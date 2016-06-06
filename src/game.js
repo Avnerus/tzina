@@ -1,4 +1,5 @@
 import Sky from './sky'
+import KeyboardController from './keyboard_controller'
 
 export default class Game {
     constructor() {
@@ -40,6 +41,9 @@ export default class Game {
         let controls = new THREE.PointerLockControls( this.camera );
         this.scene.add( controls.getObject() );
         controls.enabled = true;
+
+        this.keyboardController = new KeyboardController()
+        this.keyboardController.init(controls);
     }
     
     animate(t) {
@@ -48,6 +52,7 @@ export default class Game {
     }
 
     update(dt) {
+        this.keyboardController.update(dt);
         //console.log(this.camera.rotation);
     }
 
