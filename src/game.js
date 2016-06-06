@@ -8,16 +8,12 @@ export default class Game {
         this.renderer = new THREE.WebGLRenderer(); 
         this.renderer.setClearColor( 0, 1 );
         //this.renderer.setClearColor( 0x000000, 1 );
-        let element = this.renderer.domElement;
-        let container = document.getElementById('game');
-        container.appendChild(element);
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight, 1, 2000000);
         //this.camera.position.z = 100;
-        this.camera.position.set( 0, 100, 2000 );
+        this.camera.position.set( 0, 500, 2000 );
 
-        this.control = new THREE.OrbitControls( this.camera, element );
         this.scene.add(this.camera);
         this.clock = new THREE.Clock();
 
@@ -34,6 +30,16 @@ export default class Game {
 
 
         this.resize();
+    }
+
+    start() {
+        let element = this.renderer.domElement;
+        let container = document.getElementById('game');
+        container.appendChild(element);
+        //this.control = new THREE.OrbitControls( this.camera, element );
+        let controls = new THREE.PointerLockControls( this.camera );
+        this.scene.add( controls.getObject() );
+        controls.enabled = true;
     }
     
     animate(t) {

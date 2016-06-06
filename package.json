@@ -1,56 +1,58 @@
 {
-    "name": "tzina",
-    "version": "1.0.0",
-    "description": "Tzina Experience",
-    "main": "index.js",
-    "scripts": {
+  "name": "tzina",
+  "version": "1.0.0",
+  "description": "Tzina Experience",
+  "main": "index.js",
+  "scripts": {
     "start": "budo src/index.js:bundle.js -- -t [ babelify --presets [ es2015  ]  ] -t [ glslify  ] -t [ browserify-shim  ]"
-    },
-    "repository": {
+  },
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/Avnerus/tzina.git"
-    },
-    "author": "",
-    "license": "ISC",
-    "bugs": {
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
     "url": "https://github.com/Avnerus/tzina/issues"
-    },
-    "homepage": "https://github.com/Avnerus/tzina#readme",
-    "devDependencies": {
-      "babel-preset-es2015": "^6.5.0",
-      "babelify": "^7.2.0",
-      "beefy": ">=0.7.1",
-      "browserify": ">=3.20.0",
-      "browserify-shim": "^3.8.10",
-      "glslify": "^2.3.1"
-    },
-    "window": {
-      "title": "Tzina",
-      "toolbar": false,
-      "frame": false,
-      "width": 1920,
-      "height": 1080,
-      "position": "mouse",
-      "fullscreen": true
-    },
-    "dependencies": {
-      "gl-shader": "^4.2.0",
-      "glsl-curl-noise": "0.0.4",
-      "glsl-random": "0.0.5"
-    },
-    "browserify": {
-      "transform": [
-        "glslify",
-        "browserify-shim",
-        "babelify"
-      ]
-    },
-    "browserify-shim": {
-      "three": "global:THREE"
-    },
-    "babelify": {
-      "presets": [
-        "es2015"
-      ]
-    }
+  },
+  "homepage": "https://github.com/Avnerus/tzina#readme",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.5.0",
+    "babelify": "^7.2.0",
+    "beefy": ">=0.7.1",
+    "browserify": ">=3.20.0",
+    "browserify-shim": "^3.8.10",
+    "glslify": "^2.3.1"
+  },
+  "window": {
+    "title": "Tzina",
+    "toolbar": false,
+    "frame": false,
+    "width": 1920,
+    "height": 1080,
+    "position": "mouse",
+    "fullscreen": true
+  },
+  "dependencies": {
+    "fullscreen": "^1.0.2",
+    "gl-shader": "^4.2.0",
+    "glsl-curl-noise": "0.0.4",
+    "glsl-random": "0.0.5",
+    "pointer-lock": "0.0.4"
+  },
+  "browserify": {
+    "transform": [
+      "glslify",
+      "browserify-shim",
+      "babelify"
+    ]
+  },
+  "browserify-shim": {
+    "three": "global:THREE"
+  },
+  "babelify": {
+    "presets": [
+      "es2015"
+    ]
+  }
 }

@@ -1,0 +1,26 @@
+body {
+    background-color: black;
+}
+
+#splash {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+#start-container {
+    display: flex;
+    align-items: center;
+    height: 100px;
+    width: 200px;
+    margin: auto;
+    border: 1px solid white;
+}
+
+#start-button {
+    color: white;
+    font-size: 36px;
+    margin: auto;
+}
