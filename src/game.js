@@ -1,3 +1,4 @@
+import Sky from './sky'
 
 export default class Game {
     constructor() {
@@ -12,14 +13,24 @@ export default class Game {
         container.appendChild(element);
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight, 1, 10000);
-        this.camera.position.z = 100;
+        this.camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight, 1, 2000000);
+        //this.camera.position.z = 100;
+        this.camera.position.set( 0, 100, 2000 );
 
         this.control = new THREE.OrbitControls( this.camera, element );
         this.scene.add(this.camera);
         this.clock = new THREE.Clock();
 
         //this.camera.rotation.x = 0.22;
+
+
+        let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
+        this.scene.add( helper );
+
+        // SKY
+        this.sky = new Sky();
+        this.sky.init();
+        this.scene.add(this.sky.mesh);
 
 
         this.resize();
