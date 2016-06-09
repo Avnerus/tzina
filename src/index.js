@@ -22,6 +22,11 @@ window.onload = function() {
         console.log("Pointer attained!");
         start();
     });
+
+    game.load(function() {
+        document.getElementById('start-container').style.display = "flex";
+        document.getElementById('loading-container').style.display = "none";
+    });
 }
 
 function start() {

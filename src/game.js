@@ -11,9 +11,9 @@ export default class Game {
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight, 1, 2000000);
+        this.camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight, 1, 2000000);
         //this.camera.position.z = 100;
-        this.camera.position.set( 0, 500, 2000 );
+        this.camera.position.set( 0, 0, 500 );
 
         this.scene.add(this.camera);
         this.clock = new THREE.Clock();
@@ -31,6 +31,20 @@ export default class Game {
 
 
         this.resize();
+    }
+
+    load(onLoad) {
+        /*
+        console.log("Loading assets..")
+        let loader = new THREE.ObjectLoader();
+        loader.load("assets/square/scene.json",( obj ) => {
+            console.log("Loaded square ", obj);
+            this.scene.add( obj );
+            onLoad();
+        }, function(){} ,function(err) {
+            console.log("Error loading square ", err)
+        });*/
+       onLoad();
     }
 
     start() {
@@ -52,6 +66,7 @@ export default class Game {
     }
 
     update(dt) {
+        this.sky.update(dt);
         this.keyboardController.update(dt);
         //console.log(this.camera.rotation);
     }

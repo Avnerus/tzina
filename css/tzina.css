@@ -10,17 +10,21 @@ body {
     position: absolute;
 }
 
-#start-container {
+.splash-container {
     display: flex;
     align-items: center;
+    margin: auto;
     height: 100px;
     width: 200px;
-    margin: auto;
+    color: white;
+    font-size: 36px;
+}
+#start-container {
     border: 1px solid white;
+    display:none;
 }
 
 #start-button {
     color: white;
-    font-size: 36px;
     margin: auto;
 }

@@ -81,7 +81,7 @@ export default class KeyboardController {
     }
     
     update(dt) {
-        let delta = dt * 11;
+        let delta = dt;
         this.velocity.x -= this.velocity.x * 10.0 * delta;
         this.velocity.z -= this.velocity.z * 10.0 * delta;
 
