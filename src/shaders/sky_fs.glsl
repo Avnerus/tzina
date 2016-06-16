@@ -14,17 +14,15 @@
  * Three.js integration by zz85 http://twitter.com/blurspline
 */
 
+uniform sampler2D cloudsMap;
+
 uniform sampler2D skySampler;
 uniform vec3 sunPosition;
 varying vec3 vWorldPosition;
 
+varying vec2 vUv;
+
 vec3 cameraPos = vec3(0., 0., 0.);
-// uniform sampler2D sDiffuse;
-// const float turbidity = 10.0; //
-// const float reileigh = 2.; //
-// const float luminance = 1.0; //
-// const float mieCoefficient = 0.005;
-// const float mieDirectionalG = 0.8;
 
 uniform float luminance;
 uniform float turbidity;
@@ -198,8 +196,9 @@ void main()
 
     vec3 retColor = pow(color,vec3(1.0/(1.2+(1.2*sunfade))));
 
+    vec3 tColor = texture2D( cloudsMap, vUv ).rgb;
 
-    gl_FragColor.rgb = retColor;
+    gl_FragColor.rgb = tColor * retColor;
 
     gl_FragColor.a = 1.0;
 }

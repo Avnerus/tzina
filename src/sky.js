@@ -1,3 +1,5 @@
+import Clouds from './clouds';
+
 const SUN_DISTANCE = 400000;
 
 export default class Sky {
@@ -8,21 +10,25 @@ export default class Sky {
         // Shaders
         this.sky_fs = glslify('./shaders/sky_fs.glsl')
         this.sky_vs = glslify('./shaders/sky_vs.glsl')
+
+        this.clouds = new Clouds();
     }
     init() {
+
+        var imageTexture = THREE.ImageUtils.loadTexture('assets/test/venice.jpeg');
 
         this.inclination = 0.1;
         this.azimuth = 0.14;
 
         this.shader = new THREE.ShaderMaterial( {
             uniforms: {
-
                 luminance:	 { type: "f", value: 1.1 },
                 turbidity:	 { type: "f", value: 5 },
                 reileigh:	 { type: "f", value: 1 },
                 mieCoefficient:	 { type: "f", value: 0.005 },
                 mieDirectionalG: { type: "f", value: 0.8 },
-                sunPosition: 	 { type: "v3", value: new THREE.Vector3() }
+                sunPosition: 	 { type: "v3", value: new THREE.Vector3() },
+                cloudsMap:   { type: "t"}
             },
             vertexShader: this.sky_vs,
             fragmentShader: this.sky_fs,
@@ -38,13 +44,17 @@ export default class Sky {
         this.mesh = new THREE.Mesh( this.geo, this.shader );
 
         this.updateSunPosition();
+
+        this.clouds.init(this.shader);
+        this.a = true;
     }
-    
+
     update(dt) {
-        //console.log(this.camera.rotation);
-        this.azimuth += 0.00001;
-        this.inclination += 0.0001;
+        this.azimuth += 0.00005;
+        this.inclination += 0.0005;
         this.updateSunPosition();
+
+        this.clouds.update(dt);
     }
 
     updateSunPosition() {
