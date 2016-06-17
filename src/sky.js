@@ -15,7 +15,7 @@ export default class Sky {
     }
     init() {
 
-        var imageTexture = THREE.ImageUtils.loadTexture('assets/test/venice.jpeg');
+        //var imageTexture = THREE.ImageUtils.loadTexture('assets/test/venice.jpeg');
 
         this.inclination = 0.1;
         this.azimuth = 0.14;

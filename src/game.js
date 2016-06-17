@@ -1,9 +1,12 @@
 import Sky from './sky'
+import Square from './square'
+
 import KeyboardController from './keyboard_controller'
 
 export default class Game {
-    constructor() {
+    constructor(config) {
         console.log("Game constructed!")
+        this.config = config;
     }
     init() {
         this.renderer = new THREE.WebGLRenderer(); 
@@ -12,8 +15,8 @@ export default class Game {
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight, 1, 2000000);
-        //this.camera.position.z = 100;
-        this.camera.position.set( 0, 0, 500 );
+        //this.camera.position.set( 0, 0, 500 );
+
 
         this.scene.add(this.camera);
         this.clock = new THREE.Clock();
@@ -24,40 +27,50 @@ export default class Game {
         let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
         this.scene.add( helper );
 
+        this.loadingManager = new THREE.LoadingManager();
+
         // SKY
         this.sky = new Sky();
         this.sky.init();
         this.scene.add(this.sky.mesh);
+
+        // Square
+        this.square = new Square();
 
 
         this.resize();
     }
 
     load(onLoad) {
-        /*
-        console.log("Loading assets..")
-        let loader = new THREE.ObjectLoader();
-        loader.load("assets/square/scene.json",( obj ) => {
-            console.log("Loaded square ", obj);
-            this.scene.add( obj );
+        console.log(this.loadingManager);
+        this.loadingManager.onLoad = () => {
+            console.log("Done loading everything!");
+
             onLoad();
-        }, function(){} ,function(err) {
-            console.log("Error loading square ", err)
-        });*/
-       onLoad();
+        };
+        this.loadingManager.onError = (err) => {
+            console.log("Error during load", err);
+        };
+
+        this.square.init(this.scene, this.loadingManager);
     }
 
     start() {
         let element = this.renderer.domElement;
         let container = document.getElementById('game');
         container.appendChild(element);
-        //this.control = new THREE.OrbitControls( this.camera, element );
-        let controls = new THREE.PointerLockControls( this.camera );
-        this.scene.add( controls.getObject() );
-        controls.enabled = true;
+        if (this.config.controls == "locked") {
+            let controls = new THREE.PointerLockControls( this.camera );
+            this.scene.add( controls.getObject() );
+            controls.enabled = true;
 
-        this.keyboardController = new KeyboardController()
-        this.keyboardController.init(controls);
+            this.keyboardController = new KeyboardController()
+            this.keyboardController.init(controls);
+        } else {
+            this.controls = new THREE.OrbitControls( this.camera, element );
+        }
+        
+       
     }
     
     animate(t) {
@@ -67,7 +80,9 @@ export default class Game {
 
     update(dt) {
         this.sky.update(dt);
-        this.keyboardController.update(dt);
+        if (this.keyboardController) {
+            this.keyboardController.update(dt);
+        }
         //console.log(this.camera.rotation);
     }
 
