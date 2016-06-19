@@ -12,9 +12,18 @@ export default class Square {
             obj.position.z = 1200;
 
             scene.add(obj);
+            obj.updateMatrixWorld();
             collisionManager.addBoundingBoxes(obj,scene);
+
+            this.squareMiddle  = obj.getObjectByName("MB_PS");
+            this.squareCenter  = new THREE.Vector3();
+            this.squareCenter.setFromMatrixPosition(this.squareMiddle.matrixWorld);
         });
     }
     update(dt) {
+    }
+
+    getCenterPosition() {
+        return this.squareCenter;
     }
 }

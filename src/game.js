@@ -37,6 +37,15 @@ export default class Game {
         // Square
         this.square = new Square();
 
+        // Debug
+        var geometry = new THREE.Geometry();
+        geometry.vertices.push(
+            new THREE.Vector3( 0, 0, 0 ),
+            new THREE.Vector3( 0, 10, 0 ),
+            new THREE.Vector3( 10, 0, 0 )
+        );
+        this.lineToCenter = 
+
 
         this.resize();
     }
@@ -66,8 +75,8 @@ export default class Game {
             this.scene.add( controls.getObject() );
             controls.enabled = true;
 
-            this.keyboardController = new KeyboardController()
-            this.keyboardController.init(controls);
+            this.keyboardController = new KeyboardController(controls, this.square, this.collisionManager)
+            this.keyboardController.init();
 
             this.collisionManager.setPlayer(controls.getObject());
         } else {
@@ -84,6 +93,7 @@ export default class Game {
     update(dt) {
         this.collisionManager.update(dt);
         this.sky.update(dt);
+        this.square.update(dt);
         if (this.keyboardController) {
             this.keyboardController.update(dt);
         }

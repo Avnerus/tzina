@@ -1,5 +1,7 @@
+const BASAL_HEIGHT = 10;
+
 export default class KeyboardController {
-    constructor() {
+    constructor(controls, square, collisionManager) {
         this.moveForward = false;
         this.moveLeft = false;
         this.moveRight = false;
@@ -7,10 +9,17 @@ export default class KeyboardController {
         this.isOnObject = false;
 
         this.velocity = new THREE.Vector3();
-    }
-    init(controls) {
-
         this.controls = controls;
+        this.square = square;
+        this.collisionManager = collisionManager;
+
+        this.playerToCenter = new THREE.Vector3();
+        this.walkingDirection = new THREE.Vector3();
+
+        this.height = BASAL_HEIGHT;
+    }
+    init() {
+
         console.log("Keyboard controller init");
 
         document.addEventListener('keydown', (event) => {
@@ -93,6 +102,10 @@ export default class KeyboardController {
         if ( this.moveLeft ) this.velocity.x -= 400.0 * delta;
         if ( this.moveRight ) this.velocity.x += 400.0 * delta;
 
+        if (this.collisionManager.isClimbingStairs() && this.velocity.z != 0) {
+            this.climbStairs();
+        }
+
         if ( this.isOnObject === true ) {
             this.velocity.y = Math.max( 0, this.velocity.y );
 
@@ -103,12 +116,19 @@ export default class KeyboardController {
         this.controls.getObject().translateY( this.velocity.y * delta );
         this.controls.getObject().translateZ( this.velocity.z * delta );
 
-        if ( this.controls.getObject().position.y < 10 ) {
+        if ( this.controls.getObject().position.y < this.height) {
 
             this.velocity.y = 0;
-            this.controls.getObject().position.y = 10;
+            this.controls.getObject().position.y = this.height;
 
             this.canJump = true;
         }
+
+    }
+
+    climbStairs() {
+        let distanceToCenter = this.controls.getObject().position.distanceTo(this.square.getCenterPosition());
+        let distanceInStairs = Math.max(0, 260 - distanceToCenter);
+        this.height = Math.max(Math.min(30,distanceInStairs),BASAL_HEIGHT);
     }
 }

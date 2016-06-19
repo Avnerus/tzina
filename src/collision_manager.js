@@ -1,9 +1,9 @@
 import boxIntersect from 'box-intersect'
 
 const PLAYER_SIZE = {
-    x: 4,
+    x: 2,
     y: 100,
-    z: 4 
+    z: 2 
 }
 export default class CollisionManager {
     constructor() {
@@ -23,7 +23,7 @@ export default class CollisionManager {
             this.player.position.y + PLAYER_SIZE.y / 2,
             this.player.position.z + PLAYER_SIZE.z / 2,
         ]
-        console.log('crossings=', boxIntersect(this.playerBox, this.obstacles))
+        this.crossing = boxIntersect(this.playerBox, this.obstacles);
     }
     setPlayer(player) {
         this.player = player;
@@ -35,15 +35,7 @@ export default class CollisionManager {
                 console.log(child);
                 let bbox = new THREE.BoundingBoxHelper(child, 0x00ff00);
                 bbox.update();
-                bbox.box.min.y -= 1950;
-                bbox.box.min.z += 1200;
-                bbox.box.max.y -= 1950;
-                bbox.box.max.z += 1200;
-                bbox.box.center(bbox.position);
-                //bbox.position.y -= 1950;
-                //bbox.position.z += 1200;
-                console.log(bbox.box);
-                scene.add(bbox);
+                //scene.add(bbox);
 
                 this.obstacles.push([
                     bbox.box.min.x, 
@@ -56,5 +48,8 @@ export default class CollisionManager {
             }
         })
         console.log(this.obstacles);
+    }
+    isClimbingStairs() {
+        return (this.crossing.length > 0);
     }
 }
