@@ -16,8 +16,6 @@ export default class Game {
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight, 1, 2000000);
-        //this.camera.position.set( 0, 1950, -1200);
-
 
         this.scene.add(this.camera);
         this.clock = new THREE.Clock();

@@ -1,7 +1,10 @@
 var Game = require('./game').default;
 var config = require('./config').default;
+var Stats = require('stats.js');
 
 var game = new Game(config);
+var stats = new Stats();
+stats.showPanel(0);
 
 var fullscreen = require('fullscreen');
 var lock = require('pointer-lock');
@@ -42,6 +45,7 @@ window.onload = function() {
 
 function start() {
     document.getElementById('start-container').style.display = "none";
+    document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
     game.resize();
@@ -50,7 +54,9 @@ function start() {
 
 
 function animate(t) {
+    stats.begin();
     game.animate(t);
+    stats.end();
     requestAnimationFrame(animate);
 }
 

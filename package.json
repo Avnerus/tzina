@@ -39,7 +39,8 @@
     "gl-shader": "^4.2.0",
     "glsl-curl-noise": "0.0.4",
     "glsl-random": "0.0.5",
-    "pointer-lock": "0.0.4"
+    "pointer-lock": "0.0.4",
+    "stats.js": "^0.16.0"
   },
   "browserify": {
     "transform": [
