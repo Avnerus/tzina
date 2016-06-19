@@ -41,6 +41,7 @@ window.onload = function() {
 }
 
 function start() {
+    document.getElementById('start-container').style.display = "none";
     game.start();
     window.addEventListener('resize', resize, false);
     game.resize();

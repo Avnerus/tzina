@@ -34,6 +34,7 @@
     "fullscreen": true
   },
   "dependencies": {
+    "box-intersect": "^1.0.1",
     "fullscreen": "^1.0.2",
     "gl-shader": "^4.2.0",
     "glsl-curl-noise": "0.0.4",

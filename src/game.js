@@ -1,5 +1,6 @@
 import Sky from './sky'
 import Square from './square'
+import CollisionManager from './collision_manager'
 
 import KeyboardController from './keyboard_controller'
 
@@ -15,7 +16,7 @@ export default class Game {
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight, 1, 2000000);
-        //this.camera.position.set( 0, 0, 500 );
+        //this.camera.position.set( 0, 1950, -1200);
 
 
         this.scene.add(this.camera);
@@ -28,6 +29,7 @@ export default class Game {
         this.scene.add( helper );
 
         this.loadingManager = new THREE.LoadingManager();
+        this.collisionManager = new CollisionManager(this.camera);
 
         // SKY
         this.sky = new Sky();
@@ -42,7 +44,9 @@ export default class Game {
     }
 
     load(onLoad) {
-        console.log(this.loadingManager);
+        let objectReady = (obj) => {
+
+        }
         this.loadingManager.onLoad = () => {
             console.log("Done loading everything!");
 
@@ -52,7 +56,7 @@ export default class Game {
             console.log("Error during load", err);
         };
 
-        this.square.init(this.scene, this.loadingManager);
+        this.square.init(this.scene, this.collisionManager, this.loadingManager);
     }
 
     start() {
@@ -66,10 +70,11 @@ export default class Game {
 
             this.keyboardController = new KeyboardController()
             this.keyboardController.init(controls);
+
+            this.collisionManager.setPlayer(controls.getObject());
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
-        
        
     }
     
@@ -79,6 +84,7 @@ export default class Game {
     }
 
     update(dt) {
+        this.collisionManager.update(dt);
         this.sky.update(dt);
         if (this.keyboardController) {
             this.keyboardController.update(dt);

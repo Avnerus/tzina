@@ -4902,7 +4902,17 @@ var Clouds = function () {
 
 exports.default = Clouds;
 
-},{"./util/video360":34}],30:[function(require,module,exports){
+},{"./util/video360":36}],30:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    controls: "locked"
+};
+
+},{}],31:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4923,6 +4933,10 @@ var _sky = require('./sky');
 
 var _sky2 = _interopRequireDefault(_sky);
 
+var _square = require('./square');
+
+var _square2 = _interopRequireDefault(_square);
+
 var _keyboard_controller = require('./keyboard_controller');
 
 var _keyboard_controller2 = _interopRequireDefault(_keyboard_controller);
@@ -4938,10 +4952,11 @@ function _classCallCheck(instance, Constructor) {
 }
 
 var Game = function () {
-    function Game() {
+    function Game(config) {
         _classCallCheck(this, Game);
 
         console.log("Game constructed!");
+        this.config = config;
     }
 
     _createClass(Game, [{
@@ -4953,8 +4968,7 @@ var Game = function () {
 
             this.scene = new THREE.Scene();
             this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000000);
-            //this.camera.position.z = 100;
-            this.camera.position.set(0, 0, 500);
+            //this.camera.position.set( 0, 0, 500 );
 
             this.scene.add(this.camera);
             this.clock = new THREE.Clock();
@@ -4964,27 +4978,32 @@ var Game = function () {
             var helper = new THREE.GridHelper(5000, 5000, 0xffffff, 0xffffff);
             this.scene.add(helper);
 
+            this.loadingManager = new THREE.LoadingManager();
+
             // SKY
             this.sky = new _sky2.default();
             this.sky.init();
             this.scene.add(this.sky.mesh);
+
+            // Square
+            this.square = new _square2.default();
 
             this.resize();
         }
     }, {
         key: 'load',
         value: function load(onLoad) {
-            /*
-            console.log("Loading assets..")
-            let loader = new THREE.ObjectLoader();
-            loader.load("assets/square/scene.json",( obj ) => {
-                console.log("Loaded square ", obj);
-                this.scene.add( obj );
+            console.log(this.loadingManager);
+            this.loadingManager.onLoad = function () {
+                console.log("Done loading everything!");
+
                 onLoad();
-            }, function(){} ,function(err) {
-                console.log("Error loading square ", err)
-            });*/
-            onLoad();
+            };
+            this.loadingManager.onError = function (err) {
+                console.log("Error during load", err);
+            };
+
+            this.square.init(this.scene, this.loadingManager);
         }
     }, {
         key: 'start',
@@ -4992,13 +5011,16 @@ var Game = function () {
             var element = this.renderer.domElement;
             var container = document.getElementById('game');
             container.appendChild(element);
-            //this.control = new THREE.OrbitControls( this.camera, element );
-            var controls = new THREE.PointerLockControls(this.camera);
-            this.scene.add(controls.getObject());
-            controls.enabled = true;
+            if (this.config.controls == "locked") {
+                var controls = new THREE.PointerLockControls(this.camera);
+                this.scene.add(controls.getObject());
+                controls.enabled = true;
 
-            this.keyboardController = new _keyboard_controller2.default();
-            this.keyboardController.init(controls);
+                this.keyboardController = new _keyboard_controller2.default();
+                this.keyboardController.init(controls);
+            } else {
+                this.controls = new THREE.OrbitControls(this.camera, element);
+            }
         }
     }, {
         key: 'animate',
@@ -5010,7 +5032,9 @@ var Game = function () {
         key: 'update',
         value: function update(dt) {
             this.sky.update(dt);
-            this.keyboardController.update(dt);
+            if (this.keyboardController) {
+                this.keyboardController.update(dt);
+            }
             //console.log(this.camera.rotation);
         }
     }, {
@@ -5034,11 +5058,14 @@ var Game = function () {
 
 exports.default = Game;
 
-},{"./keyboard_controller":32,"./sky":33}],31:[function(require,module,exports){
+},{"./keyboard_controller":33,"./sky":34,"./square":35}],32:[function(require,module,exports){
 'use strict';
 
 var Game = require('./game').default;
-var game = new Game();
+var config = require('./config').default;
+
+var game = new Game(config);
+
 var fullscreen = require('fullscreen');
 var lock = require('pointer-lock');
 
@@ -5047,19 +5074,25 @@ window.onload = function () {
     game.init();
     var el = document.getElementById('game');
     var fs = fullscreen(el);
-    var pointer = lock(el);
     document.getElementById('start-button').addEventListener('click', function (event) {
         fs.request();
     });
 
+    if (config.controls == "locked") {
+        var pointer = lock(el);
+
+        pointer.on('attain', function () {
+            console.log("Pointer attained!");
+            start();
+        });
+    }
     fs.on('attain', function () {
         console.log("Full screen attained!");
-        pointer.request();
-    });
-
-    pointer.on('attain', function () {
-        console.log("Pointer attained!");
-        start();
+        if (pointer) {
+            pointer.request();
+        } else {
+            start();
+        }
     });
 
     game.load(function () {
@@ -5069,6 +5102,7 @@ window.onload = function () {
 };
 
 function start() {
+    document.getElementById('start-container').style.display = "none";
     game.start();
     window.addEventListener('resize', resize, false);
     game.resize();
@@ -5084,7 +5118,7 @@ function resize() {
     game.resize();
 }
 
-},{"./game":30,"fullscreen":27,"pointer-lock":28}],32:[function(require,module,exports){
+},{"./config":30,"./game":31,"fullscreen":27,"pointer-lock":28}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5242,7 +5276,7 @@ var KeyboardController = function () {
 
 exports.default = KeyboardController;
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5292,7 +5326,7 @@ var Sky = function () {
         key: 'init',
         value: function init() {
 
-            var imageTexture = THREE.ImageUtils.loadTexture('assets/test/venice.jpeg');
+            //var imageTexture = THREE.ImageUtils.loadTexture('assets/test/venice.jpeg');
 
             this.inclination = 0.1;
             this.azimuth = 0.14;
@@ -5351,7 +5385,60 @@ var Sky = function () {
 
 exports.default = Sky;
 
-},{"./clouds":29}],34:[function(require,module,exports){
+},{"./clouds":29}],35:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+var MODEL_PATH = "assets/square/scene.json";
+
+var Square = function () {
+    function Square() {
+        _classCallCheck(this, Square);
+
+        console.log("Square constructed!");
+    }
+
+    _createClass(Square, [{
+        key: "init",
+        value: function init(scene, manager) {
+            var loader = new THREE.ObjectLoader(manager);
+            loader.load(MODEL_PATH, function (obj) {
+                console.log("Loaded square ", obj);
+                obj.position.y = -1950;
+                obj.position.z = 1200;
+                scene.add(obj);
+            });
+        }
+    }, {
+        key: "update",
+        value: function update(dt) {}
+    }]);
+
+    return Square;
+}();
+
+exports.default = Square;
+
+},{}],36:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5414,4 +5501,4 @@ var Video360 = function () {
 
 exports.default = Video360;
 
-},{}]},{},[31]);
+},{}]},{},[32]);
