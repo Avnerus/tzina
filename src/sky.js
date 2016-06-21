@@ -54,6 +54,7 @@ export default class Sky {
         this.inclination += 0.0005;
         this.updateSunPosition();
 
+        this.geo.rotateY(0.01 * Math.PI / 180);
         this.clouds.update(dt);
     }
 

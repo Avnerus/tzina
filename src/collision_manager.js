@@ -5,12 +5,19 @@ const PLAYER_SIZE = {
     y: 100,
     z: 2 
 }
+
+const COLLIDERS = {
+    stairs: ["Object_1111", "Object_1110"],
+    ramps: ["Object_1077"]
+}
 export default class CollisionManager {
     constructor() {
         console.log("Collision Manager constructed!")
 
         this.obstacles = [];
         this.playerBox = [[0,0,0,0,0,0]]
+
+        this.obstacleInfo = [];
     }
     init() {
     }
@@ -23,33 +30,40 @@ export default class CollisionManager {
             this.player.position.y + PLAYER_SIZE.y / 2,
             this.player.position.z + PLAYER_SIZE.z / 2,
         ]
-        this.crossing = boxIntersect(this.playerBox, this.obstacles);
+        this.crossing = boxIntersect(this.playerBox, this.obstacles, (i,j) => {
+            console.log(this.obstacleInfo[j]);
+        });
     }
     setPlayer(player) {
         this.player = player;
     }
     addBoundingBoxes(obj, scene) {
-        console.log("Add bounding boxes from ", obj);
         obj.traverse( (child) => {
-            if (child.type == "Object3D" && (child.name == "Object_1110" || child.name == "Object_1111")) {
-                console.log(child);
-                let bbox = new THREE.BoundingBoxHelper(child, 0x00ff00);
-                bbox.update();
-                //scene.add(bbox);
+            if (child.type == "Object3D") {
+                for (let key of Object.keys(COLLIDERS)) {
+                    if (COLLIDERS[key].includes(child.name)) {
+                        console.log(child);
+                        let bbox = new THREE.BoundingBoxHelper(child, 0x00ff00);
+                        bbox.update();
+                        scene.add(bbox);
 
-                this.obstacles.push([
-                    bbox.box.min.x, 
-                    bbox.box.min.y, 
-                    bbox.box.min.z, 
-                    bbox.box.max.x, 
-                    bbox.box.max.y, 
-                    bbox.box.max.z
-                ])
+                        this.obstacles.push([
+                            bbox.box.min.x, 
+                            bbox.box.min.y, 
+                            bbox.box.min.z, 
+                            bbox.box.max.x, 
+                            bbox.box.max.y, 
+                            bbox.box.max.z
+                        ])
+
+                        this.obstacleInfo.push(key);
+                    }                    
+                }
             }
         })
-        console.log(this.obstacles);
+        //console.log(this.obstacles, this.obstacleInfo);
     }
     isClimbingStairs() {
-        return (this.crossing.length > 0);
+        //return (this.crossing.length > 0);
     }
 }

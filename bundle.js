@@ -4572,6 +4572,1877 @@ function oldIEDetach(el, eventName, listener, useCapture) {
 }
 
 },{}],27:[function(require,module,exports){
+/**
+ * Bit twiddling hacks for JavaScript.
+ *
+ * Author: Mikola Lysenko
+ *
+ * Ported from Stanford bit twiddling hack library:
+ *    http://graphics.stanford.edu/~seander/bithacks.html
+ */
+
+"use strict"; "use restrict";
+
+//Number of bits in an integer
+var INT_BITS = 32;
+
+//Constants
+exports.INT_BITS  = INT_BITS;
+exports.INT_MAX   =  0x7fffffff;
+exports.INT_MIN   = -1<<(INT_BITS-1);
+
+//Returns -1, 0, +1 depending on sign of x
+exports.sign = function(v) {
+  return (v > 0) - (v < 0);
+}
+
+//Computes absolute value of integer
+exports.abs = function(v) {
+  var mask = v >> (INT_BITS-1);
+  return (v ^ mask) - mask;
+}
+
+//Computes minimum of integers x and y
+exports.min = function(x, y) {
+  return y ^ ((x ^ y) & -(x < y));
+}
+
+//Computes maximum of integers x and y
+exports.max = function(x, y) {
+  return x ^ ((x ^ y) & -(x < y));
+}
+
+//Checks if a number is a power of two
+exports.isPow2 = function(v) {
+  return !(v & (v-1)) && (!!v);
+}
+
+//Computes log base 2 of v
+exports.log2 = function(v) {
+  var r, shift;
+  r =     (v > 0xFFFF) << 4; v >>>= r;
+  shift = (v > 0xFF  ) << 3; v >>>= shift; r |= shift;
+  shift = (v > 0xF   ) << 2; v >>>= shift; r |= shift;
+  shift = (v > 0x3   ) << 1; v >>>= shift; r |= shift;
+  return r | (v >> 1);
+}
+
+//Computes log base 10 of v
+exports.log10 = function(v) {
+  return  (v >= 1000000000) ? 9 : (v >= 100000000) ? 8 : (v >= 10000000) ? 7 :
+          (v >= 1000000) ? 6 : (v >= 100000) ? 5 : (v >= 10000) ? 4 :
+          (v >= 1000) ? 3 : (v >= 100) ? 2 : (v >= 10) ? 1 : 0;
+}
+
+//Counts number of bits
+exports.popCount = function(v) {
+  v = v - ((v >>> 1) & 0x55555555);
+  v = (v & 0x33333333) + ((v >>> 2) & 0x33333333);
+  return ((v + (v >>> 4) & 0xF0F0F0F) * 0x1010101) >>> 24;
+}
+
+//Counts number of trailing zeros
+function countTrailingZeros(v) {
+  var c = 32;
+  v &= -v;
+  if (v) c--;
+  if (v & 0x0000FFFF) c -= 16;
+  if (v & 0x00FF00FF) c -= 8;
+  if (v & 0x0F0F0F0F) c -= 4;
+  if (v & 0x33333333) c -= 2;
+  if (v & 0x55555555) c -= 1;
+  return c;
+}
+exports.countTrailingZeros = countTrailingZeros;
+
+//Rounds to next power of 2
+exports.nextPow2 = function(v) {
+  v += v === 0;
+  --v;
+  v |= v >>> 1;
+  v |= v >>> 2;
+  v |= v >>> 4;
+  v |= v >>> 8;
+  v |= v >>> 16;
+  return v + 1;
+}
+
+//Rounds down to previous power of 2
+exports.prevPow2 = function(v) {
+  v |= v >>> 1;
+  v |= v >>> 2;
+  v |= v >>> 4;
+  v |= v >>> 8;
+  v |= v >>> 16;
+  return v - (v>>>1);
+}
+
+//Computes parity of word
+exports.parity = function(v) {
+  v ^= v >>> 16;
+  v ^= v >>> 8;
+  v ^= v >>> 4;
+  v &= 0xf;
+  return (0x6996 >>> v) & 1;
+}
+
+var REVERSE_TABLE = new Array(256);
+
+(function(tab) {
+  for(var i=0; i<256; ++i) {
+    var v = i, r = i, s = 7;
+    for (v >>>= 1; v; v >>>= 1) {
+      r <<= 1;
+      r |= v & 1;
+      --s;
+    }
+    tab[i] = (r << s) & 0xff;
+  }
+})(REVERSE_TABLE);
+
+//Reverse bits in a 32 bit word
+exports.reverse = function(v) {
+  return  (REVERSE_TABLE[ v         & 0xff] << 24) |
+          (REVERSE_TABLE[(v >>> 8)  & 0xff] << 16) |
+          (REVERSE_TABLE[(v >>> 16) & 0xff] << 8)  |
+           REVERSE_TABLE[(v >>> 24) & 0xff];
+}
+
+//Interleave bits of 2 coordinates with 16 bits.  Useful for fast quadtree codes
+exports.interleave2 = function(x, y) {
+  x &= 0xFFFF;
+  x = (x | (x << 8)) & 0x00FF00FF;
+  x = (x | (x << 4)) & 0x0F0F0F0F;
+  x = (x | (x << 2)) & 0x33333333;
+  x = (x | (x << 1)) & 0x55555555;
+
+  y &= 0xFFFF;
+  y = (y | (y << 8)) & 0x00FF00FF;
+  y = (y | (y << 4)) & 0x0F0F0F0F;
+  y = (y | (y << 2)) & 0x33333333;
+  y = (y | (y << 1)) & 0x55555555;
+
+  return x | (y << 1);
+}
+
+//Extracts the nth interleaved component
+exports.deinterleave2 = function(v, n) {
+  v = (v >>> n) & 0x55555555;
+  v = (v | (v >>> 1))  & 0x33333333;
+  v = (v | (v >>> 2))  & 0x0F0F0F0F;
+  v = (v | (v >>> 4))  & 0x00FF00FF;
+  v = (v | (v >>> 16)) & 0x000FFFF;
+  return (v << 16) >> 16;
+}
+
+
+//Interleave bits of 3 coordinates, each with 10 bits.  Useful for fast octree codes
+exports.interleave3 = function(x, y, z) {
+  x &= 0x3FF;
+  x  = (x | (x<<16)) & 4278190335;
+  x  = (x | (x<<8))  & 251719695;
+  x  = (x | (x<<4))  & 3272356035;
+  x  = (x | (x<<2))  & 1227133513;
+
+  y &= 0x3FF;
+  y  = (y | (y<<16)) & 4278190335;
+  y  = (y | (y<<8))  & 251719695;
+  y  = (y | (y<<4))  & 3272356035;
+  y  = (y | (y<<2))  & 1227133513;
+  x |= (y << 1);
+  
+  z &= 0x3FF;
+  z  = (z | (z<<16)) & 4278190335;
+  z  = (z | (z<<8))  & 251719695;
+  z  = (z | (z<<4))  & 3272356035;
+  z  = (z | (z<<2))  & 1227133513;
+  
+  return x | (z << 2);
+}
+
+//Extracts nth interleaved component of a 3-tuple
+exports.deinterleave3 = function(v, n) {
+  v = (v >>> n)       & 1227133513;
+  v = (v | (v>>>2))   & 3272356035;
+  v = (v | (v>>>4))   & 251719695;
+  v = (v | (v>>>8))   & 4278190335;
+  v = (v | (v>>>16))  & 0x3FF;
+  return (v<<22)>>22;
+}
+
+//Computes next combination in colexicographic order (this is mistakenly called nextPermutation on the bit twiddling hacks page)
+exports.nextCombination = function(v) {
+  var t = v | (v - 1);
+  return (t + 1) | (((~t & -~t) - 1) >>> (countTrailingZeros(v) + 1));
+}
+
+
+},{}],28:[function(require,module,exports){
+'use strict'
+
+module.exports = boxIntersectWrapper
+
+var pool = require('typedarray-pool')
+var sweep = require('./lib/sweep')
+var boxIntersectIter = require('./lib/intersect')
+
+function boxEmpty(d, box) {
+  for(var j=0; j<d; ++j) {
+    if(!(box[j] <= box[j+d])) {
+      return true
+    }
+  }
+  return false
+}
+
+//Unpack boxes into a flat typed array, remove empty boxes
+function convertBoxes(boxes, d, data, ids) {
+  var ptr = 0
+  var count = 0
+  for(var i=0, n=boxes.length; i<n; ++i) {
+    var b = boxes[i]
+    if(boxEmpty(d, b)) {
+      continue
+    }
+    for(var j=0; j<2*d; ++j) {
+      data[ptr++] = b[j]
+    }
+    ids[count++] = i
+  }
+  return count
+}
+
+//Perform type conversions, check bounds
+function boxIntersect(red, blue, visit, full) {
+  var n = red.length
+  var m = blue.length
+
+  //If either array is empty, then we can skip this whole thing
+  if(n <= 0 || m <= 0) {
+    return
+  }
+
+  //Compute dimension, if it is 0 then we skip
+  var d = (red[0].length)>>>1
+  if(d <= 0) {
+    return
+  }
+
+  var retval
+
+  //Convert red boxes
+  var redList  = pool.mallocDouble(2*d*n)
+  var redIds   = pool.mallocInt32(n)
+  n = convertBoxes(red, d, redList, redIds)
+
+  if(n > 0) {
+    if(d === 1 && full) {
+      //Special case: 1d complete
+      sweep.init(n)
+      retval = sweep.sweepComplete(
+        d, visit, 
+        0, n, redList, redIds,
+        0, n, redList, redIds)
+    } else {
+
+      //Convert blue boxes
+      var blueList = pool.mallocDouble(2*d*m)
+      var blueIds  = pool.mallocInt32(m)
+      m = convertBoxes(blue, d, blueList, blueIds)
+
+      if(m > 0) {
+        sweep.init(n+m)
+
+        if(d === 1) {
+          //Special case: 1d bipartite
+          retval = sweep.sweepBipartite(
+            d, visit, 
+            0, n, redList,  redIds,
+            0, m, blueList, blueIds)
+        } else {
+          //General case:  d>1
+          retval = boxIntersectIter(
+            d, visit,    full,
+            n, redList,  redIds,
+            m, blueList, blueIds)
+        }
+
+        pool.free(blueList)
+        pool.free(blueIds)
+      }
+    }
+
+    pool.free(redList)
+    pool.free(redIds)
+  }
+
+  return retval
+}
+
+
+var RESULT
+
+function appendItem(i,j) {
+  RESULT.push([i,j])
+}
+
+function intersectFullArray(x) {
+  RESULT = []
+  boxIntersect(x, x, appendItem, true)
+  return RESULT
+}
+
+function intersectBipartiteArray(x, y) {
+  RESULT = []
+  boxIntersect(x, y, appendItem, false)
+  return RESULT
+}
+
+//User-friendly wrapper, handle full input and no-visitor cases
+function boxIntersectWrapper(arg0, arg1, arg2) {
+  var result
+  switch(arguments.length) {
+    case 1:
+      return intersectFullArray(arg0)
+    case 2:
+      if(typeof arg1 === 'function') {
+        return boxIntersect(arg0, arg0, arg1, true)
+      } else {
+        return intersectBipartiteArray(arg0, arg1)
+      }
+    case 3:
+      return boxIntersect(arg0, arg1, arg2, false)
+    default:
+      throw new Error('box-intersect: Invalid arguments')
+  }
+}
+},{"./lib/intersect":30,"./lib/sweep":34,"typedarray-pool":39}],29:[function(require,module,exports){
+'use strict'
+
+var DIMENSION   = 'd'
+var AXIS        = 'ax'
+var VISIT       = 'vv'
+var FLIP        = 'fp'
+
+var ELEM_SIZE   = 'es'
+
+var RED_START   = 'rs'
+var RED_END     = 're'
+var RED_BOXES   = 'rb'
+var RED_INDEX   = 'ri'
+var RED_PTR     = 'rp'
+
+var BLUE_START  = 'bs'
+var BLUE_END    = 'be'
+var BLUE_BOXES  = 'bb'
+var BLUE_INDEX  = 'bi'
+var BLUE_PTR    = 'bp'
+
+var RETVAL      = 'rv'
+
+var INNER_LABEL = 'Q'
+
+var ARGS = [
+  DIMENSION,
+  AXIS,
+  VISIT,
+  RED_START,
+  RED_END,
+  RED_BOXES,
+  RED_INDEX,
+  BLUE_START,
+  BLUE_END,
+  BLUE_BOXES,
+  BLUE_INDEX
+]
+
+function generateBruteForce(redMajor, flip, full) {
+  var funcName = 'bruteForce' + 
+    (redMajor ? 'Red' : 'Blue') + 
+    (flip ? 'Flip' : '') +
+    (full ? 'Full' : '')
+
+  var code = ['function ', funcName, '(', ARGS.join(), '){',
+    'var ', ELEM_SIZE, '=2*', DIMENSION, ';']
+
+  var redLoop = 
+    'for(var i=' + RED_START + ',' + RED_PTR + '=' + ELEM_SIZE + '*' + RED_START + ';' +
+        'i<' + RED_END +';' +
+        '++i,' + RED_PTR + '+=' + ELEM_SIZE + '){' +
+        'var x0=' + RED_BOXES + '[' + AXIS + '+' + RED_PTR + '],' +
+            'x1=' + RED_BOXES + '[' + AXIS + '+' + RED_PTR + '+' + DIMENSION + '],' +
+            'xi=' + RED_INDEX + '[i];'
+
+  var blueLoop = 
+    'for(var j=' + BLUE_START + ',' + BLUE_PTR + '=' + ELEM_SIZE + '*' + BLUE_START + ';' +
+        'j<' + BLUE_END + ';' +
+        '++j,' + BLUE_PTR + '+=' + ELEM_SIZE + '){' +
+        'var y0=' + BLUE_BOXES + '[' + AXIS + '+' + BLUE_PTR + '],' +
+            (full ? 'y1=' + BLUE_BOXES + '[' + AXIS + '+' + BLUE_PTR + '+' + DIMENSION + '],' : '') +
+            'yi=' + BLUE_INDEX + '[j];'
+
+  if(redMajor) {
+    code.push(redLoop, INNER_LABEL, ':', blueLoop)
+  } else {
+    code.push(blueLoop, INNER_LABEL, ':', redLoop)
+  }
+
+  if(full) {
+    code.push('if(y1<x0||x1<y0)continue;')
+  } else if(flip) {
+    code.push('if(y0<=x0||x1<y0)continue;')
+  } else {
+    code.push('if(y0<x0||x1<y0)continue;')
+  }
+
+  code.push('for(var k='+AXIS+'+1;k<'+DIMENSION+';++k){'+
+    'var r0='+RED_BOXES+'[k+'+RED_PTR+'],'+
+        'r1='+RED_BOXES+'[k+'+DIMENSION+'+'+RED_PTR+'],'+
+        'b0='+BLUE_BOXES+'[k+'+BLUE_PTR+'],'+
+        'b1='+BLUE_BOXES+'[k+'+DIMENSION+'+'+BLUE_PTR+'];'+
+      'if(r1<b0||b1<r0)continue ' + INNER_LABEL + ';}' +
+      'var ' + RETVAL + '=' + VISIT + '(')
+
+  if(flip) {
+    code.push('yi,xi')
+  } else {
+    code.push('xi,yi')
+  }
+
+  code.push(');if(' + RETVAL + '!==void 0)return ' + RETVAL + ';}}}')
+
+  return {
+    name: funcName, 
+    code: code.join('')
+  }
+}
+
+function bruteForcePlanner(full) {
+  var funcName = 'bruteForce' + (full ? 'Full' : 'Partial')
+  var prefix = []
+  var fargs = ARGS.slice()
+  if(!full) {
+    fargs.splice(3, 0, FLIP)
+  }
+
+  var code = ['function ' + funcName + '(' + fargs.join() + '){']
+
+  function invoke(redMajor, flip) {
+    var res = generateBruteForce(redMajor, flip, full)
+    prefix.push(res.code)
+    code.push('return ' + res.name + '(' + ARGS.join() + ');')
+  }
+
+  code.push('if(' + RED_END + '-' + RED_START + '>' +
+                    BLUE_END + '-' + BLUE_START + '){')
+
+  if(full) {
+    invoke(true, false)
+    code.push('}else{')
+    invoke(false, false)
+  } else {
+    code.push('if(' + FLIP + '){')
+    invoke(true, true)
+    code.push('}else{')
+    invoke(true, false)
+    code.push('}}else{if(' + FLIP + '){')
+    invoke(false, true)
+    code.push('}else{')
+    invoke(false, false)
+    code.push('}')
+  }
+  code.push('}}return ' + funcName)
+
+  var codeStr = prefix.join('') + code.join('')
+  var proc = new Function(codeStr)
+  return proc()
+}
+
+
+exports.partial = bruteForcePlanner(false)
+exports.full    = bruteForcePlanner(true)
+},{}],30:[function(require,module,exports){
+'use strict'
+
+module.exports = boxIntersectIter
+
+var pool = require('typedarray-pool')
+var bits = require('bit-twiddle')
+var bruteForce = require('./brute')
+var bruteForcePartial = bruteForce.partial
+var bruteForceFull = bruteForce.full
+var sweep = require('./sweep')
+var findMedian = require('./median')
+var genPartition = require('./partition')
+
+//Twiddle parameters
+var BRUTE_FORCE_CUTOFF    = 128       //Cut off for brute force search
+var SCAN_CUTOFF           = (1<<22)   //Cut off for two way scan
+var SCAN_COMPLETE_CUTOFF  = (1<<22)  
+
+//Partition functions
+var partitionInteriorContainsInterval = genPartition(
+  '!(lo>=p0)&&!(p1>=hi)', 
+  ['p0', 'p1'])
+
+var partitionStartEqual = genPartition(
+  'lo===p0',
+  ['p0'])
+
+var partitionStartLessThan = genPartition(
+  'lo<p0',
+  ['p0'])
+
+var partitionEndLessThanEqual = genPartition(
+  'hi<=p0',
+  ['p0'])
+
+var partitionContainsPoint = genPartition(
+  'lo<=p0&&p0<=hi',
+  ['p0'])
+
+var partitionContainsPointProper = genPartition(
+  'lo<p0&&p0<=hi',
+  ['p0'])
+
+//Frame size for iterative loop
+var IFRAME_SIZE = 6
+var DFRAME_SIZE = 2
+
+//Data for box statck
+var INIT_CAPACITY = 1024
+var BOX_ISTACK  = pool.mallocInt32(INIT_CAPACITY)
+var BOX_DSTACK  = pool.mallocDouble(INIT_CAPACITY)
+
+//Initialize iterative loop queue
+function iterInit(d, count) {
+  var levels = (8 * bits.log2(count+1) * (d+1))|0
+  var maxInts = bits.nextPow2(IFRAME_SIZE*levels)
+  if(BOX_ISTACK.length < maxInts) {
+    pool.free(BOX_ISTACK)
+    BOX_ISTACK = pool.mallocInt32(maxInts)
+  }
+  var maxDoubles = bits.nextPow2(DFRAME_SIZE*levels)
+  if(BOX_DSTACK < maxDoubles) {
+    pool.free(BOX_DSTACK)
+    BOX_DSTACK = pool.mallocDouble(maxDoubles)
+  }
+}
+
+//Append item to queue
+function iterPush(ptr,
+  axis, 
+  redStart, redEnd, 
+  blueStart, blueEnd, 
+  state, 
+  lo, hi) {
+
+  var iptr = IFRAME_SIZE * ptr
+  BOX_ISTACK[iptr]   = axis
+  BOX_ISTACK[iptr+1] = redStart
+  BOX_ISTACK[iptr+2] = redEnd
+  BOX_ISTACK[iptr+3] = blueStart
+  BOX_ISTACK[iptr+4] = blueEnd
+  BOX_ISTACK[iptr+5] = state
+
+  var dptr = DFRAME_SIZE * ptr
+  BOX_DSTACK[dptr]   = lo
+  BOX_DSTACK[dptr+1] = hi
+}
+
+//Special case:  Intersect single point with list of intervals
+function onePointPartial(
+  d, axis, visit, flip,
+  redStart, redEnd, red, redIndex,
+  blueOffset, blue, blueId) {
+
+  var elemSize = 2 * d
+  var bluePtr  = blueOffset * elemSize
+  var blueX    = blue[bluePtr + axis]
+
+red_loop:
+  for(var i=redStart, redPtr=redStart*elemSize; i<redEnd; ++i, redPtr+=elemSize) {
+    var r0 = red[redPtr+axis]
+    var r1 = red[redPtr+axis+d]
+    if(blueX < r0 || r1 < blueX) {
+      continue
+    }
+    if(flip && blueX === r0) {
+      continue
+    }
+    var redId = redIndex[i]
+    for(var j=axis+1; j<d; ++j) {
+      var r0 = red[redPtr+j]
+      var r1 = red[redPtr+j+d]
+      var b0 = blue[bluePtr+j]
+      var b1 = blue[bluePtr+j+d]
+      if(r1 < b0 || b1 < r0) {
+        continue red_loop
+      }
+    }
+    var retval
+    if(flip) {
+      retval = visit(blueId, redId)
+    } else {
+      retval = visit(redId, blueId)
+    }
+    if(retval !== void 0) {
+      return retval
+    }
+  }
+}
+
+//Special case:  Intersect one point with list of intervals
+function onePointFull(
+  d, axis, visit,
+  redStart, redEnd, red, redIndex,
+  blueOffset, blue, blueId) {
+
+  var elemSize = 2 * d
+  var bluePtr  = blueOffset * elemSize
+  var blueX    = blue[bluePtr + axis]
+
+red_loop:
+  for(var i=redStart, redPtr=redStart*elemSize; i<redEnd; ++i, redPtr+=elemSize) {
+    var redId = redIndex[i]
+    if(redId === blueId) {
+      continue
+    }
+    var r0 = red[redPtr+axis]
+    var r1 = red[redPtr+axis+d]
+    if(blueX < r0 || r1 < blueX) {
+      continue
+    }
+    for(var j=axis+1; j<d; ++j) {
+      var r0 = red[redPtr+j]
+      var r1 = red[redPtr+j+d]
+      var b0 = blue[bluePtr+j]
+      var b1 = blue[bluePtr+j+d]
+      if(r1 < b0 || b1 < r0) {
+        continue red_loop
+      }
+    }
+    var retval = visit(redId, blueId)
+    if(retval !== void 0) {
+      return retval
+    }
+  }
+}
+
+//The main box intersection routine
+function boxIntersectIter(
+  d, visit, initFull,
+  xSize, xBoxes, xIndex,
+  ySize, yBoxes, yIndex) {
+
+  //Reserve memory for stack
+  iterInit(d, xSize + ySize)
+
+  var top  = 0
+  var elemSize = 2 * d
+  var retval
+
+  iterPush(top++,
+      0,
+      0, xSize,
+      0, ySize,
+      initFull ? 16 : 0, 
+      -Infinity, Infinity)
+  if(!initFull) {
+    iterPush(top++,
+      0,
+      0, ySize,
+      0, xSize,
+      1, 
+      -Infinity, Infinity)
+  }
+
+  while(top > 0) {
+    top  -= 1
+
+    var iptr = top * IFRAME_SIZE
+    var axis      = BOX_ISTACK[iptr]
+    var redStart  = BOX_ISTACK[iptr+1]
+    var redEnd    = BOX_ISTACK[iptr+2]
+    var blueStart = BOX_ISTACK[iptr+3]
+    var blueEnd   = BOX_ISTACK[iptr+4]
+    var state     = BOX_ISTACK[iptr+5]
+
+    var dptr = top * DFRAME_SIZE
+    var lo        = BOX_DSTACK[dptr]
+    var hi        = BOX_DSTACK[dptr+1]
+
+    //Unpack state info
+    var flip      = (state & 1)
+    var full      = !!(state & 16)
+
+    //Unpack indices
+    var red       = xBoxes
+    var redIndex  = xIndex
+    var blue      = yBoxes
+    var blueIndex = yIndex
+    if(flip) {
+      red         = yBoxes
+      redIndex    = yIndex
+      blue        = xBoxes
+      blueIndex   = xIndex
+    }
+
+    if(state & 2) {
+      redEnd = partitionStartLessThan(
+        d, axis,
+        redStart, redEnd, red, redIndex,
+        hi)
+      if(redStart >= redEnd) {
+        continue
+      }
+    }
+    if(state & 4) {
+      redStart = partitionEndLessThanEqual(
+        d, axis,
+        redStart, redEnd, red, redIndex,
+        lo)
+      if(redStart >= redEnd) {
+        continue
+      }
+    }
+    
+    var redCount  = redEnd  - redStart
+    var blueCount = blueEnd - blueStart
+
+    if(full) {
+      if(d * redCount * (redCount + blueCount) < SCAN_COMPLETE_CUTOFF) {
+        retval = sweep.scanComplete(
+          d, axis, visit, 
+          redStart, redEnd, red, redIndex,
+          blueStart, blueEnd, blue, blueIndex)
+        if(retval !== void 0) {
+          return retval
+        }
+        continue
+      }
+    } else {
+      if(d * Math.min(redCount, blueCount) < BRUTE_FORCE_CUTOFF) {
+        //If input small, then use brute force
+        retval = bruteForcePartial(
+            d, axis, visit, flip,
+            redStart,  redEnd,  red,  redIndex,
+            blueStart, blueEnd, blue, blueIndex)
+        if(retval !== void 0) {
+          return retval
+        }
+        continue
+      } else if(d * redCount * blueCount < SCAN_CUTOFF) {
+        //If input medium sized, then use sweep and prune
+        retval = sweep.scanBipartite(
+          d, axis, visit, flip, 
+          redStart, redEnd, red, redIndex,
+          blueStart, blueEnd, blue, blueIndex)
+        if(retval !== void 0) {
+          return retval
+        }
+        continue
+      }
+    }
+    
+    //First, find all red intervals whose interior contains (lo,hi)
+    var red0 = partitionInteriorContainsInterval(
+      d, axis, 
+      redStart, redEnd, red, redIndex,
+      lo, hi)
+
+    //Lower dimensional case
+    if(redStart < red0) {
+
+      if(d * (red0 - redStart) < BRUTE_FORCE_CUTOFF) {
+        //Special case for small inputs: use brute force
+        retval = bruteForceFull(
+          d, axis+1, visit,
+          redStart, red0, red, redIndex,
+          blueStart, blueEnd, blue, blueIndex)
+        if(retval !== void 0) {
+          return retval
+        }
+      } else if(axis === d-2) {
+        if(flip) {
+          retval = sweep.sweepBipartite(
+            d, visit,
+            blueStart, blueEnd, blue, blueIndex,
+            redStart, red0, red, redIndex)
+        } else {
+          retval = sweep.sweepBipartite(
+            d, visit,
+            redStart, red0, red, redIndex,
+            blueStart, blueEnd, blue, blueIndex)
+        }
+        if(retval !== void 0) {
+          return retval
+        }
+      } else {
+        iterPush(top++,
+          axis+1,
+          redStart, red0,
+          blueStart, blueEnd,
+          flip,
+          -Infinity, Infinity)
+        iterPush(top++,
+          axis+1,
+          blueStart, blueEnd,
+          redStart, red0,
+          flip^1,
+          -Infinity, Infinity)
+      }
+    }
+
+    //Divide and conquer phase
+    if(red0 < redEnd) {
+
+      //Cut blue into 3 parts:
+      //
+      //  Points < mid point
+      //  Points = mid point
+      //  Points > mid point
+      //
+      var blue0 = findMedian(
+        d, axis, 
+        blueStart, blueEnd, blue, blueIndex)
+      var mid = blue[elemSize * blue0 + axis]
+      var blue1 = partitionStartEqual(
+        d, axis,
+        blue0, blueEnd, blue, blueIndex,
+        mid)
+
+      //Right case
+      if(blue1 < blueEnd) {
+        iterPush(top++,
+          axis,
+          red0, redEnd,
+          blue1, blueEnd,
+          (flip|4) + (full ? 16 : 0),
+          mid, hi)
+      }
+
+      //Left case
+      if(blueStart < blue0) {
+        iterPush(top++,
+          axis,
+          red0, redEnd,
+          blueStart, blue0,
+          (flip|2) + (full ? 16 : 0),
+          lo, mid)
+      }
+
+      //Center case (the hard part)
+      if(blue0 + 1 === blue1) {
+        //Optimization: Range with exactly 1 point, use a brute force scan
+        if(full) {
+          retval = onePointFull(
+            d, axis, visit,
+            red0, redEnd, red, redIndex,
+            blue0, blue, blueIndex[blue0])
+        } else {
+          retval = onePointPartial(
+            d, axis, visit, flip,
+            red0, redEnd, red, redIndex,
+            blue0, blue, blueIndex[blue0])
+        }
+        if(retval !== void 0) {
+          return retval
+        }
+      } else if(blue0 < blue1) {
+        var red1
+        if(full) {
+          //If full intersection, need to handle special case
+          red1 = partitionContainsPoint(
+            d, axis,
+            red0, redEnd, red, redIndex,
+            mid)
+          if(red0 < red1) {
+            var redX = partitionStartEqual(
+              d, axis,
+              red0, red1, red, redIndex,
+              mid)
+            if(axis === d-2) {
+              //Degenerate sweep intersection:
+              //  [red0, redX] with [blue0, blue1]
+              if(red0 < redX) {
+                retval = sweep.sweepComplete(
+                  d, visit,
+                  red0, redX, red, redIndex,
+                  blue0, blue1, blue, blueIndex)
+                if(retval !== void 0) {
+                  return retval
+                }
+              }
+
+              //Normal sweep intersection:
+              //  [redX, red1] with [blue0, blue1]
+              if(redX < red1) {
+                retval = sweep.sweepBipartite(
+                  d, visit,
+                  redX, red1, red, redIndex,
+                  blue0, blue1, blue, blueIndex)
+                if(retval !== void 0) {
+                  return retval
+                }
+              }
+            } else {
+              if(red0 < redX) {
+                iterPush(top++,
+                  axis+1,
+                  red0, redX,
+                  blue0, blue1,
+                  16,
+                  -Infinity, Infinity)
+              }
+              if(redX < red1) {
+                iterPush(top++,
+                  axis+1,
+                  redX, red1,
+                  blue0, blue1,
+                  0,
+                  -Infinity, Infinity)
+                iterPush(top++,
+                  axis+1,
+                  blue0, blue1,
+                  redX, red1,
+                  1,
+                  -Infinity, Infinity)
+              }
+            }
+          }
+        } else {
+          if(flip) {
+            red1 = partitionContainsPointProper(
+              d, axis,
+              red0, redEnd, red, redIndex,
+              mid)
+          } else {
+            red1 = partitionContainsPoint(
+              d, axis,
+              red0, redEnd, red, redIndex,
+              mid)
+          }
+          if(red0 < red1) {
+            if(axis === d-2) {
+              if(flip) {
+                retval = sweep.sweepBipartite(
+                  d, visit,
+                  blue0, blue1, blue, blueIndex,
+                  red0, red1, red, redIndex)
+              } else {
+                retval = sweep.sweepBipartite(
+                  d, visit,
+                  red0, red1, red, redIndex,
+                  blue0, blue1, blue, blueIndex)
+              }
+            } else {
+              iterPush(top++,
+                axis+1,
+                red0, red1,
+                blue0, blue1,
+                flip,
+                -Infinity, Infinity)
+              iterPush(top++,
+                axis+1,
+                blue0, blue1,
+                red0, red1,
+                flip^1,
+                -Infinity, Infinity)
+            }
+          }
+        }
+      }
+    }
+  }
+}
+},{"./brute":29,"./median":31,"./partition":32,"./sweep":34,"bit-twiddle":27,"typedarray-pool":39}],31:[function(require,module,exports){
+'use strict'
+
+module.exports = findMedian
+
+var genPartition = require('./partition')
+
+var partitionStartLessThan = genPartition('lo<p0', ['p0'])
+
+var PARTITION_THRESHOLD = 8   //Cut off for using insertion sort in findMedian
+
+//Base case for median finding:  Use insertion sort
+function insertionSort(d, axis, start, end, boxes, ids) {
+  var elemSize = 2 * d
+  var boxPtr = elemSize * (start+1) + axis
+  for(var i=start+1; i<end; ++i, boxPtr+=elemSize) {
+    var x = boxes[boxPtr]
+    for(var j=i, ptr=elemSize*(i-1); 
+        j>start && boxes[ptr+axis] > x; 
+        --j, ptr-=elemSize) {
+      //Swap
+      var aPtr = ptr
+      var bPtr = ptr+elemSize
+      for(var k=0; k<elemSize; ++k, ++aPtr, ++bPtr) {
+        var y = boxes[aPtr]
+        boxes[aPtr] = boxes[bPtr]
+        boxes[bPtr] = y
+      }
+      var tmp = ids[j]
+      ids[j] = ids[j-1]
+      ids[j-1] = tmp
+    }
+  }
+}
+
+//Find median using quick select algorithm
+//  takes O(n) time with high probability
+function findMedian(d, axis, start, end, boxes, ids) {
+  if(end <= start+1) {
+    return start
+  }
+
+  var lo       = start
+  var hi       = end
+  var mid      = ((end + start) >>> 1)
+  var elemSize = 2*d
+  var pivot    = mid
+  var value    = boxes[elemSize*mid+axis]
+  
+  while(lo < hi) {
+    if(hi - lo < PARTITION_THRESHOLD) {
+      insertionSort(d, axis, lo, hi, boxes, ids)
+      value = boxes[elemSize*mid+axis]
+      break
+    }
+    
+    //Select pivot using median-of-3
+    var count  = hi - lo
+    var pivot0 = (Math.random()*count+lo)|0
+    var value0 = boxes[elemSize*pivot0 + axis]
+    var pivot1 = (Math.random()*count+lo)|0
+    var value1 = boxes[elemSize*pivot1 + axis]
+    var pivot2 = (Math.random()*count+lo)|0
+    var value2 = boxes[elemSize*pivot2 + axis]
+    if(value0 <= value1) {
+      if(value2 >= value1) {
+        pivot = pivot1
+        value = value1
+      } else if(value0 >= value2) {
+        pivot = pivot0
+        value = value0
+      } else {
+        pivot = pivot2
+        value = value2
+      }
+    } else {
+      if(value1 >= value2) {
+        pivot = pivot1
+        value = value1
+      } else if(value2 >= value0) {
+        pivot = pivot0
+        value = value0
+      } else {
+        pivot = pivot2
+        value = value2
+      }
+    }
+
+    //Swap pivot to end of array
+    var aPtr = elemSize * (hi-1)
+    var bPtr = elemSize * pivot
+    for(var i=0; i<elemSize; ++i, ++aPtr, ++bPtr) {
+      var x = boxes[aPtr]
+      boxes[aPtr] = boxes[bPtr]
+      boxes[bPtr] = x
+    }
+    var y = ids[hi-1]
+    ids[hi-1] = ids[pivot]
+    ids[pivot] = y
+
+    //Partition using pivot
+    pivot = partitionStartLessThan(
+      d, axis, 
+      lo, hi-1, boxes, ids,
+      value)
+
+    //Swap pivot back
+    var aPtr = elemSize * (hi-1)
+    var bPtr = elemSize * pivot
+    for(var i=0; i<elemSize; ++i, ++aPtr, ++bPtr) {
+      var x = boxes[aPtr]
+      boxes[aPtr] = boxes[bPtr]
+      boxes[bPtr] = x
+    }
+    var y = ids[hi-1]
+    ids[hi-1] = ids[pivot]
+    ids[pivot] = y
+
+    //Swap pivot to last pivot
+    if(mid < pivot) {
+      hi = pivot-1
+      while(lo < hi && 
+        boxes[elemSize*(hi-1)+axis] === value) {
+        hi -= 1
+      }
+      hi += 1
+    } else if(pivot < mid) {
+      lo = pivot + 1
+      while(lo < hi &&
+        boxes[elemSize*lo+axis] === value) {
+        lo += 1
+      }
+    } else {
+      break
+    }
+  }
+
+  //Make sure pivot is at start
+  return partitionStartLessThan(
+    d, axis, 
+    start, mid, boxes, ids,
+    boxes[elemSize*mid+axis])
+}
+},{"./partition":32}],32:[function(require,module,exports){
+'use strict'
+
+module.exports = genPartition
+
+var code = 'for(var j=2*a,k=j*c,l=k,m=c,n=b,o=a+b,p=c;d>p;++p,k+=j){var _;if($)if(m===p)m+=1,l+=j;else{for(var s=0;j>s;++s){var t=e[k+s];e[k+s]=e[l],e[l++]=t}var u=f[p];f[p]=f[m],f[m++]=u}}return m'
+
+function genPartition(predicate, args) {
+  var fargs ='abcdef'.split('').concat(args)
+  var reads = []
+  if(predicate.indexOf('lo') >= 0) {
+    reads.push('lo=e[k+n]')
+  }
+  if(predicate.indexOf('hi') >= 0) {
+    reads.push('hi=e[k+o]')
+  }
+  fargs.push(
+    code.replace('_', reads.join())
+        .replace('$', predicate))
+  return Function.apply(void 0, fargs)
+}
+},{}],33:[function(require,module,exports){
+'use strict';
+
+//This code is extracted from ndarray-sort
+//It is inlined here as a temporary workaround
+
+module.exports = wrapper;
+
+var INSERT_SORT_CUTOFF = 32
+
+function wrapper(data, n0) {
+  if (n0 <= 4*INSERT_SORT_CUTOFF) {
+    insertionSort(0, n0 - 1, data);
+  } else {
+    quickSort(0, n0 - 1, data);
+  }
+}
+
+function insertionSort(left, right, data) {
+  var ptr = 2*(left+1)
+  for(var i=left+1; i<=right; ++i) {
+    var a = data[ptr++]
+    var b = data[ptr++]
+    var j = i
+    var jptr = ptr-2
+    while(j-- > left) {
+      var x = data[jptr-2]
+      var y = data[jptr-1]
+      if(x < a) {
+        break
+      } else if(x === a && y < b) {
+        break
+      }
+      data[jptr]   = x
+      data[jptr+1] = y
+      jptr -= 2
+    }
+    data[jptr]   = a
+    data[jptr+1] = b
+  }
+}
+
+function swap(i, j, data) {
+  i *= 2
+  j *= 2
+  var x = data[i]
+  var y = data[i+1]
+  data[i] = data[j]
+  data[i+1] = data[j+1]
+  data[j] = x
+  data[j+1] = y
+}
+
+function move(i, j, data) {
+  i *= 2
+  j *= 2
+  data[i] = data[j]
+  data[i+1] = data[j+1]
+}
+
+function rotate(i, j, k, data) {
+  i *= 2
+  j *= 2
+  k *= 2
+  var x = data[i]
+  var y = data[i+1]
+  data[i] = data[j]
+  data[i+1] = data[j+1]
+  data[j] = data[k]
+  data[j+1] = data[k+1]
+  data[k] = x
+  data[k+1] = y
+}
+
+function shufflePivot(i, j, px, py, data) {
+  i *= 2
+  j *= 2
+  data[i] = data[j]
+  data[j] = px
+  data[i+1] = data[j+1]
+  data[j+1] = py
+}
+
+function compare(i, j, data) {
+  i *= 2
+  j *= 2
+  var x = data[i],
+      y = data[j]
+  if(x < y) {
+    return false
+  } else if(x === y) {
+    return data[i+1] > data[j+1]
+  }
+  return true
+}
+
+function comparePivot(i, y, b, data) {
+  i *= 2
+  var x = data[i]
+  if(x < y) {
+    return true
+  } else if(x === y) {
+    return data[i+1] < b
+  }
+  return false
+}
+
+function quickSort(left, right, data) {
+  var sixth = (right - left + 1) / 6 | 0, 
+      index1 = left + sixth, 
+      index5 = right - sixth, 
+      index3 = left + right >> 1, 
+      index2 = index3 - sixth, 
+      index4 = index3 + sixth, 
+      el1 = index1, 
+      el2 = index2, 
+      el3 = index3, 
+      el4 = index4, 
+      el5 = index5, 
+      less = left + 1, 
+      great = right - 1, 
+      tmp = 0
+  if(compare(el1, el2, data)) {
+    tmp = el1
+    el1 = el2
+    el2 = tmp
+  }
+  if(compare(el4, el5, data)) {
+    tmp = el4
+    el4 = el5
+    el5 = tmp
+  }
+  if(compare(el1, el3, data)) {
+    tmp = el1
+    el1 = el3
+    el3 = tmp
+  }
+  if(compare(el2, el3, data)) {
+    tmp = el2
+    el2 = el3
+    el3 = tmp
+  }
+  if(compare(el1, el4, data)) {
+    tmp = el1
+    el1 = el4
+    el4 = tmp
+  }
+  if(compare(el3, el4, data)) {
+    tmp = el3
+    el3 = el4
+    el4 = tmp
+  }
+  if(compare(el2, el5, data)) {
+    tmp = el2
+    el2 = el5
+    el5 = tmp
+  }
+  if(compare(el2, el3, data)) {
+    tmp = el2
+    el2 = el3
+    el3 = tmp
+  }
+  if(compare(el4, el5, data)) {
+    tmp = el4
+    el4 = el5
+    el5 = tmp
+  }
+
+  var pivot1X = data[2*el2]
+  var pivot1Y = data[2*el2+1]
+  var pivot2X = data[2*el4]
+  var pivot2Y = data[2*el4+1]
+
+  var ptr0 = 2 * el1;
+  var ptr2 = 2 * el3;
+  var ptr4 = 2 * el5;
+  var ptr5 = 2 * index1;
+  var ptr6 = 2 * index3;
+  var ptr7 = 2 * index5;
+  for (var i1 = 0; i1 < 2; ++i1) {
+    var x = data[ptr0+i1];
+    var y = data[ptr2+i1];
+    var z = data[ptr4+i1];
+    data[ptr5+i1] = x;
+    data[ptr6+i1] = y;
+    data[ptr7+i1] = z;
+  }
+
+  move(index2, left, data)
+  move(index4, right, data)
+  for (var k = less; k <= great; ++k) {
+    if (comparePivot(k, pivot1X, pivot1Y, data)) {
+      if (k !== less) {
+        swap(k, less, data)
+      }
+      ++less;
+    } else {
+      if (!comparePivot(k, pivot2X, pivot2Y, data)) {
+        while (true) {
+          if (!comparePivot(great, pivot2X, pivot2Y, data)) {
+            if (--great < k) {
+              break;
+            }
+            continue;
+          } else {
+            if (comparePivot(great, pivot1X, pivot1Y, data)) {
+              rotate(k, less, great, data)
+              ++less;
+              --great;
+            } else {
+              swap(k, great, data)
+              --great;
+            }
+            break;
+          }
+        }
+      }
+    }
+  }
+  shufflePivot(left, less-1, pivot1X, pivot1Y, data)
+  shufflePivot(right, great+1, pivot2X, pivot2Y, data)
+  if (less - 2 - left <= INSERT_SORT_CUTOFF) {
+    insertionSort(left, less - 2, data);
+  } else {
+    quickSort(left, less - 2, data);
+  }
+  if (right - (great + 2) <= INSERT_SORT_CUTOFF) {
+    insertionSort(great + 2, right, data);
+  } else {
+    quickSort(great + 2, right, data);
+  }
+  if (great - less <= INSERT_SORT_CUTOFF) {
+    insertionSort(less, great, data);
+  } else {
+    quickSort(less, great, data);
+  }
+}
+},{}],34:[function(require,module,exports){
+'use strict'
+
+module.exports = {
+  init:           sqInit,
+  sweepBipartite: sweepBipartite,
+  sweepComplete:  sweepComplete,
+  scanBipartite:  scanBipartite,
+  scanComplete:   scanComplete
+}
+
+var pool  = require('typedarray-pool')
+var bits  = require('bit-twiddle')
+var isort = require('./sort')
+
+//Flag for blue
+var BLUE_FLAG = (1<<28)
+
+//1D sweep event queue stuff (use pool to save space)
+var INIT_CAPACITY      = 1024
+var RED_SWEEP_QUEUE    = pool.mallocInt32(INIT_CAPACITY)
+var RED_SWEEP_INDEX    = pool.mallocInt32(INIT_CAPACITY)
+var BLUE_SWEEP_QUEUE   = pool.mallocInt32(INIT_CAPACITY)
+var BLUE_SWEEP_INDEX   = pool.mallocInt32(INIT_CAPACITY)
+var COMMON_SWEEP_QUEUE = pool.mallocInt32(INIT_CAPACITY)
+var COMMON_SWEEP_INDEX = pool.mallocInt32(INIT_CAPACITY)
+var SWEEP_EVENTS       = pool.mallocDouble(INIT_CAPACITY * 8)
+
+//Reserves memory for the 1D sweep data structures
+function sqInit(count) {
+  var rcount = bits.nextPow2(count)
+  if(RED_SWEEP_QUEUE.length < rcount) {
+    pool.free(RED_SWEEP_QUEUE)
+    RED_SWEEP_QUEUE = pool.mallocInt32(rcount)
+  }
+  if(RED_SWEEP_INDEX.length < rcount) {
+    pool.free(RED_SWEEP_INDEX)
+    RED_SWEEP_INDEX = pool.mallocInt32(rcount)
+  }
+  if(BLUE_SWEEP_QUEUE.length < rcount) {
+    pool.free(BLUE_SWEEP_QUEUE)
+    BLUE_SWEEP_QUEUE = pool.mallocInt32(rcount)
+  }
+  if(BLUE_SWEEP_INDEX.length < rcount) {
+    pool.free(BLUE_SWEEP_INDEX)
+    BLUE_SWEEP_INDEX = pool.mallocInt32(rcount)
+  }
+  if(COMMON_SWEEP_QUEUE.length < rcount) {
+    pool.free(COMMON_SWEEP_QUEUE)
+    COMMON_SWEEP_QUEUE = pool.mallocInt32(rcount)
+  }
+  if(COMMON_SWEEP_INDEX.length < rcount) {
+    pool.free(COMMON_SWEEP_INDEX)
+    COMMON_SWEEP_INDEX = pool.mallocInt32(rcount)
+  }
+  var eventLength = 8 * rcount
+  if(SWEEP_EVENTS.length < eventLength) {
+    pool.free(SWEEP_EVENTS)
+    SWEEP_EVENTS = pool.mallocDouble(eventLength)
+  }
+}
+
+//Remove an item from the active queue in O(1)
+function sqPop(queue, index, count, item) {
+  var idx = index[item]
+  var top = queue[count-1]
+  queue[idx] = top
+  index[top] = idx
+}
+
+//Insert an item into the active queue in O(1)
+function sqPush(queue, index, count, item) {
+  queue[count] = item
+  index[item]  = count
+}
+
+//Recursion base case: use 1D sweep algorithm
+function sweepBipartite(
+    d, visit,
+    redStart,  redEnd, red, redIndex,
+    blueStart, blueEnd, blue, blueIndex) {
+
+  //store events as pairs [coordinate, idx]
+  //
+  //  red create:  -(idx+1)
+  //  red destroy: idx
+  //  blue create: -(idx+BLUE_FLAG)
+  //  blue destroy: idx+BLUE_FLAG
+  //
+  var ptr      = 0
+  var elemSize = 2*d
+  var istart   = d-1
+  var iend     = elemSize-1
+
+  for(var i=redStart; i<redEnd; ++i) {
+    var idx = redIndex[i]
+    var redOffset = elemSize*i
+    SWEEP_EVENTS[ptr++] = red[redOffset+istart]
+    SWEEP_EVENTS[ptr++] = -(idx+1)
+    SWEEP_EVENTS[ptr++] = red[redOffset+iend]
+    SWEEP_EVENTS[ptr++] = idx
+  }
+
+  for(var i=blueStart; i<blueEnd; ++i) {
+    var idx = blueIndex[i]+BLUE_FLAG
+    var blueOffset = elemSize*i
+    SWEEP_EVENTS[ptr++] = blue[blueOffset+istart]
+    SWEEP_EVENTS[ptr++] = -idx
+    SWEEP_EVENTS[ptr++] = blue[blueOffset+iend]
+    SWEEP_EVENTS[ptr++] = idx
+  }
+
+  //process events from left->right
+  var n = ptr >>> 1
+  isort(SWEEP_EVENTS, n)
+  
+  var redActive  = 0
+  var blueActive = 0
+  for(var i=0; i<n; ++i) {
+    var e = SWEEP_EVENTS[2*i+1]|0
+    if(e >= BLUE_FLAG) {
+      //blue destroy event
+      e = (e-BLUE_FLAG)|0
+      sqPop(BLUE_SWEEP_QUEUE, BLUE_SWEEP_INDEX, blueActive--, e)
+    } else if(e >= 0) {
+      //red destroy event
+      sqPop(RED_SWEEP_QUEUE, RED_SWEEP_INDEX, redActive--, e)
+    } else if(e <= -BLUE_FLAG) {
+      //blue create event
+      e = (-e-BLUE_FLAG)|0
+      for(var j=0; j<redActive; ++j) {
+        var retval = visit(RED_SWEEP_QUEUE[j], e)
+        if(retval !== void 0) {
+          return retval
+        }
+      }
+      sqPush(BLUE_SWEEP_QUEUE, BLUE_SWEEP_INDEX, blueActive++, e)
+    } else {
+      //red create event
+      e = (-e-1)|0
+      for(var j=0; j<blueActive; ++j) {
+        var retval = visit(e, BLUE_SWEEP_QUEUE[j])
+        if(retval !== void 0) {
+          return retval
+        }
+      }
+      sqPush(RED_SWEEP_QUEUE, RED_SWEEP_INDEX, redActive++, e)
+    }
+  }
+}
+
+//Complete sweep
+function sweepComplete(d, visit, 
+  redStart, redEnd, red, redIndex,
+  blueStart, blueEnd, blue, blueIndex) {
+
+  var ptr      = 0
+  var elemSize = 2*d
+  var istart   = d-1
+  var iend     = elemSize-1
+
+  for(var i=redStart; i<redEnd; ++i) {
+    var idx = (redIndex[i]+1)<<1
+    var redOffset = elemSize*i
+    SWEEP_EVENTS[ptr++] = red[redOffset+istart]
+    SWEEP_EVENTS[ptr++] = -idx
+    SWEEP_EVENTS[ptr++] = red[redOffset+iend]
+    SWEEP_EVENTS[ptr++] = idx
+  }
+
+  for(var i=blueStart; i<blueEnd; ++i) {
+    var idx = (blueIndex[i]+1)<<1
+    var blueOffset = elemSize*i
+    SWEEP_EVENTS[ptr++] = blue[blueOffset+istart]
+    SWEEP_EVENTS[ptr++] = (-idx)|1
+    SWEEP_EVENTS[ptr++] = blue[blueOffset+iend]
+    SWEEP_EVENTS[ptr++] = idx|1
+  }
+
+  //process events from left->right
+  var n = ptr >>> 1
+  isort(SWEEP_EVENTS, n)
+  
+  var redActive    = 0
+  var blueActive   = 0
+  var commonActive = 0
+  for(var i=0; i<n; ++i) {
+    var e     = SWEEP_EVENTS[2*i+1]|0
+    var color = e&1
+    if(i < n-1 && (e>>1) === (SWEEP_EVENTS[2*i+3]>>1)) {
+      color = 2
+      i += 1
+    }
+    
+    if(e < 0) {
+      //Create event
+      var id = -(e>>1) - 1
+
+      //Intersect with common
+      for(var j=0; j<commonActive; ++j) {
+        var retval = visit(COMMON_SWEEP_QUEUE[j], id)
+        if(retval !== void 0) {
+          return retval
+        }
+      }
+
+      if(color !== 0) {
+        //Intersect with red
+        for(var j=0; j<redActive; ++j) {
+          var retval = visit(RED_SWEEP_QUEUE[j], id)
+          if(retval !== void 0) {
+            return retval
+          }
+        }
+      }
+
+      if(color !== 1) {
+        //Intersect with blue
+        for(var j=0; j<blueActive; ++j) {
+          var retval = visit(BLUE_SWEEP_QUEUE[j], id)
+          if(retval !== void 0) {
+            return retval
+          }
+        }
+      }
+
+      if(color === 0) {
+        //Red
+        sqPush(RED_SWEEP_QUEUE, RED_SWEEP_INDEX, redActive++, id)
+      } else if(color === 1) {
+        //Blue
+        sqPush(BLUE_SWEEP_QUEUE, BLUE_SWEEP_INDEX, blueActive++, id)
+      } else if(color === 2) {
+        //Both
+        sqPush(COMMON_SWEEP_QUEUE, COMMON_SWEEP_INDEX, commonActive++, id)
+      }
+    } else {
+      //Destroy event
+      var id = (e>>1) - 1
+      if(color === 0) {
+        //Red
+        sqPop(RED_SWEEP_QUEUE, RED_SWEEP_INDEX, redActive--, id)
+      } else if(color === 1) {
+        //Blue
+        sqPop(BLUE_SWEEP_QUEUE, BLUE_SWEEP_INDEX, blueActive--, id)
+      } else if(color === 2) {
+        //Both
+        sqPop(COMMON_SWEEP_QUEUE, COMMON_SWEEP_INDEX, commonActive--, id)
+      }
+    }
+  }
+}
+
+//Sweep and prune/scanline algorithm:
+//  Scan along axis, detect intersections
+//  Brute force all boxes along axis
+function scanBipartite(
+  d, axis, visit, flip,
+  redStart,  redEnd, red, redIndex,
+  blueStart, blueEnd, blue, blueIndex) {
+  
+  var ptr      = 0
+  var elemSize = 2*d
+  var istart   = axis
+  var iend     = axis+d
+
+  var redShift  = 1
+  var blueShift = 1
+  if(flip) {
+    blueShift = BLUE_FLAG
+  } else {
+    redShift  = BLUE_FLAG
+  }
+
+  for(var i=redStart; i<redEnd; ++i) {
+    var idx = i + redShift
+    var redOffset = elemSize*i
+    SWEEP_EVENTS[ptr++] = red[redOffset+istart]
+    SWEEP_EVENTS[ptr++] = -idx
+    SWEEP_EVENTS[ptr++] = red[redOffset+iend]
+    SWEEP_EVENTS[ptr++] = idx
+  }
+  for(var i=blueStart; i<blueEnd; ++i) {
+    var idx = i + blueShift
+    var blueOffset = elemSize*i
+    SWEEP_EVENTS[ptr++] = blue[blueOffset+istart]
+    SWEEP_EVENTS[ptr++] = -idx
+  }
+
+  //process events from left->right
+  var n = ptr >>> 1
+  isort(SWEEP_EVENTS, n)
+  
+  var redActive    = 0
+  for(var i=0; i<n; ++i) {
+    var e = SWEEP_EVENTS[2*i+1]|0
+    if(e < 0) {
+      var idx   = -e
+      var isRed = false
+      if(idx >= BLUE_FLAG) {
+        isRed = !flip
+        idx -= BLUE_FLAG 
+      } else {
+        isRed = !!flip
+        idx -= 1
+      }
+      if(isRed) {
+        sqPush(RED_SWEEP_QUEUE, RED_SWEEP_INDEX, redActive++, idx)
+      } else {
+        var blueId  = blueIndex[idx]
+        var bluePtr = elemSize * idx
+        
+        var b0 = blue[bluePtr+axis+1]
+        var b1 = blue[bluePtr+axis+1+d]
+
+red_loop:
+        for(var j=0; j<redActive; ++j) {
+          var oidx   = RED_SWEEP_QUEUE[j]
+          var redPtr = elemSize * oidx
+
+          if(b1 < red[redPtr+axis+1] || 
+             red[redPtr+axis+1+d] < b0) {
+            continue
+          }
+
+          for(var k=axis+2; k<d; ++k) {
+            if(blue[bluePtr + k + d] < red[redPtr + k] || 
+               red[redPtr + k + d] < blue[bluePtr + k]) {
+              continue red_loop
+            }
+          }
+
+          var redId  = redIndex[oidx]
+          var retval
+          if(flip) {
+            retval = visit(blueId, redId)
+          } else {
+            retval = visit(redId, blueId)
+          }
+          if(retval !== void 0) {
+            return retval 
+          }
+        }
+      }
+    } else {
+      sqPop(RED_SWEEP_QUEUE, RED_SWEEP_INDEX, redActive--, e - redShift)
+    }
+  }
+}
+
+function scanComplete(
+  d, axis, visit,
+  redStart,  redEnd, red, redIndex,
+  blueStart, blueEnd, blue, blueIndex) {
+
+  var ptr      = 0
+  var elemSize = 2*d
+  var istart   = axis
+  var iend     = axis+d
+
+  for(var i=redStart; i<redEnd; ++i) {
+    var idx = i + BLUE_FLAG
+    var redOffset = elemSize*i
+    SWEEP_EVENTS[ptr++] = red[redOffset+istart]
+    SWEEP_EVENTS[ptr++] = -idx
+    SWEEP_EVENTS[ptr++] = red[redOffset+iend]
+    SWEEP_EVENTS[ptr++] = idx
+  }
+  for(var i=blueStart; i<blueEnd; ++i) {
+    var idx = i + 1
+    var blueOffset = elemSize*i
+    SWEEP_EVENTS[ptr++] = blue[blueOffset+istart]
+    SWEEP_EVENTS[ptr++] = -idx
+  }
+
+  //process events from left->right
+  var n = ptr >>> 1
+  isort(SWEEP_EVENTS, n)
+  
+  var redActive    = 0
+  for(var i=0; i<n; ++i) {
+    var e = SWEEP_EVENTS[2*i+1]|0
+    if(e < 0) {
+      var idx   = -e
+      if(idx >= BLUE_FLAG) {
+        RED_SWEEP_QUEUE[redActive++] = idx - BLUE_FLAG
+      } else {
+        idx -= 1
+        var blueId  = blueIndex[idx]
+        var bluePtr = elemSize * idx
+
+        var b0 = blue[bluePtr+axis+1]
+        var b1 = blue[bluePtr+axis+1+d]
+
+red_loop:
+        for(var j=0; j<redActive; ++j) {
+          var oidx   = RED_SWEEP_QUEUE[j]
+          var redId  = redIndex[oidx]
+
+          if(redId === blueId) {
+            break
+          }
+
+          var redPtr = elemSize * oidx
+          if(b1 < red[redPtr+axis+1] || 
+            red[redPtr+axis+1+d] < b0) {
+            continue
+          }
+          for(var k=axis+2; k<d; ++k) {
+            if(blue[bluePtr + k + d] < red[redPtr + k] || 
+               red[redPtr + k + d]   < blue[bluePtr + k]) {
+              continue red_loop
+            }
+          }
+
+          var retval = visit(redId, blueId)
+          if(retval !== void 0) {
+            return retval 
+          }
+        }
+      }
+    } else {
+      var idx = e - BLUE_FLAG
+      for(var j=redActive-1; j>=0; --j) {
+        if(RED_SWEEP_QUEUE[j] === idx) {
+          for(var k=j+1; k<redActive; ++k) {
+            RED_SWEEP_QUEUE[k-1] = RED_SWEEP_QUEUE[k]
+          }
+          break
+        }
+      }
+      --redActive
+    }
+  }
+}
+},{"./sort":33,"bit-twiddle":27,"typedarray-pool":39}],35:[function(require,module,exports){
+"use strict"
+
+function dupe_array(count, value, i) {
+  var c = count[i]|0
+  if(c <= 0) {
+    return []
+  }
+  var result = new Array(c), j
+  if(i === count.length-1) {
+    for(j=0; j<c; ++j) {
+      result[j] = value
+    }
+  } else {
+    for(j=0; j<c; ++j) {
+      result[j] = dupe_array(count, value, i+1)
+    }
+  }
+  return result
+}
+
+function dupe_number(count, value) {
+  var result, i
+  result = new Array(count)
+  for(i=0; i<count; ++i) {
+    result[i] = value
+  }
+  return result
+}
+
+function dupe(count, value) {
+  if(typeof value === "undefined") {
+    value = 0
+  }
+  switch(typeof count) {
+    case "number":
+      if(count > 0) {
+        return dupe_number(count|0, value)
+      }
+    break
+    case "object":
+      if(typeof (count.length) === "number") {
+        return dupe_array(count, value, 0)
+      }
+    break
+  }
+  return []
+}
+
+module.exports = dupe
+},{}],36:[function(require,module,exports){
 module.exports = fullscreen
 fullscreen.available = available
 
@@ -4675,7 +6546,7 @@ function shim(el) {
     el.msRequestFullscreen);
 }
 
-},{"add-event-listener":26,"events":6}],28:[function(require,module,exports){
+},{"add-event-listener":26,"events":6}],37:[function(require,module,exports){
 module.exports = pointer
 
 pointer.available = available
@@ -4840,7 +6711,231 @@ function shim(el) {
     null
 }
 
-},{"events":6,"stream":23}],29:[function(require,module,exports){
+},{"events":6,"stream":23}],38:[function(require,module,exports){
+// stats.js - http://github.com/mrdoob/stats.js
+var Stats=function(){function h(a){c.appendChild(a.dom);return a}function k(a){for(var d=0;d<c.children.length;d++)c.children[d].style.display=d===a?"block":"none";l=a}var l=0,c=document.createElement("div");c.style.cssText="position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000";c.addEventListener("click",function(a){a.preventDefault();k(++l%c.children.length)},!1);var g=(performance||Date).now(),e=g,a=0,r=h(new Stats.Panel("FPS","#0ff","#002")),f=h(new Stats.Panel("MS","#0f0","#020"));
+if(self.performance&&self.performance.memory)var t=h(new Stats.Panel("MB","#f08","#201"));k(0);return{REVISION:16,dom:c,addPanel:h,showPanel:k,begin:function(){g=(performance||Date).now()},end:function(){a++;var c=(performance||Date).now();f.update(c-g,200);if(c>e+1E3&&(r.update(1E3*a/(c-e),100),e=c,a=0,t)){var d=performance.memory;t.update(d.usedJSHeapSize/1048576,d.jsHeapSizeLimit/1048576)}return c},update:function(){g=this.end()},domElement:c,setMode:k}};
+Stats.Panel=function(h,k,l){var c=Infinity,g=0,e=Math.round,a=e(window.devicePixelRatio||1),r=80*a,f=48*a,t=3*a,u=2*a,d=3*a,m=15*a,n=74*a,p=30*a,q=document.createElement("canvas");q.width=r;q.height=f;q.style.cssText="width:80px;height:48px";var b=q.getContext("2d");b.font="bold "+9*a+"px Helvetica,Arial,sans-serif";b.textBaseline="top";b.fillStyle=l;b.fillRect(0,0,r,f);b.fillStyle=k;b.fillText(h,t,u);b.fillRect(d,m,n,p);b.fillStyle=l;b.globalAlpha=.9;b.fillRect(d,m,n,p);return{dom:q,update:function(f,
+v){c=Math.min(c,f);g=Math.max(g,f);b.fillStyle=l;b.globalAlpha=1;b.fillRect(0,0,r,m);b.fillStyle=k;b.fillText(e(f)+" "+h+" ("+e(c)+"-"+e(g)+")",t,u);b.drawImage(q,d+a,m,n-a,p,d,m,n-a,p);b.fillRect(d+n-a,m,a,p);b.fillStyle=l;b.globalAlpha=.9;b.fillRect(d+n-a,m,a,e((1-f/v)*p))}}};"object"===typeof module&&(module.exports=Stats);
+
+},{}],39:[function(require,module,exports){
+(function (global,Buffer){
+'use strict'
+
+var bits = require('bit-twiddle')
+var dup = require('dup')
+
+//Legacy pool support
+if(!global.__TYPEDARRAY_POOL) {
+  global.__TYPEDARRAY_POOL = {
+      UINT8   : dup([32, 0])
+    , UINT16  : dup([32, 0])
+    , UINT32  : dup([32, 0])
+    , INT8    : dup([32, 0])
+    , INT16   : dup([32, 0])
+    , INT32   : dup([32, 0])
+    , FLOAT   : dup([32, 0])
+    , DOUBLE  : dup([32, 0])
+    , DATA    : dup([32, 0])
+    , UINT8C  : dup([32, 0])
+    , BUFFER  : dup([32, 0])
+  }
+}
+
+var hasUint8C = (typeof Uint8ClampedArray) !== 'undefined'
+var POOL = global.__TYPEDARRAY_POOL
+
+//Upgrade pool
+if(!POOL.UINT8C) {
+  POOL.UINT8C = dup([32, 0])
+}
+if(!POOL.BUFFER) {
+  POOL.BUFFER = dup([32, 0])
+}
+
+//New technique: Only allocate from ArrayBufferView and Buffer
+var DATA    = POOL.DATA
+  , BUFFER  = POOL.BUFFER
+
+exports.free = function free(array) {
+  if(Buffer.isBuffer(array)) {
+    BUFFER[bits.log2(array.length)].push(array)
+  } else {
+    if(Object.prototype.toString.call(array) !== '[object ArrayBuffer]') {
+      array = array.buffer
+    }
+    if(!array) {
+      return
+    }
+    var n = array.length || array.byteLength
+    var log_n = bits.log2(n)|0
+    DATA[log_n].push(array)
+  }
+}
+
+function freeArrayBuffer(buffer) {
+  if(!buffer) {
+    return
+  }
+  var n = buffer.length || buffer.byteLength
+  var log_n = bits.log2(n)
+  DATA[log_n].push(buffer)
+}
+
+function freeTypedArray(array) {
+  freeArrayBuffer(array.buffer)
+}
+
+exports.freeUint8 =
+exports.freeUint16 =
+exports.freeUint32 =
+exports.freeInt8 =
+exports.freeInt16 =
+exports.freeInt32 =
+exports.freeFloat32 = 
+exports.freeFloat =
+exports.freeFloat64 = 
+exports.freeDouble = 
+exports.freeUint8Clamped = 
+exports.freeDataView = freeTypedArray
+
+exports.freeArrayBuffer = freeArrayBuffer
+
+exports.freeBuffer = function freeBuffer(array) {
+  BUFFER[bits.log2(array.length)].push(array)
+}
+
+exports.malloc = function malloc(n, dtype) {
+  if(dtype === undefined || dtype === 'arraybuffer') {
+    return mallocArrayBuffer(n)
+  } else {
+    switch(dtype) {
+      case 'uint8':
+        return mallocUint8(n)
+      case 'uint16':
+        return mallocUint16(n)
+      case 'uint32':
+        return mallocUint32(n)
+      case 'int8':
+        return mallocInt8(n)
+      case 'int16':
+        return mallocInt16(n)
+      case 'int32':
+        return mallocInt32(n)
+      case 'float':
+      case 'float32':
+        return mallocFloat(n)
+      case 'double':
+      case 'float64':
+        return mallocDouble(n)
+      case 'uint8_clamped':
+        return mallocUint8Clamped(n)
+      case 'buffer':
+        return mallocBuffer(n)
+      case 'data':
+      case 'dataview':
+        return mallocDataView(n)
+
+      default:
+        return null
+    }
+  }
+  return null
+}
+
+function mallocArrayBuffer(n) {
+  var n = bits.nextPow2(n)
+  var log_n = bits.log2(n)
+  var d = DATA[log_n]
+  if(d.length > 0) {
+    return d.pop()
+  }
+  return new ArrayBuffer(n)
+}
+exports.mallocArrayBuffer = mallocArrayBuffer
+
+function mallocUint8(n) {
+  return new Uint8Array(mallocArrayBuffer(n), 0, n)
+}
+exports.mallocUint8 = mallocUint8
+
+function mallocUint16(n) {
+  return new Uint16Array(mallocArrayBuffer(2*n), 0, n)
+}
+exports.mallocUint16 = mallocUint16
+
+function mallocUint32(n) {
+  return new Uint32Array(mallocArrayBuffer(4*n), 0, n)
+}
+exports.mallocUint32 = mallocUint32
+
+function mallocInt8(n) {
+  return new Int8Array(mallocArrayBuffer(n), 0, n)
+}
+exports.mallocInt8 = mallocInt8
+
+function mallocInt16(n) {
+  return new Int16Array(mallocArrayBuffer(2*n), 0, n)
+}
+exports.mallocInt16 = mallocInt16
+
+function mallocInt32(n) {
+  return new Int32Array(mallocArrayBuffer(4*n), 0, n)
+}
+exports.mallocInt32 = mallocInt32
+
+function mallocFloat(n) {
+  return new Float32Array(mallocArrayBuffer(4*n), 0, n)
+}
+exports.mallocFloat32 = exports.mallocFloat = mallocFloat
+
+function mallocDouble(n) {
+  return new Float64Array(mallocArrayBuffer(8*n), 0, n)
+}
+exports.mallocFloat64 = exports.mallocDouble = mallocDouble
+
+function mallocUint8Clamped(n) {
+  if(hasUint8C) {
+    return new Uint8ClampedArray(mallocArrayBuffer(n), 0, n)
+  } else {
+    return mallocUint8(n)
+  }
+}
+exports.mallocUint8Clamped = mallocUint8Clamped
+
+function mallocDataView(n) {
+  return new DataView(mallocArrayBuffer(n), 0, n)
+}
+exports.mallocDataView = mallocDataView
+
+function mallocBuffer(n) {
+  n = bits.nextPow2(n)
+  var log_n = bits.log2(n)
+  var cache = BUFFER[log_n]
+  if(cache.length > 0) {
+    return cache.pop()
+  }
+  return new Buffer(n)
+}
+exports.mallocBuffer = mallocBuffer
+
+exports.clearCache = function clearCache() {
+  for(var i=0; i<32; ++i) {
+    POOL.UINT8[i].length = 0
+    POOL.UINT16[i].length = 0
+    POOL.UINT32[i].length = 0
+    POOL.INT8[i].length = 0
+    POOL.INT16[i].length = 0
+    POOL.INT32[i].length = 0
+    POOL.FLOAT[i].length = 0
+    POOL.DOUBLE[i].length = 0
+    POOL.UINT8C[i].length = 0
+    DATA[i].length = 0
+    BUFFER[i].length = 0
+  }
+}
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
+},{"bit-twiddle":27,"buffer":3,"dup":35}],40:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4902,7 +6997,97 @@ var Clouds = function () {
 
 exports.default = Clouds;
 
-},{"./util/video360":36}],30:[function(require,module,exports){
+},{"./util/video360":48}],41:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
+
+var _boxIntersect = require("box-intersect");
+
+var _boxIntersect2 = _interopRequireDefault(_boxIntersect);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+var PLAYER_SIZE = {
+    x: 2,
+    y: 100,
+    z: 2
+};
+
+var CollisionManager = function () {
+    function CollisionManager() {
+        _classCallCheck(this, CollisionManager);
+
+        console.log("Collision Manager constructed!");
+
+        this.obstacles = [];
+        this.playerBox = [[0, 0, 0, 0, 0, 0]];
+    }
+
+    _createClass(CollisionManager, [{
+        key: "init",
+        value: function init() {}
+    }, {
+        key: "update",
+        value: function update(dt) {
+            this.playerBox[0] = [this.player.position.x - PLAYER_SIZE.x / 2, this.player.position.y - PLAYER_SIZE.y / 2, this.player.position.z - PLAYER_SIZE.z / 2, this.player.position.x + PLAYER_SIZE.x / 2, this.player.position.y + PLAYER_SIZE.y / 2, this.player.position.z + PLAYER_SIZE.z / 2];
+            this.crossing = (0, _boxIntersect2.default)(this.playerBox, this.obstacles);
+        }
+    }, {
+        key: "setPlayer",
+        value: function setPlayer(player) {
+            this.player = player;
+        }
+    }, {
+        key: "addBoundingBoxes",
+        value: function addBoundingBoxes(obj, scene) {
+            var _this = this;
+
+            console.log("Add bounding boxes from ", obj);
+            obj.traverse(function (child) {
+                if (child.type == "Object3D" && (child.name == "Object_1077" || child.name == "Object_1110" || child.name == "Object_1111")) {
+                    console.log(child);
+                    var bbox = new THREE.BoundingBoxHelper(child, 0x00ff00);
+                    bbox.update();
+                    //scene.add(bbox);
+
+                    _this.obstacles.push([bbox.box.min.x, bbox.box.min.y, bbox.box.min.z, bbox.box.max.x, bbox.box.max.y, bbox.box.max.z]);
+                }
+            });
+        }
+    }, {
+        key: "isClimbingStairs",
+        value: function isClimbingStairs() {
+            return this.crossing.length > 0;
+        }
+    }]);
+
+    return CollisionManager;
+}();
+
+exports.default = CollisionManager;
+
+},{"box-intersect":28}],42:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4912,7 +7097,7 @@ exports.default = {
     controls: "locked"
 };
 
-},{}],31:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4936,6 +7121,10 @@ var _sky2 = _interopRequireDefault(_sky);
 var _square = require('./square');
 
 var _square2 = _interopRequireDefault(_square);
+
+var _collision_manager = require('./collision_manager');
+
+var _collision_manager2 = _interopRequireDefault(_collision_manager);
 
 var _keyboard_controller = require('./keyboard_controller');
 
@@ -4962,13 +7151,12 @@ var Game = function () {
     _createClass(Game, [{
         key: 'init',
         value: function init() {
-            this.renderer = new THREE.WebGLRenderer();
+            this.renderer = new THREE.WebGLRenderer({ antialias: true });
             this.renderer.setClearColor(0, 1);
             //this.renderer.setClearColor( 0x000000, 1 );
 
             this.scene = new THREE.Scene();
             this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000000);
-            //this.camera.position.set( 0, 0, 500 );
 
             this.scene.add(this.camera);
             this.clock = new THREE.Clock();
@@ -4979,6 +7167,7 @@ var Game = function () {
             this.scene.add(helper);
 
             this.loadingManager = new THREE.LoadingManager();
+            this.collisionManager = new _collision_manager2.default(this.camera);
 
             // SKY
             this.sky = new _sky2.default();
@@ -4988,12 +7177,15 @@ var Game = function () {
             // Square
             this.square = new _square2.default();
 
-            this.resize();
+            // Debug
+            var geometry = new THREE.Geometry();
+            geometry.vertices.push(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 10, 0), new THREE.Vector3(10, 0, 0));
+            this.lineToCenter = this.resize();
         }
     }, {
         key: 'load',
         value: function load(onLoad) {
-            console.log(this.loadingManager);
+            var objectReady = function objectReady(obj) {};
             this.loadingManager.onLoad = function () {
                 console.log("Done loading everything!");
 
@@ -5003,7 +7195,7 @@ var Game = function () {
                 console.log("Error during load", err);
             };
 
-            this.square.init(this.scene, this.loadingManager);
+            this.square.init(this.scene, this.collisionManager, this.loadingManager);
         }
     }, {
         key: 'start',
@@ -5016,8 +7208,10 @@ var Game = function () {
                 this.scene.add(controls.getObject());
                 controls.enabled = true;
 
-                this.keyboardController = new _keyboard_controller2.default();
-                this.keyboardController.init(controls);
+                this.keyboardController = new _keyboard_controller2.default(controls, this.square, this.collisionManager);
+                this.keyboardController.init();
+
+                this.collisionManager.setPlayer(controls.getObject());
             } else {
                 this.controls = new THREE.OrbitControls(this.camera, element);
             }
@@ -5031,7 +7225,9 @@ var Game = function () {
     }, {
         key: 'update',
         value: function update(dt) {
+            this.collisionManager.update(dt);
             this.sky.update(dt);
+            this.square.update(dt);
             if (this.keyboardController) {
                 this.keyboardController.update(dt);
             }
@@ -5058,13 +7254,16 @@ var Game = function () {
 
 exports.default = Game;
 
-},{"./keyboard_controller":33,"./sky":34,"./square":35}],32:[function(require,module,exports){
+},{"./collision_manager":41,"./keyboard_controller":45,"./sky":46,"./square":47}],44:[function(require,module,exports){
 'use strict';
 
 var Game = require('./game').default;
 var config = require('./config').default;
+var Stats = require('stats.js');
 
 var game = new Game(config);
+var stats = new Stats();
+stats.showPanel(0);
 
 var fullscreen = require('fullscreen');
 var lock = require('pointer-lock');
@@ -5103,6 +7302,7 @@ window.onload = function () {
 
 function start() {
     document.getElementById('start-container').style.display = "none";
+    document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
     game.resize();
@@ -5110,7 +7310,9 @@ function start() {
 }
 
 function animate(t) {
+    stats.begin();
     game.animate(t);
+    stats.end();
     requestAnimationFrame(animate);
 }
 
@@ -5118,7 +7320,7 @@ function resize() {
     game.resize();
 }
 
-},{"./config":30,"./game":31,"fullscreen":27,"pointer-lock":28}],33:[function(require,module,exports){
+},{"./config":42,"./game":43,"fullscreen":36,"pointer-lock":37,"stats.js":38}],45:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5141,8 +7343,10 @@ function _classCallCheck(instance, Constructor) {
     }
 }
 
+var BASAL_HEIGHT = 10;
+
 var KeyboardController = function () {
-    function KeyboardController() {
+    function KeyboardController(controls, square, collisionManager) {
         _classCallCheck(this, KeyboardController);
 
         this.moveForward = false;
@@ -5152,14 +7356,21 @@ var KeyboardController = function () {
         this.isOnObject = false;
 
         this.velocity = new THREE.Vector3();
+        this.controls = controls;
+        this.square = square;
+        this.collisionManager = collisionManager;
+
+        this.playerToCenter = new THREE.Vector3();
+        this.walkingDirection = new THREE.Vector3();
+
+        this.height = BASAL_HEIGHT;
     }
 
     _createClass(KeyboardController, [{
         key: 'init',
-        value: function init(controls) {
+        value: function init() {
             var _this = this;
 
-            this.controls = controls;
             console.log("Keyboard controller init");
 
             document.addEventListener('keydown', function (event) {
@@ -5251,6 +7462,10 @@ var KeyboardController = function () {
             if (this.moveLeft) this.velocity.x -= 400.0 * delta;
             if (this.moveRight) this.velocity.x += 400.0 * delta;
 
+            if (this.collisionManager.isClimbingStairs() && this.velocity.z != 0) {
+                this.climbStairs();
+            }
+
             if (this.isOnObject === true) {
                 this.velocity.y = Math.max(0, this.velocity.y);
 
@@ -5261,13 +7476,20 @@ var KeyboardController = function () {
             this.controls.getObject().translateY(this.velocity.y * delta);
             this.controls.getObject().translateZ(this.velocity.z * delta);
 
-            if (this.controls.getObject().position.y < 10) {
+            if (this.controls.getObject().position.y < this.height) {
 
                 this.velocity.y = 0;
-                this.controls.getObject().position.y = 10;
+                this.controls.getObject().position.y = this.height;
 
                 this.canJump = true;
             }
+        }
+    }, {
+        key: 'climbStairs',
+        value: function climbStairs() {
+            var distanceToCenter = this.controls.getObject().position.distanceTo(this.square.getCenterPosition());
+            var distanceInStairs = Math.max(0, 260 - distanceToCenter);
+            this.height = Math.max(Math.min(30, distanceInStairs), BASAL_HEIGHT);
         }
     }]);
 
@@ -5276,7 +7498,7 @@ var KeyboardController = function () {
 
 exports.default = KeyboardController;
 
-},{}],34:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5385,7 +7607,7 @@ var Sky = function () {
 
 exports.default = Sky;
 
-},{"./clouds":29}],35:[function(require,module,exports){
+},{"./clouds":40}],47:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5419,18 +7641,32 @@ var Square = function () {
 
     _createClass(Square, [{
         key: "init",
-        value: function init(scene, manager) {
-            var loader = new THREE.ObjectLoader(manager);
+        value: function init(scene, collisionManager, loadingManager) {
+            var _this = this;
+
+            var loader = new THREE.ObjectLoader(loadingManager);
             loader.load(MODEL_PATH, function (obj) {
                 console.log("Loaded square ", obj);
                 obj.position.y = -1950;
                 obj.position.z = 1200;
+
                 scene.add(obj);
+                obj.updateMatrixWorld();
+                collisionManager.addBoundingBoxes(obj, scene);
+
+                _this.squareMiddle = obj.getObjectByName("MB_PS");
+                _this.squareCenter = new THREE.Vector3();
+                _this.squareCenter.setFromMatrixPosition(_this.squareMiddle.matrixWorld);
             });
         }
     }, {
         key: "update",
         value: function update(dt) {}
+    }, {
+        key: "getCenterPosition",
+        value: function getCenterPosition() {
+            return this.squareCenter;
+        }
     }]);
 
     return Square;
@@ -5438,7 +7674,7 @@ var Square = function () {
 
 exports.default = Square;
 
-},{}],36:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5501,4 +7737,4 @@ var Video360 = function () {
 
 exports.default = Video360;
 
-},{}]},{},[32]);
+},{}]},{},[44]);
