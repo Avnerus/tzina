@@ -18,6 +18,9 @@ export default class CollisionManager {
         this.playerBox = [[0,0,0,0,0,0]]
 
         this.obstacleInfo = [];
+
+        this.climbingStairs = false;
+        this.climbingRamp = false;
     }
     init() {
     }
@@ -31,7 +34,10 @@ export default class CollisionManager {
             this.player.position.z + PLAYER_SIZE.z / 2,
         ]
         this.crossing = boxIntersect(this.playerBox, this.obstacles, (i,j) => {
-            console.log(this.obstacleInfo[j]);
+            if (this.obstacleInfo[j] == "stairs") {
+                this.climbingStairs = true;
+                return 2;
+            }
         });
     }
     setPlayer(player) {
@@ -45,7 +51,7 @@ export default class CollisionManager {
                         console.log(child);
                         let bbox = new THREE.BoundingBoxHelper(child, 0x00ff00);
                         bbox.update();
-                        scene.add(bbox);
+                        //scene.add(bbox);
 
                         this.obstacles.push([
                             bbox.box.min.x, 
@@ -64,6 +70,6 @@ export default class CollisionManager {
         //console.log(this.obstacles, this.obstacleInfo);
     }
     isClimbingStairs() {
-        //return (this.crossing.length > 0);
+        return this.climbingStairs
     }
 }
