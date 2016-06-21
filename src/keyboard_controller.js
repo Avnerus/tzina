@@ -131,4 +131,9 @@ export default class KeyboardController {
         let distanceInStairs = Math.max(0, 260 - distanceToCenter);
         this.height = Math.max(Math.min(30,distanceInStairs),BASAL_HEIGHT);
     }
+
+    setPosition(x,y,z) {
+        this.height = y;
+        this.controls.getObject().position.set(x,y,z);
+    }
 }

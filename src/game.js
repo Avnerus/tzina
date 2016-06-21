@@ -1,6 +1,7 @@
 import Sky from './sky'
 import Square from './square'
 import CollisionManager from './collision_manager'
+import Character from './character'
 
 import KeyboardController from './keyboard_controller'
 
@@ -37,14 +38,14 @@ export default class Game {
         // Square
         this.square = new Square();
 
-        // Debug
-        var geometry = new THREE.Geometry();
-        geometry.vertices.push(
-            new THREE.Vector3( 0, 0, 0 ),
-            new THREE.Vector3( 0, 10, 0 ),
-            new THREE.Vector3( 10, 0, 0 )
-        );
-        this.lineToCenter = 
+        // Test character
+        this.testCharacter = new Character({
+            basePath : 'assets/characters/take_1',
+            mindepth : 404.999969482,
+            maxdepth : 1111.719970703,
+            position : [-496, 29, 157],
+            rotation: [0, 40, 0]
+        });
 
 
         this.resize();
@@ -79,9 +80,14 @@ export default class Game {
             this.keyboardController.init();
 
             this.collisionManager.setPlayer(controls.getObject());
+
+            // Get in the square
+            this.keyboardController.setPosition(-475, 30, 183);
+
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
+        this.testCharacter.init(this.scene)
        
     }
     
@@ -94,6 +100,7 @@ export default class Game {
         this.collisionManager.update(dt);
         this.sky.update(dt);
         this.square.update(dt);
+        this.testCharacter.update(dt);
         if (this.keyboardController) {
             this.keyboardController.update(dt);
         }
