@@ -1,4 +1,5 @@
 const MODEL_PATH = "assets/square/scene.json"
+const TREES_PATH = "assets/trees/points.ply"
 
 export default class Square {
     constructor() {
@@ -19,6 +20,19 @@ export default class Square {
             this.squareCenter  = new THREE.Vector3();
             this.squareCenter.setFromMatrixPosition(this.squareMiddle.matrixWorld);
         });
+
+        let treesLoader = new THREE.PLYLoader(loadingManager);
+        treesLoader.load(TREES_PATH,( geometry ) => {
+            console.log("Loaded trees ", geometry);
+            let material = new THREE.PointsMaterial( { size: 0.05, vertexColors: true } );
+            let mesh = new THREE.Points( geometry, material );
+            mesh.position.set(-470, 22, 183);
+            mesh.rotateZ(90 * Math.PI / 180);
+
+            scene.add(mesh);
+        });
+
+
     }
     update(dt) {
     }
