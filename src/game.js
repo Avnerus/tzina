@@ -4,6 +4,7 @@ import CollisionManager from './collision_manager'
 import Character from './character'
 
 import KeyboardController from './keyboard_controller'
+import RainShader from './rain_shader'
 
 export default class Game {
     constructor(config) {
@@ -46,6 +47,17 @@ export default class Game {
             position : [-496, 29, 157],
             rotation: [0, 40, 0]
         });
+
+
+        // Post processing
+        this.composer = new THREE.EffectComposer(this.renderer);
+        let renderPass = new THREE.RenderPass(this.scene, this.camera);
+        this.composer.addPass(renderPass);
+
+        let effect = new THREE.ShaderPass(RainShader);
+        effect.renderToScreen = true;
+        this.composer.addPass( effect );
+
 
 
         this.resize();
@@ -108,6 +120,7 @@ export default class Game {
     }
 
     render(dt) {
+        // this.composer.render();
         this.renderer.render(this.scene, this.camera);
     }
 
@@ -117,5 +130,6 @@ export default class Game {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
+        this.composer.setSize(width, height);
     }
 }

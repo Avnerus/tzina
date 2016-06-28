@@ -6445,6 +6445,7 @@ module.exports = dupe
 },{}],36:[function(require,module,exports){
 module.exports = fullscreen
 fullscreen.available = available
+fullscreen.enabled = enabled
 
 var EE = require('events').EventEmitter
 var ael = require('add-event-listener')
@@ -6452,6 +6453,13 @@ var rel = ael.removeEventListener
 
 function available() {
   return !!shim(document.body)
+}
+
+function enabled() {
+  return !!(document.fullscreenEnabled ||
+    document.webkitFullscreenEnabled ||
+    document.mozFullscreenEnabled ||
+    document.msFullscreenEnabled);
 }
 
 function fullscreen(el) {
@@ -6952,6 +6960,71 @@ var _createClass = function () {
     };
 }();
 
+var _video_rgbd = require("./util/video_rgbd");
+
+var _video_rgbd2 = _interopRequireDefault(_video_rgbd);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+var Character = function () {
+    function Character(props) {
+        _classCallCheck(this, Character);
+
+        console.log("Character constructed!");
+        this.videoRGBD = new _video_rgbd2.default(props);
+
+        this.props = props;
+    }
+
+    _createClass(Character, [{
+        key: "init",
+        value: function init(scene) {
+            this.videoRGBD.init();
+            this.videoRGBD.position.set(this.props.position[0], this.props.position[1], this.props.position[2]);
+            this.videoRGBD.rotation.set(this.props.rotation[0] * Math.PI / 180, this.props.rotation[1] * Math.PI / 180, this.props.rotation[2] * Math.PI / 180);
+
+            this.videoRGBD.scale.set(0.02, 0.02, 0.02);
+            this.videoRGBD.play();
+
+            scene.add(this.videoRGBD);
+        }
+    }, {
+        key: "update",
+        value: function update(dt) {
+            this.videoRGBD.update(dt);
+        }
+    }]);
+
+    return Character;
+}();
+
+exports.default = Character;
+
+},{"./util/video_rgbd":50}],41:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
+
 var _video = require("./util/video360");
 
 var _video2 = _interopRequireDefault(_video);
@@ -6967,12 +7040,20 @@ function _classCallCheck(instance, Constructor) {
 }
 
 var CLOUDS_SEQUENCE_PATH = "assets/clouds/sequence.webm";
+var CLOUDS_STATIC_PATH = "assets/clouds/static.png";
+
+var States = {
+    STATIC: "static",
+    TRANSITON: "transition"
+};
 
 var Clouds = function () {
     function Clouds() {
         _classCallCheck(this, Clouds);
 
         console.log("Clouds constructed!");
+
+        this.currentState = States.STATIC;
     }
 
     _createClass(Clouds, [{
@@ -6980,14 +7061,22 @@ var Clouds = function () {
         value: function init(targetShader) {
             this.cloudsVideo = new _video2.default(CLOUDS_SEQUENCE_PATH);
             this.cloudsVideo.init();
+
+            this.staticTexture = new THREE.TextureLoader().load(CLOUDS_STATIC_PATH);
+
             this.targetShader = targetShader;
         }
     }, {
         key: "update",
         value: function update(dt) {
-            if (this.cloudsVideo.isReady()) {
-                this.targetShader.uniforms.cloudsMap.value = this.cloudsVideo.texture;
-                this.cloudsVideo.update();
+            //TODO : Only 25 FPS
+            if (this.currentState === States.TRANSITON) {
+                if (this.cloudsVideo.isReady()) {
+                    this.targetShader.uniforms.cloudsMap.value = this.cloudsVideo.texture;
+                    this.cloudsVideo.update();
+                }
+            } else {
+                this.targetShader.uniforms.cloudsMap.value = this.staticTexture;
             }
         }
     }]);
@@ -6997,7 +7086,7 @@ var Clouds = function () {
 
 exports.default = Clouds;
 
-},{"./util/video360":48}],41:[function(require,module,exports){
+},{"./util/video360":49}],42:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7034,6 +7123,11 @@ var PLAYER_SIZE = {
     z: 2
 };
 
+var COLLIDERS = {
+    stairs: ["Object_1111", "Object_1110"],
+    ramps: ["Object_1077"]
+};
+
 var CollisionManager = function () {
     function CollisionManager() {
         _classCallCheck(this, CollisionManager);
@@ -7042,6 +7136,11 @@ var CollisionManager = function () {
 
         this.obstacles = [];
         this.playerBox = [[0, 0, 0, 0, 0, 0]];
+
+        this.obstacleInfo = [];
+
+        this.climbingStairs = false;
+        this.climbingRamp = false;
     }
 
     _createClass(CollisionManager, [{
@@ -7050,8 +7149,15 @@ var CollisionManager = function () {
     }, {
         key: "update",
         value: function update(dt) {
+            var _this = this;
+
             this.playerBox[0] = [this.player.position.x - PLAYER_SIZE.x / 2, this.player.position.y - PLAYER_SIZE.y / 2, this.player.position.z - PLAYER_SIZE.z / 2, this.player.position.x + PLAYER_SIZE.x / 2, this.player.position.y + PLAYER_SIZE.y / 2, this.player.position.z + PLAYER_SIZE.z / 2];
-            this.crossing = (0, _boxIntersect2.default)(this.playerBox, this.obstacles);
+            this.crossing = (0, _boxIntersect2.default)(this.playerBox, this.obstacles, function (i, j) {
+                if (_this.obstacleInfo[j] == "stairs") {
+                    _this.climbingStairs = true;
+                    return 2;
+                }
+            });
         }
     }, {
         key: "setPlayer",
@@ -7061,24 +7167,51 @@ var CollisionManager = function () {
     }, {
         key: "addBoundingBoxes",
         value: function addBoundingBoxes(obj, scene) {
-            var _this = this;
+            var _this2 = this;
 
-            console.log("Add bounding boxes from ", obj);
             obj.traverse(function (child) {
-                if (child.type == "Object3D" && (child.name == "Object_1077" || child.name == "Object_1110" || child.name == "Object_1111")) {
-                    console.log(child);
-                    var bbox = new THREE.BoundingBoxHelper(child, 0x00ff00);
-                    bbox.update();
-                    //scene.add(bbox);
+                if (child.type == "Object3D") {
+                    var _iteratorNormalCompletion = true;
+                    var _didIteratorError = false;
+                    var _iteratorError = undefined;
 
-                    _this.obstacles.push([bbox.box.min.x, bbox.box.min.y, bbox.box.min.z, bbox.box.max.x, bbox.box.max.y, bbox.box.max.z]);
+                    try {
+                        for (var _iterator = Object.keys(COLLIDERS)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                            var key = _step.value;
+
+                            if (COLLIDERS[key].includes(child.name)) {
+                                console.log(child);
+                                var bbox = new THREE.BoundingBoxHelper(child, 0x00ff00);
+                                bbox.update();
+                                //scene.add(bbox);
+
+                                _this2.obstacles.push([bbox.box.min.x, bbox.box.min.y, bbox.box.min.z, bbox.box.max.x, bbox.box.max.y, bbox.box.max.z]);
+
+                                _this2.obstacleInfo.push(key);
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError = true;
+                        _iteratorError = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion && _iterator.return) {
+                                _iterator.return();
+                            }
+                        } finally {
+                            if (_didIteratorError) {
+                                throw _iteratorError;
+                            }
+                        }
+                    }
                 }
             });
+            //console.log(this.obstacles, this.obstacleInfo);
         }
     }, {
         key: "isClimbingStairs",
         value: function isClimbingStairs() {
-            return this.crossing.length > 0;
+            return this.climbingStairs;
         }
     }]);
 
@@ -7087,7 +7220,7 @@ var CollisionManager = function () {
 
 exports.default = CollisionManager;
 
-},{"box-intersect":28}],42:[function(require,module,exports){
+},{"box-intersect":28}],43:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7097,7 +7230,7 @@ exports.default = {
     controls: "locked"
 };
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7125,6 +7258,10 @@ var _square2 = _interopRequireDefault(_square);
 var _collision_manager = require('./collision_manager');
 
 var _collision_manager2 = _interopRequireDefault(_collision_manager);
+
+var _character = require('./character');
+
+var _character2 = _interopRequireDefault(_character);
 
 var _keyboard_controller = require('./keyboard_controller');
 
@@ -7177,10 +7314,16 @@ var Game = function () {
             // Square
             this.square = new _square2.default();
 
-            // Debug
-            var geometry = new THREE.Geometry();
-            geometry.vertices.push(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 10, 0), new THREE.Vector3(10, 0, 0));
-            this.lineToCenter = this.resize();
+            // Test character
+            this.testCharacter = new _character2.default({
+                basePath: 'assets/characters/take_1',
+                mindepth: 404.999969482,
+                maxdepth: 1111.719970703,
+                position: [-496, 29, 157],
+                rotation: [0, 40, 0]
+            });
+
+            this.resize();
         }
     }, {
         key: 'load',
@@ -7212,9 +7355,13 @@ var Game = function () {
                 this.keyboardController.init();
 
                 this.collisionManager.setPlayer(controls.getObject());
+
+                // Get in the square
+                this.keyboardController.setPosition(-475, 30, 183);
             } else {
                 this.controls = new THREE.OrbitControls(this.camera, element);
             }
+            this.testCharacter.init(this.scene);
         }
     }, {
         key: 'animate',
@@ -7228,6 +7375,7 @@ var Game = function () {
             this.collisionManager.update(dt);
             this.sky.update(dt);
             this.square.update(dt);
+            this.testCharacter.update(dt);
             if (this.keyboardController) {
                 this.keyboardController.update(dt);
             }
@@ -7254,7 +7402,7 @@ var Game = function () {
 
 exports.default = Game;
 
-},{"./collision_manager":41,"./keyboard_controller":45,"./sky":46,"./square":47}],44:[function(require,module,exports){
+},{"./character":40,"./collision_manager":42,"./keyboard_controller":46,"./sky":47,"./square":48}],45:[function(require,module,exports){
 'use strict';
 
 var Game = require('./game').default;
@@ -7320,7 +7468,7 @@ function resize() {
     game.resize();
 }
 
-},{"./config":42,"./game":43,"fullscreen":36,"pointer-lock":37,"stats.js":38}],45:[function(require,module,exports){
+},{"./config":43,"./game":44,"fullscreen":36,"pointer-lock":37,"stats.js":38}],46:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7491,6 +7639,12 @@ var KeyboardController = function () {
             var distanceInStairs = Math.max(0, 260 - distanceToCenter);
             this.height = Math.max(Math.min(30, distanceInStairs), BASAL_HEIGHT);
         }
+    }, {
+        key: 'setPosition',
+        value: function setPosition(x, y, z) {
+            this.height = y;
+            this.controls.getObject().position.set(x, y, z);
+        }
     }]);
 
     return KeyboardController;
@@ -7498,7 +7652,7 @@ var KeyboardController = function () {
 
 exports.default = KeyboardController;
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7588,6 +7742,7 @@ var Sky = function () {
             this.inclination += 0.0005;
             this.updateSunPosition();
 
+            this.geo.rotateY(0.01 * Math.PI / 180);
             this.clouds.update(dt);
         }
     }, {
@@ -7607,7 +7762,7 @@ var Sky = function () {
 
 exports.default = Sky;
 
-},{"./clouds":40}],47:[function(require,module,exports){
+},{"./clouds":41}],48:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7674,7 +7829,7 @@ var Square = function () {
 
 exports.default = Square;
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7697,6 +7852,8 @@ function _classCallCheck(instance, Constructor) {
     }
 }
 
+var SEC_PER_360_FRAME = 1 / 25;
+
 var Video360 = function () {
     function Video360(path) {
         _classCallCheck(this, Video360);
@@ -7714,6 +7871,8 @@ var Video360 = function () {
             this.video.load();
             this.video.play();
 
+            this.timer = 0;
+
             this.texture = new THREE.Texture(this.video);
             this.texture.minFilter = THREE.LinearFilter;
             this.texture.magFilter = THREE.LinearFilter;
@@ -7728,7 +7887,10 @@ var Video360 = function () {
     }, {
         key: "update",
         value: function update(dt) {
-            this.texture.needsUpdate = true;
+            this.timer += dt;
+            if (this.timer >= SEC_PER_360_FRAME) {
+                this.texture.needsUpdate = true;
+            }
         }
     }]);
 
@@ -7737,4 +7899,191 @@ var Video360 = function () {
 
 exports.default = Video360;
 
-},{}]},{},[44]);
+},{}],50:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && (typeof call === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+/**
+ * @author mrdoob / http://mrdoob.com
+ * @modified by obviousjim / http://specular.cc
+ * @modified by avnerus / http://avner.js.org
+ */
+var SEC_PER_RGBD_FRAME = 1 / 25;
+
+var VideoRGBD = function (_THREE$Object3D) {
+    _inherits(VideoRGBD, _THREE$Object3D);
+
+    function VideoRGBD(properties) {
+        _classCallCheck(this, VideoRGBD);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VideoRGBD).call(this));
+
+        _this.properties = properties;
+
+        // Shaders
+        _this.rgbd_fs = "#define GLSLIFY 1\nuniform sampler2D map;\nuniform float opacity;\n\nvarying float visibility;\nvarying vec2 vUv;\n\nvoid main() {\n\n    if ( visibility < 0.75 ) discard;\n\n    vec4 color = texture2D( map, vUv + vec2(0.0, 0.5) );\n    color.w = opacity;\n\n    gl_FragColor = color;\n}\n";
+        _this.rgbd_vs = "#define GLSLIFY 1\nuniform float mindepth;\nuniform float maxdepth;\n\n//TODO: make uniforms\nconst float fx = 1.11087;\nconst float fy = 0.832305;\n\nuniform sampler2D map;\n\nvarying float visibility;\nvarying vec2 vUv;\n\nvec3 rgb2hsl( vec3 color ) {\n    float h = 0.0;\n    float s = 0.0;\n    float l = 0.0;\n    float r = color.r;\n    float g = color.g;\n    float b = color.b;\n    float cMin = min( r, min( g, b ) );\n    float cMax = max( r, max( g, b ) );\n    l =  ( cMax + cMin ) / 2.0;\n    if ( cMax > cMin ) {\n        float cDelta = cMax - cMin;\n        // saturation\n        if ( l < 0.5 ) {\n            s = cDelta / ( cMax + cMin );\n        } else {\n            s = cDelta / ( 2.0 - ( cMax + cMin ) );\n        }\n\n        // hue\n        if ( r == cMax ) {\n            h = ( g - b ) / cDelta;\n        } else if ( g == cMax ) {\n            h = 2.0 + ( b - r ) / cDelta;\n        } else {\n            h = 4.0 + ( r - g ) / cDelta;\n        }\n\n        if ( h < 0.0) {\n            h += 6.0;\n        }\n        h = h / 6.0;\n\n    }\n    return vec3( h, s, l );\n}\n\nvec3 xyz( float x, float y, float depth ) {\n    float z = depth * ( maxdepth - mindepth ) + mindepth;\n    return vec3( ( x / 640.0 ) * z * fx, ( y / 480.0 ) * z * fy, - z );\n}\n\nvoid main() {\n\n    vUv = vec2( ( position.x + 320.0 ) / 640.0, ( position.y + 240.0 ) / 480.0 );\n    vUv.y = vUv.y * 0.5;// + 0.5;\n\n    vec3 hsl = rgb2hsl( texture2D( map, vUv ).xyz );\n    vec4 pos = vec4( xyz( position.x, position.y, hsl.x ), 1.0 );\n    pos.z += 800.0;\n\n    visibility = hsl.z * 2.0;\n\n    gl_PointSize = 2.0;\n\n    gl_Position = projectionMatrix * modelViewMatrix * pos;\n}\n";
+
+        _this.timer = 0;
+
+        console.log("VideoRGBD constructed: ", _this.properties);
+        return _this;
+    }
+
+    _createClass(VideoRGBD, [{
+        key: 'init',
+        value: function init() {
+            this.video = document.createElement('video');
+            this.video.loop = true;
+            var imageTexture = new THREE.TextureLoader().load(this.properties.basePath + '.png');
+
+            var precision = 3;
+            var linesGeometry = new THREE.Geometry();
+
+            for (var y = 240; y > -240; y -= precision) {
+
+                for (var x = -320, x2 = -320 + precision; x < 320; x += precision, x2 += precision) {
+                    linesGeometry.vertices.push(new THREE.Vector3(x, y, 0));
+                    linesGeometry.vertices.push(new THREE.Vector3(x2, y, 0));
+                }
+            }
+
+            var pointsGeometry = new THREE.Geometry();
+
+            for (var _y = 240; _y > -240; _y -= precision) {
+
+                for (var _x = -320; _x < 320; _x += precision) {
+
+                    pointsGeometry.vertices.push(new THREE.Vector3(_x, _y, 0));
+                }
+            }
+
+            this.isPlaying = false;
+            this.videoTexture = new THREE.Texture(this.video);
+            this.videoTexture.minFilter = THREE.LinearFilter;
+            this.videoTexture.magFilter = THREE.LinearFilter;
+            this.videoTexture.format = THREE.RGBFormat;
+            this.videoTexture.generateMipmaps = false;
+
+            this.linesMaterial = new THREE.ShaderMaterial({
+
+                uniforms: {
+                    "map": { type: "t", value: imageTexture },
+                    "opacity": { type: "f", value: 0.25 },
+                    "mindepth": { type: "f", value: this.properties.mindepth },
+                    "maxdepth": { type: "f", value: this.properties.maxdepth }
+                },
+
+                vertexShader: this.rgbd_vs,
+                fragmentShader: this.rgbd_fs,
+                blending: THREE.AdditiveBlending,
+                depthTest: false,
+                depthWrite: false,
+                wireframe: true,
+                transparent: true
+
+            });
+
+            this.linesMaterial.linewidth = 1;
+
+            this.add(new THREE.Line(linesGeometry, this.linesMaterial, THREE.LineSegments));
+
+            this.pointsMaterial = new THREE.ShaderMaterial({
+
+                uniforms: {
+
+                    "map": { type: "t", value: imageTexture },
+                    "opacity": { type: "f", value: 0.95 },
+                    "mindepth": { type: "f", value: this.properties.mindepth },
+                    "maxdepth": { type: "f", value: this.properties.maxdepth }
+                },
+
+                vertexShader: this.rgbd_vs,
+                fragmentShader: this.rgbd_fs,
+                blending: THREE.AdditiveBlending,
+                depthTest: false,
+                depthWrite: false,
+                transparent: true
+
+            });
+
+            this.add(new THREE.Points(pointsGeometry, this.pointsMaterial));
+        }
+    }, {
+        key: 'play',
+        value: function play() {
+            if (this.isPlaying === true) return;
+
+            this.video.src = this.properties.basePath + '.webm';
+            this.video.play();
+            this.isPlaying = true;
+        }
+    }, {
+        key: 'update',
+        value: function update(dt) {
+            this.timer += dt;
+            if (this.timer >= SEC_PER_RGBD_FRAME) {
+                this.timer = 0;
+                if (this.isPlaying && this.video.readyState === this.video.HAVE_ENOUGH_DATA) {
+
+                    this.linesMaterial.uniforms.map.value = this.videoTexture;
+                    this.pointsMaterial.uniforms.map.value = this.videoTexture;
+
+                    this.videoTexture.needsUpdate = true;
+                }
+            }
+        }
+    }, {
+        key: 'pause',
+        value: function pause() {
+            if (this.isPlaying === false) return;
+
+            this.video.pause();
+
+            this.isPlaying = false;
+        }
+    }, {
+        key: 'isPlaying',
+        value: function isPlaying() {
+            return this.isPlaying;
+        }
+    }]);
+
+    return VideoRGBD;
+}(THREE.Object3D);
+
+exports.default = VideoRGBD;
+;
+
+},{}]},{},[45]);
