@@ -17,11 +17,13 @@ export default class Character {
         );
 
         this.videoRGBD.scale.set(0.02, 0.02, 0.02);
-        this.videoRGBD.play();
 
         scene.add(this.videoRGBD);
 
 
+    }
+    play() {
+        this.videoRGBD.play();
     }
     update(dt) {
         this.videoRGBD.update(dt);

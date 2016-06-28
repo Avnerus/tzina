@@ -31,10 +31,6 @@ export default class Game {
         this.loadingManager = new THREE.LoadingManager();
         this.collisionManager = new CollisionManager(this.camera);
 
-        // SKY
-        this.sky = new Sky();
-        this.sky.init();
-        this.scene.add(this.sky.mesh);
 
         // Square
         this.square = new Square();
@@ -68,7 +64,11 @@ export default class Game {
 
         }
         this.loadingManager.onLoad = () => {
+
             console.log("Done loading everything!");
+            this.sky = new Sky();
+            this.sky.init();
+            this.scene.add(this.sky.mesh);
 
             onLoad();
         };
@@ -77,6 +77,10 @@ export default class Game {
         };
 
         this.square.init(this.scene, this.collisionManager, this.loadingManager);
+        this.testCharacter.init(this.scene)
+
+        
+
     }
 
     start() {
@@ -99,7 +103,8 @@ export default class Game {
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
-        this.testCharacter.init(this.scene)
+        
+        this.testCharacter.play();
        
     }
     
