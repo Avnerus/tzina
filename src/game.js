@@ -12,7 +12,7 @@ export default class Game {
         this.config = config;
     }
     init() {
-        this.renderer = new THREE.WebGLRenderer({antialias: true}); 
+        this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
         //this.renderer.setClearColor( 0x000000, 1 );
 
@@ -41,7 +41,8 @@ export default class Game {
             mindepth : 404.999969482,
             maxdepth : 1111.719970703,
             position : [-496, 29, 157],
-            rotation: [0, 40, 0]
+            rotation: [0, 40, 0],
+            name: 'test'
         });
 
 
@@ -79,7 +80,7 @@ export default class Game {
         this.square.init(this.scene, this.collisionManager, this.loadingManager);
         this.testCharacter.init(this.scene)
 
-        
+
 
     }
 
@@ -103,11 +104,11 @@ export default class Game {
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
-        
-        this.testCharacter.play();
-       
+
+        //this.testCharacter.play();
+
     }
-    
+
     animate(t) {
       this.update(this.clock.getDelta());
       this.render(this.clock.getDelta());

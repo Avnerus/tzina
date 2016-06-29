@@ -2,6 +2,7 @@
  * @author mrdoob / http://mrdoob.com
  * @modified by obviousjim / http://specular.cc
  * @modified by avnerus / http://avner.js.org
+ * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
 
@@ -24,7 +25,7 @@ export default class VideoRGBD extends THREE.Object3D {
 
     init() {
         this.video = document.createElement( 'video' );
-        this.video.loop = true;
+        this.video.loop = false;
         let imageTexture = new THREE.TextureLoader().load(this.properties.basePath + '.png' );
 
         let precision = 3;
@@ -125,8 +126,8 @@ export default class VideoRGBD extends THREE.Object3D {
     pause() {
         if ( this.isPlaying === false ) return;
 
+        this.video.src = this.properties.basePath + '.png';
         this.video.pause();
-
         this.isPlaying = false;
 
     };
