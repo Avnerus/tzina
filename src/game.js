@@ -25,8 +25,13 @@ export default class Game {
         //this.camera.rotation.x = 0.22;
 
 
-        let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
-        this.scene.add( helper );
+        //let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
+        //this.scene.add( helper );
+        
+        var dirLight = new THREE.DirectionalLight(0xFFFFFF);
+        dirLight.position.set( 0, 120, 200  );
+        dirLight.target.position.set(0,100,0);
+        this.scene.add(dirLight);
 
         this.loadingManager = new THREE.LoadingManager();
         this.collisionManager = new CollisionManager(this.camera);
@@ -75,8 +80,8 @@ export default class Game {
             console.log("Error during load", err);
         };
 
-        this.square.init(this.scene, this.collisionManager, this.loadingManager);
-        this.testCharacter.init(this.scene)
+        //this.square.init(this.scene, this.collisionManager, this.loadingManager);
+        this.testCharacter.init(this.scene, this.loadingManager)
 
         this.flood = new Flood();
         this.flood.init();

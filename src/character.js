@@ -8,7 +8,8 @@ export default class Character {
         
         this.props = props;
     }
-    init(scene) {
+    init(scene, loadingManager) {
+        loadingManager.itemStart(this.props.basePath);
         this.videoRGBD.init();
         this.videoRGBD.position.set(this.props.position[0], this.props.position[1], this.props.position[2]);
         this.videoRGBD.rotation.set(
@@ -20,6 +21,8 @@ export default class Character {
         this.videoRGBD.scale.set(0.02, 0.02, 0.02);
 
         scene.add(this.videoRGBD);
+
+        loadingManager.itemEnd(this.props.basePath);
 
 
     }

@@ -1,4 +1,4 @@
-const MODEL_PATH = "assets/square/scene.json"
+const MODEL_PATH = "assets/square/scene_minus_trees.json"
 const TREES_PATH = "assets/trees/points.ply"
 
 export default class Square {
@@ -9,6 +9,7 @@ export default class Square {
         let loader = new THREE.ObjectLoader(loadingManager);
         loader.load(MODEL_PATH,( obj ) => {
             console.log("Loaded square ", obj);
+
             obj.position.y = -1950;
             obj.position.z = 1200;
 
@@ -17,8 +18,12 @@ export default class Square {
             collisionManager.addBoundingBoxes(obj,scene);
 
             this.squareMiddle  = obj.getObjectByName("MB_PS");
-            this.squareCenter  = new THREE.Vector3();
-            this.squareCenter.setFromMatrixPosition(this.squareMiddle.matrixWorld);
+            if (this.squareMiddle) {
+                this.squareCenter  = new THREE.Vector3();
+                this.squareCenter.setFromMatrixPosition(this.squareMiddle.matrixWorld);
+            } else {
+                this.squareCenter = new THREE.Vector3(0,0,0);
+            }
         });
 
         let treesLoader = new THREE.PLYLoader(loadingManager);
