@@ -25,6 +25,7 @@ export default class VideoRGBD extends THREE.Object3D {
 
     init() {
         this.video = document.createElement( 'video' );
+        this.video.src = this.properties.basePath + '.webm';
         this.video.loop = false;
         let imageTexture = new THREE.TextureLoader().load(this.properties.basePath + '.png' );
 
@@ -105,7 +106,6 @@ export default class VideoRGBD extends THREE.Object3D {
     play() {
             if ( this.isPlaying === true ) return;
 
-            this.video.src = this.properties.basePath + '.webm';
             this.video.play();
             this.isPlaying = true;
     }
@@ -126,8 +126,11 @@ export default class VideoRGBD extends THREE.Object3D {
     pause() {
         if ( this.isPlaying === false ) return;
 
-        this.video.src = this.properties.basePath + '.png';
         this.video.pause();
+
+        this.linesMaterial.uniforms.map.value = this.imageTexture;
+        this.pointsMaterial.uniforms.map.value = this.imageTexture;
+
         this.isPlaying = false;
 
     };

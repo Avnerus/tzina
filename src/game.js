@@ -2,9 +2,9 @@ import Sky from './sky'
 import Square from './square'
 import CollisionManager from './collision_manager'
 import Character from './character'
-
 import KeyboardController from './keyboard_controller'
 import PostShader from './post_shader'
+import Flood from './flood'
 
 export default class Game {
     constructor(config) {
@@ -78,6 +78,9 @@ export default class Game {
         this.square.init(this.scene, this.collisionManager, this.loadingManager);
         this.testCharacter.init(this.scene)
 
+        this.flood = new Flood();
+        this.flood.init();
+        this.scene.add(this.flood);
 
 
     }
@@ -97,7 +100,7 @@ export default class Game {
             this.collisionManager.setPlayer(controls.getObject());
 
             // Get in the square
-            this.keyboardController.setPosition(-475, 30, 183);
+            //this.keyboardController.setPosition(-475, 30, 183);
 
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
@@ -116,6 +119,7 @@ export default class Game {
         this.collisionManager.update(dt);
         this.sky.update(dt);
         this.square.update(dt);
+        this.flood.update(dt);
         this.testCharacter.update(dt);
         if (this.keyboardController) {
             this.keyboardController.update(dt);

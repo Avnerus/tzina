@@ -1,4 +1,4 @@
-const BASAL_HEIGHT = 10;
+const BASAL_HEIGHT = 15;
 
 export default class KeyboardController {
     constructor(controls, square, collisionManager) {
