@@ -4,7 +4,7 @@ import CollisionManager from './collision_manager'
 import Character from './character'
 
 import KeyboardController from './keyboard_controller'
-import RainShader from './rain_shader'
+import PostShader from './post_shader'
 
 export default class Game {
     constructor(config) {
@@ -51,11 +51,9 @@ export default class Game {
         let renderPass = new THREE.RenderPass(this.scene, this.camera);
         this.composer.addPass(renderPass);
 
-        let effect = new THREE.ShaderPass(RainShader);
+        let effect = new THREE.ShaderPass(PostShader);
         effect.renderToScreen = true;
         this.composer.addPass( effect );
-
-
 
         this.resize();
     }
@@ -126,7 +124,7 @@ export default class Game {
     }
 
     render(dt) {
-        // this.composer.render();
+        // this.composer.render(); // For post processing
         this.renderer.render(this.scene, this.camera);
     }
 
