@@ -7,19 +7,35 @@ var stats = new Stats();
 stats.showPanel(0);
 
 var fullscreen = require('fullscreen');
-var lock = require('pointer-lock');
+var lock = require('pointer-lock-chrome-tolerant');
 
+console.log("Touch? ", Modernizr.touchevents)
 
 window.onload = function() {
     console.log("Loading...");
     game.init();
     var el = document.getElementById('game');
-    var fs = fullscreen(el);
+
     document.getElementById('start-button').addEventListener('click',function(event) {
-        fs.request();
+        if (fullscreen.available()) {
+            var fs = fullscreen(el);
+
+            fs.on('attain',function() {
+                console.log("Full screen attained!");
+                if (pointer) {
+                    pointer.request();
+                } else {
+                    start();
+                }
+            });
+
+            fs.request();
+        } else {
+            start();
+        }
     });
 
-    if (config.controls == "locked") {
+    if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
         var pointer = lock(el);
 
         pointer.on('attain', function() {
@@ -27,14 +43,6 @@ window.onload = function() {
             start();
         });
     }
-    fs.on('attain',function() {
-        console.log("Full screen attained!");
-        if (pointer) {
-            pointer.request();
-        } else {
-            start();
-        }
-    });
 
 
     game.load(function() {

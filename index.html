@@ -1,13 +1,14 @@
 <!doctype html>
 <html>
     <head>
-        <meta charset="utf-8">
+       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <link type="text/css" href="css/reset.css" rel="stylesheet">
+        <meta name="apple-mobile-web-app-capable" content="yes">
         <link type="text/css" href="css/tzina.css" rel="stylesheet">
         <title>Tzina</title>
     </head>
     <body>
+        <script src="lib/modernizr-custom.js"></script>
         <script src="lib/three.js"></script>
         <script src="lib/OrbitControls.js"></script>
         <script src="lib/PointerLockControls.js"></script>
@@ -18,6 +19,7 @@
         <script src="lib/ShaderPass.js"></script>
         <script src="lib/MaskPass.js"></script>
         <script src="bundle.js"></script>
+        <div id="game"></div>
         <div id="splash">
             <div id="loading-container" class="splash-container">
                 LOADING
@@ -26,6 +28,5 @@
                 <a target="_self" href="#" id="start-button">ENTER</a>
             </div>
         </div>
-        <div id="game"></div>
     </body>
 </html>
