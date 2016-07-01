@@ -4,9 +4,9 @@ export default class Flood extends THREE.Object3D  {
         super();
         console.log("Flood constructed!")
 
-        this.waveSource = new THREE.Vector3(0.0, 0.0, 0.0);
+        this.waveSource = new THREE.Vector3(0, 10, 0);
         this.waveFrequencey = 0.5;
-        this.waveHeight = 1;
+        this.waveHeight = 1.2;
         this.waveLength = 0.7;
     }
     init(scene) {
@@ -14,8 +14,8 @@ export default class Flood extends THREE.Object3D  {
         console.log(geometry);
         let material = new THREE.MeshPhongMaterial({
             color: 0x99F9FF,
-            opacity: 0.95,
-            shininess: 90,
+            opacity: 0.75,
+            shininess: 20,
             shading: THREE.FlatShading,
             transparent: true,
             side: THREE.DoubleSide,
@@ -39,11 +39,11 @@ export default class Flood extends THREE.Object3D  {
                 (Math.PI * 2.0 * dist));
             //console.log(this.mesh.geometry.vertices[i].z);
         }
+        /*this.mesh.geometry.computeFaceNormals();
+        this.mesh.geometry.computeVertexNormals; */
         this.mesh.geometry.verticesNeedUpdate = true;
-        this.mesh.geometry.computeFaceNormals();
-        this.mesh.geometry.computeVertexNormals()
 
-        /*
+       /* 
         if (this.mesh.position.y < MAX_FLOOD_HEIGHT) {
             this.mesh.position.y += 0.01;
         }*/

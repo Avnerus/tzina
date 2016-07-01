@@ -12,6 +12,8 @@ export default class Sky {
         this.sky_vs = glslify('./shaders/sky_vs.glsl')
 
         this.clouds = new Clouds();
+
+        this.sunPosition = new THREE.Vector3(0,0,0);
     }
     init() {
 
@@ -50,8 +52,8 @@ export default class Sky {
     }
 
     update(dt) {
-        this.azimuth += 0.00005;
-        this.inclination += 0.0005;
+        this.azimuth += 0.00002;
+        this.inclination += 0.0002;
         this.updateSunPosition();
 
         this.geo.rotateY(0.01 * Math.PI / 180);
@@ -62,12 +64,16 @@ export default class Sky {
         let theta = Math.PI * ( this.inclination - 0.5 );
         let phi = 2 * Math.PI * ( this.azimuth - 0.5 );
 
-        let newPosition = new THREE.Vector3(
+        this.sunPosition.set(
             SUN_DISTANCE * Math.cos( phi ),
             SUN_DISTANCE * Math.sin( phi ) * Math.sin( theta ),
             SUN_DISTANCE * Math.sin( phi ) * Math.cos( theta )
         );
 
-        this.shader.uniforms.sunPosition.value.copy(newPosition);
+        this.shader.uniforms.sunPosition.value.copy(this.sunPosition);
+    }
+
+    getSunPosition() {
+        return this.sunPosition;
     }
 }

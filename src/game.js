@@ -27,11 +27,24 @@ export default class Game {
 
         //let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
         //this.scene.add( helper );
+        //
+
+        // LIGHT
+        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.05 );
+        this.hemiLight.color.setHSL( 0.6, 1, 0.6 );
+        this.hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+        this.hemiLight.position.set( 0, 500, 0 );
+        this.scene.add( this.hemiLight );
         
-        var dirLight = new THREE.DirectionalLight(0xFFFFFF);
-        dirLight.position.set( 0, 120, 200  );
-        dirLight.target.position.set(0,100,0);
-        this.scene.add(dirLight);
+        this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 1);
+        this.dirLight.position.set( 0, 120, -200  );
+        this.dirLight.color.setHSL( 0.1, 1, 0.95 );
+        //dirLight.target.position.set(0,100,0);
+        //
+        this.dirLight.shadowCameraFar = 3500;
+        this.dirLight.shadowBias = -0.000001;
+        this.dirLight.shadowDarkness = 0.35;
+        this.scene.add(this.dirLight);
 
         this.loadingManager = new THREE.LoadingManager();
         this.collisionManager = new CollisionManager(this.camera);
@@ -50,6 +63,8 @@ export default class Game {
             name: 'test'
         });
 
+
+        this.sky = new Sky();
 
         // Post processing
         this.composer = new THREE.EffectComposer(this.renderer);
@@ -70,7 +85,6 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            this.sky = new Sky();
             this.sky.init();
             this.scene.add(this.sky.mesh);
 
@@ -123,6 +137,7 @@ export default class Game {
     update(dt) {
         this.collisionManager.update(dt);
         this.sky.update(dt);
+        this.dirLight.position.copy(this.sky.getSunPosition());
         this.square.update(dt);
         this.flood.update(dt);
         this.testCharacter.update(dt);
