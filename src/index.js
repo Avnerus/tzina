@@ -7,7 +7,7 @@ var stats = new Stats();
 stats.showPanel(0);
 
 var fullscreen = require('fullscreen');
-var lock = require('pointer-lock');
+var lock = require('pointer-lock-chrome-tolerant');
 
 
 window.onload = function() {
@@ -19,7 +19,7 @@ window.onload = function() {
         fs.request();
     });
 
-    if (config.controls == "locked") {
+    if (config.controls == "locked" && lock.available()) {
         var pointer = lock(el);
 
         pointer.on('attain', function() {
