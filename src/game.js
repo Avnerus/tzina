@@ -76,7 +76,6 @@ export default class Game {
         effect.renderToScreen = true;
         this.composer.addPass( effect );
 
-        this.resize();
     }
 
     load(onLoad) {
@@ -106,8 +105,8 @@ export default class Game {
 
     start() {
         let element = this.renderer.domElement;
-        let container = document.getElementById('game');
-        container.appendChild(element);
+        this.container = document.getElementById('game');
+        this.container.appendChild(element);
         if (this.config.controls == "locked") {
             let controls = new THREE.PointerLockControls( this.camera );
             this.scene.add( controls.getObject() );
@@ -124,6 +123,7 @@ export default class Game {
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
+        this.resize();
 
         //this.testCharacter.play();
 
@@ -153,8 +153,8 @@ export default class Game {
     }
 
     resize() {
-        let width = window.innerWidth;
-        let height = window.innerHeight;
+        let width = this.container.offsetWidth;
+        let height = this.container.offsetHeight;
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
