@@ -65,6 +65,7 @@ export default class Game {
 
 
         this.sky = new Sky();
+        this.sky.init();
 
         // Post processing
         this.composer = new THREE.EffectComposer(this.renderer);
@@ -85,7 +86,6 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            this.sky.init();
             this.scene.add(this.sky.mesh);
 
             onLoad();
