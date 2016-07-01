@@ -3,7 +3,7 @@ import Clouds from './clouds';
 const SUN_DISTANCE = 400000;
 
 export default class Sky {
-    constructor() {
+    constructor(loadingManager) {
         console.log("Sky constructed!")
         const glslify = require('glslify');
 
@@ -11,7 +11,7 @@ export default class Sky {
         this.sky_fs = glslify('./shaders/sky_fs.glsl')
         this.sky_vs = glslify('./shaders/sky_vs.glsl')
 
-        this.clouds = new Clouds();
+        this.clouds = new Clouds(loadingManager);
 
         this.sunPosition = new THREE.Vector3(0,0,0);
     }
@@ -36,6 +36,7 @@ export default class Sky {
             fragmentShader: this.sky_fs,
             side: THREE.BackSide
         } );
+        this.clouds.init(this.shader);
 
         /*
         var geometry = new THREE.SphereBufferGeometry( 450000, 32, 32 );
@@ -47,7 +48,6 @@ export default class Sky {
 
         this.updateSunPosition();
 
-        this.clouds.init(this.shader);
         this.a = true;
     }
 

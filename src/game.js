@@ -41,9 +41,10 @@ export default class Game {
         this.dirLight.color.setHSL( 0.1, 1, 0.95 );
         //dirLight.target.position.set(0,100,0);
         //
-        this.dirLight.shadowCameraFar = 3500;
-        this.dirLight.shadowBias = -0.000001;
-        this.dirLight.shadowDarkness = 0.35;
+        //
+        /*
+        this.dirLight.shadow.camera.far = 3500;
+        this.dirLight.shadow.bias = -0.000001;*/
         this.scene.add(this.dirLight);
 
         this.loadingManager = new THREE.LoadingManager();
@@ -64,8 +65,11 @@ export default class Game {
         });
 
 
-        this.sky = new Sky();
-        this.sky.init();
+        this.sky = new Sky(this.loadingManager);
+
+        this.flood = new Flood();
+        this.flood.init();
+        this.scene.add(this.flood);
 
         // Post processing
         this.composer = new THREE.EffectComposer(this.renderer);
@@ -80,9 +84,6 @@ export default class Game {
     }
 
     load(onLoad) {
-        let objectReady = (obj) => {
-
-        }
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
@@ -94,12 +95,15 @@ export default class Game {
             console.log("Error during load", err);
         };
 
+        this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+            
+            console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
+        }
+
         //this.square.init(this.scene, this.collisionManager, this.loadingManager);
+        this.sky.init();
         this.testCharacter.init(this.scene, this.loadingManager)
 
-        this.flood = new Flood();
-        this.flood.init();
-        this.scene.add(this.flood);
 
 
     }
