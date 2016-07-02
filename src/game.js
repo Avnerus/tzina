@@ -14,6 +14,7 @@ export default class Game {
     init() {
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
+        this.renderer.setPixelRatio(window.devicePixelRatio);
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
@@ -80,6 +81,8 @@ export default class Game {
         effect.renderToScreen = true;
         this.composer.addPass( effect );
 
+
+
     }
 
     load(onLoad) {
@@ -111,6 +114,18 @@ export default class Game {
         let element = this.renderer.domElement;
         this.container = document.getElementById('game');
         this.container.appendChild(element);
+        // WebVR
+        let vrControls = new THREE.VRControls(this.camera);
+        vrControls.standing = true;
+
+        let vrEffect = new THREE.VREffect(this.renderer);
+        vrEffect.setSize(window.innerWidth, window.innerHeight);
+
+        let params = {
+          hideButton: false, // Default: false.
+          isUndistorted: false // Default: false.
+        };
+        var manager = new WebVRManager(this.renderer, vrEffect, params);
         if (this.config.controls == "locked") {
             let controls = new THREE.PointerLockControls( this.camera );
             this.scene.add( controls.getObject() );

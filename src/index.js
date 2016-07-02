@@ -56,6 +56,7 @@ function start() {
     document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
+    window.addEventListener('vrdisplaypresentchange', resize, true);
     game.resize();
     animate();
 }
