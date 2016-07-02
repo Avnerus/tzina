@@ -106,6 +106,16 @@ export default class Game {
         this.sky.init();
         this.testCharacter.init(this.scene, this.loadingManager)
 
+        // WebVR
+        let vrEffect = new THREE.VREffect(this.renderer);
+        vrEffect.setSize(window.innerWidth, window.innerHeight);
+
+        let params = {
+          hideButton: false, // Default: false.
+          isUndistorted: false // Default: false.
+        };
+        this.vrManager = new WebVRManager(this.renderer, vrEffect, params);
+
 
 
     }
@@ -114,27 +124,22 @@ export default class Game {
         let element = this.renderer.domElement;
         this.container = document.getElementById('game');
         this.container.appendChild(element);
-        // WebVR
-        let vrControls = new THREE.VRControls(this.camera);
-        vrControls.standing = true;
-
-        let vrEffect = new THREE.VREffect(this.renderer);
-        vrEffect.setSize(window.innerWidth, window.innerHeight);
-
-        let params = {
-          hideButton: false, // Default: false.
-          isUndistorted: false // Default: false.
-        };
-        var manager = new WebVRManager(this.renderer, vrEffect, params);
+        console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked") {
-            let controls = new THREE.PointerLockControls( this.camera );
-            this.scene.add( controls.getObject() );
-            controls.enabled = true;
 
-            this.keyboardController = new KeyboardController(controls, this.square, this.collisionManager)
-            this.keyboardController.init();
+            if (this.vrManager.isVRCompatible) {
+                this.vrControls = new THREE.VRControls(this.camera);
+                this.vrControls.standing = true;
+            } else {
+                let controls = new THREE.PointerLockControls( this.camera );
+                this.scene.add( controls.getObject() ); 
+                controls.enabled = true;
 
-            this.collisionManager.setPlayer(controls.getObject());
+                this.keyboardController = new KeyboardController(controls.getObject(),this.square, this.collisionManager)
+                this.keyboardController.init();
+            }
+
+            this.collisionManager.setPlayer(this.camera);
 
             // Get in the square
             //this.keyboardController.setPosition(-475, 30, 183);
@@ -160,6 +165,9 @@ export default class Game {
         this.square.update(dt);
         this.flood.update(dt);
         this.testCharacter.update(dt);
+        if (this.vrControls) {
+            this.vrControls.update();
+        }
         if (this.keyboardController) {
             this.keyboardController.update(dt);
         }
@@ -168,7 +176,8 @@ export default class Game {
 
     render(dt) {
         // this.composer.render(); // For post processing
-        this.renderer.render(this.scene, this.camera);
+        //this.renderer.render(this.scene, this.camera);
+        this.vrManager.render(this.scene, this.camera);
     }
 
     resize() {

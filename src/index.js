@@ -11,6 +11,11 @@ var lock = require('pointer-lock-chrome-tolerant');
 
 console.log("Touch? ", Modernizr.touchevents)
 
+var FPS  = 30;
+var FPS_INTERVAL = 1000 / FPS;
+var elapsed = 0
+var lastTimestamp = 0;
+
 window.onload = function() {
     console.log("Loading...");
     game.init();
@@ -32,7 +37,9 @@ window.onload = function() {
             fs.request();
         } else {
             start();
-        }
+            }
+
+        //start();
     });
 
     if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
@@ -58,15 +65,20 @@ function start() {
     window.addEventListener('resize', resize, false);
     window.addEventListener('vrdisplaypresentchange', resize, true);
     game.resize();
+    stats.begin();
     animate();
 }
 
 
 function animate(t) {
-    stats.begin();
-    game.animate(t);
-    stats.end();
     requestAnimationFrame(animate);
+    elapsed = t - lastTimestamp;
+    if (elapsed >= FPS_INTERVAL) {
+        lastTimestamp = t - (elapsed % FPS_INTERVAL);
+        game.animate(t);
+        stats.end();
+        stats.begin();
+    }
 }
 
 function resize() {

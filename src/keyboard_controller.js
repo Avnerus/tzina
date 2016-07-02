@@ -1,7 +1,7 @@
 const BASAL_HEIGHT = 15;
 
 export default class KeyboardController {
-    constructor(controls, square, collisionManager) {
+    constructor(camera, square, collisionManager) {
         this.moveForward = false;
         this.moveLeft = false;
         this.moveRight = false;
@@ -9,7 +9,7 @@ export default class KeyboardController {
         this.isOnObject = false;
 
         this.velocity = new THREE.Vector3();
-        this.controls = controls;
+        this.camera = camera;
         this.square = square;
         this.collisionManager = collisionManager;
 
@@ -112,14 +112,14 @@ export default class KeyboardController {
             this.canJump = true;
         }
 
-        this.controls.getObject().translateX( this.velocity.x * delta );
-        this.controls.getObject().translateY( this.velocity.y * delta );
-        this.controls.getObject().translateZ( this.velocity.z * delta );
+        this.camera.translateX( this.velocity.x * delta );
+        this.camera.translateY( this.velocity.y * delta );
+        this.camera.translateZ( this.velocity.z * delta );
 
-        if ( this.controls.getObject().position.y < this.height) {
+        if ( this.camera.position.y < this.height) {
 
             this.velocity.y = 0;
-            this.controls.getObject().position.y = this.height;
+            this.camera.position.y = this.height;
 
             this.canJump = true;
         }
@@ -127,13 +127,13 @@ export default class KeyboardController {
     }
 
     climbStairs() {
-        let distanceToCenter = this.controls.getObject().position.distanceTo(this.square.getCenterPosition());
+        let distanceToCenter = this.camera.position.distanceTo(this.square.getCenterPosition());
         let distanceInStairs = Math.max(0, 260 - distanceToCenter);
         this.height = Math.max(Math.min(30,distanceInStairs),BASAL_HEIGHT);
     }
 
     setPosition(x,y,z) {
         this.height = y;
-        this.controls.getObject().position.set(x,y,z);
+        this.camera.position.set(x,y,z);
     }
 }
