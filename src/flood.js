@@ -22,7 +22,7 @@ export default class Flood extends THREE.Object3D  {
             wireframe: false
         });
         this.mesh = new THREE.Mesh(geometry, material);
-        this.mesh.position.y = 0;
+        this.mesh.position.y = 10;
         this.mesh.rotation.x = -Math.PI / 2;
         this.add(this.mesh);
 

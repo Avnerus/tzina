@@ -28,7 +28,6 @@ export default class Clouds {
     }
     
     update(dt) {
-        //TODO : Only 25 FPS
         if (this.currentState === States.TRANSITON) {
             if (this.cloudsVideo.isReady()) {
                 this.targetShader.uniforms.cloudsMap.value = this.cloudsVideo.texture;

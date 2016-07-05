@@ -1,4 +1,4 @@
-const MODEL_PATH = "assets/square/scene_minus_trees.json"
+const MODEL_PATH = "assets/square/scene.json"
 const TREES_PATH = "assets/trees/points.ply"
 
 export default class Square {
@@ -10,8 +10,15 @@ export default class Square {
         loader.load(MODEL_PATH,( obj ) => {
             console.log("Loaded square ", obj);
 
+            /*
             obj.position.y = -1950;
             obj.position.z = 1200;
+            */
+
+            obj.position.y = -210;
+            obj.position.z = -370;
+            obj.position.x = 0;
+            obj.scale.set( 2, 2, 2 );
 
             scene.add(obj);
             obj.updateMatrixWorld();
@@ -31,7 +38,7 @@ export default class Square {
             console.log("Loaded trees ", geometry);
             let material = new THREE.PointsMaterial( { size: 0.05, vertexColors: true } );
             let mesh = new THREE.Points( geometry, material );
-            mesh.position.set(-470, 22, 183);
+            mesh.position.set(-100,12, -20);
             mesh.rotateZ(90 * Math.PI / 180);
 
             scene.add(mesh);

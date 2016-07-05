@@ -36,7 +36,11 @@ export default class Sky {
             fragmentShader: this.sky_fs,
             side: THREE.BackSide
         } );
-        this.clouds.init(this.shader);
+
+        // Chrome Linux workaround
+        setTimeout(()=> {
+            this.clouds.init(this.shader);
+        },0);
 
         /*
         var geometry = new THREE.SphereBufferGeometry( 450000, 32, 32 );

@@ -60,7 +60,7 @@ export default class Game {
             basePath : 'assets/characters/take_1',
             mindepth : 404.999969482,
             maxdepth : 1111.719970703,
-            position : [-496, 29, 157],
+            position : [-153, 15, -2],
             rotation: [0, 40, 0],
             name: 'test'
         });
@@ -102,7 +102,7 @@ export default class Game {
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
-        //this.square.init(this.scene, this.collisionManager, this.loadingManager);
+        this.square.init(this.scene, this.collisionManager, this.loadingManager);
         this.sky.init();
         this.testCharacter.init(this.scene, this.loadingManager)
 
@@ -142,7 +142,7 @@ export default class Game {
             this.collisionManager.setPlayer(this.camera);
 
             // Get in the square
-            //this.keyboardController.setPosition(-475, 30, 183);
+            this.keyboardController.setPosition(-155, 15, 0);
 
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );

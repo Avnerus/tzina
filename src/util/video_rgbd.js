@@ -23,11 +23,11 @@ export default class VideoRGBD extends THREE.Object3D {
         console.log("VideoRGBD constructed: " , this.properties);
     }
 
-    init() {
+    init(loadingManager) {
         this.video = document.createElement( 'video' );
         this.video.src = this.properties.basePath + '.webm';
         this.video.loop = false;
-        let imageTexture = new THREE.TextureLoader().load(this.properties.basePath + '.png' );
+        let imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
         let precision = 3;
         let linesGeometry = new THREE.Geometry();

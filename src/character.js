@@ -9,22 +9,20 @@ export default class Character {
         this.props = props;
     }
     init(scene, loadingManager) {
-        loadingManager.itemStart(this.props.basePath);
-        this.videoRGBD.init();
-        this.videoRGBD.position.set(this.props.position[0], this.props.position[1], this.props.position[2]);
-        this.videoRGBD.rotation.set(
-            this.props.rotation[0] * Math.PI / 180,
-            this.props.rotation[1] * Math.PI / 180,
-            this.props.rotation[2] * Math.PI / 180
-        );
+        setTimeout(()=> {
+            this.videoRGBD.init(loadingManager);
+            this.videoRGBD.position.set(this.props.position[0], this.props.position[1], this.props.position[2]);
+            this.videoRGBD.rotation.set(
+                this.props.rotation[0] * Math.PI / 180,
+                this.props.rotation[1] * Math.PI / 180,
+                this.props.rotation[2] * Math.PI / 180
+            );
 
-        this.videoRGBD.scale.set(0.02, 0.02, 0.02);
+            this.videoRGBD.scale.set(0.005, 0.005, 0.005);
 
-        scene.add(this.videoRGBD);
+            scene.add(this.videoRGBD);
 
-        loadingManager.itemEnd(this.props.basePath);
-
-
+        },0)
     }
     play() {
         this.videoRGBD.play();
