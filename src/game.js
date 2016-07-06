@@ -68,9 +68,10 @@ export default class Game {
 
         this.sky = new Sky(this.loadingManager);
 
+        /*
         this.flood = new Flood();
         this.flood.init();
-        this.scene.add(this.flood);
+        this.scene.add(this.flood);*/
 
         // Post processing
         this.composer = new THREE.EffectComposer(this.renderer);
@@ -104,7 +105,7 @@ export default class Game {
 
         this.square.init(this.scene, this.collisionManager, this.loadingManager);
         this.sky.init();
-        this.testCharacter.init(this.scene, this.loadingManager)
+        //this.testCharacter.init(this.scene, this.loadingManager)
 
         // WebVR
         let vrEffect = new THREE.VREffect(this.renderer);
@@ -115,8 +116,6 @@ export default class Game {
           isUndistorted: false // Default: false.
         };
         this.vrManager = new WebVRManager(this.renderer, vrEffect, params);
-
-
 
     }
 
@@ -139,14 +138,14 @@ export default class Game {
                 this.keyboardController.init();
             }
 
-            this.collisionManager.setPlayer(this.camera);
-
             // Get in the square
             this.keyboardController.setPosition(-155, 15, 0);
 
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
+
+        this.collisionManager.setPlayer(this.camera);
         this.resize();
 
         //this.testCharacter.play();
@@ -159,8 +158,9 @@ export default class Game {
     }
 
     update(dt) {
-        this.collisionManager.update(dt);
         this.sky.update(dt);
+        /*
+        this.collisionManager.update(dt);
         this.dirLight.position.copy(this.sky.getSunPosition());
         this.square.update(dt);
         this.flood.update(dt);
@@ -171,7 +171,7 @@ export default class Game {
         if (this.keyboardController) {
             this.keyboardController.update(dt);
         }
-        //console.log(this.camera.rotation);
+        //console.log(this.camera.rotation); */
     }
 
     render(dt) {

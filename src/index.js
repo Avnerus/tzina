@@ -19,15 +19,30 @@ var lastTimestamp = 0;
 window.onload = function() {
     console.log("Loading...");
     game.init();
-    var el = document.getElementById('game');
+    //var el = document.getElementsByTagName('body')[0];
+    //var el = document.getElementById('game');
+    var el = document.documentElement;
 
     document.getElementById('start-button').addEventListener('click',function(event) {
+        if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
+            
+            var pointer = lock(el);
+
+            pointer.on('attain', function() {
+                console.log("Pointer attained!");
+                start();
+                });
+
+                pointer.request(); 
+        }
+
+        
         if (fullscreen.available()) {
             var fs = fullscreen(el);
 
             fs.on('attain',function() {
                 console.log("Full screen attained!");
-                if (pointer) {
+                if (typeof(pointer) != 'undefined') {
                     pointer.request();
                 } else {
                     start();
@@ -37,25 +52,21 @@ window.onload = function() {
             fs.request();
         } else {
             start();
-            }
+        }
 
-        //start();
+        //start(); 
     });
 
-    if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
-        var pointer = lock(el);
-
-        pointer.on('attain', function() {
-            console.log("Pointer attained!");
-            start();
-        });
-    }
 
 
     game.load(function() {
         document.getElementById('start-container').style.display = "flex";
         document.getElementById('loading-container').style.display = "none";
     });
+}
+
+window.onscroll = function() {
+    console.log("SCROLLL");
 }
 
 function start() {

@@ -1,7 +1,6 @@
 body {
     margin: 0px;
     background-color: #000000;
-    overflow: hidden;
 }
 
 #game {
@@ -10,6 +9,8 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
+    height: 4000px;
+    overflow: scroll;
 }
 
 #splash {
