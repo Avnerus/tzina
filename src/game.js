@@ -5,6 +5,7 @@ import Character from './character'
 import KeyboardController from './keyboard_controller'
 import PostShader from './post_shader'
 import Flood from './flood'
+import ZoomController from './zoom_controller'
 
 export default class Game {
     constructor(config) {
@@ -90,7 +91,7 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            this.scene.add(this.sky.mesh);
+            //this.scene.add(this.sky.mesh);
 
             onLoad();
         };
@@ -131,11 +132,13 @@ export default class Game {
                 this.vrControls.standing = true;
             } else {
                 let controls = new THREE.PointerLockControls( this.camera );
-                this.scene.add( controls.getObject() ); 
                 controls.enabled = true;
 
                 this.keyboardController = new KeyboardController(controls.getObject(),this.square, this.collisionManager)
                 this.keyboardController.init();
+
+                this.zoomController = new ZoomController(this.camera);
+                this.zoomController.init();
             }
 
             // Get in the square
@@ -153,24 +156,24 @@ export default class Game {
     }
 
     animate(t) {
-      this.update(this.clock.getDelta());
-      this.render(this.clock.getDelta());
+        this.update(this.clock.getDelta());
+        this.render(this.clock.getDelta());
     }
 
     update(dt) {
         this.sky.update(dt);
+        this.dirLight.position.copy(this.sky.getSunPosition());
         if (this.keyboardController) {
             this.keyboardController.update(dt);
+            this.zoomController.update(dt);
         }
-        /*
-        this.collisionManager.update(dt);
-        this.dirLight.position.copy(this.sky.getSunPosition());
-        this.square.update(dt);
-        this.flood.update(dt);
-        this.testCharacter.update(dt);
         if (this.vrControls) {
             this.vrControls.update();
         }
+        /*
+        this.collisionManager.update(dt);
+        this.flood.update(dt);
+        this.testCharacter.update(dt);
         //console.log(this.camera.rotation); */
     }
 
