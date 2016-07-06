@@ -32,7 +32,7 @@ export default class Game {
         //
 
         // LIGHT
-        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.05 );
+        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.2 );
         this.hemiLight.color.setHSL( 0.6, 1, 0.6 );
         this.hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
         this.hemiLight.position.set( 0, 500, 0 );
@@ -91,7 +91,7 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            //this.scene.add(this.sky.mesh);
+            this.scene.add(this.sky.mesh);
 
             onLoad();
         };
@@ -134,6 +134,7 @@ export default class Game {
                 let controls = new THREE.PointerLockControls( this.camera );
                 controls.enabled = true;
 
+                this.scene.add(controls.getObject());
                 this.keyboardController = new KeyboardController(controls.getObject(),this.square, this.collisionManager)
                 this.keyboardController.init();
 
