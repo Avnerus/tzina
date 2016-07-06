@@ -159,6 +159,9 @@ export default class Game {
 
     update(dt) {
         this.sky.update(dt);
+        if (this.keyboardController) {
+            this.keyboardController.update(dt);
+        }
         /*
         this.collisionManager.update(dt);
         this.dirLight.position.copy(this.sky.getSunPosition());
@@ -167,9 +170,6 @@ export default class Game {
         this.testCharacter.update(dt);
         if (this.vrControls) {
             this.vrControls.update();
-        }
-        if (this.keyboardController) {
-            this.keyboardController.update(dt);
         }
         //console.log(this.camera.rotation); */
     }

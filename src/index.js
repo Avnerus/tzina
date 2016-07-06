@@ -1,6 +1,8 @@
 var Game = require('./game').default;
 var config = require('./config').default;
 var Stats = require('stats.js');
+var $ = require('jquery-browserify');
+require('jquery-mousewheel')($);
 
 var game = new Game(config);
 var stats = new Stats();
@@ -18,6 +20,9 @@ var lastTimestamp = 0;
 
 window.onload = function() {
     console.log("Loading...");
+    $(document.documentElement).on('mousewheel', function(event) {
+            console.log(event.deltaX, event.deltaY, event.deltaFactor);
+    });
     game.init();
     //var el = document.getElementsByTagName('body')[0];
     //var el = document.getElementById('game');
@@ -63,10 +68,6 @@ window.onload = function() {
         document.getElementById('start-container').style.display = "flex";
         document.getElementById('loading-container').style.display = "none";
     });
-}
-
-window.onscroll = function() {
-    console.log("SCROLLL");
 }
 
 function start() {
