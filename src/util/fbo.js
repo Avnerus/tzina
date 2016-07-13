@@ -30,7 +30,7 @@ export default class FBO {
         let options = {
             minFilter: THREE.NearestFilter,//important as we want to sample square pixels
             magFilter: THREE.NearestFilter,//
-            format: THREE.RGBFormat,//could be RGBAFormat
+            format: THREE.RGBAFormat,
             type:THREE.FloatType//important as we need precise coordinates (not ints)
         };
         this.rttOut = new THREE.WebGLRenderTarget( width,height, options);
