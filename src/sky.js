@@ -34,7 +34,6 @@ export default class Sky {
             },
             vertexShader: this.sky_vs,
             fragmentShader: this.sky_fs,
-            side: THREE.BackSide
         } );
 
         // Chrome Linux workaround
@@ -47,12 +46,13 @@ export default class Sky {
         var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
         ths.mesh = new THREE.Mesh( geometry, material );*/
         
+        /*
         this.geo = new THREE.SphereBufferGeometry( 450000, 32, 15 );
         this.mesh = new THREE.Mesh( this.geo, this.shader );
+        */
 
         this.updateSunPosition();
 
-        this.a = true;
     }
 
     update(dt) {
@@ -62,6 +62,11 @@ export default class Sky {
 
         this.geo.rotateY(0.01 * Math.PI / 180);
         this.clouds.update(dt);
+    }
+
+    applyToMesh(mesh) {
+        mesh.material = this.shader;
+        this.geo = mesh.geometry;
     }
 
     updateSunPosition() {

@@ -11,6 +11,7 @@ export default class Game {
     constructor(config) {
         console.log("Game constructed!")
         this.config = config;
+        this.started = false;
     }
     init() {
         this.renderer = new THREE.WebGLRenderer({antialias: true});
@@ -32,7 +33,7 @@ export default class Game {
         //
 
         // LIGHT
-        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.2 );
+        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.5 );
         this.hemiLight.color.setHSL( 0.6, 1, 0.6 );
         this.hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
         this.hemiLight.position.set( 0, 500, 0 );
@@ -40,7 +41,7 @@ export default class Game {
         
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 1);
         this.dirLight.position.set( 0, 120, -200  );
-        this.dirLight.color.setHSL( 0.1, 1, 0.95 );
+        this.dirLight.color.setHSL( 0.9, 1, 0.95 );
         //dirLight.target.position.set(0,100,0);
         //
         //
@@ -83,15 +84,16 @@ export default class Game {
         effect.renderToScreen = true;
         this.composer.addPass( effect );
 
-
-
     }
 
     load(onLoad) {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            this.scene.add(this.sky.mesh);
+            this.sky.applyToMesh(this.square.getSphereMesh());
+            /*if (this.sky.mesh) {
+                this.scene.add(this.sky.mesh);
+                }*/
 
             onLoad();
         };
@@ -106,7 +108,7 @@ export default class Game {
 
         this.square.init(this.scene, this.collisionManager, this.loadingManager);
         this.sky.init();
-        //this.testCharacter.init(this.scene, this.loadingManager)
+        this.testCharacter.init(this.scene, this.loadingManager)
 
         // WebVR
         let vrEffect = new THREE.VREffect(this.renderer);
@@ -121,6 +123,7 @@ export default class Game {
     }
 
     start() {
+        this.started = true;
         let element = this.renderer.domElement;
         this.container = document.getElementById('game');
         this.container.appendChild(element);
@@ -135,15 +138,15 @@ export default class Game {
                 controls.enabled = true;
 
                 this.scene.add(controls.getObject());
-                this.keyboardController = new KeyboardController(controls.getObject(),this.square, this.collisionManager)
+                this.keyboardController = new KeyboardController(this.config, controls.getObject(),this.square, this.collisionManager)
                 this.keyboardController.init();
 
-                this.zoomController = new ZoomController(this.camera);
+                this.zoomController = new ZoomController(this.config, this.camera, this.square);
                 this.zoomController.init();
             }
 
             // Get in the square
-            this.keyboardController.setPosition(-155, 15, 0);
+            this.keyboardController.setPosition(0, 15, 0);
 
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
@@ -158,7 +161,7 @@ export default class Game {
 
     animate(t) {
         this.update(this.clock.getDelta());
-        this.render(this.clock.getDelta());
+        this.render();
     }
 
     update(dt) {
@@ -170,7 +173,7 @@ export default class Game {
         }
         if (this.vrControls) {
             this.vrControls.update();
-        }
+            }
         /*
         this.collisionManager.update(dt);
         this.flood.update(dt);
@@ -178,7 +181,7 @@ export default class Game {
         //console.log(this.camera.rotation); */
     }
 
-    render(dt) {
+    render() {
         // this.composer.render(); // For post processing
         //this.renderer.render(this.scene, this.camera);
         this.vrManager.render(this.scene, this.camera);

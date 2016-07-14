@@ -1,7 +1,5 @@
-const BASAL_HEIGHT = 15;
-
 export default class KeyboardController {
-    constructor(camera, square, collisionManager) {
+    constructor(config, camera, square, collisionManager) {
         this.moveForward = false;
         this.moveLeft = false;
         this.moveRight = false;
@@ -16,7 +14,7 @@ export default class KeyboardController {
         this.playerToCenter = new THREE.Vector3();
         this.walkingDirection = new THREE.Vector3();
 
-        this.height = BASAL_HEIGHT;
+        this.height = config.basalHeight;
     }
     init() {
 
@@ -132,7 +130,7 @@ export default class KeyboardController {
     climbStairs() {
         let distanceToCenter = this.camera.position.distanceTo(this.square.getCenterPosition());
         let distanceInStairs = Math.max(0, 260 - distanceToCenter);
-        this.height = Math.max(Math.min(30,distanceInStairs),BASAL_HEIGHT);
+        this.height = Math.max(Math.min(30,distanceInStairs),this.config.basalHeight);
     }
 
     setPosition(x,y,z) {

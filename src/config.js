@@ -1,3 +1,4 @@
 export default {
-    controls: "locked"
+    controls: "locked",
+    basalHeight: 15
 }

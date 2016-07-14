@@ -30,7 +30,9 @@ window.onload = function() {
 
             pointer.on('attain', function() {
                 console.log("Pointer attained!");
-                start();
+                if (!game.started) {
+                    start();
+                }
                 });
 
                 pointer.request(); 
@@ -45,13 +47,17 @@ window.onload = function() {
                 if (typeof(pointer) != 'undefined') {
                     pointer.request();
                 } else {
-                    start();
+                    if (!game.started) {
+                        start();
+                    }
                 }
             });
 
             fs.request();
         } else {
-            start();
+            if (!game.started) {
+                start();
+            }
         }
 
         //start(); 

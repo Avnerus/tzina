@@ -15,10 +15,10 @@ export default class Square {
             obj.position.z = 1200;
             */
 
-            obj.position.y = -210;
-            obj.position.z = -370;
+            obj.position.y = -80;
+            obj.position.z = 100;
             obj.position.x = 0;
-            obj.scale.set( 2, 2, 2 );
+            obj.scale.set( 4, 4, 4 );
 
             scene.add(obj);
             obj.updateMatrixWorld();
@@ -28,9 +28,13 @@ export default class Square {
             if (this.squareMiddle) {
                 this.squareCenter  = new THREE.Vector3();
                 this.squareCenter.setFromMatrixPosition(this.squareMiddle.matrixWorld);
+                console.log("Square center", this.squareCenter);
             } else {
                 this.squareCenter = new THREE.Vector3(0,0,0);
             }
+
+            this.sphereMesh = obj.getObjectByName("SkySphere").children[0];
+            console.log("Sky sphere", this.sphereMesh);
         });
 
         let treesLoader = new THREE.PLYLoader(loadingManager);
@@ -47,6 +51,10 @@ export default class Square {
 
     }
     update(dt) {
+    }
+
+    getSphereMesh() {
+        return this.sphereMesh;
     }
 
     getCenterPosition() {
