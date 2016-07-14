@@ -36,10 +36,9 @@ export default class ZoomController {
 
                 //TweenMax.to(this.camera.position, 1, {x:zoomPosition.x, y: zoomPosition.y, z:zoomPosition.z});
 
-
             }
             this.camera.translateZ( this.velocityZ * -3.0 * dt );
-            this.camera.translateY( this.velocityZ * -0.5 * dt );
+            //this.camera.translateY( this.velocityZ * -0.5 * dt );
             this.camera.updateProjectionMatrix();
             if (this.velocityZ > 0) {
                 this.velocityZ = Math.max(0, this.velocityZ - 10 * dt);

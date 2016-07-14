@@ -33,15 +33,15 @@ export default class Game {
         //
 
         // LIGHT
-        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.5 );
-        this.hemiLight.color.setHSL( 0.6, 1, 0.6 );
-        this.hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
+        this.hemiLight.color.setHSL(1,1,1);
+        //this.hemiLight.groundColor.setHSL( 0., 1, 0.75 );
         this.hemiLight.position.set( 0, 500, 0 );
         this.scene.add( this.hemiLight );
         
-        this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 1);
+        this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.5);
         this.dirLight.position.set( 0, 120, -200  );
-        this.dirLight.color.setHSL( 0.9, 1, 0.95 );
+        this.dirLight.color.setHSL(1,1,1);
         //dirLight.target.position.set(0,100,0);
         //
         //
