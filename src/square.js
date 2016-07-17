@@ -1,11 +1,12 @@
 const MODEL_PATH = "assets/square/scene.json"
 const TREES_PATH = "assets/trees/points.ply"
 
-export default class Square {
+export default class Square extends THREE.Object3D{
     constructor() {
+        super();
         console.log("Square constructed!")
     }
-    init(scene,collisionManager,loadingManager) {
+    init(collisionManager,loadingManager) {
         let loader = new THREE.ObjectLoader(loadingManager);
         loader.load(MODEL_PATH,( obj ) => {
             console.log("Loaded square ", obj);
@@ -20,9 +21,9 @@ export default class Square {
             obj.position.x = 0;
             obj.scale.set( 4, 4, 4 );
 
-            scene.add(obj);
+            this.add(obj);
             obj.updateMatrixWorld();
-            collisionManager.addBoundingBoxes(obj,scene);
+            collisionManager.addBoundingBoxes(obj,this);
 
             this.squareMiddle  = obj.getObjectByName("MB_PS");
             if (this.squareMiddle) {
@@ -45,7 +46,7 @@ export default class Square {
             mesh.position.set(-100,12, -20);
             mesh.rotateZ(90 * Math.PI / 180);
 
-            scene.add(mesh);
+            this.add(mesh);
         });
 
 

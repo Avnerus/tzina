@@ -28,8 +28,8 @@ export default class Game {
         //this.camera.rotation.x = 0.22;
 
 
-        //let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
-        //this.scene.add( helper );
+        let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
+        this.scene.add( helper );
         //
 
         // LIGHT
@@ -39,7 +39,7 @@ export default class Game {
         this.hemiLight.position.set( 0, 500, 0 );
         this.scene.add( this.hemiLight );
         
-        this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.5);
+        this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
         this.dirLight.position.set( 0, 120, -200  );
         this.dirLight.color.setHSL(1,1,1);
         //dirLight.target.position.set(0,100,0);
@@ -57,13 +57,21 @@ export default class Game {
         // Square
         this.square = new Square();
 
-        // Test character
-        this.testCharacter = new Character({
+        // Test characters
+        /*this.testCharacter = new Character({
             basePath : 'assets/characters/take_1',
             mindepth : 404.999969482,
             maxdepth : 1111.719970703,
-            position : [-153, 15, -2],
-            rotation: [0, 40, 0],
+            position : [30, 15, 40],
+            rotation: [0, 0, 0],
+            name: 'test'
+            });*/
+        this.testCharacter = new Character({
+            basePath : 'assets/characters/lupocomp',
+            mindepth : 2331.267333984,
+            maxdepth : 3446.559326172,
+            position : [100, 15, 150],
+            rotation: [0, 0, 0],
             name: 'test'
         });
 
@@ -90,10 +98,8 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
+            this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
-            /*if (this.sky.mesh) {
-                this.scene.add(this.sky.mesh);
-                }*/
 
             onLoad();
         };
@@ -106,9 +112,9 @@ export default class Game {
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
-        this.square.init(this.scene, this.collisionManager, this.loadingManager);
+        this.square.init(this.collisionManager, this.loadingManager);
         this.sky.init();
-        this.testCharacter.init(this.scene, this.loadingManager)
+        this.testCharacter.init(this.square, this.loadingManager)
 
         // WebVR
         let vrEffect = new THREE.VREffect(this.renderer);
@@ -146,12 +152,15 @@ export default class Game {
             }
 
             // Get in the square
-            this.keyboardController.setPosition(0, 15, 0);
+            this.keyboardController.setPosition(30, 15, 50);
 
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
 
+        if (this.testCharacter) {
+            this.testCharacter.play();
+        }
         this.collisionManager.setPlayer(this.camera);
         this.resize();
 
@@ -165,7 +174,7 @@ export default class Game {
     }
 
     update(dt) {
-        this.sky.update(dt);
+        //this.sky.update(dt);
         this.dirLight.position.copy(this.sky.getSunPosition());
         if (this.keyboardController) {
             this.keyboardController.update(dt);
@@ -174,10 +183,10 @@ export default class Game {
         if (this.vrControls) {
             this.vrControls.update();
             }
+        this.testCharacter.update(dt);
         /*
         this.collisionManager.update(dt);
         this.flood.update(dt);
-        this.testCharacter.update(dt);
         //console.log(this.camera.rotation); */
     }
 

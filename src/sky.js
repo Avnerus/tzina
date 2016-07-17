@@ -1,6 +1,6 @@
 import Clouds from './clouds';
 
-const SUN_DISTANCE = 400000;
+const SUN_DISTANCE = 10000;
 
 export default class Sky {
     constructor(loadingManager) {
@@ -34,6 +34,7 @@ export default class Sky {
             },
             vertexShader: this.sky_vs,
             fragmentShader: this.sky_fs,
+            side: THREE.BackSide
         } );
 
         // Chrome Linux workaround
@@ -65,8 +66,10 @@ export default class Sky {
     }
 
     applyToMesh(mesh) {
-        mesh.material = this.shader;
-        this.geo = mesh.geometry;
+        if (mesh) {
+            mesh.material = this.shader;
+            this.geo = mesh.geometry;
+        }
     }
 
     updateSunPosition() {

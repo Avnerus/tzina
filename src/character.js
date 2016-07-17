@@ -9,7 +9,6 @@ export default class Character {
         this.props = props;
     }
     init(scene, loadingManager) {
-        setTimeout(()=> {
             this.videoRGBD.init(loadingManager);
             this.videoRGBD.position.set(this.props.position[0], this.props.position[1], this.props.position[2]);
             this.videoRGBD.rotation.set(
@@ -19,10 +18,10 @@ export default class Character {
             );
 
             this.videoRGBD.scale.set(0.005, 0.005, 0.005);
+            this.videoRGBD.updateMatrixWorld();
 
             scene.add(this.videoRGBD);
 
-        },0)
     }
     play() {
         this.videoRGBD.play();

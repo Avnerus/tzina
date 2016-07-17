@@ -5,6 +5,9 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
+const VERTS_WIDE = 256;
+const VERTS_TALL = 256;
+
 
 export default class VideoRGBD extends THREE.Object3D {
     constructor(properties) {
@@ -29,27 +32,6 @@ export default class VideoRGBD extends THREE.Object3D {
         this.video.loop = false;
         let imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
-        let precision = 3;
-        let linesGeometry = new THREE.Geometry();
-
-        for ( let y = 240; y > - 240; y -= precision ) {
-
-            for (let x = - 320, x2 = - 320 + precision; x < 320; x += precision, x2 += precision ) {
-                linesGeometry.vertices.push( new THREE.Vector3( x, y, 0 ) );
-                linesGeometry.vertices.push( new THREE.Vector3( x2, y, 0 ) );
-            }
-        }
-
-        let pointsGeometry = new THREE.Geometry();
-
-        for ( let y = 240; y > - 240; y -= precision ) {
-
-            for ( let x = - 320; x < 320; x += precision ) {
-
-                pointsGeometry.vertices.push( new THREE.Vector3( x, y, 0 ) );
-
-            }
-        }
 
         this.isPlaying = false;
         this.videoTexture = new THREE.Texture( this.video );
@@ -58,7 +40,9 @@ export default class VideoRGBD extends THREE.Object3D {
         this.videoTexture.format = THREE.RGBFormat;
         this.videoTexture.generateMipmaps = false;
 
-        this.linesMaterial = new THREE.ShaderMaterial( {
+        let geometry = this.buildMeshGeometry();
+
+        this.meshMaterial = new THREE.ShaderMaterial( {
 
             uniforms: {
                 "map": { type: "t", value: imageTexture },
@@ -71,41 +55,49 @@ export default class VideoRGBD extends THREE.Object3D {
             fragmentShader: this.rgbd_fs,
             blending: THREE.AdditiveBlending,
             depthTest: false,
-            depthWrite: false,
-            wireframe: true,
-            transparent: true
-
+            depthWrite: false
         } );
 
-        this.linesMaterial.linewidth = 1;
+        //let material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+        let mesh = new THREE.Mesh( geometry, this.meshMaterial );
+        //let mesh = new THREE.Mesh( geometry, material);
+        //mesh.frustumCulled = false;
+        this.add(mesh);
 
-        this.add( new THREE.Line( linesGeometry, this.linesMaterial, THREE.LineSegments ) );
+        var bbox = new THREE.BoundingBoxHelper( mesh, 0xff0000  );
+        bbox.update();
+        this.add( bbox );
+    }
 
-        this.pointsMaterial = new THREE.ShaderMaterial( {
-
-            uniforms: {
-
-                "map": { type: "t", value: imageTexture },
-                "opacity": { type: "f", value: 0.95 },
-                "mindepth" : { type : "f", value : this.properties.mindepth },
-                "maxdepth" : { type : "f", value : this.properties.maxdepth }
-            },
-
-            vertexShader: this.rgbd_vs,
-            fragmentShader: this.rgbd_fs,
-            blending: THREE.AdditiveBlending,
-            depthTest: false,
-            depthWrite: false,
-            transparent: true
-
-        } );
-
-        this.add( new THREE.Points( pointsGeometry, this.pointsMaterial ) );
+    buildMeshGeometry() {
+        let meshGeometry = new THREE.Geometry();
+        for ( let y = 0; y < VERTS_TALL; y++) {
+            for ( let x = 0; x < VERTS_WIDE; x++ ) {
+                meshGeometry.vertices.push(
+                    new THREE.Vector3( -320 + x * 2, 240 -y *2, 0 ) );
+            }
+        }
+        for ( let y = 0; y < VERTS_TALL - 1; y++ ) {
+            for ( let x = 0; x < VERTS_WIDE - 1; x++) {
+                meshGeometry.faces.push(
+                    new THREE.Face3(
+                        x + y * VERTS_WIDE,
+                        x + (y+1) * VERTS_WIDE,
+                        (x+1) + y * (VERTS_WIDE)
+                ));
+                meshGeometry.faces.push(
+                    new THREE.Face3(
+                        x + 1 + y * VERTS_WIDE,
+                        x + (y+1) * VERTS_WIDE,
+                        (x+1) + (y+1) * (VERTS_WIDE)
+                ));
+            }
+        }
+        return meshGeometry;
     }
 
     play() {
             if ( this.isPlaying === true ) return;
-
             this.video.play();
             this.isPlaying = true;
     }
@@ -115,8 +107,7 @@ export default class VideoRGBD extends THREE.Object3D {
             this.timer = 0;
             if ( this.isPlaying && this.video.readyState === this.video.HAVE_ENOUGH_DATA ) {
 
-                this.linesMaterial.uniforms.map.value = this.videoTexture;
-                this.pointsMaterial.uniforms.map.value = this.videoTexture;
+                this.meshMaterial.uniforms.map.value = this.videoTexture;
 
                 this.videoTexture.needsUpdate = true;
 
