@@ -21,6 +21,8 @@ export default class Square extends THREE.Object3D{
             obj.position.x = 0;
             obj.scale.set( 4, 4, 4 );
 
+            console.log(obj.getObjectByName("tarmac_remod").children[0]);
+
             this.add(obj);
             obj.updateMatrixWorld();
             collisionManager.addBoundingBoxes(obj,this);

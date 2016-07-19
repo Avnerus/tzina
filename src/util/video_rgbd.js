@@ -5,8 +5,8 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
-const VERTS_WIDE = 256;
-const VERTS_TALL = 256;
+const VERTS_WIDE = 128;
+const VERTS_TALL = 128;
 
 
 export default class VideoRGBD extends THREE.Object3D {
@@ -26,7 +26,7 @@ export default class VideoRGBD extends THREE.Object3D {
         console.log("VideoRGBD constructed: " , this.properties);
     }
 
-    init(loadingManager) {
+    init(scene, loadingManager) {
         this.video = document.createElement( 'video' );
         this.video.src = this.properties.basePath + '.webm';
         this.video.loop = false;
@@ -55,18 +55,20 @@ export default class VideoRGBD extends THREE.Object3D {
             fragmentShader: this.rgbd_fs,
             blending: THREE.AdditiveBlending,
             depthTest: false,
-            depthWrite: false
+            depthWrite: false,
         } );
 
-        //let material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-        let mesh = new THREE.Mesh( geometry, this.meshMaterial );
+        //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
+        this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //let mesh = new THREE.Mesh( geometry, material);
+        this.mesh.scale.set(0.002, 0.002, 0.002);
+        this.mesh.position.set(40,12,40);
+        scene.add(this.mesh);
         //mesh.frustumCulled = false;
-        this.add(mesh);
 
-        var bbox = new THREE.BoundingBoxHelper( mesh, 0xff0000  );
+        var bbox = new THREE.BoundingBoxHelper( this.mesh, 0x00ff00  );
         bbox.update();
-        this.add( bbox );
+        scene.add( bbox );
     }
 
     buildMeshGeometry() {
@@ -74,7 +76,8 @@ export default class VideoRGBD extends THREE.Object3D {
         for ( let y = 0; y < VERTS_TALL; y++) {
             for ( let x = 0; x < VERTS_WIDE; x++ ) {
                 meshGeometry.vertices.push(
-                    new THREE.Vector3( -320 + x * 2, 240 -y *2, 0 ) );
+                        new THREE.Vector3((-320 + x * 4), (240 -y * 4) , 0 ) );
+                    // new THREE.Vector3(-x / VERTS_WIDE ,  y / VERTS_TALL, 0 ) );
             }
         }
         for ( let y = 0; y < VERTS_TALL - 1; y++ ) {
@@ -119,8 +122,7 @@ export default class VideoRGBD extends THREE.Object3D {
 
         this.video.pause();
 
-        this.linesMaterial.uniforms.map.value = this.imageTexture;
-        this.pointsMaterial.uniforms.map.value = this.imageTexture;
+        this.meshMaterial.uniforms.map.value = this.imageTexture;
 
         this.isPlaying = false;
 

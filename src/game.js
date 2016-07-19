@@ -20,7 +20,10 @@ export default class Game {
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight, 1, 2000000);
+        this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 1, 2000000);
+        
+        //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
+        
 
         this.scene.add(this.camera);
         this.clock = new THREE.Clock();
@@ -30,6 +33,8 @@ export default class Game {
 
         let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
         this.scene.add( helper );
+        let axis = new THREE.AxisHelper(75);
+        this.scene.add(axis);
         //
 
         // LIGHT
@@ -70,7 +75,7 @@ export default class Game {
             basePath : 'assets/characters/lupocomp',
             mindepth : 2331.267333984,
             maxdepth : 3446.559326172,
-            position : [100, 15, 150],
+            position : [30, 15, 47],
             rotation: [0, 0, 0],
             name: 'test'
         });
@@ -99,9 +104,13 @@ export default class Game {
 
             console.log("Done loading everything!");
             this.scene.add(this.square);
-            this.sky.applyToMesh(this.square.getSphereMesh());
+            //this.sky.applyToMesh(this.square.getSphereMesh());
+            if (!this.testCharacter.videoRGBD.mesh) {
 
-            onLoad();
+                this.testCharacter.init(this.scene, this.loadingManager)
+
+                onLoad();
+            }
         };
         this.loadingManager.onError = (err) => {
             console.log("Error during load", err);
@@ -114,7 +123,6 @@ export default class Game {
 
         this.square.init(this.collisionManager, this.loadingManager);
         this.sky.init();
-        this.testCharacter.init(this.square, this.loadingManager)
 
         // WebVR
         let vrEffect = new THREE.VREffect(this.renderer);
@@ -159,7 +167,7 @@ export default class Game {
         }
 
         if (this.testCharacter) {
-            this.testCharacter.play();
+             this.testCharacter.play();
         }
         this.collisionManager.setPlayer(this.camera);
         this.resize();
