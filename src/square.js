@@ -8,6 +8,7 @@ export default class Square extends THREE.Object3D{
     }
     init(collisionManager,loadingManager) {
         let loader = new THREE.ObjectLoader(loadingManager);
+        loadingManager.itemStart("Square");
         loader.load(MODEL_PATH,( obj ) => {
             console.log("Loaded square ", obj);
 
@@ -20,8 +21,6 @@ export default class Square extends THREE.Object3D{
             obj.position.z = 100;
             obj.position.x = 0;
             obj.scale.set( 4, 4, 4 );
-
-            console.log(obj.getObjectByName("tarmac_remod").children[0]);
 
             this.add(obj);
             obj.updateMatrixWorld();
@@ -38,6 +37,7 @@ export default class Square extends THREE.Object3D{
 
             this.sphereMesh = obj.getObjectByName("SkySphere").children[0];
             console.log("Sky sphere", this.sphereMesh);
+            loadingManager.itemEnd("Square");
         });
 
         let treesLoader = new THREE.PLYLoader(loadingManager);

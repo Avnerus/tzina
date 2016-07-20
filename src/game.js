@@ -107,9 +107,6 @@ export default class Game {
             this.scene.add(this.testCharacter)
 
             onLoad();
-            setTimeout(() => {
-                this.testCharacter.play();
-            },5000)
         };
         this.loadingManager.onError = (err) => {
             console.log("Error during load", err);
@@ -169,8 +166,9 @@ export default class Game {
         this.collisionManager.setPlayer(this.camera);
         this.resize();
 
-        //this.testCharacter.play();
-
+        setTimeout(() => {
+            this.testCharacter.play();
+        },5000)
     }
 
     animate(t) {

@@ -66,6 +66,7 @@ export default class Sky {
     }
 
     applyToMesh(mesh) {
+        console.log("Apply sky to", mesh);
         if (mesh) {
             mesh.material = this.shader;
             this.geo = mesh.geometry;
