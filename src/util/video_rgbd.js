@@ -9,11 +9,10 @@ const VERTS_WIDE = 128;
 const VERTS_TALL = 128;
 
 
-export default class VideoRGBD extends THREE.Object3D {
+export default class VideoRGBD  {
     constructor(properties) {
         const glslify = require('glslify');
 
-        super();
         this.properties = properties;
 
 
@@ -26,11 +25,10 @@ export default class VideoRGBD extends THREE.Object3D {
         console.log("VideoRGBD constructed: " , this.properties);
     }
 
-    init(scene, loadingManager) {
+    init(loadingManager) {
         this.video = document.createElement( 'video' );
         this.video.src = this.properties.basePath + '.webm';
         this.video.loop = false;
-        let imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
 
         this.isPlaying = false;
@@ -40,43 +38,50 @@ export default class VideoRGBD extends THREE.Object3D {
         this.videoTexture.format = THREE.RGBFormat;
         this.videoTexture.generateMipmaps = false;
 
-        let geometry = this.buildMeshGeometry();
+        this.imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
         this.meshMaterial = new THREE.ShaderMaterial( {
 
             uniforms: {
-                "map": { type: "t", value: imageTexture },
-                "opacity": { type: "f", value: 0.25 },
+                "map": { type: "t", value: this.imageTexture },
                 "mindepth" : { type : "f", value : this.properties.mindepth },
                 "maxdepth" : { type : "f", value : this.properties.maxdepth }
             },
 
             vertexShader: this.rgbd_vs,
             fragmentShader: this.rgbd_fs,
-            blending: THREE.AdditiveBlending,
+            blending: THREE.AdditiveBlending /*
             depthTest: false,
-            depthWrite: false,
+            depthWrite: false*/
         } );
+
+        let geometry = this.buildMeshGeometry();
 
         //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //let mesh = new THREE.Mesh( geometry, material);
-        this.mesh.scale.set(0.002, 0.002, 0.002);
-        this.mesh.position.set(40,12,40);
-        scene.add(this.mesh);
+        this.mesh.scale.set(0.0016, 0.0016, 0.0016);
+        this.mesh.rotation.set(
+            this.properties.rotation[0],
+            this.properties.rotation[1],
+            this.properties.rotation[2]
+        );
         //mesh.frustumCulled = false;
 
+        /*
         var bbox = new THREE.BoundingBoxHelper( this.mesh, 0x00ff00  );
         bbox.update();
-        scene.add( bbox );
+        scene.add( bbox );*/
+
     }
+
 
     buildMeshGeometry() {
         let meshGeometry = new THREE.Geometry();
         for ( let y = 0; y < VERTS_TALL; y++) {
             for ( let x = 0; x < VERTS_WIDE; x++ ) {
                 meshGeometry.vertices.push(
-                        new THREE.Vector3((-320 + x * 4), (240 -y * 4) , 0 ) );
+                        new THREE.Vector3((-640 + x * 5), (480 -y * 5) , 0 ) );
                     // new THREE.Vector3(-x / VERTS_WIDE ,  y / VERTS_TALL, 0 ) );
             }
         }

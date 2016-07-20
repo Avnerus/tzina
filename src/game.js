@@ -75,18 +75,17 @@ export default class Game {
             basePath : 'assets/characters/lupocomp',
             mindepth : 2331.267333984,
             maxdepth : 3446.559326172,
-            position : [30, 15, 47],
-            rotation: [0, 0, 0],
-            name: 'test'
+            position : [30, 6, 42],
+            rotation: [0, 170, 0],
+            name: 'Lupo'
         });
-
 
         this.sky = new Sky(this.loadingManager);
 
         /*
         this.flood = new Flood();
         this.flood.init();
-        this.scene.add(this.flood);*/
+        this.scene.add(this.flood); */
 
         // Post processing
         this.composer = new THREE.EffectComposer(this.renderer);
@@ -104,13 +103,13 @@ export default class Game {
 
             console.log("Done loading everything!");
             this.scene.add(this.square);
-            //this.sky.applyToMesh(this.square.getSphereMesh());
-            if (!this.testCharacter.videoRGBD.mesh) {
+            this.sky.applyToMesh(this.square.getSphereMesh());
+            this.scene.add(this.testCharacter)
 
-                this.testCharacter.init(this.scene, this.loadingManager)
-
-                onLoad();
-            }
+            onLoad();
+            setTimeout(() => {
+                this.testCharacter.play();
+            },5000)
         };
         this.loadingManager.onError = (err) => {
             console.log("Error during load", err);
@@ -121,8 +120,9 @@ export default class Game {
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
-        this.square.init(this.collisionManager, this.loadingManager);
         this.sky.init();
+        this.testCharacter.init(this.loadingManager)
+        this.square.init(this.collisionManager, this.loadingManager);
 
         // WebVR
         let vrEffect = new THREE.VREffect(this.renderer);
@@ -160,15 +160,12 @@ export default class Game {
             }
 
             // Get in the square
-            this.keyboardController.setPosition(30, 15, 50);
+            this.keyboardController.setPosition(35, 10, 65);
 
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
 
-        if (this.testCharacter) {
-             this.testCharacter.play();
-        }
         this.collisionManager.setPlayer(this.camera);
         this.resize();
 
@@ -182,7 +179,7 @@ export default class Game {
     }
 
     update(dt) {
-        //this.sky.update(dt);
+        this.sky.update(dt);
         this.dirLight.position.copy(this.sky.getSunPosition());
         if (this.keyboardController) {
             this.keyboardController.update(dt);
@@ -192,9 +189,9 @@ export default class Game {
             this.vrControls.update();
             }
         this.testCharacter.update(dt);
+        //this.flood.update(dt);
         /*
         this.collisionManager.update(dt);
-        this.flood.update(dt);
         //console.log(this.camera.rotation); */
     }
 

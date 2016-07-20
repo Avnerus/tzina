@@ -11,7 +11,6 @@ export default class Video360 {
         this.video.loop = true;
         this.video.src = this.path;
         this.video.load();
-        this.video.play();
 
         this.timer = 0;
 

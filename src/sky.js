@@ -39,7 +39,7 @@ export default class Sky {
 
         // Chrome Linux workaround
         setTimeout(()=> {
-            this.clouds.init(this.shader);
+                 this.clouds.init(this.shader);
         },0);
 
         /*
