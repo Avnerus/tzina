@@ -9,7 +9,7 @@ export default class Character extends THREE.Object3D {
         
         this.props = props;
     }
-    init(loadingManager) {
+    init(loadingManager, animations) {
             this.videoRGBD.init(loadingManager);
             this.position.set(
                 this.props.position[0],
@@ -17,11 +17,16 @@ export default class Character extends THREE.Object3D {
                 this.props.position[2]
             );
             this.add(this.videoRGBD.mesh);
+            this.animation = animations[this.props.animation];
+            //this.add(this.animation);
+            this.animation.scale.set(0.01, 0.01, 0.01);
+            this.animation.position.z = -5;
     }
     play() {
             this.videoRGBD.play();
     }
-    update(dt) {
+    update(dt,et) {
          this.videoRGBD.update(dt);
+         //this.animation.update(dt,et)
     }
 }

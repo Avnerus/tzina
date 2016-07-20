@@ -7,6 +7,9 @@ import PostShader from './post_shader'
 import Flood from './flood'
 import ZoomController from './zoom_controller'
 
+// Animations
+import HannahAnimation from './animations/hannah'
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
@@ -77,17 +80,26 @@ export default class Game {
             maxdepth : 3446.559326172,
             position : [30, 6, 42],
             rotation: [0, 170, 0],
-            name: 'Lupo'
+            name: 'Lupo',
+            animation: 'Hannah'
         });
 
         this.sky = new Sky(this.loadingManager);
+
+
+        // animations
+        this.animations = {
+            'Hannah': new HannahAnimation()
+        }
+        
 
         /*
         this.flood = new Flood();
         this.flood.init();
         this.scene.add(this.flood); */
 
-        // Post processing
+        /*
+        // Post processing 
         this.composer = new THREE.EffectComposer(this.renderer);
         let renderPass = new THREE.RenderPass(this.scene, this.camera);
         this.composer.addPass(renderPass);
@@ -95,6 +107,7 @@ export default class Game {
         let effect = new THREE.ShaderPass(PostShader);
         effect.renderToScreen = true;
         this.composer.addPass( effect );
+        */
 
     }
 
@@ -118,8 +131,13 @@ export default class Game {
         }
 
         this.sky.init();
-        this.testCharacter.init(this.loadingManager)
+        this.testCharacter.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
+
+        // Animations init
+        Object.keys(this.animations).forEach((key) => {
+            this.animations[key].init(this.loadingManager);
+        });
 
         // WebVR
         let vrEffect = new THREE.VREffect(this.renderer);
@@ -167,16 +185,16 @@ export default class Game {
         this.resize();
 
         setTimeout(() => {
-            this.testCharacter.play();
+            //    this.testCharacter.play();
         },5000)
     }
 
     animate(t) {
-        this.update(this.clock.getDelta());
+        this.update(this.clock.getDelta(), this.clock.getElapsedTime());
         this.render();
     }
 
-    update(dt) {
+    update(dt,et) {
         this.sky.update(dt);
         this.dirLight.position.copy(this.sky.getSunPosition());
         if (this.keyboardController) {
@@ -186,7 +204,7 @@ export default class Game {
         if (this.vrControls) {
             this.vrControls.update();
             }
-        this.testCharacter.update(dt);
+        this.testCharacter.update(dt,et);
         //this.flood.update(dt);
         /*
         this.collisionManager.update(dt);
@@ -205,6 +223,6 @@ export default class Game {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
-        this.composer.setSize(width, height);
+        //this.composer.setSize(width, height);
     }
 }
