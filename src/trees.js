@@ -19,8 +19,9 @@ export default class Trees extends THREE.Object3D {
                 TreesDef.instances.forEach((instance) => {
                     let mesh = new THREE.Points( treeTypes[instance.type], material );
                     mesh.position.fromArray(instance.position);
-                    mesh.scale.set(0.2, 0.2, 0.2);
+                    mesh.scale.set(0.25 * instance.scale, 0.25 * instance.scale, 0.25 * instance.scale);
                     mesh.rotateZ(90 * Math.PI / 180);
+                    mesh.rotateX(instance.rotateX * Math.PI / 180);
                     this.add(mesh);
                     resolve();
                 })
