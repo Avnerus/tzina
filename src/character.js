@@ -11,11 +11,7 @@ export default class Character extends THREE.Object3D {
     }
     init(loadingManager, animations) {
             this.videoRGBD.init(loadingManager);
-            this.position.set(
-                this.props.position[0],
-                this.props.position[1],
-                this.props.position[2]
-            );
+            this.position.fromArray(this.props.position);
             this.add(this.videoRGBD.mesh);
             this.animation = animations[this.props.animation];
             //this.add(this.animation);
