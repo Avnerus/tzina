@@ -1,3 +1,5 @@
+import EventEmitter from 'events'
+
 import Sky from './sky'
 import Square from './square'
 import CollisionManager from './collision_manager'
@@ -6,6 +8,7 @@ import KeyboardController from './keyboard_controller'
 import PostShader from './post_shader'
 import Flood from './flood'
 import ZoomController from './zoom_controller'
+import TzinaVRControls from './tzina_vr_controls'
 
 // Animations
 import HannahAnimation from './animations/hannah'
@@ -17,6 +20,10 @@ export default class Game {
         this.started = false;
     }
     init() {
+
+        class TzinaEmitter extends EventEmitter {}
+        this.emitter = new TzinaEmitter();
+
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
         this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -158,25 +165,18 @@ export default class Game {
         this.container.appendChild(element);
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked") {
-
-            if (this.vrManager.isVRCompatible) {
-                this.vrControls = new THREE.VRControls(this.camera);
+                this.vrControls = new TzinaVRControls(this.emitter, this.camera);
                 this.vrControls.standing = true;
-            } else {
+                this.keyboardController = new KeyboardController(this.config, this.emitter,  this.camera, this.square, this.collisionManager)
+                this.keyboardController.init();
+                this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
+                this.zoomController.init();
+                this.keyboardController.setPosition(40, 10, 65);
+
+                /*
                 let controls = new THREE.PointerLockControls( this.camera );
                 controls.enabled = true;
-
-                this.scene.add(controls.getObject());
-                this.keyboardController = new KeyboardController(this.config, controls.getObject(),this.square, this.collisionManager)
-                this.keyboardController.init();
-
-                this.zoomController = new ZoomController(this.config, this.camera, this.square);
-                this.zoomController.init();
-            }
-
-            // Get in the square
-            this.keyboardController.setPosition(40, 10, 65);
-
+                this.scene.add(controls.getObject());*/
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
