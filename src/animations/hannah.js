@@ -46,10 +46,10 @@ export default class HannahAnimation extends THREE.Object3D {
         evilMat = new THREE.MeshLambertMaterial( {map: evilTex} );
 
         let loader = new THREE.JSONLoader(this.loadingManager);
-        loader.load(this.BASE_PATH + "/models/spike_curvey.js", (geometry, material) => {
+        loader.load(this.BASE_PATH + "/models/spike_curvey_s.js", (geometry, material) => {
             evilGeo = geometry;
         });
-        loader.load(this.BASE_PATH + "/models/leavesss_less.js", (geometry, material) => {
+        loader.load(this.BASE_PATH + "/models/leavesss_less_s.js", (geometry, material) => {
             leafGeo = geometry;
 
             // ref: https://stemkoski.github.io/Three.js/Vertex-Colors.html
@@ -74,11 +74,11 @@ export default class HannahAnimation extends THREE.Object3D {
             }
         });
 
-        loader.load(this.BASE_PATH + "/models/twig.js", function(geometry, material){
+        loader.load(this.BASE_PATH + "/models/twig_s.js", function(geometry, material){
             twigGeo = geometry;
         });
 
-        this.loadModelDome(this.BASE_PATH + '/models/shield.js', this.BASE_PATH + '/models/dome.js', this.BASE_PATH + '/models/collapse.js')
+        this.loadModelDome(this.BASE_PATH + '/models/shield_s.js', this.BASE_PATH + '/models/dome_s.js', this.BASE_PATH + '/models/collapse_s.js')
         .then((dome) => {
             this.add(dome);
             console.log("Loaded dome, setting up 'things'", dome);
@@ -127,11 +127,9 @@ export default class HannahAnimation extends THREE.Object3D {
                 hannahRoom.add(meshhh);
             });
         }
-        hannahRoom.scale.set(8,8,8);
-        hannahRoom.rotation.y = Math.PI;
-        hannahRoom.position.y = 400;
+        hannahRoom.scale.set(0.02,0.02,0.02);
+        hannahRoom.position.set(1,2,4);
         this.add(hannahRoom);
-
 
         this.loadingManager.itemEnd("HannahAnim");
     }
@@ -148,7 +146,7 @@ export default class HannahAnimation extends THREE.Object3D {
         });
 
         // reduce emitter amount to be 1/5 of domeMorphTargets.length
-        for(let i = 0; i < this.domeMorphTargets.length-6; i+=6){
+        for(let i = 0; i < this.domeMorphTargets.length-10; i+=10){
             let emitter = new SPE.Emitter({
                 type: SPE.distributions.SPHERE,
                 // duration: 10,
@@ -158,24 +156,25 @@ export default class HannahAnimation extends THREE.Object3D {
                 },
                 position: {
                     value: this.domeMorphTargets[i].mesh.position,
-                    spread: new THREE.Vector3(20,20,20),
-                    radiusScale: new THREE.Vector3(3,3,3),
-                    distribution: SPE.distributions.SPHERE
+                    radius: 0.2,
+                    // spread: new THREE.Vector3(1,1,1),
+                    // radiusScale: new THREE.Vector3(1,1,1),
+                    // distribution: SPE.distributions.SPHERE
                 },
                 acceleration: {
-                    value: new THREE.Vector3(0,-5,0),
-                    spread: new THREE.Vector3(2,-5,2)
+                    value: new THREE.Vector3(0,-0.5,0),
+                    // spread: new THREE.Vector3(0.5,-0.8,0.5)
                 },
                 velocity: {
-                    value: new THREE.Vector3(1,-1,1)
+                    value: new THREE.Vector3(0.3,-0.3,0.3)
                     // distribution: SPE.distributions.SPHERE
                 },
                 rotation: {
-                    angle: 1
+                    angle: 0.5
                 },
                 angle: {
-                    value: [0,1,-1],
-                    spread: [0,-1,1]
+                    value: [0,0.5,-0.5],
+                    spread: [0,-0.5,0.5]
                 },
                 // color: {
                 // 	value: new THREE.Color( 0xAA4488 )
@@ -184,16 +183,17 @@ export default class HannahAnimation extends THREE.Object3D {
                     value: [0,1,1,1,0]
                 },
                 size: {
-                    value: [10,50,50,50,30]
+                    value: [.05,.25,.25,.25,.15]
                     // spread: [1,3]
                 },
-                particleCount: 1,
-                drag: 0.5
+                particleCount: 3,
+                drag: 0.6
                 // wiggle: 15
                 // isStatic: true
             });
             this.particleGroup.addEmitter( emitter );
         }
+        console.log(this.particleGroup.emitters.length);
         this.add( this.particleGroup.mesh );
     }
 
@@ -209,6 +209,7 @@ export default class HannahAnimation extends THREE.Object3D {
             loader.load(modelS, (geometry, material) => {
 
                 this.shieldGeo = geometry;
+                console.log(this.shieldGeo.vertices.length);
                 
                 loader.load(modelD, (geometryD, materialD) => {
                     let domeGeo = geometryD;
@@ -217,8 +218,8 @@ export default class HannahAnimation extends THREE.Object3D {
                         let collapseGeo = geometryC;
 
                         var tempDome = new THREE.Mesh(domeGeo, followMat);
-                        tempDome.rotation.y = Math.PI;
-                        tempDome.scale.multiplyScalar(90);
+                        // tempDome.rotation.y = Math.PI;
+                        // tempDome.scale.multiplyScalar(90);
                         tempDome.updateMatrix();
 
                         domeGeo.applyMatrix( tempDome.matrix );
@@ -243,12 +244,14 @@ export default class HannahAnimation extends THREE.Object3D {
             this.particleGroup.tick( dt );
         }
         for(let i=0; i < this.shieldGeo.vertices.length; i++){
-            let h = this.perlin.noise(et*0.1, i, 1)/2;
+            let h = this.perlin.noise(et*0.1, i, 1)/150;
             this.domeMorphTargets[i].mesh.position.addScalar( h );
 
-            if( i % 6==0 ){
-                if(i/6 != 63)
-                    this.particleGroup.emitters[i/6].position.value = this.particleGroup.emitters[i/6].position.value.addScalar( h );
+            if( i % 10==0 ){
+                if(i/10 != 38){
+                    // this.particleGroup.emitters[i/6].position.value = this.particleGroup.emitters[i/6].position.value.addScalar( h );
+                    this.particleGroup.emitters[i/10].position.value = this.particleGroup.emitters[i/10].position.value.copy( this.domeMorphTargets[i].mesh.position );
+                }
             }
         }
 
@@ -264,22 +267,6 @@ export default class HannahAnimation extends THREE.Object3D {
 function Thing( pos, geoTwig, geoLeaf, geoEvil, twigMat, leafMat, evilMat ){
 
     this.position = pos.clone();
-    this.acceleration = new THREE.Vector3(0,0,0);
-    this.velocity = new THREE.Vector3(0,0,0);
-
-    this.r = 15; // 0.6
-    this.maxSpeed = 2; //0.3
-    this.maxForce = 0.005; //0.01
-    this.maxForceSelf = 0.00001; //0.0001
-    this.toChase = true;
-
-    this.neighbordist = 10;
-
-    var lightDis = 20;
-
-    this.separateSingleScalar = 0.1;
-    this.arriveScalar = 1;
-
     this.mesh = new THREE.Object3D();
 
     // v.2
@@ -294,7 +281,7 @@ function Thing( pos, geoTwig, geoLeaf, geoEvil, twigMat, leafMat, evilMat ){
     this.mesh.position.copy(this.position);
 
     this.mesh.children[1].scale.set(0.01, 0.01, 0.01);
-    this.mesh.children[2].scale.set(0.01, 0.01, 0.01);
+    this.mesh.children[0].scale.set(0.01, 0.01, 0.01);
 }
 
 function map_range(value, low1, high1, low2, high2) {

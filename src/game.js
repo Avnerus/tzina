@@ -91,7 +91,6 @@ export default class Game {
         this.animations = {
             'Hannah': new HannahAnimation()
         }
-        
 
         /*
         this.flood = new Flood();
@@ -175,7 +174,7 @@ export default class Game {
             }
 
             // Get in the square
-            this.keyboardController.setPosition(35, 10, 65);
+            this.keyboardController.setPosition(40, 10, 65);
 
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
