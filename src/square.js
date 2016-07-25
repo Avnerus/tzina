@@ -17,10 +17,6 @@ export default class Square extends THREE.Object3D{
             obj.add(trees);
             loadingManager.itemEnd("Square");
         });
-        
-
-
-
     }
     update(dt) {
     }
@@ -40,7 +36,7 @@ export default class Square extends THREE.Object3D{
                 obj.updateMatrixWorld();
                 //collisionManager.addBoundingBoxes(obj,this);
 
-                this.squareMiddle  = obj.getObjectByName("MB_PS");
+                this.squareMiddle  = obj.getObjectByName("basin");
                 if (this.squareMiddle) {
                     this.squareCenter  = new THREE.Vector3();
                     this.squareCenter.setFromMatrixPosition(this.squareMiddle.matrixWorld);

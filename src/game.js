@@ -202,7 +202,7 @@ export default class Game {
             this.zoomController.update(dt);
         }
         if (this.vrControls) {
-            this.vrControls.update();
+               this.vrControls.update();
             }
         this.testCharacter.update(dt,et);
         //this.flood.update(dt);

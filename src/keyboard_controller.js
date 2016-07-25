@@ -104,7 +104,7 @@ export default class KeyboardController {
             this.velocity.x -= this.velocity.x * 10.0 * delta;
             this.velocity.z -= this.velocity.z * 10.0 * delta;
 
-            this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+            //this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
             if ( this.moveForward ) this.velocity.z -= 100.0 * delta;
             if ( this.moveBackward ) this.velocity.z += 100.0 * delta;
@@ -112,9 +112,10 @@ export default class KeyboardController {
             if ( this.moveLeft ) this.velocity.x -= 100.0 * delta;
             if ( this.moveRight ) this.velocity.x += 100.0 * delta;
 
+            /*
             if (this.collisionManager.isClimbingStairs() && this.velocity.z != 0) {
                 this.climbStairs();
-            }
+                }*/
 
             if ( this.isOnObject === true)  {
                 this.velocity.y = Math.max( 0, this.velocity.y );
@@ -128,6 +129,8 @@ export default class KeyboardController {
             this.camera.position.y += this.velocity.y * delta;
             this.camera.translateZ( this.velocity.z * delta );
 
+            /*
+
             if ( this.camera.position.y < this.height) {
                     if ( this.camera.position.y < this.height) {
 
@@ -139,7 +142,7 @@ export default class KeyboardController {
 
 
                  this.canJump = true;
-            }
+                 }*/
 
 
             //console.log(this.camera.position);*/

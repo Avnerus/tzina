@@ -5,12 +5,16 @@ export default class ZoomController {
     constructor(config, emitter, camera, square) {
         this.camera = camera;
         this.square = square;
-        this.inZoomMode = false;
+        this.recalculateZoom = true;
         this.velocityZ = 0;
         this.emitter = emitter;
         this.zoomVector = new THREE.Vector3();
+        this.lastCameraOrientation = new THREE.Quaternion();
+        this.config = config;
 
-        this.MAX_DISTANCE = 100;
+        this.MAX_DISTANCE = 830;
+        this.DISTANCE_BEFORE_RISING = 83;
+
     }
     init() {
         JQueryMouseWheel($);
@@ -31,24 +35,37 @@ export default class ZoomController {
     
     update(dt) {
         if (this.velocityZ != 0) {
-            if (!this.inZoomMode) {
-                this.inZoomMode = true;
-                console.log("What?");
-                this.zoomVector.copy(new THREE.Vector3(0, 0, 1) ).applyQuaternion( this.camera.quaternion );
+            if (!this.camera.quaternion.equals(this.lastCameraOrientation)) {
+                let quat = new THREE.Quaternion().copy(this.camera.quaternion);
 
-                this.emitter.emit("start_zoom");
-                this.startZ = this.camera.position.z;
-                this.startY = this.camera.position.y;
+                this.zoomVector.copy(new THREE.Vector3(0, 0, 1) ).applyQuaternion(quat);
+                this.zoomVector.y = 0;
 
-                let zoomPosition = this.getZoomOutPosition();
+                this.lastCameraOrientation.copy(this.camera.quaternion);
+
+
 
                 //TweenMax.to(this.camera.position, 1, {x:zoomPosition.x, y: zoomPosition.y, z:zoomPosition.z});
 
             }
+            let distanceToSquare = this.camera.position.distanceTo(this.square.getCenterPosition());
+            if (distanceToSquare >= this.MAX_DISTANCE) {
+                this.velocityZ = Math.max(this.velocityZ, 0);
+            }
+            
+            //console.log(distanceToSquare);
+            if (distanceToSquare > this.DISTANCE_BEFORE_RISING ) {
+                this.camera.position.y = this.config.basalHeight + 0.1 * (distanceToSquare - this.DISTANCE_BEFORE_RISING);
+            } else {
+                this.camera.position.y = this.config.basalHeight;
+            }
+
             let movement = new THREE.Vector3();
-            movement.copy(this.zoomVector).multiplyScalar(this.velocityZ * -3.5 * dt);
+            movement.copy(this.zoomVector).multiplyScalar(this.velocityZ * -4.0 * dt * (distanceToSquare / this.DISTANCE_BEFORE_RISING));
             this.camera.position.add(movement);
             this.camera.updateProjectionMatrix();
+
+
             if (this.velocityZ > 0) {
                 this.velocityZ = Math.max(0, this.velocityZ - 10 * dt);
             } else {
