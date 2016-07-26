@@ -118,10 +118,10 @@ export default class HannahAnimation extends THREE.Object3D {
             doodleMen.push(mMesh);
         }
 
-        for(var i = 0; i < hannahRoomFiles.length; i++){
+        for(let i = 0; i < hannahRoomFiles.length; i++){
             loader.load( hannahRoomFiles[i], function(geometry){
-                var colorValue = Math.random() * 0xFF | 0;
-                var colorString = "rgb("+colorValue+","+colorValue+","+colorValue+")";
+                let colorValue = Math.random() * 0xFF | 0;
+                let colorString = "rgb("+colorValue+","+colorValue+","+colorValue+")";
                 let mat = new THREE.MeshLambertMaterial({ color: colorString });
                 let meshhh = new THREE.Mesh(geometry, mat);
                 hannahRoom.add(meshhh);
@@ -217,7 +217,7 @@ export default class HannahAnimation extends THREE.Object3D {
                     loader.load(modelC, (geometryC, materialC) => {
                         let collapseGeo = geometryC;
 
-                        var tempDome = new THREE.Mesh(domeGeo, followMat);
+                        let tempDome = new THREE.Mesh(domeGeo, followMat);
                         // tempDome.rotation.y = Math.PI;
                         // tempDome.scale.multiplyScalar(90);
                         tempDome.updateMatrix();
@@ -257,7 +257,7 @@ export default class HannahAnimation extends THREE.Object3D {
 
         // DOODLE_MEN
         if( this.doodleMenAnimators.length > 0) {
-            for(var i=0; i < this.doodleMenAnimators.length; i++){
+            for(let i=0; i < this.doodleMenAnimators.length; i++){
                 this.doodleMenAnimators[i].updateWithOrder( 300*dt );
             }
         }
