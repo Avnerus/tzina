@@ -9,6 +9,7 @@ import PostShader from './post_shader'
 import Flood from './flood'
 import ZoomController from './zoom_controller'
 import TzinaVRControls from './tzina_vr_controls'
+import SoundManager from './sound_manager'
 
 // Animations
 import HannahAnimation from './animations/hannah'
@@ -31,9 +32,10 @@ export default class Game {
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 1, 2000000);
-        
+
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
-        
+        this.sound_manager = new SoundManager(this.camera, this.scene);
+
 
         this.scene.add(this.camera);
         this.clock = new THREE.Clock();
@@ -53,7 +55,7 @@ export default class Game {
         //this.hemiLight.groundColor.setHSL( 0., 1, 0.75 );
         this.hemiLight.position.set( 0, 500, 0 );
         this.scene.add( this.hemiLight );
-        
+
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
         this.dirLight.position.set( 0, 120, -200  );
         this.dirLight.color.setHSL(1,1,1);
@@ -98,7 +100,7 @@ export default class Game {
         this.animations = {
             'Hannah': new HannahAnimation()
         }
-        
+
 
         /*
         this.flood = new Flood();
@@ -106,7 +108,7 @@ export default class Game {
         this.scene.add(this.flood); */
 
         /*
-        // Post processing 
+        // Post processing
         this.composer = new THREE.EffectComposer(this.renderer);
         let renderPass = new THREE.RenderPass(this.scene, this.camera);
         this.composer.addPass(renderPass);
@@ -133,11 +135,12 @@ export default class Game {
         };
 
         this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            
+
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
         this.sky.init();
+        this.sound_manager.init();
         this.testCharacter.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
 
@@ -163,6 +166,7 @@ export default class Game {
         let element = this.renderer.domElement;
         this.container = document.getElementById('game');
         this.container.appendChild(element);
+        this.sound_manager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked") {
                 this.vrControls = new TzinaVRControls(this.emitter, this.camera);
