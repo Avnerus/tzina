@@ -9,6 +9,7 @@ import ZoomController from './zoom_controller'
 
 // Animations
 import HannahAnimation from './animations/hannah'
+import LupoAnimation from './animations/lupo'
 
 export default class Game {
     constructor(config) {
@@ -81,7 +82,7 @@ export default class Game {
             position : [30, 6, 42],
             rotation: [0, 170, 0],
             name: 'Lupo',
-            animation: 'Hannah'
+            animation: 'Lupo'
         });
 
         this.sky = new Sky(this.loadingManager);
@@ -89,7 +90,8 @@ export default class Game {
 
         // animations
         this.animations = {
-            'Hannah': new HannahAnimation()
+            'Hannah': new HannahAnimation(),
+            'Lupo': new LupoAnimation()
         }
 
         /*
