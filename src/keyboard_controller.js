@@ -20,6 +20,8 @@ export default class KeyboardController {
         this.height = config.basalHeight;
 
         this.active = true;
+
+        this.zAxis = new THREE.Vector3(0,0,1);
     }
     init() {
 
@@ -127,7 +129,9 @@ export default class KeyboardController {
             
             this.camera.translateX( this.velocity.x * delta );
             this.camera.position.y += this.velocity.y * delta;
-            this.camera.translateZ( this.velocity.z * delta );
+            let zVector = new THREE.Vector3().copy(this.zAxis).applyQuaternion(this.camera.quaternion);
+            zVector.y = 0;
+            this.camera.position.add(zVector.multiplyScalar(this.velocity.z * delta));
 
             /*
 
