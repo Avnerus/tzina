@@ -4,9 +4,8 @@ import Fountain from "./fountain"
 const MODEL_PATH = "assets/square/scene.json"
 
 export default class Square extends THREE.Object3D{
-    constructor(emitter) {
+    constructor() {
         super();
-        this.emitter = emitter;
         console.log("Square constructed!")
     }
     init(collisionManager,loadingManager) {
@@ -29,9 +28,10 @@ export default class Square extends THREE.Object3D{
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");
 
-            this.emitter.emit("add_gui", this.fountain.position, "x");
-            this.emitter.emit("add_gui", this.fountain.position, "z");
-            this.emitter.emit("add_gui", this.fountain.position, "y");
+            /*
+            events.emit("add_gui", this.fountain.position, "x"); 
+            events.emit("add_gui", this.fountain.position, "z");
+            events.emit("add_gui", this.fountain.position, "y"); */
         });
     }
     update(dt) {

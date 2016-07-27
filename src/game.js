@@ -24,6 +24,8 @@ export default class Game {
 
         class TzinaEmitter extends EventEmitter {}
         this.emitter = new TzinaEmitter();
+        global.events = this.emitter;
+
         this.gui = new GuiManager(this.emitter);
         this.gui.init();
 
@@ -73,7 +75,7 @@ export default class Game {
 
 
         // Square
-        this.square = new Square(this.emitter);
+        this.square = new Square();
 
         // Test characters
         /*this.testCharacter = new Character({
