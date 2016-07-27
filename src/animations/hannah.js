@@ -22,9 +22,9 @@ export default class HannahAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            {time: 4, anim: this.beDome},
-            {time: 10, anim: this.showLeaf},
-            {time: 16, anim: this.beCollapse}
+            { time: 4, anim: ()=>{this.beDome()} },
+            { time: 10, anim: ()=>{this.showLeaf()} },
+            { time: 16, anim: ()=>{this.beCollapse()} }
         ];
 
         let hannahRoomFiles = [this.BASE_PATH + "/models/hannah_room/hr_bookshelf.js", this.BASE_PATH + "/models/hannah_room/hr_chair.js",
@@ -55,6 +55,10 @@ export default class HannahAnimation extends THREE.Object3D {
         evilTex.repeat.set( 1, 4 );
         evilMat = new THREE.MeshLambertMaterial( {map: evilTex} );
 
+        this.center = new THREE.Mesh( new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({color: 0xff0000}));
+        this.center.position.set(0,-5,2);
+        this.add(this.center);
+
         let loader = new THREE.JSONLoader(this.loadingManager);
         loader.load(this.BASE_PATH + "/models/spike_curvey_s.js", (geometry, material) => {
             evilGeo = geometry;
@@ -78,7 +82,8 @@ export default class HannahAnimation extends THREE.Object3D {
                     point = leafGeo.vertices[ vertexIndex ];
                     // initialize color variable
                     color = new THREE.Color();
-                    color.setRGB( 0.1 + (10+point.x) / ((j+4)*5), 0.5 + (10+point.y) / ((j+4)*15), 0.2 + (10+point.z) / ((j+4)*5) );
+                    // console.log( ((point.x+1)*30) / ((j+4)*14) );
+                    color.setRGB( ((point.x+1)*30) / ((j+4)*15), 0.5 + (point.y*10) / ((j+4)*13), ((point.x+1)*30) / ((j+4)*14) );
                     face.vertexColors[j] = color;
                 }
             }
@@ -94,9 +99,8 @@ export default class HannahAnimation extends THREE.Object3D {
             this.dome = dome;
             this.add( this.dome );
             console.log("Loaded dome, setting up 'things'", this.dome);
-            console.log("dome's vertices length: " + this.dome.geometry.vertices.length);
 
-            let centerV = new THREE.Vector3();
+            let centerV = this.center.position.clone();
             let upp = new THREE.Vector3(0,-1,0);
 
             for(let i = 0; i < this.dome.geometry.vertices.length; i++){
@@ -106,14 +110,20 @@ export default class HannahAnimation extends THREE.Object3D {
 
                 this.add(fMesh.mesh);
 
+                let vA = this.dome.geometry.vertices[i].clone();
+                let tempA = new THREE.Vector3();
+                tempA.set( this.lookupTable[i%50]*0.5, this.lookupTable[(i+1)%50]*0.5, this.lookupTable[(i+2)%50]*0.5 );
+                vA.add( tempA );
+
                 let m1 = new THREE.Matrix4();
-                m1.lookAt( centerV, this.dome.geometry.vertices[i], upp );
+                m1.lookAt( centerV, vA, upp );
                 fMesh.mesh.quaternion.setFromRotationMatrix( m1 );
 
                 this.domeMorphTargets.push( fMesh );
             }
-            console.log("domeMorphTargets length: " + this.domeMorphTargets.length);
+            // console.log("domeMorphTargets length: " + this.domeMorphTargets.length);
 
+            // this.updateVertices();
             this.initParticles();
         });
         let hannahRoom = new THREE.Object3D();
@@ -226,13 +236,17 @@ export default class HannahAnimation extends THREE.Object3D {
     }
 
     updateVertices() {
+
+        // console.log( "dome's morphTargetInfluence[0] : " + this.dome.morphTargetInfluences[0]
+        //             +", dome's morphTargetInfluence[1] : " + this.dome.morphTargetInfluences[1]);
         
         let morphTargets = this.dome.geometry.morphTargets;
         let morphInfluences = this.dome.morphTargetInfluences;
-        
+        let upp = new THREE.Vector3(0,-1,0);
+
         // get morph geometry update position data
         for(let i=0; i<this.shieldGeo.vertices.length; i++){
-            let centerV = new THREE.Vector3(0,0,0);
+            let centerV = this.center.position.clone();
             let vA = new THREE.Vector3();
             let tempA = new THREE.Vector3();
 
@@ -243,15 +257,16 @@ export default class HannahAnimation extends THREE.Object3D {
             }
 
             vA.add( this.shieldGeo.vertices[i] );
-            tempA.set( this.lookupTable[i%50]*100, this.lookupTable[(i+1)%50]*100, this.lookupTable[(i+2)%50]*100 );
+            tempA.set( this.lookupTable[i%50]*0.5, this.lookupTable[(i+1)%50]*0.5, this.lookupTable[(i+2)%50]*0.5 );
             vA.add( tempA );
 
             this.domeMorphTargets[i].mesh.position.copy( vA );
+
             if(i%10==0){
                 if(i/10 != 38)
                     this.particleGroup.emitters[i/10].position.value = this.particleGroup.emitters[i/10].position.value.copy( vA );
             }
-
+                        
             // rotate
             let m1 = new THREE.Matrix4();
             m1.lookAt( centerV, vA, upp );
@@ -259,21 +274,21 @@ export default class HannahAnimation extends THREE.Object3D {
         }
     }
 
-    beDome( thiss ) {
+    beDome() {
         let tmpEndArray = [1,0];
-        TweenMax.to( thiss.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, onUpdate: thiss.updateVertices } );
+        TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
     }
 
-    showLeaf( thiss ) {
-        for(let i=0; i<thiss.domeMorphTargets.length; i++){
-            TweenMax.to( thiss.domeMorphTargets[i].mesh.children[1].scale, 2, { x: 1, y: 1, z: 1, ease: Power2.easeOut } );
-            TweenMax.to( thiss.domeMorphTargets[i].mesh.children[2].scale, 3, { x: 0.01, y: 0.01, z: 0.01, ease: Power4.easeIn } );
+    showLeaf() {
+        for(let i=0; i<this.domeMorphTargets.length; i++){
+            TweenMax.to( this.domeMorphTargets[i].mesh.children[1].scale, 2, { x: 1, y: 1, z: 1, ease: Power2.easeOut } );
+            TweenMax.to( this.domeMorphTargets[i].mesh.children[2].scale, 4, { x: 0.01, y: 0.01, z: 0.01, ease: Power4.easeIn } );
         }
     }
 
-    beCollapse( thiss ) {
+    beCollapse() {
         let tmpEndArray = [0,1];
-        TweenMax.to( thiss.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, onUpdate: thiss.updateVertices } );
+        TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
     }
 
     loadModelDome (modelS, modelD, modelC) {
@@ -297,14 +312,14 @@ export default class HannahAnimation extends THREE.Object3D {
                     loader.load(modelC, (geometryC, materialC) => {
                         let collapseGeo = geometryC;
 
-                        let tempDome = new THREE.Mesh(domeGeo, followMat);
+                        // let tempDome = new THREE.Mesh(domeGeo, followMat);
                         // tempDome.rotation.y = Math.PI;
                         // tempDome.scale.multiplyScalar(90);
-                        tempDome.updateMatrix();
+                        // tempDome.updateMatrix();
 
-                        domeGeo.applyMatrix( tempDome.matrix );
-                        this.shieldGeo.applyMatrix( tempDome.matrix );
-                        collapseGeo.applyMatrix( tempDome.matrix );
+                        // domeGeo.applyMatrix( tempDome.matrix );
+                        // this.shieldGeo.applyMatrix( tempDome.matrix );
+                        // collapseGeo.applyMatrix( tempDome.matrix );
 
                         this.shieldGeo.morphTargets[0] = {name: 't1', vertices: domeGeo.vertices};
                         this.shieldGeo.morphTargets[1] = {name: 't2', vertices: collapseGeo.vertices};
