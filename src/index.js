@@ -11,7 +11,7 @@ var lock = require('pointer-lock-chrome-tolerant');
 
 console.log("Touch? ", Modernizr.touchevents)
 
-var FPS  = 30;
+var FPS  = config.fps;
 var FPS_INTERVAL = 1000 / FPS;
 var elapsed = 0
 var lastTimestamp = 0;

@@ -1,4 +1,5 @@
 import EventEmitter from 'events'
+import GuiManager from './gui_manager'
 
 import Sky from './sky'
 import Square from './square'
@@ -23,6 +24,8 @@ export default class Game {
 
         class TzinaEmitter extends EventEmitter {}
         this.emitter = new TzinaEmitter();
+        this.gui = new GuiManager(this.emitter);
+        this.gui.init();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
@@ -70,7 +73,7 @@ export default class Game {
 
 
         // Square
-        this.square = new Square();
+        this.square = new Square(this.emitter);
 
         // Test characters
         /*this.testCharacter = new Character({
@@ -197,6 +200,7 @@ export default class Game {
     update(dt,et) {
         this.sky.update(dt);
         this.dirLight.position.copy(this.sky.getSunPosition());
+        this.square.update();
         if (this.keyboardController) {
             this.keyboardController.update(dt);
             this.zoomController.update(dt);

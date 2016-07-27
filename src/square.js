@@ -1,24 +1,40 @@
 import Trees from "./trees"
+import Fountain from "./fountain"
 
 const MODEL_PATH = "assets/square/scene.json"
 
 export default class Square extends THREE.Object3D{
-    constructor() {
+    constructor(emitter) {
         super();
+        this.emitter = emitter;
         console.log("Square constructed!")
     }
     init(collisionManager,loadingManager) {
         loadingManager.itemStart("Square");
         let trees = new Trees();
-        Promise.all([this.loadSquare(loadingManager),trees.init(loadingManager)])
+        this.fountain = new Fountain();
+        Promise.all([
+            this.loadSquare(loadingManager),
+            trees.init(loadingManager),
+            this.fountain.init(loadingManager)
+        ])
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
             obj.add(trees);
+            //obj.add(this.fountain);
+            obj.add(this.fountain);
+            this.fountain.position.set(-1,25,-1);
+            this.fountain.scale.set(0.25, 0.25, 0.25);
+            //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");
+
+            this.emitter.emit("add_gui", this.fountain.position, "x");
+            this.emitter.emit("add_gui", this.fountain.position, "z");
         });
     }
     update(dt) {
+        this.fountain.update();
     }
 
     loadSquare(loadingManager) {

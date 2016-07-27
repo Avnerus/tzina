@@ -1,6 +1,7 @@
 export default class KeyboardController {
     constructor(config, emitter, camera, square, collisionManager) {
 
+        this.config = config;
         this.emitter = emitter;
 
         this.moveForward = false;
@@ -129,9 +130,13 @@ export default class KeyboardController {
             
             this.camera.translateX( this.velocity.x * delta );
             this.camera.position.y += this.velocity.y * delta;
-            let zVector = new THREE.Vector3().copy(this.zAxis).applyQuaternion(this.camera.quaternion);
-            zVector.y = 0;
-            this.camera.position.add(zVector.multiplyScalar(this.velocity.z * delta));
+            if (this.config.enableFlying) {
+                this.camera.translateZ(this.velocity.z * delta);
+            } else {
+                let zVector = new THREE.Vector3().copy(this.zAxis).applyQuaternion(this.camera.quaternion);
+                zVector.y = 0;
+                this.camera.position.add(zVector.multiplyScalar(this.velocity.z * delta));
+            }
 
             /*
 
