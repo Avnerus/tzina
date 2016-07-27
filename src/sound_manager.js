@@ -13,7 +13,6 @@ export default class SoundManager {
     init() {
         //LISTENER
         this.listener = new THREE.AudioListener();
-
         this.camera.add(this.listener);
 
         //SOUNDS
@@ -70,13 +69,13 @@ export default class SoundManager {
             console.log('Highway two sound loaded');
         });
 
-
-
     }
 
     play() {
         fountain.play();
+
         highway_1.play();
+
         highway_2.play();
 
     }
@@ -84,8 +83,10 @@ export default class SoundManager {
     pause() {
         fountain.pause();
         fountain.currentTime = 0;
+
         highway_1.pause();
         highway_1.currentTime = 0;
+
         highway_2.pause();
         highway_2.currentTime = 0;
 
