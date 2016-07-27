@@ -24,13 +24,14 @@ export default class Square extends THREE.Object3D{
             obj.add(trees);
             //obj.add(this.fountain);
             obj.add(this.fountain);
-            this.fountain.position.set(-1,25,-1);
+            this.fountain.position.set(0.5,22, -1);
             this.fountain.scale.set(0.25, 0.25, 0.25);
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");
 
             this.emitter.emit("add_gui", this.fountain.position, "x");
             this.emitter.emit("add_gui", this.fountain.position, "z");
+            this.emitter.emit("add_gui", this.fountain.position, "y");
         });
     }
     update(dt) {

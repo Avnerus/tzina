@@ -11,9 +11,22 @@ export default class Fountain extends THREE.Object3D  {
                 //value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'water_splash.png')
                 value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'smokeparticle.png')
             },
-            maxParticleCount: 1000
+            maxParticleCount: 2400
         });
-        this.createTrickle();
+
+
+        // Create fountains
+        let angle = 30;
+        let radius = 9.5;
+        let position = new THREE.Vector3(0,0,0);
+        let rotation = 0;
+
+        for (let i = 0; i <= 360; i+= angle ) {
+            rotation = i * Math.PI / 180;
+            position.x = Math.cos(rotation) * radius;
+            position.z = Math.sin(rotation) * radius;
+            this.createTrickle(position, rotation);
+        }
         //this.particleGroup.mesh.frustumCulled = false;
         this.add(this.particleGroup.mesh);
     }
@@ -22,18 +35,24 @@ export default class Fountain extends THREE.Object3D  {
        this.particleGroup.tick(dt); 
     }
 
-    createTrickle() {
+    createTrickle(position, rotation) {
+        // Get the velocity after rotation
         let emitter = new SPE.Emitter({
             maxAge: 5,
             type: SPE.distributions.BOX,
             position : {
-                value: new THREE.Vector3(0,4,0)
+                value: position
+            },
+            rotation: {
+                axis: new THREE.Vector3(0, 1, 0),
+                angle: rotation,
+                static: true
             },
             acceleration: {
                 value: new THREE.Vector3(0,-12,0)
             },
             velocity: {
-                value: new THREE.Vector3(7,20,0)
+                value: new THREE.Vector3(2,30,0)
             },
             color: {
                 value: new THREE.Color(0x87D9F5)
@@ -42,7 +61,9 @@ export default class Fountain extends THREE.Object3D  {
                 value: [0,2.0,0]
             },
             particleCount: 200,
-            opacity: [0, 0.5, 0],
+            opacity: {
+                value: [0.5, 1.0, 0.5]
+            },
             transparent: true
         });
 

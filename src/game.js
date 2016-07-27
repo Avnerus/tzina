@@ -163,6 +163,7 @@ export default class Game {
 
     start() {
         this.started = true;
+        this.vrManager.setMode_(2);
         let element = this.renderer.domElement;
         this.container = document.getElementById('game');
         this.container.appendChild(element);
