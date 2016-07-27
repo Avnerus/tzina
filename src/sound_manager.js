@@ -18,6 +18,7 @@ export default class SoundManager {
         //SOUNDS
         fountain = new THREE.PositionalAudio(this.listener);
         fountain.position.set(3, 15, 95);
+        fountain.setRefDistance( 1 );
         fountain.autoplay = false;
         fountain.loop = true;
 
@@ -49,7 +50,7 @@ export default class SoundManager {
         let loader = new THREE.AudioLoader();
 
         // FOUNTAIN
-        loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
+        loader.load(SOUND_PATH + 'fountain_water.ogg', function(audioBuffer) {
             fountain.setBuffer(audioBuffer);
         }, function() {
             console.log('Fountain sound loaded');
