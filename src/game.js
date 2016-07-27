@@ -152,14 +152,14 @@ export default class Game {
         });
 
         // WebVR
-        let vrEffect = new THREE.VREffect(this.renderer);
-        vrEffect.setSize(window.innerWidth, window.innerHeight);
+        this.vrEffect = new THREE.VREffect(this.renderer);
+        this.vrEffect.setSize(window.innerWidth, window.innerHeight);
 
         let params = {
           hideButton: false, // Default: false.
           isUndistorted: false // Default: false.
         };
-        this.vrManager = new WebVRManager(this.renderer, vrEffect, params);
+        this.vrManager = new WebVRManager(this.renderer, this.vrEffect, params);
 
     }
 
@@ -230,6 +230,7 @@ export default class Game {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
+        this.vrEffect.setSize(width, height);
         //this.composer.setSize(width, height);
     }
 }

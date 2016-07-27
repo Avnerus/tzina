@@ -1,7 +1,7 @@
 export default class Fountain extends THREE.Object3D  {
     constructor() {
         super();
-        this.BASE_PATH = '/assets/fountain/'
+        this.BASE_PATH = 'assets/fountain/'
         console.log("Fountain constructed!")
 
     }
