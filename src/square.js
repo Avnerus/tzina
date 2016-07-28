@@ -23,7 +23,7 @@ export default class Square extends THREE.Object3D{
             obj.add(trees);
             //obj.add(this.fountain);
             obj.add(this.fountain);
-            this.fountain.position.set(0.7,25.5, -0.8);
+            this.fountain.position.set(0.6,24.6, -0.8);
             this.fountain.scale.set(0.25, 0.25, 0.25);
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");

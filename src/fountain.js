@@ -24,7 +24,7 @@ export default class Fountain extends THREE.Object3D  {
         
         // First circle
         let angle = 30;
-        let radius = 9.5;
+        let radius = 8;
         let position = new THREE.Vector3(0,0,0);
         let rotation = 0;
 
@@ -39,7 +39,7 @@ export default class Fountain extends THREE.Object3D  {
 
         // Second
         position.y = -2;
-        radius = 15;
+        radius = 14;
 
         for (let i = 0; i <= 360; i+= angle ) {
             rotation = i * Math.PI / 180;
