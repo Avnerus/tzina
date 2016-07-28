@@ -89,10 +89,10 @@ export default class Fountain extends THREE.Object3D  {
                 value: velocity
             },
             color: {
-                value: new THREE.Color(0x9CB3BA)
+                value: new THREE.Color(0xB7C5C9)
             },
             size: {
-                value: [1.0, 1.5, 0.0]
+                value: [0.5, 1.0, 0.0]
             },
             particleCount: 200,
             opacity: {
