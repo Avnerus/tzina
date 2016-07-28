@@ -190,6 +190,9 @@ export default class Game {
         this.collisionManager.setPlayer(this.camera);
         this.resize();
 
+
+        this.square.fountain.startCycle();
+
         setTimeout(() => {
             //    this.testCharacter.play();
         },5000)
