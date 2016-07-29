@@ -39,12 +39,6 @@ export default {
             position: [43,22,3],
             rotateX: 0,
             scale: 4
-        },
-        {
-            type: "ThreeTrees",
-            position: [10,22,3],
-            rotateX: -50,
-            scale: 4
         }
         // {
         //     type: "Test",
