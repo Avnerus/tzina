@@ -40,7 +40,7 @@ export default class Game {
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 1, 2000000);
 
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
-        this.sound_manager = new SoundManager(this.camera, this.scene);
+        this.soundManager = new SoundManager(this.camera, this.scene);
 
 
         this.scene.add(this.camera);
@@ -126,7 +126,7 @@ export default class Game {
         */
 
         // Intro
-        this.intro = new Intro(this.camera, this.square);
+        this.intro = new Intro(this.camera, this.square, this.soundManager);
 
     }
 
@@ -149,7 +149,7 @@ export default class Game {
         }
 
         this.sky.init();
-        this.sound_manager.init();
+        this.soundManager.init();
         this.testCharacter.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
 
@@ -176,7 +176,7 @@ export default class Game {
         let element = this.renderer.domElement;
         this.container = document.getElementById('game');
         this.container.appendChild(element);
-        this.sound_manager.play();
+        this.soundManager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked") {
                 this.vrControls = new TzinaVRControls(this.emitter, this.camera);
@@ -231,6 +231,7 @@ export default class Game {
         /*
         this.collisionManager.update(dt);
         //console.log(this.camera.rotation); */
+        this.intro.update();
     }
 
     render() {

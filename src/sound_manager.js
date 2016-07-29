@@ -11,6 +11,45 @@ export default class SoundManager {
     }
 
     init() {
+
+        // Extending THREE.Audio
+
+        THREE.Audio.prototype.playIn = function(seconds) {
+            if ( this.isPlaying === true ) {
+
+                        console.warn( 'THREE.Audio: Audio is already playing.' );
+                        return;
+
+                    }
+
+                    if ( this.hasPlaybackControl === false ) {
+
+                        console.warn( 'THREE.Audio: this Audio has no playback control.' );
+                        return;
+
+                    }
+
+                    this.playStartTime = this.context.currentTime + seconds;
+
+                    var source = this.context.createBufferSource();
+
+                    source.buffer = this.source.buffer;
+                    source.loop = this.source.loop;
+                    source.onended = this.source.onended;
+                    source.start( this.playStartTime, this.startTime );
+                    source.playbackRate.value = this.playbackRate;
+
+                    this.isPlaying = true;
+
+                    this.source = source;
+
+            return this.connect();
+        }
+
+        THREE.Audio.prototype.getCurrentTime = function() {
+            return this.context.currentTime - this.playStartTime;
+        }
+
         //LISTENER
         this.listener = new THREE.AudioListener();
         this.camera.add(this.listener);
@@ -47,24 +86,27 @@ export default class SoundManager {
         this.scene.add(highway_2);
 
         //BUFFER THE SOUNDS INTO THE PROPER ELEMENTS
-        let loader = new THREE.AudioLoader();
+        this.loader = new THREE.AudioLoader();
+
+        // Dynamically loaded sounds
+        this.sounds = {}
 
         // FOUNTAIN
-        loader.load(SOUND_PATH + 'fountain_water.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'fountain_water.ogg', function(audioBuffer) {
             fountain.setBuffer(audioBuffer);
         }, function() {
             console.log('Fountain sound loaded');
         });
 
         // HIGHWAY ONE
-        loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
             highway_1.setBuffer(audioBuffer);
         }, function() {
             console.log('Highway one sound loaded');
         });
 
         // HIGHWAY TWO
-        loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
             highway_2.setBuffer(audioBuffer);
         }, function() {
             console.log('Highway two sound loaded');
@@ -81,6 +123,15 @@ export default class SoundManager {
 
     }
 
+    loadSound(fileName) {
+        return new Promise((resolve, reject) => {
+            let sound = new THREE.Audio(this.listener);
+            this.loader.load(SOUND_PATH + fileName, (audioBuffer) => {
+                sound.setBuffer(audioBuffer)
+                resolve(sound);
+            });
+        });
+    }
     pause() {
         fountain.pause();
         fountain.currentTime = 0;

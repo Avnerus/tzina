@@ -1,9 +1,10 @@
 import _ from 'lodash'
 
 export default class Intro {
-    constructor(camera, square) {
+    constructor(camera, square, soundManager) {
         this.camera = camera;
         this.square = square;
+        this.soundManager = soundManager;
 
         this.STARTING_POSITION = new THREE.Vector3(
             312.6124548161197,
@@ -18,6 +19,8 @@ export default class Intro {
             'XYZ'
         );
 
+        this.INTRO_SOUND = 'INTRO_Shirin.ogg'
+
     }
 
     init() {
@@ -26,6 +29,14 @@ export default class Intro {
         this.camera.position.copy(this.STARTING_POSITION);
         this.camera.rotation.copy(this.STARTING_ROTATION);
 
+        // Load the sound
+        this.soundManager.loadSound(this.INTRO_SOUND)
+        .then((sound) => {
+            console.log("Sound ", sound);
+            this.sound = sound;
+            this.sound.playIn(1);
+            //this.soundManager.playSound(this.INTRO_SOUND);
+        });
 
         setTimeout(() => {
             this.turnOnWindows();
@@ -116,5 +127,11 @@ export default class Intro {
     endIntro() {
         console.log("END INTRO");
         events.emit("intro_end");
+    }
+
+    update() {
+        if (this.sound && this.sound.isPlaying) {
+            //console.log("Intro sound position ", this.sound.getCurrentTime());
+        }
     }
 }
