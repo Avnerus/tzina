@@ -7,6 +7,10 @@ export default {
                 {
             name: "ThreeTrees",
             fileName: "3tress_2.ply"
+        },
+         {
+            name: "palm",
+            fileName: "palm.ply"
         }
     ],
     instances: [
@@ -20,25 +24,38 @@ export default {
             type: "ThreeTrees",
             position: [0,22,19],
             rotateX: -20,
-            scale: 4
+            scale: 4.2
         },
          {
             type: "ThreeTrees",
             position: [0,22,19],
             rotateX: -20,
-            scale: 4
+            scale: 4.2
         },
          {
             type: "ThreeTrees",
-            position: [44,24,2],
+            position: [50,27,2],
             rotateX: 0,
-            scale: 4
+            scale: 4.4
         }, 
         {
             type: "ThreeTrees",
-            position: [43,22,3],
+            position: [43,24,3],
             rotateX: 0,
-            scale: 4
+            scale: 4.4
+        },
+        {
+            type: "palm",
+            position: [-12,16,29],
+            rotateX: -120,
+            scale: 3
+        },
+
+        {
+            type: "palm",
+            position: [8,22,6],
+            rotateX: 60,
+            scale: 3
         }
         // {
         //     type: "Test",
