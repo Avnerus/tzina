@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export default class Intro {
     constructor(camera, square) {
         this.camera = camera;
@@ -24,9 +26,30 @@ export default class Intro {
         this.camera.position.copy(this.STARTING_POSITION);
         this.camera.rotation.copy(this.STARTING_ROTATION);
 
+
         setTimeout(() => {
-            this.zoomToSquare();
+            this.turnOnWindows();
         },10000);
+    }
+
+    start() {
+
+    }
+
+    turnOnWindows() {
+        let shuffledWindows = _.shuffle(this.square.windows.children);
+        console.log("INTRO: TURN ON " + shuffledWindows.length + " WINDOWS");
+        let index = {
+            value: 0
+        }
+        let lastIndex = 0;
+        TweenMax.to(index, 5, {value: shuffledWindows.length - 1, onUpdate: (val) => {
+            let currentIndex = Math.ceil(index.value);
+            for (let i = lastIndex + 1; i <= currentIndex; i++) {
+                shuffledWindows[i].visible = true;
+            }
+            lastIndex = currentIndex;
+        },onComplete: () => {this.zoomToSquare()}});
     }
 
     zoomToSquare() {

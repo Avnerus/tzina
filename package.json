@@ -44,6 +44,7 @@
     "glsl-random": "0.0.5",
     "jquery-browserify": "^1.8.1",
     "jquery-mousewheel": "^3.1.13",
+    "lodash": "^4.14.0",
     "pointer-lock": "git+https://github.com/bunnybones1/pointer-lock-chrome-tolerant.git",
     "stats.js": "^0.16.0"
   },
