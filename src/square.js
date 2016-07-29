@@ -27,12 +27,17 @@ export default class Square extends THREE.Object3D{
             obj.add(this.fountain);
             this.windows = results[3];
             obj.add(this.windows);
-            this.turnOffWindows();
+            this.mesh = obj;
             this.fountain.position.set(0.6,24.6, -0.8);
             this.fountain.scale.set(0.25, 0.25, 0.25);
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");
 
+            // INITIAL STATE
+            this.turnOffWindows();
+            this.mesh.rotation.y = 45 * Math.PI / 180;
+            
+            //
             events.emit("add_gui", this.fountain.position, "x"); 
             events.emit("add_gui", this.fountain.position, "z");
             events.emit("add_gui", this.fountain.position, "y"); 

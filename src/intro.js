@@ -36,6 +36,12 @@ export default class Intro {
 
     }
 
+    rotateSquare() {
+        console.log("ROTATE SQUARE");
+        TweenMax.to(this.square.mesh.rotation, 4, {y: 0, onComplete: () => { this.zoomToSquare() }});
+    }
+
+
     turnOnWindows() {
         let shuffledWindows = _.shuffle(this.square.windows.children);
         console.log("INTRO: TURN ON " + shuffledWindows.length + " WINDOWS");
@@ -49,7 +55,7 @@ export default class Intro {
                 shuffledWindows[i].visible = true;
             }
             lastIndex = currentIndex;
-        },onComplete: () => {this.zoomToSquare()}});
+        },onComplete: () => {this.rotateSquare()}});
     }
 
     zoomToSquare() {
