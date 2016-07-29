@@ -1,8 +1,7 @@
 export default class KeyboardController {
-    constructor(config, emitter, camera, square, collisionManager) {
+    constructor(config, camera, square, collisionManager) {
 
         this.config = config;
-        this.emitter = emitter;
 
         this.moveForward = false;
         this.moveLeft = false;
@@ -28,11 +27,18 @@ export default class KeyboardController {
 
         console.log("Keyboard controller init");
 
-        this.emitter.on("start_zoom" ,() => {
+        events.on("start_zoom" ,() => {
             this.active = false;
 
         });
 
+        events.on("intro_start" ,() => {
+            this.active = false;
+        });
+
+        events.on("intro_end" ,() => {
+            this.active = true;
+        });
 
         document.addEventListener('keydown', (event) => {
             switch ( event.keyCode ) {

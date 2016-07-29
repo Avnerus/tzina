@@ -19,7 +19,7 @@ export default class Sky {
 
         //var imageTexture = THREE.ImageUtils.loadTexture('assets/test/venice.jpeg');
 
-        this.inclination = 0.1;
+        this.inclination = 0.6
         this.azimuth = 0.14;
 
         this.shader = new THREE.ShaderMaterial( {
@@ -33,8 +33,7 @@ export default class Sky {
                 cloudsMap:   { type: "t"}
             },
             vertexShader: this.sky_vs,
-            fragmentShader: this.sky_fs,
-            side: THREE.BackSide
+            fragmentShader: this.sky_fs
         } );
 
         // Chrome Linux workaround
@@ -57,9 +56,10 @@ export default class Sky {
     }
 
     update(dt) {
+        /*
         this.azimuth += 0.00002;
         this.inclination += 0.0002;
-        this.updateSunPosition();
+        this.updateSunPosition();*/
 
         this.geo.rotateY(0.01 * Math.PI / 180);
         this.clouds.update(dt);

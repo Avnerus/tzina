@@ -14,6 +14,7 @@ export default class ZoomController {
         this.config = config;
 
         this.MAX_DISTANCE = 830;
+        //this.MAX_DISTANCE = 1500;
         this.DISTANCE_BEFORE_RISING = 100;
 
     }
@@ -83,6 +84,8 @@ export default class ZoomController {
             } else {
                 this.velocityZ = Math.min(0, this.velocityZ + 10 * dt);
             }
+
+            console.log(this.camera.position, this.camera.rotation);
         }
     }
 }

@@ -2,6 +2,7 @@ import Trees from "./trees"
 import Fountain from "./fountain"
 
 const MODEL_PATH = "assets/square/scene.json"
+const WINDOWS_PATH = "assets/square/windows.json"
 
 export default class Square extends THREE.Object3D{
     constructor() {
@@ -15,7 +16,8 @@ export default class Square extends THREE.Object3D{
         Promise.all([
             this.loadSquare(loadingManager),
             trees.init(loadingManager),
-            this.fountain.init(loadingManager)
+            this.fountain.init(loadingManager),
+            this.loadWindows(loadingManager)
         ])
         .then((results) => {
             console.log("Load results", results);
@@ -23,6 +25,7 @@ export default class Square extends THREE.Object3D{
             obj.add(trees);
             //obj.add(this.fountain);
             obj.add(this.fountain);
+            obj.add(results[3]);
             this.fountain.position.set(0.6,24.6, -0.8);
             this.fountain.scale.set(0.25, 0.25, 0.25);
             //this.fountain.scale.set(0.25, 0.25, 0.25);
@@ -35,6 +38,16 @@ export default class Square extends THREE.Object3D{
     }
     update(dt) {
         this.fountain.update();
+    }
+
+    loadWindows(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(WINDOWS_PATH,( obj ) => {
+                console.log("Loaded Windows ", obj );
+                resolve(obj);
+            });
+        });
     }
 
     loadSquare(loadingManager) {
@@ -65,8 +78,8 @@ export default class Square extends THREE.Object3D{
                 console.log("Sky sphere", this.sphereMesh);
                 resolve(obj);
             });
-        });
 
+        });
     }
 
     getSphereMesh() {

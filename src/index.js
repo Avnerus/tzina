@@ -52,7 +52,6 @@ window.onload = function() {
                     }
                 }
             });
-
             fs.request();
         } else {
             if (!game.started) {

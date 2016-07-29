@@ -10,6 +10,7 @@ import PostShader from './post_shader'
 import Flood from './flood'
 import ZoomController from './zoom_controller'
 import TzinaVRControls from './tzina_vr_controls'
+import Intro from './intro'
 
 // Animations
 import HannahAnimation from './animations/hannah'
@@ -53,7 +54,8 @@ export default class Game {
         //
 
         // LIGHT
-        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
+        //this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
+        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0 );
         this.hemiLight.color.setHSL(1,1,1);
         //this.hemiLight.groundColor.setHSL( 0., 1, 0.75 );
         this.hemiLight.position.set( 0, 500, 0 );
@@ -121,6 +123,9 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
+        // Intro
+        this.intro = new Intro(this.camera, this.square);
+
     }
 
     load(onLoad) {
@@ -138,7 +143,6 @@ export default class Game {
         };
 
         this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
@@ -173,11 +177,12 @@ export default class Game {
         if (this.config.controls == "locked") {
                 this.vrControls = new TzinaVRControls(this.emitter, this.camera);
                 this.vrControls.standing = true;
-                this.keyboardController = new KeyboardController(this.config, this.emitter,  this.camera, this.square, this.collisionManager)
+                this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
                 this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
                 this.zoomController.init();
-                this.keyboardController.setPosition(40, 10, 65);
+
+                //this.keyboardController.setPosition(40, 10, 65);
 
                 /*
                 let controls = new THREE.PointerLockControls( this.camera );
@@ -192,6 +197,9 @@ export default class Game {
 
 
         this.square.fountain.startCycle();
+
+        // Init the intro
+        this.intro.init();
 
         setTimeout(() => {
             //    this.testCharacter.play();

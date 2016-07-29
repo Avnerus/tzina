@@ -38,3 +38,7 @@ body {
     color: white;
     margin: auto;
 }
+
+#loading-label {
+    margin: auto;
+}

@@ -58,66 +58,77 @@ export default function ( emitter, object, onError ) {
 	// standing=true but the VRDisplay doesn't provide stageParameters.
 	this.userHeight = 1.6;
 
+    this.active = true;
+
+    events.on('intro_start', () => {
+        console.log("Intro starting - disabling vr control");
+        this.active = false;
+    })
+    events.on('intro_end', () => {
+        console.log("Intro starting - disabling vr control");
+        this.active = true;
+    })
+
 	this.update = function () {
 
+        if (this.active) {
+            if ( vrInput ) {
 
-		if ( vrInput ) {
+                if ( vrInput.getPose ) {
 
-			if ( vrInput.getPose ) {
+                    var pose = vrInput.getPose();
 
-				var pose = vrInput.getPose();
+                    if ( pose.orientation !== null ) {
 
-				if ( pose.orientation !== null ) {
-
-					object.quaternion.fromArray( pose.orientation );
-
-				}
-
-                if ( pose.position !== null ) {
-
-                    object.position.fromArray( pose.position );
-
-                    if ( this.standing ) {
-
-                        if ( vrInput.stageParameters ) {
-
-                            object.updateMatrix();
-
-                            standingMatrix.fromArray(vrInput.stageParameters.sittingToStandingTransform);
-                            object.applyMatrix( standingMatrix );
-
-                        } else {
-
-                            object.position.setY( object.position.y + this.userHeight );
-
-                        }
+                        object.quaternion.fromArray( pose.orientation );
 
                     }
 
-                    object.position.multiplyScalar( scope.scale );
+                    if ( pose.position !== null ) {
 
+                        object.position.fromArray( pose.position );
+
+                        if ( this.standing ) {
+
+                            if ( vrInput.stageParameters ) {
+
+                                object.updateMatrix();
+
+                                standingMatrix.fromArray(vrInput.stageParameters.sittingToStandingTransform);
+                                object.applyMatrix( standingMatrix );
+
+                            } else {
+
+                                object.position.setY( object.position.y + this.userHeight );
+
+                            }
+
+                        }
+
+                        object.position.multiplyScalar( scope.scale );
+
+                    }
+
+                } else {
+
+                    // Deprecated API.
+                    var state = vrInput.getState();
+
+                    if ( state.orientation !== null ) {
+
+                        object.quaternion.copy( state.orientation );
+
+                    }
+
+                    if ( state.position !== null ) {
+
+                        object.position.copy( state.position );
+
+                    } 
                 }
 
-			} else {
-
-				// Deprecated API.
-				var state = vrInput.getState();
-
-				if ( state.orientation !== null ) {
-
-					object.quaternion.copy( state.orientation );
-
-				}
-
-                if ( state.position !== null ) {
-
-                    object.position.copy( state.position );
-
-                } 
-			}
-
-		}
-
+            }
+        }
 	};
 
 	this.resetPose = function () {
