@@ -27,82 +27,103 @@ export default class LupoAnimation extends THREE.Object3D {
 
         let modelLoader = new THREE.JSONLoader(this.loadingManager);
 
-        this.loadModelSculptures(this.BASE_PATH + "/models/base.js", this.BASE_PATH + "/models/top.js", this.BASE_PATH + "/models/down.js")
-        .then((lupoArt) => {
-            this.lupoArt = lupoArt;
-            this.lupoArt.position.set(.7,-1.2,3);
-            this.add(this.lupoArt);
-            console.log("Loaded lupo art", this.lupoArt);
-            // trigger rotating
-            // TweenMax.to(this.lupoArt.rotation, 1, {x:Math.PI, repeat:-1, repeatDelay:2, yoyo:true});
+        let sculptureModelFiles = [ this.BASE_PATH + "/models/sculptures/deer.js",
+                                    this.BASE_PATH + "/models/sculptures/dog.js",
+                                    this.BASE_PATH + "/models/sculptures/macho.js",
+                                    this.BASE_PATH + "/models/sculptures/painter.js",
+                                    this.BASE_PATH + "/models/sculptures/pig.js",
+                                    this.BASE_PATH + "/models/sculptures/right_arm.js",
+                                    this.BASE_PATH + "/models/sculptures/short_legs.js",
+                                    this.BASE_PATH + "/models/sculptures/two_heads.js" ];
+        let sculptureTextureFiles = [ this.BASE_PATH + "/images/sculptures/lupo_deer.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_dog.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_macho.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_painter.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_pig.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_rightArm.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_shortLegs.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_twoHeads.png" ];
 
-            tl.to(this.lupoArt.rotation, 2, {x:Math.PI}).to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
+        let sculptureModels=[];
+        this.sculptureMaterials=[];
+        this.sculptureTextures=[];
+
+        // v.OLD
+        // this.loadModelSculptures(this.BASE_PATH + "/models/base.js", this.BASE_PATH + "/models/top.js", this.BASE_PATH + "/models/down.js,")
+        // .then((lupoArt) => {
+        //     this.lupoArt = lupoArt;
+        //     this.lupoArt.position.set(.7,-1.2,3);
+        //     this.add(this.lupoArt);
+        //     console.log("Loaded lupo art", this.lupoArt);
+        //     // trigger rotating
+        //     // TweenMax.to(this.lupoArt.rotation, 1, {x:Math.PI, repeat:-1, repeatDelay:2, yoyo:true});
+
+        //     tl.to(this.lupoArt.rotation, 2, {x:Math.PI}).to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
+        // });
+
+        this.loadSculptureTextures( sculptureTextureFiles )
+        .then( () => {
+
+            // this.sculptureTextures = lupoArtText;
+            // this.sculptureMaterials = lupoArtMat;
+            // console.log("Loaded lupo art materials", lupoArtMat);
+
+            this.loadSculptureModels( sculptureModelFiles )
+            .then((lupoArt) => {
+                this.lupoArt = lupoArt;
+                this.lupoArt.position.set(.7,-1.2,3);
+                this.add(this.lupoArt);
+                console.log("Loaded lupo art", this.lupoArt);
+                // trigger rotating
+                tl.to(this.lupoArt.rotation, 2, {x:Math.PI}).to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
+            });
         });
 
         this.loadingManager.itemEnd("LupoAnim");
     }
 
-    initParticles() {
-        let p_tex_loader = new THREE.TextureLoader(this.loadingManager);
-        let particleTex = p_tex_loader.load(this.BASE_PATH + '/images/dandelion_particle.jpg');
-
-        this.particleGroup = new SPE.Group({
-            texture: {
-                value: particleTex
-            },
-            depthTest: false
+    loadSculptureTextures ( textureFiles ) {
+        let promise = new Promise( (resolve, reject) => {
+            // this.sculptureTextures = lupoArtText;
+            // this.sculptureMaterials = lupoArtMat;
+            // let lupoArtText=[];
+            // let lupoArtMat=[];
+            let tex_loader = new THREE.TextureLoader(this.loadingManager);
+            for(let i=0; i<textureFiles.length; i++){
+                let _tex = tex_loader.load( textureFiles[i] );
+                this.sculptureTextures.push( _tex );
+                let _mat = new THREE.MeshPhongMaterial({map: _tex, transparent: true, shininess: 200});
+                this.sculptureMaterials.push( _mat );
+            }
+            resolve();
         });
+        return promise;
+    }
 
-        // reduce emitter amount to be 1/5 of domeMorphTargets.length
-        for(let i = 0; i < this.domeMorphTargets.length-10; i+=10){
-            let emitter = new SPE.Emitter({
-                type: SPE.distributions.SPHERE,
-                // duration: 10,
-                maxAge: {
-                    value: 10,
-                    spread: 2
-                },
-                position: {
-                    value: this.domeMorphTargets[i].mesh.position,
-                    radius: 0.2,
-                    // spread: new THREE.Vector3(1,1,1),
-                    // radiusScale: new THREE.Vector3(1,1,1),
-                    // distribution: SPE.distributions.SPHERE
-                },
-                acceleration: {
-                    value: new THREE.Vector3(0,-0.5,0),
-                    // spread: new THREE.Vector3(0.5,-0.8,0.5)
-                },
-                velocity: {
-                    value: new THREE.Vector3(0.3,-0.3,0.3)
-                    // distribution: SPE.distributions.SPHERE
-                },
-                rotation: {
-                    angle: 0.5
-                },
-                angle: {
-                    value: [0,0.5,-0.5],
-                    spread: [0,-0.5,0.5]
-                },
-                // color: {
-                // 	value: new THREE.Color( 0xAA4488 )
-                // },
-                opacity: {
-                    value: [0,1,1,1,0]
-                },
-                size: {
-                    value: [.05,.25,.25,.25,.15]
-                    // spread: [1,3]
-                },
-                particleCount: 3,
-                drag: 0.6
-                // wiggle: 15
-                // isStatic: true
-            });
-            this.particleGroup.addEmitter( emitter );
-        }
-        console.log(this.particleGroup.emitters.length);
-        this.add( this.particleGroup.mesh );
+    loadSculptureModels ( modelFiles ) {
+        let promise = new Promise( (resolve, reject) => {
+            let lupoArt = new THREE.Object3D();
+            let loader = new THREE.JSONLoader(this.loadingManager);
+
+            for(var i = 0; i < modelFiles.length; i++){
+                let modelF = modelFiles[i];
+                let matF = this.sculptureMaterials[i];
+                loader.load( modelFiles[i], (geometry) => {
+                    let meshhh = new THREE.Mesh( geometry, matF );
+                    lupoArt.add(meshhh);
+                });
+                this.loadModels.bind(undefined, loader, i);
+            }
+            resolve( lupoArt );
+        });
+        return promise;
+    }
+
+    loadModels(loader, i) {
+        loader.load( modelFiles[i], (geometry) => {
+            let meshhh = new THREE.Mesh( geometry, this.sculptureMaterials[i] );
+            lupoArt.add(meshhh);
+        });
     }
 
     loadModelSculptures (model, modelT, modelB) {

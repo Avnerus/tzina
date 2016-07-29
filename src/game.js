@@ -90,7 +90,7 @@ export default class Game {
 
         // animations
         this.animations = {
-            'Hannah': new HannahAnimation(),
+            // 'Hannah': new HannahAnimation(),
             'Lupo': new LupoAnimation()
         }
 
