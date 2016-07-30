@@ -23,7 +23,7 @@ const States = {
 }
 
 export default class Sky {
-    constructor(loadingManager) {
+    constructor(loadingManager, dirLight, hemiLight) {
         console.log("Sky constructed!")
         const glslify = require('glslify');
 
@@ -34,6 +34,8 @@ export default class Sky {
         this.clouds = new Clouds(loadingManager);
 
         this.sunPosition = new THREE.Vector3(0,0,0);
+        this.dirLight = dirLight;
+        this.hemiLight = hemiLight;
     }
     init() {
 
@@ -75,9 +77,14 @@ export default class Sky {
 
         let tl = new TimelineMax({onUpdate: () => {
             this.updateSunPosition();
+            this.updateHemiLght();
         }, onComplete : () => {this.state = States.STATIC}});
         tl.to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[10], {ease: Linear.easeNone}))
         .to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[time], {ease: Linear.easeNone}));
+
+        TweenMax.to(this, inSeconds, {currentTime: time, onUpdate: () => {
+            this.updateHemiLght();            
+        }});
 
     }
 
@@ -110,7 +117,18 @@ export default class Sky {
         );
 
         this.shader.uniforms.sunPosition.value.copy(this.sunPosition);
+
+        this.dirLight.position.copy(this.sunPosition);
     }
+
+    updateHemiLght() {
+        if (this.currentTime >= 16 && this.currentTime <= 21 ) {
+            this.hemiLight.intensity = 0.1 * (20 - this.currentTime) / 5;
+        } else {
+            this.hemiLight.intensity = 0;
+        }
+    }
+
 
     getSunPosition() {
         return this.sunPosition;

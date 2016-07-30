@@ -8,6 +8,27 @@ export default class Intro {
         this.sky = sky;
         this.scene = scene;
 
+        this.soundEvents = [
+            {
+                time: 6.8,
+                action: () => {
+                    this.showTitle()
+                }
+            },
+            {
+                time: 17.3,
+                action: () => {
+                    this.rotateSquare()
+                }
+           },
+           {
+                time: 30.3,
+                action: () => {
+                    this.bringUpSun()
+                }
+           }
+        ]
+
         this.STARTING_POSITION = new THREE.Vector3(
             312.6124548161197,
             50,
@@ -55,24 +76,31 @@ export default class Intro {
             this.turnOnWindows();
             setTimeout(() => {
                 this.playSound();
-            },5000)
+            },4000)
 
         },3000);
     }
 
     bringUpSun() {
-        this.sky.transitionTo(17, 8);
+        this.sky.transitionTo(17, 22);
     }
 
     playSound() {
-        this.scene.add(this.titlePlane);
-        this.sound.play();
+        this.sound.playIn(1);
+        this.currentEvent = this.soundEvents.shift();
         //this.bringUpSun();
     }
 
+    showTitle() {
+        this.scene.add(this.titlePlane);
+    }
+
     rotateSquare() {
-        console.log("ROTATE SQUARE");
-        TweenMax.to(this.square.mesh.rotation, 4, {y: 0, onComplete: () => { this.zoomToSquare() }});
+        TweenMax.to(this.square.mesh.rotation, 35, {y: 183 * Math.PI / 180, ease: Linear.easeNone, onComplete: () => { 
+            setTimeout(() => {
+                this.zoomToSquare();
+            },2000)
+        }});
     }
 
 
@@ -153,8 +181,15 @@ export default class Intro {
     }
 
     update() {
-        if (this.sound && this.sound.isPlaying) {
-            //console.log("Intro sound position ", this.sound.getCurrentTime());
+        if (this.sound && this.sound.isPlaying && this.currentEvent) {
+            if (this.sound.getCurrentTime() >= this.currentEvent.time) {
+                this.currentEvent.action();
+                if (this.soundEvents.length > 0) {
+                    this.currentEvent = this.soundEvents.shift();
+                } else {
+                    this.currentEvent = null;
+                }
+            }
         }
     }
 }
