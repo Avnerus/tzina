@@ -13,7 +13,7 @@ const HOURS_DEFINITION = {
     },
     17 : {
         inclination: 0.09,
-        azimuth: 0.49
+        azimuth: 0.42
     }
 }
 

@@ -75,7 +75,7 @@ export default class Intro {
         setTimeout(() => {
             this.turnOnWindows();
             setTimeout(() => {
-                this.playSound();
+                     this.playSound();
             },4000)
 
         },3000);
@@ -96,7 +96,7 @@ export default class Intro {
     }
 
     rotateSquare() {
-        TweenMax.to(this.square.mesh.rotation, 35, {y: 183 * Math.PI / 180, ease: Linear.easeNone, onComplete: () => { 
+        TweenMax.to(this.square.mesh.rotation, 35, {y: -176 * Math.PI / 180, ease: Sine.easeInOut, onComplete: () => { 
             setTimeout(() => {
                 this.zoomToSquare();
             },2000)
@@ -157,7 +157,7 @@ export default class Intro {
 
         let startPosition;
         
-        timeline.to(zoom, 10, {ease: Linear.easeNone, value: -1120, yValue: 10, onUpdate: () => {
+        timeline.to(zoom, 14, {ease: Linear.easeNone, value: -1120, yValue: 10, onUpdate: () => {
             let zoomAdd = new THREE.Vector3().copy(zoomVector).multiplyScalar(zoom.value);
             this.camera.position.copy(this.STARTING_POSITION).add(zoomAdd);
             this.camera.position.y = zoom.yValue;
@@ -170,7 +170,7 @@ export default class Intro {
                 middlePosition,
                 endPosition
             ]
-        })
+        , ease: Linear.easeNone})
         .to(this.camera.rotation, 2, {x: targetRotation.x, y: targetRotation.y, z: targetRotation.z, ease: Linear.easeNone, onComplete: () => { this.endIntro() } }, "-=2" )
 
     }

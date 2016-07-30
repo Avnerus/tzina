@@ -35,7 +35,6 @@ export default class Square extends THREE.Object3D{
 
             // INITIAL STATE
             this.turnOffWindows();
-            this.mesh.rotation.y = 0 * Math.PI / 180;
             
             //
             events.emit("add_gui", this.fountain.position, "x"); 
