@@ -11,30 +11,29 @@ export default {
          {
             name: "palm",
             fileName: "palm.ply"
+        },
+         {
+            name: "single",
+            fileName: "singleTree.ply"
         }
     ],
     instances: [
-        // {
-        //     type: "Test",
-        //     position: [10,21,5],
-        //     rotateX: 0,
-        //     scale: 1
+    
+         {
+            type: "ThreeTrees",
+            position: [4,22,14],
+            rotateX: -10,
+            scale: 4.3
+        },
+        //  {
+        //     type: "ThreeTrees",
+        //     position: [4,22,14],
+        //     rotateX: -10,
+        //     scale: 4
         // },
          {
             type: "ThreeTrees",
-            position: [0,22,19],
-            rotateX: -20,
-            scale: 4.2
-        },
-         {
-            type: "ThreeTrees",
-            position: [0,22,19],
-            rotateX: -20,
-            scale: 4.2
-        },
-         {
-            type: "ThreeTrees",
-            position: [50,27,2],
+            position: [45,24,2],
             rotateX: 0,
             scale: 4.4
         }, 
@@ -45,9 +44,38 @@ export default {
             scale: 4.4
         },
         {
+            type: "ThreeTrees",
+            position: [80,24,2],
+            rotateX: 270,
+            scale: 4.4
+        },
+        {
+            type: "ThreeTrees",
+            position: [50,24,2],
+            rotateX: 0,
+            scale: 4.4
+        },
+      {
+            type: "ThreeTrees",
+            position: [50,24,2],
+            rotateX: 0,
+            scale: 4.4
+        },
+
+   
+
+     {
+            type: "ThreeTrees",
+            position: [10,26,-26],
+            rotateX: -200,
+            scale: 4.4
+        },
+
+    
+        {
             type: "palm",
-            position: [-12,16,29],
-            rotateX: -120,
+            position: [-18,16,10],
+            rotateX: -100,
             scale: 3
         },
 
@@ -56,19 +84,22 @@ export default {
             position: [8,22,6],
             rotateX: 60,
             scale: 3
+        },
+        {
+            type: "single",
+            position: [-52,18,2],
+            rotateX: 100,
+            scale: 3
+        },
+
+
+        {
+            type: "single",
+            position: [20,18,8],
+            rotateX: 100,
+            scale: 3
         }
-        // {
-        //     type: "Test",
-        //     position: [10,21,10],
-        //     rotateX: 15,
-        //     scale: 0.5,
-        // },
-        // {
-        //     type: "Test",
-        //     position: [15,21,10],
-        //     rotateX: 45 ,
-        //     scale: 0.8
-        // }
+   
     ]
 }
 
