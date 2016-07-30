@@ -36,10 +36,10 @@ export default class Square extends THREE.Object3D{
             // INITIAL STATE
             this.turnOffWindows();
             
-            //
+            /*
             events.emit("add_gui", this.fountain.position, "x"); 
             events.emit("add_gui", this.fountain.position, "z");
-            events.emit("add_gui", this.fountain.position, "y"); 
+            events.emit("add_gui", this.fountain.position, "y"); */
         });
     }
     update(dt) {

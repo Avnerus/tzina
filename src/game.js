@@ -82,14 +82,7 @@ export default class Game {
         this.square = new Square();
 
         // Test characters
-        /*this.testCharacter = new Character({
-            basePath : 'assets/characters/take_1',
-            mindepth : 404.999969482,
-            maxdepth : 1111.719970703,
-            position : [30, 15, 40],
-            rotation: [0, 0, 0],
-            name: 'test'
-            });*/
+        /*
         this.testCharacter = new Character({
             basePath : 'assets/characters/lupocomp',
             mindepth : 2331.267333984,
@@ -97,6 +90,17 @@ export default class Game {
             position : [30, 6, 42],
             rotation: [0, 170, 0],
             name: 'Lupo',
+            animation: 'Hannah'
+            });*/
+
+        
+        this.hannah = new Character({
+            basePath : 'assets/characters/hanna',
+            mindepth : 2138.454101562,
+            maxdepth : 3047.334472656,
+            position : [30, 6, 42],
+            rotation: [0, 170, 0],
+            name: 'Hanna',
             animation: 'Hannah'
         });
 
@@ -136,7 +140,7 @@ export default class Game {
             console.log("Done loading everything!");
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
-            this.scene.add(this.testCharacter)
+            this.scene.add(this.hannah)
 
             onLoad();
         };
@@ -150,7 +154,7 @@ export default class Game {
 
         this.sky.init();
         this.soundManager.init();
-        this.testCharacter.init(this.loadingManager, this.animations)
+        this.hannah.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
 
         // Animations init
@@ -205,9 +209,10 @@ export default class Game {
         // Init the intro
         this.intro.init();
 
-        setTimeout(() => {
-            //    this.testCharacter.play();
-        },5000)
+        /*
+        this.sky.transitionTo(17,1);
+
+        this.hannah.play();*/
     }
 
     animate(t) {
@@ -225,7 +230,7 @@ export default class Game {
         if (this.vrControls) {
                this.vrControls.update();
             }
-        this.testCharacter.update(dt,et);
+        this.hannah.update(dt,et);
         //this.flood.update(dt);
         /*
         this.collisionManager.update(dt);
