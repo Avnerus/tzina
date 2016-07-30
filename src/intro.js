@@ -10,19 +10,20 @@ export default class Intro {
 
         this.soundEvents = [
             {
-                time: 6.8,
+                time: 10.283,
                 action: () => {
                     this.showTitle()
                 }
             },
             {
-                time: 17.3,
+                time: 21.3,
                 action: () => {
                     this.rotateSquare()
+                    this.hideTitle();
                 }
            },
            {
-                time: 30.3,
+                time: 34.3,
                 action: () => {
                     this.bringUpSun()
                 }
@@ -70,15 +71,14 @@ export default class Intro {
         .then((sound) => {
             console.log("Sound ", sound);
             this.sound = sound;
+
+            setTimeout(() => {
+                this.turnOnWindows();
+                this.playSound();
+
+            },3000);
         });
 
-        setTimeout(() => {
-            this.turnOnWindows();
-            setTimeout(() => {
-                     this.playSound();
-            },4000)
-
-        },3000);
     }
 
     bringUpSun() {
@@ -94,10 +94,14 @@ export default class Intro {
     showTitle() {
         this.scene.add(this.titlePlane);
     }
+    hideTitle() {
+        this.scene.remove(this.titlePlane);
+    }
 
     rotateSquare() {
-        TweenMax.to(this.square.mesh.rotation, 35, {y: -176 * Math.PI / 180, ease: Sine.easeInOut, onComplete: () => { 
+        TweenMax.to(this.square.mesh.rotation, 34, {y: -176 * Math.PI / 180, ease: Sine.easeInOut, onComplete: () => { 
             setTimeout(() => {
+                this.turnOffWindows();
                 this.zoomToSquare();
             },2000)
         }});
@@ -111,13 +115,29 @@ export default class Intro {
             value: 0
         }
         let lastIndex = 0;
-        TweenMax.to(index, 60, {value: Math.floor(shuffledWindows.length - 1 / 3), ease: Circ.easeIn, onUpdate: (val) => {
+        TweenMax.to(index, 50, {value: Math.floor((shuffledWindows.length - 1) / 3), ease: Circ.easeIn, onUpdate: (val) => {
             let currentIndex = Math.ceil(index.value);
             for (let i = lastIndex + 1; i <= currentIndex; i++) {
                 shuffledWindows[i].visible = true;
             }
             lastIndex = currentIndex;
-        },onComplete: () => {}});
+        }});
+    }
+
+    turnOffWindows() {
+        let litWindows = _.filter(this.square.windows.children, _.matchesProperty('visible', true));
+        console.log("INTRO: TURN OFF " + litWindows.length + "  WINDOWS");
+        let index = {
+            value: 0
+        }
+        let lastIndex = 0;
+        TweenMax.to(index, 6, {value:litWindows.length - 1, ease: Circ.easeIn, onUpdate: (val) => {
+            let currentIndex = Math.ceil(index.value);
+            for (let i = lastIndex + 1; i <= currentIndex; i++) {
+                litWindows[i].visible = false;
+            }
+            lastIndex = currentIndex;
+        }});
     }
 
     zoomToSquare() {
@@ -165,13 +185,13 @@ export default class Intro {
             zoomVector = new THREE.Vector3().copy(new THREE.Vector3(0, 0, 1) ).applyQuaternion(this.camera.quaternion);
             console.log("END POSITION", this.camera.position);
         }})
-        .to(this.camera.position, 2, {
+        .to(this.camera.position, 5, {
             bezier: [
                 middlePosition,
                 endPosition
             ]
         , ease: Linear.easeNone})
-        .to(this.camera.rotation, 2, {x: targetRotation.x, y: targetRotation.y, z: targetRotation.z, ease: Linear.easeNone, onComplete: () => { this.endIntro() } }, "-=2" )
+        .to(this.camera.rotation, 5, {x: targetRotation.x, y: targetRotation.y, z: targetRotation.z, ease: Linear.easeNone, onComplete: () => { this.endIntro() } }, "-=5" )
 
     }
 

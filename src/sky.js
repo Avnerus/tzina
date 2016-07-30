@@ -65,20 +65,32 @@ export default class Sky {
                  //this.clouds.startTransition();
         },0);
 
-        this.state = States.STATIC;
+        this.setState(States.STATIC);
 
         this.updateSunPosition();
 
     }
 
+    fadeSpin() {
+        TweenMax.to(this, 15, {spinFactor: 0.01});
+    }
+
+    setState(state) {
+        if (state == States.STATIC) {
+            this.spinFactor = 0.01;
+        } else {
+            this.spinFactor = 0.5;
+        }
+    }
+
     transitionTo(time, inSeconds) {
         console.log("SKY: Transition to " + time + " in " + inSeconds + " seconds");
-        this.state = States.TRANSITON;
+        this.setState(States.TRANSITON);
 
         let tl = new TimelineMax({onUpdate: () => {
             this.updateSunPosition();
             this.updateHemiLght();
-        }, onComplete : () => {this.state = States.STATIC}});
+        }, onComplete : () => {this.fadeSpin()}});
         tl.to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[10], {ease: Linear.easeNone}))
         .to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[time], {ease: Linear.easeNone}));
 
@@ -90,11 +102,7 @@ export default class Sky {
 
 
     update(dt) {
-        if (this.state == States.STATIC) {
-            this.geo.rotateY(0.01 * Math.PI / 180);
-        } else {
-            this.geo.rotateY(0.5 * Math.PI / 180);
-        }
+        this.geo.rotateY(this.spinFactor * Math.PI / 180);
         this.clouds.update(dt);
     }
 
