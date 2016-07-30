@@ -43,10 +43,20 @@ export default class LupoAnimation extends THREE.Object3D {
                                       this.BASE_PATH + "/images/sculptures/lupo_rightArm.png",
                                       this.BASE_PATH + "/images/sculptures/lupo_shortLegs.png",
                                       this.BASE_PATH + "/images/sculptures/lupo_twoHeads.png" ];
+        let sculptureTextMADFiles = [ this.BASE_PATH + "/images/sculptures/lupo_deer_MAD.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_dog_MAD.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_macho_MAD.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_painter_MAD.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_pig_MAD.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_rightArm_MAD.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_shortLegs_MAD.png",
+                                      this.BASE_PATH + "/images/sculptures/lupo_twoHeads_MAD.png" ];
 
         let sculptureModels=[];
         this.sculptureMaterials=[];
         this.sculptureTextures=[];
+        this.sculptureMADMaterials=[];
+        this.sculptureMADTextures=[];
 
         // v.OLD
         // this.loadModelSculptures(this.BASE_PATH + "/models/base.js", this.BASE_PATH + "/models/top.js", this.BASE_PATH + "/models/down.js,")
@@ -61,7 +71,7 @@ export default class LupoAnimation extends THREE.Object3D {
         //     tl.to(this.lupoArt.rotation, 2, {x:Math.PI}).to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
         // });
 
-        this.loadSculptureTextures( sculptureTextureFiles )
+        this.loadSculptureTextures( sculptureTextureFiles, sculptureTextMADFiles )
         .then( () => {
 
             // this.sculptureTextures = lupoArtText;
@@ -82,7 +92,7 @@ export default class LupoAnimation extends THREE.Object3D {
         this.loadingManager.itemEnd("LupoAnim");
     }
 
-    loadSculptureTextures ( textureFiles ) {
+    loadSculptureTextures ( textureFiles, textureMADFiles ) {
         let promise = new Promise( (resolve, reject) => {
             // this.sculptureTextures = lupoArtText;
             // this.sculptureMaterials = lupoArtMat;
@@ -95,6 +105,12 @@ export default class LupoAnimation extends THREE.Object3D {
                 let _mat = new THREE.MeshPhongMaterial({map: _tex, transparent: true, shininess: 200});
                 this.sculptureMaterials.push( _mat );
             }
+            for(let i=0; i<textureMADFiles.length; i++){
+                let _tex = tex_loader.load( textureMADFiles[i] );
+                this.sculptureMADTextures.push( _tex );
+                let _mat = new THREE.MeshPhongMaterial({map: _tex, transparent: true, shininess: 200});
+                this.sculptureMADMaterials.push( _mat );
+            }
             resolve();
         });
         return promise;
@@ -103,27 +119,31 @@ export default class LupoAnimation extends THREE.Object3D {
     loadSculptureModels ( modelFiles ) {
         let promise = new Promise( (resolve, reject) => {
             let lupoArt = new THREE.Object3D();
+            let lupoArtTop = new THREE.Object3D();
+            let lupoArtBottom = new THREE.Object3D();
             let loader = new THREE.JSONLoader(this.loadingManager);
 
             for(var i = 0; i < modelFiles.length; i++){
                 let modelF = modelFiles[i];
                 let matF = this.sculptureMaterials[i];
+                let matMADF = this.sculptureMADMaterials[i];
                 loader.load( modelFiles[i], (geometry) => {
                     let meshhh = new THREE.Mesh( geometry, matF );
-                    lupoArt.add(meshhh);
+                    lupoArtTop.add(meshhh);
+
+                    let meshh = new THREE.Mesh( geometry, matMADF );
+                    lupoArtBottom.add(meshh);
                 });
-                this.loadModels.bind(undefined, loader, i);
+                // this.loadModels.bind(undefined, loader, i);
             }
+
+            lupoArt.add( lupoArtTop );
+            lupoArtBottom.rotation.x = Math.PI;
+            lupoArt.add( lupoArtBottom );
+
             resolve( lupoArt );
         });
         return promise;
-    }
-
-    loadModels(loader, i) {
-        loader.load( modelFiles[i], (geometry) => {
-            let meshhh = new THREE.Mesh( geometry, this.sculptureMaterials[i] );
-            lupoArt.add(meshhh);
-        });
     }
 
     loadModelSculptures (model, modelT, modelB) {
