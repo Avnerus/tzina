@@ -5,8 +5,8 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
-const VERTS_WIDE = 128;
-const VERTS_TALL = 128;
+const VERTS_WIDE = 192;
+const VERTS_TALL = 192;
 
 
 export default class VideoRGBD  {
@@ -28,7 +28,7 @@ export default class VideoRGBD  {
     init(loadingManager) {
         this.video = document.createElement( 'video' );
         this.video.src = this.properties.basePath + '.webm';
-        this.video.loop = false;
+        this.video.loop = true;
 
 
         this.isPlaying = false;
@@ -40,12 +40,33 @@ export default class VideoRGBD  {
 
         this.imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
+        this.debug = {
+            x1: 1920,
+            x2: 3300,
+            x3: 640,
+            y1: 480,
+            y2: 1440,
+            y3: 480
+        }
+        events.emit("add_gui", this.debug, "x1"); 
+        events.emit("add_gui", this.debug, "x2"); 
+        events.emit("add_gui", this.debug, "x3"); 
+        events.emit("add_gui", this.debug, "y1"); 
+        events.emit("add_gui", this.debug, "y2"); 
+        events.emit("add_gui", this.debug, "y3"); 
+
         this.meshMaterial = new THREE.ShaderMaterial( {
 
             uniforms: {
                 "map": { type: "t", value: this.imageTexture },
                 "mindepth" : { type : "f", value : this.properties.mindepth },
-                "maxdepth" : { type : "f", value : this.properties.maxdepth }
+                "maxdepth" : { type : "f", value : this.properties.maxdepth },
+                "x1" : { type : "f", value : this.debug.x1 },
+                "x2" : { type : "f", value : this.debug.x2 },
+                "x3" : { type : "f", value : this.debug.x3 },
+                "y1" : { type : "f", value : this.debug.y1 },
+                "y2" : { type : "f", value : this.debug.y2 },
+                "y3" : { type : "f", value : this.debug.y3 }
             },
 
             vertexShader: this.rgbd_vs,
@@ -61,11 +82,14 @@ export default class VideoRGBD  {
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //let mesh = new THREE.Mesh( geometry, material);
         this.mesh.scale.set(0.0016, 0.0016, 0.0016);
+        //this.mesh.scale.set(0.016, 0.016, 0.016);
         this.mesh.rotation.set(
             this.properties.rotation[0],
             this.properties.rotation[1],
             this.properties.rotation[2]
         );
+
+
         //mesh.frustumCulled = false;
 
         /*
@@ -121,6 +145,13 @@ export default class VideoRGBD  {
 
             }
         }
+
+        this.meshMaterial.uniforms.x1.value = this.debug.x1;
+        this.meshMaterial.uniforms.x2.value = this.debug.x2;
+        this.meshMaterial.uniforms.x3.value = this.debug.x3;
+        this.meshMaterial.uniforms.y1.value = this.debug.y1;
+        this.meshMaterial.uniforms.y2.value = this.debug.y2;
+        this.meshMaterial.uniforms.y3.value = this.debug.y3;
     }
     pause() {
         if ( this.isPlaying === false ) return;

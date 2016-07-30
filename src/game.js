@@ -138,7 +138,7 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            this.scene.add(this.square);
+            //this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
             this.scene.add(this.hannah)
 
@@ -190,7 +190,7 @@ export default class Game {
                 this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
                 this.zoomController.init();
 
-                //this.keyboardController.setPosition(40, 10, 65);
+                this.keyboardController.setPosition(40, 10, 65);
 
                 /*
                 let controls = new THREE.PointerLockControls( this.camera );
@@ -207,12 +207,11 @@ export default class Game {
         this.square.fountain.startCycle();
 
         // Init the intro
-        this.intro.init();
+        //this.intro.init();
 
-        /*
         this.sky.transitionTo(17,1);
 
-        this.hannah.play();*/
+        this.hannah.play();
     }
 
     animate(t) {

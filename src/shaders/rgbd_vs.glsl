@@ -7,6 +7,13 @@ const float fy = 0.832305;
 
 uniform sampler2D map;
 
+uniform float x1; 
+uniform float y1; 
+uniform float x2; 
+uniform float y2; 
+uniform float x3; 
+uniform float y3; 
+
 varying float visibility;
 varying vec2 vUv;
 
@@ -49,12 +56,12 @@ vec3 rgb2hsl( vec3 color ) {
 
 vec3 xyz( float x, float y, float depth ) {
     float z = depth * ( maxdepth - mindepth ) + mindepth;
-    return vec3( ( x / 640.0 ) * z * fx, ( y / 480.0 ) * z * fy, - z );
+    return vec3( ( x / x3 ) * z * fx, ( y / y3) * z * fy, - z );
 }
 
 void main() {
 
-    vUv = vec2( ( position.x + 640.0 ) / 1600.0, ( position.y + 480.0 ) / 1300.0 );
+    vUv = vec2( ( position.x + x1) / x2, ( position.y + y1 ) / y2);
     vUv.y = vUv.y * 0.5;// + 0.5;
 
     vec3 hsl = rgb2hsl( texture2D( map, vUv ).xyz );
