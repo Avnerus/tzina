@@ -122,8 +122,8 @@ export default class Sky {
     }
 
     updateHemiLght() {
-        if (this.currentTime >= 16 && this.currentTime <= 21 ) {
-            this.hemiLight.intensity = 0.1 * (20 - this.currentTime) / 5;
+        if (this.currentTime >= 1 && this.currentTime <= 20 ) {
+            this.hemiLight.intensity = 0.1 * (20 - this.currentTime) / 19;
         } else {
             this.hemiLight.intensity = 0;
         }

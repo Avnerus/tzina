@@ -157,7 +157,7 @@ export default class Intro {
 
         let startPosition;
         
-        timeline.to(zoom, 6, {ease: Linear.easeNone, value: -1120, yValue: 10, onUpdate: () => {
+        timeline.to(zoom, 10, {ease: Linear.easeNone, value: -1120, yValue: 10, onUpdate: () => {
             let zoomAdd = new THREE.Vector3().copy(zoomVector).multiplyScalar(zoom.value);
             this.camera.position.copy(this.STARTING_POSITION).add(zoomAdd);
             this.camera.position.y = zoom.yValue;
