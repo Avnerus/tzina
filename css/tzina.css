@@ -42,3 +42,17 @@ body {
 #loading-label {
     margin: auto;
 }
+
+#title-label {
+    margin: auto;
+}
+
+#title-container {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    color: white;
+    font-size: 36px;
+    position: relative;
+    bottom: 30%
+}

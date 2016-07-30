@@ -85,12 +85,12 @@ export default {
             rotateX: 60,
             scale: 3
         },
-        // {
-        //     type: "single",
-        //     position: [-52,18,2],
-        //     rotateX: 100,
-        //     scale: 3
-        // },
+        {
+            type: "single",
+            position: [-52,18,2],
+            rotateX: 100,
+            scale: 3
+        },
 
 
         {

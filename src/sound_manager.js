@@ -72,13 +72,14 @@ export default class SoundManager {
         highway_2.loop = true;
 
         //DEBUG CUBES
+        /*
         this.testCubeone = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
         this.testCubeone.position.set(-25, 15, 0);
         this.scene.add(this.testCubeone);
 
         this.testCubetwo = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
         this.testCubetwo.position.set(30, 10, 190);
-        this.scene.add(this.testCubetwo);
+        this.scene.add(this.testCubetwo);*/
 
         //SOUND ADDING
         this.scene.add(fountain);

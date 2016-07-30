@@ -100,7 +100,7 @@ export default class Game {
             animation: 'Hannah'
         });
 
-        this.sky = new Sky(this.loadingManager);
+        this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
 
 
         // animations
@@ -126,7 +126,7 @@ export default class Game {
         */
 
         // Intro
-        this.intro = new Intro(this.camera, this.square, this.soundManager);
+        this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
 
     }
 
@@ -217,7 +217,6 @@ export default class Game {
 
     update(dt,et) {
         this.sky.update(dt);
-        this.dirLight.position.copy(this.sky.getSunPosition());
         this.square.update();
         if (this.keyboardController) {
             this.keyboardController.update(dt);

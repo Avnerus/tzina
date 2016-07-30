@@ -1,10 +1,34 @@
 import _ from 'lodash'
 
 export default class Intro {
-    constructor(camera, square, soundManager) {
+    constructor(camera, square, sky, soundManager, scene) {
         this.camera = camera;
         this.square = square;
         this.soundManager = soundManager;
+        this.sky = sky;
+        this.scene = scene;
+
+        this.soundEvents = [
+            {
+                time: 10.283,
+                action: () => {
+                    this.showTitle()
+                }
+            },
+            {
+                time: 21.3,
+                action: () => {
+                    this.rotateSquare()
+                    this.hideTitle();
+                }
+           },
+           {
+                time: 34.3,
+                action: () => {
+                    this.bringUpSun()
+                }
+           }
+        ]
 
         this.STARTING_POSITION = new THREE.Vector3(
             312.6124548161197,
@@ -21,6 +45,14 @@ export default class Intro {
 
         this.INTRO_SOUND = 'INTRO_Shirin.ogg'
 
+        let titlePlaneGeo = new THREE.PlaneGeometry( 1024, 128 );
+        let loader = new THREE.TextureLoader();
+        loader.load('assets/intro/title.png', (texture) => {
+            this.titleTexture = texture;
+            let material = new THREE.MeshBasicMaterial( {map: this.titleTexture, side: THREE.DoubleSide, transparent:true}  );
+            this.titlePlane = new THREE.Mesh(titlePlaneGeo, material);
+        });
+
     }
 
     init() {
@@ -29,44 +61,83 @@ export default class Intro {
         this.camera.position.copy(this.STARTING_POSITION);
         this.camera.rotation.copy(this.STARTING_ROTATION);
 
+        this.titlePlane.position.copy(this.square.getCenterPosition());
+        this.titlePlane.position.y = 400;
+        this.titlePlane.rotation.copy(this.STARTING_ROTATION);
+        
+
         // Load the sound
         this.soundManager.loadSound(this.INTRO_SOUND)
         .then((sound) => {
             console.log("Sound ", sound);
             this.sound = sound;
-            this.sound.playIn(1);
-            //this.soundManager.playSound(this.INTRO_SOUND);
+
+            setTimeout(() => {
+                this.turnOnWindows();
+                this.playSound();
+
+            },3000);
         });
 
-        setTimeout(() => {
-            this.turnOnWindows();
-        },10000);
     }
 
-    start() {
+    bringUpSun() {
+        this.sky.transitionTo(17, 22);
+    }
 
+    playSound() {
+        this.sound.playIn(1);
+        this.currentEvent = this.soundEvents.shift();
+        //this.bringUpSun();
+    }
+
+    showTitle() {
+        this.scene.add(this.titlePlane);
+    }
+    hideTitle() {
+        this.scene.remove(this.titlePlane);
     }
 
     rotateSquare() {
-        console.log("ROTATE SQUARE");
-        TweenMax.to(this.square.mesh.rotation, 4, {y: 0, onComplete: () => { this.zoomToSquare() }});
+        TweenMax.to(this.square.mesh.rotation, 34, {y: -176 * Math.PI / 180, ease: Sine.easeInOut, onComplete: () => { 
+            setTimeout(() => {
+                this.turnOffWindows();
+                this.zoomToSquare();
+            },2000)
+        }});
     }
 
 
     turnOnWindows() {
         let shuffledWindows = _.shuffle(this.square.windows.children);
-        console.log("INTRO: TURN ON " + shuffledWindows.length + " WINDOWS");
+        console.log("INTRO: TURN ON  WINDOWS");
         let index = {
             value: 0
         }
         let lastIndex = 0;
-        TweenMax.to(index, 5, {value: shuffledWindows.length - 1, onUpdate: (val) => {
+        TweenMax.to(index, 50, {value: Math.floor((shuffledWindows.length - 1) / 3), ease: Circ.easeIn, onUpdate: (val) => {
             let currentIndex = Math.ceil(index.value);
             for (let i = lastIndex + 1; i <= currentIndex; i++) {
                 shuffledWindows[i].visible = true;
             }
             lastIndex = currentIndex;
-        },onComplete: () => {this.rotateSquare()}});
+        }});
+    }
+
+    turnOffWindows() {
+        let litWindows = _.filter(this.square.windows.children, _.matchesProperty('visible', true));
+        console.log("INTRO: TURN OFF " + litWindows.length + "  WINDOWS");
+        let index = {
+            value: 0
+        }
+        let lastIndex = 0;
+        TweenMax.to(index, 6, {value:litWindows.length - 1, ease: Circ.easeIn, onUpdate: (val) => {
+            let currentIndex = Math.ceil(index.value);
+            for (let i = lastIndex + 1; i <= currentIndex; i++) {
+                litWindows[i].visible = false;
+            }
+            lastIndex = currentIndex;
+        }});
     }
 
     zoomToSquare() {
@@ -106,7 +177,7 @@ export default class Intro {
 
         let startPosition;
         
-        timeline.to(zoom, 6, {ease: Linear.easeNone, value: -1120, yValue: 10, onUpdate: () => {
+        timeline.to(zoom, 14, {ease: Linear.easeNone, value: -1120, yValue: 10, onUpdate: () => {
             let zoomAdd = new THREE.Vector3().copy(zoomVector).multiplyScalar(zoom.value);
             this.camera.position.copy(this.STARTING_POSITION).add(zoomAdd);
             this.camera.position.y = zoom.yValue;
@@ -114,13 +185,13 @@ export default class Intro {
             zoomVector = new THREE.Vector3().copy(new THREE.Vector3(0, 0, 1) ).applyQuaternion(this.camera.quaternion);
             console.log("END POSITION", this.camera.position);
         }})
-        .to(this.camera.position, 2, {
+        .to(this.camera.position, 5, {
             bezier: [
                 middlePosition,
                 endPosition
             ]
-        })
-        .to(this.camera.rotation, 2, {x: targetRotation.x, y: targetRotation.y, z: targetRotation.z, ease: Linear.easeNone, onComplete: () => { this.endIntro() } }, "-=2" )
+        , ease: Linear.easeNone})
+        .to(this.camera.rotation, 5, {x: targetRotation.x, y: targetRotation.y, z: targetRotation.z, ease: Linear.easeNone, onComplete: () => { this.endIntro() } }, "-=5" )
 
     }
 
@@ -130,8 +201,15 @@ export default class Intro {
     }
 
     update() {
-        if (this.sound && this.sound.isPlaying) {
-            //console.log("Intro sound position ", this.sound.getCurrentTime());
+        if (this.sound && this.sound.isPlaying && this.currentEvent) {
+            if (this.sound.getCurrentTime() >= this.currentEvent.time) {
+                this.currentEvent.action();
+                if (this.soundEvents.length > 0) {
+                    this.currentEvent = this.soundEvents.shift();
+                } else {
+                    this.currentEvent = null;
+                }
+            }
         }
     }
 }

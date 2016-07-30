@@ -2,8 +2,28 @@ import Clouds from './clouds';
 
 const SUN_DISTANCE = 10000;
 
+const HOURS_DEFINITION = {
+    0: {
+        inclination: 0.6,
+        azimuth: 0.02
+    },
+    10: {
+        inclination: 0,
+        azimuth: 0.23
+    },
+    17 : {
+        inclination: 0.09,
+        azimuth: 0.42
+    }
+}
+
+const States = {
+    STATIC: "static",
+    TRANSITON: "transition"
+}
+
 export default class Sky {
-    constructor(loadingManager) {
+    constructor(loadingManager, dirLight, hemiLight) {
         console.log("Sky constructed!")
         const glslify = require('glslify');
 
@@ -14,13 +34,16 @@ export default class Sky {
         this.clouds = new Clouds(loadingManager);
 
         this.sunPosition = new THREE.Vector3(0,0,0);
+        this.dirLight = dirLight;
+        this.hemiLight = hemiLight;
     }
     init() {
 
         //var imageTexture = THREE.ImageUtils.loadTexture('assets/test/venice.jpeg');
 
-        this.inclination = 0.6
-        this.azimuth = 0.14;
+        this.currentTime = 0;
+        this.inclination = HOURS_DEFINITION[this.currentTime].inclination;
+        this.azimuth = HOURS_DEFINITION[this.currentTime].azimuth;
 
         this.shader = new THREE.ShaderMaterial( {
             uniforms: {
@@ -39,29 +62,47 @@ export default class Sky {
         // Chrome Linux workaround
         setTimeout(()=> {
                  this.clouds.init(this.shader);
+                 //this.clouds.startTransition();
         },0);
 
-        /*
-        var geometry = new THREE.SphereBufferGeometry( 450000, 32, 32 );
-        var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-        ths.mesh = new THREE.Mesh( geometry, material );*/
-        
-        /*
-        this.geo = new THREE.SphereBufferGeometry( 450000, 32, 15 );
-        this.mesh = new THREE.Mesh( this.geo, this.shader );
-        */
+        this.setState(States.STATIC);
 
         this.updateSunPosition();
 
     }
 
-    update(dt) {
-        /*
-        this.azimuth += 0.00002;
-        this.inclination += 0.0002;
-        this.updateSunPosition();*/
+    fadeSpin() {
+        TweenMax.to(this, 15, {spinFactor: 0.01});
+    }
 
-        this.geo.rotateY(0.01 * Math.PI / 180);
+    setState(state) {
+        if (state == States.STATIC) {
+            this.spinFactor = 0.01;
+        } else {
+            this.spinFactor = 0.5;
+        }
+    }
+
+    transitionTo(time, inSeconds) {
+        console.log("SKY: Transition to " + time + " in " + inSeconds + " seconds");
+        this.setState(States.TRANSITON);
+
+        let tl = new TimelineMax({onUpdate: () => {
+            this.updateSunPosition();
+            this.updateHemiLght();
+        }, onComplete : () => {this.fadeSpin()}});
+        tl.to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[10], {ease: Linear.easeNone}))
+        .to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[time], {ease: Linear.easeNone}));
+
+        TweenMax.to(this, inSeconds, {currentTime: time, onUpdate: () => {
+            this.updateHemiLght();            
+        }});
+
+    }
+
+
+    update(dt) {
+        this.geo.rotateY(this.spinFactor * Math.PI / 180);
         this.clouds.update(dt);
     }
 
@@ -84,7 +125,22 @@ export default class Sky {
         );
 
         this.shader.uniforms.sunPosition.value.copy(this.sunPosition);
+
+        this.dirLight.position.copy(this.sunPosition);
     }
+
+    updateHemiLght() {
+        if (this.currentTime > 0 && this.currentTime <= 14  ) {
+            this.hemiLight.intensity = 0.3 * (this.currentTime / 14) * (this.currentTime / 14);
+        } 
+        else if (this.currentTime > 14 && this.currentTime <= 23) {
+            this.hemiLight = 0.3 * ((23 - this.currentTime) / 18) * ((23 - this.currentTime) / 18);
+        }
+        else {
+            this.hemiLight.intensity = 0;
+        }
+    }
+
 
     getSunPosition() {
         return this.sunPosition;
