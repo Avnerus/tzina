@@ -126,7 +126,7 @@ export default class Game {
         */
 
         // Intro
-        this.intro = new Intro(this.camera, this.square, this.soundManager);
+        this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
 
     }
 

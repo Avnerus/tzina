@@ -2,6 +2,26 @@ import Clouds from './clouds';
 
 const SUN_DISTANCE = 10000;
 
+const HOURS_DEFINITION = {
+    0: {
+        inclination: 0.6,
+        azimuth: 0.02
+    },
+    10: {
+        inclination: 0,
+        azimuth: 0.23
+    },
+    17 : {
+        inclination: 0.09,
+        azimuth: 0.49
+    }
+}
+
+const States = {
+    STATIC: "static",
+    TRANSITON: "transition"
+}
+
 export default class Sky {
     constructor(loadingManager) {
         console.log("Sky constructed!")
@@ -19,8 +39,9 @@ export default class Sky {
 
         //var imageTexture = THREE.ImageUtils.loadTexture('assets/test/venice.jpeg');
 
-        this.inclination = 0.6
-        this.azimuth = 0.14;
+        this.currentTime = 0;
+        this.inclination = HOURS_DEFINITION[this.currentTime].inclination;
+        this.azimuth = HOURS_DEFINITION[this.currentTime].azimuth;
 
         this.shader = new THREE.ShaderMaterial( {
             uniforms: {
@@ -39,29 +60,34 @@ export default class Sky {
         // Chrome Linux workaround
         setTimeout(()=> {
                  this.clouds.init(this.shader);
+                 //this.clouds.startTransition();
         },0);
 
-        /*
-        var geometry = new THREE.SphereBufferGeometry( 450000, 32, 32 );
-        var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-        ths.mesh = new THREE.Mesh( geometry, material );*/
-        
-        /*
-        this.geo = new THREE.SphereBufferGeometry( 450000, 32, 15 );
-        this.mesh = new THREE.Mesh( this.geo, this.shader );
-        */
+        this.state = States.STATIC;
 
         this.updateSunPosition();
 
     }
 
-    update(dt) {
-        /*
-        this.azimuth += 0.00002;
-        this.inclination += 0.0002;
-        this.updateSunPosition();*/
+    transitionTo(time, inSeconds) {
+        console.log("SKY: Transition to " + time + " in " + inSeconds + " seconds");
+        this.state = States.TRANSITON;
 
-        this.geo.rotateY(0.01 * Math.PI / 180);
+        let tl = new TimelineMax({onUpdate: () => {
+            this.updateSunPosition();
+        }, onComplete : () => {this.state = States.STATIC}});
+        tl.to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[10], {ease: Linear.easeNone}))
+        .to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[time], {ease: Linear.easeNone}));
+
+    }
+
+
+    update(dt) {
+        if (this.state == States.STATIC) {
+            this.geo.rotateY(0.01 * Math.PI / 180);
+        } else {
+            this.geo.rotateY(0.5 * Math.PI / 180);
+        }
         this.clouds.update(dt);
     }
 

@@ -1,10 +1,12 @@
 import _ from 'lodash'
 
 export default class Intro {
-    constructor(camera, square, soundManager) {
+    constructor(camera, square, sky, soundManager, scene) {
         this.camera = camera;
         this.square = square;
         this.soundManager = soundManager;
+        this.sky = sky;
+        this.scene = scene;
 
         this.STARTING_POSITION = new THREE.Vector3(
             312.6124548161197,
@@ -21,6 +23,14 @@ export default class Intro {
 
         this.INTRO_SOUND = 'INTRO_Shirin.ogg'
 
+        let titlePlaneGeo = new THREE.PlaneGeometry( 1024, 128 );
+        let loader = new THREE.TextureLoader();
+        loader.load('assets/intro/title.png', (texture) => {
+            this.titleTexture = texture;
+            let material = new THREE.MeshBasicMaterial( {map: this.titleTexture, side: THREE.DoubleSide, transparent:true}  );
+            this.titlePlane = new THREE.Mesh(titlePlaneGeo, material);
+        });
+
     }
 
     init() {
@@ -29,22 +39,35 @@ export default class Intro {
         this.camera.position.copy(this.STARTING_POSITION);
         this.camera.rotation.copy(this.STARTING_ROTATION);
 
+        this.titlePlane.position.copy(this.square.getCenterPosition());
+        this.titlePlane.position.y = 400;
+        this.titlePlane.rotation.copy(this.STARTING_ROTATION);
+        
+
         // Load the sound
         this.soundManager.loadSound(this.INTRO_SOUND)
         .then((sound) => {
             console.log("Sound ", sound);
             this.sound = sound;
-            this.sound.playIn(1);
-            //this.soundManager.playSound(this.INTRO_SOUND);
         });
 
         setTimeout(() => {
             this.turnOnWindows();
-        },10000);
+            setTimeout(() => {
+                this.playSound();
+            },5000)
+
+        },3000);
     }
 
-    start() {
+    bringUpSun() {
+        this.sky.transitionTo(17, 8);
+    }
 
+    playSound() {
+        this.scene.add(this.titlePlane);
+        this.sound.play();
+        //this.bringUpSun();
     }
 
     rotateSquare() {
@@ -55,18 +78,18 @@ export default class Intro {
 
     turnOnWindows() {
         let shuffledWindows = _.shuffle(this.square.windows.children);
-        console.log("INTRO: TURN ON " + shuffledWindows.length + " WINDOWS");
+        console.log("INTRO: TURN ON  WINDOWS");
         let index = {
             value: 0
         }
         let lastIndex = 0;
-        TweenMax.to(index, 5, {value: shuffledWindows.length - 1, onUpdate: (val) => {
+        TweenMax.to(index, 60, {value: Math.floor(shuffledWindows.length - 1 / 3), ease: Circ.easeIn, onUpdate: (val) => {
             let currentIndex = Math.ceil(index.value);
             for (let i = lastIndex + 1; i <= currentIndex; i++) {
                 shuffledWindows[i].visible = true;
             }
             lastIndex = currentIndex;
-        },onComplete: () => {this.rotateSquare()}});
+        },onComplete: () => {}});
     }
 
     zoomToSquare() {
