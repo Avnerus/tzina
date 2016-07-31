@@ -87,7 +87,7 @@ export default class HannahAnimation extends THREE.Object3D {
                     // initialize color variable
                     color = new THREE.Color();
                     // console.log( ((point.x+1)*30) / ((j+4)*14) );
-                    color.setRGB( ((point.x+1)*30) / ((j+4)*15), 0.5 + (point.y*10) / ((j+4)*13), ((point.x+1)*30) / ((j+4)*14) );
+                    color.setRGB( ((point.x+1.2)*30) / ((j+4)*15), 0.6 + (point.y*10) / ((j+4)*13), ((point.x+1.3)*30) / ((j+4)*14) );
                     face.vertexColors[j] = color;
                 }
             }
@@ -226,15 +226,17 @@ export default class HannahAnimation extends THREE.Object3D {
                     value: [0,1,1,1,0]
                 },
                 size: {
-                    value: [.05,.25,.25,.25,.15]
+                    value: [.10,.5,.5,.5,.3]
                     // spread: [1,3]
                 },
-                particleCount: 3,
-                drag: 0.6
+                particleCount: 15,
+                drag: 0.6,
+                activeMultiplier: 0.3
                 // wiggle: 15
                 // isStatic: true
             });
             this.particleGroup.addEmitter( emitter );
+            // console.log( this.particleGroup.emitters[0] );
         }
         this.add( this.particleGroup.mesh );
     }
@@ -320,6 +322,11 @@ export default class HannahAnimation extends THREE.Object3D {
                     }
                 } } );
             }
+        }
+
+        for(let i=0; i<this.particleGroup.emitters.length; i++){
+            this.particleGroup.emitters[i].activeMultiplier = 1;
+            this.particleGroup.emitters[i].acceleration.value = new THREE.Vector3(0,0.5,0);
         }
         // mesh.geometry.colorsNeedUpdate = true;
         // for(let i=0; i<this.domeMorphTargets.length; i++){
