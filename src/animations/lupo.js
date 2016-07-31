@@ -128,7 +128,7 @@ export default class LupoAnimation extends THREE.Object3D {
             let delayT = i*this.lookupTable[i];
             TweenMax.to(this.lupoArt.children[0].children[i].scale, 3, { y:1, delay: delayT, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 0.2, points: 100, taper: "out", randomize: true, clamp: false}) });  // ease: Back.easeInOut.config(0.5)
             TweenMax.to(this.lupoArt.children[0].children[i].position, 3, { x:targetPos.x, y:targetPos.y, z:targetPos.z, delay: delayT });
-            TweenMax.to(this.lupoArt.children[0].children[i].material, 1, { opacity:1, delay: delayT });
+            TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:1, delay: delayT });
         }
     }
 
