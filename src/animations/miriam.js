@@ -32,9 +32,13 @@ export default class MiriamAnimation extends THREE.Object3D {
 
     initParticles( geo ) {
         // let geometry = new THREE.CubeGeometry(100,20, 100);
+        let fboGeo = geo.clone();
+        fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(31, 6, 40) );
+        fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(170 * Math.PI / 180) );
+
         let data = new Float32Array( this.width * this.height * 3  );
         //let data = Util.getSphere(this.width * this.height, 128);
-        let points = THREE.GeometryUtils.randomPointsInGeometry( geo, this.width * this.height);
+        let points = THREE.GeometryUtils.randomPointsInGeometry( fboGeo, this.width * this.height);
         for ( var i = 0, j = 0, l = data.length; i < l; i += 3, j += 1 ) {
             data[ i ] = points[ j ].x;
             data[ i + 1 ] = points[ j ].y;
@@ -124,6 +128,11 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         this.completeSequenceSetup();
 
+        // get manFigure worldPosition
+        // this.scene.updateMatrixWorld();
+        // let manWorldPosition = new THREE.Vector3();
+        // manWorldPosition.setFromMatrixPosition( this.manFigure.matrixWorld );
+
         // FBO_PARTICLES
         let positions = this.initParticles( manGeometry );
         this.rttIn = positions;
@@ -156,6 +165,7 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         this.fbo = new FBO()
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
+        this.fbo.particles.position.set( 50,0,-50 );
         // this.fbo.particles.position.y = -10;
         // this.fbo.particles.position.x = 30;
         // this.fbo.particles.position.z = 270;
@@ -260,7 +270,7 @@ export default class MiriamAnimation extends THREE.Object3D {
             }
 
             this.grandFatherClock.scale.multiplyScalar(0.01);
-            this.grandFatherClock.position.set(0, 3, .8);
+            this.grandFatherClock.position.set(1, 3, -1.2);
             // this.grandFatherClock.rotation.y = Math.PI;
 
             this.add(this.grandFatherClock);
@@ -300,9 +310,6 @@ export default class MiriamAnimation extends THREE.Object3D {
             this.pointer2Time = et;
         }
 
-        // FBO
-        this.fbo.update();
-
         // ANIMATION_SEQUENCE
         if(!this.animStart){
             this.animStartTime = et;
@@ -322,5 +329,8 @@ export default class MiriamAnimation extends THREE.Object3D {
                 }
             }
         }
+
+        // FBO
+        this.fbo.update();
     }
 }
