@@ -22,9 +22,10 @@ export default class HannahAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 65, anim: ()=>{this.beDome()} },
-            { time: 86, anim: ()=>{this.showLeaf()} },
-            { time: 172, anim: ()=>{this.beCollapse()} }
+            { time: 1, anim: ()=>{this.appear()} },     // 1
+            { time: 65, anim: ()=>{this.beDome()} },    // 65
+            { time: 86, anim: ()=>{this.showLeaf()} },  // 86
+            { time: 172, anim: ()=>{this.beCollapse()} }// 172
         ];
 
         this.nextAnim = null;
@@ -67,26 +68,26 @@ export default class HannahAnimation extends THREE.Object3D {
             evilGeo = geometry;
         });
         loader.load(this.BASE_PATH + "/models/leavesss_less_s.js", (geometry, material) => {
-            leafGeo = geometry;
+            this.leafGeo = geometry;
 
             // ref: https://stemkoski.github.io/Three.js/Vertex-Colors.html
             let face, numberOfSides, vertexIndex, point, color;
             let faceIndices = [ 'a', 'b', 'c', 'd' ];
             // vertex color
-            for(let i=0; i < leafGeo.faces.length; i++)
+            for(let i=0; i < this.leafGeo.faces.length; i++)
             {
-                face = leafGeo.faces[i];
+                face = this.leafGeo.faces[i];
                 numberOfSides = (face instanceof THREE.Face3 ) ? 3 : 4;
                 // assign color to each vertex of current face
                 for(let j=0; j < numberOfSides; j++)
                 {
                     vertexIndex = face[ faceIndices[j] ];
                     //store coordinates of vertex
-                    point = leafGeo.vertices[ vertexIndex ];
+                    point = this.leafGeo.vertices[ vertexIndex ];
                     // initialize color variable
                     color = new THREE.Color();
                     // console.log( ((point.x+1)*30) / ((j+4)*14) );
-                    color.setRGB( ((point.x+1)*30) / ((j+4)*15), 0.5 + (point.y*10) / ((j+4)*13), ((point.x+1)*30) / ((j+4)*14) );
+                    color.setRGB( ((point.x+1.2)*30) / ((j+4)*15), 0.6 + (point.y*10) / ((j+4)*13), ((point.x+1.3)*30) / ((j+4)*14) );
                     face.vertexColors[j] = color;
                 }
             }
@@ -108,7 +109,7 @@ export default class HannahAnimation extends THREE.Object3D {
 
             for(let i = 0; i < this.dome.geometry.vertices.length; i++){
                 let fMesh = new Thing( this.dome.geometry.vertices[i],
-                                       twigGeo, leafGeo, evilGeo,
+                                       twigGeo, this.leafGeo, evilGeo,
                                        twigMat, leafMat, evilMat );
 
                 this.add(fMesh.mesh);
@@ -156,8 +157,8 @@ export default class HannahAnimation extends THREE.Object3D {
                 hannahRoom.add(meshhh);
             });
         }
-        hannahRoom.scale.multiplyScalar(0.02);
-        hannahRoom.position.set(0,2,1);
+        hannahRoom.scale.multiplyScalar(0.025);
+        hannahRoom.position.set(0.5,2.5,0.8);
         this.add(hannahRoom);
 
         this.loadingManager.itemEnd("HannahAnim");
@@ -198,18 +199,13 @@ export default class HannahAnimation extends THREE.Object3D {
                 },
                 position: {
                     value: this.domeMorphTargets[i].mesh.position,
-                    radius: 0.2,
-                    // spread: new THREE.Vector3(1,1,1),
-                    // radiusScale: new THREE.Vector3(1,1,1),
-                    // distribution: SPE.distributions.SPHERE
+                    radius: 0.2
                 },
                 acceleration: {
-                    value: new THREE.Vector3(0,-0.5,0),
-                    // spread: new THREE.Vector3(0.5,-0.8,0.5)
+                    value: new THREE.Vector3(0,-0.5,0)
                 },
                 velocity: {
                     value: new THREE.Vector3(0.3,-0.3,0.3)
-                    // distribution: SPE.distributions.SPHERE
                 },
                 rotation: {
                     angle: 0.5
@@ -218,22 +214,18 @@ export default class HannahAnimation extends THREE.Object3D {
                     value: [0,0.5,-0.5],
                     spread: [0,-0.5,0.5]
                 },
-                // color: {
-                // 	value: new THREE.Color( 0xAA4488 )
-                // },
                 opacity: {
                     value: [0,1,1,1,0]
                 },
                 size: {
-                    value: [.05,.25,.25,.25,.15]
-                    // spread: [1,3]
+                    value: [.10,.5,.5,.5,.3]
                 },
-                particleCount: 3,
-                drag: 0.6
-                // wiggle: 15
-                // isStatic: true
+                particleCount: 15,
+                drag: 0.6,
+                activeMultiplier: 0.3
             });
             this.particleGroup.addEmitter( emitter );
+            // console.log( this.particleGroup.emitters[0] );
         }
         this.add( this.particleGroup.mesh );
     }
@@ -277,6 +269,12 @@ export default class HannahAnimation extends THREE.Object3D {
         }
     }
 
+    appear() {
+        for(let i=0; i<this.domeMorphTargets.length; i++){
+            TweenMax.to( this.domeMorphTargets[i].mesh.children[2].scale, 4, { x: 1, y: 1, z: 1, ease: Power4.easeIn } );
+        }
+    }
+
     beDome() {
         let tmpEndArray = [1,0];
         TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
@@ -292,6 +290,34 @@ export default class HannahAnimation extends THREE.Object3D {
     beCollapse() {
         let tmpEndArray = [0,1];
         TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
+        // change leaf color
+        let face, numberOfSides, vertexIndex, point, color;
+        let faceIndices = [ 'a', 'b', 'c', 'd' ];
+        for(let i=0; i < this.leafGeo.faces.length; i++)
+        {
+            face = this.leafGeo.faces[i];
+            numberOfSides = (face instanceof THREE.Face3 ) ? 3 : 4;
+
+            for(let j=0; j < numberOfSides; j++)
+            {
+                vertexIndex = face[ faceIndices[j] ];
+                point = this.leafGeo.vertices[ vertexIndex ];
+                // face.vertexColors[j].setHSL( Math.random(), 0.5, 0.5 );
+                let faceVertexColor = face.vertexColors[j];
+                // 0.63, 0.31, 0.08
+                TweenMax.to( faceVertexColor, 4, { r:(point.x*2+0.5)*4/5, g:Math.random()/4+0.1, b:0.08, onUpdate: ()=>{ 
+                    for(let i=0; i<this.domeMorphTargets.length; i++){
+                        this.domeMorphTargets[i].mesh.children[1].geometry.colorsNeedUpdate = true;
+                    }
+                } } );
+            }
+        }
+
+        for(let i=0; i<this.particleGroup.emitters.length; i++){
+            this.particleGroup.emitters[i].activeMultiplier = 1;
+            this.particleGroup.emitters[i].acceleration.value = new THREE.Vector3(0,0.5,0);
+        }
+
     }
 
     loadModelDome (modelS, modelD, modelC) {
@@ -360,7 +386,7 @@ export default class HannahAnimation extends THREE.Object3D {
             this.particleGroup.tick( dt );
         }
         for(let i=0; i < this.shieldGeo.vertices.length; i++){
-            let h = this.perlin.noise(et*0.1, i, 1)/150;
+            let h = this.perlin.noise(et*0.1, i, 1)/140;
             this.domeMorphTargets[i].mesh.position.addScalar( h );
 
             if( i % 10==0 ){
@@ -398,6 +424,7 @@ function Thing( pos, geoTwig, geoLeaf, geoEvil, twigMat, leafMat, evilMat ){
 
     this.mesh.children[1].scale.set(0.01, 0.01, 0.01);
     this.mesh.children[0].scale.set(0.01, 0.01, 0.01);
+    this.mesh.children[2].scale.set(0.01, 0.01, 0.01);
 }
 
 function map_range(value, low1, high1, low2, high2) {

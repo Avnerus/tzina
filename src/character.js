@@ -31,7 +31,9 @@ export default class Character extends THREE.Object3D {
             this.fullVideo.init(loadingManager);
 
             this.fullVideo.mesh.visible = false;
+
             this.add(this.fullVideo.mesh);
+            this.add(this.idleVideo.mesh);
 
             this.fullVideo.video.addEventListener('timeupdate',() => {
                 if (this.playingFull && this.animation) {
@@ -57,11 +59,11 @@ export default class Character extends THREE.Object3D {
                 this.props.rotation[1] * Math. PI / 180,
                 this.props.rotation[2] * Math. PI / 180
             );
-            this.add(this.idleVideo.mesh);
 
             if (this.props.animation) {
                 this.animation = animations[this.props.animation];
-                this.animation.position.set(1,0,-2);
+                this.animation.position.set(0,-1.5,-2.2);
+                this.animation.rotation.x = 20 * Math.PI/180;
                 this.add(this.animation);
                 this.animation.visible = false;
             } else {
