@@ -138,7 +138,7 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            //this.scene.add(this.square);
+            //            this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
 
             let bbox = new THREE.BoundingBoxHelper( this.hannah, 0x00ffff  );

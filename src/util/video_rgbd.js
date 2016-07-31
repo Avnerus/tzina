@@ -41,17 +41,19 @@ export default class VideoRGBD  {
         this.imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
         this.debug = {
-            //x1: 1460,
-            x1: 1260,
-            x2: 1920,
+            x1: 1460,
+            //x1: 1260,
+            //x2: 1920,
+            x2: 2800,
             x3: 1920,
             //y1: 720,
+            // y2: 1440,
             y1: 1260,
-            y2: 1440,
+            y2: 2040,
             y3: 1440,
             uvd: 0.440277,
-            posz: 2500.0,
-            posx: 400.0
+            posz: 2600.0,
+            posx: 150.0
         }
         events.emit("add_gui", this.debug, "x1"); 
         events.emit("add_gui", this.debug, "x2"); 
@@ -95,7 +97,7 @@ export default class VideoRGBD  {
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //let mesh = new THREE.Mesh( geometry, material);
         //this.mesh.scale.set(0.0016, 0.0016, 0.0016);
-        this.mesh.scale.set(0.016, 0.016, 0.016);
+        this.mesh.scale.set(0.009, 0.009, 0.009);
         this.mesh.rotation.set(
             this.properties.rotation[0],
             this.properties.rotation[1],
