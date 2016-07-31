@@ -39,6 +39,8 @@ export default class Game {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
 
+        this.camera.position.set(30,3,76);
+
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
         //this.soundManager = new SoundManager(this.camera, this.scene);
 
@@ -141,8 +143,8 @@ export default class Game {
             //this.sky.applyToMesh(this.square.getSphereMesh());
 
             let bbox = new THREE.BoundingBoxHelper( this.hannah, 0x00ffff  );
-            bbox.update();
-            this.scene.add( bbox  );
+            //bbox.update();
+            //this.scene.add( bbox  );
 
             this.scene.add(this.hannah)
             // this.scene.add(this.square);
@@ -224,6 +226,7 @@ export default class Game {
         //this.sky.transitionTo(17,1);
 
         this.hannah.play();
+        document.getElementById('subtitles').play();
     }
 
     animate(t) {
@@ -247,6 +250,7 @@ export default class Game {
         this.collisionManager.update(dt);
         //console.log(this.camera.rotation); */
         //this.intro.update();
+        //console.log(this.camera.rotation);
     }
 
     render() {

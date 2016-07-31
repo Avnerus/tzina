@@ -3,6 +3,13 @@ body {
     background-color: #000000;
     overflow: hidden;
 }
+video{
+  position: absolute;
+  width: 100%;
+  left: 0; bottom: 0;
+  z-index: 4000;
+
+}
 #header{
   display: none;
   position: absolute;
