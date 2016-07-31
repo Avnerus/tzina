@@ -23,9 +23,9 @@ export default class HannahAnimation extends THREE.Object3D {
         this.animStart = false;
         this.sequenceConfig = [
             { time: 1, anim: ()=>{this.appear()} },     // 1
-            { time: 5, anim: ()=>{this.beDome()} },    // 65
-            { time: 10, anim: ()=>{this.showLeaf()} },  // 86
-            { time: 15, anim: ()=>{this.beCollapse()} }// 172
+            { time: 65, anim: ()=>{this.beDome()} },    // 65
+            { time: 86, anim: ()=>{this.showLeaf()} },  // 86
+            { time: 172, anim: ()=>{this.beCollapse()} }// 172
         ];
 
         this.nextAnim = null;
@@ -199,18 +199,13 @@ export default class HannahAnimation extends THREE.Object3D {
                 },
                 position: {
                     value: this.domeMorphTargets[i].mesh.position,
-                    radius: 0.2,
-                    // spread: new THREE.Vector3(1,1,1),
-                    // radiusScale: new THREE.Vector3(1,1,1),
-                    // distribution: SPE.distributions.SPHERE
+                    radius: 0.2
                 },
                 acceleration: {
-                    value: new THREE.Vector3(0,-0.5,0),
-                    // spread: new THREE.Vector3(0.5,-0.8,0.5)
+                    value: new THREE.Vector3(0,-0.5,0)
                 },
                 velocity: {
                     value: new THREE.Vector3(0.3,-0.3,0.3)
-                    // distribution: SPE.distributions.SPHERE
                 },
                 rotation: {
                     angle: 0.5
@@ -219,21 +214,15 @@ export default class HannahAnimation extends THREE.Object3D {
                     value: [0,0.5,-0.5],
                     spread: [0,-0.5,0.5]
                 },
-                // color: {
-                // 	value: new THREE.Color( 0xAA4488 )
-                // },
                 opacity: {
                     value: [0,1,1,1,0]
                 },
                 size: {
                     value: [.10,.5,.5,.5,.3]
-                    // spread: [1,3]
                 },
                 particleCount: 15,
                 drag: 0.6,
                 activeMultiplier: 0.3
-                // wiggle: 15
-                // isStatic: true
             });
             this.particleGroup.addEmitter( emitter );
             // console.log( this.particleGroup.emitters[0] );
@@ -328,10 +317,7 @@ export default class HannahAnimation extends THREE.Object3D {
             this.particleGroup.emitters[i].activeMultiplier = 1;
             this.particleGroup.emitters[i].acceleration.value = new THREE.Vector3(0,0.5,0);
         }
-        // mesh.geometry.colorsNeedUpdate = true;
-        // for(let i=0; i<this.domeMorphTargets.length; i++){
-        //     this.domeMorphTargets[i].mesh.children[1].geometry.colorsNeedUpdate = true;
-        // }
+
     }
 
     loadModelDome (modelS, modelD, modelC) {
