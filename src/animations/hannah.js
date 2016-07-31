@@ -22,9 +22,9 @@ export default class HannahAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 4, anim: ()=>{this.beDome()} },
-            { time: 10, anim: ()=>{this.showLeaf()} },
-            { time: 16, anim: ()=>{this.beCollapse()} }
+            { time: 65, anim: ()=>{this.beDome()} },
+            { time: 86, anim: ()=>{this.showLeaf()} },
+            { time: 172, anim: ()=>{this.beCollapse()} }
         ];
 
         this.nextAnim = null;

@@ -45,6 +45,10 @@ export default class Character extends THREE.Object3D {
             this.add(this.idleVideo.mesh);
             this.animation = animations[this.props.animation];
             this.animation.position.set(1,0,-2);
+            this.add(this.fullVideo.mesh);
+            this.add(this.animation);
+            this.fullVideo.mesh.visible = false;
+            this.animation.visible = false;
 
             this.collisionManager.addCharacter(this);
     }
@@ -68,8 +72,8 @@ export default class Character extends THREE.Object3D {
             console.log("Character collision!");
             this.idleVideo.pause();
             this.remove(this.idleVideo.mesh);
-            this.add(this.fullVideo.mesh);
-            this.add(this.animation);
+            this.fullVideo.mesh.visible = true;
+            this.animation.visible = true;
             this.animation.start()
             this.fullVideo.play();
         }

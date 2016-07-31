@@ -107,9 +107,8 @@ export default class KeyboardController {
         }, false);
     }
     
-    update(dt) {
-        if (this.active) {
-            let delta = dt;
+    update(delta) {
+        if (this.active && delta < 0.1) {
             this.velocity.x -= this.velocity.x * 10.0 * delta;
             this.velocity.z -= this.velocity.z * 10.0 * delta;
 
