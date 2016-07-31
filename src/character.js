@@ -32,6 +32,14 @@ export default class Character extends THREE.Object3D {
                 }
             },false);
 
+            this.fullVideo.video.addEventListener('ended',() => {
+                console.log("Character video ended");
+                this.remove(this.animation);
+                this.remove(this.fullVideo.mesh);
+                this.idleVideo.mesh.visible = true;
+                this.idleVideo.play();
+                this.playingFull = false;
+            },false);
 
             this.idleVideo.video.loop = true;
 
@@ -71,7 +79,6 @@ export default class Character extends THREE.Object3D {
             this.playingFull = true;
             console.log("Character collision!");
             this.idleVideo.pause();
-            this.remove(this.idleVideo.mesh);
             this.fullVideo.mesh.visible = true;
             this.animation.visible = true;
             this.animation.start()
