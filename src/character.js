@@ -52,7 +52,8 @@ export default class Character extends THREE.Object3D {
             );
             this.add(this.idleVideo.mesh);
             this.animation = animations[this.props.animation];
-            this.animation.position.set(1,0,-2);
+            this.animation.rotation.x = 20 * Math.PI/180;
+            this.animation.position.set(0,-1.5,-2.2);
             this.add(this.fullVideo.mesh);
             this.add(this.animation);
             this.fullVideo.mesh.visible = false;
