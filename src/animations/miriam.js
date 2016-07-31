@@ -68,7 +68,8 @@ export default class MiriamAnimation extends THREE.Object3D {
             { time: 16, anim: ()=>{this.manCircle()} },
             { time: 20, anim: ()=>{this.manSwirl()} },
             { time: 24, anim: ()=>{this.manSwirl2()} },
-            { time: 28, anim: ()=>{this.manSwirl3()} }
+            { time: 28, anim: ()=>{this.manSwirl3()} },
+            { time: 32, anim: ()=>{this.manSwirlNonstop()} }
         ];
 
         let GFClockTex = tex_loader.load(this.BASE_PATH + '/images/clockUV4.jpg');
@@ -205,6 +206,9 @@ export default class MiriamAnimation extends THREE.Object3D {
     manSwirl3 () {
         let tmpEndArray = [0,0,0,0,0,1];
         TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray } );
+    }
+    manSwirlNonstop () {
+        
     }
 
     loadModelClock (model, modelB, modelC, modelD, meshMat) {
