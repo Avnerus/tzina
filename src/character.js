@@ -6,13 +6,17 @@ export default class Character extends THREE.Object3D {
         this.idleVideo = new VideoRGBD({
             mindepth: props.mindepth,
             maxdepth: props.maxdepth,
-            fileName: props.basePath + "_idle.webm"
+            fileName: props.basePath + "_idle.webm",
+            uvd: props.uvd,
+            scale: props.scale
         });
 
         this.fullVideo = new VideoRGBD({
             mindepth: props.mindepth,
             maxdepth: props.maxdepth,
-            fileName: props.basePath + "_full.webm"
+            fileName: props.basePath + "_full.webm",
+            uvd: props.uvd,
+            scale: props.scale
         });
         this.collisionManager = collisionManager;
 
@@ -25,6 +29,9 @@ export default class Character extends THREE.Object3D {
     init(loadingManager, animations) {
             this.idleVideo.init(loadingManager);
             this.fullVideo.init(loadingManager);
+
+            this.fullVideo.mesh.visible = false;
+            this.add(this.fullVideo.mesh);
 
             this.fullVideo.video.addEventListener('timeupdate',() => {
                 if (this.playingFull && this.animation) {
@@ -51,12 +58,15 @@ export default class Character extends THREE.Object3D {
                 this.props.rotation[2] * Math. PI / 180
             );
             this.add(this.idleVideo.mesh);
-            this.animation = animations[this.props.animation];
-            this.animation.position.set(1,0,-2);
-            this.add(this.fullVideo.mesh);
-            this.add(this.animation);
-            this.fullVideo.mesh.visible = false;
-            this.animation.visible = false;
+
+            if (this.props.animation) {
+                this.animation = animations[this.props.animation];
+                this.animation.position.set(1,0,-2);
+                this.add(this.animation);
+                this.animation.visible = false;
+            } else {
+                this.animation = null;
+            }
 
             this.collisionManager.addCharacter(this);
     }
@@ -70,12 +80,14 @@ export default class Character extends THREE.Object3D {
             this.idleVideo.update(dt);
         } else {
             this.fullVideo.update(dt);
-            this.animation.update(dt,et)
+            if (this.animation) {
+                this.animation.update(dt,et)
+            }
         }
     }
 
     onCollision() {
-        if (!this.playingFull) {
+        if (!this.playingFull && this.animation) {
             this.playingFull = true;
             console.log("Character collision!");
             this.idleVideo.pause();

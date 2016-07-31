@@ -42,7 +42,8 @@ export default class VideoRGBD  {
             uniforms: {
                 "map": { type: "t" },
                 "mindepth" : { type : "f", value : this.properties.mindepth },
-                "maxdepth" : { type : "f", value : this.properties.maxdepth }
+                "maxdepth" : { type : "f", value : this.properties.maxdepth },
+                "uvd" : { type : "f", value : this.properties.uvd }
             },
 
             vertexShader: this.rgbd_vs,
@@ -57,7 +58,7 @@ export default class VideoRGBD  {
         //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //let mesh = new THREE.Mesh( geometry, material);
-        this.mesh.scale.set(0.005, 0.005, 0.005);
+        this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         //mesh.frustumCulled = false;
 
         /*

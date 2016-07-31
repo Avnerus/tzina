@@ -101,8 +101,22 @@ export default class Game {
             maxdepth : 3047.334472656,
             position : [36, 8.1, 50],
             rotation: [20, 195, 6],
-            name: 'Hanna',
-            animation: 'Hannah'
+            name: 'Hannah',
+            animation: 'Hannah',
+            uvd: 0.440277,
+            scale: 0.005
+        }, this.collisionManager);
+
+        this.lupo = new Character({
+            basePath : 'assets/characters/lupo',
+            mindepth : 1500.681884766,
+            maxdepth : 3376.051757813,
+            position : [53, 7.9, 79.3],
+            rotation: [6, 195, 6],
+            name: 'Lupo',
+            uvd: 0.45,
+            scale: 0.006,
+            animation: null
         }, this.collisionManager);
 
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
@@ -141,17 +155,20 @@ export default class Game {
             console.log("Done loading everything!");
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
+            this.scene.add(this.lupo)
             this.scene.add(this.hannah)
 
-            this.hannah.rotationY = 195;
-            this.hannah.rotationX = 20;
-            this.hannah.rotationZ = 6;
-            events.emit("add_gui", this.hannah.position, "x"); 
-            events.emit("add_gui", this.hannah.position, "z");
-            events.emit("add_gui", this.hannah.position, "y"); 
-            events.emit("add_gui", this.hannah, "rotationY"); 
-            events.emit("add_gui", this.hannah, "rotationZ"); 
-            events.emit("add_gui", this.hannah, "rotationX"); 
+
+            /*
+            this.lupo.rotationY = 195;
+            this.lupo.rotationX = 6;
+            this.lupo.rotationZ = 6;
+            events.emit("add_gui", this.lupo.position, "x"); 
+            events.emit("add_gui", this.lupo.position, "z");
+            events.emit("add_gui", this.lupo.position, "y"); 
+            events.emit("add_gui", this.lupo, "rotationY"); 
+            events.emit("add_gui", this.lupo, "rotationZ"); 
+            events.emit("add_gui", this.lupo, "rotationX"); */
 
             onLoad();
         };
@@ -166,6 +183,7 @@ export default class Game {
         this.sky.init();
         this.soundManager.init();
         this.hannah.init(this.loadingManager, this.animations)
+        this.lupo.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
 
         // Animations init
@@ -223,6 +241,7 @@ export default class Game {
         
         this.sky.transitionTo(17,1);
 
+        this.lupo.play();
         this.hannah.play();
     }
 
@@ -242,9 +261,13 @@ export default class Game {
                this.vrControls.update();
             }
         this.hannah.update(dt,et);
-        this.hannah.rotation.y = this.hannah.rotationY * Math.PI / 180;
-        this.hannah.rotation.x = this.hannah.rotationX * Math.PI / 180;
-        this.hannah.rotation.z = this.hannah.rotationZ * Math.PI / 180;
+        this.lupo.update(dt,et);
+
+        /*
+        this.lupo.rotation.y = this.lupo.rotationY * Math.PI / 180;
+        this.lupo.rotation.x = this.lupo.rotationX * Math.PI / 180;
+        this.lupo.rotation.z = this.lupo.rotationZ * Math.PI / 180;*/
+
         //this.flood.update(dt);
         this.collisionManager.update(dt);
         //console.log(this.camera.rotation); */
