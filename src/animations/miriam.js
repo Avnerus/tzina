@@ -30,11 +30,11 @@ export default class MiriamAnimation extends THREE.Object3D {
         console.log("Beam Constructed!")
     }
 
-    initCubeParticles() {
-        let geometry = new THREE.CubeGeometry(100,20, 100);
+    initParticles( geo ) {
+        // let geometry = new THREE.CubeGeometry(100,20, 100);
         let data = new Float32Array( this.width * this.height * 3  );
         //let data = Util.getSphere(this.width * this.height, 128);
-        let points = THREE.GeometryUtils.randomPointsInGeometry( geometry, this.width * this.height);
+        let points = THREE.GeometryUtils.randomPointsInGeometry( geo, this.width * this.height);
         for ( var i = 0, j = 0, l = data.length; i < l; i += 3, j += 1 ) {
             data[ i ] = points[ j ].x;
             data[ i + 1 ] = points[ j ].y;
@@ -119,13 +119,13 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.manFigure = new THREE.Mesh(manGeometry, manMaterial);
         // manFigure.scale.set(80,80,80);
         // manFigure.rotation.y = Math.PI;
-        // manFigure.position.set(0,0,200);
+        this.manFigure.position.set(1,0,-2);
         this.add( this.manFigure );
 
         this.completeSequenceSetup();
 
         // FBO_PARTICLES
-        let positions = this.initCubeParticles();
+        let positions = this.initParticles( manGeometry );
         this.rttIn = positions;
 
         this.simulationShader = new THREE.ShaderMaterial({
@@ -141,7 +141,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 16 }
+                pointSize: { type: "f", value: 1 }
             },
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,
@@ -151,13 +151,14 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         // Particle geometry? Just once particle
         var particleGeometry  = new THREE.Geometry();
-        particleGeometry.vertices.push(new THREE.Vector3( 0,  0, 0 ), new THREE.Vector3(0, -1, 0), new THREE.Vector3(0,-1,-1));
+        // particleGeometry.vertices.push(new THREE.Vector3( 0,  0, 0 ), new THREE.Vector3(0, -1, 0), new THREE.Vector3(0,-1,-1));
+        particleGeometry.vertices.push( new THREE.Vector3() );
 
         this.fbo = new FBO()
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
-        this.fbo.particles.position.y = -10;
-        this.fbo.particles.position.x = 30;
-        this.fbo.particles.position.z = 270;
+        // this.fbo.particles.position.y = -10;
+        // this.fbo.particles.position.x = 30;
+        // this.fbo.particles.position.z = 270;
         this.scene.add( this.fbo.particles );
 
         //

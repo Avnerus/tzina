@@ -8,7 +8,7 @@ import Flood from './flood'
 import ZoomController from './zoom_controller'
 
 // Animations
-import HannahAnimation from './animations/hannah'
+import MiriamAnimation from './animations/miriam'
 
 export default class Game {
     constructor(config) {
@@ -23,7 +23,7 @@ export default class Game {
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 1, 2000000);
+        this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
         
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
         
@@ -80,8 +80,8 @@ export default class Game {
             maxdepth : 3446.559326172,
             position : [30, 6, 42],
             rotation: [0, 170, 0],
-            name: 'Lupo',
-            animation: 'Hannah'
+            name: 'Miriam',
+            animation: 'Miriam'
         });
 
         this.sky = new Sky(this.loadingManager);
@@ -89,7 +89,7 @@ export default class Game {
 
         // animations
         this.animations = {
-            'Hannah': new HannahAnimation()
+            'Miriam': new MiriamAnimation( this.scene, this.renderer )
         }
 
         /*
@@ -114,7 +114,7 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            this.scene.add(this.square);
+            // this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
             this.scene.add(this.testCharacter)
 
