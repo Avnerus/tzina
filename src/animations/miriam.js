@@ -93,13 +93,13 @@ export default class MiriamAnimation extends THREE.Object3D {
                                                    Number(men_figures2[i][j][1]),
                                                    Number(men_figures2[i][j][2]) );
                 // scale down
-                    newVector.multiplyScalar(0.3);
+                    newVector.multiplyScalar(1.3);
                 men_figures_vec[i].push( newVector );
             }
         }
 
         // CREATE CURVE
-        let manMaterial = new THREE.MeshLambertMaterial({color: 0xff0000, morphTargets: true, wireframe: true});
+        let manMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, morphTargets: true});
         let m_f_size2 = Object.keys(men_figures_vec).length;
 
         for(let i=1; i<=m_f_size2; i++) {
@@ -111,10 +111,10 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
  
         let curveColors = [];
-        let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.01, 1, true);
+        let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.1, 2, true);
         console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
         for(let i=1; i<men_figures_points.length; i++){
-            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.01, 1, true);
+            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.1, 2, true);
             let nameee = 't'+(i-1);
             manGeometry.morphTargets[i-1] = {name: nameee, vertices: manGeometry2.vertices};
         }
@@ -123,7 +123,8 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.manFigure = new THREE.Mesh(manGeometry, manMaterial);
         // manFigure.scale.set(80,80,80);
         // manFigure.rotation.y = Math.PI;
-        this.manFigure.position.set(1,0,-2);
+        this.manFigure.position.set(1,-7,-5);
+        console.log();
         this.add( this.manFigure );
 
         this.completeSequenceSetup();
@@ -150,7 +151,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 1 }
+                pointSize: { type: "f", value: 2 }
             },
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,
