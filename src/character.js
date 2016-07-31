@@ -62,8 +62,12 @@ export default class Character extends THREE.Object3D {
 
             if (this.props.animation) {
                 this.animation = animations[this.props.animation];
-                this.animation.position.set(0,-1.5,-2.2);
-                this.animation.rotation.x = 20 * Math.PI/180;
+                this.animation.position.fromArray(this.props.animationPosition);
+                this.animation.rotation.set(
+                    this.props.animationRotation[0] * Math. PI / 180,
+                    this.props.animationRotation[1] * Math. PI / 180,
+                    this.props.animationRotation[2] * Math. PI / 180
+                );
                 this.add(this.animation);
                 this.animation.visible = false;
             } else {

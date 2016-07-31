@@ -16,6 +16,7 @@ import SoundManager from './sound_manager'
 
 // Animations
 import HannahAnimation from './animations/hannah'
+import LupoAnimation from './animations/lupo'
 
 export default class Game {
     constructor(config) {
@@ -104,7 +105,9 @@ export default class Game {
             name: 'Hannah',
             animation: 'Hannah',
             uvd: 0.440277,
-            scale: 0.005
+            scale: 0.005,
+            animationPosition: [0,-1.5,-2.2],
+            animationRotation: [20, 0, 0]
         }, this.collisionManager);
 
         this.lupo = new Character({
@@ -116,7 +119,9 @@ export default class Game {
             name: 'Lupo',
             uvd: 0.45,
             scale: 0.006,
-            animation: null
+            animation: 'Lupo',
+            animationPosition: [0, 0, -5],
+            animationRotation: [20, 0, 0]
         }, this.collisionManager);
 
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
@@ -124,7 +129,8 @@ export default class Game {
 
         // animations
         this.animations = {
-            'Hannah': new HannahAnimation()
+            'Hannah': new HannahAnimation(),
+            'Lupo': new LupoAnimation()
         }
 
 
