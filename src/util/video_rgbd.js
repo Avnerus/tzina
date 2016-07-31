@@ -46,7 +46,8 @@ export default class VideoRGBD  {
             x3: 1920,
             y1: 720,
             y2: 1600,
-            y3: 1440 
+            y3: 1440,
+            uvd: 0.4435
         }
         events.emit("add_gui", this.debug, "x1"); 
         events.emit("add_gui", this.debug, "x2"); 
@@ -54,6 +55,7 @@ export default class VideoRGBD  {
         events.emit("add_gui", this.debug, "y1"); 
         events.emit("add_gui", this.debug, "y2"); 
         events.emit("add_gui", this.debug, "y3"); 
+        events.emit("add_gui", this.debug, "uvd"); 
 
         this.meshMaterial = new THREE.ShaderMaterial( {
 
@@ -66,7 +68,8 @@ export default class VideoRGBD  {
                 "x3" : { type : "f", value : this.debug.x3 },
                 "y1" : { type : "f", value : this.debug.y1 },
                 "y2" : { type : "f", value : this.debug.y2 },
-                "y3" : { type : "f", value : this.debug.y3 }
+                "y3" : { type : "f", value : this.debug.y3 },
+                "uvd" : { type : "f", value : this.debug.uvd }
             },
 
             vertexShader: this.rgbd_vs,
@@ -152,6 +155,7 @@ export default class VideoRGBD  {
         this.meshMaterial.uniforms.y1.value = this.debug.y1;
         this.meshMaterial.uniforms.y2.value = this.debug.y2;
         this.meshMaterial.uniforms.y3.value = this.debug.y3;
+        this.meshMaterial.uniforms.uvd.value = this.debug.uvd;
     }
     pause() {
         if ( this.isPlaying === false ) return;
