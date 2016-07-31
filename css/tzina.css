@@ -56,3 +56,12 @@ body {
     position: relative;
     bottom: 30%
 }
+#subtitles {
+  position: absolute;
+  width: 100%;
+  left: 0; bottom: 0;
+  z-index: 4000;
+  height:0px;
+  overflow:visible;
+  pointer-events:none;
+}
