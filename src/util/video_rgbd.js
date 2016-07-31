@@ -5,8 +5,8 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
-const VERTS_WIDE = 128;
-const VERTS_TALL = 128;
+const VERTS_WIDE = 256;
+const VERTS_TALL = 256;
 
 
 export default class VideoRGBD  {
@@ -60,12 +60,7 @@ export default class VideoRGBD  {
         //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //let mesh = new THREE.Mesh( geometry, material);
-        this.mesh.scale.set(0.0016, 0.0016, 0.0016);
-        this.mesh.rotation.set(
-            this.properties.rotation[0],
-            this.properties.rotation[1],
-            this.properties.rotation[2]
-        );
+        this.mesh.scale.set(0.007, 0.007, 0.007);
         //mesh.frustumCulled = false;
 
         /*

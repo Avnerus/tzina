@@ -1,4 +1,5 @@
 import EventEmitter from 'events'
+
 import GuiManager from './gui_manager'
 
 import Sky from './sky'
@@ -98,8 +99,8 @@ export default class Game {
             basePath : 'assets/characters/hanna',
             mindepth : 2138.454101562,
             maxdepth : 3047.334472656,
-            position : [30, 6, 42],
-            rotation: [0, 170, 0],
+            position : [36, 8.8, 50],
+            rotation: [0, 180, 0],
             name: 'Hanna',
             animation: 'Hannah'
         });
@@ -141,6 +142,12 @@ export default class Game {
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
             this.scene.add(this.hannah)
+
+            this.hannah.rotationY = 210;
+            events.emit("add_gui", this.hannah.position, "x"); 
+            events.emit("add_gui", this.hannah.position, "z");
+            events.emit("add_gui", this.hannah.position, "y"); 
+            events.emit("add_gui", this.hannah, "rotationY"); 
 
             onLoad();
         };
@@ -190,7 +197,7 @@ export default class Game {
                 this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
                 this.zoomController.init();
 
-                //this.keyboardController.setPosition(40, 10, 65);
+                this.keyboardController.setPosition(40, 10, 65);
 
                 /*
                 let controls = new THREE.PointerLockControls( this.camera );
@@ -207,12 +214,12 @@ export default class Game {
         this.square.fountain.startCycle();
 
         // Init the intro
-        this.intro.init();
+        // this.intro.init();
 
-        /*
+        
         this.sky.transitionTo(17,1);
 
-        this.hannah.play();*/
+        this.hannah.play();
     }
 
     animate(t) {
@@ -231,6 +238,7 @@ export default class Game {
                this.vrControls.update();
             }
         this.hannah.update(dt,et);
+        this.hannah.rotation.y = this.hannah.rotationY * Math.PI / 180;
         //this.flood.update(dt);
         /*
         this.collisionManager.update(dt);
