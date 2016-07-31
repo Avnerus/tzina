@@ -34,11 +34,12 @@ export default class LupoAnimation extends THREE.Object3D {
 
         let modelLoader = new THREE.JSONLoader(this.loadingManager);
 
-        let sculptureModelFiles = [ [this.BASE_PATH + "/models/sculptures/deer.js", new THREE.Vector3(2, .3, 2), new THREE.Vector3(2, 2, -2)],
-                                    [this.BASE_PATH + "/models/sculptures/dog.js", new THREE.Vector3(-2, .3, 1.5), new THREE.Vector3(-2, 2, -1)],
+        // url + targetPosition + startPosition
+        let sculptureModelFiles = [ [this.BASE_PATH + "/models/sculptures/deer.js", new THREE.Vector3(2, .3, 2), new THREE.Vector3(2, .5, 2)],
+                                    [this.BASE_PATH + "/models/sculptures/dog.js", new THREE.Vector3(-2, .3, 1.5), new THREE.Vector3(-2, .5, 1.5)],
                                     [this.BASE_PATH + "/models/sculptures/macho.js", new THREE.Vector3(-3.8, .7, 0), new THREE.Vector3(-3.8, 2, 0)],
                                     [this.BASE_PATH + "/models/sculptures/painter.js", new THREE.Vector3(5, 1, -1), new THREE.Vector3(5, 1.5, -1)],
-                                    [this.BASE_PATH + "/models/sculptures/pig.js", new THREE.Vector3(3.5, 0.3, 1), new THREE.Vector3(3.5, 2, -2)],
+                                    [this.BASE_PATH + "/models/sculptures/pig.js", new THREE.Vector3(3.5, 0.3, 1), new THREE.Vector3(3.5, .5, 1)],
                                     [this.BASE_PATH + "/models/sculptures/right_arm.js", new THREE.Vector3(2.7, .5, -1), new THREE.Vector3(2.7, 2, -1)],
                                     [this.BASE_PATH + "/models/sculptures/short_legs.js", new THREE.Vector3(-2.5, .3, 1.8), new THREE.Vector3(-2.5, 1.5, 1.8)],
                                     [this.BASE_PATH + "/models/sculptures/two_heads.js", new THREE.Vector3(0, 1.5, -1.4),new THREE.Vector3(0, 2, -1.4)] ];
@@ -61,9 +62,12 @@ export default class LupoAnimation extends THREE.Object3D {
 
         let sculptureModels=[];
         this.sculptureMaterials=[];
-        this.sculptureTextures=[];
+        // this.sculptureTextures=[];
+        this.sculptureTextures={};
+
         this.sculptureMADMaterials=[];
-        this.sculptureMADTextures=[];
+        // this.sculptureMADTextures=[];
+        this.sculptureMADTextures={};
 
         // v.OLD
         // this.loadModelSculptures(this.BASE_PATH + "/models/base.js", this.BASE_PATH + "/models/top.js", this.BASE_PATH + "/models/down.js,")
@@ -83,7 +87,7 @@ export default class LupoAnimation extends THREE.Object3D {
 
             // this.sculptureTextures = lupoArtText;
             // this.sculptureMaterials = lupoArtMat;
-            // console.log("Loaded lupo art materials", lupoArtMat);
+            console.log("Loaded lupo art materials");
 
             this.loadSculptureModels( sculptureModelFiles )
             .then((lupoArt) => {
@@ -125,8 +129,8 @@ export default class LupoAnimation extends THREE.Object3D {
             let targetPos = this.lupoArt.children[0].children[i].targetPosition;
             let delayT = i*this.lookupTable[i];
             TweenMax.to(this.lupoArt.children[0].children[i].scale, 3, { y:1, delay: delayT, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 0.2, points: 100, taper: "out", randomize: true, clamp: false}) });  // ease: Back.easeInOut.config(0.5)
-            TweenMax.to(this.lupoArt.children[0].children[i].position, 3, { x:targetPos.x, y:targetPos.y, z:targetPos.z, delay: delayT, ease: Power1.easeInOut });
-            TweenMax.to(this.lupoArt.children[0].children[i].material, 3, { opacity:1, delay: delayT });
+            TweenMax.to(this.lupoArt.children[0].children[i].position, 3, { x:targetPos.x, y:targetPos.y, z:targetPos.z, delay: delayT });
+            TweenMax.to(this.lupoArt.children[0].children[i].material, 1, { opacity:1, delay: delayT });
         }
     }
 
@@ -138,20 +142,31 @@ export default class LupoAnimation extends THREE.Object3D {
     }
 
     shiftTextures() {
-        if( this.dummy.roughValue>2){
-            for(let i=0; i<this.lupoArt.children[0].children.length; i++){
-                this.lupoArt.children[0].children[i].material.map = this.sculptureMADTextures[i];
-            }
-        } else {
-            for(let i=0; i<this.lupoArt.children[0].children.length; i++){
-                this.lupoArt.children[0].children[i].material.map = this.sculptureTextures[i];
-            }
+        // if( this.dummy.roughValue>2){
+        //     for(let i=0; i<this.lupoArt.children[0].children.length; i++){
+        //         this.lupoArt.children[0].children[i].material.map = this.sculptureMADTextures[i];
+        //         // console.log( i + ", " + this.sculptureMADTextures[i].texIndex );
+        //     }
+        // } else {
+        //     for(let i=0; i<this.lupoArt.children[0].children.length; i++){
+        //         this.lupoArt.children[0].children[i].material.map = this.sculptureTextures[i];
+        //         console.log( i + ", " + this.sculptureTextures[i].texIndex );
+        //     }
+        // }
+
+        let target = this.lupoArt.children[0].children;
+        for(let i=0; i<target.length; i++){
+            if( this.dummy.roughValue>2)
+                target[i].material.map = this.sculptureMADTextures[ target[i].material.map.texIndex ];
+            else
+                target[i].material.map = this.sculptureTextures[ target[i].material.map.texIndex ];
         }
     }
 
     doneShiftTextures() {
-        for(let i=0; i<this.lupoArt.children[0].children.length; i++){
-            this.lupoArt.children[0].children[i].material.map = this.sculptureTextures[i];
+        let target = this.lupoArt.children[0].children;
+        for(let i=0; i<target.length; i++){
+            target[i].material.map = this.sculptureTextures[ target[i].material.map.texIndex ];
         }
     }
 
@@ -161,20 +176,23 @@ export default class LupoAnimation extends THREE.Object3D {
 
     loadSculptureTextures ( textureFiles, textureMADFiles ) {
         let promise = new Promise( (resolve, reject) => {
-            // this.sculptureTextures = lupoArtText;
-            // this.sculptureMaterials = lupoArtMat;
-            // let lupoArtText=[];
-            // let lupoArtMat=[];
+
             let tex_loader = new THREE.TextureLoader(this.loadingManager);
             for(let i=0; i<textureFiles.length; i++){
                 let _tex = tex_loader.load( textureFiles[i] );
-                this.sculptureTextures.push( _tex );
+                _tex.texIndex=i;
+                _tex.name="sculptureTex_" + i;
+                this.sculptureTextures[i] = _tex;
+
                 let _mat = new THREE.MeshPhongMaterial({map: _tex, transparent: true, shininess: 100});
                 this.sculptureMaterials.push( _mat );
             }
             for(let i=0; i<textureMADFiles.length; i++){
                 let _tex = tex_loader.load( textureMADFiles[i] );
-                this.sculptureMADTextures.push( _tex );
+                _tex.texIndex=i;
+                _tex.name="sculptureMadTex_" + i;
+                this.sculptureMADTextures[i] = _tex;
+
                 let _mat = new THREE.MeshPhongMaterial({map: _tex, transparent: true, shininess: 100});
                 this.sculptureMADMaterials.push( _mat );
             }
