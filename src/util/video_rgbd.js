@@ -53,17 +53,17 @@ export default class VideoRGBD  {
             posz: 2500.0,
             posx: 400.0
         }
-        events.emit("add_gui", this.debug, "x1"); 
-        events.emit("add_gui", this.debug, "x2"); 
-        events.emit("add_gui", this.debug, "x3"); 
-        events.emit("add_gui", this.debug, "y1"); 
-        events.emit("add_gui", this.debug, "y2"); 
-        events.emit("add_gui", this.debug, "y3"); 
-        events.emit("add_gui", this.debug, "uvd"); 
-        events.emit("add_gui", this.debug, "posx"); 
-        events.emit("add_gui", this.debug, "posz"); 
-        events.emit("add_gui", this.properties, "mindepth"); 
-        events.emit("add_gui", this.properties, "maxdepth"); 
+        events.emit("add_gui", this.debug, "x1");
+        events.emit("add_gui", this.debug, "x2");
+        events.emit("add_gui", this.debug, "x3");
+        events.emit("add_gui", this.debug, "y1");
+        events.emit("add_gui", this.debug, "y2");
+        events.emit("add_gui", this.debug, "y3");
+        events.emit("add_gui", this.debug, "uvd");
+        events.emit("add_gui", this.debug, "posx");
+        events.emit("add_gui", this.debug, "posz");
+        events.emit("add_gui", this.properties, "mindepth");
+        events.emit("add_gui", this.properties, "maxdepth");
 
         this.meshMaterial = new THREE.ShaderMaterial( {
 

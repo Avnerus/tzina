@@ -1,10 +1,11 @@
+import $ from 'jquery-browserify'
 var Game = require('./game').default;
 var config = require('./config').default;
-var Stats = require('stats.js');
+//var Stats = require('stats.js');
 
 var game = new Game(config);
-var stats = new Stats();
-stats.showPanel(0);
+//var stats = new Stats();
+//stats.showPanel(0);
 
 var fullscreen = require('fullscreen');
 var lock = require('pointer-lock-chrome-tolerant');
@@ -17,67 +18,44 @@ var elapsed = 0
 var lastTimestamp = 0;
 
 window.onload = function() {
+    $('.fadein').delay(500).fadeIn(500);
+    $('#header').delay(500).fadeIn(500);
+
+    $('#menu').click(function() {
+      $(this).toggleClass('open');
+        if($('#menu').hasClass('open')){
+          $('#header').animate({'height':'300px'},100,function(){
+            $('.chapter_text').fadeIn(750);
+          });
+        } else {
+          $('.chapter_text').fadeOut(50);
+          $('#header').animate({'height':'45px'},100,function(){
+
+          });
+        };
+      });
     console.log("Loading...");
     game.init();
+
     //var el = document.getElementsByTagName('body')[0];
     //var el = document.getElementById('game');
     var el = document.documentElement;
 
-    document.getElementById('start-button').addEventListener('click',function(event) {
-        if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
-            
-            var pointer = lock(document.getElementById('game'));
-
-            pointer.on('attain', function() {
-                console.log("Pointer attained!");
-                if (!game.started) {
-                    start();
-                }
-                });
-
-                pointer.request(); 
-        }
-
-        
-        if (fullscreen.available()) {
-            var fs = fullscreen(el);
-
-            fs.on('attain',function() {
-                console.log("Full screen attained!");
-                if (typeof(pointer) != 'undefined' && !game.started) {
-                    pointer.request();
-                } else {
-                    if (!game.started) {
-                        start();
-                    }
-                }
-            });
-            fs.request();
-        } else {
-            if (!game.started) {
-                start();
-            }
-        }
-
-        //start(); 
-    });
-
-
-
     game.load(function() {
-        document.getElementById('start-container').style.display = "flex";
-        document.getElementById('loading-container').style.display = "none";
+      $('#splash').delay( 2000 ).fadeOut( 500 );
+        //document.getElementById('loading-container').style.display = "none";
+        start();
+
     });
 }
 
 function start() {
-    document.getElementById('start-container').style.display = "none";
-    document.getElementById('game').appendChild(stats.dom);
+    //document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
     window.addEventListener('vrdisplaypresentchange', resize, true);
     game.resize();
-    stats.begin();
+    //stats.begin();
     animate();
 }
 
@@ -88,12 +66,11 @@ function animate(t) {
     if (elapsed >= FPS_INTERVAL) {
         lastTimestamp = t - (elapsed % FPS_INTERVAL);
         game.animate(t);
-        stats.end();
-        stats.begin();
+        //stats.end();
+        //stats.begin();
     }
 }
 
 function resize() {
     game.resize();
 }
-

@@ -6,6 +6,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link type="text/css" href="css/tzina.css" rel="stylesheet">
         <title>Tzina</title>
+        <link href='https://fonts.googleapis.com/css?family=Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
     </head>
     <body>
         <script src="lib/modernizr-custom.js"></script>
@@ -25,13 +26,28 @@
         <script src="lib/webvr-polyfill.js"></script>
         <script src="lib/webvr-manager.js"></script>
         <script src="bundle.js"></script>
+        <div id="header">
+          <div id="menu" href="#">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="header_logo_text">TZINA</div>
+          <div class="header_text">symphony of longing</div>
+          <div class="chapter_text">
+            Miriam, 78, is a part of chapter 2/7   focusing on home and family.
+Each chapter, in the final experience, represents a different part of the day - from dawn to dusk, linking the chapter’s protagonists to a specific theme that emerges from their personal story
+          </div>
+        </div>
+
         <div id="game"></div>
         <div id="splash">
             <div id="loading-container" class="splash-container">
-                <span id="loading-label">LOADING</span>
-            </div>
-            <div id="start-container" class="splash-container">
-                <a target="_self" href="#" id="start-button">ENTER</a>
+              <span class="fadein">
+                <img id="loading_image" src="assets/misc/loader.gif" />
+                <div id="loading_text">L O A D I N G</div>
+              </span>
             </div>
         </div>
     </body>

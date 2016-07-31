@@ -29,7 +29,7 @@ export default class Game {
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
-        this.gui.init();
+        //this.gui.init();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
@@ -40,7 +40,7 @@ export default class Game {
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 1, 2000000);
 
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
-        this.soundManager = new SoundManager(this.camera, this.scene);
+        //this.soundManager = new SoundManager(this.camera, this.scene);
 
 
         this.scene.add(this.camera);
@@ -50,9 +50,9 @@ export default class Game {
 
 
         let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
-        this.scene.add( helper );
+        //this.scene.add( helper );
         let axis = new THREE.AxisHelper(75);
-        this.scene.add(axis);
+        //this.scene.add(axis);
         //
 
         // LIGHT
@@ -79,7 +79,7 @@ export default class Game {
 
 
         // Square
-        this.square = new Square();
+        //this.square = new Square();
 
         // Test characters
         /*
@@ -93,7 +93,7 @@ export default class Game {
             animation: 'Hannah'
             });*/
 
-        
+
         this.hannah = new Character({
             basePath : 'assets/characters/hanna',
             mindepth : 2138.454101562,
@@ -104,7 +104,7 @@ export default class Game {
             animation: 'Hannah'
         });
 
-        this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
+        //this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
 
 
         // animations
@@ -130,7 +130,7 @@ export default class Game {
         */
 
         // Intro
-        this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
+        //this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
 
     }
 
@@ -139,7 +139,7 @@ export default class Game {
 
             console.log("Done loading everything!");
             //this.scene.add(this.square);
-            this.sky.applyToMesh(this.square.getSphereMesh());
+            //this.sky.applyToMesh(this.square.getSphereMesh());
 
             let bbox = new THREE.BoundingBoxHelper( this.hannah, 0x00ffff  );
             bbox.update();
@@ -157,10 +157,10 @@ export default class Game {
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
-        this.sky.init();
-        this.soundManager.init();
+        //this.sky.init();
+        //this.soundManager.init();
         this.hannah.init(this.loadingManager, this.animations)
-        this.square.init(this.collisionManager, this.loadingManager);
+        //this.square.init(this.collisionManager, this.loadingManager);
 
         // Animations init
         Object.keys(this.animations).forEach((key) => {
@@ -185,15 +185,15 @@ export default class Game {
         let element = this.renderer.domElement;
         this.container = document.getElementById('game');
         this.container.appendChild(element);
-        this.soundManager.play();
+        //this.soundManager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked") {
                 this.vrControls = new TzinaVRControls(this.emitter, this.camera);
                 this.vrControls.standing = true;
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
-                this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
-                this.zoomController.init();
+                //this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
+                //this.zoomController.init();
 
                 this.keyboardController.setPosition(40, 10, 65);
 
@@ -209,12 +209,12 @@ export default class Game {
         this.resize();
 
 
-        this.square.fountain.startCycle();
+        //this.square.fountain.startCycle();
 
         // Init the intro
         //this.intro.init();
 
-        this.sky.transitionTo(17,1);
+        //this.sky.transitionTo(17,1);
 
         this.hannah.play();
     }
@@ -225,11 +225,11 @@ export default class Game {
     }
 
     update(dt,et) {
-        this.sky.update(dt);
-        this.square.update();
+        //this.sky.update(dt);
+        //this.square.update();
         if (this.keyboardController) {
             this.keyboardController.update(dt);
-            this.zoomController.update(dt);
+            //this.zoomController.update(dt);
         }
         if (this.vrControls) {
                this.vrControls.update();
@@ -239,7 +239,7 @@ export default class Game {
         /*
         this.collisionManager.update(dt);
         //console.log(this.camera.rotation); */
-        this.intro.update();
+        //this.intro.update();
     }
 
     render() {
