@@ -16,8 +16,6 @@ export default class LupoAnimation extends THREE.Object3D {
         this.loadingManager.itemStart("LupoAnim");
         this.perlin = new ImprovedNoise();
 
-        this.tl = new TimelineMax({repeatDelay: 3, repeat: -1});
-
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
@@ -37,11 +35,11 @@ export default class LupoAnimation extends THREE.Object3D {
         // url + targetPosition + startPosition
         let sculptureModelFiles = [ [this.BASE_PATH + "/models/sculptures/deer.js", new THREE.Vector3(2, .3, 2), new THREE.Vector3(2, .5, 2)],
                                     [this.BASE_PATH + "/models/sculptures/dog.js", new THREE.Vector3(-2, .3, 1.5), new THREE.Vector3(-2, .5, 1.5)],
-                                    [this.BASE_PATH + "/models/sculptures/macho.js", new THREE.Vector3(-3.8, .7, 0), new THREE.Vector3(-3.8, 2, 0)],
-                                    [this.BASE_PATH + "/models/sculptures/painter.js", new THREE.Vector3(5, 1, -1), new THREE.Vector3(5, 1.5, -1)],
+                                    [this.BASE_PATH + "/models/sculptures/macho.js", new THREE.Vector3(-3.8, .7, 0), new THREE.Vector3(-3.8, 2, 1.3)],
+                                    [this.BASE_PATH + "/models/sculptures/painter.js", new THREE.Vector3(5, 1, -1), new THREE.Vector3(5, 2, -1)],
                                     [this.BASE_PATH + "/models/sculptures/pig.js", new THREE.Vector3(3.5, 0.3, 1), new THREE.Vector3(3.5, .5, 1)],
                                     [this.BASE_PATH + "/models/sculptures/right_arm.js", new THREE.Vector3(2.7, .5, -1), new THREE.Vector3(2.7, 2, -1)],
-                                    [this.BASE_PATH + "/models/sculptures/short_legs.js", new THREE.Vector3(-2.5, .3, 1.8), new THREE.Vector3(-2.5, 1.5, 1.8)],
+                                    [this.BASE_PATH + "/models/sculptures/short_legs.js", new THREE.Vector3(-2.5, .3, 1.8), new THREE.Vector3(-2.5, 2, 1.8)],
                                     [this.BASE_PATH + "/models/sculptures/two_heads.js", new THREE.Vector3(0, 1.5, -1.4),new THREE.Vector3(0, 2, -1.4)] ];
         let sculptureTextureFiles = [ this.BASE_PATH + "/images/sculptures/lupo_deer.png",
                                       this.BASE_PATH + "/images/sculptures/lupo_dog.png",
@@ -171,7 +169,10 @@ export default class LupoAnimation extends THREE.Object3D {
     }
 
     rotateSculptures() {
-        this.tl.to(this.lupoArt.rotation, 2, {x:Math.PI}).to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
+        this.lupoArt.rotation.x = 0;
+        this.tl = new TimelineMax({repeatDelay: 3, repeat: -1});
+        this.tl.to(this.lupoArt.rotation, 2, {x:Math.PI})
+               .to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
     }
 
     loadSculptureTextures ( textureFiles, textureMADFiles ) {
