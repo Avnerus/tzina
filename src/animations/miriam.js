@@ -135,6 +135,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         // manWorldPosition.setFromMatrixPosition( this.manFigure.matrixWorld );
 
         // FBO_PARTICLES
+        /*
         let positions = this.initParticles( manGeometry );
         this.rttIn = positions;
 
@@ -161,17 +162,14 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         // Particle geometry? Just once particle
         var particleGeometry  = new THREE.Geometry();
-        // particleGeometry.vertices.push(new THREE.Vector3( 0,  0, 0 ), new THREE.Vector3(0, -1, 0), new THREE.Vector3(0,-1,-1));
         particleGeometry.vertices.push( new THREE.Vector3() );
 
         this.fbo = new FBO()
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
         this.fbo.particles.position.set( 50,0,-50 );
-        // this.fbo.particles.position.y = -10;
-        // this.fbo.particles.position.x = 30;
-        // this.fbo.particles.position.z = 270;
         this.scene.add( this.fbo.particles );
-
+        */
+        
         //
         this.loadingManager.itemEnd("MiriamAnim");
 
@@ -332,6 +330,6 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
 
         // FBO
-        this.fbo.update();
+        // this.fbo.update();
     }
 }
