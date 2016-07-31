@@ -31,12 +31,12 @@ export default {
         //     rotateX: -10,
         //     scale: 4
         // },
-         {
-            type: "ThreeTrees",
-            position: [45,24,2],
-            rotateX: 0,
-            scale: 4.4
-        }, 
+        //  {
+        //     type: "ThreeTrees",
+        //     position: [42,24,2],
+        //     rotateX: 0,
+        //     scale: 4.4
+        // }, 
         {
             type: "ThreeTrees",
             position: [43,24,3],
@@ -45,32 +45,52 @@ export default {
         },
         {
             type: "ThreeTrees",
-            position: [80,24,2],
-            rotateX: 270,
+            position: [40,24,2],
+            rotateX: 0,
             scale: 4.4
         },
         {
             type: "ThreeTrees",
-            position: [50,24,2],
-            rotateX: 0,
+            position: [20,24,-23],
+            rotateX: 80,
             scale: 4.4
         },
       {
             type: "ThreeTrees",
-            position: [50,24,2],
-            rotateX: 0,
+            position: [30,24,-20],
+            rotateX: 20,
             scale: 4.4
         },
 
+ {
+            type: "ThreeTrees",
+            position: [30,24,-20],
+            rotateX: 60,
+            scale: 4.4
+        },
+
+ {
+            type: "ThreeTrees",
+            position: [30,24,-20],
+            rotateX: 60,
+            scale: 4.4
+        },
+    {
+            type: "ThreeTrees",
+            position: [6,23,-10],
+            rotateX: 180,
+            scale: 4.4
+        },
+   
+    {
+            type: "ThreeTrees",
+            position: [-20,26,-20],
+            rotateX: -30,
+            scale: 4
+        },
    
 
-     {
-            type: "ThreeTrees",
-            position: [10,26,-26],
-            rotateX: -200,
-            scale: 4.4
-        },
-
+    
     
         {
             type: "palm",
@@ -85,20 +105,20 @@ export default {
             rotateX: 60,
             scale: 3
         },
-        {
-            type: "single",
-            position: [-52,18,2],
-            rotateX: 100,
-            scale: 3
-        },
+        // {
+        //     type: "single",
+        //     position: [-52,18,2],
+        //     rotateX: 100,
+        //     scale: 3
+        // },
 
 
-        {
-            type: "single",
-            position: [20,18,8],
-            rotateX: 100,
-            scale: 3
-        }
+        // {
+        //     type: "single",
+        //     position: [20,18,8],
+        //     rotateX: 100,
+        //     scale: 3
+        // }
    
     ]
 }
