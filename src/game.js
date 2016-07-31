@@ -38,8 +38,8 @@ export default class Game {
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 1, 2000000);
-
+        this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
+        
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
         this.soundManager = new SoundManager(this.camera, this.scene);
 
@@ -90,7 +90,7 @@ export default class Game {
             maxdepth : 3446.559326172,
             position : [30, 6, 42],
             rotation: [0, 170, 0],
-            name: 'Lupo',
+            name: 'Hannah',
             animation: 'Hannah'
             });*/
 
@@ -139,7 +139,7 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            this.scene.add(this.square);
+            // this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
             this.scene.add(this.hannah)
 
@@ -201,7 +201,8 @@ export default class Game {
                 this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
                 this.zoomController.init();
 
-                this.keyboardController.setPosition(40, 10, 65);
+            // Get in the square
+            this.keyboardController.setPosition(40, 10, 65);
 
                 /*
                 let controls = new THREE.PointerLockControls( this.camera );

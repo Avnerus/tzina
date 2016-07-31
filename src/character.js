@@ -23,8 +23,8 @@ export default class Character extends THREE.Object3D {
             this.add(this.videoRGBD.mesh);
             this.animation = animations[this.props.animation];
             this.add(this.animation);
-            this.animation.scale.set(0.01, 0.01, 0.01);
-            this.animation.position.z = -5;
+            // this.animation.scale.set(0.01, 0.01, 0.01);
+            this.animation.position.set(1,0,-2);
     }
     play() {
             this.videoRGBD.play();
