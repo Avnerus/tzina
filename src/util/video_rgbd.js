@@ -27,9 +27,7 @@ export default class VideoRGBD  {
 
     init(loadingManager) {
         this.video = document.createElement( 'video' );
-        this.video.src = this.properties.basePath + '.webm';
-        this.video.loop = true;
-
+        this.video.src = this.properties.fileName;
 
         this.isPlaying = false;
         this.videoTexture = new THREE.Texture( this.video );
@@ -38,12 +36,11 @@ export default class VideoRGBD  {
         this.videoTexture.format = THREE.RGBFormat;
         this.videoTexture.generateMipmaps = false;
 
-        this.imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
         this.meshMaterial = new THREE.ShaderMaterial( {
 
             uniforms: {
-                "map": { type: "t", value: this.imageTexture },
+                "map": { type: "t" },
                 "mindepth" : { type : "f", value : this.properties.mindepth },
                 "maxdepth" : { type : "f", value : this.properties.maxdepth }
             },

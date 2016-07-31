@@ -76,7 +76,7 @@ export default class Game {
         this.scene.add(this.dirLight);
 
         this.loadingManager = new THREE.LoadingManager();
-        this.collisionManager = new CollisionManager(this.camera);
+        this.collisionManager = new CollisionManager(this.camera, this.scene);
 
 
         // Square
@@ -103,7 +103,7 @@ export default class Game {
             rotation: [20, 195, 6],
             name: 'Hanna',
             animation: 'Hannah'
-        });
+        }, this.collisionManager);
 
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
 
@@ -139,7 +139,7 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            // this.scene.add(this.square);
+            this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
             this.scene.add(this.hannah)
 
@@ -212,7 +212,6 @@ export default class Game {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
 
-        this.collisionManager.setPlayer(this.camera);
         this.resize();
 
 
@@ -247,7 +246,6 @@ export default class Game {
         this.hannah.rotation.x = this.hannah.rotationX * Math.PI / 180;
         this.hannah.rotation.z = this.hannah.rotationZ * Math.PI / 180;
         //this.flood.update(dt);
-        /*
         this.collisionManager.update(dt);
         //console.log(this.camera.rotation); */
         this.intro.update();

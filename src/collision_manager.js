@@ -11,7 +11,7 @@ const COLLIDERS = {
     ramps: ["Object_1077"]
 }
 export default class CollisionManager {
-    constructor() {
+    constructor(camera, scene) {
         console.log("Collision Manager constructed!")
 
         this.obstacles = [];
@@ -21,6 +21,8 @@ export default class CollisionManager {
 
         this.climbingStairs = false;
         this.climbingRamp = false;
+        this.scene = scene;
+        this.player = camera;
     }
     init() {
     }
@@ -34,15 +36,35 @@ export default class CollisionManager {
             this.player.position.z + PLAYER_SIZE.z / 2,
         ]
         this.crossing = boxIntersect(this.playerBox, this.obstacles, (i,j) => {
-            if (this.obstacleInfo[j] == "stairs") {
-                this.climbingStairs = true;
-                return 2;
+            if (this.obstacleInfo[j].onCollision) {
+                this.obstacleInfo[j].onCollision();
             }
         });
     }
     setPlayer(player) {
         this.player = player;
     }
+
+    addCharacter(character) {
+        console.log("COLLISION MANAGER - Adding character ", character);
+        let space = 5;
+
+        let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
+        bbox.update();
+        //this.scene.add(bbox);
+
+        this.obstacles.push([
+            bbox.box.min.x - space, 
+            bbox.box.min.y - space, 
+            bbox.box.min.z - space, 
+            bbox.box.max.x + space, 
+            bbox.box.max.y + space, 
+            bbox.box.max.z + space
+        ])
+
+        this.obstacleInfo.push(character);
+    }
+
     addBoundingBoxes(obj, scene) {
         obj.traverse( (child) => {
             if (child.type == "Object3D") {

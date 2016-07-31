@@ -27,6 +27,9 @@ export default class HannahAnimation extends THREE.Object3D {
             { time: 16, anim: ()=>{this.beCollapse()} }
         ];
 
+        this.nextAnim = null;
+
+
         let hannahRoomFiles = [this.BASE_PATH + "/models/hannah_room/hr_bookshelf.js", this.BASE_PATH + "/models/hannah_room/hr_chair.js",
                                this.BASE_PATH + "/models/hannah_room/hr_door.js", this.BASE_PATH + "/models/hannah_room/hr_fireplace.js",
                                this.BASE_PATH + "/models/hannah_room/hr_photo1.js", this.BASE_PATH + "/models/hannah_room/hr_photo2.js",
@@ -336,6 +339,22 @@ export default class HannahAnimation extends THREE.Object3D {
         return promise;
     }
 
+    updateVideoTime(time) {
+        if (this.nextAnim && time >= this.nextAnim.time) {
+            console.log("do anim sequence ", this.nextAnim);
+            this.nextAnim.anim();
+            if (this.sequenceConfig.length > 0) {
+                this.nextAnim = this.sequenceConfig.shift();
+            } else {
+                this.nextAnim = null;
+            }
+        }
+    }
+
+    start() {
+        this.nextAnim = this.sequenceConfig.shift();
+    }
+
     update(dt,et) {
         if(this.particleGroup) {
             this.particleGroup.tick( dt );
@@ -356,28 +375,6 @@ export default class HannahAnimation extends THREE.Object3D {
         if( this.doodleMenAnimators.length > 0) {
             for(let i=0; i < this.doodleMenAnimators.length; i++){
                 this.doodleMenAnimators[i].updateWithOrder( 300*dt );
-            }
-        }
-
-        // ANIMATION_SEQUENCE
-        if(!this.animStart){
-            this.animStartTime = et;
-            this.animStart = true;
-
-            console.log("this dome", this.dome);
-        }
-
-        if(this.animStart){
-            let animTime = et-this.animStartTime;
-
-            for(let i=0; i<this.sequenceConfig.length; i++){
-
-                if(animTime >= this.sequenceConfig[i].time && !this.sequenceConfig[i].performed){
-
-                    this.sequenceConfig[i].anim( this );
-                    this.sequenceConfig[i].performed = true;
-                    console.log("do anim sequence: " + i);
-                }
             }
         }
     }

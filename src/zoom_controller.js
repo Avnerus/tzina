@@ -85,7 +85,7 @@ export default class ZoomController {
                 this.velocityZ = Math.min(0, this.velocityZ + 10 * dt);
             }
 
-            console.log(this.camera.position, this.camera.rotation);
+            //console.log(this.camera.position, this.camera.rotation);
         }
     }
 }
