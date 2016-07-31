@@ -5,8 +5,8 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
-const VERTS_WIDE = 192;
-const VERTS_TALL = 192;
+const VERTS_WIDE = 128;
+const VERTS_TALL = 128;
 
 
 export default class VideoRGBD  {
@@ -41,12 +41,12 @@ export default class VideoRGBD  {
         this.imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
         this.debug = {
-            x1: 1920,
-            x2: 3300,
-            x3: 640,
-            y1: 480,
-            y2: 1440,
-            y3: 480
+            x1: 1100,
+            x2: 1920,
+            x3: 1920,
+            y1: 720,
+            y2: 1600,
+            y3: 1440 
         }
         events.emit("add_gui", this.debug, "x1"); 
         events.emit("add_gui", this.debug, "x2"); 
@@ -81,8 +81,8 @@ export default class VideoRGBD  {
         //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //let mesh = new THREE.Mesh( geometry, material);
-        this.mesh.scale.set(0.0016, 0.0016, 0.0016);
-        //this.mesh.scale.set(0.016, 0.016, 0.016);
+        //this.mesh.scale.set(0.0016, 0.0016, 0.0016);
+        this.mesh.scale.set(0.016, 0.016, 0.016);
         this.mesh.rotation.set(
             this.properties.rotation[0],
             this.properties.rotation[1],
