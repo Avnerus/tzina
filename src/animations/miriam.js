@@ -111,10 +111,10 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
  
         let curveColors = [];
-        let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.01, 1, true);
+        let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.1, 1, true);
         console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
         for(let i=1; i<men_figures_points.length; i++){
-            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.01, 1, true);
+            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.1, 1, true);
             let nameee = 't'+(i-1);
             manGeometry.morphTargets[i-1] = {name: nameee, vertices: manGeometry2.vertices};
         }
