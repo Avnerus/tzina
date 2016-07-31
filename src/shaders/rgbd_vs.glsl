@@ -13,6 +13,8 @@ uniform float x2;
 uniform float y2; 
 uniform float x3; 
 uniform float y3; 
+uniform float posx; 
+uniform float posz; 
 
 varying float visibility;
 varying vec2 vUv;
@@ -66,8 +68,8 @@ void main() {
 
     vec3 hsl = rgb2hsl( texture2D( map, vUv ).xyz );
     vec4 pos = vec4( xyz( position.x, position.y, hsl.x ), 1.0 );
-    pos.z += 2700.0;
-    pos.x += 1500.0;
+    pos.z += posz;
+    pos.x += posx;
 
 
     //pos.x += 1000.0;

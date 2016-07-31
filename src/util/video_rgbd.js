@@ -5,8 +5,8 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
-const VERTS_WIDE = 128;
-const VERTS_TALL = 128;
+const VERTS_WIDE = 256;
+const VERTS_TALL = 256;
 
 
 export default class VideoRGBD  {
@@ -41,13 +41,17 @@ export default class VideoRGBD  {
         this.imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
         this.debug = {
-            x1: 1100,
+            //x1: 1460,
+            x1: 1260,
             x2: 1920,
             x3: 1920,
-            y1: 720,
-            y2: 1600,
+            //y1: 720,
+            y1: 1260,
+            y2: 1440,
             y3: 1440,
-            uvd: 0.4435
+            uvd: 0.440277,
+            posz: 2500.0,
+            posx: 400.0
         }
         events.emit("add_gui", this.debug, "x1"); 
         events.emit("add_gui", this.debug, "x2"); 
@@ -56,6 +60,10 @@ export default class VideoRGBD  {
         events.emit("add_gui", this.debug, "y2"); 
         events.emit("add_gui", this.debug, "y3"); 
         events.emit("add_gui", this.debug, "uvd"); 
+        events.emit("add_gui", this.debug, "posx"); 
+        events.emit("add_gui", this.debug, "posz"); 
+        events.emit("add_gui", this.properties, "mindepth"); 
+        events.emit("add_gui", this.properties, "maxdepth"); 
 
         this.meshMaterial = new THREE.ShaderMaterial( {
 
@@ -69,7 +77,9 @@ export default class VideoRGBD  {
                 "y1" : { type : "f", value : this.debug.y1 },
                 "y2" : { type : "f", value : this.debug.y2 },
                 "y3" : { type : "f", value : this.debug.y3 },
-                "uvd" : { type : "f", value : this.debug.uvd }
+                "uvd" : { type : "f", value : this.debug.uvd },
+                "posx" : { type : "f", value : this.debug.posx },
+                "posz" : { type : "f", value : this.debug.posz }
             },
 
             vertexShader: this.rgbd_vs,
@@ -156,6 +166,10 @@ export default class VideoRGBD  {
         this.meshMaterial.uniforms.y2.value = this.debug.y2;
         this.meshMaterial.uniforms.y3.value = this.debug.y3;
         this.meshMaterial.uniforms.uvd.value = this.debug.uvd;
+        this.meshMaterial.uniforms.posx.value = this.debug.posx;
+        this.meshMaterial.uniforms.posz.value = this.debug.posz;
+        this.meshMaterial.uniforms.mindepth.value = this.properties.mindepth;
+        this.meshMaterial.uniforms.maxdepth.value = this.properties.maxdepth;
     }
     pause() {
         if ( this.isPlaying === false ) return;

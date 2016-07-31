@@ -140,6 +140,11 @@ export default class Game {
             console.log("Done loading everything!");
             //this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
+
+            let bbox = new THREE.BoundingBoxHelper( this.hannah, 0x00ffff  );
+            bbox.update();
+            this.scene.add( bbox  );
+
             this.scene.add(this.hannah)
 
             onLoad();
