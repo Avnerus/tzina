@@ -185,7 +185,7 @@ export default class MiriamAnimation extends THREE.Object3D {
 
     manHold () {
         let tmpEndArray = [1,0,0,0,0,0];
-        TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power3.easeInOut } );
+        TweenMax.to( this.manFigure.morphTargetInfluences, 6, { endArray: tmpEndArray, ease: Power3.easeInOut } );
     }
     manLean () {
         let tmpEndArray = [0,1,0,0,0,0];
@@ -208,7 +208,10 @@ export default class MiriamAnimation extends THREE.Object3D {
         TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray } );
     }
     manSwirlNonstop () {
-        
+        this.tl = new TimelineMax({repeat: -1});
+        this.tl.to( this.manFigure.morphTargetInfluences, 4, { endArray: [0,0,0,1,0,0] })
+               .to( this.manFigure.morphTargetInfluences, 4, { endArray: [0,0,0,0,1,0] })
+               .to( this.manFigure.morphTargetInfluences, 4, { endArray: [0,0,0,0,0,1] }, "+=2");
     }
 
     loadModelClock (model, modelB, modelC, modelD, meshMat) {
