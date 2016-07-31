@@ -22,7 +22,7 @@ export default class Character extends THREE.Object3D {
 
             this.add(this.videoRGBD.mesh);
             this.animation = animations[this.props.animation];
-            //this.add(this.animation);
+            this.add(this.animation);
             this.animation.scale.set(0.01, 0.01, 0.01);
             this.animation.position.z = -5;
     }
@@ -31,6 +31,6 @@ export default class Character extends THREE.Object3D {
     }
     update(dt,et) {
          this.videoRGBD.update(dt);
-         //this.animation.update(dt,et)
+         this.animation.update(dt,et)
     }
 }
