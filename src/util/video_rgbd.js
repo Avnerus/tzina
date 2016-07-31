@@ -30,7 +30,6 @@ export default class VideoRGBD  {
         this.video.src = this.properties.basePath + '.webm';
         this.video.loop = true;
 
-
         this.isPlaying = false;
         this.videoTexture = new THREE.Texture( this.video );
         this.videoTexture.minFilter = THREE.LinearFilter;
@@ -42,16 +41,16 @@ export default class VideoRGBD  {
 
         this.debug = {
             //x1: 1460,
-            x1: 1260,
-            x2: 1920,
+            x1: 1460,
+            x2: 2800,
             x3: 1920,
             //y1: 720,
             y1: 1260,
-            y2: 1440,
+            y2: 2040,
             y3: 1440,
-            uvd: 0.440277,
-            posz: 2500.0,
-            posx: 400.0
+            uvd: 0.5,
+            posz: 2600.0,
+            posx: 150.0
         }
         events.emit("add_gui", this.debug, "x1");
         events.emit("add_gui", this.debug, "x2");

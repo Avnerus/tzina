@@ -14,7 +14,7 @@ import Intro from './intro'
 import SoundManager from './sound_manager'
 
 // Animations
-import HannahAnimation from './animations/hannah'
+import MiriamAnimation from './animations/miriam'
 
 export default class Game {
     constructor(config) {
@@ -37,7 +37,7 @@ export default class Game {
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 1, 2000000);
+        this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
 
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
         //this.soundManager = new SoundManager(this.camera, this.scene);
@@ -89,19 +89,20 @@ export default class Game {
             maxdepth : 3446.559326172,
             position : [30, 6, 42],
             rotation: [0, 170, 0],
+<<<<<<< HEAD
             name: 'Lupo',
             animation: 'Hannah'
             });*/
 
 
         this.hannah = new Character({
-            basePath : 'assets/characters/hanna',
-            mindepth : 2138.454101562,
-            maxdepth : 3047.334472656,
+            basePath : 'assets/characters/miriam',
+            mindepth : 1983.749877930,
+            maxdepth : 3119.456298828,
             position : [30, 6, 42],
             rotation: [0, 170, 0],
             name: 'Hanna',
-            animation: 'Hannah'
+            animation: 'Miriam'
         });
 
         //this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
@@ -109,9 +110,8 @@ export default class Game {
 
         // animations
         this.animations = {
-            'Hannah': new HannahAnimation()
+            'Miriam': new MiriamAnimation( this.scene, this.renderer )
         }
-
 
         /*
         this.flood = new Flood();
@@ -146,6 +146,8 @@ export default class Game {
             this.scene.add( bbox  );
 
             this.scene.add(this.hannah)
+            // this.scene.add(this.square);
+
 
             onLoad();
         };
@@ -195,7 +197,13 @@ export default class Game {
                 //this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
                 //this.zoomController.init();
 
-                this.keyboardController.setPosition(40, 10, 65);
+                //this.keyboardController.setPosition(40, 10, 65);
+                //this.zoomController = new ZoomController(this.config, this.camera, this.square);
+                //this.zoomController.init();
+    
+
+            // Get in the square
+            //this.keyboardController.setPosition(40, 10, 65);
 
                 /*
                 let controls = new THREE.PointerLockControls( this.camera );

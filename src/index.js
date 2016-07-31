@@ -19,6 +19,7 @@ var lastTimestamp = 0;
 
 window.onload = function() {
     $('.fadein').delay(500).fadeIn(500);
+
     $('#header').delay(500).fadeIn(500);
 
     $('#menu').click(function() {
