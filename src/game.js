@@ -89,9 +89,8 @@ export default class Game {
             maxdepth : 3446.559326172,
             position : [30, 6, 42],
             rotation: [0, 170, 0],
-<<<<<<< HEAD
             name: 'Lupo',
-            animation: 'Hannah'
+            animation: 'Lupo'
             });*/
 
 
@@ -200,7 +199,7 @@ export default class Game {
                 //this.keyboardController.setPosition(40, 10, 65);
                 //this.zoomController = new ZoomController(this.config, this.camera, this.square);
                 //this.zoomController.init();
-    
+
 
             // Get in the square
             //this.keyboardController.setPosition(40, 10, 65);
