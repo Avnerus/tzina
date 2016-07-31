@@ -46,6 +46,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
         let positions = new THREE.DataTexture( data, this.width, this.height, THREE.RGBFormat, THREE.FloatType );
         positions.needsUpdate = true;
+        
         return positions;
     }
 
@@ -112,7 +113,7 @@ export default class MiriamAnimation extends THREE.Object3D {
  
         let curveColors = [];
         let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.1, 1, true);
-        console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
+        // console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
         for(let i=1; i<men_figures_points.length; i++){
             let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.1, 1, true);
             let nameee = 't'+(i-1);
@@ -128,10 +129,6 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         this.completeSequenceSetup();
 
-        // get manFigure worldPosition
-        // this.scene.updateMatrixWorld();
-        // let manWorldPosition = new THREE.Vector3();
-        // manWorldPosition.setFromMatrixPosition( this.manFigure.matrixWorld );
 
         // FBO_PARTICLES
         let positions = this.initParticles( manGeometry );
@@ -163,7 +160,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         // particleGeometry.vertices.push(new THREE.Vector3( 0,  0, 0 ), new THREE.Vector3(0, -1, 0), new THREE.Vector3(0,-1,-1));
         particleGeometry.vertices.push( new THREE.Vector3() );
 
-        this.fbo = new FBO()
+        this.fbo = new FBO();
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
         this.fbo.particles.position.set( 50,0,-50 );
         // this.fbo.particles.position.y = -10;
@@ -174,7 +171,6 @@ export default class MiriamAnimation extends THREE.Object3D {
         //
         this.loadingManager.itemEnd("MiriamAnim");
 
-       
     }
 
     completeSequenceSetup() {
