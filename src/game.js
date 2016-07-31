@@ -99,8 +99,8 @@ export default class Game {
             basePath : 'assets/characters/hanna',
             mindepth : 2138.454101562,
             maxdepth : 3047.334472656,
-            position : [36, 8.8, 50],
-            rotation: [0, 180, 0],
+            position : [36, 8.1, 50],
+            rotation: [20, 195, 6],
             name: 'Hanna',
             animation: 'Hannah'
         });
@@ -143,11 +143,15 @@ export default class Game {
             this.sky.applyToMesh(this.square.getSphereMesh());
             this.scene.add(this.hannah)
 
-            this.hannah.rotationY = 210;
+            this.hannah.rotationY = 195;
+            this.hannah.rotationX = 20;
+            this.hannah.rotationZ = 6;
             events.emit("add_gui", this.hannah.position, "x"); 
             events.emit("add_gui", this.hannah.position, "z");
             events.emit("add_gui", this.hannah.position, "y"); 
             events.emit("add_gui", this.hannah, "rotationY"); 
+            events.emit("add_gui", this.hannah, "rotationZ"); 
+            events.emit("add_gui", this.hannah, "rotationX"); 
 
             onLoad();
         };
@@ -239,6 +243,8 @@ export default class Game {
             }
         this.hannah.update(dt,et);
         this.hannah.rotation.y = this.hannah.rotationY * Math.PI / 180;
+        this.hannah.rotation.x = this.hannah.rotationX * Math.PI / 180;
+        this.hannah.rotation.z = this.hannah.rotationZ * Math.PI / 180;
         //this.flood.update(dt);
         /*
         this.collisionManager.update(dt);

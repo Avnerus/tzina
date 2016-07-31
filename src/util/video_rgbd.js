@@ -28,7 +28,7 @@ export default class VideoRGBD  {
     init(loadingManager) {
         this.video = document.createElement( 'video' );
         this.video.src = this.properties.basePath + '.webm';
-        this.video.loop = false;
+        this.video.loop = true;
 
 
         this.isPlaying = false;
@@ -60,7 +60,7 @@ export default class VideoRGBD  {
         //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //let mesh = new THREE.Mesh( geometry, material);
-        this.mesh.scale.set(0.007, 0.007, 0.007);
+        this.mesh.scale.set(0.005, 0.005, 0.005);
         //mesh.frustumCulled = false;
 
         /*
