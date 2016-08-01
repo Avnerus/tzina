@@ -14,7 +14,7 @@ export default class Character extends THREE.Object3D {
         this.fullVideo = new VideoRGBD({
             mindepth: props.mindepth,
             maxdepth: props.maxdepth,
-            fileName: props.basePath + "_full.webm",
+            fileName: props.basePath + "_full.mp4",
             uvd: props.uvd,
             scale: props.scale
         });
@@ -124,7 +124,7 @@ export default class Character extends THREE.Object3D {
         this.timeSinceCollision = 0;
         if (!this.playingFull && this.animation && !this.animation.visible) {
             console.log("Character collision!");
-            this.animation.visible = true;
+            //this.animation.visible = true;
 
             // load substitles video
             if (!this.isPaused) {
@@ -137,6 +137,7 @@ export default class Character extends THREE.Object3D {
                     this.playFull();
                 },false);
                 subtitlesVideo.load();
+               this.playFull();
             } else {
                 console.log("Resume");
                 let subtitlesVideo = document.getElementById("subtitles");

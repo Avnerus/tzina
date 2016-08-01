@@ -49,12 +49,12 @@ vec3 rgb2hsl( vec3 color ) {
 
 vec3 xyz( float x, float y, float depth ) {
     float z = depth * ( maxdepth - mindepth ) + mindepth;
-    return vec3( ( x / 1920.0 ) * z * fx, ( y / 940.0 ) * z * fy, - z );
+    return vec3( ( x / 1920.0 ) * z * fx, ( y / 1440.0 ) * z * fy, - z );
 }
 
 void main() {
 
-    vUv = vec2( ( position.x + 1500.0 ) / 2400.0, ( position.y + 820.0 ) / 1700.0 );
+    vUv = vec2( ( position.x + 1460.0 ) / 2800.0, ( position.y + 1260.0 ) / 2040.0 );
     vUv.y = vUv.y * 0.5;// + 0.5;
 
     vec3 hsl = rgb2hsl( texture2D( map, vUv ).xyz );

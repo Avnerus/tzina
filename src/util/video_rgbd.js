@@ -5,8 +5,8 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
-const VERTS_WIDE = 256;
-const VERTS_TALL = 256;
+const VERTS_WIDE = 128;
+const VERTS_TALL = 128;
 
 
 export default class VideoRGBD  {
@@ -111,7 +111,6 @@ export default class VideoRGBD  {
                 this.meshMaterial.uniforms.map.value = this.videoTexture;
 
                 this.videoTexture.needsUpdate = true;
-
             }
         }
     }
