@@ -19,8 +19,12 @@ export default class LupoAnimation extends THREE.Object3D {
         // setup animation sequence
         this.sequenceConfig = [
             { time: 5, anim: ()=>{this.showSculptures()} },
-            { time: 16, anim: ()=>{this.shiftSculptures()} },
-            { time: 20, anim: ()=>{this.rotateSculptures()} }
+            { time: 16, anim: ()=>{this.flickerSculptureTextures()} },  // texture flickering
+            // { time: 20, anim: ()=>{this.rotateSculptures()} }        // rotate sculptures forever
+            { time: 20, anim: ()=>{this.shiftSculptures()} },           // shift sculptures
+            { time: 24, anim: ()=>{this.shiftSculptures()} },
+            { time: 28, anim: ()=>{this.shiftSculptures()} },
+            { time: 32, anim: ()=>{this.shiftSculptures()} }
         ];
 
         this.nextAnim = null;
@@ -39,7 +43,7 @@ export default class LupoAnimation extends THREE.Object3D {
                                     [this.BASE_PATH + "/models/sculptures/macho.js", new THREE.Vector3(-3.8, .7, 0), new THREE.Vector3(-3.8, 2, 1.3)],
                                     [this.BASE_PATH + "/models/sculptures/painter.js", new THREE.Vector3(5, 1, -1), new THREE.Vector3(5, 2, -1)],
                                     [this.BASE_PATH + "/models/sculptures/pig.js", new THREE.Vector3(3.5, 0.3, 1), new THREE.Vector3(3.5, .5, 1)],
-                                    [this.BASE_PATH + "/models/sculptures/right_arm.js", new THREE.Vector3(2.7, .5, -1), new THREE.Vector3(2.7, 2, -1)],
+                                    [this.BASE_PATH + "/models/sculptures/right_arm.js", new THREE.Vector3(2.7, .9, 0), new THREE.Vector3(2.7, 2.5, -1)],
                                     [this.BASE_PATH + "/models/sculptures/short_legs.js", new THREE.Vector3(-2.5, .3, 1.8), new THREE.Vector3(-2.5, 2, 1.8)],
                                     [this.BASE_PATH + "/models/sculptures/two_heads.js", new THREE.Vector3(0, 1.5, -1.4),new THREE.Vector3(0, 2, -1.4)] ];
         let sculptureTextureFiles = [ this.BASE_PATH + "/images/sculptures/lupo_deer.png",
@@ -133,7 +137,7 @@ export default class LupoAnimation extends THREE.Object3D {
         }
     }
 
-    shiftSculptures() {
+    flickerSculptureTextures() {
         TweenMax.to(this.dummy, 2, { roughValue:5, 
                                      ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 5, points: 100, taper: "both", randomize: true, clamp: false}),
                                      onUpdate: ()=>{this.shiftTextures()},
@@ -174,6 +178,10 @@ export default class LupoAnimation extends THREE.Object3D {
         this.tl = new TimelineMax({repeatDelay: 3, repeat: -1});
         this.tl.to(this.lupoArt.rotation, 2, {x:Math.PI})
                .to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
+    }
+
+    shiftSculptures() {
+        TweenMax.to(this.lupoArt.rotation, 2, { x:"+="+Math.PI });
     }
 
     loadSculptureTextures ( textureFiles, textureMADFiles ) {
