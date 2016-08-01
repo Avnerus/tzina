@@ -39,7 +39,7 @@ export default class Game {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
 
-        this.camera.position.set(30,3,76);
+        this.camera.position.set(29.679206907015324,3,109.29482697052835);
 
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
         //this.soundManager = new SoundManager(this.camera, this.scene);
@@ -250,7 +250,7 @@ export default class Game {
         this.collisionManager.update(dt);
         //console.log(this.camera.rotation); */
         //this.intro.update();
-        //console.log(this.camera.rotation);
+        //console.log(this.camera.position);
     }
 
     render() {

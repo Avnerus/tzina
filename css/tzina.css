@@ -3,13 +3,6 @@ body {
     background-color: #000000;
     overflow: hidden;
 }
-video{
-  position: absolute;
-  width: 100%;
-  left: 0; bottom: 0;
-  z-index: 4000;
-
-}
 #header{
   display: none;
   position: absolute;
@@ -25,7 +18,7 @@ video{
   font-size: 25px;
   top: 5px; left: 40px;
   letter-spacing: 4px;
-  font-weight: 200;
+  font-weight: 400;
   z-index: 500;
 }
 .header_text{
@@ -34,7 +27,16 @@ video{
   font-size: 12px;
   top: 17px; left: 140px;
   letter-spacing: 2px;
-  font-weight: 200;
+  font-weight: 400;
+  z-index: 500;
+}
+.header_char_num{
+  position: absolute;
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  top: 17px; right: 85px;
+  letter-spacing: 2px;
+  font-weight: 400;
   z-index: 500;
 }
 .fadein{
@@ -65,8 +67,8 @@ video{
   text-align: center;
   color: #ffffff;
   z-index: 999;
-  line-height: 5;
-  font-weight: 100;
+  line-height: 20;
+  font-weight: 200;
 }
 .splash-container img {
     position: absolute;
@@ -108,14 +110,22 @@ video{
 #loading_image{
   z-index: 900;
 }
+#subtitles{
+  position: absolute;
+  width: 70%;
+  left: 15%; bottom: 0;
+  z-index: 4000;
+  z-index: 199;
+}
 /*///////////
 ////MENU/////
 ///////////*/
 #menu {
-  width: 25px;
+  z-index: 200;
+  width: 20px;
   height: 25px;
   position: absolute;
-  right: 40px; top: 12px;
+  right: 40px; top: 20px;
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
   -o-transform: rotate(0deg);
@@ -149,36 +159,30 @@ video{
   top: 0px;
 }
 
-#menu span:nth-child(2),#menu span:nth-child(3) {
-  top: 9px;
+#menu span:nth-child(2) {
+  top: 0px;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
-#menu span:nth-child(4) {
-  top: 18px;
-}
 
 #menu.open span:nth-child(1) {
-  top: 9px;
-  width: 0%;
-  left: 50%;
+  -webkit-transform: rotate(225deg);
+  -moz-transform: rotate(225deg);
+  -o-transform: rotate(225deg);
+  transform: rotate(225deg);
+  top: 0px;
 }
 
 #menu.open span:nth-child(2) {
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
+  -webkit-transform: rotate(135deg);
+  -moz-transform: rotate(135deg);
+  -o-transform: rotate(135deg);
+  transform: rotate(135deg);
 }
 
-#menu.open span:nth-child(3) {
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-}
-#menu.open span:nth-child(4) {
-  opacity: 0;
-}
 .chapter_text{
   display: none;
   font-family: 'Lato', sans-serif;
@@ -189,4 +193,12 @@ video{
   position: absolute;
   width: 400px;
   top: 18%; left:40px;
+}
+.instruc{
+  display: none;
+}
+.instruc img{
+  position: absolute;
+  left: 15px; bottom: 25px;
+  width: 17%;
 }

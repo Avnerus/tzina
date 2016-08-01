@@ -64,15 +64,15 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.animStart = false;
         // time: anim start time; animFunction(_number): anim duration
         this.sequenceConfig = [
-            { time:  2, anim: ()=>{this.manAppear(12)} },
-            { time: 14, anim: ()=>{this.manHold(6)} },
-            { time: 20, anim: ()=>{this.manLean(6)} },
-            { time: 26, anim: ()=>{this.manCircle(4)} },
-            { time: 30, anim: ()=>{this.manSwirl(4)} },
-            { time: 34, anim: ()=>{this.manSwirl2(4)} },
-            { time: 38, anim: ()=>{this.manSwirl3(4)} },
-            { time: 42, anim: ()=>{this.manSwirlNonstop()} },
-            { time: 54, anim: ()=>{this.manSwirlSpeedup(20)} }
+            { time:  10, anim: ()=>{this.manAppear(10)} },
+            { time: 40, anim: ()=>{this.manHold(8)} },
+            { time: 65, anim: ()=>{this.manLean(6)} },
+            { time: 105, anim: ()=>{this.manCircle(6)} },
+            { time: 110, anim: ()=>{this.manSwirl(6)} },
+            { time: 115, anim: ()=>{this.manSwirl2(6)} },
+            { time: 120, anim: ()=>{this.manSwirl3(6)} },
+            { time: 125, anim: ()=>{this.manSwirlNonstop()} },
+            { time: 220, anim: ()=>{this.manSwirlSpeedup(20)} }
         ];
 
         let GFClockTex = tex_loader.load(this.BASE_PATH + '/images/clockUV4.jpg');
@@ -113,7 +113,7 @@ export default class MiriamAnimation extends THREE.Object3D {
             // let manCurve = manSpline.getPoints( 50 );
             men_figures_points.push(manSpline);
         }
- 
+
         let curveColors = [];
         let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.1, 2, true);
         console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
@@ -175,11 +175,11 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.fbo.particles.position.set( 50,0,-50 );
         this.scene.add( this.fbo.particles );
         */
-        
+
         //
         this.loadingManager.itemEnd("MiriamAnim");
 
-       
+
     }
 
     completeSequenceSetup() {

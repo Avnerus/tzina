@@ -43,7 +43,9 @@ window.onload = function() {
     var el = document.documentElement;
 
     game.load(function() {
-      $('#splash').delay( 2000 ).fadeOut( 500 );
+      $('#splash').delay( 1000 ).fadeOut( 500, function(){
+        $('.instruc').fadeIn(500).delay(10000).fadeOut(500);
+      });
         //document.getElementById('loading-container').style.display = "none";
         start();
 
