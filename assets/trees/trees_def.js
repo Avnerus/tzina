@@ -105,6 +105,12 @@ export default {
             rotateX: 60,
             scale: 3
         },
+         {
+            type: "palm",
+            position: [-38,20,-72],
+            rotateX: 60,
+            scale: 3.8
+        },
         // {
         //     type: "single",
         //     position: [-52,18,2],

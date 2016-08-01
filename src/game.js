@@ -49,10 +49,10 @@ export default class Game {
         //this.camera.rotation.x = 0.22;
 
 
-        // let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
-        // this.scene.add( helper );
-        // let axis = new THREE.AxisHelper(75);
-        // this.scene.add(axis);
+                // let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
+                // this.scene.add( helper );
+                // let axis = new THREE.AxisHelper(75);
+                // this.scene.add(axis);
         //
 
         // LIGHT
