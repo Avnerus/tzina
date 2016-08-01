@@ -16,15 +16,27 @@ export default class LupoAnimation extends THREE.Object3D {
         this.loadingManager.itemStart("LupoAnim");
         this.perlin = new ImprovedNoise();
 
-        // setup animation sequence
         this.sequenceConfig = [
-            { time: 5, anim: ()=>{this.showSculptures()} },
-            { time: 16, anim: ()=>{this.flickerSculptureTextures()} },  // texture flickering
+            { time: 16, anim: ()=>{this.showSculptures()} },
+            { time: 24, anim: ()=>{this.flickerSculptureTextures()} },  // texture flickering
             // { time: 20, anim: ()=>{this.rotateSculptures()} }        // rotate sculptures forever
-            { time: 20, anim: ()=>{this.shiftSculptures()} },           // shift sculptures
-            { time: 24, anim: ()=>{this.shiftSculptures()} },
-            { time: 28, anim: ()=>{this.shiftSculptures()} },
-            { time: 32, anim: ()=>{this.shiftSculptures()} }
+            { time: 44, anim: ()=>{this.shiftSculptures()} },           // shift sculptures---> plastic
+            { time: 67, anim: ()=>{this.shiftSculptures()} },
+            { time: 112, anim: ()=>{this.shiftSculptures()} },
+            { time: 143, anim: ()=>{this.shiftSculptures()} },
+            { time: 180, anim: ()=>{this.shiftSculptures()} },           // shift sculptures---> plastic
+            { time: 191, anim: ()=>{this.shiftSculptures()} },
+            { time: 203, anim: ()=>{this.shiftSculptures()} },
+            { time: 210, anim: ()=>{this.flickerSculptureTextures()} },
+            { time: 213, anim: ()=>{this.shiftSculptures()} },           // shift sculptures---> plastic
+            { time: 228, anim: ()=>{this.shiftSculptures()} },
+            { time: 243, anim: ()=>{this.shiftSculptures()} },
+            { time: 295, anim: ()=>{this.shiftSculptures()} },
+            { time: 312, anim: ()=>{this.shiftSculptures()} },           // shift sculptures---> plastic
+            { time: 314, anim: ()=>{this.shiftSculptures()} },
+            { time: 340, anim: ()=>{this.shiftSculptures()} },
+            { time: 358, anim: ()=>{this.shiftSculptures()} }
+           
         ];
 
         this.nextAnim = null;

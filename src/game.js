@@ -114,8 +114,8 @@ export default class Game {
             basePath : 'assets/characters/lupo',
             mindepth : 1500.681884766,
             maxdepth : 3376.051757813,
-            position : [53, 7.9, 79.3],
-            rotation: [6, 195, 6],
+            position : [53, 7.9, 79.3], // [-41, 7.9, 121], 
+            rotation: [6, 195, 6], // [6,215,6],
             name: 'Lupo',
             uvd: 0.45,
             scale: 0.006,
@@ -222,8 +222,8 @@ export default class Game {
                 this.vrControls.standing = true;
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
-                this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
-                this.zoomController.init();
+                //this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
+                //this.zoomController.init();
 
             // Get in the square
             this.keyboardController.setPosition(40, 10, 65);
@@ -247,7 +247,7 @@ export default class Game {
         
         this.sky.transitionTo(17,1);
 
-        this.lupo.play();
+        //this.lupo.play();
         this.hannah.play();
     }
 
@@ -261,13 +261,13 @@ export default class Game {
         this.square.update();
         if (this.keyboardController) {
             this.keyboardController.update(dt);
-            this.zoomController.update(dt);
+            //this.zoomController.update(dt);
         }
         if (this.vrControls) {
                this.vrControls.update();
             }
         this.hannah.update(dt,et);
-        this.lupo.update(dt,et);
+        //this.lupo.update(dt,et);
 
         /*
         this.lupo.rotation.y = this.lupo.rotationY * Math.PI / 180;

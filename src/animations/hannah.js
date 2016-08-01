@@ -369,8 +369,8 @@ export default class HannahAnimation extends THREE.Object3D {
         if (this.nextAnim && time >= this.nextAnim.time) {
             console.log("do anim sequence ", this.nextAnim);
             this.nextAnim.anim();
-            if (this.sequenceConfig.length > 0) {
-                this.nextAnim = this.sequenceConfig.shift();
+            if (this.currentSequence.length > 0) {
+                this.nextAnim = this.currentSequence.shift();
             } else {
                 this.nextAnim = null;
             }
@@ -378,7 +378,8 @@ export default class HannahAnimation extends THREE.Object3D {
     }
 
     start() {
-        this.nextAnim = this.sequenceConfig.shift();
+        this.currentSequence = this.sequenceConfig.slice(0);
+        this.nextAnim = this.currentSequence.shift();
     }
 
     update(dt,et) {

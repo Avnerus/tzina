@@ -24,8 +24,6 @@ body {
     display: flex;
     align-items: center;
     margin: auto;
-    height: 100px;
-    width: 200px;
     color: white;
     font-size: 36px;
 }
@@ -39,7 +37,7 @@ body {
     margin: auto;
 }
 
-#loading-label {
+#loading-image {
     margin: auto;
 }
 

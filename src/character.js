@@ -25,6 +25,7 @@ export default class Character extends THREE.Object3D {
         this.props = props;
 
         this.playingFull = false;
+        this.isPaused = false;
     }
     init(loadingManager, animations) {
             this.idleVideo.init(loadingManager);
@@ -43,14 +44,7 @@ export default class Character extends THREE.Object3D {
 
             this.fullVideo.video.addEventListener('ended',() => {
                 console.log("Character video ended");
-                this.animation.visible.false;
-                this.remove(this.animation);
-                this.remove(this.fullVideo.mesh);
-                this.idleVideo.mesh.visible = true;
-                this.idleVideo.play();
-                this.playingFull = false;
-                let subtitlesVideo = document.getElementById("subtitles");
-                subtitlesVideo.src = "";
+                this.endFull();
             },false);
 
             this.idleVideo.video.loop = true;
@@ -89,27 +83,67 @@ export default class Character extends THREE.Object3D {
             this.idleVideo.update(dt);
         } else {
             this.fullVideo.update(dt);
+            if (this.timeSinceCollision > 2) {
+                console.log("Time since collision ", this.timeSinceCollision, "Ending sequence");
+                this.pauseFull();
+            }
         }
 
         if (this.animation && this.animation.visible) {
             this.animation.update(dt,et)
         }
+        this.timeSinceCollision += dt;
+    }
+
+    endFull() {
+        this.animation.visible = false;
+        this.fullVideo.pause();
+        this.idleVideo.mesh.visible = true;
+        this.fullVideo.mesh.visible = false;
+        this.idleVideo.play();
+        this.playingFull = false;
+        let subtitlesVideo = document.getElementById("subtitles");
+        subtitlesVideo.src = "";
+    }
+
+
+    pauseFull() {
+        this.animation.visible = false;
+        this.fullVideo.pause();
+        this.idleVideo.mesh.visible = true;
+        this.fullVideo.mesh.visible = false;
+        this.idleVideo.play();
+        this.playingFull = false;
+        let subtitlesVideo = document.getElementById("subtitles");
+        subtitlesVideo.pause();
+        subtitlesVideo.style.display = "none";
+        this.isPaused = true;
     }
 
     onCollision() {
+        this.timeSinceCollision = 0;
         if (!this.playingFull && this.animation && !this.animation.visible) {
             console.log("Character collision!");
             this.animation.visible = true;
 
             // load substitles video
-            let subtitlesVideo = document.getElementById("subtitles");
-            subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
-            subtitlesVideo.addEventListener('canplay',() => {
+            if (!this.isPaused) {
+                this.animation.start()
+
+                let subtitlesVideo = document.getElementById("subtitles");
+                subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
+                subtitlesVideo.addEventListener('canplay',() => {
+                    subtitlesVideo.play();
+                    this.playFull();
+                },false);
+                subtitlesVideo.load();
+            } else {
+                console.log("Resume");
+                let subtitlesVideo = document.getElementById("subtitles");
+                subtitlesVideo.style.display = "block";
                 subtitlesVideo.play();
                 this.playFull();
-            },false);
-            subtitlesVideo.load();
-
+            }
         }
     }
 
@@ -117,7 +151,7 @@ export default class Character extends THREE.Object3D {
         this.playingFull = true;
         this.idleVideo.pause();
         this.fullVideo.mesh.visible = true;
-        this.animation.start()
+        //this.fullVideo.video.currentTime = 0;
         this.fullVideo.play();
     }
 }
