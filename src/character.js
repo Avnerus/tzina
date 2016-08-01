@@ -43,11 +43,14 @@ export default class Character extends THREE.Object3D {
 
             this.fullVideo.video.addEventListener('ended',() => {
                 console.log("Character video ended");
+                this.animation.visible.false;
                 this.remove(this.animation);
                 this.remove(this.fullVideo.mesh);
                 this.idleVideo.mesh.visible = true;
                 this.idleVideo.play();
                 this.playingFull = false;
+                let subtitlesVideo = document.getElementById("subtitles");
+                subtitlesVideo.src = "";
             },false);
 
             this.idleVideo.video.loop = true;
@@ -86,21 +89,35 @@ export default class Character extends THREE.Object3D {
             this.idleVideo.update(dt);
         } else {
             this.fullVideo.update(dt);
-            if (this.animation) {
-                this.animation.update(dt,et)
-            }
+        }
+
+        if (this.animation && this.animation.visible) {
+            this.animation.update(dt,et)
         }
     }
 
     onCollision() {
-        if (!this.playingFull && this.animation) {
-            this.playingFull = true;
+        if (!this.playingFull && this.animation && !this.animation.visible) {
             console.log("Character collision!");
-            this.idleVideo.pause();
-            this.fullVideo.mesh.visible = true;
             this.animation.visible = true;
-            this.animation.start()
-            this.fullVideo.play();
+
+            // load substitles video
+            let subtitlesVideo = document.getElementById("subtitles");
+            subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
+            subtitlesVideo.addEventListener('canplay',() => {
+                subtitlesVideo.play();
+                this.playFull();
+            },false);
+            subtitlesVideo.load();
+
         }
+    }
+
+    playFull() {
+        this.playingFull = true;
+        this.idleVideo.pause();
+        this.fullVideo.mesh.visible = true;
+        this.animation.start()
+        this.fullVideo.play();
     }
 }
