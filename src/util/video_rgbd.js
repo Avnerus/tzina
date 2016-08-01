@@ -5,8 +5,8 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
-const VERTS_WIDE = 256;
-const VERTS_TALL = 256;
+const VERTS_WIDE = 128;
+const VERTS_TALL = 128;
 
 
 export default class VideoRGBD  {
@@ -40,6 +40,7 @@ export default class VideoRGBD  {
 
         this.imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
+        /*
         this.debug = {
             x1: 1460,
             //x1: 1260,
@@ -51,6 +52,17 @@ export default class VideoRGBD  {
             y1: 1260,
             y2: 2040,
             y3: 1440,
+            uvd: 0.440277,
+            posz: 2600.0,
+            posx: 150.0
+            }*/
+        this.debug = {
+            x1: 1500,
+            x2: 2400,
+            x3: 1920,
+            y1: 820,
+            y2: 1700,
+            y3: 940,
             uvd: 0.440277,
             posz: 2600.0,
             posx: 150.0
@@ -97,7 +109,7 @@ export default class VideoRGBD  {
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //let mesh = new THREE.Mesh( geometry, material);
         //this.mesh.scale.set(0.0016, 0.0016, 0.0016);
-        this.mesh.scale.set(0.009, 0.009, 0.009);
+        this.mesh.scale.set(0.003, 0.003, 0.003);
         this.mesh.rotation.set(
             this.properties.rotation[0],
             this.properties.rotation[1],
