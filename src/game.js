@@ -120,8 +120,8 @@ export default class Game {
             uvd: 0.45,
             scale: 0.006,
             animation: 'Lupo',
-            animationPosition: [0, 0, -5],
-            animationRotation: [20, 0, 0]
+            animationPosition: [0, -1.8, -4],
+            animationRotation: [5, 0, -3]
         }, this.collisionManager);
 
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
