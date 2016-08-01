@@ -62,14 +62,17 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         // setup animation sequence
         this.animStart = false;
+        // time: anim start time; animFunction(_number): anim duration
         this.sequenceConfig = [
-            { time:  4, anim: ()=>{this.manHold()} },
-            { time: 10, anim: ()=>{this.manLean()} },
-            { time: 16, anim: ()=>{this.manCircle()} },
-            { time: 20, anim: ()=>{this.manSwirl()} },
-            { time: 24, anim: ()=>{this.manSwirl2()} },
-            { time: 28, anim: ()=>{this.manSwirl3()} },
-            { time: 32, anim: ()=>{this.manSwirlNonstop()} }
+            { time:  2, anim: ()=>{this.manAppear(12)} },
+            { time: 14, anim: ()=>{this.manHold(6)} },
+            { time: 20, anim: ()=>{this.manLean(6)} },
+            { time: 26, anim: ()=>{this.manCircle(4)} },
+            { time: 30, anim: ()=>{this.manSwirl(4)} },
+            { time: 34, anim: ()=>{this.manSwirl2(4)} },
+            { time: 38, anim: ()=>{this.manSwirl3(4)} },
+            { time: 42, anim: ()=>{this.manSwirlNonstop()} },
+            { time: 54, anim: ()=>{this.manSwirlSpeedup(20)} }
         ];
 
         let GFClockTex = tex_loader.load(this.BASE_PATH + '/images/clockUV4.jpg');
@@ -122,13 +125,15 @@ export default class MiriamAnimation extends THREE.Object3D {
         manGeometry.computeMorphNormals();
 
         this.manFigure = new THREE.Mesh(manGeometry, manMaterial);
-        // manFigure.scale.set(80,80,80);
+        this.manFigure.scale.set(0.01,0.01,0.01);
         // manFigure.rotation.y = Math.PI;
         this.manFigure.position.set(1,-7,-5);
         console.log();
         this.add( this.manFigure );
 
         this.completeSequenceSetup();
+
+        this.dummy={timeScaleValue:0};
 
         // get manFigure worldPosition
         // this.scene.updateMatrixWorld();
@@ -182,36 +187,53 @@ export default class MiriamAnimation extends THREE.Object3D {
             this.sequenceConfig[i].performed = false;
         }
     }
-
-    manHold () {
+    manAppear (_duration) {
+        TweenMax.to( this.manFigure.scale, _duration, { x:1,y:1,z:1, ease: Power3.easeOut } );
+    }
+    manHold (_duration) {
         let tmpEndArray = [1,0,0,0,0,0];
-        TweenMax.to( this.manFigure.morphTargetInfluences, 6, { endArray: tmpEndArray, ease: Power3.easeInOut } );
+        TweenMax.to( this.manFigure.morphTargetInfluences, _duration, { endArray: tmpEndArray, ease: Power3.easeInOut } );
     }
-    manLean () {
+    manLean (_duration) {
         let tmpEndArray = [0,1,0,0,0,0];
-        TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut } );
+        TweenMax.to( this.manFigure.morphTargetInfluences, _duration, { endArray: tmpEndArray, ease: Power2.easeInOut } );
     }
-    manCircle () {
+    manCircle (_duration) {
         let tmpEndArray = [0,0,1,0,0,0];
-        TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power1.easeInOut } );
+        TweenMax.to( this.manFigure.morphTargetInfluences, _duration, { endArray: tmpEndArray, ease: Power1.easeInOut } );
     }
-    manSwirl () {
+    manSwirl (_duration) {
         let tmpEndArray = [0,0,0,1,0,0];
-        TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray } );
+        TweenMax.to( this.manFigure.morphTargetInfluences, _duration, { endArray: tmpEndArray } );
     }
-    manSwirl2 () {
+    manSwirl2 (_duration) {
         let tmpEndArray = [0,0,0,0,1,0];
-        TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray } );
+        TweenMax.to( this.manFigure.morphTargetInfluences, _duration, { endArray: tmpEndArray } );
     }
-    manSwirl3 () {
+    manSwirl3 (_duration) {
         let tmpEndArray = [0,0,0,0,0,1];
-        TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray } );
+        TweenMax.to( this.manFigure.morphTargetInfluences, _duration, { endArray: tmpEndArray } );
     }
     manSwirlNonstop () {
         this.tl = new TimelineMax({repeat: -1});
         this.tl.to( this.manFigure.morphTargetInfluences, 4, { endArray: [0,0,0,1,0,0] })
                .to( this.manFigure.morphTargetInfluences, 4, { endArray: [0,0,0,0,1,0] })
-               .to( this.manFigure.morphTargetInfluences, 4, { endArray: [0,0,0,0,0,1] }, "+=2");
+               .to( this.manFigure.morphTargetInfluences, 4, { endArray: [0,0,0,0,0,1], onStart: ()=>{
+                    TweenMax.to( this.manFigure.rotation, 4, { y:"-="+Math.PI } );
+               } });
+    }
+    manSwirlSpeedup (_duration) {
+        TweenMax.to( this.dummy, _duration, { timeScaleValue: 50,
+                                       ease: Power2.easeIn,
+                                       onStart: ()=>{
+                                                    TweenMax.to( this.manFigure.scale, _duration, { x:2,y:2,z:2, ease: Expo.easeIn } );
+                                                    TweenMax.to( this.manFigure.position, _duration, { y:"-=2", ease: Power3.easeIn } );
+                                                },
+                                       onUpdate: ()=>{this.tl.timeScale(this.dummy.timeScaleValue);},
+                                       onComplete: ()=>{
+                                                       console.log("fastest!");
+                                                       TweenMax.to( this.manFigure.scale, 2, { x:0.01,y:0.01,z:0.01, ease: Back.easeInOut, onComplete: ()=>{this.tl.kill()} } );
+                                                    } } );
     }
 
     loadModelClock (model, modelB, modelC, modelD, meshMat) {
