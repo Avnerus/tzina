@@ -1,5 +1,8 @@
 export default class KeyboardController {
     constructor(config, camera, square, collisionManager) {
+
+        this.config = config;
+
         this.moveForward = false;
         this.moveLeft = false;
         this.moveRight = false;
@@ -15,10 +18,27 @@ export default class KeyboardController {
         this.walkingDirection = new THREE.Vector3();
 
         this.height = config.basalHeight;
+
+        this.active = true;
+
+        this.zAxis = new THREE.Vector3(0,0,1);
     }
     init() {
 
         console.log("Keyboard controller init");
+
+        events.on("start_zoom" ,() => {
+            this.active = false;
+
+        });
+
+        events.on("intro_start" ,() => {
+            this.active = false;
+        });
+
+        events.on("intro_end" ,() => {
+            this.active = true;
+        });
 
         document.addEventListener('keydown', (event) => {
             switch ( event.keyCode ) {
@@ -87,43 +107,61 @@ export default class KeyboardController {
         }, false);
     }
     
-    update(dt) {
-        let delta = dt;
-        this.velocity.x -= this.velocity.x * 10.0 * delta;
-        this.velocity.z -= this.velocity.z * 10.0 * delta;
+    update(delta) {
+        if (this.active && delta < 0.1) {
+            this.velocity.x -= this.velocity.x * 10.0 * delta;
+            this.velocity.z -= this.velocity.z * 10.0 * delta;
 
-        this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+            //this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
-        if ( this.moveForward ) this.velocity.z -= 100.0 * delta;
-        if ( this.moveBackward ) this.velocity.z += 100.0 * delta;
+            if ( this.moveForward ) this.velocity.z -= 100.0 * delta;
+            if ( this.moveBackward ) this.velocity.z += 100.0 * delta;
 
-        if ( this.moveLeft ) this.velocity.x -= 100.0 * delta;
-        if ( this.moveRight ) this.velocity.x += 100.0 * delta;
+            if ( this.moveLeft ) this.velocity.x -= 100.0 * delta;
+            if ( this.moveRight ) this.velocity.x += 100.0 * delta;
 
-        if (this.collisionManager.isClimbingStairs() && this.velocity.z != 0) {
-            this.climbStairs();
+            /*
+            if (this.collisionManager.isClimbingStairs() && this.velocity.z != 0) {
+                this.climbStairs();
+                }*/
+
+            if ( this.isOnObject === true)  {
+                this.velocity.y = Math.max( 0, this.velocity.y );
+
+                this.canJump = true;
+            }
+
+
+            
+            this.camera.translateX( this.velocity.x * delta );
+            this.camera.position.y += this.velocity.y * delta;
+            if (this.config.enableFlying) {
+                this.camera.translateZ(this.velocity.z * delta);
+            } else {
+                let zVector = new THREE.Vector3().copy(this.zAxis).applyQuaternion(this.camera.quaternion);
+                zVector.y = 0;
+                this.camera.position.add(zVector.multiplyScalar(this.velocity.z * delta));
+            }
+
+            /*
+
+            if ( this.camera.position.y < this.height) {
+                    if ( this.camera.position.y < this.height) {
+
+                         this.velocity.y = 0;
+                         this.camera.position.y = this.height;
+
+                         this.canJump = true;
+                    }
+
+
+                 this.canJump = true;
+                 }*/
+
+
+            //console.log(this.camera.position);*/
+            
         }
-
-        if ( this.isOnObject === true ) {
-            this.velocity.y = Math.max( 0, this.velocity.y );
-
-            this.canJump = true;
-        }
-
-        this.camera.translateX( this.velocity.x * delta );
-        this.camera.translateY( this.velocity.y * delta );
-        this.camera.translateZ( this.velocity.z * delta );
-
-        if ( this.camera.position.y < this.height) {
-
-            this.velocity.y = 0;
-            this.camera.position.y = this.height;
-
-            this.canJump = true;
-        }
-
-    //    console.log(this.camera.position);
-    
 
     }
 

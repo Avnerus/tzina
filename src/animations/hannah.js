@@ -1,5 +1,7 @@
 import ImprovedNoise from '../util/improved_noise'
 import TextureAnimator from '../util/texture_animator'
+import EndArrayPlugin from '../util/EndArrayPlugin'
+TweenPlugin.activate([EndArrayPlugin]);
 
 export default class HannahAnimation extends THREE.Object3D {
     constructor() {
@@ -16,6 +18,18 @@ export default class HannahAnimation extends THREE.Object3D {
         this.loadingManager.itemStart("HannahAnim");
         this.domeMorphTargets = [];
         this.perlin = new ImprovedNoise();
+
+        // setup animation sequence
+        this.animStart = false;
+        this.sequenceConfig = [
+            { time: 1, anim: ()=>{this.appear()} },     // 1
+            { time: 65, anim: ()=>{this.beDome()} },    // 65
+            { time: 86, anim: ()=>{this.showLeaf()} },  // 86
+            { time: 172, anim: ()=>{this.beCollapse()} }// 172
+        ];
+
+        this.nextAnim = null;
+
 
         let hannahRoomFiles = [this.BASE_PATH + "/models/hannah_room/hr_bookshelf.js", this.BASE_PATH + "/models/hannah_room/hr_chair.js",
                                this.BASE_PATH + "/models/hannah_room/hr_door.js", this.BASE_PATH + "/models/hannah_room/hr_fireplace.js",
@@ -45,30 +59,35 @@ export default class HannahAnimation extends THREE.Object3D {
         evilTex.repeat.set( 1, 4 );
         evilMat = new THREE.MeshLambertMaterial( {map: evilTex} );
 
+        this.center = new THREE.Mesh( new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({color: 0xff0000}));
+        this.center.position.set(0,-5,2);
+        this.add(this.center);
+
         let loader = new THREE.JSONLoader(this.loadingManager);
         loader.load(this.BASE_PATH + "/models/spike_curvey_s.js", (geometry, material) => {
             evilGeo = geometry;
         });
         loader.load(this.BASE_PATH + "/models/leavesss_less_s.js", (geometry, material) => {
-            leafGeo = geometry;
+            this.leafGeo = geometry;
 
             // ref: https://stemkoski.github.io/Three.js/Vertex-Colors.html
             let face, numberOfSides, vertexIndex, point, color;
             let faceIndices = [ 'a', 'b', 'c', 'd' ];
             // vertex color
-            for(let i=0; i < leafGeo.faces.length; i++)
+            for(let i=0; i < this.leafGeo.faces.length; i++)
             {
-                face = leafGeo.faces[i];
+                face = this.leafGeo.faces[i];
                 numberOfSides = (face instanceof THREE.Face3 ) ? 3 : 4;
                 // assign color to each vertex of current face
                 for(let j=0; j < numberOfSides; j++)
                 {
                     vertexIndex = face[ faceIndices[j] ];
                     //store coordinates of vertex
-                    point = leafGeo.vertices[ vertexIndex ];
+                    point = this.leafGeo.vertices[ vertexIndex ];
                     // initialize color variable
                     color = new THREE.Color();
-                    color.setRGB( 0.1 + (10+point.x) / ((j+4)*5), 0.5 + (10+point.y) / ((j+4)*15), 0.2 + (10+point.z) / ((j+4)*5) );
+                    // console.log( ((point.x+1)*30) / ((j+4)*14) );
+                    color.setRGB( ((point.x+1.2)*30) / ((j+4)*15), 0.6 + (point.y*10) / ((j+4)*13), ((point.x+1.3)*30) / ((j+4)*14) );
                     face.vertexColors[j] = color;
                 }
             }
@@ -80,24 +99,35 @@ export default class HannahAnimation extends THREE.Object3D {
 
         this.loadModelDome(this.BASE_PATH + '/models/shield_s.js', this.BASE_PATH + '/models/dome_s.js', this.BASE_PATH + '/models/collapse_s.js')
         .then((dome) => {
-            this.add(dome);
-            console.log("Loaded dome, setting up 'things'", dome);
-            let centerV = new THREE.Vector3();
+
+            this.dome = dome;
+            this.add( this.dome );
+            console.log("Loaded dome, setting up 'things'", this.dome);
+
+            let centerV = this.center.position.clone();
             let upp = new THREE.Vector3(0,-1,0);
 
-            for(let i = 0; i < dome.geometry.vertices.length; i++){
-                let fMesh = new Thing( dome.geometry.vertices[i],
-                                       twigGeo, leafGeo, evilGeo,
+            for(let i = 0; i < this.dome.geometry.vertices.length; i++){
+                let fMesh = new Thing( this.dome.geometry.vertices[i],
+                                       twigGeo, this.leafGeo, evilGeo,
                                        twigMat, leafMat, evilMat );
 
                 this.add(fMesh.mesh);
 
+                let vA = this.dome.geometry.vertices[i].clone();
+                let tempA = new THREE.Vector3();
+                tempA.set( this.lookupTable[i%50]*0.5, this.lookupTable[(i+1)%50]*0.5, this.lookupTable[(i+2)%50]*0.5 );
+                vA.add( tempA );
+
                 let m1 = new THREE.Matrix4();
-                m1.lookAt( centerV, dome.geometry.vertices[i], upp );
+                m1.lookAt( centerV, vA, upp );
                 fMesh.mesh.quaternion.setFromRotationMatrix( m1 );
 
                 this.domeMorphTargets.push( fMesh );
             }
+            // console.log("domeMorphTargets length: " + this.domeMorphTargets.length);
+
+            // this.updateVertices();
             this.initParticles();
         });
         let hannahRoom = new THREE.Object3D();
@@ -118,20 +148,33 @@ export default class HannahAnimation extends THREE.Object3D {
             doodleMen.push(mMesh);
         }
 
-        for(var i = 0; i < hannahRoomFiles.length; i++){
+        for(let i = 0; i < hannahRoomFiles.length; i++){
             loader.load( hannahRoomFiles[i], function(geometry){
-                var colorValue = Math.random() * 0xFF | 0;
-                var colorString = "rgb("+colorValue+","+colorValue+","+colorValue+")";
+                let colorValue = Math.random() * 0xFF | 0;
+                let colorString = "rgb("+colorValue+","+colorValue+","+colorValue+")";
                 let mat = new THREE.MeshLambertMaterial({ color: colorString });
                 let meshhh = new THREE.Mesh(geometry, mat);
                 hannahRoom.add(meshhh);
             });
         }
-        hannahRoom.scale.set(0.02,0.02,0.02);
-        hannahRoom.position.set(1,2,4);
+        hannahRoom.scale.multiplyScalar(0.025);
+        hannahRoom.position.set(0.5,2.5,0.8);
         this.add(hannahRoom);
 
         this.loadingManager.itemEnd("HannahAnim");
+
+        this.lookupTable=[];
+        for (var i=0; i<50; i++) {
+          this.lookupTable.push(Math.random());
+        }
+
+        this.completeSequenceSetup();
+    }
+
+    completeSequenceSetup() {
+        for(let i=0; i<this.sequenceConfig.length; i++){
+            this.sequenceConfig[i].performed = false;
+        }
     }
 
     initParticles() {
@@ -156,18 +199,13 @@ export default class HannahAnimation extends THREE.Object3D {
                 },
                 position: {
                     value: this.domeMorphTargets[i].mesh.position,
-                    radius: 0.2,
-                    // spread: new THREE.Vector3(1,1,1),
-                    // radiusScale: new THREE.Vector3(1,1,1),
-                    // distribution: SPE.distributions.SPHERE
+                    radius: 0.2
                 },
                 acceleration: {
-                    value: new THREE.Vector3(0,-0.5,0),
-                    // spread: new THREE.Vector3(0.5,-0.8,0.5)
+                    value: new THREE.Vector3(0,-0.5,0)
                 },
                 velocity: {
                     value: new THREE.Vector3(0.3,-0.3,0.3)
-                    // distribution: SPE.distributions.SPHERE
                 },
                 rotation: {
                     angle: 0.5
@@ -176,30 +214,116 @@ export default class HannahAnimation extends THREE.Object3D {
                     value: [0,0.5,-0.5],
                     spread: [0,-0.5,0.5]
                 },
-                // color: {
-                // 	value: new THREE.Color( 0xAA4488 )
-                // },
                 opacity: {
                     value: [0,1,1,1,0]
                 },
                 size: {
-                    value: [.05,.25,.25,.25,.15]
-                    // spread: [1,3]
+                    value: [.10,.5,.5,.5,.3]
                 },
-                particleCount: 3,
-                drag: 0.6
-                // wiggle: 15
-                // isStatic: true
+                particleCount: 15,
+                drag: 0.6,
+                activeMultiplier: 0.3
             });
             this.particleGroup.addEmitter( emitter );
+            // console.log( this.particleGroup.emitters[0] );
         }
-        console.log(this.particleGroup.emitters.length);
         this.add( this.particleGroup.mesh );
+    }
+
+    updateVertices() {
+
+        // console.log( "dome's morphTargetInfluence[0] : " + this.dome.morphTargetInfluences[0]
+        //             +", dome's morphTargetInfluence[1] : " + this.dome.morphTargetInfluences[1]);
+        
+        let morphTargets = this.dome.geometry.morphTargets;
+        let morphInfluences = this.dome.morphTargetInfluences;
+        let upp = new THREE.Vector3(0,-1,0);
+
+        // get morph geometry update position data
+        for(let i=0; i<this.shieldGeo.vertices.length; i++){
+            let centerV = this.center.position.clone();
+            let vA = new THREE.Vector3();
+            let tempA = new THREE.Vector3();
+
+            for ( let t = 0, tl = morphTargets.length; t < tl; t ++ ) {
+                let influence = morphInfluences[ t ];
+                let target = morphTargets[t].vertices[i];
+                vA.addScaledVector( tempA.subVectors( target, this.shieldGeo.vertices[i] ), influence );
+            }
+
+            vA.add( this.shieldGeo.vertices[i] );
+            tempA.set( this.lookupTable[i%50]*0.5, this.lookupTable[(i+1)%50]*0.5, this.lookupTable[(i+2)%50]*0.5 );
+            vA.add( tempA );
+
+            this.domeMorphTargets[i].mesh.position.copy( vA );
+
+            if(i%10==0){
+                if(i/10 != 38)
+                    this.particleGroup.emitters[i/10].position.value = this.particleGroup.emitters[i/10].position.value.copy( vA );
+            }
+                        
+            // rotate
+            let m1 = new THREE.Matrix4();
+            m1.lookAt( centerV, vA, upp );
+            this.domeMorphTargets[i].mesh.quaternion.setFromRotationMatrix( m1 );
+        }
+    }
+
+    appear() {
+        for(let i=0; i<this.domeMorphTargets.length; i++){
+            TweenMax.to( this.domeMorphTargets[i].mesh.children[2].scale, 4, { x: 1, y: 1, z: 1, ease: Power4.easeIn } );
+        }
+    }
+
+    beDome() {
+        let tmpEndArray = [1,0];
+        TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
+    }
+
+    showLeaf() {
+        for(let i=0; i<this.domeMorphTargets.length; i++){
+            TweenMax.to( this.domeMorphTargets[i].mesh.children[1].scale, 2, { x: 1, y: 1, z: 1, ease: Power2.easeOut } );
+            TweenMax.to( this.domeMorphTargets[i].mesh.children[2].scale, 4, { x: 0.01, y: 0.01, z: 0.01, ease: Power4.easeIn } );
+        }
+    }
+
+    beCollapse() {
+        let tmpEndArray = [0,1];
+        TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
+        // change leaf color
+        let face, numberOfSides, vertexIndex, point, color;
+        let faceIndices = [ 'a', 'b', 'c', 'd' ];
+        for(let i=0; i < this.leafGeo.faces.length; i++)
+        {
+            face = this.leafGeo.faces[i];
+            numberOfSides = (face instanceof THREE.Face3 ) ? 3 : 4;
+
+            for(let j=0; j < numberOfSides; j++)
+            {
+                vertexIndex = face[ faceIndices[j] ];
+                point = this.leafGeo.vertices[ vertexIndex ];
+                // face.vertexColors[j].setHSL( Math.random(), 0.5, 0.5 );
+                let faceVertexColor = face.vertexColors[j];
+                // 0.63, 0.31, 0.08
+                TweenMax.to( faceVertexColor, 4, { r:(point.x*2+0.5)*4/5, g:Math.random()/4+0.1, b:0.08, onUpdate: ()=>{ 
+                    for(let i=0; i<this.domeMorphTargets.length; i++){
+                        this.domeMorphTargets[i].mesh.children[1].geometry.colorsNeedUpdate = true;
+                    }
+                } } );
+            }
+        }
+
+        for(let i=0; i<this.particleGroup.emitters.length; i++){
+            this.particleGroup.emitters[i].activeMultiplier = 1;
+            this.particleGroup.emitters[i].acceleration.value = new THREE.Vector3(0,0.5,0);
+        }
+
     }
 
     loadModelDome (modelS, modelD, modelC) {
 
         let promise = new Promise( (resolve, reject) => {
+
             let loader = new THREE.JSONLoader(this.loadingManager);
             let domeMat = new THREE.MeshBasicMaterial({morphTargets: true, color: 0xAA4488, wireframe: true, visible: false});
             let followMat = new THREE.MeshBasicMaterial({color: 0xffff00});
@@ -217,20 +341,21 @@ export default class HannahAnimation extends THREE.Object3D {
                     loader.load(modelC, (geometryC, materialC) => {
                         let collapseGeo = geometryC;
 
-                        var tempDome = new THREE.Mesh(domeGeo, followMat);
+                        // let tempDome = new THREE.Mesh(domeGeo, followMat);
                         // tempDome.rotation.y = Math.PI;
                         // tempDome.scale.multiplyScalar(90);
-                        tempDome.updateMatrix();
+                        // tempDome.updateMatrix();
 
-                        domeGeo.applyMatrix( tempDome.matrix );
-                        this.shieldGeo.applyMatrix( tempDome.matrix );
-                        collapseGeo.applyMatrix( tempDome.matrix );
+                        // domeGeo.applyMatrix( tempDome.matrix );
+                        // this.shieldGeo.applyMatrix( tempDome.matrix );
+                        // collapseGeo.applyMatrix( tempDome.matrix );
 
                         this.shieldGeo.morphTargets[0] = {name: 't1', vertices: domeGeo.vertices};
                         this.shieldGeo.morphTargets[1] = {name: 't2', vertices: collapseGeo.vertices};
                         this.shieldGeo.computeMorphNormals();
 
                         let dome = new THREE.Mesh(this.shieldGeo, domeMat);
+                        dome.name = "dome";
                         resolve(dome);
                     });
                 });
@@ -239,12 +364,29 @@ export default class HannahAnimation extends THREE.Object3D {
         });
         return promise;
     }
+
+    updateVideoTime(time) {
+        if (this.nextAnim && time >= this.nextAnim.time) {
+            console.log("do anim sequence ", this.nextAnim);
+            this.nextAnim.anim();
+            if (this.sequenceConfig.length > 0) {
+                this.nextAnim = this.sequenceConfig.shift();
+            } else {
+                this.nextAnim = null;
+            }
+        }
+    }
+
+    start() {
+        this.nextAnim = this.sequenceConfig.shift();
+    }
+
     update(dt,et) {
         if(this.particleGroup) {
             this.particleGroup.tick( dt );
         }
         for(let i=0; i < this.shieldGeo.vertices.length; i++){
-            let h = this.perlin.noise(et*0.1, i, 1)/150;
+            let h = this.perlin.noise(et*0.1, i, 1)/140;
             this.domeMorphTargets[i].mesh.position.addScalar( h );
 
             if( i % 10==0 ){
@@ -257,7 +399,7 @@ export default class HannahAnimation extends THREE.Object3D {
 
         // DOODLE_MEN
         if( this.doodleMenAnimators.length > 0) {
-            for(var i=0; i < this.doodleMenAnimators.length; i++){
+            for(let i=0; i < this.doodleMenAnimators.length; i++){
                 this.doodleMenAnimators[i].updateWithOrder( 300*dt );
             }
         }
@@ -282,6 +424,7 @@ function Thing( pos, geoTwig, geoLeaf, geoEvil, twigMat, leafMat, evilMat ){
 
     this.mesh.children[1].scale.set(0.01, 0.01, 0.01);
     this.mesh.children[0].scale.set(0.01, 0.01, 0.01);
+    this.mesh.children[2].scale.set(0.01, 0.01, 0.01);
 }
 
 function map_range(value, low1, high1, low2, high2) {

@@ -17,12 +17,13 @@ export default class LupoAnimation extends THREE.Object3D {
         this.perlin = new ImprovedNoise();
 
         // setup animation sequence
-        this.animStart = false;
         this.sequenceConfig = [
             { time: 5, anim: ()=>{this.showSculptures()} },
             { time: 16, anim: ()=>{this.shiftSculptures()} },
             { time: 20, anim: ()=>{this.rotateSculptures()} }
         ];
+
+        this.nextAnim = null;
 
         let p_tex_loader = new THREE.TextureLoader(this.loadingManager);
 
@@ -274,26 +275,23 @@ export default class LupoAnimation extends THREE.Object3D {
         return promise;
     }
 
-    update(dt,et) {
-        // ANIMATION_SEQUENCE
-        if(!this.animStart){
-            this.animStartTime = et;
-            this.animStart = true;
-        }
+    start() {
+        this.nextAnim = this.sequenceConfig.shift();
+    }
 
-        if(this.animStart){
-            let animTime = et-this.animStartTime;
-
-            for(let i=0; i<this.sequenceConfig.length; i++){
-
-                if(animTime >= this.sequenceConfig[i].time && !this.sequenceConfig[i].performed){
-
-                    this.sequenceConfig[i].anim( this );
-                    this.sequenceConfig[i].performed = true;
-                    console.log("Animation log: do anim sequence: " + i);
-                }
+    updateVideoTime(time) {
+        if (this.nextAnim && time >= this.nextAnim.time) {
+            console.log("do anim sequence ", this.nextAnim);
+            this.nextAnim.anim();
+            if (this.sequenceConfig.length > 0) {
+                this.nextAnim = this.sequenceConfig.shift();
+            } else {
+                this.nextAnim = null;
             }
         }
+    }
+
+    update(dt,et) {
     }
 }
 

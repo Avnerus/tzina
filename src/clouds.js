@@ -18,22 +18,23 @@ export default class Clouds {
     
     }
     init(targetShader) {
-        this.cloudsVideo = new Video360(CLOUDS_SEQUENCE_PATH);
+        this.cloudsVideo = new Video360(CLOUDS_SEQUENCE_PATH, targetShader.uniforms.cloudsMap);
         this.cloudsVideo.init();
 
         this.staticTexture = new THREE.TextureLoader(this.loadingManager).load(CLOUDS_STATIC_PATH);
+        targetShader.uniforms.cloudsMap.value = this.staticTexture;
 
         this.targetShader = targetShader;
     }
     
     update(dt) {
         if (this.currentState === States.TRANSITON) {
-            if (this.cloudsVideo.isReady()) {
-                this.targetShader.uniforms.cloudsMap.value = this.cloudsVideo.texture;
-                this.cloudsVideo.update();
-            }
-        } else {
-            this.targetShader.uniforms.cloudsMap.value = this.staticTexture;
-        }
+            this.cloudsVideo.update(dt);
+        } 
+    }
+
+    startTransition() {
+        this.currentState = States.TRANSITON;
+        this.cloudsVideo.play();
     }
 }

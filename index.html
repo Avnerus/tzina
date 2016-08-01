@@ -10,7 +10,7 @@
     <body>
         <script src="lib/modernizr-custom.js"></script>
         <script src="lib/TweenMax.min.js"></script>
-        <script src="lib/TimelineMax.min.js"></script>
+        <script src="lib/dat.gui.min.js"></script>
         <script src="lib/three.js"></script>
         <script src="lib/SPE.min.js"></script>
         <script src="lib/OrbitControls.js"></script>
@@ -21,15 +21,15 @@
         <script src="lib/RenderPass.js"></script>
         <script src="lib/ShaderPass.js"></script>
         <script src="lib/MaskPass.js"></script>
-        <script src="lib/VRControls.js"></script>
         <script src="lib/VREffect.js"></script>
         <script src="lib/webvr-polyfill.js"></script>
         <script src="lib/webvr-manager.js"></script>
         <script src="bundle.js"></script>
-        <div id="game" class="webvr-polyfill-fullscreen-wrapper"></div>
+        <video id="subtitles"><source src="" type="video/webm"></video>
+        <div id="game"></div>
         <div id="splash">
             <div id="loading-container" class="splash-container">
-                LOADING
+                <span id="loading-label">LOADING</span>
             </div>
             <div id="start-container" class="splash-container">
                 <a target="_self" href="#" id="start-button">ENTER</a>

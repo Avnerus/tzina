@@ -11,7 +11,7 @@ var lock = require('pointer-lock-chrome-tolerant');
 
 console.log("Touch? ", Modernizr.touchevents)
 
-var FPS  = 30;
+var FPS  = config.fps;
 var FPS_INTERVAL = 1000 / FPS;
 var elapsed = 0
 var lastTimestamp = 0;
@@ -26,7 +26,7 @@ window.onload = function() {
     document.getElementById('start-button').addEventListener('click',function(event) {
         if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
             
-            var pointer = lock(el);
+            var pointer = lock(document.getElementById('game'));
 
             pointer.on('attain', function() {
                 console.log("Pointer attained!");
@@ -44,7 +44,7 @@ window.onload = function() {
 
             fs.on('attain',function() {
                 console.log("Full screen attained!");
-                if (typeof(pointer) != 'undefined') {
+                if (typeof(pointer) != 'undefined' && !game.started) {
                     pointer.request();
                 } else {
                     if (!game.started) {
@@ -52,7 +52,6 @@ window.onload = function() {
                     }
                 }
             });
-
             fs.request();
         } else {
             if (!game.started) {

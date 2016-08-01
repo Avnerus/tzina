@@ -5,8 +5,8 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
-const VERTS_WIDE = 128;
-const VERTS_TALL = 128;
+const VERTS_WIDE = 256;
+const VERTS_TALL = 256;
 
 
 export default class VideoRGBD  {
@@ -27,9 +27,7 @@ export default class VideoRGBD  {
 
     init(loadingManager) {
         this.video = document.createElement( 'video' );
-        this.video.src = this.properties.basePath + '.webm';
-        this.video.loop = false;
-
+        this.video.src = this.properties.fileName;
 
         this.isPlaying = false;
         this.videoTexture = new THREE.Texture( this.video );
@@ -38,14 +36,14 @@ export default class VideoRGBD  {
         this.videoTexture.format = THREE.RGBFormat;
         this.videoTexture.generateMipmaps = false;
 
-        this.imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
         this.meshMaterial = new THREE.ShaderMaterial( {
 
             uniforms: {
-                "map": { type: "t", value: this.imageTexture },
+                "map": { type: "t" },
                 "mindepth" : { type : "f", value : this.properties.mindepth },
-                "maxdepth" : { type : "f", value : this.properties.maxdepth }
+                "maxdepth" : { type : "f", value : this.properties.maxdepth },
+                "uvd" : { type : "f", value : this.properties.uvd }
             },
 
             vertexShader: this.rgbd_vs,
@@ -60,12 +58,7 @@ export default class VideoRGBD  {
         //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //let mesh = new THREE.Mesh( geometry, material);
-        this.mesh.scale.set(0.0016, 0.0016, 0.0016);
-        this.mesh.rotation.set(
-            this.properties.rotation[0],
-            this.properties.rotation[1],
-            this.properties.rotation[2]
-        );
+        this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         //mesh.frustumCulled = false;
 
         /*

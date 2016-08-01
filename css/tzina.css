@@ -38,3 +38,30 @@ body {
     color: white;
     margin: auto;
 }
+
+#loading-label {
+    margin: auto;
+}
+
+#title-label {
+    margin: auto;
+}
+
+#title-container {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    color: white;
+    font-size: 36px;
+    position: relative;
+    bottom: 30%
+}
+#subtitles {
+  position: absolute;
+  width: 100%;
+  left: 0; bottom: 0;
+  z-index: 4000;
+  height:0px;
+  overflow:visible;
+  pointer-events:none;
+}

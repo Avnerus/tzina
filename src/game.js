@@ -1,3 +1,7 @@
+import EventEmitter from 'events'
+
+import GuiManager from './gui_manager'
+
 import Sky from './sky'
 import Square from './square'
 import CollisionManager from './collision_manager'
@@ -6,6 +10,9 @@ import KeyboardController from './keyboard_controller'
 import PostShader from './post_shader'
 import Flood from './flood'
 import ZoomController from './zoom_controller'
+import TzinaVRControls from './tzina_vr_controls'
+import Intro from './intro'
+import SoundManager from './sound_manager'
 
 // Animations
 import HannahAnimation from './animations/hannah'
@@ -18,16 +25,25 @@ export default class Game {
         this.started = false;
     }
     init() {
+
+        class TzinaEmitter extends EventEmitter {}
+        this.emitter = new TzinaEmitter();
+        global.events = this.emitter;
+
+        this.gui = new GuiManager(this.emitter);
+        this.gui.init();
+
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
         this.renderer.setPixelRatio(window.devicePixelRatio);
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 1, 2000000);
+        this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
         
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
-        
+        this.soundManager = new SoundManager(this.camera, this.scene);
+
 
         this.scene.add(this.camera);
         this.clock = new THREE.Clock();
@@ -42,12 +58,13 @@ export default class Game {
         //
 
         // LIGHT
-        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
+        //this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
+        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0 );
         this.hemiLight.color.setHSL(1,1,1);
         //this.hemiLight.groundColor.setHSL( 0., 1, 0.75 );
         this.hemiLight.position.set( 0, 500, 0 );
         this.scene.add( this.hemiLight );
-        
+
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
         this.dirLight.position.set( 0, 120, -200  );
         this.dirLight.color.setHSL(1,1,1);
@@ -60,39 +77,62 @@ export default class Game {
         this.scene.add(this.dirLight);
 
         this.loadingManager = new THREE.LoadingManager();
-        this.collisionManager = new CollisionManager(this.camera);
+        this.collisionManager = new CollisionManager(this.camera, this.scene);
 
 
         // Square
         this.square = new Square();
 
         // Test characters
-        /*this.testCharacter = new Character({
-            basePath : 'assets/characters/take_1',
-            mindepth : 404.999969482,
-            maxdepth : 1111.719970703,
-            position : [30, 15, 40],
-            rotation: [0, 0, 0],
-            name: 'test'
-            });*/
+        /*
         this.testCharacter = new Character({
             basePath : 'assets/characters/lupocomp',
             mindepth : 2331.267333984,
             maxdepth : 3446.559326172,
             position : [30, 6, 42],
             rotation: [0, 170, 0],
-            name: 'Lupo',
-            animation: 'Lupo'
-        });
+            name: 'Hannah',
+            animation: 'Hannah'
+            });*/
 
-        this.sky = new Sky(this.loadingManager);
+        
+        this.hannah = new Character({
+            basePath : 'assets/characters/hanna',
+            mindepth : 2138.454101562,
+            maxdepth : 3047.334472656,
+            position : [36, 8.1, 50],
+            rotation: [20, 195, 6],
+            name: 'Hannah',
+            animation: 'Hannah',
+            uvd: 0.440277,
+            scale: 0.005,
+            animationPosition: [0,-1.5,-2.2],
+            animationRotation: [20, 0, 0]
+        }, this.collisionManager);
+
+        this.lupo = new Character({
+            basePath : 'assets/characters/lupo',
+            mindepth : 1500.681884766,
+            maxdepth : 3376.051757813,
+            position : [53, 7.9, 79.3],
+            rotation: [6, 195, 6],
+            name: 'Lupo',
+            uvd: 0.45,
+            scale: 0.006,
+            animation: 'Lupo',
+            animationPosition: [0, 0, -5],
+            animationRotation: [20, 0, 0]
+        }, this.collisionManager);
+
+        this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
 
 
         // animations
         this.animations = {
-            // 'Hannah': new HannahAnimation(),
+            'Hannah': new HannahAnimation(),
             'Lupo': new LupoAnimation()
         }
+
 
         /*
         this.flood = new Flood();
@@ -100,7 +140,7 @@ export default class Game {
         this.scene.add(this.flood); */
 
         /*
-        // Post processing 
+        // Post processing
         this.composer = new THREE.EffectComposer(this.renderer);
         let renderPass = new THREE.RenderPass(this.scene, this.camera);
         this.composer.addPass(renderPass);
@@ -110,6 +150,9 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
+        // Intro
+        this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
+
     }
 
     load(onLoad) {
@@ -118,7 +161,20 @@ export default class Game {
             console.log("Done loading everything!");
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
-            this.scene.add(this.testCharacter)
+            this.scene.add(this.lupo)
+            this.scene.add(this.hannah)
+
+
+            /*
+            this.lupo.rotationY = 195;
+            this.lupo.rotationX = 6;
+            this.lupo.rotationZ = 6;
+            events.emit("add_gui", this.lupo.position, "x"); 
+            events.emit("add_gui", this.lupo.position, "z");
+            events.emit("add_gui", this.lupo.position, "y"); 
+            events.emit("add_gui", this.lupo, "rotationY"); 
+            events.emit("add_gui", this.lupo, "rotationZ"); 
+            events.emit("add_gui", this.lupo, "rotationX"); */
 
             onLoad();
         };
@@ -127,12 +183,13 @@ export default class Game {
         };
 
         this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
         this.sky.init();
-        this.testCharacter.init(this.loadingManager, this.animations)
+        this.soundManager.init();
+        this.hannah.init(this.loadingManager, this.animations)
+        this.lupo.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
 
         // Animations init
@@ -141,53 +198,57 @@ export default class Game {
         });
 
         // WebVR
-        let vrEffect = new THREE.VREffect(this.renderer);
-        vrEffect.setSize(window.innerWidth, window.innerHeight);
+        this.vrEffect = new THREE.VREffect(this.renderer);
+        this.vrEffect.setSize(window.innerWidth, window.innerHeight);
 
         let params = {
           hideButton: false, // Default: false.
           isUndistorted: false // Default: false.
         };
-        this.vrManager = new WebVRManager(this.renderer, vrEffect, params);
+        this.vrManager = new WebVRManager(this.renderer, this.vrEffect, params);
 
     }
 
     start() {
         this.started = true;
+        this.vrManager.setMode_(2);
         let element = this.renderer.domElement;
         this.container = document.getElementById('game');
         this.container.appendChild(element);
+        this.soundManager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked") {
-
-            if (this.vrManager.isVRCompatible) {
-                this.vrControls = new THREE.VRControls(this.camera);
+                this.vrControls = new TzinaVRControls(this.emitter, this.camera);
                 this.vrControls.standing = true;
-            } else {
-                let controls = new THREE.PointerLockControls( this.camera );
-                controls.enabled = true;
-
-                this.scene.add(controls.getObject());
-                this.keyboardController = new KeyboardController(this.config, controls.getObject(),this.square, this.collisionManager)
+                this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
-
-                this.zoomController = new ZoomController(this.config, this.camera, this.square);
+                this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
                 this.zoomController.init();
-            }
 
             // Get in the square
             this.keyboardController.setPosition(40, 10, 65);
 
+                /*
+                let controls = new THREE.PointerLockControls( this.camera );
+                controls.enabled = true;
+                this.scene.add(controls.getObject());*/
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
 
-        this.collisionManager.setPlayer(this.camera);
         this.resize();
 
-        setTimeout(() => {
-            //    this.testCharacter.play();
-        },5000)
+
+        this.square.fountain.startCycle();
+
+        // Init the intro
+        // this.intro.init();
+
+        
+        this.sky.transitionTo(17,1);
+
+        this.lupo.play();
+        this.hannah.play();
     }
 
     animate(t) {
@@ -197,19 +258,26 @@ export default class Game {
 
     update(dt,et) {
         this.sky.update(dt);
-        this.dirLight.position.copy(this.sky.getSunPosition());
+        this.square.update();
         if (this.keyboardController) {
             this.keyboardController.update(dt);
             this.zoomController.update(dt);
         }
         if (this.vrControls) {
-            this.vrControls.update();
+               this.vrControls.update();
             }
-        this.testCharacter.update(dt,et);
-        //this.flood.update(dt);
+        this.hannah.update(dt,et);
+        this.lupo.update(dt,et);
+
         /*
+        this.lupo.rotation.y = this.lupo.rotationY * Math.PI / 180;
+        this.lupo.rotation.x = this.lupo.rotationX * Math.PI / 180;
+        this.lupo.rotation.z = this.lupo.rotationZ * Math.PI / 180;*/
+
+        //this.flood.update(dt);
         this.collisionManager.update(dt);
         //console.log(this.camera.rotation); */
+        this.intro.update();
     }
 
     render() {
@@ -224,6 +292,7 @@ export default class Game {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
+        this.vrEffect.setSize(width, height);
         //this.composer.setSize(width, height);
     }
 }
