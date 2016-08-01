@@ -31,10 +31,14 @@ export default class MiriamAnimation extends THREE.Object3D {
     }
 
     initParticles( geo ) {
-        // let geometry = new THREE.CubeGeometry(100,20, 100);
+        this.manFigure.matrixWorldNeedsUpdate = true;
+
         let fboGeo = geo.clone();
-        fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(31, 6, 40) );
-        fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(170 * Math.PI / 180) );
+        // console.log( this.manFigure.matrixWorld );
+        fboGeo.applyMatrix( this.manFigure.matrixWorld );
+
+        // fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(31, 6, 40) );
+        // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(170 * Math.PI / 180) );
 
         let data = new Float32Array( this.width * this.height * 3  );
         //let data = Util.getSphere(this.width * this.height, 128);
@@ -69,7 +73,8 @@ export default class MiriamAnimation extends THREE.Object3D {
             { time: 16, anim: ()=>{this.manCircle()} },
             { time: 20, anim: ()=>{this.manSwirl()} },
             { time: 24, anim: ()=>{this.manSwirl2()} },
-            { time: 28, anim: ()=>{this.manSwirl3()} }
+            { time: 28, anim: ()=>{this.manSwirl3()} },
+            { time: 32, anim: ()=>{this.manSwirlNonstop()} }
         ];
 
         let GFClockTex = tex_loader.load(this.BASE_PATH + '/images/clockUV4.jpg');
@@ -100,7 +105,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
 
         // CREATE CURVE
-        let manMaterial = new THREE.MeshLambertMaterial({color: 0xff0000, morphTargets: true, wireframe: true});
+        let manMaterial = new THREE.MeshLambertMaterial({color: 0xff0000, morphTargets: true});
         let m_f_size2 = Object.keys(men_figures_vec).length;
 
         for(let i=1; i<=m_f_size2; i++) {
@@ -112,10 +117,10 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
  
         let curveColors = [];
-        let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.1, 1, true);
+        let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.1, 2, true);
         // console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
         for(let i=1; i<men_figures_points.length; i++){
-            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.1, 1, true);
+            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.1, 2, true);
             let nameee = 't'+(i-1);
             manGeometry.morphTargets[i-1] = {name: nameee, vertices: manGeometry2.vertices};
         }
@@ -126,6 +131,9 @@ export default class MiriamAnimation extends THREE.Object3D {
         // manFigure.rotation.y = Math.PI;
         this.manFigure.position.set(1,0,-2);
         this.add( this.manFigure );
+
+        this.manFigure.matrixWorldNeedsUpdate = true;
+        console.log( this.manFigure.matrixWorld );
 
         this.completeSequenceSetup();
 
@@ -181,7 +189,7 @@ export default class MiriamAnimation extends THREE.Object3D {
 
     manHold () {
         let tmpEndArray = [1,0,0,0,0,0];
-        TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power3.easeInOut } );
+        TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power3.easeInOut, onUpdate: ()=>{this.updateVertices() } } );
     }
     manLean () {
         let tmpEndArray = [0,1,0,0,0,0];
@@ -202,6 +210,43 @@ export default class MiriamAnimation extends THREE.Object3D {
     manSwirl3 () {
         let tmpEndArray = [0,0,0,0,0,1];
         TweenMax.to( this.manFigure.morphTargetInfluences, 4, { endArray: tmpEndArray } );
+    }
+    manSwirlNonstop () {
+        this.tl = new TimelineMax({repeat: -1});
+        this.tl.to( this.manFigure.morphTargetInfluences, 4, { endArray: [0,0,0,1,0,0] })
+               .to( this.manFigure.morphTargetInfluences, 4, { endArray: [0,0,0,0,1,0] })
+               .to( this.manFigure.morphTargetInfluences, 4, { endArray: [0,0,0,0,0,1] }, "+=2");
+    }
+
+    updateVertices() {
+        // let morphTargets = this.manFigure.geometry.morphTargets;
+        // let morphInfluences = this.manFigure.morphTargetInfluences;
+        // let upp = new THREE.Vector3(0,-1,0);
+
+        // // get morph geometry update position data
+        // for(let i=0; i<this.manGeometry.vertices.length; i++){
+        //     // let centerV = this.center.position.clone();
+
+        //     let vA = new THREE.Vector3();
+        //     let tempA = new THREE.Vector3();
+
+        //     for ( let t = 0, tl = morphTargets.length; t < tl; t ++ ) {
+        //         let influence = morphInfluences[ t ];
+        //         let target = morphTargets[t].vertices[i];
+        //         vA.addScaledVector( tempA.subVectors( target, this.shieldGeo.vertices[i] ), influence );
+        //     }
+
+        //     vA.add( this.shieldGeo.vertices[i] );
+        //     tempA.set( this.lookupTable[i%50]*0.5, this.lookupTable[(i+1)%50]*0.5, this.lookupTable[(i+2)%50]*0.5 );
+        //     vA.add( tempA );
+
+        //     this.domeMorphTargets[i].mesh.position.copy( vA );
+                        
+        //     // rotate
+        //     // let m1 = new THREE.Matrix4();
+        //     // m1.lookAt( centerV, vA, upp );
+        //     // this.domeMorphTargets[i].mesh.quaternion.setFromRotationMatrix( m1 );
+        // }
     }
 
     loadModelClock (model, modelB, modelC, modelD, meshMat) {
