@@ -31,7 +31,7 @@ export default class Game {
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
-        this.gui.init();
+        //this.gui.init();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
@@ -97,31 +97,37 @@ export default class Game {
 
         
         this.hannah = new Character({
+            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/hanna',
             mindepth : 2138.454101562,
             maxdepth : 3047.334472656,
-            position : [36, 8.1, 50],
-            rotation: [20, 195, 6],
+            position : [-32, 8.1, 152.5],
+            rotation: [-19, 45, 15],
             name: 'Hannah',
             animation: 'Hannah',
             uvd: 0.440277,
             scale: 0.005,
             animationPosition: [0,-1.5,-2.2],
-            animationRotation: [20, 0, 0]
+            animationRotation: [20, 0, 0],
+            space: 7,
+            subtitles: "subtitles"
         }, this.collisionManager);
 
         this.lupo = new Character({
+            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/lupo',
             basePath : 'assets/characters/lupo',
             mindepth : 1500.681884766,
             maxdepth : 3376.051757813,
-            position : [53, 7.9, 79.3], // [-41, 7.9, 121], 
-            rotation: [6, 195, 6], // [6,215,6],
+            position : [-51, 7.9, 126],//[51, 7.9, 77], // [-41, 7.9, 121], 
+            rotation: [-8,20,6],//[6, 195, 6], // [6,215,6],
             name: 'Lupo',
             uvd: 0.45,
             scale: 0.006,
             animation: 'Lupo',
             animationPosition: [0, -1.8, -4],
-            animationRotation: [5, 0, -3]
+            animationRotation: [5, 0, -3],
+            space: 9 ,
+            subtitles: "subtitles2"
         }, this.collisionManager);
 
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
@@ -164,14 +170,14 @@ export default class Game {
             this.scene.add(this.lupo)
             this.scene.add(this.hannah)
 
-
             /*
-            this.lupo.rotationY = 195;
-            this.lupo.rotationX = 6;
-            this.lupo.rotationZ = 6;
+
+            this.lupo.rotationY = 20;
+            this.lupo.rotationX = -14;
+            this.lupo.rotationZ = 6; 
             events.emit("add_gui", this.lupo.position, "x"); 
             events.emit("add_gui", this.lupo.position, "z");
-            events.emit("add_gui", this.lupo.position, "y"); 
+            events.emit("add_gui", this.lupo.position, "y");
             events.emit("add_gui", this.lupo, "rotationY"); 
             events.emit("add_gui", this.lupo, "rotationZ"); 
             events.emit("add_gui", this.lupo, "rotationX"); */
@@ -226,7 +232,7 @@ export default class Game {
                 //this.zoomController.init();
 
             // Get in the square
-            this.keyboardController.setPosition(40, 10, 65);
+                //this.keyboardController.setPosition(40, 10, 65);
 
                 /*
                 let controls = new THREE.PointerLockControls( this.camera );
@@ -242,13 +248,44 @@ export default class Game {
         this.square.fountain.startCycle();
 
         // Init the intro
-        // this.intro.init();
+        this.intro.init();
 
         
-        this.sky.transitionTo(17,1);
+        //this.sky.transitionTo(17,1);
+        //
 
-        //this.lupo.play();
-        this.hannah.play();
+        events.on("intro_end", () => {
+            this.lupo.play();
+            this.hannah.play(); 
+            document.getElementById("wasd-container").style.display = "block";
+            setTimeout(() => {
+                document.getElementById("wasd-container").style.display = "none";
+            },3000);
+        });
+
+
+        this.charactersEnded = 0;
+        events.on("character_ended", (name) => {
+            this.charactersEnded++;
+            if (this.charactersEnded == 2) {
+                this.zoomOut();
+            }
+        });
+    }
+
+
+    zoomOut() {
+        console.log("FINAL ZOOM OUT");
+        let zoomVector = new THREE.Vector3().copy(new THREE.Vector3(0, 0, 1) ).applyQuaternion(this.camera.quaternion);
+        zoomVector.y = 0.15;
+        zoomVector.multiplyScalar(1000);
+        let newPosition = new THREE.Vector3().copy(this.camera.position);
+        newPosition.add(zoomVector);
+        console.log("Move to ", newPosition);
+        TweenMax.to(this.camera.position, 20, {x: newPosition.x, y: newPosition.y, z: newPosition.z, onComplete: () => {
+            document.getElementById("coming-soon").style.display = "block";
+            document.getElementById("coming-img").style.opacity = 1;
+        }});
     }
 
     animate(t) {
@@ -267,9 +304,10 @@ export default class Game {
                this.vrControls.update();
             }
         this.hannah.update(dt,et);
-        //this.lupo.update(dt,et);
+        this.lupo.update(dt,et);
 
         /*
+
         this.lupo.rotation.y = this.lupo.rotationY * Math.PI / 180;
         this.lupo.rotation.x = this.lupo.rotationX * Math.PI / 180;
         this.lupo.rotation.z = this.lupo.rotationZ * Math.PI / 180;*/

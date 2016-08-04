@@ -47,7 +47,7 @@ export default class CollisionManager {
 
     addCharacter(character) {
         console.log("COLLISION MANAGER - Adding character ", character);
-        let space = 5;
+        let space = character.props.space;
 
         let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
         bbox.update();

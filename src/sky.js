@@ -76,6 +76,7 @@ export default class Sky {
     }
 
     setState(state) {
+        this.state = state;
         if (state == States.STATIC) {
             this.spinFactor = 0.01;
         } else {
@@ -90,7 +91,10 @@ export default class Sky {
         let tl = new TimelineMax({onUpdate: () => {
             this.updateSunPosition();
             this.updateHemiLght();
-        }, onComplete : () => {this.fadeSpin()}});
+        }, onComplete : () => {
+            this.fadeSpin();
+            this.setState(States.STATIC);
+        }});
         tl.to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[10], {ease: Linear.easeNone}))
         .to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[time], {ease: Linear.easeNone}));
 
@@ -104,6 +108,12 @@ export default class Sky {
     update(dt) {
         this.geo.rotateY(this.spinFactor * Math.PI / 180);
         this.clouds.update(dt);
+        if (this.state == States.STATIC) {
+            this.azimuth += 0.0002 * dt;
+            this.inclination += 0.0002 * dt;
+            this.updateSunPosition();
+            this.updateHemiLght();
+        }
     }
 
     applyToMesh(mesh) {

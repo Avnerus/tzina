@@ -28,7 +28,6 @@ body {
     font-size: 36px;
 }
 #start-container {
-    border: 1px solid white;
     display:none;
 }
 
@@ -54,12 +53,12 @@ body {
     position: relative;
     bottom: 30%
 }
-#subtitles {
+.subtitles {
   position: absolute;
   width: 100%;
   left: 0; bottom: 0;
   z-index: 4000;
   //height:0px;
-  overflow:visible;
+  //overflow:visible;
   pointer-events:none;
 }

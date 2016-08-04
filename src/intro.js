@@ -73,8 +73,10 @@ export default class Intro {
             this.sound = sound;
 
             setTimeout(() => {
+                
                 this.turnOnWindows();
-                this.playSound();
+                this.playSound(); 
+                //this.zoomToSquare();
 
             },3000);
         });

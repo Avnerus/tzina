@@ -5,8 +5,8 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
-const VERTS_WIDE = 128;
-const VERTS_TALL = 128;
+const VERTS_WIDE = 256;
+const VERTS_TALL = 256;
 
 
 export default class VideoRGBD  {
@@ -28,6 +28,8 @@ export default class VideoRGBD  {
     init(loadingManager) {
         this.video = document.createElement( 'video' );
         this.video.src = this.properties.fileName;
+        //this.video.crossOrigin = "anonymous"
+        console.log("Cross origin video ", this.video.crossOrigin);
 
         this.isPlaying = false;
         this.videoTexture = new THREE.Texture( this.video );

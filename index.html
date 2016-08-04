@@ -25,17 +25,38 @@
         <script src="lib/webvr-polyfill.js"></script>
         <script src="lib/webvr-manager.js"></script>
         <script src="bundle.js"></script>
-        <video id="subtitles"><source src="" type="video/webm"></video>
+        <video id="subtitles" class="subtitles"><source src="" type="video/webm"></video>
+        <video id="subtitles2" class="subtitles"><source src="" type="video/webm"></video>
         <div id="game"></div>
         <div id="splash">
             <div id="loading-container" class="splash-container">
                 <div id="loading-image">
-                    <img src="assets/splash/loading_fountain.gif"></img>
+                    <img src="assets/splash/loading_fountain.gif" width="200px"></img>
                 </div>
             </div>
             <div id="start-container" class="splash-container">
-                <a target="_self" href="#" id="start-button">ENTER</a>
+                <a target="_self" href="#" id="start-button">
+                    <img src="assets/splash/chapter_title.png"></img>
+                </a>
             </div>
+            <div id="coming-soon" class="splash-container" style="display:none;"><img id="coming-img" src="assets/splash/coming_soon.png" style="
+                width: 600px;
+                position: relative;
+                top: 200px;
+                opacity: 0;
+                transition: opacity .25s ease-in-out;
+            ">
+            </div>
+            <div id="wasd-container" class="splash-container" style="
+                position: relative;
+                left: 40%;
+                top: 35%;
+                display: none;
+            ">
+                            <img id="wasd-img" src="assets/splash/wasd.png" style="
+                width: 200px;
+            ">
+                       </div>
         </div>
     </body>
 </html>

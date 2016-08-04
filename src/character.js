@@ -14,7 +14,7 @@ export default class Character extends THREE.Object3D {
         this.fullVideo = new VideoRGBD({
             mindepth: props.mindepth,
             maxdepth: props.maxdepth,
-            fileName: props.basePath + "_full.mp4",
+            fileName: props.basePath + "_full.webm",
             uvd: props.uvd,
             scale: props.scale
         });
@@ -26,6 +26,7 @@ export default class Character extends THREE.Object3D {
 
         this.playingFull = false;
         this.isPaused = false;
+        this.done = false;
     }
     init(loadingManager, animations) {
             this.idleVideo.init(loadingManager);
@@ -48,6 +49,7 @@ export default class Character extends THREE.Object3D {
             },false);
 
             this.idleVideo.video.loop = true;
+            this.fullVideo.video.loop = false;
 
             this.position.fromArray(this.props.position);
 
@@ -72,6 +74,19 @@ export default class Character extends THREE.Object3D {
             }
 
             this.collisionManager.addCharacter(this);
+
+            events.on("character_playing", (name) => {
+                if (this.props.name != name) {
+                    console.log(name, " is playing." , this.props.name, "is pausing");
+                    this.idleVideo.pause();
+                }                
+            });
+            events.on("character_idle", (name) => {
+                if (this.props.name != name) {
+                    console.log(name, " is idle." , this.props.name, "is playing");
+                    this.idleVideo.play();
+                }                
+            });
     }
     play() {
         this.idleVideo.play();
@@ -102,8 +117,12 @@ export default class Character extends THREE.Object3D {
         this.fullVideo.mesh.visible = false;
         this.idleVideo.play();
         this.playingFull = false;
-        let subtitlesVideo = document.getElementById("subtitles");
+        let subtitlesVideo = document.getElementById(this.props.subtitles);
         subtitlesVideo.src = "";
+        this.isPaused = false;
+        this.done = true;
+        events.emit("character_idle", this.props.name)
+        events.emit("character_ended", this.props.name)
     }
 
 
@@ -114,33 +133,33 @@ export default class Character extends THREE.Object3D {
         this.fullVideo.mesh.visible = false;
         this.idleVideo.play();
         this.playingFull = false;
-        let subtitlesVideo = document.getElementById("subtitles");
+        let subtitlesVideo = document.getElementById(this.props.subtitles);
         subtitlesVideo.pause();
         subtitlesVideo.style.display = "none";
         this.isPaused = true;
+        events.emit("character_idle", this.props.name)
     }
 
     onCollision() {
         this.timeSinceCollision = 0;
-        if (!this.playingFull && this.animation && !this.animation.visible) {
+        if (!this.playingFull && !this.done && this.animation && !this.animation.visible) {
             console.log("Character collision!");
-            //this.animation.visible = true;
+            this.animation.visible = true;
 
-            // load substitles video
+            // load subtitles video
             if (!this.isPaused) {
                 this.animation.start()
 
-                let subtitlesVideo = document.getElementById("subtitles");
+                let subtitlesVideo = document.getElementById(this.props.subtitles);
                 subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
                 subtitlesVideo.addEventListener('canplay',() => {
                     subtitlesVideo.play();
                     this.playFull();
                 },false);
                 subtitlesVideo.load();
-               this.playFull();
             } else {
                 console.log("Resume");
-                let subtitlesVideo = document.getElementById("subtitles");
+                let subtitlesVideo = document.getElementById(this.props.subtitles);
                 subtitlesVideo.style.display = "block";
                 subtitlesVideo.play();
                 this.playFull();
@@ -154,5 +173,6 @@ export default class Character extends THREE.Object3D {
         this.fullVideo.mesh.visible = true;
         //this.fullVideo.video.currentTime = 0;
         this.fullVideo.play();
+        events.emit("character_playing", this.props.name)
     }
 }
