@@ -26,8 +26,10 @@ export default class LupoAnimation extends THREE.Object3D {
             { time: 28, anim: ()=>{this.shiftSculptures()} },
             { time: 32, anim: ()=>{this.shiftSculptures()} }
         ];
+        this.sequenceConfigOriginal =  this.sequenceConfig.slice(0);
 
         this.nextAnim = null;
+        this.tweenAnimCollectors = [];
 
         let p_tex_loader = new THREE.TextureLoader(this.loadingManager);
 
@@ -46,22 +48,22 @@ export default class LupoAnimation extends THREE.Object3D {
                                     [this.BASE_PATH + "/models/sculptures/right_arm.js", new THREE.Vector3(2.7, .9, 0), new THREE.Vector3(2.7, 2.5, -1)],
                                     [this.BASE_PATH + "/models/sculptures/short_legs.js", new THREE.Vector3(-2.5, .3, 1.8), new THREE.Vector3(-2.5, 2, 1.8)],
                                     [this.BASE_PATH + "/models/sculptures/two_heads.js", new THREE.Vector3(0, 1.5, -1.4),new THREE.Vector3(0, 2, -1.4)] ];
-        let sculptureTextureFiles = [ this.BASE_PATH + "/images/sculptures/lupo_deer.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_dog.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_macho.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_painter.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_pig.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_rightArm.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_shortLegs.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_twoHeads2.png" ];
-        let sculptureTextMADFiles = [ this.BASE_PATH + "/images/sculptures/lupo_deer_MAD.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_dog_MAD.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_macho_MAD.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_painter_MAD.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_pig_MAD.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_rightArm_MAD.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_shortLegs_MAD.png",
-                                      this.BASE_PATH + "/images/sculptures/lupo_twoHeads_MAD.png" ];
+        let sculptureTextureFiles = [ this.BASE_PATH + "/images/sculptures/lupo_deer.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_dog.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_macho.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_painter.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_pig.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_rightArm.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_shortLegs.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_twoHeads.jpg" ];
+        let sculptureTextMADFiles = [ this.BASE_PATH + "/images/sculptures/lupo_deer_MAD.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_dog_MAD.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_macho_MAD.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_painter_MAD.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_pig_MAD.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_rightArm_MAD.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_shortLegs_MAD.jpg",
+                                      this.BASE_PATH + "/images/sculptures/lupo_twoHeads_MAD.jpg" ];
 
         let sculptureModels=[];
         this.sculptureMaterials=[];
@@ -131,17 +133,22 @@ export default class LupoAnimation extends THREE.Object3D {
         for(let i=0; i<this.lupoArt.children[0].children.length; i++){
             let targetPos = this.lupoArt.children[0].children[i].targetPosition;
             let delayT = i*this.lookupTable[i];
-            TweenMax.to(this.lupoArt.children[0].children[i].scale, 3, { y:1, delay: delayT, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 0.2, points: 100, taper: "out", randomize: true, clamp: false}) });  // ease: Back.easeInOut.config(0.5)
-            TweenMax.to(this.lupoArt.children[0].children[i].position, 3, { x:targetPos.x, y:targetPos.y, z:targetPos.z, delay: delayT });
-            TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:1, delay: delayT });
+            let t_scale = TweenMax.to(this.lupoArt.children[0].children[i].scale, 3, { y:1, delay: delayT, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 0.2, points: 100, taper: "out", randomize: true, clamp: false}) });  // ease: Back.easeInOut.config(0.5)
+            let t_pos = TweenMax.to(this.lupoArt.children[0].children[i].position, 3, { x:targetPos.x, y:targetPos.y, z:targetPos.z, delay: delayT });
+            let t_mat = TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:1, delay: delayT });
+            //
+            this.tweenAnimCollectors.push(t_scale);
+            this.tweenAnimCollectors.push(t_pos);
+            this.tweenAnimCollectors.push(t_mat);
         }
     }
 
     flickerSculptureTextures() {
-        TweenMax.to(this.dummy, 2, { roughValue:5, 
+        let t_flicker = TweenMax.to(this.dummy, 2, { roughValue:5, 
                                      ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 5, points: 100, taper: "both", randomize: true, clamp: false}),
                                      onUpdate: ()=>{this.shiftTextures()},
                                      onComplete: ()=>{this.doneShiftTextures()} });  // ease: Back.easeInOut.config(0.5)
+        this.tweenAnimCollectors.push(t_flicker);
     }
 
     shiftTextures() {
@@ -178,10 +185,14 @@ export default class LupoAnimation extends THREE.Object3D {
         this.tl = new TimelineMax({repeatDelay: 3, repeat: -1});
         this.tl.to(this.lupoArt.rotation, 2, {x:Math.PI})
                .to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
+        //
+        this.tweenAnimCollectors.push( this.tl );
     }
 
     shiftSculptures() {
         TweenMax.to(this.lupoArt.rotation, 2, { x:"+="+Math.PI });
+        //
+        this.tweenAnimCollectors.push( this.tl );
     }
 
     loadSculptureTextures ( textureFiles, textureMADFiles ) {
@@ -233,6 +244,7 @@ export default class LupoAnimation extends THREE.Object3D {
                     meshhh.position.copy( modelPos );
                     // save for later use
                     meshhh.targetPosition = modelTargetPos;
+                    meshhh.originalPosition = modelPos;
                     lupoArtTop.add(meshhh);
 
                     let meshh = new THREE.Mesh( geometry, matMADF );
@@ -285,6 +297,28 @@ export default class LupoAnimation extends THREE.Object3D {
 
     start() {
         this.nextAnim = this.sequenceConfig.shift();
+    }
+
+    reset() {
+        // stop animation
+        for(let i=0; i<this.tweenAnimCollectors.length; i++){
+            this.tweenAnimCollectors[i].kill();
+        }
+        // back to original status
+        TweenMax.to(this.lupoArt.rotation, 1, { x:0 });
+        for(let i=0; i<this.lupoArt.children[0].children.length; i++){
+            let origPos = this.lupoArt.children[0].children[i].originalPosition;
+            TweenMax.to(this.lupoArt.children[0].children[i].scale, 1.5, { y:0.01, delay: 1 });
+            TweenMax.to(this.lupoArt.children[0].children[i].position, 1.5, { x:origPos.x, y:origPos.y, z:origPos.z, delay: 1 });
+            TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:0, delay: 1 });
+        }
+
+        // reset sequence
+        this.sequenceConfig = [];
+        this.sequenceConfig = this.sequenceConfigOriginal.slice(0); // copy the original setting
+        this.completeSequenceSetup();
+        
+        // this.start();
     }
 
     updateVideoTime(time) {
