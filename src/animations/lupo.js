@@ -304,6 +304,9 @@ export default class LupoAnimation extends THREE.Object3D {
         for(let i=0; i<this.tweenAnimCollectors.length; i++){
             this.tweenAnimCollectors[i].kill();
         }
+        // clean the collector
+        this.tweenAnimCollectors = [];
+
         // back to original status
         TweenMax.to(this.lupoArt.rotation, 1, { x:0 });
         for(let i=0; i<this.lupoArt.children[0].children.length; i++){
@@ -317,7 +320,7 @@ export default class LupoAnimation extends THREE.Object3D {
         this.sequenceConfig = [];
         this.sequenceConfig = this.sequenceConfigOriginal.slice(0); // copy the original setting
         this.completeSequenceSetup();
-        
+
         // this.start();
     }
 
