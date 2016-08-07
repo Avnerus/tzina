@@ -110,7 +110,7 @@ body {
 #loading_image{
   z-index: 900;
 }
-#subtitles{
+.subtitles{
   position: absolute;
   width: 70%;
   left: 15%; bottom: 0;
@@ -201,4 +201,27 @@ body {
   position: absolute;
   left: 15px; bottom: 25px;
   width: 17%;
+}
+
+.switch-character {
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    color: white;
+    position: absolute;
+    right: 20px;
+    top: 100px;
+    border: solid 1px;
+    height: 50px;
+    display: flex;
+    align-items:center;
+}
+
+.switch-character a {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
+    color: white;
 }

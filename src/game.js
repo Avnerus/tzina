@@ -15,6 +15,7 @@ import SoundManager from './sound_manager'
 
 // Animations
 import MiriamAnimation from './animations/miriam'
+import LupoAnimation from './animations/lupo'
 
 export default class Game {
     constructor(config) {
@@ -59,7 +60,7 @@ export default class Game {
 
         // LIGHT
         //this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
-        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0 );
+        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
         this.hemiLight.color.setHSL(1,1,1);
         //this.hemiLight.groundColor.setHSL( 0., 1, 0.75 );
         this.hemiLight.position.set( 0, 500, 0 );
@@ -96,24 +97,36 @@ export default class Game {
             });*/
 
 
-        this.hannah = new Character({
+        this.miriamConfig = {
             basePath : 'assets/characters/miriam',
             mindepth : 1983.749877930,
             maxdepth : 3119.456298828,
             position : [30, 6, 42],
             rotation: [0, 170, 0],
-            name: 'Hanna',
-            animation: 'Miriam'
-        });
+            name: 'Miriam',
+            uvd: 0.5
+        }
+
+        this.lupoConfig = {
+            basePath : 'assets/characters/lupo',
+            mindepth : 1500.681884766,
+            maxdepth : 3376.051757813,
+            position : [30,6,42],//[51, 7.9, 77], // [-41, 7.9, 121], 
+            rotation: [0,170,0],//[6, 195, 6], // [6,215,6],
+            name: 'Lupo',
+            uvd: 0.45,
+            scale: 0.006,
+            animationPosition: [0, -1.8, -4],
+            animationRotation: [5, 0, -3],
+            space: 9 ,
+subtitles: "subtitles2"
+        }
+
 
         //this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
 
 
         // animations
-        this.animations = {
-            'Miriam': new MiriamAnimation( this.scene, this.renderer )
-        }
-
         /*
         this.flood = new Flood();
         this.flood.init();
@@ -138,19 +151,12 @@ export default class Game {
     load(onLoad) {
         this.loadingManager.onLoad = () => {
 
-            console.log("Done loading everything!");
-            //this.scene.add(this.square);
-            //this.sky.applyToMesh(this.square.getSphereMesh());
+            if (!this.loaded) {
+                this.loaded = true;
+                console.log("Done loading everything!");
 
-            let bbox = new THREE.BoundingBoxHelper( this.hannah, 0x00ffff  );
-            //bbox.update();
-            //this.scene.add( bbox  );
-
-            this.scene.add(this.hannah)
-            // this.scene.add(this.square);
-
-
-            onLoad();
+                onLoad();
+            }
         };
         this.loadingManager.onError = (err) => {
             console.log("Error during load", err);
@@ -162,13 +168,7 @@ export default class Game {
 
         //this.sky.init();
         //this.soundManager.init();
-        this.hannah.init(this.loadingManager, this.animations)
         //this.square.init(this.collisionManager, this.loadingManager);
-
-        // Animations init
-        Object.keys(this.animations).forEach((key) => {
-            this.animations[key].init(this.loadingManager);
-        });
 
         // WebVR
         this.vrEffect = new THREE.VREffect(this.renderer);
@@ -180,6 +180,65 @@ export default class Game {
         };
         this.vrManager = new WebVRManager(this.renderer, this.vrEffect, params);
 
+        $('#switch-button').click(() => {
+            console.log("Switch character!");
+            this.switchCharacter();
+            
+        });
+
+        this.loadMiriam();
+    }
+
+    switchCharacter() {
+        this.character.videoRGBD.pause();
+        this.scene.remove(this.character);
+        if (this.character.props.name == 'Miriam') {
+            this.loadLupo();
+        } else {
+            this.loadMiriam();
+        }
+    }
+
+    loadMiriam() {
+        console.log("Load Miriam!");
+        this.miriamConfig.animation = new MiriamAnimation( this.scene, this.renderer )
+        this.miriamConfig.animation.init(this.loadingManager);
+        this.character = new Character(this.miriamConfig);
+        this.character.init(this.loadingManager, this.animations)
+        this.scene.add(this.character)
+        this.character.play();
+        document.getElementById('subtitles2').style.display = "none";
+        document.getElementById('subtitles').pause();
+        document.getElementById('subtitles').style.display = "block";
+        document.getElementById('subtitles').currentTime = 0;
+        document.getElementById('subtitles').play();
+
+        document.getElementById('chapter-text').innerHTML = `
+                                                    Miriam, 78, is a part of chapter 2/7   focusing on home and family.
+                                            Each chapter, in the final experience, represents a different part of the day - from dawn to dusk, linking the chapter’s protagonists to a specific theme that emerges from their personal story.
+                                                     `;
+    }
+
+    loadLupo() {
+        console.log("Load Lupo!");
+        this.lupoConfig.animation = new LupoAnimation( this.scene, this.renderer )
+        this.lupoConfig.animation.init(this.loadingManager);
+        this.lupoConfig.animation.start();
+        this.character = new Character(this.lupoConfig);
+        this.character.init(this.loadingManager, this.animations)
+        this.character.animation.position.fromArray([0, -1.8, -4]);
+        this.character.animation.scale.set(2,2,2);
+        this.character.animation.rotation.set(5 * Math.PI / 180, 180 * Math.PI / 180, -3 * Math.PI / 180);
+        this.scene.add(this.character)
+        this.character.play();
+
+        document.getElementById('subtitles').style.display = "none";
+        document.getElementById('subtitles').pause();
+        document.getElementById('subtitles2').style.display = "block";
+        document.getElementById('subtitles2').currentTime = 0;
+        document.getElementById('subtitles2').play();
+
+        document.getElementById('chapter-text').innerHTML = `Lupo`;
     }
 
     start() {
@@ -225,8 +284,6 @@ export default class Game {
 
         //this.sky.transitionTo(17,1);
 
-        this.hannah.play();
-        document.getElementById('subtitles').play();
     }
 
     animate(t) {
@@ -244,7 +301,9 @@ export default class Game {
         if (this.vrControls) {
                this.vrControls.update();
             }
-        this.hannah.update(dt,et);
+        if (this.character) {
+            this.character.update(dt,et);
+        }
         //this.flood.update(dt);
         /*
         this.collisionManager.update(dt);

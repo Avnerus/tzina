@@ -48,7 +48,7 @@ export default class VideoRGBD  {
             y1: 1260,
             y2: 2040,
             y3: 1440,
-            uvd: 0.5,
+            uvd: this.properties.uvd,
             posz: 2600.0,
             posx: 150.0
         }

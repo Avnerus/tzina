@@ -324,6 +324,9 @@ export default class MiriamAnimation extends THREE.Object3D {
             geo.vertices[i].y += n;
         }
     }
+    updateVideoTime() {
+
+    }
 
     update(dt,et) {
         this.grandFatherClock.rotation.z = Math.sin(et*1000 / 1000) * (Math.PI/10);

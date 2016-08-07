@@ -41,7 +41,7 @@ window.onload = function() {
     //var el = document.getElementsByTagName('body')[0];
     //var el = document.getElementById('game');
     var el = document.documentElement;
-
+    
     game.load(function() {
       $('#splash').delay( 1000 ).fadeOut( 500, function(){
         $('.instruc').fadeIn(500).delay(10000).fadeOut(500);

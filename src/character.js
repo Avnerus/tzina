@@ -13,10 +13,16 @@ export default class Character extends THREE.Object3D {
             this.videoRGBD.init(loadingManager);
             this.position.fromArray(this.props.position);
             this.add(this.videoRGBD.mesh);
-            this.animation = animations[this.props.animation];
+            this.animation = this.props.animation;
             this.add(this.animation);
             // this.animation.scale.set(0.01, 0.01, 0.01);
             // this.animation.position.z = -5;
+
+        this.videoRGBD.video.addEventListener('timeupdate',() => {
+            if (this.animation) {
+                this.animation.updateVideoTime(this.videoRGBD.video.currentTime);
+            }
+        },false);
     }
     play() {
             this.videoRGBD.play();

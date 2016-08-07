@@ -34,13 +34,11 @@
           <div class="header_logo_text">TZINA</div>
           <div class="header_text">symphony of longing</div>
           <div class="header_char_num">Character Demo 6/11</div>
-          <div class="chapter_text">
-            Miriam, 78, is a part of chapter 2/7   focusing on home and family.
-Each chapter, in the final experience, represents a different part of the day - from dawn to dusk, linking the chapter’s protagonists to a specific theme that emerges from their personal story.
-          </div>
+          <div class="chapter_text" id="chapter-text"></div>
         </div>
           <!--video autoplay="false" id="subtitles" src="assets/characters/sub_miriam.mov.webm" style="background: transparent;" /-->
-          <video id="subtitles"><source src="assets/characters/sub_miriam.mov.webm" type="video/webm"></video>
+          <video id="subtitles" class="subtitles"><source src="assets/characters/sub_miriam.mov.webm" type="video/webm"></video>
+        <video id="subtitles2" class="subtitles"><source src="assets/characters/lupo_subtitles.webm" type="video/webm"></video>
         <div id="game"></div>
         <div id="splash">
             <div id="loading-container" class="splash-container">
@@ -51,5 +49,8 @@ Each chapter, in the final experience, represents a different part of the day - 
             </div>
         </div>
         <div class="instruc"><img src="assets/misc/wasd.gif" /></div>
+        <div class="switch-character">
+            <a id="switch-button" target="_self" href="#">SWITCH CHARACTER</a>
+        </div>
     </body>
 </html>
