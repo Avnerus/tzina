@@ -42,6 +42,7 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         let data = new Float32Array( this.width * this.height * 3  );
         //let data = Util.getSphere(this.width * this.height, 128);
+
         let points = THREE.GeometryUtils.randomPointsInGeometry( fboGeo, this.width * this.height);
         for ( var i = 0, j = 0, l = data.length; i < l; i += 3, j += 1 ) {
             data[ i ] = points[ j ].x;
@@ -117,12 +118,23 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
  
         let curveColors = [];
+        this.manGeometries = [];
         let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.1, 2, true);
+        this.manGeometries.push( manGeometry );
+        let manGeometry2nd;
+        
         // console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
         for(let i=1; i<men_figures_points.length; i++){
-            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.1, 2, true);
+            let manGeometry2;
+            if(i==1){
+                manGeometry2nd = new THREE.TubeGeometry( men_figures_points[i], 120, 0.1, 2, true);
+                manGeometry2 = manGeometry2nd.clone();
+            }
+            else
+                manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.1, 2, true);
             let nameee = 't'+(i-1);
             manGeometry.morphTargets[i-1] = {name: nameee, vertices: manGeometry2.vertices};
+            this.manGeometries.push(manGeometry2);
         }
         manGeometry.computeMorphNormals();
 
@@ -140,13 +152,15 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         // FBO_PARTICLES
         let positions = this.initParticles( manGeometry );
+        let morphPositions = this.initParticles( manGeometry2nd );
         this.rttIn = positions;
 
         this.simulationShader = new THREE.ShaderMaterial({
             uniforms: {
                 positions: { type: "t", value: positions },
                 timer: { type: "f", value: 0 },
-                maxDepth : { type: "f", value: this.maxDepth }
+                maxDepth : { type: "f", value: this.maxDepth },
+                morphPositions: { type: "t", value: morphPositions }
             },
             vertexShader: this.simulation_vs,
             fragmentShader:  this.simulation_fs,
@@ -362,11 +376,18 @@ export default class MiriamAnimation extends THREE.Object3D {
 
             for(let i=0; i<this.sequenceConfig.length; i++){
 
+                // move on to 'next' sequence
                 if(animTime >= this.sequenceConfig[i].time && !this.sequenceConfig[i].performed){
-
                     this.sequenceConfig[i].anim( this );
                     this.sequenceConfig[i].performed = true;
                     console.log("do anim sequence: " + i);
+
+                    // update manGeometries ( e.g. sequenceConfig[0] --> for morph: manGeometries[1] )
+                    let positions = this.initParticles( this.manGeometries[i] );
+                    let morphPositions = this.initParticles( this.manGeometries[i+1] );
+                    console.log( morphPositions );
+                    this.simulationShader.uniforms.positions.value = positions;
+                    this.simulationShader.uniforms.morphPositions.value = morphPositions;
                 }
             }
         }
