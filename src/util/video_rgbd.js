@@ -45,12 +45,15 @@ export default class VideoRGBD  {
                 "map": { type: "t" },
                 "mindepth" : { type : "f", value : this.properties.mindepth },
                 "maxdepth" : { type : "f", value : this.properties.maxdepth },
-                "uvd" : { type : "f", value : this.properties.uvd }
+                "uvd" : { type : "f", value : this.properties.uvd },
+                "opacity" : { type : "f", value : 1.0 }
             },
 
             vertexShader: this.rgbd_vs,
             fragmentShader: this.rgbd_fs,
-            blending: THREE.AdditiveBlending /*
+            //blending: THREE.AdditiveBlending,
+            transparent: true,
+            /*
             depthTest: false,
             depthWrite: false*/
         } );
@@ -67,7 +70,6 @@ export default class VideoRGBD  {
         var bbox = new THREE.BoundingBoxHelper( this.mesh, 0x00ff00  );
         bbox.update();
         scene.add( bbox );*/
-
     }
 
 
@@ -130,4 +132,8 @@ export default class VideoRGBD  {
     isPlaying() {
         return this.isPlaying;
     };
+
+    setOpacity(opacity) {
+        this.meshMaterial.uniforms.opacity.value = opacity;        
+    }
 };

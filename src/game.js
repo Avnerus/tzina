@@ -31,7 +31,7 @@ export default class Game {
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
-        //this.gui.init();
+        this.gui.init();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
@@ -233,13 +233,7 @@ export default class Game {
                 //this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
                 //this.zoomController.init();
 
-            // Get in the square
-                //this.keyboardController.setPosition(40, 10, 65);
 
-                /*
-                let controls = new THREE.PointerLockControls( this.camera );
-                controls.enabled = true;
-                this.scene.add(controls.getObject());*/
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
@@ -249,16 +243,19 @@ export default class Game {
 
         this.square.fountain.startCycle();
 
-        // Init the intro
-        this.intro.init();
+        if (this.config.skipIntro) {
+            // Get in the square
+            this.keyboardController.setPosition(-15, 10, 167);
+            this.sky.transitionTo(17,1);
+            this.hannah.play(); 
+        } else {
+            // Init the intro
+            this.intro.init();
+        }
 
-        
-        //this.sky.transitionTo(17,1);
-        //
 
         events.on("intro_end", () => {
             //this.lupo.play();
-            this.hannah.play(); 
             document.getElementById("wasd-container").style.display = "block";
             setTimeout(() => {
                 document.getElementById("wasd-container").style.display = "none";

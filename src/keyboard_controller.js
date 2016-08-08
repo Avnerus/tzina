@@ -159,7 +159,7 @@ export default class KeyboardController {
                  }*/
 
 
-            //console.log(this.camera.position);*/
+            //console.log(this.camera.position);
             
         }
 
