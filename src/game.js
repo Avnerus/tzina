@@ -227,9 +227,9 @@ export default class Game {
         this.lupoConfig.animation.start();
         this.character = new Character(this.lupoConfig);
         this.character.init(this.loadingManager, this.animations)
-        this.character.animation.position.fromArray([0, -1.8, -4]);
-        this.character.animation.scale.set(2,2,2);
-        this.character.animation.rotation.set(5 * Math.PI / 180, 180 * Math.PI / 180, -3 * Math.PI / 180);
+        this.character.animation.position.fromArray([-5, -6, -15]);
+        this.character.animation.scale.multiplyScalar(2.7);
+        // this.character.animation.rotation.set(5 * Math.PI / 180, 0 * Math.PI / 180, -3 * Math.PI / 180);
         this.scene.add(this.character)
         this.character.play();
 
