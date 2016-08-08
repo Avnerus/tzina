@@ -34,4 +34,5 @@ node_modules
 
 *.swp
 
-lupo.webm
+* lupo video file too big
+assets/characters/lupo.webm

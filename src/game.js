@@ -119,7 +119,7 @@ export default class Game {
             animationPosition: [0, -1.8, -4],
             animationRotation: [5, 0, -3],
             space: 9 ,
-subtitles: "subtitles2"
+            subtitles: "subtitles2"
         }
 
 
