@@ -122,6 +122,12 @@ export default class LupoAnimation extends THREE.Object3D {
             });
         });
 
+        //
+        let floor = new THREE.Mesh( new THREE.PlaneGeometry(20,40), new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide}) );
+        floor.rotation.x = Math.PI/2;
+        floor.position.y = -4;
+        this.add(floor);
+
         this.lookupTable=[];
         for (var i=0; i<50; i++) {
           this.lookupTable.push(Math.random());
