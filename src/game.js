@@ -213,6 +213,7 @@ export default class Game {
         document.getElementById('subtitles').currentTime = 0;
         document.getElementById('subtitles').play();
 
+        document.getElementById('header-text').innerHTML = "Character Demo 6/11"
         document.getElementById('chapter-text').innerHTML = `
                                                     Miriam, 78, is a part of chapter 2/7   focusing on home and family.
                                             Each chapter, in the final experience, represents a different part of the day - from dawn to dusk, linking the chapter’s protagonists to a specific theme that emerges from their personal story.
@@ -232,13 +233,16 @@ export default class Game {
         this.scene.add(this.character)
         this.character.play();
 
+        document.getElementById('header-text').innerHTML = "Character Demo 5/11"
         document.getElementById('subtitles').style.display = "none";
         document.getElementById('subtitles').pause();
         document.getElementById('subtitles2').style.display = "block";
         document.getElementById('subtitles2').currentTime = 0;
         document.getElementById('subtitles2').play();
 
-        document.getElementById('chapter-text').innerHTML = `Lupo`;
+        document.getElementById('chapter-text').innerHTML = `
+Lupo, 46 is a part of chapter 4/7 focusing on mistrust and betrayal . Each chapter, in the final experience, represents a different part of the day - from dawn to dusk, linking the chapter’s protagonists to a specific theme that emerges from their personal story.
+    `
     }
 
     start() {
