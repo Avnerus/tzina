@@ -113,6 +113,7 @@ export default class Game {
             subtitles: "subtitles"
         }, this.collisionManager);
 
+        /*
         this.lupo = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/lupo',
             basePath : 'assets/characters/lupo',
@@ -128,15 +129,16 @@ export default class Game {
             animationRotation: [5, 0, -3],
             space: 9 ,
             subtitles: "subtitles2"
-        }, this.collisionManager);
+        }, this.collisionManager);*/
 
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
 
 
         // animations
         this.animations = {
-            'Hannah': new HannahAnimation(),
-            'Lupo': new LupoAnimation()
+            'Hannah': new HannahAnimation()
+           //  'Lupo': new LupoAnimation()
+            
         }
 
 
@@ -167,7 +169,7 @@ export default class Game {
             console.log("Done loading everything!");
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
-            this.scene.add(this.lupo)
+            //this.scene.add(this.lupo)
             this.scene.add(this.hannah)
 
             /*
@@ -195,7 +197,7 @@ export default class Game {
         this.sky.init();
         this.soundManager.init();
         this.hannah.init(this.loadingManager, this.animations)
-        this.lupo.init(this.loadingManager, this.animations)
+        //this.lupo.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
 
         // Animations init
@@ -255,7 +257,7 @@ export default class Game {
         //
 
         events.on("intro_end", () => {
-            this.lupo.play();
+            //this.lupo.play();
             this.hannah.play(); 
             document.getElementById("wasd-container").style.display = "block";
             setTimeout(() => {
@@ -267,8 +269,10 @@ export default class Game {
         this.charactersEnded = 0;
         events.on("character_ended", (name) => {
             this.charactersEnded++;
-            if (this.charactersEnded == 2) {
-                this.zoomOut();
+            if (this.charactersEnded == 1) {
+                setTimeout(() => {
+                    this.zoomOut();
+                },30000)
             }
         });
     }
@@ -304,7 +308,7 @@ export default class Game {
                this.vrControls.update();
             }
         this.hannah.update(dt,et);
-        this.lupo.update(dt,et);
+        //this.lupo.update(dt,et);
 
         /*
 
