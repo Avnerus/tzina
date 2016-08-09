@@ -6,14 +6,19 @@ uniform sampler2D positions;
 uniform sampler2D morphPositions;
 uniform float timer;
 uniform float maxDepth;
+uniform float maxDistance;
 varying vec2 vUv;
+
 
 void main() {
     vec3 pos = texture2D( positions, vUv ).rgb;
     vec3 morphPos = texture2D( morphPositions, vUv ).rgb;
-    pos = pos + (morphPos-pos) * timer;
+
+    if( timer<0.9 ){
+        pos = pos + (morphPos-pos) * timer;
+    }
     
-    vec3 velocity = curlNoise(pos) * 1.0;
+    vec3 velocity = curlNoise( pos * 0.8 ) * 0.006;
     pos = pos + velocity;
 
     /*

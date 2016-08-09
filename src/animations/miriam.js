@@ -20,8 +20,8 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.simulation_fs = glslify('../shaders/simulation_fs.glsl');
         this.simulation_vs = glslify('../shaders/simulation_vs.glsl');
 
-        this.width = 128;
-        this.height = 128;
+        this.width = 256;
+        this.height = 256;
 
         this.scene = scene;
         this.renderer = renderer;
@@ -184,7 +184,8 @@ export default class MiriamAnimation extends THREE.Object3D {
                 positions: { type: "t", value: positions },
                 timer: { type: "f", value: 0 },
                 maxDepth : { type: "f", value: this.maxDepth },
-                morphPositions: { type: "t", value: morphPositions }
+                morphPositions: { type: "t", value: morphPositions },
+                maxDistance: { type: "f", value: 50 }
             },
             vertexShader: this.simulation_vs,
             fragmentShader:  this.simulation_fs,
@@ -210,6 +211,8 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
         // this.fbo.particles.position.set( 50,0,-50 );
         this.scene.add( this.fbo.particles );
+
+        this.timerAnim = null;
 
         this.fbo.update();
         //
@@ -409,17 +412,27 @@ export default class MiriamAnimation extends THREE.Object3D {
                         let morphPositions = this.initParticles( this.manGeometries[i+1] );
 
                         // this.simulationShader.uniforms.positions.value = positions;
-                        this.simulationShader.uniforms.timer.value = 0;
+
+                        if(this.timerAnim!=null)
+                            this.timerAnim.kill();
+
+                        // this.simulationShader.uniforms.timer.value = 0;
                         this.simulationShader.uniforms.morphPositions.value = morphPositions;
+
+                        // this.timerAnim = TweenMax.to(this.simulationShader.uniforms.timer, 2, {value:1, ease: Power1.easeIn});
+                        this.timerAnim = TweenMax.fromTo(this.simulationShader.uniforms.timer, 2, {value:0}, {value:1, ease: Power4.easeInOut});
                     }
                 }
             }
         }
 
         // FBO
-        if(this.simulationShader.uniforms.timer.value<0.997)
-            this.simulationShader.uniforms.timer.value += 0.003;
-
         this.fbo.update();
+
+        // if(this.simulationShader.uniforms.timer.value<0.99)
+        //     this.simulationShader.uniforms.timer.value += 0.01;
+
+        // this.simulationShader.uniforms.curlTimer.value += 0.01;
+
     }
 }
