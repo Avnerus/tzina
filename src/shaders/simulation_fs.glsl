@@ -3,15 +3,23 @@
 #pragma glslify: rotationMatrix = require(./rotation)
 
 uniform sampler2D positions;
+uniform sampler2D morphPositions;
 uniform float timer;
 uniform float maxDepth;
 varying vec2 vUv;
 
 void main() {
     vec3 pos = texture2D( positions, vUv ).rgb;
-    //mat4 rotateY = rotationMatrix(vec3(0.0, 1.0, 0.0), random(vUv) * 0.01);
-    vec3 velocity = curlNoise(pos * 0.02) * 0.05;
+    vec3 morphPos = texture2D( morphPositions, vUv ).rgb;
+
+    if( timer<0.97 ){
+        pos = pos + (morphPos-pos) * timer;
+    }
+    
+    vec3 velocity = curlNoise( pos * 0.4 ) * 0.004;
     pos = pos + velocity;
+
+    //mat4 rotateY = rotationMatrix(vec3(0.0, 1.0, 0.0), random(vUv) * 0.01);
     //if (pos.y > 10.0) {
     //   pos = velocity;
     //}

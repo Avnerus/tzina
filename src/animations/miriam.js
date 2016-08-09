@@ -20,8 +20,8 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.simulation_fs = glslify('../shaders/simulation_fs.glsl');
         this.simulation_vs = glslify('../shaders/simulation_vs.glsl');
 
-        this.width = 128;
-        this.height = 128;
+        this.width = 256;
+        this.height = 256;
 
         this.scene = scene;
         this.renderer = renderer;
@@ -31,14 +31,16 @@ export default class MiriamAnimation extends THREE.Object3D {
     }
 
     initParticles( geo ) {
-        // let geometry = new THREE.CubeGeometry(100,20, 100);
+        this.manFigure.matrixWorldNeedsUpdate = true;
+
         let fboGeo = geo.clone();
-        fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(31, 6, 40) );
-        fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(170 * Math.PI / 180) );
+        fboGeo.applyMatrix( this.manFigure.matrixWorld );
 
         let data = new Float32Array( this.width * this.height * 3  );
         //let data = Util.getSphere(this.width * this.height, 128);
-        let points = THREE.GeometryUtils.randomPointsInGeometry( fboGeo, this.width * this.height);
+
+        // let points = THREE.GeometryUtils.randomPointsInGeometry( fboGeo, this.width * this.height);
+        let points = THREE.GeometryUtils.indexedPointsInGeometry( fboGeo, this.width * this.height, this.indexArray );
         for ( var i = 0, j = 0, l = data.length; i < l; i += 3, j += 1 ) {
             data[ i ] = points[ j ].x;
             data[ i + 1 ] = points[ j ].y;
@@ -46,6 +48,35 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
         let positions = new THREE.DataTexture( data, this.width, this.height, THREE.RGBFormat, THREE.FloatType );
         positions.needsUpdate = true;
+        
+        return positions;
+    }
+
+    initParticlesFirstEver( geo ) {
+        // this.manFigure.matrixWorldNeedsUpdate = true;
+
+        let fboGeo = geo.clone();
+        // console.log( this.manFigure.matrixWorld );
+        fboGeo.applyMatrix( this.manFigure.matrixWorld );
+
+        // fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(31, 6, 40) );
+        // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(170 * Math.PI / 180) );
+
+        let data = new Float32Array( this.width * this.height * 3  );
+        //let data = Util.getSphere(this.width * this.height, 128);
+
+        let results = THREE.GeometryUtils.randomPointsAndIndexInGeometry( fboGeo, this.width * this.height);
+        let points = results[0];
+        this.indexArray = results[1];
+
+        for ( var i = 0, j = 0, l = data.length; i < l; i += 3, j += 1 ) {
+            data[ i ] = points[ j ].x;
+            data[ i + 1 ] = points[ j ].y;
+            data[ i + 2 ] = points[ j ].z;
+        }
+        let positions = new THREE.DataTexture( data, this.width, this.height, THREE.RGBFormat, THREE.FloatType );
+        positions.needsUpdate = true;
+        
         return positions;
     }
 
@@ -64,15 +95,15 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.animStart = false;
         // time: anim start time; animFunction(_number): anim duration
         this.sequenceConfig = [
-            { time:  10, anim: ()=>{this.manAppear(10)} },
-            { time: 40, anim: ()=>{this.manHold(8)} },
-            { time: 65, anim: ()=>{this.manLean(6)} },
-            { time: 105, anim: ()=>{this.manCircle(6)} },
-            { time: 110, anim: ()=>{this.manSwirl(6)} },
-            { time: 115, anim: ()=>{this.manSwirl2(6)} },
-            { time: 120, anim: ()=>{this.manSwirl3(6)} },
-            { time: 125, anim: ()=>{this.manSwirlNonstop()} },
-            { time: 220, anim: ()=>{this.manSwirlSpeedup(20)} }
+            { time: 10, anim: ()=>{this.manAppear(10)} },           //10
+            { time: 20, anim: ()=>{this.manHold(8)} },              //40
+            { time: 30, anim: ()=>{this.manLean(6)} },              //65
+            { time: 40, anim: ()=>{this.manCircle(6)} },           //105
+            { time: 45, anim: ()=>{this.manSwirl(6)} },            //110
+            { time: 50, anim: ()=>{this.manSwirl2(6)} },           //115
+            { time: 55, anim: ()=>{this.manSwirl3(6)} },           //120
+            { time: 60, anim: ()=>{this.manSwirlNonstop()} },      //125
+            { time: 80, anim: ()=>{this.manSwirlSpeedup(20)} }     //220
         ];
 
         let GFClockTex = tex_loader.load(this.BASE_PATH + '/images/clockUV4.jpg');
@@ -103,7 +134,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
 
         // CREATE CURVE
-        let manMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, morphTargets: true});
+        let manMaterial = new THREE.MeshBasicMaterial({color: 0xcccccc, morphTargets: true, transparent: true, opacity: 0});
         let m_f_size2 = Object.keys(men_figures_vec).length;
 
         for(let i=1; i<=m_f_size2; i++) {
@@ -115,20 +146,26 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
 
         let curveColors = [];
+        this.manGeometries = [];
+
         let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.1, 2, true);
-        console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
+        this.manGeometries.push( manGeometry );
+
         for(let i=1; i<men_figures_points.length; i++){
             let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.1, 2, true);
             let nameee = 't'+(i-1);
             manGeometry.morphTargets[i-1] = {name: nameee, vertices: manGeometry2.vertices};
+
+            this.manGeometries.push( manGeometry2 );
         }
         manGeometry.computeMorphNormals();
 
         this.manFigure = new THREE.Mesh(manGeometry, manMaterial);
-        this.manFigure.scale.set(0.01,0.01,0.01);
+        // this.manFigure.scale.set(0.01,0.01,0.01);
         // manFigure.rotation.y = Math.PI;
-        this.manFigure.position.set(1,-7,-5);
-        console.log();
+
+        // this.manFigure.position.set(1,-7,-5);
+
         this.add( this.manFigure );
 
         this.completeSequenceSetup();
@@ -141,15 +178,17 @@ export default class MiriamAnimation extends THREE.Object3D {
         // manWorldPosition.setFromMatrixPosition( this.manFigure.matrixWorld );
 
         // FBO_PARTICLES
-        /*
-        let positions = this.initParticles( manGeometry );
+        let positions = this.initParticlesFirstEver( this.manGeometries[0] );
+        let morphPositions = this.initParticles( this.manGeometries[1] );
         this.rttIn = positions;
 
         this.simulationShader = new THREE.ShaderMaterial({
             uniforms: {
                 positions: { type: "t", value: positions },
                 timer: { type: "f", value: 0 },
-                maxDepth : { type: "f", value: this.maxDepth }
+                maxDepth : { type: "f", value: this.maxDepth },
+                morphPositions: { type: "t", value: morphPositions },
+                maxDistance: { type: "f", value: 50 }
             },
             vertexShader: this.simulation_vs,
             fragmentShader:  this.simulation_fs,
@@ -158,7 +197,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 2 }
+                pointSize: { type: "f", value: 1.3 }
             },
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,
@@ -168,13 +207,16 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         // Particle geometry? Just once particle
         var particleGeometry  = new THREE.Geometry();
+        // particleGeometry.vertices.push(new THREE.Vector3( 0,  0, 0 ), new THREE.Vector3(0, -1, 0), new THREE.Vector3(0,-1,-1));
         particleGeometry.vertices.push( new THREE.Vector3() );
 
-        this.fbo = new FBO()
+        this.fbo = new FBO();
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
-        this.fbo.particles.position.set( 50,0,-50 );
         this.scene.add( this.fbo.particles );
-        */
+
+        this.timerAnim = null;
+
+        this.fbo.update();
 
         //
         this.loadingManager.itemEnd("MiriamAnim");
@@ -188,7 +230,9 @@ export default class MiriamAnimation extends THREE.Object3D {
         }
     }
     manAppear (_duration) {
-        TweenMax.to( this.manFigure.scale, _duration, { x:1,y:1,z:1, ease: Power3.easeOut } );
+        this.manFigure.material.opacity = 1;
+        // TweenMax.to( this.manFigure.scale, _duration, { x:1,y:1,z:1, ease: Power3.easeOut } );
+        TweenMax.fromTo( this.manFigure.scale, _duration, {x:0.01,y:0.01,z:0.01}, { x:1,y:1,z:1, ease: Power3.easeOut } );
     }
     manHold (_duration) {
         let tmpEndArray = [1,0,0,0,0,0];
@@ -297,8 +341,9 @@ export default class MiriamAnimation extends THREE.Object3D {
                 this.grandFatherClock.add(bar);
             }
 
-            this.grandFatherClock.scale.multiplyScalar(0.05);
-            this.grandFatherClock.position.set(2, 3, -3.5);
+            this.grandFatherClock.scale.multiplyScalar(0.06);
+            // this.grandFatherClock.position.set(2, 3, -3.5);
+            this.grandFatherClock.position.set(0, 8, 1);
             // this.grandFatherClock.rotation.y = Math.PI;
 
             this.add(this.grandFatherClock);
@@ -357,11 +402,27 @@ export default class MiriamAnimation extends THREE.Object3D {
                     this.sequenceConfig[i].anim( this );
                     this.sequenceConfig[i].performed = true;
                     console.log("do anim sequence: " + i);
+
+                    if( i<this.manGeometries.length ){
+                        // update manGeometries ( e.g. sequenceConfig[0] --> for morph: manGeometries[1] )
+                        // let positions = this.initParticles( this.manGeometries[i] );
+                        let morphPositions = this.initParticles( this.manGeometries[i] );
+
+                        if(this.timerAnim!=null)
+                            this.timerAnim.kill();
+
+                        // this.simulationShader.uniforms.timer.value = 0;
+                        this.simulationShader.uniforms.morphPositions.value = morphPositions;
+
+                        // this.timerAnim = TweenMax.to(this.simulationShader.uniforms.timer, 2, {value:1, ease: Power1.easeIn});
+                        this.timerAnim = TweenMax.fromTo(this.simulationShader.uniforms.timer, 8, {value:0}, {value:1, ease: Power4.easeInOut});
+                    }
+
                 }
             }
         }
 
         // FBO
-        // this.fbo.update();
+        this.fbo.update();
     }
 }
