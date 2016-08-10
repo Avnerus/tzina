@@ -8,6 +8,13 @@ export default class Square extends THREE.Object3D{
     constructor() {
         super();
         console.log("Square constructed!")
+
+
+        this.ENTRY_POINTS = [
+            {
+                position: [22, 20, 34]
+            }
+        ]
     }
     init(collisionManager,loadingManager) {
         loadingManager.itemStart("Square");
@@ -36,10 +43,21 @@ export default class Square extends THREE.Object3D{
             // INITIAL STATE
             this.turnOffWindows();
             
+/*            events.emit("add_gui", obj.position, "x"); */
+            events.emit("add_gui",{}, obj.position, "y"); 
+            //events.emit("add_gui", obj.position, "z");
+            events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
+
             /*
-            events.emit("add_gui", this.fountain.position, "x"); 
-            events.emit("add_gui", this.fountain.position, "z");
-            events.emit("add_gui", this.fountain.position, "y"); */
+
+            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+            var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+            let cube = new THREE.Mesh( geometry, material );
+            obj.add( cube );
+            events.emit("add_gui",{}, cube.position, "x"); 
+            events.emit("add_gui",{}, cube.position, "y"); 
+            events.emit("add_gui",{}, cube.position, "z"); */
+
         });
     }
     update(dt) {
@@ -67,7 +85,7 @@ export default class Square extends THREE.Object3D{
                 console.log("Loaded square ", obj);
 
                 obj.position.y = -80;
-                obj.position.z = 100;
+                obj.position.z = 0;
                 obj.position.x = 0;
                 obj.scale.set( 4, 4, 4 );
 

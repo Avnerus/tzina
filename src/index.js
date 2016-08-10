@@ -24,6 +24,7 @@ window.onload = function() {
     var el = document.documentElement;
 
     document.getElementById('start-button').addEventListener('click',function(event) {
+        /*
         if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
             
             var pointer = lock(document.getElementById('game'));
@@ -36,7 +37,7 @@ window.onload = function() {
                 });
 
                 pointer.request(); 
-        }
+        }*/
 
         
         if (fullscreen.available()) {

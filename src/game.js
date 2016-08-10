@@ -51,10 +51,10 @@ export default class Game {
         //this.camera.rotation.x = 0.22;
 
 
-                // let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
-                // this.scene.add( helper );
-                // let axis = new THREE.AxisHelper(75);
-                // this.scene.add(axis);
+                 let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
+                 this.scene.add( helper );
+                 let axis = new THREE.AxisHelper(75);
+                 this.scene.add(axis);
         //
 
         // LIGHT
@@ -161,6 +161,9 @@ export default class Game {
         // Intro
         this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
 
+        this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
+        this.zoomController.init();
+
     }
 
     load(onLoad) {
@@ -171,6 +174,19 @@ export default class Game {
             this.sky.applyToMesh(this.square.getSphereMesh());
             //this.scene.add(this.lupo)
             this.scene.add(this.hannah)
+
+
+            // DEBUG
+            var geometry = new THREE.BoxGeometry( 5, 5, 5 );
+            var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+            let cube = new THREE.Mesh( geometry, material );
+            this.square.mesh.updateMatrixWorld(true);
+            cube.position.fromArray(this.square.ENTRY_POINTS[0].position).applyMatrix4(this.square.mesh.matrixWorld);
+            this.scene.add( cube );
+            events.emit("add_gui",{}, cube.position, "x"); 
+            events.emit("add_gui",{}, cube.position, "y"); 
+            events.emit("add_gui",{}, cube.position, "z"); 
+
 
             /*
 
@@ -230,8 +246,6 @@ export default class Game {
                 this.vrControls.standing = true;
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
-                //this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
-                //this.zoomController.init();
 
 
         } else {
@@ -250,6 +264,8 @@ export default class Game {
             this.hannah.play(); 
         } else {
             // Init the intro
+
+            this.sky.transitionTo(17,1);
             this.intro.init();
         }
 
@@ -299,7 +315,7 @@ export default class Game {
         this.square.update();
         if (this.keyboardController) {
             this.keyboardController.update(dt);
-            //this.zoomController.update(dt);
+            this.zoomController.update(dt);
         }
         if (this.vrControls) {
                this.vrControls.update();

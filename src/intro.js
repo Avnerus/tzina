@@ -30,10 +30,17 @@ export default class Intro {
            }
         ]
 
+        
+        /*
         this.STARTING_POSITION = new THREE.Vector3(
             312.6124548161197,
             50,
             1297.4795914541091
+        );*/
+        this.STARTING_POSITION = new THREE.Vector3(
+            0,
+            50,
+            1400
         );
 
         this.STARTING_ROTATION = new THREE.Euler (
@@ -57,9 +64,11 @@ export default class Intro {
 
     init() {
         // Put the camera in the starting position
-        events.emit("intro_start");
+//        events.emit("intro_start");
         this.camera.position.copy(this.STARTING_POSITION);
-        this.camera.rotation.copy(this.STARTING_ROTATION);
+        //this.camera.rotation.copy(this.STARTING_ROTATION);
+        
+        /*
 
         this.titlePlane.position.copy(this.square.getCenterPosition());
         this.titlePlane.position.y = 400;
@@ -79,7 +88,7 @@ export default class Intro {
                 //this.zoomToSquare();
 
             },3000);
-        });
+        }); */
 
     }
 
