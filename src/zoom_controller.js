@@ -66,9 +66,9 @@ export default class ZoomController {
     calculateEntryQuaternion() {
         this.originalQuaternion = this.camera.quaternion;
         let cameraClone = this.camera.clone();
-        console.log("Camera clone quaternion: ", cameraClone.quaternion);
-        cameraClone.translateZ(1000);
         let entryPoint = new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[0].position).applyMatrix4(this.square.mesh.matrixWorld);
+        console.log("Camera clone quaternion: ", cameraClone.quaternion);
+        //cameraClone.translateZ(1000);
         cameraClone.lookAt(entryPoint);
 
         this.entryQuaternion = cameraClone.quaternion;
@@ -118,6 +118,8 @@ export default class ZoomController {
             let p = Math.min(1,(1400 - this.camera.position.z)/1000);
             console.log(p);
             THREE.Quaternion.slerp(this.originalQuaternion, this.entryQuaternion, this.camera.quaternion, p);
+
+            this.camera.position.y = 50 - 40 * p;
             this.camera.updateProjectionMatrix();
 
 
