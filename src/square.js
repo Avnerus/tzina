@@ -12,7 +12,8 @@ export default class Square extends THREE.Object3D{
 
         this.ENTRY_POINTS = [
             {
-                position: [22, 20, 34]
+                startPosition: [21, 20, 34],
+                endPosition: [15, 22, 14]
             }
         ]
     }

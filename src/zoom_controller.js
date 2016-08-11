@@ -1,9 +1,10 @@
 import $ from 'jquery-browserify'
 import JQueryMouseWheel from 'jquery-mousewheel';
-import { easeOutQuad } from 'easing-utils';
+import { easeOutQuad, easeInQuart } from 'easing-utils';
+import DebugUtil from './util/debug'
 
 export default class ZoomController {
-    constructor(config, emitter, camera, square) {
+    constructor(config, emitter, camera, square, scene) {
         this.camera = camera;
         this.square = square;
         this.recalculateZoom = true;
@@ -13,6 +14,9 @@ export default class ZoomController {
         this.lastCameraOrientation = new THREE.Quaternion();
         this.lastCameraOrientation.y = 1;
         this.config = config;
+        this.scene = scene;
+
+        this.distanceOnCurve = 0;
 
         //this.MAX_DISTANCE = 830;
         this.MAX_DISTANCE = 9500;
@@ -40,7 +44,7 @@ export default class ZoomController {
                     break;
                 case 85: // u
                     event.preventDefault();
-                    this.calculateEntryQuaternion();
+                    this.calculateZoomCurve();
                     break;
             }
             return false;
@@ -63,20 +67,35 @@ export default class ZoomController {
         this.zoomVector.y = 0;
     }
 
-    calculateEntryQuaternion() {
-        this.originalQuaternion = this.camera.quaternion;
-        let cameraClone = this.camera.clone();
-        let entryPoint = new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[0].position).applyMatrix4(this.square.mesh.matrixWorld);
-        console.log("Camera clone quaternion: ", cameraClone.quaternion);
-        //cameraClone.translateZ(1000);
-        cameraClone.lookAt(entryPoint);
+    calculateZoomCurve() {
+        this.calculateZoomVector();
+        let entryPoint = new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[0].startPosition).applyMatrix4(this.square.mesh.matrixWorld);
+        let endPoint = new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[0].endPosition).applyMatrix4(this.square.mesh.matrixWorld);
+        let movement = new THREE.Vector3();
+        movement.copy(this.zoomVector).multiplyScalar(-100);
+        let midPoint = new THREE.Vector3().copy(this.camera.position);
+        midPoint.z = 700;
+        midPoint.y = entryPoint.y + 0.5 * (this.camera.position.y - entryPoint.y);
+        console.log("Creating curv. Points: ", this.camera.position, midPoint, entryPoint, endPoint);
+        this.zoomCurve = new THREE.CatmullRomCurve3( [
+            new THREE.Vector3().copy(this.camera.position),
+            midPoint,
+            entryPoint,
+            endPoint
+        ] )
+        console.log(this.zoomCurve);
+        this.scene.add(DebugUtil.drawCurve(this.zoomCurve, 0x0000ff));
 
-        this.entryQuaternion = cameraClone.quaternion;
-        this.entryQuaternion.x = 0;
-        console.log("Entet quaternion: ", this.entryQuaternion);
-        //this.camera.quaternion.copy(this.entryQuaternion);
+        events.emit("add_gui",{
+            onChange: () => {
+                this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
+                if (this.distanceOnCurve <= 0.9) {
+                    this.camera.lookAt(this.zoomCurve.getPoint(this.distanceOnCurve + 0.1));
+                }
+            }
+        }, this, "distanceOnCurve", 0, 1); 
     }
-    
+
     update(dt) {
         if (this.velocityZ != 0) {
             if (!this.camera.quaternion.equals(this.lastCameraOrientation)) {
@@ -86,8 +105,13 @@ export default class ZoomController {
                 //TweenMax.to(this.camera.position, 1, {x:zoomPosition.x, y: zoomPosition.y, z:zoomPosition.z});
 
             }
-            let scalar = 0;
-            let distanceToSquare = this.camera.position.distanceTo(this.square.getCenterPosition());
+            //let scalar = 0;
+            //let distanceToSquare = this.camera.position.distanceTo(this.square.getCenterPosition());
+            //let distanceToEntry  = this.camera.position.distanceTo(this.entryPoint);
+
+            //console.log("Distance to square ", distanceToSquare, "Distance to entry point ", distanceToEntry);
+
+            /*
             if (distanceToSquare > this.MAX_DISTANCE && this.velocityZ < 0) {
                 scalar = 0;
             } else if (distanceToSquare > this.DISTANCE_BEFORE_RISING) {
@@ -99,7 +123,7 @@ export default class ZoomController {
                 scalar = this.velocityZ * -3.0 * dt * (2 - progress);
             } else {
                 scalar = this.velocityZ * -3.5 * dt;
-            }
+            }*/
             
             //console.log(distanceToSquare);
             /*
@@ -110,17 +134,28 @@ export default class ZoomController {
                 }*/
 
                  
+        /*
+            scalar = this.velocityZ * -3.5 * dt;
+
             let movement = new THREE.Vector3();
             movement.copy(this.zoomVector).multiplyScalar(scalar);
             this.camera.position.add(movement);
 
             // SLERP into entry point
-            let p = Math.min(1,(1400 - this.camera.position.z)/1000);
+            //let p = Math.min(1,(1400 - this.camera.position.z)/180000);
+            let p = (1- (distanceToEntry / this.distanceToEntry));
             console.log(p);
-            THREE.Quaternion.slerp(this.originalQuaternion, this.entryQuaternion, this.camera.quaternion, p);
+            THREE.Quaternion.slerp(this.originalQuaternion, this.entryQuaternion, this.camera.quaternion, p * 0.0062);
 
-            this.camera.position.y = 50 - 40 * p;
-            this.camera.updateProjectionMatrix();
+            this.camera.position.y = this.originalHeight - (this.originalHeight - this.entryPoint.y) * p;
+            this.camera.updateProjectionMatrix();*/
+
+
+            this.distanceOnCurve += this.velocityZ * dt * 0.001;
+            console.log(this.distanceOnCurve);
+            this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
+            this.camera.lookAt(this.zoomCurve.getPoint(this.distanceOnCurve + 0.01));
+        
 
 
             if (this.velocityZ > 0) {

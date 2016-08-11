@@ -13,10 +13,13 @@ import ZoomController from './zoom_controller'
 import TzinaVRControls from './tzina_vr_controls'
 import Intro from './intro'
 import SoundManager from './sound_manager'
+import TimeController from './time_controller'
 
 // Animations
 import HannahAnimation from './animations/hannah'
 import LupoAnimation from './animations/lupo'
+
+import DebugUtil from './util/debug'
 
 export default class Game {
     constructor(config) {
@@ -36,6 +39,8 @@ export default class Game {
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
         this.renderer.setPixelRatio(window.devicePixelRatio);
+
+        this.container = document.getElementById('game');
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
@@ -161,8 +166,11 @@ export default class Game {
         // Intro
         this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
 
-        this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
+        this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
         this.zoomController.init();
+
+        this.timeController = new TimeController(this.config, this.container, this.square);
+        this.timeController.init();
 
     }
 
@@ -176,17 +184,22 @@ export default class Game {
             this.scene.add(this.hannah)
 
 
-            // DEBUG
-            var geometry = new THREE.BoxGeometry( 5, 5, 5 );
-            var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-            let cube = new THREE.Mesh( geometry, material );
             this.square.mesh.updateMatrixWorld(true);
-            cube.position.fromArray(this.square.ENTRY_POINTS[0].position).applyMatrix4(this.square.mesh.matrixWorld);
-            this.scene.add( cube );
-            events.emit("add_gui",{}, cube.position, "x"); 
-            events.emit("add_gui",{}, cube.position, "y"); 
-            events.emit("add_gui",{}, cube.position, "z"); 
+            let cube = DebugUtil.adjustableCube(
+                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[0].startPosition),
+                "Ramp entry",
+                1,
+                0xff0000
+            )
+            this.square.mesh.add( cube );
 
+            cube = DebugUtil.adjustableCube(
+                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[0].endPosition),
+                "Ramp end",
+                1,
+                0x00ffff
+            )
+            this.square.mesh.add( cube );
 
             /*
 
@@ -237,7 +250,6 @@ export default class Game {
         this.started = true;
         this.vrManager.setMode_(2);
         let element = this.renderer.domElement;
-        this.container = document.getElementById('game');
         this.container.appendChild(element);
         this.soundManager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
@@ -317,6 +329,7 @@ export default class Game {
             this.keyboardController.update(dt);
             this.zoomController.update(dt);
         }
+        this.timeController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
             }
