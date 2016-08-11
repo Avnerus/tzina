@@ -206,6 +206,10 @@ export default class Game {
         this.character = new Character(this.miriamConfig);
         this.character.init(this.loadingManager, this.animations);
         this.character.animation.position.fromArray([1,-7,-5]);
+
+        this.character.animation.character = this.character;
+        // this.character.animation.character.fullVideo.setOpacity(0.2);
+
         this.scene.add(this.character);
         this.character.play();
         document.getElementById('subtitles2').style.display = "none";

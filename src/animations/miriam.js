@@ -53,13 +53,12 @@ export default class MiriamAnimation extends THREE.Object3D {
     }
 
     initParticlesFirstEver( geo ) {
-        // this.manFigure.matrixWorldNeedsUpdate = true;
-
         let fboGeo = geo.clone();
-        // console.log( this.manFigure.matrixWorld );
-        fboGeo.applyMatrix( this.manFigure.matrixWorld );
+        // this.manFigure.matrixWorldNeedsUpdate = true;
+        // fboGeo.applyMatrix( this.manFigure.matrixWorld );
 
-        // fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(31, 6, 40) );
+        fboGeo.applyMatrix( new THREE.Matrix4().makeScale(0.1,0.1,0.1) );
+        fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(31, 0, 37) );
         // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(170 * Math.PI / 180) );
 
         let data = new Float32Array( this.width * this.height * 3  );
@@ -219,7 +218,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.timerAnim = null;
 
         this.fbo.update();
-
+        // this.updateMorphForFBO( this.manGeometries[0], 10 );
         //
         this.loadingManager.itemEnd("MiriamAnim");
 
@@ -424,6 +423,8 @@ export default class MiriamAnimation extends THREE.Object3D {
         if(!this.animStart){
             this.animStartTime = et;
             this.animStart = true;
+            //
+            // this.updateMorphForFBO( this.manGeometries[0], 50 );
         }
 
         if(this.animStart){
