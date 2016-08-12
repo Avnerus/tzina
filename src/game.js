@@ -102,13 +102,13 @@ export default class Game {
             mindepth : 2138.454101562,
             maxdepth : 3047.334472656,
             position : [-32, 8.1, 152.5],
-            rotation: [-19, 45, 15],
+            rotation: [0,0,0],
             name: 'Haim',
             animation: 'Haim',
             uvd: 0.440277,
             scale: 0.005,
             animationPosition: [0,-1.5,-2.2],
-            animationRotation: [20, 0, 0],
+            animationRotation: [0, 0, 0],
             space: 7,
             subtitles: "subtitles"
         }, this.collisionManager);
@@ -188,7 +188,7 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            
+
             // this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
             //this.scene.add(this.lupo)
@@ -280,9 +280,10 @@ export default class Game {
 
         if (this.config.skipIntro) {
             // Get in the square
-            this.keyboardController.setPosition(-15, 10, 167);
+            this.keyboardController.setPosition(-35, 10, 177);
             this.sky.transitionTo(17,1);
-            this.hannah.play(); 
+            // this.hannah.play(); 
+            this.haim.play(); 
         } else {
             // Init the intro
 
