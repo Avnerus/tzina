@@ -2,10 +2,11 @@ import Chapters from './chapters'
 import MathUtil from './util/math'
 
 export default class TimeController {
-    constructor(config, element, square) {
+    constructor(config, element, square, sky) {
         this.square = square;
         this.config = config;
         this.element = element;
+        this.sky = sky;
         
         this.rotateVelocity = 0;
         this.currentRotation = 0;
@@ -26,7 +27,8 @@ export default class TimeController {
                 rotationY = 2 * Math.PI + rotationY;
             }
             this.currentRotation = rotationY * 180 / Math.PI;
-            console.log(this.currentRotation);
+//            console.log(this.currentRotation + " :: " + this.currentRotation / 15);
+            this.sky.setTime(this.currentRotation / 15);
         }
     }
 
@@ -34,10 +36,8 @@ export default class TimeController {
         //console.log("Time move! ", e.pageX + "/" + this.element.offsetWidth);
         if (e.pageX > this.element.offsetWidth * 2 / 3) {
             this.rotateVelocity = (e.pageX - this.element.offsetWidth * 2 /3) / (this.element.offsetWidth / 3);
-            console.log("Time velocity: " + this.rotateVelocity);
         } else if (e.pageX < this.element.offsetWidth / 3) {
             this.rotateVelocity = (this.element.offsetWidth / 3 - e.pageX) / (this.element.offsetWidth / 3) * -1;
-            console.log("Time velocity: " + this.rotateVelocity);
         } else {
             if (this.rotateVelocity != 0) {
                 // We stopped

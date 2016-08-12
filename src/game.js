@@ -169,7 +169,7 @@ export default class Game {
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
         this.zoomController.init();
 
-        this.timeController = new TimeController(this.config, this.container, this.square);
+        this.timeController = new TimeController(this.config, this.container, this.square, this.sky);
         this.timeController.init();
 
     }
@@ -276,8 +276,6 @@ export default class Game {
             this.hannah.play(); 
         } else {
             // Init the intro
-
-            this.sky.transitionTo(17,1);
             this.intro.init();
         }
 
