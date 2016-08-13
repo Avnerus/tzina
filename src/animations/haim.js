@@ -25,8 +25,8 @@ export default class HaimAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{this.tubeDown(0.5)} },
-            { time: 15, anim: ()=>{this.tubeOut(0.5)} }
+            { time: 5,  anim: ()=>{this.tubeDown(1)} },
+            { time: 20, anim: ()=>{this.tubeOut(0.5)} }
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -93,6 +93,16 @@ export default class HaimAnimation extends THREE.Object3D {
         //     }
         // }
 
+        // CLOUND
+        let cloudTex = tex_loader.load( this.BASE_PATH + '/images/clouds.png' );
+        // cloudTex.repeat.y = 2;
+        this.cloudMat = new THREE.MeshBasicMaterial( {color: 0x00ffff, map: cloudTex, blending: "AdditiveBlending", transparent: true, side: THREE.DoubleSide, opacity: 0.4} );
+        // let cloudGeo = new THREE.PlaneGeometry(4,7);
+        // this.transY(cloudGeo, 3);
+        // this.cloud = new THREE.Mesh( cloudGeo, this.cloudMat );
+        // this.cloud.rotation.x = Math.PI/2;
+        // this.cloud.scale.multiplyScalar(0.01);
+
         // TUBE_BAG
         this.bag;
         this.bagTexs = [];
@@ -102,65 +112,7 @@ export default class HaimAnimation extends THREE.Object3D {
             let bagTex = tex_loader.load( bagFiles[i] );
             this.bagTexs.push( bagTex );
         }
-        // let bagTex = tex_loader.load(this.BASE_PATH + '/images/tubeBag.jpg');
-
-        loader.load(this.BASE_PATH + "/models/haim_tubeBag.json", (geometry, material) => {
-            this.bag = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( {map: this.bagTexs[0], transparent: true} ) );
-            // this.add( bag );
-            // for(let i=0; i<this.liquidInTubes.length; i++){
-            //     let theBag = this.bag.clone();
-            //     let lengthhh = this.liquidInTubes[i].geometry.vertices.length-1;
-            //     this.liquidInTubes[i].matrixWorldNeedsUpdate = true;
-            //     this.liquidInTubes[i].geometry.applyMatrix( this.liquidInTubes[i].matrixWorld );
-            //     // console.log(this.liquidInTubes[i].geometry.vertices);
-            //     theBag.position.copy( this.liquidInTubes[i].geometry.vertices[lengthhh] );
-            //     this.add( theBag );
-            // }
-
-            // CREATE CURVE
-            this.cvMaterial = new THREE.MeshBasicMaterial({color: 0x00ffff, wireframe: true, morphTargets: true, transparent: true, opacity: 0.1});
-            this.liquidMaterial = new THREE.MeshBasicMaterial({map: liquidTex, transparent: true, opacity: 0.9});
-            this.liquidDown = false;
-            this.createCurve( new THREE.Vector3(), new THREE.Vector3() );
-            this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,1,0) );
-            this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,-2,0) );
-        });     
-
-        // // CREATE CURVE
-        // this.cvMaterial = new THREE.MeshBasicMaterial({color: 0x00ffff, wireframe: true, morphTargets: true, transparent: true, opacity: 0.1});
-        // this.liquidMaterial = new THREE.MeshBasicMaterial({map: liquidTex, transparent: true, opacity: 0.9});
-        // this.liquidDown = false;
-        // this.createCurve( new THREE.Vector3(), new THREE.Vector3() );
-        // this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,1,0) );
-        // this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,-2,0) );
-   
-        // let c_size2 = Object.keys(curve_vec).length;
-
-        // for(let i=0; i<c_size2; i++) {
-        //     let cSpline = new THREE.CatmullRomCurve3( curve_vec[i] );
-        //     cSpline.type = 'chordal';
-        //     // cSpline.closed = true;
-        //     // let manCurve = manSpline.getPoints( 50 );
-        //     curve_points.push(cSpline);
-        // }
- 
-        // let curveColors = [];
-
-        // let cvGeometry = new THREE.TubeGeometry( curve_points[0], 120, 0.1, 5, false);
-        
-        // // console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
-        // for(let i=1; i<curve_points.length; i++){
-        //     let cvGeometry2 = new THREE.TubeGeometry( curve_points[i], 120, 0.1, 5, false);
-        //     let nameee = 't'+(i-1);
-        //     cvGeometry.morphTargets[i-1] = {name: nameee, vertices: cvGeometry2.vertices};
-        // }
-        // cvGeometry.computeMorphNormals();
-
-        // this.cvTube1 = new THREE.Mesh(cvGeometry, cvMaterial);
-        // // this.cvTube1.scale.set(5,5,5);
-        // // this.cvTube1.rotation.y = Math.PI;
-        // // this.cvTube1.position.set(1,0,-2);
-        // this.add( this.cvTube1 );
+        // let bagTex = tex_loader.load(this.BASE_PATH + '/images/tubeBag.jpg');   
 
         // OUT_BOUND CURVES
         let curveOutData = [ {"0": [["-0.147", "1.266", "0.000"], ["0.065", "1.479", "0.000"], ["0.207", "1.585", "0.000"], ["0.384", "1.869", "0.000"], ["0.597", "2.188", "0.000"]], "1": [["-0.147", "1.266", "0.000"], ["0.233", "1.658", "0.000"], ["0.630", "2.155", "0.000"], ["1.191", "2.917", "0.000"], ["1.528", "3.654", "0.000"]], "2": [["-0.147", "1.266", "0.000"], ["0.758", "2.335", "0.000"], ["1.724", "3.843", "0.000"], ["2.172", "6.088", "0.000"], ["2.369", "8.359", "0.000"]], "3": [["-0.147", "1.266", "0.000"], ["1.466", "2.775", "0.000"], ["2.347", "5.554", "0.000"], ["2.663", "9.469", "0.000"], ["2.790", "12.589", "0.000"]], "4": [["-0.147", "1.266", "0.000"], ["1.896", "2.992", "0.000"], ["2.635", "6.535", "0.000"], ["2.875", "11.431", "0.000"], ["2.972", "14.938", "0.000"]]},
@@ -184,20 +136,40 @@ export default class HaimAnimation extends THREE.Object3D {
                                                        Number(curveOutData[k][i][j][1]),
                                                        Number(curveOutData[k][i][j][2]) );
                     // scale down
-                        newVector.multiplyScalar(0.7);
-                        // newVector.multiply( new THREE.Vector3(1,2,1) );
+                        // newVector.multiplyScalar(0.7);
+                        newVector.multiply( new THREE.Vector3(0.9,0.6,0.9) );
                     curve_vec[i].push( newVector );
                 }
             }
             this.outTubesVec.push( curve_vec );
         }
 
-        // CREATE OUT_CURVES
-        this.cvOutMaterial = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true, morphTargets: true, transparent: true, opacity: 0.1});
-        this.liquidOutMaterial = new THREE.MeshBasicMaterial({map: liquidOutTex, transparent: true, opacity: 0.9});
-        this.liquidOut = false;
-        this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,1,0) );
-        this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,-1,0) );
+        loader.load(this.BASE_PATH + "/models/haim_tubeBag.json", (geometry, material) => {
+            this.bag = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( {map: this.bagTexs[0], transparent: true} ) );
+            
+            loader.load(this.BASE_PATH + "/models/cloud.json", (geometry, material) => {
+                // let cloudGeo = new THREE.PlaneGeometry(4,7);
+                // this.transY(cloudGeo, 3);
+                this.cloud = new THREE.Mesh( geometry, this.cloudMat );
+                // this.cloud.rotation.x = Math.PI/2;
+                this.cloud.scale.multiplyScalar(0.01);
+
+                // CREATE CURVE
+                this.cvMaterial = new THREE.MeshBasicMaterial({color: 0x00ffff, wireframe: true, morphTargets: true, transparent: true, opacity: 0.1});
+                this.liquidMaterial = new THREE.MeshBasicMaterial({map: liquidTex, transparent: true, opacity: 0.9});
+                this.liquidDown = false;
+                this.createCurve( new THREE.Vector3(), new THREE.Vector3() );
+                this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,0.25,0) );
+                this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,-0.5,0) );
+
+                // CREATE OUT_BOUDN CURVE
+                this.cvOutMaterial = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true, morphTargets: true, transparent: true, opacity: 0.1});
+                this.liquidOutMaterial = new THREE.MeshBasicMaterial({map: liquidOutTex, transparent: true, opacity: 0.9});
+                this.liquidOut = false;
+                this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,0.3,0) );
+                this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,-0.2,0) );
+            });
+        });  
 
         //
         this.loadingManager.itemEnd("HaimAnim");
@@ -250,6 +222,12 @@ export default class HaimAnimation extends THREE.Object3D {
             theBag.rotation.y = -rot.y;
             tubeObject.add( theBag );
 
+            // children_3 -> COULDS
+            let theCloud = this.cloud.clone();
+            lengthhh = liquidGeo.vertices.length-1;
+            theCloud.position.copy( liquidGeo.vertices[lengthhh] );
+            tubeObject.add( theCloud );
+
             tubeObject.position.copy( pos );
             tubeObject.rotation.set( rot.x, rot.y, rot.z );
             this.tubes.push( tubeObject );
@@ -288,6 +266,14 @@ export default class HaimAnimation extends THREE.Object3D {
             let liquidGeo = new THREE.TubeGeometry( curve_points[curve_points.length-1], this.ARC_SEGMENTS, 0.03, 3, false);
             let tubeLiquid = new THREE.Mesh(liquidGeo, this.liquidOutMaterial);
             tubeObject.add( tubeLiquid );
+
+            // children_2 -> COULDS
+            let theCloud = this.cloud.clone();
+            let lengthhh = liquidGeo.vertices.length-1;
+            theCloud.position.copy( liquidGeo.vertices[lengthhh] );
+            // theBag.scale.multiplyScalar( this.clamp(this.lookupTable[j], 0.3, 1) );
+            // theBag.rotation.y = -rot.y;
+            tubeObject.add( theCloud );
 
             tubeObject.position.copy( pos );
             tubeObject.rotation.set( rot.x, rot.y, rot.z );
@@ -366,14 +352,18 @@ export default class HaimAnimation extends THREE.Object3D {
             targets.push( this.tubes[i].children[0].morphTargetInfluences );
         }
         this.tl = new TimelineMax();    //{repeat: -1}
-        this.tl.to( targets, _duration*2, { endArray: tmpEndArray, ease: Power0.easeNone, onStart: ()=>{
+        this.tl.to( targets, _duration, { endArray: tmpEndArray, ease: Power0.easeNone, onStart: ()=>{
                     this.tubes[0].children[1].material.map.offset.x=-1.5;
                }} )
-               .to( targets, _duration*2, { endArray: tmpEndArray2, ease: Power0.easeNone })
-               .to( targets, _duration*2, { endArray: tmpEndArray3, ease: Power0.easeNone })
-               .to( targets, _duration, { endArray: tmpEndArray4, ease: Power0.easeNone, onStart: ()=>{
+               .to( targets, _duration, { endArray: tmpEndArray2, ease: Power0.easeNone })
+               .to( targets, _duration, { endArray: tmpEndArray3, ease: Power0.easeNone })
+               .to( targets, _duration/1.5, { endArray: tmpEndArray4, ease: Back.easeInOut.config(2.5), onStart: ()=>{
                     this.tubes[0].children[1].material.map.offset.x=-1.5;
                     this.liquidDown = true;
+               }, onComplete: ()=>{
+                    for(let i=0; i<this.tubes.length; i++){
+                        TweenMax.to( this.tubes[i].children[2].scale, _duration*(this.clamp(this.tubes[i].children[2].scale.x, 0.5, 1)*20), { x: 0.01, y: 0.01, z: 0.01, ease: Bounce.easeInOut } );
+                    }
                } });
     }
 
@@ -387,14 +377,18 @@ export default class HaimAnimation extends THREE.Object3D {
             targets.push( this.outTubes[i].children[0].morphTargetInfluences );
         }
         this.tl = new TimelineMax();    //{repeat: -1}
-        this.tl.to( targets, _duration, { endArray: tmpEndArray, ease: Power0.easeNone, onStart: ()=>{
+        this.tl.to( targets, _duration*1.5, { endArray: tmpEndArray, ease: Back.easeInOut.config(2.5), onStart: ()=>{
                     // this.tubes[0].children[1].material.map.offset.x=-1.5;
                }} )
                .to( targets, _duration*2, { endArray: tmpEndArray2, ease: Power0.easeNone })
                .to( targets, _duration*2, { endArray: tmpEndArray3, ease: Power0.easeNone })
-               .to( targets, _duration*2, { endArray: tmpEndArray4, ease: Power0.easeNone, onStart: ()=>{
+               .to( targets, _duration*2, { endArray: tmpEndArray4, ease: Power0.easeNone, onComplete: ()=>{
                     // this.tubes[0].children[1].material.map.offset.x=-1.5;
                     this.liquidOut = true;
+                    for(let i=0; i<this.outTubes.length; i++){
+                        TweenMax.to( this.outTubes[i].children[2].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone } );
+                        TweenMax.to( this.tubes[i].children[3].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone } );
+                    }
                } });
     }
 
