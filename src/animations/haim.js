@@ -6,9 +6,46 @@ import EndArrayPlugin from '../util/EndArrayPlugin'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class HaimAnimation extends THREE.Object3D {
-    constructor() {
+    constructor( scene, renderer ) {
         super();
         this.BASE_PATH = 'assets/animations/haim';
+
+        // FBO_PARTICLES
+        // ref: https://github.com/Avnerus/nao-game-client/blob/master/beam.js
+        const glslify = require('glslify');
+
+        // Shaders
+        this.render_fs = glslify('../shaders/haim/render_fs.glsl');
+        this.render_vs = glslify('../shaders/haim/render_vs.glsl');
+        this.simulation_fs = glslify('../shaders/haim/simulation_fs.glsl');
+        this.simulation_vs = glslify('../shaders/haim/simulation_vs.glsl');
+
+        this.width = 128;
+        this.height = 128;
+
+        this.scene = scene;
+        this.renderer = renderer;
+        this.maxDepth = 50.0;
+
+        console.log("FBO Constructed!")
+    }
+
+    initParticles( geo ) {
+        let fboGeo = geo.clone();
+        fboGeo.applyMatrix( new THREE.Matrix4().makeScale(2,2,2) );
+        fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(-32, 20, 154) );
+        // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(170 * Math.PI / 180) );
+
+        let data = new Float32Array( this.width * this.height * 3  );
+        let points = THREE.GeometryUtils.randomPointsInGeometry( fboGeo, this.width * this.height);
+        for ( var i = 0, j = 0, l = data.length; i < l; i += 3, j += 1 ) {
+            data[ i ] = points[ j ].x;
+            data[ i + 1 ] = points[ j ].y;
+            data[ i + 2 ] = points[ j ].z;
+        }
+        let positions = new THREE.DataTexture( data, this.width, this.height, THREE.RGBFormat, THREE.FloatType );
+        positions.needsUpdate = true;
+        return positions;
     }
 
     init(loadingManager) {
@@ -176,9 +213,53 @@ export default class HaimAnimation extends THREE.Object3D {
         boneTex.wrapS = boneTex.wrapT = THREE.RepeatWrapping;
         boneTex.repeat.set( 5, 5 );
         loader.load(this.BASE_PATH + "/models/spine.json", (geometry, material) => {
+            this.boneGeo = geometry.clone();
             this.spine = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({map: boneTex}) );
             this.add( this.spine );
-        });        
+        });
+
+
+        // FBO_PARTICLES
+        let particleGeo = new THREE.BoxGeometry(5,5,5);
+        let positions = this.initParticles( particleGeo );
+        this.rttIn = positions;
+
+        this.simulationShader = new THREE.ShaderMaterial({
+            uniforms: {
+                positions: { type: "t", value: positions },
+                timer: { type: "f", value: 0 },
+                maxDepth : { type: "f", value: this.maxDepth },
+                maxDistance: { type: "f", value: 50 },
+                amplitude: { type: "f", value: 0.004 },
+                frequency: { type: "f", value: 0.4 }
+                // acce: { type: "f", value: 0 }
+            },
+            vertexShader: this.simulation_vs,
+            fragmentShader:  this.simulation_fs,
+        });
+
+        this.renderShader = new THREE.ShaderMaterial( {
+            uniforms: {
+                positions: { type: "t", value: null },
+                pointSize: { type: "f", value: 1 }
+            },
+            vertexShader: this.render_vs,
+            fragmentShader: this.render_fs,
+            transparent: true,
+            blending:THREE.AdditiveBlending,
+        } );
+
+        // Particle geometry? Just once particle
+        var particleGeometry  = new THREE.Geometry();
+        // particleGeometry.vertices.push(new THREE.Vector3(), new THREE.Vector3(0, -0.05, -0.1), new THREE.Vector3(0,-0.05,0.1));
+        particleGeometry.vertices.push( new THREE.Vector3() );
+
+        this.fbo = new FBO();
+        this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
+        this.add( this.fbo.particles );
+        this.timerAnim = null;
+        this.fbo.particles.position.y = 1000;
+        // this.fbo.update();
 
         //
         this.loadingManager.itemEnd("HaimAnim");
@@ -394,6 +475,7 @@ export default class HaimAnimation extends THREE.Object3D {
                .to( targets, _duration*2, { endArray: tmpEndArray4, ease: Power0.easeNone, onComplete: ()=>{
                     // this.tubes[0].children[1].material.map.offset.x=-1.5;
                     this.liquidOut = true;
+                    this.fbo.particles.position.y = 0;
                     for(let i=0; i<this.outTubes.length; i++){
                         TweenMax.to( this.outTubes[i].children[2].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone } );
                         TweenMax.to( this.tubes[i].children[3].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone } );
@@ -520,6 +602,9 @@ export default class HaimAnimation extends THREE.Object3D {
             this.outTubes[0].children[1].material.map.offset.x-=0.01;
             if(this.outTubes[0].children[1].material.map.offset.x<-1)
                 this.outTubes[0].children[1].material.map.offset.x=1;
+
+            // FBO
+            this.fbo.update();
         }
     }
 }

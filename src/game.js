@@ -156,7 +156,7 @@ export default class Game {
         this.animations = {
             // 'Hannah': new HannahAnimation()
            //  'Lupo': new LupoAnimation()
-            'Haim': new HaimAnimation()
+            'Haim': new HaimAnimation( this.scene, this.renderer )
         }
 
 
