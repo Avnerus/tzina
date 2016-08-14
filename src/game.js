@@ -107,7 +107,7 @@ export default class Game {
             animation: 'Haim',
             uvd: 0.440277,
             scale: 0.005,
-            animationPosition: [0,-1.5,-2.2],
+            animationPosition: [0.2,-1,-0.5],
             animationRotation: [0, 0, 0],
             space: 7,
             subtitles: "subtitles"

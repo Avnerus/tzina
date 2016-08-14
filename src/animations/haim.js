@@ -169,7 +169,16 @@ export default class HaimAnimation extends THREE.Object3D {
                 this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,0.3,0) );
                 this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,-0.2,0) );
             });
-        });  
+        });
+
+        // SPINE
+        let boneTex = tex_loader.load( this.BASE_PATH + '/images/bone.jpg' );
+        boneTex.wrapS = boneTex.wrapT = THREE.RepeatWrapping;
+        boneTex.repeat.set( 5, 5 );
+        loader.load(this.BASE_PATH + "/models/spine.json", (geometry, material) => {
+            this.spine = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({map: boneTex}) );
+            this.add( this.spine );
+        });        
 
         //
         this.loadingManager.itemEnd("HaimAnim");
