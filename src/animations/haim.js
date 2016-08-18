@@ -142,12 +142,16 @@ export default class HaimAnimation extends THREE.Object3D {
 
         // TUBE_BAG
         this.bag;
-        this.bagTexs = [];
+        this.bagTexs = [], this.bagAniTexs = [];
         let bagFiles = [ this.BASE_PATH + '/images/tubeBag.png', this.BASE_PATH + '/images/tubeBag_B.png',
                          this.BASE_PATH + '/images/tubeBag_E.png', this.BASE_PATH + '/images/tubeBag_M.png'];
+        let bagAniFiles = [ this.BASE_PATH + '/images/lip_ani.png', this.BASE_PATH + '/images/wool_ani.png',
+                            this.BASE_PATH + '/images/eye_ani.png', this.BASE_PATH + '/images/dollar_ani.png'];
         for(let i=0; i<bagFiles.length; i++){
             let bagTex = tex_loader.load( bagFiles[i] );
+            let bagAniTex = tex_loader.load( bagAniFiles[i] );
             this.bagTexs.push( bagTex );
+            this.bagAniTexs.push( bagAniTex );
         }
         // let bagTex = tex_loader.load(this.BASE_PATH + '/images/tubeBag.jpg');   
 
@@ -205,6 +209,9 @@ export default class HaimAnimation extends THREE.Object3D {
                 this.liquidOut = false;
                 this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,0.3,0) );
                 this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,-0.2,0) );
+
+                this.initSPEParicle( tex_loader );
+                this.createGroundPuddle( tex_loader );
             });
         });
 
@@ -223,7 +230,76 @@ export default class HaimAnimation extends THREE.Object3D {
         let particleGeo = new THREE.BoxGeometry(5,5,5);
         let positions = this.initParticles( particleGeo );
         this.rttIn = positions;
+        this.initFBOParticle( positions );
+        // let dotText = tex_loader.load( this.BASE_PATH + '/images/dot.png', (text) => {
+        //     dotText = text;
+        //     this.initFBOParticle();
+        // } );
 
+        //
+        this.loadingManager.itemEnd("HaimAnim");
+    }
+
+    initSPEParicle( tex_loader) {
+        let particleTex = tex_loader.load(this.BASE_PATH + '/images/tubeBag_ani_2.png');
+
+        this.particleGroup = new SPE.Group({
+            texture: {
+                value: particleTex,
+                frames: new THREE.Vector2(4,4),
+                frameCount: 16,
+                loop: 3
+            },
+            depthTest: false
+        });
+
+        // reduce emitter amount to be 1/5 of domeMorphTargets.length
+        for(let i = 0; i < this.outTubes.length; i++){
+            let emitter = new SPE.Emitter({
+                // type: SPE.distributions.SPHERE,
+                // duration: 10,
+                maxAge: {
+                    value: 10,
+                    spread: 4
+                },
+                position: {
+                    value: this.outTubes[i].children[2].position,
+                    spread: new THREE.Vector3(5,0,5)
+                    // radius: 0.5
+                },
+                acceleration: {
+                    value: new THREE.Vector3(0,-1,0),
+                    spread: new THREE.Vector3(0,-2,0)
+                },
+                velocity: {
+                    value: new THREE.Vector3(0.1,-0.5,0.1)
+                },
+                // rotation: {
+                //     angle: 0.5
+                // },
+                // angle: {
+                //     value: [0,0.5,-0.5],
+                //     spread: [0,-0.5,0.5]
+                // },
+                opacity: {
+                    value: [.5,1,1,1,0]
+                },
+                size: {
+                    value: [2,4,5,6,3],
+                    spread: 1
+                },
+                particleCount: 15
+                // drag: 0.1,
+                // activeMultiplier: 0.5
+            });
+            this.particleGroup.addEmitter( emitter );
+            // console.log( this.particleGroup.emitters[0] );
+        }
+        this.add( this.particleGroup.mesh );
+
+    }
+
+    initFBOParticle( positions ) {
         this.simulationShader = new THREE.ShaderMaterial({
             uniforms: {
                 positions: { type: "t", value: positions },
@@ -241,7 +317,7 @@ export default class HaimAnimation extends THREE.Object3D {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 1 }
+                pointSize: { type: "f", value: 2 }
             },
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,
@@ -253,6 +329,7 @@ export default class HaimAnimation extends THREE.Object3D {
         var particleGeometry  = new THREE.Geometry();
         // particleGeometry.vertices.push(new THREE.Vector3(), new THREE.Vector3(0, -0.05, -0.1), new THREE.Vector3(0,-0.05,0.1));
         particleGeometry.vertices.push( new THREE.Vector3() );
+        // particleGeometry.vertices.push(new THREE.Vector3(), new THREE.Vector3(-0.1, -0.05, 0), new THREE.Vector3(0.1, -0.05, 0), new THREE.Vector3(0,0.1,0));
 
         this.fbo = new FBO();
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
@@ -260,9 +337,22 @@ export default class HaimAnimation extends THREE.Object3D {
         this.timerAnim = null;
         this.fbo.particles.position.y = 1000;
         // this.fbo.update();
+    }
 
-        //
-        this.loadingManager.itemEnd("HaimAnim");
+    createGroundPuddle( tex_loader) {
+        let puddleTex = tex_loader.load( this.BASE_PATH + '/images/puddle.png');
+        this.puddleAnimator = new TextureAnimator( puddleTex, 4, 1, 6, 60, [0,1,2,3,2,0] );
+        // starAnimators.push(starAnimator);
+        let puddleMat = new THREE.MeshBasicMaterial({map: puddleTex, transparent: true, side: THREE.DoubleSide});
+        var puddleGeo = new THREE.PlaneGeometry(.5,.5);
+        for(let i=0; i<50; i++){
+            let puddle = new THREE.Mesh(puddleGeo, puddleMat);
+            puddle.position.set(Math.random()*14-7,
+                                -3,
+                                Math.random()*16-8 +3);
+            puddle.rotation.x = Math.PI/2;
+            this.add(puddle);
+        }
     }
 
     createCurve( pos, rot ){
@@ -474,11 +564,14 @@ export default class HaimAnimation extends THREE.Object3D {
                .to( targets, _duration*2, { endArray: tmpEndArray3, ease: Power0.easeNone })
                .to( targets, _duration*2, { endArray: tmpEndArray4, ease: Power0.easeNone, onComplete: ()=>{
                     // this.tubes[0].children[1].material.map.offset.x=-1.5;
-                    this.liquidOut = true;
-                    this.fbo.particles.position.y = 0;
+                    // this.liquidOut = true;
+                    // this.fbo.particles.position.y = 0;
+
                     for(let i=0; i<this.outTubes.length; i++){
                         TweenMax.to( this.outTubes[i].children[2].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone } );
-                        TweenMax.to( this.tubes[i].children[3].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone } );
+                        TweenMax.to( this.tubes[i].children[3].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone, onComplete: ()=>{
+                            this.liquidOut = true;
+                        } } );
                     }
                } });
     }
@@ -590,6 +683,10 @@ export default class HaimAnimation extends THREE.Object3D {
     }
 
     update(dt,et) {
+        // test
+        // this.particleGroup.tick( dt );
+        this.fbo.update();
+
         if(this.liquidDown && !this.liquidOut){
             this.tubes[0].children[1].material.map.offset.x+=0.01;
             if(this.tubes[0].children[1].material.map.offset.x>1)
@@ -604,7 +701,10 @@ export default class HaimAnimation extends THREE.Object3D {
                 this.outTubes[0].children[1].material.map.offset.x=1;
 
             // FBO
-            this.fbo.update();
+            // this.fbo.update();
+            // SPE
+            // this.particleGroup.tick( dt );
+            // this.puddleAnimator.updateWithOrder( 300*dt );
         }
     }
 }
