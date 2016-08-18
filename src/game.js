@@ -15,9 +15,7 @@ import Intro from './intro'
 import SoundManager from './sound_manager'
 
 // Animations
-import HannahAnimation from './animations/hannah'
-import LupoAnimation from './animations/lupo'
-import HaimAnimation from './animations/haim'
+import IntroAnimation from './animations/introAni'
 
 export default class Game {
     constructor(config) {
@@ -96,6 +94,24 @@ export default class Game {
             animation: 'Hannah'
             });*/
 
+        // this.introAni = new Character({
+        //     //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
+        //     basePath : 'assets/characters/haim',
+        //     mindepth : 2138.454101562,
+        //     maxdepth : 3047.334472656,
+        //     position : [-32, 8.1, 152.5],
+        //     rotation: [0,0,0],
+        //     name: 'Haim',
+        //     animation: 'IntroAni',
+        //     uvd: 0.440277,
+        //     scale: 0.005,
+        //     animationPosition: [0,0,0],
+        //     animationRotation: [0,0,0],
+        //     space: 1,
+        //     subtitles: "subtitles"
+        // }, this.collisionManager);
+
+        /*
         this.haim = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/haim',
@@ -113,7 +129,7 @@ export default class Game {
             subtitles: "subtitles"
         }, this.collisionManager);
 
-        /*
+        
         this.hannah = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/hanna',
@@ -156,7 +172,8 @@ export default class Game {
         this.animations = {
             // 'Hannah': new HannahAnimation()
            //  'Lupo': new LupoAnimation()
-            'Haim': new HaimAnimation( this.scene, this.renderer )
+            // 'Haim': new HaimAnimation( this.scene, this.renderer )
+            // 'IntroAni': new IntroAnimation( this.scene, this.renderer )
         }
 
 
@@ -178,6 +195,7 @@ export default class Game {
 
         // Intro
         this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
+        this.introAni = new IntroAnimation( this.scene, this.renderer );
 
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
         this.zoomController.init();
@@ -189,11 +207,11 @@ export default class Game {
 
             console.log("Done loading everything!");
 
-            // this.scene.add(this.square);
+            this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
             //this.scene.add(this.lupo)
             // this.scene.add(this.hannah)
-            this.scene.add(this.haim)
+            this.scene.add(this.introAni);
 
 
             // DEBUG
@@ -234,8 +252,10 @@ export default class Game {
         this.soundManager.init();
         // this.hannah.init(this.loadingManager, this.animations)
         //this.lupo.init(this.loadingManager, this.animations)
-        this.haim.init(this.loadingManager, this.animations)
+        // this.haim.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
+
+        this.introAni.init(this.loadingManager);
 
         // Animations init
         Object.keys(this.animations).forEach((key) => {
@@ -283,12 +303,14 @@ export default class Game {
             this.keyboardController.setPosition(-35, 10, 177);
             this.sky.transitionTo(17,1);
             // this.hannah.play(); 
-            this.haim.play(); 
+            // this.haim.play();
         } else {
             // Init the intro
-
+            // this.keyboardController.setPosition(-35, 10, 177);
             this.sky.transitionTo(17,1);
             this.intro.init();
+            
+            this.introAni.start();
         }
 
 
@@ -344,7 +366,7 @@ export default class Game {
             }
         // this.hannah.update(dt,et);
         //this.lupo.update(dt,et);
-        this.haim.update(dt,et);
+        // this.haim.update(dt,et);
 
         /*
 
@@ -356,6 +378,8 @@ export default class Game {
         this.collisionManager.update(dt);
         //console.log(this.camera.rotation); */
         this.intro.update();
+
+        this.introAni.update(dt,et);
     }
 
     render() {

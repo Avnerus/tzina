@@ -1,12 +1,13 @@
 import _ from 'lodash'
 
 export default class Intro {
-    constructor(camera, square, sky, soundManager, scene) {
+    constructor(camera, square, sky, soundManager, scene, animation) {
         this.camera = camera;
         this.square = square;
         this.soundManager = soundManager;
         this.sky = sky;
         this.scene = scene;
+        this.animation = animation;
 
         this.soundEvents = [
             {
