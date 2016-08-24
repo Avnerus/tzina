@@ -183,10 +183,8 @@ export default class Game {
             //this.scene.add(this.lupo)
             this.scene.add(this.hannah)
 
-
-            this.square.mesh.updateMatrixWorld(true);
             let cube = DebugUtil.adjustableCube(
-                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[0].startPosition),
+                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[1].startPosition),
                 "Ramp entry",
                 1,
                 0xff0000
@@ -194,7 +192,7 @@ export default class Game {
             this.square.mesh.add( cube );
 
             cube = DebugUtil.adjustableCube(
-                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[0].endPosition),
+                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[1].endPosition),
                 "Ramp end",
                 1,
                 0x00ffff
@@ -271,12 +269,18 @@ export default class Game {
 
         if (this.config.skipIntro) {
             // Get in the square
+            //
+            
+           /*
             this.keyboardController.setPosition(-15, 10, 167);
             this.sky.transitionTo(17,1);
             this.hannah.play(); 
+            */
         } else {
             // Init the intro
             this.intro.init();
+
+            this.timeController.setTime(17);
         }
 
 

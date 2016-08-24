@@ -19,7 +19,6 @@ export default class TimeController {
         this.angles.push(360);
         console.log("Chapter times", this.times, this.angles);
         document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
-
         this.currentHour = 0;
     }
 
@@ -82,6 +81,7 @@ export default class TimeController {
         TweenMax.to(this, 1, {currentRotation: targetRotationY, onComplete: () => { 
             console.log("Fixed");
             this.showChapterTitle();
+            events.emit("hour_updated", this.currentHour);
         }, onUpdate: () => {
             this.updateSquare();
         }});
@@ -90,5 +90,13 @@ export default class TimeController {
     showChapterTitle() {
         let chapter = _.find(Chapters, {hour: this.currentHour });
         document.getElementById("chapter-title-text").innerHTML = chapter.hour + ":00 - " + chapter.name;
+    }
+
+    setTime(hour) {
+        this.currentHour = hour;
+        this.currentRotation = hour * 15;
+        this.updateSquare();
+        this.showChapterTitle();
+        events.emit("hour_updated", this.currentHour);
     }
 }

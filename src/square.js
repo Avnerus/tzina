@@ -12,8 +12,14 @@ export default class Square extends THREE.Object3D{
 
         this.ENTRY_POINTS = [
             {
+                hour: 19,
                 startPosition: [21, 20, 34],
                 endPosition: [15, 22, 14]
+            },
+            {
+                hour: 17,
+                startPosition: [-1, 20, 43],
+                endPosition: [-3.5, 22, 18]
             }
         ]
     }
@@ -50,16 +56,6 @@ export default class Square extends THREE.Object3D{
             //events.emit("add_gui", obj.position, "z");
             events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
 
-            /*
-
-            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-            let cube = new THREE.Mesh( geometry, material );
-            obj.add( cube );
-            events.emit("add_gui",{}, cube.position, "x"); 
-            events.emit("add_gui",{}, cube.position, "y"); 
-            events.emit("add_gui",{}, cube.position, "z"); */
-
         });
     }
     update(dt) {
@@ -91,8 +87,11 @@ export default class Square extends THREE.Object3D{
                 obj.position.x = 0;
                 obj.scale.set( 4, 4, 4 );
 
+                this.rotation.y = Math.PI * 80 / 180;
+                this.updateMatrixWorld();
+
                 this.add(obj);
-                obj.updateMatrixWorld();
+                //obj.updateMatrixWorld();
                 //collisionManager.addBoundingBoxes(obj,this);
 
                 this.squareMiddle  = obj.getObjectByName("basin");

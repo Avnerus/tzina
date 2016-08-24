@@ -114,11 +114,11 @@ export default class KeyboardController {
 
             //this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
-            if ( this.moveForward ) this.velocity.z -= 100.0 * delta;
-            if ( this.moveBackward ) this.velocity.z += 100.0 * delta;
+            if ( this.moveForward ) this.velocity.z -= 100.0 * delta * this.config.movementSpeed;
+            if ( this.moveBackward ) this.velocity.z += 100.0 * delta * this.config.movementSpeed;
 
-            if ( this.moveLeft ) this.velocity.x -= 100.0 * delta;
-            if ( this.moveRight ) this.velocity.x += 100.0 * delta;
+            if ( this.moveLeft ) this.velocity.x -= 100.0 * delta * this.config.movementSpeed;
+            if ( this.moveRight ) this.velocity.x += 100.0 * delta * this.config.movementSpeed;
 
             /*
             if (this.collisionManager.isClimbingStairs() && this.velocity.z != 0) {
