@@ -115,8 +115,6 @@ export default class Sky {
             this.nextTimeIndex = (this.nextTimeIndex + 1 > this.HOURS_DEFINITION.length -1 ) ? 0: this.nextTimeIndex +1; 
             this.baseTimeIndex = temp;
             this.setTime(time);
-            console.log("BASE TIME NOW " + this.HOURS_DEFINITION[this.baseTimeIndex].time);
-            console.log("NEXT TIME NOW " + this.HOURS_DEFINITION[this.nextTimeIndex].time);
         } else {
             // Linear interpolation
             this.currentTime = time;
@@ -175,12 +173,6 @@ export default class Sky {
     update(dt) {
         this.geo.rotateY(this.spinFactor * Math.PI / 180);
         this.clouds.update(dt);
-        if (this.state == States.STATIC) {
-            this.azimuth += 0.0002 * dt;
-            this.inclination += 0.0002 * dt;
-            this.updateSunPosition();
-            this.updateHemiLght();
-        }
     }
 
     applyToMesh(mesh) {
