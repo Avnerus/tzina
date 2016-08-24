@@ -17,19 +17,26 @@ export default class TimeController {
         this.angles = this.times.map((time) => {return time * 15});
         console.log("Chapter times", this.times, this.angles);
         document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
+
+        this.currentHour = 0;
     }
 
     update(dt) {
         if (this.rotateVelocity != 0) {
             this.square.mesh.rotateY(this.rotateVelocity * Math.PI /180 * dt * 20);
-            let rotationY = this.square.mesh.rotation.y;
-            if (rotationY < 0) {
-                rotationY = 2 * Math.PI + rotationY;
-            }
-            this.currentRotation = rotationY * 180 / Math.PI;
-//            console.log(this.currentRotation + " :: " + this.currentRotation / 15);
-            this.sky.setTime(this.currentRotation / 15);
+            //console.log("Square RotY: ", this.square.mesh.rotation.y);
+            this.updateSky();
         }
+    }
+
+    updateSky() {
+        let rotationY = this.square.mesh.rotation.y;
+        if (rotationY < 0) {
+            rotationY = 2 * Math.PI + rotationY;
+        }
+        this.currentRotation = rotationY * 180 / Math.PI;
+//            console.log(this.currentRotation + " :: " + this.currentRotation / 15);
+        this.sky.setTime(this.currentRotation / 15);
     }
 
     handleMouseMove(e) {
@@ -41,10 +48,28 @@ export default class TimeController {
         } else {
             if (this.rotateVelocity != 0) {
                 // We stopped
-                let closestTime = MathUtil.closestValue(this.angles, this.currentRotation);
-                console.log("Closest hour: ", closestTime);
+                let closestAngle = MathUtil.closestValue(this.angles, this.currentRotation);
+                let closestHour = closestAngle / 15;
+                console.log("Closest hour: ", closestHour, "Angle: ", closestAngle);
+
+                this.stickToAngle(closestAngle);
             }
             this.rotateVelocity = 0;
         }
     } 
+    stickToAngle(closestAngle) {
+        let targetRotationY = closestAngle;
+        if (targetRotationY > 180) {
+            targetRotationY -= 360;
+        }
+        targetRotationY = targetRotationY * Math.PI / 180; 
+        console.log("Target rotationY Rad: ", targetRotationY);
+
+        TweenMax.to(this.square.mesh.rotation, 1, {y: targetRotationY, onComplete: () => { 
+            console.log("Fixed");
+        }, onUpdate: () => {
+            this.updateSky();
+        }});
+
+    }
 }

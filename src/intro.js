@@ -66,6 +66,7 @@ export default class Intro {
         // Put the camera in the starting position
 //        events.emit("intro_start");
         this.camera.position.copy(this.STARTING_POSITION);
+        events.emit("add_gui",{}, this.camera.position, "y"); 
         //this.camera.rotation.copy(this.STARTING_ROTATION);
         
         /*

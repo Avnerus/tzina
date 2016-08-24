@@ -31,24 +31,29 @@ export default class Sky {
             },
             {
                 time: 7,
-                inclination: 0,
-                azimuth: 0.121
+                inclination: 0.1,
+                azimuth: 0.07
             },
             {
-                time: 13,
-                inclination: 0,
-                azimuth: 0.23
+                time: 9,
+                inclination: 0.1,
+                azimuth: 0.13
             },
             {
-                time: 18,
-                inclination: 0.09,
-                azimuth: 0.42
+                time: 12,
+                inclination: 0.1,
+                azimuth: 0.255
+            },
+            {
+                time: 17,
+                inclination: 0.1,
+                azimuth: 0.37
             },
             {
                 time: 23,
                 inclination: 0.6,
-                azimuth: 0.42
-            },
+                azimuth: 0.5
+            }
         ]
     }
     init() {
