@@ -19,9 +19,11 @@ export default class ZoomController {
 
         this.distanceOnCurve = 0;
 
-        //this.MAX_DISTANCE = 830;
-        this.MAX_DISTANCE = 9500;
-        this.DISTANCE_BEFORE_RISING = 100;
+        this.STARTING_POSITION = new THREE.Vector3(
+            0,
+            50,
+            1400
+        );
 
     }
     init() {
@@ -56,7 +58,12 @@ export default class ZoomController {
         events.on("hour_updated", (hour) => {
             console.log("Zoom Controller: Hour updated to ", hour);
             let entryPoint = _.find(this.square.ENTRY_POINTS, {hour: hour});
-            this.calculateZoomCurve(entryPoint);
+            if (entryPoint) {
+                this.calculateZoomCurve(entryPoint);
+            } else {
+                this.calculateZoomVector();
+                this.zoomCurve = null;
+            }
         });
     }
 
@@ -79,20 +86,32 @@ export default class ZoomController {
         this.calculateZoomVector();
         let startPoint = new THREE.Vector3().fromArray(entryPoint.startPosition).applyMatrix4(this.square.mesh.matrixWorld);
         console.log("START POINT ", startPoint);
-
         let endPoint = new THREE.Vector3().fromArray(entryPoint.endPosition).applyMatrix4(this.square.mesh.matrixWorld);
-        let movement = new THREE.Vector3();
-        movement.copy(this.zoomVector).multiplyScalar(-100);
-        let midPoint = new THREE.Vector3().copy(this.camera.position);
-        midPoint.z = 700;
-        midPoint.y = startPoint.y + 0.5 * (this.camera.position.y - startPoint.y);
-        console.log("Creating curv. Points: ", this.camera.position, midPoint, startPoint, endPoint);
-        this.zoomCurve = new THREE.CatmullRomCurve3( [
-            new THREE.Vector3().copy(this.camera.position),
-            midPoint,
-            startPoint,
-            endPoint
-        ] )
+        if (this.camera.position.equals(this.STARTING_POSITION)) {
+            console.log("Zoom curve from camera in starting position", this.STARTING_POSITION);
+            let movement = new THREE.Vector3();
+            movement.copy(this.zoomVector).multiplyScalar(-100);
+            let midPoint = new THREE.Vector3().copy(this.camera.position);
+            midPoint.z = 700;
+            midPoint.y = startPoint.y + 0.5 * (this.camera.position.y - startPoint.y);
+            console.log("Creating curv. Points: ", this.camera.position, midPoint, startPoint, endPoint);
+            this.zoomCurve = new THREE.CatmullRomCurve3( [
+                new THREE.Vector3().copy(this.camera.position),
+                midPoint,
+                startPoint,
+                endPoint
+            ] )
+        } else {
+            console.log("Zoom curve includes starting position");    
+            this.zoomCurve = new THREE.CatmullRomCurve3( [
+                new THREE.Vector3().copy(this.STARTING_POSITION),
+                new THREE.Vector3().copy(this.camera.position),
+                startPoint,
+                endPoint
+            ] )
+            // http://stackoverflow.com/questions/16650360/distance-of-a-specific-point-along-a-splinecurve3-tubegeometry-in-three-js
+            this.distanceOnCurve = 1 / 3;
+        }
         console.log(this.zoomCurve);
         this.scene.add(DebugUtil.drawCurve(this.zoomCurve, 0x0000ff));
 
@@ -107,12 +126,12 @@ export default class ZoomController {
     }
 
     update(dt) {
-        if (this.velocityZ != 0) {
+        if (this.velocityZ != 0 && this.zoomCurve) {
             if (!this.camera.quaternion.equals(this.lastCameraOrientation)) {
                 this.lastCameraOrientation.copy(this.camera.quaternion);
                 this.calculateZoomVector();
             }
-            this.distanceOnCurve = Math.min(1, this.distanceOnCurve + this.velocityZ * dt * 0.001);
+            this.distanceOnCurve = Math.max(0,Math.min(1, this.distanceOnCurve + this.velocityZ * dt * 0.001));
             console.log(this.distanceOnCurve);
             this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
             this.camera.lookAt(this.zoomCurve.getPoint(this.distanceOnCurve + 0.01));

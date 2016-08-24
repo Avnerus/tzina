@@ -43,13 +43,6 @@ export default class Intro {
             1400
         );
 
-        this.STARTING_ROTATION = new THREE.Euler (
-            -0.021886075735205162,
-            0.29445780646733244,
-            0.006352727962780677,
-            'XYZ'
-        );
-
         this.INTRO_SOUND = 'INTRO_Shirin.ogg'
 
         let titlePlaneGeo = new THREE.PlaneGeometry( 1024, 128 );
@@ -67,7 +60,6 @@ export default class Intro {
 //        events.emit("intro_start");
         this.camera.position.copy(this.STARTING_POSITION);
         events.emit("add_gui",{}, this.camera.position, "y"); 
-        //this.camera.rotation.copy(this.STARTING_ROTATION);
         
         /*
 
