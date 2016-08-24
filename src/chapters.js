@@ -55,7 +55,7 @@ export default
 			]
 		}, 
 		{
-		"name": "Bordem",
+		"name": "Boredom",
 			"hour": 12,
 			"timeLimitMinutes" : 8,
 			"characters": [

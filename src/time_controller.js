@@ -1,5 +1,6 @@
 import Chapters from './chapters'
 import MathUtil from './util/math'
+import _ from 'lodash'
 
 export default class TimeController {
     constructor(config, element, square, sky) {
@@ -69,6 +70,7 @@ export default class TimeController {
                 console.log("Closest hour: ", closestHour, "Angle: ", closestAngle);
 
                 this.stickToAngle(closestAngle);
+                this.currentHour = closestHour;
             }
             this.rotateVelocity = 0;
         }
@@ -79,9 +81,14 @@ export default class TimeController {
 
         TweenMax.to(this, 1, {currentRotation: targetRotationY, onComplete: () => { 
             console.log("Fixed");
+            this.showChapterTitle();
         }, onUpdate: () => {
             this.updateSquare();
         }});
+    }
 
+    showChapterTitle() {
+        let chapter = _.find(Chapters, {hour: this.currentHour });
+        document.getElementById("chapter-title-text").innerHTML = chapter.hour + ":00 - " + chapter.name;
     }
 }
