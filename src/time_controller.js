@@ -11,6 +11,8 @@ export default class TimeController {
         
         this.rotateVelocity = 0;
         this.currentRotation = 0;
+
+        this.active = true;
     }
     init() {
         console.log("Initializing Time Controller", this.element)
@@ -20,10 +22,14 @@ export default class TimeController {
         console.log("Chapter times", this.times, this.angles);
         document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
         this.currentHour = 0;
+
+        events.on("chapter_threshold", (passed) => {
+            this.active = !passed;
+        });
     }
 
     update(dt) {
-        if (this.rotateVelocity != 0) {
+        if (this.active && this.rotateVelocity != 0) {
             this.square.mesh.rotateY(this.rotateVelocity * Math.PI /180 * dt * 20);
             //console.log("Square RotY: ", this.square.mesh.rotation.y);
             this.updateRotation();
@@ -50,6 +56,11 @@ export default class TimeController {
     }
 
     handleMouseMove(e) {
+
+        if (!this.active) {
+            return;
+        }
+
         //console.log("Time move! ", e.pageX + "/" + this.element.offsetWidth);
         if (e.pageX > this.element.offsetWidth * 2 / 3) {
             this.rotateVelocity = (e.pageX - this.element.offsetWidth * 2 /3) / (this.element.offsetWidth / 3);

@@ -25,6 +25,12 @@ export default class ZoomController {
             1400
         );
 
+        this.CHAPTER_THRESHOLD = 0.56;
+        this.CONTROL_THRESHOLD = 1;
+
+        this.passedChapterThreshold = false;
+        this.passedControlThreshold = false;
+
     }
     init() {
         JQueryMouseWheel($);
@@ -114,15 +120,6 @@ export default class ZoomController {
         }
         console.log(this.zoomCurve);
         this.scene.add(DebugUtil.drawCurve(this.zoomCurve, 0x0000ff));
-
-        events.emit("add_gui",{
-            onChange: () => {
-                this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
-                if (this.distanceOnCurve <= 0.9) {
-                    this.camera.lookAt(this.zoomCurve.getPoint(this.distanceOnCurve + 0.1));
-                }
-            }
-        }, this, "distanceOnCurve", 0, 1); 
     }
 
     update(dt) {
@@ -135,7 +132,23 @@ export default class ZoomController {
             console.log(this.distanceOnCurve);
             this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
             this.camera.lookAt(this.zoomCurve.getPoint(this.distanceOnCurve + 0.01));
+
+            if (!this.passedChapterThreshold && this.distanceOnCurve > this.CHAPTER_THRESHOLD) {
+                this.passedChapterThreshold = true;
+                events.emit("chapter_threshold", this.passedChapterThreshold);
+            } else if (this.passedChapterThreshold && this.distanceOnCurve <= this.CHAPTER_THRESHOLD) {
+                this.passedChapterThreshold = false;
+                events.emit("chapter_threshold", this.passedChapterThreshold);
+            }
         
+
+            if (!this.passedControlThreshold && this.distanceOnCurve > this.CONTROL_THRESHOLD) {
+                this.passedControlThreshold = true;
+                events.emit("control_threshold", this.passedControlThreshold);
+            } else if (this.passedControlThreshold && this.distanceOnCurve <= this.CONTROL_THRESHOLD) {
+                this.passedControlThreshold = false;
+                events.emit("control_threshold", this.passedControlThreshold);
+            }
 
             if (this.velocityZ > 0) {
                 this.velocityZ = Math.max(0, this.velocityZ - 10 * dt);
