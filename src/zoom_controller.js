@@ -90,6 +90,16 @@ export default class ZoomController {
         this.zoomVector.y = 0;
     }
 
+    calculateEaseQuaternion() {
+        // To east the camera rotation into the curve
+        let cameraClone = this.camera.clone();
+        this.easeQuaternionSource = new THREE.Quaternion().copy(cameraClone.quaternion);
+        cameraClone.position.copy(this.zoomCurve.getPoint(0.95));
+        cameraClone.lookAt(this.zoomCurve.getPoint(0.951));
+        this.easeQuaternionTarget = new THREE.Quaternion().copy(cameraClone.quaternion);
+        //console.log("Ease quaternion Source ", this.easeQuaternionSource, " Target: ", this.easeQuaternionTarget);
+    }
+
     calculateZoomCurve(entryPoint) {
         this.calculateZoomVector();
         if (!entryPoint && this.passedControlThreshold) {
@@ -106,8 +116,11 @@ export default class ZoomController {
                 new THREE.Vector3().copy(this.camera.position),
             ] );
             this.distanceOnCurve = 1;
+            this.calculateEaseQuaternion();
         } else {
             this.square.mesh.updateMatrixWorld();
+            this.easeQuaternionSource = null;
+            this.easeQuaternionTarget = null;
             let startPoint = new THREE.Vector3().fromArray(entryPoint.startPosition).applyMatrix4(this.square.mesh.matrixWorld);
             console.log("START POINT ", startPoint);
             let endPoint = new THREE.Vector3().fromArray(entryPoint.endPosition).applyMatrix4(this.square.mesh.matrixWorld);
@@ -154,7 +167,17 @@ export default class ZoomController {
             this.distanceOnCurve = Math.max(0,Math.min(1, this.distanceOnCurve + this.velocityZ * dt * 0.001));
             //console.log(this.distanceOnCurve);
             this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
-            if (this.distanceOnCurve <= 0.95) {
+            if (this.easeQuaternionTarget && this.distanceOnCurve >= 0.95) {
+                let easePercent = (1 - this.distanceOnCurve) / 0.05;
+                console.log("EASE Quaternion ", easePercent);
+                THREE.Quaternion.slerp(
+                    this.easeQuaternionSource, 
+                    this.easeQuaternionTarget,
+                    this.camera.quaternion,
+                    easePercent
+                );
+            }
+            else if (this.distanceOnCurve <= 0.99) {
                 this.camera.lookAt(this.zoomCurve.getPoint(this.distanceOnCurve + 0.01));
             }
 
