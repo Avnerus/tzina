@@ -24,6 +24,11 @@ export default class ZoomController {
             50,
             1400
         );
+        this.MID_ZOOM = new THREE.Vector3(
+            0,
+            30,
+            900
+        );
 
         this.CHAPTER_THRESHOLD = 0.45;
         this.CONTROL_THRESHOLD = 1;
@@ -71,6 +76,7 @@ export default class ZoomController {
                 this.lastEntryPoint = entryPoint;
             } else {
                 this.calculateZoomVector();
+                this.velocityZ = null;
                 this.zoomCurve = null;
             }
         });
@@ -106,12 +112,13 @@ export default class ZoomController {
             // Zooming back out
             console.log("Zoom curve from camera in control position", this.camera.position);
             let movement = new THREE.Vector3();
-            movement.copy(this.zoomVector).multiplyScalar(200);
+            movement.copy(this.zoomVector).multiplyScalar(100);
             let midPoint = new THREE.Vector3().copy(this.camera.position).add(movement);
             midPoint.y = this.camera.position.y + 0.5 * (this.STARTING_POSITION.y - this.camera.position.y);
 
             this.zoomCurve = new THREE.CatmullRomCurve3( [
                 new THREE.Vector3().copy(this.STARTING_POSITION),
+                this.MID_ZOOM,
                 midPoint,
                 new THREE.Vector3().copy(this.camera.position),
             ] );
@@ -122,23 +129,16 @@ export default class ZoomController {
             this.easeQuaternionSource = null;
             this.easeQuaternionTarget = null;
             let startPoint = new THREE.Vector3().fromArray(entryPoint.startPosition).applyMatrix4(this.square.mesh.matrixWorld);
-            console.log("START POINT ", startPoint);
             let endPoint = new THREE.Vector3().fromArray(entryPoint.endPosition).applyMatrix4(this.square.mesh.matrixWorld);
 
             if (this.camera.position.equals(this.STARTING_POSITION)) {
-                console.log("Zoom curve from camera in starting position", this.STARTING_POSITION);
-                let midPoint = new THREE.Vector3().copy(this.camera.position);
-                midPoint.z = 700;
-                midPoint.y = startPoint.y + 0.5 * (this.camera.position.y - startPoint.y);
-                console.log("Creating curv. Points: ", this.camera.position, midPoint, startPoint, endPoint);
                 this.zoomCurve = new THREE.CatmullRomCurve3( [
                     new THREE.Vector3().copy(this.camera.position),
-                    midPoint,
+                    this.MID_ZOOM,
                     startPoint,
                     endPoint
                 ] )
             } else {
-                console.log("Zoom curve includes starting position");    
                 this.zoomCurve = new THREE.CatmullRomCurve3( [
                     new THREE.Vector3().copy(this.STARTING_POSITION),
                     new THREE.Vector3().copy(this.camera.position),
@@ -150,7 +150,7 @@ export default class ZoomController {
             }
         }
         console.log(this.zoomCurve);
-        this.scene.add(DebugUtil.drawCurve(this.zoomCurve, 0x0000ff));
+        //this.scene.add(DebugUtil.drawCurve(this.zoomCurve, 0x0000ff));
     }
 
     update(dt) {
@@ -169,7 +169,6 @@ export default class ZoomController {
             this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
             if (this.easeQuaternionTarget && this.distanceOnCurve >= 0.95) {
                 let easePercent = (1 - this.distanceOnCurve) / 0.05;
-                console.log("EASE Quaternion ", easePercent);
                 THREE.Quaternion.slerp(
                     this.easeQuaternionSource, 
                     this.easeQuaternionTarget,
@@ -200,7 +199,6 @@ export default class ZoomController {
             }
 
             if (!this.basePosition && this.distanceOnCurve == 0) {
-                console.log("Reset camera rotation");
                 this.basePosition = true;
                 this.velocityZ = 0;
                 this.calculateZoomCurve(this.lastEntryPoint);
