@@ -18,7 +18,7 @@ export default class Square extends THREE.Object3D{
             },
             {
                 hour: 17,
-                startPosition: [-1, 20, 43],
+                startPosition: [-3, 20, 43],
                 endPosition: [-3.5, 22, 18]
             }
         ]

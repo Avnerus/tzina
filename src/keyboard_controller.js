@@ -21,7 +21,7 @@ export default class KeyboardController {
 
         this.height = config.basalHeight;
 
-        this.active = true;
+        this.active = false;
 
         this.zAxis = new THREE.Vector3(0,0,1);
     }
@@ -45,8 +45,10 @@ export default class KeyboardController {
 
         events.on("control_threshold", (passed) => {
             if (passed) {
+                this.active = true;
                 this.pointer.request();
             } else {
+                this.active = false;
                 this.pointer.release();
             }
         })
@@ -124,7 +126,7 @@ export default class KeyboardController {
             this.velocity.z -= this.velocity.z * 10.0 * delta;
 
             //this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-
+            
             if ( this.moveForward ) this.velocity.z -= 100.0 * delta * this.config.movementSpeed;
             if ( this.moveBackward ) this.velocity.z += 100.0 * delta * this.config.movementSpeed;
 

@@ -44,15 +44,36 @@ export default class TimeController {
         this.currentRotation = rotationY * 180 / Math.PI;
 //            console.log(this.currentRotation + " :: " + this.currentRotation / 15);
         this.sky.setTime(this.currentRotation / 15);
+
+        let closestAngle = MathUtil.closestValue(this.angles, this.currentRotation);
+        let closestHour = this.getHour(closestAngle);
+        if (closestHour != this.currentHour) {
+            this.currentHour = closestHour;
+            this.showChapterTitle();
+        }
     }
 
     updateSquare() {
-        let rotationY = this.currentRotation
-        if (rotationY > 180) {
-            rotationY -= 360;
+        if (this.square.mesh) {
+            let rotationY = this.currentRotation
+            if (rotationY > 180) {
+                rotationY -= 360;
+            }
+            this.square.mesh.rotation.y = rotationY * Math.PI / 180;
+            this.sky.setTime(this.currentRotation / 15);
         }
-        this.square.mesh.rotation.y = rotationY * Math.PI / 180;
-        this.sky.setTime(this.currentRotation / 15);
+    }
+
+    getHour(angle) {
+        let hour;
+
+        if (angle == 360) {
+            hour = 0;
+        } else {
+            hour = angle / 15;
+        }
+
+        return hour;
     }
 
     handleMouseMove(e) {
@@ -69,15 +90,9 @@ export default class TimeController {
         } else {
             if (this.rotateVelocity != 0) {
                 // We stopped
+                
                 let closestAngle = MathUtil.closestValue(this.angles, this.currentRotation);
-                let closestHour;
-
-                if (closestAngle == 360) {
-                    closestHour = 0;
-                } else {
-                    closestHour = closestAngle / 15;
-                }
-                console.log("Closest hour: ", closestHour, "Angle: ", closestAngle);
+                let closestHour = this.getHour(closestAngle);
 
                 this.stickToAngle(closestAngle);
                 this.currentHour = closestHour;
