@@ -25,11 +25,13 @@ export default class ZoomController {
             1400
         );
 
-        this.CHAPTER_THRESHOLD = 0.56;
+        this.CHAPTER_THRESHOLD = 0.5;
         this.CONTROL_THRESHOLD = 1;
 
         this.passedChapterThreshold = false;
         this.passedControlThreshold = false;
+
+        this.basePosition = true;
 
     }
     init() {
@@ -130,7 +132,7 @@ export default class ZoomController {
                 this.calculateZoomVector();
                 }*/
             this.distanceOnCurve = Math.max(0,Math.min(1, this.distanceOnCurve + this.velocityZ * dt * 0.001));
-            console.log(this.distanceOnCurve);
+            //console.log(this.distanceOnCurve);
             this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
             this.camera.lookAt(this.zoomCurve.getPoint(this.distanceOnCurve + 0.01));
 
@@ -143,12 +145,22 @@ export default class ZoomController {
             }
         
 
-            if (!this.passedControlThreshold && this.distanceOnCurve > this.CONTROL_THRESHOLD) {
+            if (!this.passedControlThreshold && this.distanceOnCurve >= this.CONTROL_THRESHOLD) {
                 this.passedControlThreshold = true;
+                this.velocityZ = 0;
                 events.emit("control_threshold", this.passedControlThreshold);
             } else if (this.passedControlThreshold && this.distanceOnCurve <= this.CONTROL_THRESHOLD) {
                 this.passedControlThreshold = false;
                 events.emit("control_threshold", this.passedControlThreshold);
+            }
+
+            if (!this.basePosition && this.distanceOnCurve == 0) {
+                console.log("Reset camera rotation");
+                this.basePosition = true;
+                this.velocityZ = 0;
+                this.camera.rotation.set(0,0,0);
+            } else if (this.basePosition && this.distanceOnCurve > 0) {
+                this.basePosition = false;
             }
 
             if (this.velocityZ > 0) {

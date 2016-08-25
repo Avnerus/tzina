@@ -69,6 +69,14 @@ export default function ( emitter, object, onError ) {
         this.active = true;
     })
 
+    events.on("control_threshold", (passed) => {
+        if (passed) {
+            this.active = true;
+        } else {
+            this.active = false;
+        }
+    })
+
 	this.update = function () {
 
         if (this.active) {

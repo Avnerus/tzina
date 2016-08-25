@@ -1,3 +1,5 @@
+import lock from 'pointer-lock-chrome-tolerant';
+
 export default class KeyboardController {
     constructor(config, camera, square, collisionManager) {
 
@@ -26,6 +28,7 @@ export default class KeyboardController {
     init() {
 
         console.log("Keyboard controller init");
+        this.pointer = lock(document.getElementById('game'));
 
         events.on("start_zoom" ,() => {
             this.active = false;
@@ -39,6 +42,14 @@ export default class KeyboardController {
         events.on("intro_end" ,() => {
             this.active = true;
         });
+
+        events.on("control_threshold", (passed) => {
+            if (passed) {
+                this.pointer.request();
+            } else {
+                this.pointer.release();
+            }
+        })
 
         document.addEventListener('keydown', (event) => {
             switch ( event.keyCode ) {
