@@ -37,7 +37,7 @@ export default class ZoomController {
         console.log("Zoom controller init");
 
         $(document.documentElement).on('mousewheel', (event) => {
-                this.velocityZ = event.deltaY * 0.5;
+                this.velocityZ = event.deltaY * 10;
         });
 
         // keyboard zoom
@@ -124,10 +124,11 @@ export default class ZoomController {
 
     update(dt) {
         if (this.velocityZ != 0 && this.zoomCurve) {
+            /*
             if (!this.camera.quaternion.equals(this.lastCameraOrientation)) {
                 this.lastCameraOrientation.copy(this.camera.quaternion);
                 this.calculateZoomVector();
-            }
+                }*/
             this.distanceOnCurve = Math.max(0,Math.min(1, this.distanceOnCurve + this.velocityZ * dt * 0.001));
             console.log(this.distanceOnCurve);
             this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
@@ -151,9 +152,9 @@ export default class ZoomController {
             }
 
             if (this.velocityZ > 0) {
-                this.velocityZ = Math.max(0, this.velocityZ - 10 * dt);
+                this.velocityZ = Math.max(0, this.velocityZ - 0.01 * dt);
             } else {
-                this.velocityZ = Math.min(0, this.velocityZ + 10 * dt);
+                this.velocityZ = Math.min(0, this.velocityZ + 0.01 * dt);
             }
 
             //console.log(this.camera.position, this.camera.rotation);
