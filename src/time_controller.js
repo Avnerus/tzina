@@ -105,8 +105,6 @@ export default class TimeController {
         console.log("Target rotationY ", targetRotationY, " from ", this.currentRotation);
 
         TweenMax.to(this, 1, {currentRotation: targetRotationY, onComplete: () => { 
-            console.log("Fixed");
-            this.showChapterTitle();
             events.emit("hour_updated", this.currentHour);
         }, onUpdate: () => {
             this.updateSquare();
@@ -116,6 +114,17 @@ export default class TimeController {
     showChapterTitle() {
         let chapter = _.find(Chapters, {hour: this.currentHour });
         document.getElementById("chapter-title-text").innerHTML = chapter.hour + ":00 - " + chapter.name;
+        this.turnOnChapterSun(this.currentHour);
+    }
+
+    turnOnChapterSun() {
+        if (this.currentHour == 17 ) {
+            this.square.turnOnSun("9");
+        } else if (this.currentHour == 19) {
+            this.square.turnOnSun("7");
+        } else {
+            this.square.turnOffSun(this.square.currentSun);
+        }
     }
 
     setTime(hour) {

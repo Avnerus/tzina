@@ -3,6 +3,7 @@ import Fountain from "./fountain"
 
 const MODEL_PATH = "assets/square/scene.json"
 const WINDOWS_PATH = "assets/square/windows.json"
+const SUNS_PATH = "assets/square/suns.json"
 
 export default class Square extends THREE.Object3D{
     constructor() {
@@ -31,7 +32,8 @@ export default class Square extends THREE.Object3D{
             this.loadSquare(loadingManager),
             trees.init(loadingManager),
             this.fountain.init(loadingManager),
-            this.loadWindows(loadingManager)
+            this.loadWindows(loadingManager),
+            this.loadSuns(loadingManager)
         ])
         .then((results) => {
             console.log("Load results", results);
@@ -40,7 +42,14 @@ export default class Square extends THREE.Object3D{
             //obj.add(this.fountain);
             obj.add(this.fountain);
             this.windows = results[3];
+            this.suns = results[4];
+
             obj.add(this.windows);
+            /*
+            this.suns.scale.set(4,4,4);
+            this.suns.position.y = -80;
+            this.suns.rotation.y = Math.PI * 80 / 180;*/
+            obj.add(this.suns);
             obj.rotation.order = "YXZ";
             this.mesh = obj;
             this.fountain.position.set(0.6,24.6, -0.8);
@@ -50,6 +59,7 @@ export default class Square extends THREE.Object3D{
 
             // INITIAL STATE
             this.turnOffWindows();
+            this.turnOffSuns();
             
 /*            events.emit("add_gui", obj.position, "x"); */
             events.emit("add_gui",{}, obj.position, "y"); 
@@ -66,11 +76,51 @@ export default class Square extends THREE.Object3D{
         this.windows.children.forEach((obj) => {obj.visible = false});
     }
 
+    turnOffSuns() {
+        this.suns.children.forEach((obj) => {
+            if (obj.children.length > 0) {
+                this.turnOffSun(obj.name);
+            }
+        })
+    }
+
+    turnOffSun(name) {
+        let sun = this.suns.getObjectByName(name).children[0];
+        console.log("Turn off sun", sun);
+        sun.material.color = new THREE.Color(0x434241);
+        sun.material.emissive = new THREE.Color(0x717277);
+        sun.material.specular = new THREE.Color(0x000000);
+        sun.material.side = THREE.BackSide;
+    }
+
+    turnOnSun(name) {
+        if (this.currentSun) {
+            this.turnOffSun(this.currentSun);
+        }
+        let sun = this.suns.getObjectByName(name).children[0];
+        console.log("Turn on sun", sun);
+        sun.material.color = new THREE.Color(0x5B5B5B);
+        sun.material.emissive = new THREE.Color(0xC8C5B9);
+        sun.material.specular = new THREE.Color(0xFFFFFF);
+        sun.material.side = THREE.DoubleSide;
+
+        this.currentSun = name;
+    }
+
     loadWindows(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(WINDOWS_PATH,( obj ) => {
                 console.log("Loaded Windows ", obj );
+                resolve(obj);
+            });
+        });
+    }
+    loadSuns(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(SUNS_PATH,( obj ) => {
+                console.log("Loaded suns ", obj );
                 resolve(obj);
             });
         });
