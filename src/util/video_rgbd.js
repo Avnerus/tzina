@@ -5,8 +5,8 @@
  * @modified by juniorxsound / http://orfleisher.com
  */
 const SEC_PER_RGBD_FRAME = 1 / 25;
-const VERTS_WIDE = 128;
-const VERTS_TALL = 128;
+const VERTS_WIDE = 256;
+const VERTS_TALL = 256;
 
 
 export default class VideoRGBD  {
@@ -57,15 +57,16 @@ export default class VideoRGBD  {
             posx: 150.0
             }*/
         this.debug = {
-            x1: 1500,
-            x2: 2400,
-            x3: 1920,
-            y1: 820,
-            y2: 1700,
-            y3: 940,
-            uvd: 0.440277,
+            x1: 700,
+            x2: 1350,
+            x3: 920,
+            y1: 940,
+            y2: 1600,
+            y3: 720,
+            uvdy: 0.4948,
+            uvdx: -0.0245,
             posz: 2600.0,
-            posx: 150.0
+            posx: 0.0
         }
         events.emit("add_gui", this.debug, "x1"); 
         events.emit("add_gui", this.debug, "x2"); 
@@ -73,7 +74,8 @@ export default class VideoRGBD  {
         events.emit("add_gui", this.debug, "y1"); 
         events.emit("add_gui", this.debug, "y2"); 
         events.emit("add_gui", this.debug, "y3"); 
-        events.emit("add_gui", this.debug, "uvd"); 
+        events.emit("add_gui", this.debug, "uvdy"); 
+        events.emit("add_gui", this.debug, "uvdx"); 
         events.emit("add_gui", this.debug, "posx"); 
         events.emit("add_gui", this.debug, "posz"); 
         events.emit("add_gui", this.properties, "mindepth"); 
@@ -91,7 +93,8 @@ export default class VideoRGBD  {
                 "y1" : { type : "f", value : this.debug.y1 },
                 "y2" : { type : "f", value : this.debug.y2 },
                 "y3" : { type : "f", value : this.debug.y3 },
-                "uvd" : { type : "f", value : this.debug.uvd },
+                "uvdy" : { type : "f", value : this.debug.uvdy },
+                "uvdx" : { type : "f", value : this.debug.uvdx },
                 "posx" : { type : "f", value : this.debug.posx },
                 "posz" : { type : "f", value : this.debug.posz }
             },
@@ -107,7 +110,7 @@ export default class VideoRGBD  {
 
         //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
-        //let mesh = new THREE.Mesh( geometry, material);
+        //this.mesh = new THREE.Mesh( geometry, material);
         //this.mesh.scale.set(0.0016, 0.0016, 0.0016);
         this.mesh.scale.set(0.003, 0.003, 0.003);
         this.mesh.rotation.set(
@@ -132,7 +135,8 @@ export default class VideoRGBD  {
         for ( let y = 0; y < VERTS_TALL; y++) {
             for ( let x = 0; x < VERTS_WIDE; x++ ) {
                 meshGeometry.vertices.push(
-                        new THREE.Vector3((-640 + x * 5), (480 -y * 5) , 0 ) );
+                    new THREE.Vector3((-640 + x * 5), (480 -y * 5) , 0 ) );
+
                     // new THREE.Vector3(-x / VERTS_WIDE ,  y / VERTS_TALL, 0 ) );
             }
         }
@@ -179,7 +183,8 @@ export default class VideoRGBD  {
         this.meshMaterial.uniforms.y1.value = this.debug.y1;
         this.meshMaterial.uniforms.y2.value = this.debug.y2;
         this.meshMaterial.uniforms.y3.value = this.debug.y3;
-        this.meshMaterial.uniforms.uvd.value = this.debug.uvd;
+        this.meshMaterial.uniforms.uvdy.value = this.debug.uvdy;
+        this.meshMaterial.uniforms.uvdx.value = this.debug.uvdx;
         this.meshMaterial.uniforms.posx.value = this.debug.posx;
         this.meshMaterial.uniforms.posz.value = this.debug.posz;
         this.meshMaterial.uniforms.mindepth.value = this.properties.mindepth;
