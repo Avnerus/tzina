@@ -16,5 +16,28 @@ export default {
         events.emit("add_gui", {folder:name}, cube.position, "y"); 
         events.emit("add_gui", {folder:name}, cube.position, "z"); 
         return cube;
+    },
+    positionObject: function(object, name, angles) {
+        events.emit("add_gui", {folder:name + " - Position"}, object.position, "x"); 
+        events.emit("add_gui", {folder:name + " - Position"}, object.position, "y"); 
+        events.emit("add_gui", {folder:name + " - Position"}, object.position, "z"); 
+
+        if (angles) {
+            object.angleRotation = {x: angles[0], y: angles[1], z: angles[2]};
+        } else {
+            object.angleRotation = {x: 0, y: 0, z: 0};
+        }
+        events.emit("add_gui", {
+                    folder:name + " - Rotation",
+                    onChange: () => {object.rotation.x = object.angleRotation.x * Math.PI / 180}
+        }, object.angleRotation, "x"); 
+        events.emit("add_gui", {
+                    folder:name + " - Rotation",
+                    onChange: () => {object.rotation.y = object.angleRotation.y * Math.PI / 180}
+        }, object.angleRotation, "y"); 
+        events.emit("add_gui", {
+                    folder:name + " - Rotation",
+                    onChange: () => {object.rotation.z = object.angleRotation.z * Math.PI / 180}
+        }, object.angleRotation, "z"); 
     }
 }

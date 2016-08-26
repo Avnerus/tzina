@@ -130,6 +130,8 @@ export default class Game {
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
 
+            /*
+
             let cube = DebugUtil.adjustableCube(
                 new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[1].startPosition),
                 "Ramp entry",
@@ -144,19 +146,7 @@ export default class Game {
                 1,
                 0x00ffff
             )
-            this.square.mesh.add( cube );
-
-            /*
-
-            this.lupo.rotationY = 20;
-            this.lupo.rotationX = -14;
-            this.lupo.rotationZ = 6; 
-            events.emit("add_gui", this.lupo.position, "x"); 
-            events.emit("add_gui", this.lupo.position, "z");
-            events.emit("add_gui", this.lupo.position, "y");
-            events.emit("add_gui", this.lupo, "rotationY"); 
-            events.emit("add_gui", this.lupo, "rotationZ"); 
-            events.emit("add_gui", this.lupo, "rotationX"); */
+            this.square.mesh.add( cube );*/
 
             onLoad();
         };

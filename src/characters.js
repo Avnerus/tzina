@@ -16,7 +16,7 @@ export default [
         animationRotation: [20, 0, 0],
         space: 7,
         subtitles: "subtitles"
-    },
+    } /*,
     {
         name: 'Lupo',
         basePath : 'assets/characters/lupo',
@@ -31,6 +31,6 @@ export default [
         animationRotation: [5, 0, -3],
         space: 9 ,
         subtitles: "subtitles2"
-    }
+    }*/
 
 ]

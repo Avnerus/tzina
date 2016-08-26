@@ -97,6 +97,7 @@ export default class Character extends THREE.Object3D {
     }
 
     load() {
+        console.log("Character " + this.props.name + ": Load");
         this.idleVideo.load();
     }
 
