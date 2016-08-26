@@ -49,6 +49,7 @@ export default class TimeController {
         let closestHour = this.getHour(closestAngle);
         if (closestHour != this.currentHour) {
             this.currentHour = closestHour;
+            events.emit("hour_updated", this.currentHour);
             this.showChapterTitle();
         }
     }
@@ -105,7 +106,6 @@ export default class TimeController {
         console.log("Target rotationY ", targetRotationY, " from ", this.currentRotation);
 
         TweenMax.to(this, 1, {currentRotation: targetRotationY, onComplete: () => { 
-            events.emit("hour_updated", this.currentHour);
         }, onUpdate: () => {
             this.updateSquare();
         }});

@@ -14,10 +14,8 @@ import TzinaVRControls from './tzina_vr_controls'
 import Intro from './intro'
 import SoundManager from './sound_manager'
 import TimeController from './time_controller'
+import CharacterController from './character_controller'
 
-// Animations
-import HannahAnimation from './animations/hannah'
-import LupoAnimation from './animations/lupo'
 
 import DebugUtil from './util/debug'
 
@@ -44,6 +42,7 @@ export default class Game {
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
+        console.log("SCENE: ", this.scene);
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
         
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
@@ -89,62 +88,11 @@ export default class Game {
         this.square = new Square();
 
         // Test characters
-        /*
-        this.testCharacter = new Character({
-            basePath : 'assets/characters/lupocomp',
-            mindepth : 2331.267333984,
-            maxdepth : 3446.559326172,
-            position : [30, 6, 42],
-            rotation: [0, 170, 0],
-            name: 'Hannah',
-            animation: 'Hannah'
-            });*/
-
         
-        this.hannah = new Character({
-            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
-            basePath : 'assets/characters/hanna',
-            mindepth : 2138.454101562,
-            maxdepth : 3047.334472656,
-            position : [-32, 8.1, 152.5],
-            rotation: [-19, 45, 15],
-            name: 'Hannah',
-            animation: 'Hannah',
-            uvd: 0.440277,
-            scale: 0.005,
-            animationPosition: [0,-1.5,-2.2],
-            animationRotation: [20, 0, 0],
-            space: 7,
-            subtitles: "subtitles"
-        }, this.collisionManager);
-
-        /*
-        this.lupo = new Character({
-            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/lupo',
-            basePath : 'assets/characters/lupo',
-            mindepth : 1500.681884766,
-            maxdepth : 3376.051757813,
-            position : [-51, 7.9, 126],//[51, 7.9, 77], // [-41, 7.9, 121], 
-            rotation: [-8,20,6],//[6, 195, 6], // [6,215,6],
-            name: 'Lupo',
-            uvd: 0.45,
-            scale: 0.006,
-            animation: 'Lupo',
-            animationPosition: [0, -1.8, -4],
-            animationRotation: [5, 0, -3],
-            space: 9 ,
-            subtitles: "subtitles2"
-        }, this.collisionManager);*/
 
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
 
 
-        // animations
-        this.animations = {
-            'Hannah': new HannahAnimation()
-           //  'Lupo': new LupoAnimation()
-            
-        }
 
 
         /*
@@ -163,7 +111,6 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
-        // Intro
         this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
 
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
@@ -171,6 +118,8 @@ export default class Game {
 
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky);
         this.timeController.init();
+
+        this.characterController = new CharacterController(this.config, this.square, this.collisionManager);
 
     }
 
@@ -180,8 +129,6 @@ export default class Game {
             console.log("Done loading everything!");
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
-            //this.scene.add(this.lupo)
-            this.scene.add(this.hannah)
 
             let cube = DebugUtil.adjustableCube(
                 new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[1].startPosition),
@@ -223,14 +170,10 @@ export default class Game {
 
         this.sky.init();
         this.soundManager.init();
-        this.hannah.init(this.loadingManager, this.animations)
-        //this.lupo.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
 
-        // Animations init
-        Object.keys(this.animations).forEach((key) => {
-            this.animations[key].init(this.loadingManager);
-        });
+        // Characters
+        this.characterController.init(this.loadingManager);
 
         // WebVR
         this.vrEffect = new THREE.VREffect(this.renderer);
@@ -274,7 +217,6 @@ export default class Game {
            /*
             this.keyboardController.setPosition(-15, 10, 167);
             this.sky.transitionTo(17,1);
-            this.hannah.play(); 
             */
         } else {
             // Init the intro
@@ -334,15 +276,7 @@ export default class Game {
         this.timeController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
-            }
-        this.hannah.update(dt,et);
-        //this.lupo.update(dt,et);
-
-        /*
-
-        this.lupo.rotation.y = this.lupo.rotationY * Math.PI / 180;
-        this.lupo.rotation.x = this.lupo.rotationX * Math.PI / 180;
-        this.lupo.rotation.z = this.lupo.rotationZ * Math.PI / 180;*/
+        }
 
         //this.flood.update(dt);
         this.collisionManager.update(dt);

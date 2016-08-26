@@ -87,7 +87,7 @@ export default
 			"hour": 17,
 			"timeLimitMinutes" : 12,
 			"characters": [
-				"Hanna",
+				"Hannah",
 				"Lupo2",
 				"Dogs",
 				"shirin4"

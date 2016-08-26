@@ -3,6 +3,8 @@ import VideoRGBD from './util/video_rgbd'
 export default class Character extends THREE.Object3D {
     constructor(props, collisionManager) {
         super();
+        this.collisionManager = collisionManager;
+
         this.idleVideo = new VideoRGBD({
             mindepth: props.mindepth,
             maxdepth: props.maxdepth,
@@ -18,7 +20,6 @@ export default class Character extends THREE.Object3D {
             uvd: props.uvd,
             scale: props.scale
         });
-        this.collisionManager = collisionManager;
 
         console.log(props.name + " character constructed!");
         
@@ -27,8 +28,9 @@ export default class Character extends THREE.Object3D {
         this.playingFull = false;
         this.isPaused = false;
         this.done = false;
+
     }
-    init(loadingManager, animations) {
+    init(loadingManager) {
             this.idleVideo.init(loadingManager);
             this.fullVideo.init(loadingManager);
 
@@ -60,7 +62,9 @@ export default class Character extends THREE.Object3D {
             );
 
             if (this.props.animation) {
-                this.animation = animations[this.props.animation];
+                this.animation = this.props.animation;
+                this.animation.init(loadingManager);
+
                 this.animation.position.fromArray(this.props.animationPosition);
                 this.animation.rotation.set(
                     this.props.animationRotation[0] * Math. PI / 180,
@@ -92,6 +96,13 @@ export default class Character extends THREE.Object3D {
         this.idleVideo.play();
     }
 
+    load() {
+        this.idleVideo.load();
+    }
+
+    unload() {
+        this.idleVideo.unload();
+    }
     
     update(dt,et) {
         if (!this.playingFull) {
@@ -113,12 +124,16 @@ export default class Character extends THREE.Object3D {
     endFull() {
         this.animation.visible = false;
         this.fullVideo.pause();
+        this.fullVideo.unload();
+
         this.idleVideo.mesh.visible = true;
         this.fullVideo.mesh.visible = false;
         this.idleVideo.play();
         this.playingFull = false;
-        let subtitlesVideo = document.getElementById(this.props.subtitles);
-        subtitlesVideo.src = "";
+        if (this.props.subtitles) {
+            let subtitlesVideo = document.getElementById(this.props.subtitles);
+            subtitlesVideo.src = "";
+        }
         this.isPaused = false;
         this.done = true;
         events.emit("character_idle", this.props.name)

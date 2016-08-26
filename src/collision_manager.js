@@ -62,7 +62,13 @@ export default class CollisionManager {
             bbox.box.max.z + space
         ])
 
+        character.obstacleIndex = this.obstacles.length -1;
+
         this.obstacleInfo.push(character);
+    }
+
+    removeCharacter(character) {
+
     }
 
     addBoundingBoxes(obj, scene) {

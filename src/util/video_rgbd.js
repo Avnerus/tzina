@@ -27,9 +27,9 @@ export default class VideoRGBD  {
 
     init(loadingManager) {
         this.video = document.createElement( 'video' );
-        this.video.src = this.properties.fileName;
-        //this.video.crossOrigin = "anonymous"
-        console.log("Cross origin video ", this.video.crossOrigin);
+        /*
+        this.video.crossOrigin = "anonymous"
+        console.log("Cross origin video ", this.video.crossOrigin); */
 
         this.isPlaying = false;
         this.videoTexture = new THREE.Texture( this.video );
@@ -71,7 +71,12 @@ export default class VideoRGBD  {
         bbox.update();
         scene.add( bbox );*/
     }
-
+    load() {
+        this.video.src = this.properties.fileName;
+    }
+    unload() {
+        this.video.src = "";
+    }
 
     buildMeshGeometry() {
         let meshGeometry = new THREE.Geometry();
@@ -79,7 +84,6 @@ export default class VideoRGBD  {
             for ( let x = 0; x < VERTS_WIDE; x++ ) {
                 meshGeometry.vertices.push(
                         new THREE.Vector3((-640 + x * 5), (480 -y * 5) , 0 ) );
-                    // new THREE.Vector3(-x / VERTS_WIDE ,  y / VERTS_TALL, 0 ) );
             }
         }
         for ( let y = 0; y < VERTS_TALL - 1; y++ ) {
@@ -122,8 +126,6 @@ export default class VideoRGBD  {
         if ( this.isPlaying === false ) return;
 
         this.video.pause();
-
-        this.meshMaterial.uniforms.map.value = this.imageTexture;
 
         this.isPlaying = false;
 

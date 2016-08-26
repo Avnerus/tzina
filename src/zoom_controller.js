@@ -161,9 +161,16 @@ export default class ZoomController {
                 this.calculateZoomVector();
                 }*/
 
-            if (this.velocityZ < 0 && this.passedControlThreshold) {
-                this.calculateZoomCurve();
+            if (this.passedControlThreshold) {
+                if (this.velocityZ < 0) {
+                    this.calculateZoomCurve();
+                } else {
+                    this.velocityZ = 0;
+                    return;
+                }
             }
+
+
             this.distanceOnCurve = Math.max(0,Math.min(1, this.distanceOnCurve + this.velocityZ * dt * 0.001));
             //console.log(this.distanceOnCurve);
             this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
