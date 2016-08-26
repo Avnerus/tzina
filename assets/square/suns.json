@@ -100,7 +100,7 @@
 			"uuid": "92e1fa79-a425-4e6e-915d-e37d0846c47a",
 			"name": "sun", 
 			"type": "MeshPhongMaterial",
-			"color": "0x5B5B5B",
+			"color": "0xF54876FF",
 			"emissive": "0xC8C5B9",
 			"opacity": 1,
 			"map": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_MainTex",

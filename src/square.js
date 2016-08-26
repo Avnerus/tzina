@@ -87,10 +87,13 @@ export default class Square extends THREE.Object3D{
     turnOffSun(name) {
         let sun = this.suns.getObjectByName(name).children[0];
         console.log("Turn off sun", sun);
-        sun.material.color = new THREE.Color(0x434241);
-        sun.material.emissive = new THREE.Color(0x717277);
-        sun.material.specular = new THREE.Color(0x000000);
         sun.material.side = THREE.BackSide;
+        sun.material.color = new THREE.Color(0x000733);
+        sun.material.emissive = new THREE.Color(0x222223);
+        sun.material.specular = new THREE.Color(0x000000);
+        sun.material.opacity = .8;
+     
+
     }
 
     turnOnSun(name) {
@@ -99,11 +102,10 @@ export default class Square extends THREE.Object3D{
         }
         let sun = this.suns.getObjectByName(name).children[0];
         console.log("Turn on sun", sun);
-        sun.material.color = new THREE.Color(0x5B5B5B);
+        sun.material.color = new THREE.Color(0xF4F5DC);
         sun.material.emissive = new THREE.Color(0xC8C5B9);
         sun.material.specular = new THREE.Color(0xFFFFFF);
         sun.material.side = THREE.DoubleSide;
-
         this.currentSun = name;
     }
 
