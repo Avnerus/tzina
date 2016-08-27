@@ -61,16 +61,20 @@ export default class VideoRGBD  {
 
         let geometry = this.buildMeshGeometry();
 
-        //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
+       //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
-        //let mesh = new THREE.Mesh( geometry, material);
+        //this.mesh = new THREE.Mesh( geometry, material);
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         //mesh.frustumCulled = false;
 
-        /*
-        var bbox = new THREE.BoundingBoxHelper( this.mesh, 0x00ff00  );
-        bbox.update();
-        scene.add( bbox );*/
+
+       /*
+
+        if (scene) {
+            var bbox = new THREE.BoundingBoxHelper( this.mesh, 0xff0000  );
+            bbox.update();
+            scene.add( bbox );
+        }*/
     }
     load() {
         this.video.src = this.properties.fileName;

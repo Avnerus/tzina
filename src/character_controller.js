@@ -31,9 +31,9 @@ export default class CharacterController {
             });
 
             this.activeCharacters.forEach((character) => {
+                this.square.mesh.add(character);
                 character.load();
                 character.play();
-                this.square.mesh.add(character);
                 DebugUtil.positionObject(character, character.props.name, character.props.rotation);
             });
 

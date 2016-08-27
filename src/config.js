@@ -4,5 +4,5 @@ export default {
     fps: 30,
     enableFlying: false,
     skipIntro: false,
-    movementSpeed: 10
+    movementSpeed: 5
 }

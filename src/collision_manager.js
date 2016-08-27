@@ -49,9 +49,20 @@ export default class CollisionManager {
         console.log("COLLISION MANAGER - Adding character ", character);
         let space = character.props.space;
 
-        let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
-        bbox.update();
-        //this.scene.add(bbox);
+            /*
+            let geometry = new THREE.BoxGeometry( 5, 5, 5  );
+            let material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true}  );
+            let cube = new THREE.Mesh( geometry, material  );
+            cube.position.copy(new THREE.Vector3().setFromMatrixPosition(character.idleVideo.mesh.matrixWorld));
+            console.log("BBOX? ", cube);
+            this.scene.add(cube);*/
+
+             let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
+                bbox.update();
+                /*
+            this.scene.add(bbox);*/
+
+
 
         this.obstacles.push([
             bbox.box.min.x - space, 
@@ -60,7 +71,7 @@ export default class CollisionManager {
             bbox.box.max.x + space, 
             bbox.box.max.y + space, 
             bbox.box.max.z + space
-        ])
+        ]);
 
         character.obstacleIndex = this.obstacles.length -1;
 

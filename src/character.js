@@ -73,13 +73,12 @@ export default class Character extends THREE.Object3D {
                     this.props.animationRotation[1] * Math. PI / 180,
                     this.props.animationRotation[2] * Math. PI / 180
                 );
-                this.add(this.animation);
+                //this.add(this.animation);
                 this.animation.visible = false;
             } else {
                 this.animation = null;
             }
 
-            this.collisionManager.addCharacter(this);
 
             events.on("character_playing", (name) => {
                 if (this.props.name != name) {
@@ -100,6 +99,7 @@ export default class Character extends THREE.Object3D {
 
     load() {
         console.log("Character " + this.props.name + ": Load");
+        this.collisionManager.addCharacter(this);
         this.idleVideo.load();
     }
 
@@ -162,6 +162,7 @@ export default class Character extends THREE.Object3D {
         this.timeSinceCollision = 0;
         if (!this.playingFull && !this.done && this.animation && !this.animation.visible) {
             console.log("Character collision!");
+            this.add(this.animation);
             this.animation.visible = true;
 
             // load subtitles video
