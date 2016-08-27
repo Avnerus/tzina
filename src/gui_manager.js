@@ -2,6 +2,7 @@ export default class GuiManager {
     constructor(emitter) {
         this.emitter = emitter;
         this.folders = {};
+        this.controls = [];
        
     }
     init() {
@@ -25,6 +26,10 @@ export default class GuiManager {
 
             if (opts.onChange) {
                 control.onChange(opts.onChange);
+            }
+
+            if (opts.listen) {
+                control.listen();
             }
         })
     }

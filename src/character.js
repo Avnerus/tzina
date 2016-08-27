@@ -151,9 +151,11 @@ export default class Character extends THREE.Object3D {
         this.fullVideo.mesh.visible = false;
         this.idleVideo.play();
         this.playingFull = false;
-        let subtitlesVideo = document.getElementById(this.props.subtitles);
-        subtitlesVideo.pause();
-        subtitlesVideo.style.display = "none";
+        if (this.props.subtitles) {
+            let subtitlesVideo = document.getElementById(this.props.subtitles);
+            subtitlesVideo.pause();
+            subtitlesVideo.style.display = "none";
+        }
         this.isPaused = true;
         events.emit("character_idle", this.props.name)
     }
@@ -167,14 +169,15 @@ export default class Character extends THREE.Object3D {
 
             // load subtitles video
             if (!this.isPaused) {
+                this.fullVideo.load();
                 this.animation.start()
+                this.playFull();
 
                 if(this.props.subtitles) {
                     let subtitlesVideo = document.getElementById(this.props.subtitles);
                     subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
                     subtitlesVideo.addEventListener('canplay',() => {
                         subtitlesVideo.play();
-                        this.playFull();
                     },false);
                     subtitlesVideo.load();
                 }
@@ -194,6 +197,7 @@ export default class Character extends THREE.Object3D {
         this.playingFull = true;
         this.idleVideo.pause();
         this.fullVideo.mesh.visible = true;
+        this.idleVideo.mesh.visible = false;
         //this.fullVideo.video.currentTime = 0;
         this.fullVideo.play();
         events.emit("character_playing", this.props.name)

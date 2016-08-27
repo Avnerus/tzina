@@ -54,7 +54,7 @@ vec3 xyz( float x, float y, float depth ) {
 
 void main() {
 
-    vUv = vec2( ( position.x + 700.0 ) / 1350.0, ( position.y + 940.0 ) / 1600.0 );
+    vUv = vec2( ( position.x + 610.0 ) / 1150.0, ( position.y + 600.0 ) / 1100.0 );
     vUv.y = vUv.y * 0.5;// + 0.5;
 
     vec3 hsl = rgb2hsl( texture2D( map, vUv ).xyz );

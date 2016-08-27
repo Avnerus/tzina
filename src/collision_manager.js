@@ -57,10 +57,11 @@ export default class CollisionManager {
             console.log("BBOX? ", cube);
             this.scene.add(cube);*/
 
+           this.scene.updateMatrixWorld(true);
+
              let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
                 bbox.update();
-                /*
-            this.scene.add(bbox);*/
+          //  this.scene.add(bbox);
 
 
 

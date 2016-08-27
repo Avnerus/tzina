@@ -13,6 +13,8 @@ export default class TimeController {
         this.currentRotation = 0;
 
         this.active = true;
+
+        this.clockRunning = false;
     }
     init() {
         console.log("Initializing Time Controller", this.element)
@@ -20,11 +22,16 @@ export default class TimeController {
         this.angles = this.times.map((time) => {return time * 15});
         this.angles.push(360);
         console.log("Chapter times", this.times, this.angles);
-        //document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
+        document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
         this.currentHour = 0;
+        this.nextHour = this.times[1];
 
         events.on("chapter_threshold", (passed) => {
             this.active = !passed;
+        });
+
+        events.on("control_threshold", (passed) => {
+            this.clockRunning = passed;
         });
     }
 
@@ -33,6 +40,20 @@ export default class TimeController {
             this.square.mesh.rotateY(this.rotateVelocity * Math.PI /180 * dt * 20);
             //console.log("Square RotY: ", this.square.mesh.rotation.y);
             this.updateRotation();
+        }
+        if (this.clockRunning) {
+            this.currentHour += dt * this.config.daySpeed;
+            if (this.currentHour >= 24) {
+                this.currentHour = 0;
+            }
+
+            if ((this.currentHour >= this.nextHour && this.nextHour != 0) ||
+                (this.nextHour == 0 && this.currentHour > 0 && this.currentHour < this.times[1])) {
+                this.currentHour = this.nextHour;
+                this.updateNextHour();
+                events.emit("hour_updated", this.currentHour);
+            }
+            this.sky.setTime(this.currentHour);
         }
     }
 
@@ -52,6 +73,17 @@ export default class TimeController {
             events.emit("hour_updated", this.currentHour);
             this.showChapterTitle();
         }
+    }
+
+    updateNextHour() {
+        let currentIndex = this.times.indexOf(this.currentHour);
+        if (currentIndex == this.times.length -1) {
+            this.nextHour = this.times[0];
+        } else {
+            this.nextHour = this.times[currentIndex +1];
+        }
+
+        console.log("Next hour: ", this.nextHour);
     }
 
     updateSquare() {
@@ -105,7 +137,9 @@ export default class TimeController {
         let targetRotationY = closestAngle;
         console.log("Target rotationY ", targetRotationY, " from ", this.currentRotation);
 
-        TweenMax.to(this, 1, {currentRotation: targetRotationY, onComplete: () => { 
+        TweenMax.to(this, 1, {currentRotation: targetRotationY, onComplete: () => {
+            events.emit("angle_updated", this.currentHour);
+            this.updateNextHour();
         }, onUpdate: () => {
             this.updateSquare();
         }});
@@ -133,5 +167,6 @@ export default class TimeController {
         this.updateSquare();
         this.showChapterTitle();
         events.emit("hour_updated", this.currentHour);
+        this.updateNextHour();
     }
 }

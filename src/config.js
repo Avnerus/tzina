@@ -4,5 +4,7 @@ export default {
     fps: 30,
     enableFlying: false,
     skipIntro: false,
-    movementSpeed: 5
+    movementSpeed: 1,
+//    daySpeed: 0.02
+    daySpeed: 0.06
 }
