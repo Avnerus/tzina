@@ -163,6 +163,7 @@ export default class Game {
         };
 
         this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+            
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
@@ -189,6 +190,7 @@ export default class Game {
         this.started = true;
         this.vrManager.setMode_(2);
         let element = this.renderer.domElement;
+        this.container = document.getElementById('game');
         this.container.appendChild(element);
         this.soundManager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
@@ -198,11 +200,18 @@ export default class Game {
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
 
+                this.zoomController = new ZoomController(this.config, this.camera, this.square);
+                this.zoomController.init();
+            }
+
+            // Get in the square
+            this.keyboardController.setPosition(40, 10, 65);
 
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
 
+        this.collisionManager.setPlayer(this.camera);
         this.resize();
 
 
@@ -278,6 +287,7 @@ export default class Game {
         }
 
         //this.flood.update(dt);
+        /*
         this.collisionManager.update(dt);
         //console.log(this.camera.rotation); */
         this.intro.update();
