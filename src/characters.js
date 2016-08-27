@@ -17,6 +17,22 @@ export default [
         animationRotation: [20, 0, 0],
         space: 7,
         subtitles: null
+    },
+    {
+        name: 'Miriam',
+        basePath : 'assets/characters/miriam',
+        mindepth : 1983.749877930,
+        maxdepth : 3119.456298828,
+        position : [-5.5, 21.93, 10.8],
+        rotation: [-22, 50, 14],
+        animation: new HannahAnimation(),
+        uvdy: 0.4847,
+        uvdx: -0.025
+        scale: 0.003 * 0.25,
+        animationPosition: [0,-1.5,-2.2],
+        animationRotation: [20, 0, 0],
+        space: 7,
+        subtitles: null
     } /*,
     {
         name: 'Lupo',
