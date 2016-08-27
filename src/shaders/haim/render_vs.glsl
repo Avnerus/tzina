@@ -20,7 +20,7 @@ void main() {
 
     //pos now contains the position of a point in space that can be transformed
     //gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );
-    vColor = newPosition;
+    //vColor = newPosition;
     gl_Position = projectionMatrix *  viewMatrix * vec4( newPosition, 1.0 );
 
     gl_PointSize = pointSize;

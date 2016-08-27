@@ -195,7 +195,7 @@ export default class Game {
 
         // Intro
         this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
-        this.introAni = new IntroAnimation( this.scene, this.renderer );
+        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square );
 
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
         this.zoomController.init();
@@ -211,6 +211,7 @@ export default class Game {
             this.sky.applyToMesh(this.square.getSphereMesh());
             //this.scene.add(this.lupo)
             // this.scene.add(this.hannah)
+            this.introAni.initFBOParticle();
             this.scene.add(this.introAni);
 
 

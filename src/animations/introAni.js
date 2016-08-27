@@ -6,7 +6,7 @@ import EndArrayPlugin from '../util/EndArrayPlugin'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class IntroAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( scene, renderer, square ) {
         super();
         this.BASE_PATH = 'assets/animations/intro';
 
@@ -26,6 +26,8 @@ export default class IntroAnimation extends THREE.Object3D {
         this.scene = scene;
         this.renderer = renderer;
         this.maxDepth = 50.0;
+
+        this.square = square;
 
         console.log("FBO Constructed!")
     }
@@ -93,16 +95,18 @@ export default class IntroAnimation extends THREE.Object3D {
                               new THREE.PointsMaterial( { color: 0x00ffff, size: 3 } ) ];
 
             // scale, position, rotation
-            let treeTransformer = [ [new THREE.Vector3(110, 90, 80), new THREE.Vector3(0,1100,1000), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)],
+            let treeTransformer = [ [new THREE.Vector3(70, 70, 10), new THREE.Vector3(0,1100,300), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)],
                                     [new THREE.Vector3(50, 50, 50), new THREE.Vector3(500,800,1000), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2*(1-1/2)) ],
                                     [new THREE.Vector3(65, 40, 50), new THREE.Vector3(-500,900,1000), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2*(1+1/2))] ];
             
+            this.trees = [];
             for(let i=0; i<treeTransformer.length; i++){
                 let tree = new THREE.Points( geometry.clone(), materials[i] );
                 tree.scale.set( treeTransformer[i][0].x, treeTransformer[i][0].y, treeTransformer[i][0].z );
                 tree.position.set( treeTransformer[i][1].x, treeTransformer[i][1].y, treeTransformer[i][1].z );
                 tree.rotation.set( treeTransformer[i][2].x, treeTransformer[i][2].y, treeTransformer[i][2].z );
                 this.add( tree );
+                this.trees.push( tree );
             }
 
             // this.tree = new THREE.Points( geometry, material );
@@ -112,16 +116,40 @@ export default class IntroAnimation extends THREE.Object3D {
             // this.add( this.tree );
 
             let refObj = new THREE.Object3D();
-            refObj.scale.set( 110, 90, 80 );
-            refObj.position.set(0,900,1100);
+            refObj.scale.set( 70, 70, 10 );    // 110, 90, 80 // 110, 90, 10
+            refObj.position.set(0,1100,300);    // 0,900,1100 // 0,1500,300
             refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
 
             // FBO_PARTICLES
             // let particleGeo = new THREE.BoxGeometry(2000,1000,2000);
-            let particleGeo = new THREE.CylinderGeometry( 800, 800, 5000, 32 );
-            let positions = this.initParticles( refObj, geometry );
-            this.rttIn = positions;
-            this.initFBOParticle( positions );
+            let particleGeo = new THREE.CylinderGeometry( 100, 100, 500, 32 );
+
+            this.positionsForFBO = this.initParticles( refObj, geometry );
+
+            this.rttIn = this.positionsForFBO;
+            // this.initFBOParticle( positions );
+        });
+
+        loader.load(this.BASE_PATH + "/models/terrain4.json", (geometry, material) => {
+            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x4c5b6b, shininess:0, shading: THREE.FlatShading}) ); //0x005a78
+            // this.terrain.scale.set(150,50,110);//80,50,50
+            this.terrain.scale.multiplyScalar(15);
+            // this.terrain.rotation.y = Math.PI;
+            this.terrain.position.set(0,-3000,200);
+            this.add( this.terrain );
+        });
+
+        let houseTex = tex_loader.load( this.BASE_PATH + '/images/house.jpg' );
+        let houseEmisTex = tex_loader.load( this.BASE_PATH + '/images/house_EMI.png' );
+        loader.load(this.BASE_PATH + "/models/house2.json", (geometry, material) => {
+            this.house = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({map:houseTex, emissiveMap:houseEmisTex, emissive:0xffff00, emissiveIntensity: 0.5}) );
+
+            TweenMax.to(this.house.material, 2, {emissiveIntensity:1.5, repeat:-1, yoyo:true, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: "none", randomize: true, clamp: false})});
+
+            this.house.scale.multiplyScalar(15);//80,50,50
+            // this.terrain.rotation.y = Math.PI;
+            this.house.position.set(0,-3000,200);
+            this.add( this.house );
         });
 
 
@@ -130,16 +158,28 @@ export default class IntroAnimation extends THREE.Object3D {
         this.loadingManager.itemEnd("IntroAnim");
     }
 
-    initFBOParticle( positions ) {
+    initFBOParticle() {
+        // get square data: radius & center
+        let squareMesh = this.square.getSphereMesh();
+        console.log(squareMesh.geometry.boundingSphere);
+        this.sRadius = squareMesh.geometry.boundingSphere.radius;
+        this.sCenter = squareMesh.geometry.boundingSphere.center;
+        console.log(this.sCenter);
+
         this.simulationShader = new THREE.ShaderMaterial({
             uniforms: {
-                positions: { type: "t", value: positions },
+                positions: { type: "t", value: this.positionsForFBO },
                 timer: { type: "f", value: 0 },
                 maxDepth : { type: "f", value: this.maxDepth },
                 maxDistance: { type: "f", value: 50 },
-                amplitude: { type: "f", value: 0.2 },
+                amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                acceleration: { type: "f", value: 2 }
+                gravity: { type: "f", value: 2 },
+                squareRadius: {type: "f", value: this.sRadius*26},
+                squareCenterX: {type: "f", value: this.sCenter.x},
+                squareCenterY: {type: "f", value: this.sCenter.y},
+                squareCenterZ: {type: "f", value: this.sCenter.z},
+                bounceFactor: {type: "f", value: 2}
             },
             vertexShader: this.simulation_vs,
             fragmentShader:  this.simulation_fs,
