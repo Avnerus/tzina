@@ -31,6 +31,8 @@ export default class Character extends THREE.Object3D {
         this.isPaused = false;
         this.done = false;
 
+        this.active = false;
+
     }
     init(loadingManager) {
             this.idleVideo.init(loadingManager);
@@ -63,8 +65,7 @@ export default class Character extends THREE.Object3D {
                 this.props.rotation[2] * Math. PI / 180
             );
 
-            if (this.props.animation) {
-                this.animation = this.props.animation;
+            if (this.animation) {
                 this.animation.init(loadingManager);
 
                 this.animation.position.fromArray(this.props.animationPosition);
@@ -101,10 +102,12 @@ export default class Character extends THREE.Object3D {
         console.log("Character " + this.props.name + ": Load");
         this.collisionManager.addCharacter(this);
         this.idleVideo.load();
+        this.active = true;
     }
 
     unload() {
         this.idleVideo.unload();
+        this.active = false;
     }
     
     update(dt,et) {

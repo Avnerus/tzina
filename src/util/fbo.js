@@ -74,7 +74,7 @@ export default class FBO {
             }
         }
 
-        console.log("Vertices array: ", vertices);
+        //console.log("Vertices array: ", vertices);
 
         let references  = new Float32Array( points * 2);
         for(var vert = 0; vert < points; vert++ ) {

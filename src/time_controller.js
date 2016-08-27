@@ -167,6 +167,7 @@ export default class TimeController {
         this.updateSquare();
         this.showChapterTitle();
         events.emit("hour_updated", this.currentHour);
+        events.emit("angle_updated", this.currentHour);
         this.updateNextHour();
     }
 }

@@ -16,8 +16,13 @@ import SoundManager from './sound_manager'
 import TimeController from './time_controller'
 import CharacterController from './character_controller'
 
-
 import DebugUtil from './util/debug'
+
+// Animations
+import HannahAnimation from './animations/hannah'
+import LupoAnimation from './animations/lupo'
+import MiriamAnimation from './animations/miriam'
+
 
 export default class Game {
     constructor(config) {
@@ -127,8 +132,12 @@ export default class Game {
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky);
         this.timeController.init();
 
-        this.characterController = new CharacterController(this.config, this.square, this.collisionManager);
+        this.animations = {
+            'Hannah' : new HannahAnimation(),
+            'Miriam' : new MiriamAnimation(this.scene, this.renderer)
+        }
 
+        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager);
     }
 
     load(onLoad) {
@@ -163,7 +172,6 @@ export default class Game {
         };
 
         this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
@@ -190,7 +198,6 @@ export default class Game {
         this.started = true;
         this.vrManager.setMode_(2);
         let element = this.renderer.domElement;
-        this.container = document.getElementById('game');
         this.container.appendChild(element);
         this.soundManager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
@@ -199,19 +206,10 @@ export default class Game {
                 this.vrControls.standing = true;
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
-
-                this.zoomController = new ZoomController(this.config, this.camera, this.square);
-                this.zoomController.init();
-            }
-
-            // Get in the square
-            this.keyboardController.setPosition(40, 10, 65);
-
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
 
-        this.collisionManager.setPlayer(this.camera);
         this.resize();
 
 
@@ -229,7 +227,7 @@ export default class Game {
             // Init the intro
             this.intro.init();
 
-            this.timeController.setTime(17);
+            this.timeController.setTime(19);
         }
 
 
@@ -285,10 +283,9 @@ export default class Game {
         if (this.vrControls) {
                this.vrControls.update();
         }
-
+        this.collisionManager.update(dt);
         //this.flood.update(dt);
         /*
-        this.collisionManager.update(dt);
         //console.log(this.camera.rotation); */
         this.intro.update();
     }

@@ -285,37 +285,6 @@ export default class MiriamAnimation extends THREE.Object3D {
                                                     } } );
     }
 
-    updateVertices() {
-        // let morphTargets = this.manFigure.geometry.morphTargets;
-        // let morphInfluences = this.manFigure.morphTargetInfluences;
-        // let upp = new THREE.Vector3(0,-1,0);
-
-        // // get morph geometry update position data
-        // for(let i=0; i<this.manGeometry.vertices.length; i++){
-        //     // let centerV = this.center.position.clone();
-
-        //     let vA = new THREE.Vector3();
-        //     let tempA = new THREE.Vector3();
-
-        //     for ( let t = 0, tl = morphTargets.length; t < tl; t ++ ) {
-        //         let influence = morphInfluences[ t ];
-        //         let target = morphTargets[t].vertices[i];
-        //         vA.addScaledVector( tempA.subVectors( target, this.shieldGeo.vertices[i] ), influence );
-        //     }
-
-        //     vA.add( this.shieldGeo.vertices[i] );
-        //     tempA.set( this.lookupTable[i%50]*0.5, this.lookupTable[(i+1)%50]*0.5, this.lookupTable[(i+2)%50]*0.5 );
-        //     vA.add( tempA );
-
-        //     this.domeMorphTargets[i].mesh.position.copy( vA );
-                        
-        //     // rotate
-        //     // let m1 = new THREE.Matrix4();
-        //     // m1.lookAt( centerV, vA, upp );
-        //     // this.domeMorphTargets[i].mesh.quaternion.setFromRotationMatrix( m1 );
-        // }
-    }
-
     loadModelClock (model, modelB, modelC, modelD, meshMat) {
 
         let loader = new THREE.JSONLoader(this.loadingManager);
@@ -420,6 +389,27 @@ export default class MiriamAnimation extends THREE.Object3D {
             this.timerAnim = TweenMax.fromTo(this.simulationShader.uniforms.timer, timerSpeed, {value:0}, {value:1, ease: Expo.easeOut});
     }
 
+    updateVideoTime(time) {
+        if (this.nextAnim && time >= this.nextAnim.time) {
+            console.log("Miriam - do anim sequence ", this.nextAnim);
+            this.nextAnim.anim();
+            let index = this.sequenceConfig.indexOf(this.nextAnim);
+            if (index < this.manGeometries.length -1) {
+                this.updateMorphForFBO( this.manGeometries[index], 0 );
+            }
+            if (this.currentSequence.length > 0) {
+                this.nextAnim = this.currentSequence.shift();
+            } else {
+                this.nextAnim = null;
+            }
+        }
+    }
+
+    start() {
+        this.currentSequence = this.sequenceConfig.slice(0);
+        this.nextAnim = this.currentSequence.shift();
+    }
+
     update(dt,et) {
         this.grandFatherClock.rotation.z = Math.sin(et*1000 / 1000) * (Math.PI/10);
         this.cGear.rotation.y += 0.008;
@@ -431,44 +421,6 @@ export default class MiriamAnimation extends THREE.Object3D {
         if(this.pointer2Time + 2 < et ){
             this.myCP2.rotation.z -= 0.1;
             this.pointer2Time = et;
-        }
-
-        // ANIMATION_SEQUENCE
-        if(!this.animStart){
-            this.animStartTime = et;
-            this.animStart = true;
-        }
-
-        if(this.animStart){
-            let animTime = et-this.animStartTime;
-
-            for(let i=0; i<this.sequenceConfig.length; i++){
-
-                // move on to 'next' sequence
-                if(animTime >= this.sequenceConfig[i].time && !this.sequenceConfig[i].performed){
-                    this.sequenceConfig[i].anim( this );
-                    this.sequenceConfig[i].performed = true;
-                    console.log("do anim sequence: " + i);
-
-                    if( i<this.manGeometries.length ){
-                        // v.1
-                        /*
-                        // update manGeometries ( e.g. sequenceConfig[0] --> for morph: manGeometries[1] )
-                        // let positions = this.initParticles( this.manGeometries[i] );
-                        let morphPositions = this.initParticles( this.manGeometries[i] );
-                        if(this.timerAnim!=null)
-                            this.timerAnim.kill();
-                        // this.simulationShader.uniforms.timer.value = 0;
-                        this.simulationShader.uniforms.morphPositions.value = morphPositions;
-                        // this.timerAnim = TweenMax.to(this.simulationShader.uniforms.timer, 2, {value:1, ease: Power1.easeIn});
-                        this.timerAnim = TweenMax.fromTo(this.simulationShader.uniforms.timer, 8, {value:0}, {value:1, ease: Expo.easeInOut});
-                        */
-
-                        // v.2
-                        this.updateMorphForFBO( this.manGeometries[i], 0 );
-                    }
-                }
-            }
         }
 
         // FBO
