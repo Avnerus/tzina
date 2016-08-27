@@ -20,7 +20,7 @@ export default class TimeController {
         this.angles = this.times.map((time) => {return time * 15});
         this.angles.push(360);
         console.log("Chapter times", this.times, this.angles);
-        document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
+        //document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
         this.currentHour = 0;
 
         events.on("chapter_threshold", (passed) => {

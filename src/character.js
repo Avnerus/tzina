@@ -9,7 +9,8 @@ export default class Character extends THREE.Object3D {
             mindepth: props.mindepth,
             maxdepth: props.maxdepth,
             fileName: props.basePath + "_idle.webm",
-            uvd: props.uvd,
+            uvdy: props.uvdy,
+            uvdx: props.uvdx,
             scale: props.scale
         });
 
@@ -17,7 +18,8 @@ export default class Character extends THREE.Object3D {
             mindepth: props.mindepth,
             maxdepth: props.maxdepth,
             fileName: props.basePath + "_full.webm",
-            uvd: props.uvd,
+            uvdy: props.uvdy,
+            uvdx: props.uvdx,
             scale: props.scale
         });
 
@@ -166,18 +168,22 @@ export default class Character extends THREE.Object3D {
             if (!this.isPaused) {
                 this.animation.start()
 
-                let subtitlesVideo = document.getElementById(this.props.subtitles);
-                subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
-                subtitlesVideo.addEventListener('canplay',() => {
-                    subtitlesVideo.play();
-                    this.playFull();
-                },false);
-                subtitlesVideo.load();
+                if(this.props.subtitles) {
+                    let subtitlesVideo = document.getElementById(this.props.subtitles);
+                    subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
+                    subtitlesVideo.addEventListener('canplay',() => {
+                        subtitlesVideo.play();
+                        this.playFull();
+                    },false);
+                    subtitlesVideo.load();
+                }
             } else {
                 console.log("Resume");
-                let subtitlesVideo = document.getElementById(this.props.subtitles);
-                subtitlesVideo.style.display = "block";
-                subtitlesVideo.play();
+                if (this.props.subtitles) {
+                    let subtitlesVideo = document.getElementById(this.props.subtitles);
+                    subtitlesVideo.style.display = "block";
+                    subtitlesVideo.play();
+                }
                 this.playFull();
             }
         }

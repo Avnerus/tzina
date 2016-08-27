@@ -264,6 +264,7 @@ export default class Game {
             this.zoomController.update(dt);
         }
         this.timeController.update(dt);
+        this.characterController.update(dt,et);
         if (this.vrControls) {
                this.vrControls.update();
         }

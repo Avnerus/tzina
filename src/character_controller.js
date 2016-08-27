@@ -33,13 +33,16 @@ export default class CharacterController {
             this.activeCharacters.forEach((character) => {
                 character.load();
                 character.play();
-                this.square.add(character);
+                this.square.mesh.add(character);
                 DebugUtil.positionObject(character, character.props.name, character.props.rotation);
             });
 
         });
     }
 
-    update(dt) {
+    update(dt,et) {
+        for (let i = 0; i < this.activeCharacters.length; i++) {
+            this.activeCharacters[i].update(dt,et);
+        }
     }
 }

@@ -7,15 +7,16 @@ export default [
         basePath : 'assets/characters/hanna',
         mindepth : 2138.454101562,
         maxdepth : 3047.334472656,
-        position : [-32, 8.1, 152.5],
-        rotation: [-19, 45, 15],
+        position : [-5.5, 22, 13.8],
+        rotation: [-22, 50, 14],
         animation: new HannahAnimation(),
-        uvd: 0.440277,
-        scale: 0.005,
+        uvdy: 0.4948,
+        uvdx: -0.0245,
+        scale: 0.002 * 0.25,
         animationPosition: [0,-1.5,-2.2],
         animationRotation: [20, 0, 0],
         space: 7,
-        subtitles: "subtitles"
+        subtitles: null
     } /*,
     {
         name: 'Lupo',

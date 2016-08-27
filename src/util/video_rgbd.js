@@ -45,7 +45,8 @@ export default class VideoRGBD  {
                 "map": { type: "t" },
                 "mindepth" : { type : "f", value : this.properties.mindepth },
                 "maxdepth" : { type : "f", value : this.properties.maxdepth },
-                "uvd" : { type : "f", value : this.properties.uvd },
+                "uvdy" : { type : "f", value : this.properties.uvdy },
+                "uvdx" : { type : "f", value : this.properties.uvdx },
                 "opacity" : { type : "f", value : 1.0 }
             },
 
