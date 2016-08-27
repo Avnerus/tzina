@@ -57,11 +57,11 @@ export default class VideoRGBD  {
             posx: 150.0
             }*/
         this.debug = {
-            x1: 700,
-            x2: 1350,
+            x1: 610,
+            x2: 1150,
             x3: 920,
-            y1: 940,
-            y2: 1600,
+            y1: 600,
+            y2: 1100,
             y3: 720,
             uvdy: 0.4948,
             uvdx: -0.0245,
