@@ -33,6 +33,8 @@ export default class Character extends THREE.Object3D {
 
         this.active = false;
 
+        this.playedIntro = false;
+
     }
     init(loadingManager) {
             this.idleVideo.init(loadingManager);
@@ -197,6 +199,13 @@ export default class Character extends THREE.Object3D {
                 }
                 this.playFull();
             }
+        }
+    }
+
+    onIntro() {
+        if (!this.playedIntro) {
+            console.log(this.props.name, " - Playing intro");
+            this.playedIntro = true;
         }
     }
 

@@ -129,7 +129,7 @@ export default class Game {
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
         this.zoomController.init();
 
-        this.timeController = new TimeController(this.config, this.container, this.square, this.sky);
+        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene);
         this.timeController.init();
 
         this.animations = {

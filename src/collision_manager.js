@@ -38,6 +38,8 @@ export default class CollisionManager {
         this.crossing = boxIntersect(this.playerBox, this.obstacles, (i,j) => {
             if (this.obstacleInfo[j].onCollision) {
                 this.obstacleInfo[j].onCollision();
+            } else if (this.obstacleInfo[j].intro) {
+                this.obstacleInfo[j].intro.onIntro();
             }
         });
     }
@@ -48,6 +50,7 @@ export default class CollisionManager {
     addCharacter(character) {
         console.log("COLLISION MANAGER - Adding character ", character);
         let space = character.props.space;
+        let introSpace = character.props.introSpace;
 
             /*
             let geometry = new THREE.BoxGeometry( 5, 5, 5  );
@@ -77,12 +80,22 @@ export default class CollisionManager {
         character.obstacleIndex = this.obstacles.length -1;
 
         this.obstacleInfo.push(character);
+        
+        this.obstacles.push([
+            bbox.box.min.x - introSpace, 
+            bbox.box.min.y - introSpace, 
+            bbox.box.min.z - introSpace, 
+            bbox.box.max.x + introSpace, 
+            bbox.box.max.y + introSpace, 
+            bbox.box.max.z + introSpace
+        ]);
+        this.obstacleInfo.push({intro: character});
     }
 
     removeCharacter(character) {
         console.log("COLLISION MANAGER - Removing character ", character, "Obstacle index: ",character.obstacleIndex);
-        this.obstacles.splice(character.obstacleIndex, 1);
-        this.obstacleInfo.splice(character.obstacleIndex, 1);
+        this.obstacles.splice(character.obstacleIndex, 2);
+        this.obstacleInfo.splice(character.obstacleIndex, 2);
     }
 
     addBoundingBoxes(obj, scene) {
