@@ -13,7 +13,7 @@ export default [
         animationPosition: [0,-1.5,-2.2],
         animationRotation: [20, 0, 0],
         space: 7,
-        intro_space: 15,
+        introSpace: 17,
         subtitles: null
     },
     {
@@ -30,7 +30,7 @@ export default [
         animationPosition: [0,-1.5,-2.2],
         animationRotation: [20, 0, 0],
         space: 7,
-        intro_space: 15,
+        introSpace: 17,
         subtitles: null
     } /*,
     {

@@ -43,7 +43,7 @@ export default class Intro {
             1400
         );
 
-        this.INTRO_SOUND = 'INTRO_Shirin.ogg'
+        this.INTRO_SOUND = 'assets/sounds/INTRO_Shirin.ogg'
 
         let titlePlaneGeo = new THREE.PlaneGeometry( 1024, 128 );
         let loader = new THREE.TextureLoader();
