@@ -1,13 +1,16 @@
 import Chapters from './chapters'
 import MathUtil from './util/math'
+import DebugUtil from './util/debug'
 import _ from 'lodash'
+import {MeshText2D, textAlign} from '../lib/text2d/index'
 
 export default class TimeController {
-    constructor(config, element, square, sky) {
+    constructor(config, element, square, sky, scene) {
         this.square = square;
         this.config = config;
         this.element = element;
         this.sky = sky;
+        this.scene = scene;
         
         this.rotateVelocity = 0;
         this.currentRotation = 0;
@@ -33,6 +36,12 @@ export default class TimeController {
         events.on("control_threshold", (passed) => {
             this.clockRunning = passed;
         });
+
+        this.chapterTitle = new MeshText2D("SPRITE", { align: textAlign.center,  font: '40px Arial', fillStyle: '#FFFFFF' , antialias: true })
+        this.chapterTitle.visible = false;
+        this.chapterTitle.position.y = 400;
+        DebugUtil.positionObject(this.chapterTitle, "text");
+        this.scene.add(this.chapterTitle)
     }
 
     update(dt) {
@@ -147,8 +156,11 @@ export default class TimeController {
 
     showChapterTitle() {
         let chapter = _.find(Chapters, {hour: this.currentHour });
-        document.getElementById("chapter-title-text").innerHTML = chapter.hour + ":00 - " + chapter.name;
+        this.chapterTitle.text = chapter.hour + ":00 - " + chapter.name;
+        this.chapterTitle.visible = true;
+        //document.getElementById("chapter-title-text").innerHTML = chapter.hour + ":00 - " + chapter.name;
         this.turnOnChapterSun(this.currentHour);
+
     }
 
     turnOnChapterSun() {

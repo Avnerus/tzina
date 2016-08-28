@@ -101,8 +101,6 @@ export default class Game {
         this.square = new Square();
 
         // Test characters
-        
-
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
 
 
@@ -129,7 +127,7 @@ export default class Game {
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
         this.zoomController.init();
 
-        this.timeController = new TimeController(this.config, this.container, this.square, this.sky);
+        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene);
         this.timeController.init();
 
         this.animations = {
@@ -137,7 +135,7 @@ export default class Game {
             'Miriam' : new MiriamAnimation(this.scene, this.renderer)
         }
 
-        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager);
+        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager);
     }
 
     load(onLoad) {
@@ -147,15 +145,17 @@ export default class Game {
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
 
-            /*
 
+            /*
             let cube = DebugUtil.adjustableCube(
-                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[1].startPosition),
-                "Ramp entry",
+                new THREE.Vector3(),
+                "Red cube",
                 1,
                 0xff0000
             )
-            this.square.mesh.add( cube );
+            this.scene.add(cube); */
+
+            /*
 
             cube = DebugUtil.adjustableCube(
                 new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[1].endPosition),

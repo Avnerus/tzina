@@ -14,6 +14,7 @@ export default [
         animationPosition: [0,-0.3,-0.5],
         animationRotation: [15, 0, 2],
         space: 7,
+        introSpace: 17,
         subtitles: null
     },
     {
@@ -31,6 +32,7 @@ export default [
         animationPosition: [0,0,0],   // 0,-1.5,-2.2
         animationRotation: [0, 0, 0],      // 20, 0, 0
         space: 7,
+        introSpace: 17,
         subtitles: null
     } /*,
     {

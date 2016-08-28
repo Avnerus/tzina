@@ -1,9 +1,11 @@
 import VideoRGBD from './util/video_rgbd'
+import DebugUtil from './util/debug'
 
 export default class Character extends THREE.Object3D {
-    constructor(props, collisionManager) {
+    constructor(props, collisionManager, soundManager) {
         super();
         this.collisionManager = collisionManager;
+        this.soundManager = soundManager;
 
         this.idleVideo = new VideoRGBD({
             mindepth: props.mindepth,
@@ -32,6 +34,8 @@ export default class Character extends THREE.Object3D {
         this.done = false;
 
         this.active = false;
+
+        this.playedIntro = false;
 
     }
     init(loadingManager) {
@@ -82,6 +86,15 @@ export default class Character extends THREE.Object3D {
             }
 
 
+            this.soundManager.loadPositionalSound(this.props.basePath + "_intro.ogg")
+            .then((sound) => {
+                this.introSound = sound;
+                this.introSound.autoplay = false;
+                this.introSound.loop = false;
+                this.introSound.setRefDistance(7);
+                this.add(this.introSound);
+            });
+
             events.on("character_playing", (name) => {
                 if (this.active && this.props.name != name) {
                     console.log(name, " is playing." , this.props.name, "is pausing");
@@ -94,6 +107,8 @@ export default class Character extends THREE.Object3D {
                     this.idleVideo.play();
                 }                
             });
+
+
     }
     play() {
         this.idleVideo.play();
@@ -198,6 +213,14 @@ export default class Character extends THREE.Object3D {
                 }
                 this.playFull();
             }
+        }
+    }
+
+    onIntro() {
+        if (!this.playedIntro) {
+            console.log(this.props.name, " - Playing intro", this.introSound);
+            this.playedIntro = true;
+            this.introSound.play();
         }
     }
 

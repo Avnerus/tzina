@@ -6,9 +6,10 @@ import DebugUtil from './util/debug'
 import _ from 'lodash'
 
 export default class CharacterController {
-    constructor(config, animations, square, collisionManager)  {
+    constructor(config, animations, square, collisionManager, soundManager)  {
         this.config = config;
         this.collisionManager = collisionManager;
+        this.soundManager = soundManager;
         this.characters = {};
         this.square = square;
         this.activeCharacters = [];
@@ -17,7 +18,7 @@ export default class CharacterController {
     init(loadingManager) {
         console.log("Initializing Character controller");
         Characters.forEach((characterProps) => {
-            let character = new Character(characterProps, this.collisionManager);
+            let character = new Character(characterProps, this.collisionManager, this.soundManager);
             character.animation = this.animations[characterProps.animation];
             character.init(loadingManager);
             this.characters[characterProps.name] = character;
