@@ -3,6 +3,7 @@ import TextureAnimator from '../util/texture_animator'
 import GeometryUtils from '../util/GeometryUtils'
 import FBO from '../util/fbo'
 import EndArrayPlugin from '../util/EndArrayPlugin'
+import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class MiriamAnimation extends THREE.Object3D {

@@ -68,6 +68,7 @@ export default class Character extends THREE.Object3D {
             if (this.animation) {
                 this.animation.init(loadingManager);
 
+                this.animation.scale.multiplyScalar(this.props.animationScale);
                 this.animation.position.fromArray(this.props.animationPosition);
                 this.animation.rotation.set(
                     this.props.animationRotation[0] * Math. PI / 180,

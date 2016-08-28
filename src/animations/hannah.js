@@ -156,8 +156,8 @@ export default class HannahAnimation extends THREE.Object3D {
                 hannahRoom.add(meshhh);
             });
         }
-        hannahRoom.scale.multiplyScalar(0.025);
-        hannahRoom.position.set(0.5,2.5,0.8);
+        hannahRoom.scale.multiplyScalar(0.015);
+        hannahRoom.position.set(0.5,2,0.8);
         this.add(hannahRoom);
 
         this.loadingManager.itemEnd("HannahAnim");

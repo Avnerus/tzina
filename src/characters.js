@@ -10,8 +10,9 @@ export default [
         uvdy: 0.4948,
         uvdx: -0.0245,
         scale: 0.003 * 0.25,
-        animationPosition: [0,-1.5,-2.2],
-        animationRotation: [20, 0, 0],
+        animationScale: 0.25,
+        animationPosition: [0,-0.3,-0.5],
+        animationRotation: [15, 0, 2],
         space: 7,
         subtitles: null
     },
@@ -26,8 +27,9 @@ export default [
         uvdy: 0.4847,
         uvdx: -0.025,
         scale: 0.003 * 0.25,
-        animationPosition: [0,-1.5,-2.2],
-        animationRotation: [20, 0, 0],
+        animationScale: 1,
+        animationPosition: [0,0,0],   // 0,-1.5,-2.2
+        animationRotation: [0, 0, 0],      // 20, 0, 0
         space: 7,
         subtitles: null
     } /*,
