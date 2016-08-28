@@ -23,6 +23,14 @@ export default class CharacterController {
             this.characters[characterProps.name] = character;
         });
         events.on("hour_updated", (hour) => {
+
+            console.log("Unloading active characters");
+            this.activeCharacters.forEach((character) => {
+                this.square.mesh.remove(character);
+                character.unload();
+            });
+            this.activeCharacters = [];            
+
             console.log("Loading characters for ", hour);
             
             let chapter = _.find(Chapters, {hour});
@@ -36,7 +44,7 @@ export default class CharacterController {
                 this.square.mesh.add(character);
                 character.load();
                 character.play();
-                DebugUtil.positionObject(character, character.props.name, character.props.rotation);
+                //DebugUtil.positionObject(character, character.props.name, character.props.rotation);
             });
 
         });

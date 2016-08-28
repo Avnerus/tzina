@@ -82,13 +82,13 @@ export default class Character extends THREE.Object3D {
 
 
             events.on("character_playing", (name) => {
-                if (this.props.name != name) {
+                if (this.active && this.props.name != name) {
                     console.log(name, " is playing." , this.props.name, "is pausing");
                     this.idleVideo.pause();
                 }                
             });
             events.on("character_idle", (name) => {
-                if (this.props.name != name) {
+                if (this.active && this.props.name != name) {
                     console.log(name, " is idle." , this.props.name, "is playing");
                     this.idleVideo.play();
                 }                
@@ -106,7 +106,11 @@ export default class Character extends THREE.Object3D {
     }
 
     unload() {
+        this.collisionManager.removeCharacter(this);
+        this.fullVideo.unload();
         this.idleVideo.unload();
+        this.animation.visible = false;
+        this.remove(this.animation);
         this.active = false;
     }
     

@@ -69,7 +69,7 @@ export default class ZoomController {
         events.emit("add_gui",{}, this.camera.position, "z"); 
 
         events.on("angle_updated", (hour) => {
-            console.log("Zoom Controller: Hour updated to ", hour);
+            console.log("Zoom Controller: Hour angle updated to ", hour);
             let entryPoint = _.find(this.square.ENTRY_POINTS, {hour: hour});
             if (entryPoint) {
                 this.calculateZoomCurve(entryPoint);

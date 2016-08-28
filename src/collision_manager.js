@@ -80,7 +80,9 @@ export default class CollisionManager {
     }
 
     removeCharacter(character) {
-
+        console.log("COLLISION MANAGER - Removing character ", character, "Obstacle index: ",character.obstacleIndex);
+        this.obstacles.splice(character.obstacleIndex, 1);
+        this.obstacleInfo.splice(character.obstacleIndex, 1);
     }
 
     addBoundingBoxes(obj, scene) {
