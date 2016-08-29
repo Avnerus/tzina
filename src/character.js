@@ -1,9 +1,11 @@
 import VideoRGBD from './util/video_rgbd'
+import DebugUtil from './util/debug'
 
 export default class Character extends THREE.Object3D {
-    constructor(props, collisionManager) {
+    constructor(props, collisionManager, soundManager) {
         super();
         this.collisionManager = collisionManager;
+        this.soundManager = soundManager;
 
         this.idleVideo = new VideoRGBD({
             mindepth: props.mindepth,
@@ -70,6 +72,7 @@ export default class Character extends THREE.Object3D {
             if (this.animation) {
                 this.animation.init(loadingManager);
 
+                this.animation.scale.multiplyScalar(this.props.animationScale);
                 this.animation.position.fromArray(this.props.animationPosition);
                 this.animation.rotation.set(
                     this.props.animationRotation[0] * Math. PI / 180,
@@ -83,6 +86,15 @@ export default class Character extends THREE.Object3D {
             }
 
 
+            this.soundManager.loadPositionalSound(this.props.basePath + "_intro.ogg")
+            .then((sound) => {
+                this.introSound = sound;
+                this.introSound.autoplay = false;
+                this.introSound.loop = false;
+                this.introSound.setRefDistance(7);
+                this.add(this.introSound);
+            });
+
             events.on("character_playing", (name) => {
                 if (this.active && this.props.name != name) {
                     console.log(name, " is playing." , this.props.name, "is pausing");
@@ -95,6 +107,8 @@ export default class Character extends THREE.Object3D {
                     this.idleVideo.play();
                 }                
             });
+
+
     }
     play() {
         this.idleVideo.play();
@@ -102,16 +116,16 @@ export default class Character extends THREE.Object3D {
 
     load() {
         console.log("Character " + this.props.name + ": Load");
-        this.collisionManager.addCharacter(this);
         this.idleVideo.load();
         this.active = true;
     }
 
     unload() {
-        this.collisionManager.removeCharacter(this);
         this.fullVideo.unload();
         this.idleVideo.unload();
-        this.animation.visible = false;
+        if (this.animation) {
+            this.animation.visible = false;
+        }
         this.remove(this.animation);
         this.active = false;
     }
@@ -134,7 +148,9 @@ export default class Character extends THREE.Object3D {
     }
 
     endFull() {
-        this.animation.visible = false;
+        if (this.animation) {
+            this.animation.visible = false;
+        }
         this.fullVideo.pause();
         this.fullVideo.unload();
 
@@ -154,7 +170,9 @@ export default class Character extends THREE.Object3D {
 
 
     pauseFull() {
-        this.animation.visible = false;
+        if (this.animation) {
+            this.animation.visible = false;
+        }
         this.fullVideo.pause();
         this.idleVideo.mesh.visible = true;
         this.fullVideo.mesh.visible = false;
@@ -171,15 +189,20 @@ export default class Character extends THREE.Object3D {
 
     onCollision() {
         this.timeSinceCollision = 0;
-        if (!this.playingFull && !this.done && this.animation && !this.animation.visible) {
+        if (!this.playingFull && !this.done) {
             console.log("Character collision!");
-            this.add(this.animation);
-            this.animation.visible = true;
+            if (this.animation && !this.animation.visible) {
+
+                this.add(this.animation);
+                this.animation.visible = true;
+            }
 
             // load subtitles video
             if (!this.isPaused) {
                 this.fullVideo.load();
-                this.animation.start()
+                if (this.animation) {
+                    this.animation.start()
+                }
                 this.playFull();
 
                 if(this.props.subtitles) {
@@ -204,14 +227,16 @@ export default class Character extends THREE.Object3D {
 
     onIntro() {
         if (!this.playedIntro) {
-            console.log(this.props.name, " - Playing intro");
+            console.log(this.props.name, " - Playing intro", this.introSound);
             this.playedIntro = true;
+            this.introSound.play();
         }
     }
 
     playFull() {
         this.playingFull = true;
         this.idleVideo.pause();
+        this.introSound.pause();
         this.fullVideo.mesh.visible = true;
         this.idleVideo.mesh.visible = false;
         //this.fullVideo.video.currentTime = 0;

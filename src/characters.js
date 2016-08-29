@@ -10,10 +10,11 @@ export default [
         uvdy: 0.4948,
         uvdx: -0.0245,
         scale: 0.003 * 0.25,
-        animationPosition: [0,-1.5,-2.2],
-        animationRotation: [20, 0, 0],
+        animationScale: 0.25,
+        animationPosition: [0,-0.3,-0.5],
+        animationRotation: [15, 0, 2],
         space: 7,
-        intro_space: 15,
+        introSpace: 17,
         subtitles: null
     },
     {
@@ -21,18 +22,56 @@ export default [
         basePath : 'assets/characters/miriam',
         mindepth : 1983.749877930,
         maxdepth : 3119.456298828,
-        position : [16.3, 21.85, -1.5],
-        rotation: [-17, 40, 12],
+        position : [11.3, 21.85, -7.8],
+        rotation: [-17, 28, 12],
         animation: 'Miriam',
         uvdy: 0.4847,
         uvdx: -0.025,
         scale: 0.003 * 0.25,
-        animationPosition: [0,-1.5,-2.2],
-        animationRotation: [20, 0, 0],
+        animationScale: 0.25,
+        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
+        animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 7,
-        intro_space: 15,
+        introSpace: 17,
         subtitles: null
-    } /*,
+    },
+    {
+        name: 'Itzik',
+        basePath : 'assets/characters/itzik',
+        mindepth : 0.0,
+        maxdepth : 3494.158935547,
+        position : [-14.3, 22, 2.1],
+        rotation: [-10, 20, 8],
+        animation: null,
+        uvdy: 0.4889,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        animationScale: 0.25,
+        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
+        animationRotation: [13, 0, 0],      // 20, 0, 0
+        space: 7,
+        introSpace: 17,
+        subtitles: null
+    },
+    {
+        name: 'Haim',
+        basePath : 'assets/characters/haim',
+        mindepth : 1029.795776367,
+        maxdepth : 2834.144287109,
+        position : [19, 21.75, 4],
+        rotation: [0, -23, 8],
+        animation: 'Haim',
+        uvdy: 0.4861,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        animationScale: 0.25,
+        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
+        animationRotation: [13, 0, 0],      // 20, 0, 0
+        space: 7,
+        introSpace: 17,
+        subtitles: null
+    }
+/*,
     {
         name: 'Lupo',
         basePath : 'assets/characters/lupo',
@@ -48,5 +87,4 @@ export default [
         space: 9 ,
         subtitles: "subtitles2"
     }*/
-
 ]

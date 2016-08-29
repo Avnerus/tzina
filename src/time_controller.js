@@ -37,11 +37,14 @@ export default class TimeController {
             this.clockRunning = passed;
         });
 
-        this.chapterTitle = new MeshText2D("SPRITE", { align: textAlign.center,  font: '40px Arial', fillStyle: '#FFFFFF' , antialias: true })
+        this.chapterTitle = new MeshText2D("SPRITE", { align: textAlign.center,  font: '25px Arial', fillStyle: '#FFFFFF' , antialias: true })
         this.chapterTitle.visible = false;
-        this.chapterTitle.position.y = 400;
-        DebugUtil.positionObject(this.chapterTitle, "text");
+
+        this.prevChapterTitle = new MeshText2D("SPRITE", { align: textAlign.center,  font: '25px Arial', fillStyle: '#FFFFFF' , antialias: true })
+        this.prevChapterTitle.visible = false;
+        //DebugUtil.positionObject(this.chapterTitle, "text");
         this.scene.add(this.chapterTitle)
+        this.scene.add(this.prevChapterTitle)
     }
 
     update(dt) {
@@ -156,8 +159,26 @@ export default class TimeController {
 
     showChapterTitle() {
         let chapter = _.find(Chapters, {hour: this.currentHour });
+        if (this.chapterTitle.visible) {
+            this.prevChapterTitle.visible = true;
+            this.prevChapterTitle.text = this.chapterTitle.text;
+            this.prevChapterTitle.position.copy(this.chapterTitle.position);
+            this.prevChapterTitle.material.opacity = this.chapterTitle.material.opacity;
+            TweenMax.to(this.prevChapterTitle.material, 1, {opacity: 0});
+        }
+        let targetOpacity;
+        if (this.currentHour == 17 || this.currentHour == 19) {
+            targetOpacity = 1.0;
+        } else {
+            targetOpacity = 0.3;
+        }
         this.chapterTitle.text = chapter.hour + ":00 - " + chapter.name;
         this.chapterTitle.visible = true;
+        this.chapterTitle.position.fromArray(chapter.titlePosition);
+        this.chapterTitle.material.opacity = 0;
+
+        TweenMax.to(this.chapterTitle.material, 1, {opacity: targetOpacity});
+
         //document.getElementById("chapter-title-text").innerHTML = chapter.hour + ":00 - " + chapter.name;
         this.turnOnChapterSun(this.currentHour);
 

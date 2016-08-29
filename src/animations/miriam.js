@@ -3,10 +3,11 @@ import TextureAnimator from '../util/texture_animator'
 import GeometryUtils from '../util/GeometryUtils'
 import FBO from '../util/fbo'
 import EndArrayPlugin from '../util/EndArrayPlugin'
+import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class MiriamAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( renderer ) {
         super();
         this.BASE_PATH = 'assets/animations/miriam';
 
@@ -23,7 +24,6 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.width = 256;
         this.height = 256;
 
-        this.scene = scene;
         this.renderer = renderer;
         this.maxDepth = 50.0;
     }
@@ -32,7 +32,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.manFigure.matrixWorldNeedsUpdate = true;
 
         let fboGeo = geo.clone();
-        fboGeo.applyMatrix( this.manFigure.matrixWorld );
+        // fboGeo.applyMatrix( this.manFigure.matrixWorld );
 
         let data = new Float32Array( this.width * this.height * 3  );
 
@@ -53,7 +53,8 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         let fboGeo = geo.clone();
         fboGeo.applyMatrix( new THREE.Matrix4().makeScale(0.1,0.1,0.1) );
-        fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(31, 6, 40) );
+        // fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(31, 6, 40) );
+
         // fboGeo.applyMatrix( this.manFigure.matrixWorld );
         // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(170 * Math.PI / 180) );
 
@@ -203,7 +204,8 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         this.fbo = new FBO();
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
-        this.scene.add( this.fbo.particles );
+        this.add( this.fbo.particles );
+        this.fbo.particles.position.set(1,0,-2);
 
         this.timerAnim = null;
 
@@ -270,6 +272,7 @@ export default class MiriamAnimation extends THREE.Object3D {
                                        onStart: ()=>{
                                                     TweenMax.to( this.manFigure.scale, _duration, { x:2,y:2,z:2, ease: Expo.easeIn } );
                                                     TweenMax.to( this.manFigure.position, _duration, { y:"-=2", ease: Power3.easeIn } );
+                                                    TweenMax.to( this.fbo.particles.scale, _duration, { x:2,y:2,z:2, ease: Expo.easeIn } );
                                                     this.speedUpStart = true;
                                                 },
                                        onUpdate: ()=>{
@@ -347,8 +350,9 @@ export default class MiriamAnimation extends THREE.Object3D {
             }
 
             this.grandFatherClock.scale.multiplyScalar(0.01);
-            this.grandFatherClock.position.set(1, 3, -1.2);
+            this.grandFatherClock.position.set(1, 3, -1.5);
             // this.grandFatherClock.rotation.y = Math.PI;
+            //DebugUtil.positionObject(this.grandFatherClock, "Clock")
 
             this.add(this.grandFatherClock);
 

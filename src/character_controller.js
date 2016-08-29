@@ -6,18 +6,20 @@ import DebugUtil from './util/debug'
 import _ from 'lodash'
 
 export default class CharacterController {
-    constructor(config, animations, square, collisionManager)  {
+    constructor(config, animations, square, collisionManager, soundManager)  {
         this.config = config;
         this.collisionManager = collisionManager;
+        this.soundManager = soundManager;
         this.characters = {};
         this.square = square;
         this.activeCharacters = [];
         this.animations = animations;
+        this.addedColliders = false;
     }
     init(loadingManager) {
         console.log("Initializing Character controller");
         Characters.forEach((characterProps) => {
-            let character = new Character(characterProps, this.collisionManager);
+            let character = new Character(characterProps, this.collisionManager, this.soundManager);
             character.animation = this.animations[characterProps.animation];
             character.init(loadingManager);
             this.characters[characterProps.name] = character;
@@ -28,6 +30,9 @@ export default class CharacterController {
             this.activeCharacters.forEach((character) => {
                 this.square.mesh.remove(character);
                 character.unload();
+                if (this.addedColliders) {
+                    this.collisionManager.removeCharacter(character);
+                }
             });
             this.activeCharacters = [];            
 
@@ -44,9 +49,20 @@ export default class CharacterController {
                 this.square.mesh.add(character);
                 character.load();
                 character.play();
-                //DebugUtil.positionObject(character, character.props.name, character.props.rotation);
+                DebugUtil.positionObject(character, character.props.name, character.props.rotation);
             });
 
+            this.addedColliders = false;
+
+        });
+        events.on("angle_updated", (hour) => {
+            if (!this.addedColliders) {
+                this.activeCharacters.forEach((character) => {
+                    this.collisionManager.addCharacter(character);
+                });
+
+                this.addedColliders = true;
+            }
         });
     }
 
