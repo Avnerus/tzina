@@ -6,5 +6,5 @@ export default {
     skipIntro: false,
     movementSpeed: 1,
     daySpeed: 0.003
-  //  daySpeed: 0.02
+//    daySpeed: 0.08
 }

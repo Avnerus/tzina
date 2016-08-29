@@ -81,6 +81,7 @@ export default class VideoRGBD  {
         this.video.load();
     }
     unload() {
+        this.pause();
         this.video.src = "";
     }
 
