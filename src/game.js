@@ -239,14 +239,23 @@ export default class Game {
         this.charactersEnded = [];
         events.on("character_ended", (name) => {
             this.charactersEnded.push(name);
-            if (this.charactersEnded.indexOf("Itzik") != -1 && 
+            if (this.charactersEnded.length == 4) {
+
+            }
+            else if (this.charactersEnded.indexOf("Itzik") != -1 && 
                 this.charactersEnded.indexOf("Hannah") != -1 &&
                 this.timeController.currentHour >= 17 &&
                 this.timeController.currentHour < 19
                ) {
                    this.timeController.setDaySpeed(0.06);
-               }
-
+            } 
+            else if (this.charactersEnded.indexOf("Miriam") != -1 && 
+                this.charactersEnded.indexOf("Haim") != -1 &&
+                this.timeController.currentHour >= 19
+               ) {
+                 this.timeController.jumpToTime(17);
+            } 
+        
             /*
             if (this.charactersEnded == 1) {
                 setTimeout(() => {

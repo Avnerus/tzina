@@ -230,4 +230,12 @@ export default class TimeController {
         events.emit("angle_updated", this.currentHour);
         this.updateNextHour();
     }
+
+    jumpToTime(hour) {
+        this.currentHour = hour;
+        this.sky.setTime(this.currentHour);
+        events.emit("hour_updated", this.currentHour);
+        events.emit("angle_updated", this.currentHour);
+        this.updateNextHour();
+    }
 }

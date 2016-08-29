@@ -262,11 +262,12 @@ export default class Character extends THREE.Object3D {
         this.introSound.pause();
         this.fullVideo.mesh.visible = true;
         this.idleVideo.mesh.visible = false;
+
         /*
-        if (this.props.name == "Hannah") {
-            this.fullVideo.video.currentTime = 285;
+        if (this.props.name == "Haim") {
+            this.fullVideo.video.currentTime = 250;
         } else {
-            this.fullVideo.video.currentTime = 205;
+            this.fullVideo.video.currentTime = 280;
         }*/
         this.fullVideo.play();
         if (this.subtitlesReady) {
