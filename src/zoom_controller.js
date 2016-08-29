@@ -66,7 +66,7 @@ export default class ZoomController {
             return false;
         }, false);
 
-        events.emit("add_gui",{}, this.camera.position, "z"); 
+        //events.emit("add_gui",{}, this.camera.position, "z"); 
 
         events.on("angle_updated", (hour) => {
             console.log("Zoom Controller: Hour angle updated to ", hour);
@@ -209,6 +209,7 @@ export default class ZoomController {
                 this.basePosition = true;
                 this.velocityZ = 0;
                 this.calculateZoomCurve(this.lastEntryPoint);
+                events.emit("base_position");
                 //this.camera.rotation.set(0,0,0);
             } else if (this.basePosition && this.distanceOnCurve > 0) {
                 this.basePosition = false;

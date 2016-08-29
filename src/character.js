@@ -114,6 +114,7 @@ export default class Character extends THREE.Object3D {
 
     }
     play() {
+        console.log(this.props.name + " Play idle");
         this.idleVideo.play();
     }
 

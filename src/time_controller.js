@@ -18,6 +18,8 @@ export default class TimeController {
         this.active = true;
 
         this.clockRunning = false;
+
+        this.daySpeed = config.daySpeed;
     }
     init() {
         console.log("Initializing Time Controller", this.element)
@@ -35,6 +37,16 @@ export default class TimeController {
 
         events.on("control_threshold", (passed) => {
             this.clockRunning = passed;
+        });
+
+        events.on("base_position", () => {
+            console.log("Return to base, hour is ", this.currentHour);            
+            let closestAngle = MathUtil.closestValue(this.angles, this.currentHour * 15);
+            let closestHour = this.getHour(closestAngle);
+            this.stickToAngle(closestAngle);
+            this.currentHour = closestHour;
+
+            this.showChapterTitle();
         });
 
         let TEXT_DEFINITION = {
@@ -61,7 +73,7 @@ export default class TimeController {
             this.updateRotation();
         }
         if (this.clockRunning) {
-            this.currentHour += dt * this.config.daySpeed;
+            this.currentHour += dt * this.daySpeed;
             if (this.currentHour >= 24) {
                 this.currentHour = 0;
             }
@@ -74,6 +86,10 @@ export default class TimeController {
             }
             this.sky.setTime(this.currentHour);
         }
+    }
+
+    setDaySpeed(speed) {
+        this.daySpeed = speed;
     }
 
     updateRotation() {
