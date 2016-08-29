@@ -49,7 +49,7 @@ export default class CharacterController {
                 this.square.mesh.add(character);
                 character.load();
                 character.play();
-                DebugUtil.positionObject(character, character.props.name, character.props.rotation);
+//                DebugUtil.positionObject(character, character.props.name, character.props.rotation);
             });
 
             this.addedColliders = false;

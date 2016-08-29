@@ -78,6 +78,7 @@ export default class VideoRGBD  {
     }
     load() {
         this.video.src = this.properties.fileName;
+        this.video.load();
     }
     unload() {
         this.video.src = "";

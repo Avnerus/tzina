@@ -49,9 +49,9 @@ export default [
         animationScale: 0.25,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 7,
+        space: 10,
         introSpace: 17,
-        subtitles: null
+        subtitles: true
     },
     {
         name: 'Haim',
@@ -67,9 +67,9 @@ export default [
         animationScale: 0.25,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 7,
+        space: 10,
         introSpace: 17,
-        subtitles: null
+        subtitles: true
     }
 /*,
     {

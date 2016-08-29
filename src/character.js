@@ -37,6 +37,9 @@ export default class Character extends THREE.Object3D {
 
         this.playedIntro = false;
 
+        this.subtitlesReady = false;
+        this.fullReady = false;
+
     }
     init(loadingManager) {
             this.idleVideo.init(loadingManager);
@@ -123,6 +126,9 @@ export default class Character extends THREE.Object3D {
     unload() {
         this.fullVideo.unload();
         this.idleVideo.unload();
+        if (this.subtitlesVideo) {
+            this.subtitlesVideo.src = "";
+        }
         if (this.animation) {
             this.animation.visible = false;
         }
@@ -179,9 +185,8 @@ export default class Character extends THREE.Object3D {
         this.idleVideo.play();
         this.playingFull = false;
         if (this.props.subtitles) {
-            let subtitlesVideo = document.getElementById(this.props.subtitles);
-            subtitlesVideo.pause();
-            subtitlesVideo.style.display = "none";
+            this.subtitlesVideo.pause();
+            this.subtitlesVideo.style.display = "none";
         }
         this.isPaused = true;
         events.emit("character_idle", this.props.name)
@@ -190,39 +195,57 @@ export default class Character extends THREE.Object3D {
     onCollision() {
         this.timeSinceCollision = 0;
         if (!this.playingFull && !this.done) {
-            console.log("Character collision!");
-            if (this.animation && !this.animation.visible) {
-
+            this.playingFull = true;
+            console.log(this.props.name + " - Loading full video ");
+            if (this.animation) {
+                this.animation.visible = false;
                 this.add(this.animation);
-                this.animation.visible = true;
             }
 
             // load subtitles video
             if (!this.isPaused) {
-                this.fullVideo.load();
-                if (this.animation) {
-                    this.animation.start()
-                }
-                this.playFull();
 
                 if(this.props.subtitles) {
-                    let subtitlesVideo = document.getElementById(this.props.subtitles);
-                    subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
-                    subtitlesVideo.addEventListener('canplay',() => {
-                        subtitlesVideo.play();
+                    this.subtitlesVideo = document.getElementById("subtitles");
+                    this.subtitlesVideo.addEventListener('canplay',() => {
+                        if (!this.subtitlesReady) {
+                            console.log(this.props.name + " - Subtitles Ready");
+                            this.subtitlesReady = true;
+                            this.checkReady();
+                        }
                     },false);
-                    subtitlesVideo.load();
+                    this.subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
+                    this.subtitlesVideo.load();
                 }
+                this.fullVideo.video.addEventListener('canplay',() => {
+                    if (!this.fullReady) {
+                        console.log(this.props.name + " - Full video ready");
+                        this.fullReady = true;
+                        this.checkReady();
+                    }
+                },false);
+                this.fullVideo.load();
+                this.fullVideo.pause();
+
             } else {
                 console.log("Resume");
                 if (this.props.subtitles) {
-                    let subtitlesVideo = document.getElementById(this.props.subtitles);
-                    subtitlesVideo.style.display = "block";
-                    subtitlesVideo.play();
+                    this.subtitlesVideo.style.display = "block";
+                    this.subtitlesVideo.play();
                 }
                 this.playFull();
             }
         }
+    }
+
+    checkReady() {
+        if (this.fullReady && (this.subtitlesReady || !this.props.subtitles)) {
+            if (this.animation) {
+                this.animation.start()
+            }
+            this.playFull();
+        }
+        
     }
 
     onIntro() {
@@ -241,6 +264,13 @@ export default class Character extends THREE.Object3D {
         this.idleVideo.mesh.visible = false;
         //this.fullVideo.video.currentTime = 0;
         this.fullVideo.play();
+        if (this.subtitlesReady) {
+            this.subtitlesVideo.style.display = "block";
+            this.subtitlesVideo.play();
+        }
+        if (this.animation) {
+            this.animation.visible = true;
+        }
         events.emit("character_playing", this.props.name)
     }
 }
