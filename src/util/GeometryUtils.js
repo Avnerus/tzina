@@ -464,6 +464,93 @@ THREE.GeometryUtils = {
 
 	},
 
+	randomPointsInNoFaceGeometry: function ( geometry, n ) {
+
+		var i,
+			vertices = geometry.vertices,
+			totalArea = 0,
+			cumulativeAreas = [],
+			vA, vB, vC;
+
+		// precompute face areas
+		vA = new THREE.Vector3();
+		vB = new THREE.Vector3();
+		vC = new THREE.Vector3();
+
+		// geometry._areas = [];
+		var il = vertices.length;
+
+		for ( i = 0; i < (il-3); i ++ ) {
+			vA.copy( vertices[ i + 0 ] );
+			vB.copy( vertices[ i + 1 ] );
+			vC.copy( vertices[ i + 2 ] );
+
+			var area = THREE.GeometryUtils.triangleArea( vA, vB, vC );
+			totalArea += area;
+
+			cumulativeAreas.push( totalArea );
+
+		}
+
+		// binary search cumulative areas array
+
+		function binarySearchIndices( value ) {
+
+			function binarySearch( start, end ) {
+
+				// return closest larger index
+				// if exact number is not found
+
+				if ( end < start )
+					return start;
+
+				var mid = start + Math.floor( ( end - start ) / 2 );
+
+				if ( cumulativeAreas[ mid ] > value ) {
+
+					return binarySearch( start, mid - 1 );
+
+				} else if ( cumulativeAreas[ mid ] < value ) {
+
+					return binarySearch( mid + 1, end );
+
+				} else {
+
+					return mid;
+
+				}
+
+			}
+
+			var result = binarySearch( 0, cumulativeAreas.length - 1 );
+			return result;
+
+		}
+
+		// pick random face weighted by face area
+
+		var r, index,
+			result = [];
+
+		for ( i = 0; i < n; i ++ ) {
+
+			r = Math.random() * totalArea;
+
+			index = binarySearchIndices( r );
+
+			// result[ i ] = THREE.GeometryUtils.randomPointInFace( faces[ index ], geometry, true );
+			vA.copy( vertices[ index + 0 ] );
+			vB.copy( vertices[ index + 1 ] );
+			vC.copy( vertices[ index + 2 ] );
+
+			result[ i ] = THREE.GeometryUtils.randomPointInTriangle( vA, vB, vC );
+
+		}
+
+		return result;
+
+	},
+
 	// Get triangle area (half of parallelogram)
 	// http://mathworld.wolfram.com/TriangleArea.html
 

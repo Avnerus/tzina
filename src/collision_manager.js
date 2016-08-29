@@ -1,7 +1,7 @@
 import boxIntersect from 'box-intersect'
 
 const PLAYER_SIZE = {
-    x: 2,
+    x: 2, 
     y: 100,
     z: 2 
 }

@@ -227,7 +227,7 @@ export default class Game {
 
 
         events.on("intro_end", () => {
-            //this.lupo.play();
+	    this.introAni.start();
             document.getElementById("wasd-container").style.display = "block";
             setTimeout(() => {
                 document.getElementById("wasd-container").style.display = "none";
