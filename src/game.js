@@ -227,7 +227,7 @@ export default class Game {
             // Init the intro
             this.intro.init();
 
-            this.timeController.setTime(17);
+            this.timeController.setTime(19);//17
         }
 
 

@@ -28,9 +28,9 @@ export default [
         uvdy: 0.4847,
         uvdx: -0.025,
         scale: 0.003 * 0.25,
-        animationScale: 1,
-        animationPosition: [0,0,0],   // 0,-1.5,-2.2
-        animationRotation: [0, 0, 0],      // 20, 0, 0
+        animationScale: 0.25,
+        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
+        animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 7,
         introSpace: 17,
         subtitles: null
