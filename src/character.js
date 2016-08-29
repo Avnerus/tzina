@@ -116,18 +116,23 @@ export default class Character extends THREE.Object3D {
 
     load() {
         console.log("Character " + this.props.name + ": Load");
-        this.collisionManager.addCharacter(this);
         this.idleVideo.load();
         this.active = true;
+        this.collisionManager.addCharacter(this);
+    }
+
+    refreshCollider() {
+        this.collisionManager.removeCharacter(this);
+        this.collisionManager.addCharacter(this);
     }
 
     unload() {
-        this.collisionManager.removeCharacter(this);
         this.fullVideo.unload();
         this.idleVideo.unload();
         this.animation.visible = false;
         this.remove(this.animation);
         this.active = false;
+        this.collisionManager.removeCharacter(this);
     }
     
     update(dt,et) {

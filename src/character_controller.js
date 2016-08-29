@@ -49,6 +49,11 @@ export default class CharacterController {
             });
 
         });
+        events.on("angle_updated", (hour) => {
+            this.activeCharacters.forEach((character) => {
+                character.refreshCollider();
+            });
+        });
     }
 
     update(dt,et) {
