@@ -34,7 +34,7 @@ export default [
         space: 7,
         introSpace: 17,
         subtitles: null
-    } ,
+    },
     {
         name: 'Itzik',
         basePath : 'assets/characters/itzik',
@@ -43,8 +43,25 @@ export default [
         position : [-14.3, 22, 2.1],
         rotation: [-10, 20, 8],
         animation: null,
-        //uvdy: 0.518,
         uvdy: 0.4889,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        animationScale: 0.25,
+        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
+        animationRotation: [13, 0, 0],      // 20, 0, 0
+        space: 7,
+        introSpace: 17,
+        subtitles: null
+    },
+    {
+        name: 'Haim',
+        basePath : 'assets/characters/haim',
+        mindepth : 1029.795776367,
+        maxdepth : 2834.144287109,
+        position : [14.3, 22, 10],
+        rotation: [-10, 20, 8],
+        animation: null,
+        uvdy: 0.4861,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
         animationScale: 0.25,
