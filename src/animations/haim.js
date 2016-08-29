@@ -6,7 +6,7 @@ import EndArrayPlugin from '../util/EndArrayPlugin'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class HaimAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( renderer ) {
         super();
         this.BASE_PATH = 'assets/animations/haim';
 
@@ -23,7 +23,6 @@ export default class HaimAnimation extends THREE.Object3D {
         this.width = 128;
         this.height = 128;
 
-        this.scene = scene;
         this.renderer = renderer;
         this.maxDepth = 50.0;
 
@@ -54,13 +53,12 @@ export default class HaimAnimation extends THREE.Object3D {
     }
 
     setupAnim() {
-        this.loadingManager.itemStart("MiriamAnim");
+        this.loadingManager.itemStart("HaimAnim");
         this.perlin = new ImprovedNoise();
         let tex_loader = new THREE.TextureLoader(this.loadingManager);
         let loader = new THREE.JSONLoader(this.loadingManager);
 
         // setup animation sequence
-        this.animStart = false;
         this.sequenceConfig = [
             { time: 5,  anim: ()=>{this.tubeDown(1)} },
             { time: 20, anim: ()=>{this.tubeOut(0.5)} }

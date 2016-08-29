@@ -148,7 +148,7 @@ export default
 			"timeLimitMinutes" : 4,
             "titlePosition": [0, -150, 0],
 			"characters": [
-				"Haim",
+				//"Haim",
 				"Izchak",
 				"Waterman",
 				"Shimi2",

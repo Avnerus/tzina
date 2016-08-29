@@ -7,7 +7,7 @@ import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class MiriamAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( renderer ) {
         super();
         this.BASE_PATH = 'assets/animations/miriam';
 
@@ -24,7 +24,6 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.width = 256;
         this.height = 256;
 
-        this.scene = scene;
         this.renderer = renderer;
         this.maxDepth = 50.0;
     }

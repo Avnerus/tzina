@@ -135,7 +135,7 @@ export default class Character extends THREE.Object3D {
             this.idleVideo.update(dt);
         } else {
             this.fullVideo.update(dt);
-            if (this.timeSinceCollision > 100) {
+            if (this.timeSinceCollision > 2) {
                 console.log("Time since collision ", this.timeSinceCollision, "Ending sequence");
                 this.pauseFull();
             }
