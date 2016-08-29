@@ -5,6 +5,6 @@ export default {
     enableFlying: false,
     skipIntro: false,
     movementSpeed: 1,
-//    daySpeed: 0.003
-    daySpeed: 0.08
+    daySpeed: 0.003
+//    daySpeed: 0.08
 }

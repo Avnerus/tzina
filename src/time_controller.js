@@ -83,12 +83,16 @@ export default class TimeController {
                 this.currentHour = this.nextHour;
                 this.updateNextHour();
                 events.emit("hour_updated", this.currentHour);
+                events.emit("angle_updated", this.currentHour);
+
+                this.daySpeed = this.config.daySpeed;
             }
             this.sky.setTime(this.currentHour);
         }
     }
 
     setDaySpeed(speed) {
+        console.log("Time controller - setting day speed to " + speed);
         this.daySpeed = speed;
     }
 

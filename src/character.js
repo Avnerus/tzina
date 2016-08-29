@@ -166,8 +166,7 @@ export default class Character extends THREE.Object3D {
         this.idleVideo.play();
         this.playingFull = false;
         if (this.props.subtitles) {
-            let subtitlesVideo = document.getElementById(this.props.subtitles);
-            subtitlesVideo.src = "";
+            this.subtitlesVideo.src = "";
         }
         this.isPaused = false;
         this.done = true;
@@ -263,7 +262,12 @@ export default class Character extends THREE.Object3D {
         this.introSound.pause();
         this.fullVideo.mesh.visible = true;
         this.idleVideo.mesh.visible = false;
-        //this.fullVideo.video.currentTime = 0;
+        /*
+        if (this.props.name == "Hannah") {
+            this.fullVideo.video.currentTime = 285;
+        } else {
+            this.fullVideo.video.currentTime = 205;
+        }*/
         this.fullVideo.play();
         if (this.subtitlesReady) {
             this.subtitlesVideo.style.display = "block";
