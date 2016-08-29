@@ -37,10 +37,10 @@ export default class TimeController {
             this.clockRunning = passed;
         });
 
-        this.chapterTitle = new MeshText2D("SPRITE", { align: textAlign.center,  font: '40px Arial', fillStyle: '#FFFFFF' , antialias: true })
+        this.chapterTitle = new MeshText2D("SPRITE", { align: textAlign.center,  font: '25px Arial', fillStyle: '#FFFFFF' , antialias: true })
         this.chapterTitle.visible = false;
 
-        this.prevChapterTitle = new MeshText2D("SPRITE", { align: textAlign.center,  font: '40px Arial', fillStyle: '#FFFFFF' , antialias: true })
+        this.prevChapterTitle = new MeshText2D("SPRITE", { align: textAlign.center,  font: '25px Arial', fillStyle: '#FFFFFF' , antialias: true })
         this.prevChapterTitle.visible = false;
         //DebugUtil.positionObject(this.chapterTitle, "text");
         this.scene.add(this.chapterTitle)
