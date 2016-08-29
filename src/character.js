@@ -118,21 +118,16 @@ export default class Character extends THREE.Object3D {
         console.log("Character " + this.props.name + ": Load");
         this.idleVideo.load();
         this.active = true;
-        this.collisionManager.addCharacter(this);
-    }
-
-    refreshCollider() {
-        this.collisionManager.removeCharacter(this);
-        this.collisionManager.addCharacter(this);
     }
 
     unload() {
         this.fullVideo.unload();
         this.idleVideo.unload();
-        this.animation.visible = false;
+        if (this.animation) {
+            this.animation.visible = false;
+        }
         this.remove(this.animation);
         this.active = false;
-        this.collisionManager.removeCharacter(this);
     }
     
     update(dt,et) {
@@ -153,7 +148,9 @@ export default class Character extends THREE.Object3D {
     }
 
     endFull() {
-        this.animation.visible = false;
+        if (this.animation) {
+            this.animation.visible = false;
+        }
         this.fullVideo.pause();
         this.fullVideo.unload();
 
@@ -173,7 +170,9 @@ export default class Character extends THREE.Object3D {
 
 
     pauseFull() {
-        this.animation.visible = false;
+        if (this.animation) {
+            this.animation.visible = false;
+        }
         this.fullVideo.pause();
         this.idleVideo.mesh.visible = true;
         this.fullVideo.mesh.visible = false;
@@ -190,15 +189,20 @@ export default class Character extends THREE.Object3D {
 
     onCollision() {
         this.timeSinceCollision = 0;
-        if (!this.playingFull && !this.done && this.animation && !this.animation.visible) {
+        if (!this.playingFull && !this.done) {
             console.log("Character collision!");
-            this.add(this.animation);
-            this.animation.visible = true;
+            if (this.animation && !this.animation.visible) {
+
+                this.add(this.animation);
+                this.animation.visible = true;
+            }
 
             // load subtitles video
             if (!this.isPaused) {
                 this.fullVideo.load();
-                this.animation.start()
+                if (this.animation) {
+                    this.animation.start()
+                }
                 this.playFull();
 
                 if(this.props.subtitles) {
@@ -232,6 +236,7 @@ export default class Character extends THREE.Object3D {
     playFull() {
         this.playingFull = true;
         this.idleVideo.pause();
+        this.introSound.pause();
         this.fullVideo.mesh.visible = true;
         this.idleVideo.mesh.visible = false;
         //this.fullVideo.video.currentTime = 0;

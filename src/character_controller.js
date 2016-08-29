@@ -14,6 +14,7 @@ export default class CharacterController {
         this.square = square;
         this.activeCharacters = [];
         this.animations = animations;
+        this.addedColliders = false;
     }
     init(loadingManager) {
         console.log("Initializing Character controller");
@@ -29,6 +30,9 @@ export default class CharacterController {
             this.activeCharacters.forEach((character) => {
                 this.square.mesh.remove(character);
                 character.unload();
+                if (this.addedColliders) {
+                    this.collisionManager.removeCharacter(character);
+                }
             });
             this.activeCharacters = [];            
 
@@ -45,14 +49,20 @@ export default class CharacterController {
                 this.square.mesh.add(character);
                 character.load();
                 character.play();
-                //DebugUtil.positionObject(character, character.props.name, character.props.rotation);
+//                DebugUtil.positionObject(character, character.props.name, character.props.rotation);
             });
+
+            this.addedColliders = false;
 
         });
         events.on("angle_updated", (hour) => {
-            this.activeCharacters.forEach((character) => {
-                character.refreshCollider();
-            });
+            if (!this.addedColliders) {
+                this.activeCharacters.forEach((character) => {
+                    this.collisionManager.addCharacter(character);
+                });
+
+                this.addedColliders = true;
+            }
         });
     }
 

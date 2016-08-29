@@ -353,7 +353,7 @@ export default class MiriamAnimation extends THREE.Object3D {
             this.grandFatherClock.scale.multiplyScalar(0.01);
             this.grandFatherClock.position.set(1, 3, -1.5);
             // this.grandFatherClock.rotation.y = Math.PI;
-            DebugUtil.positionObject(this.grandFatherClock, "Clock")
+            //DebugUtil.positionObject(this.grandFatherClock, "Clock")
 
             this.add(this.grandFatherClock);
 

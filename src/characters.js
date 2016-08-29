@@ -34,7 +34,26 @@ export default [
         space: 7,
         introSpace: 17,
         subtitles: null
-    } /*,
+    } ,
+    {
+        name: 'Itzik',
+        basePath : 'assets/characters/itzik',
+        mindepth : 0.0,
+        maxdepth : 3494.158935547,
+        position : [-14.3, 22, 2.1],
+        rotation: [-10, 20, 8],
+        animation: null,
+        uvdy: 0.518,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        animationScale: 0.25,
+        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
+        animationRotation: [13, 0, 0],      // 20, 0, 0
+        space: 7,
+        introSpace: 17,
+        subtitles: null
+    }
+/*,
     {
         name: 'Lupo',
         basePath : 'assets/characters/lupo',
@@ -50,5 +69,4 @@ export default [
         space: 9 ,
         subtitles: "subtitles2"
     }*/
-
 ]
