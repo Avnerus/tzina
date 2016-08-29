@@ -4,6 +4,7 @@ export default
 			"name": "Excitement awakening",
 			"hour": 7,
 			"timeLimitMinutes" : 10,
+            "titlePosition": [-570, 100, 0],
 			"characters": [
 				"Meir",
 				"Rami",
@@ -31,6 +32,7 @@ export default
 		"name": "Family Home",
 			"hour": 9,
 			"timeLimitMinutes" : 13,
+            "titlePosition": [-430, 220, 0],
 			"characters": [
 				"Miryam",
 				"Itzik",
@@ -58,6 +60,7 @@ export default
 		"name": "Boredom",
 			"hour": 12,
 			"timeLimitMinutes" : 8,
+            "titlePosition": [0, 350, 0],
 			"characters": [
 				"Mark",
 				"Lupo1",
@@ -85,6 +88,7 @@ export default
         {
 		"name": "Distrust Betrayal",
 			"hour": 17,
+            "titlePosition": [470, 230, 0],
 			"timeLimitMinutes" : 12,
 			"characters": [
 				"Hannah",
@@ -112,6 +116,7 @@ export default
 		"name": "Despair Loneliness",
 			"hour": 19,
 			"timeLimitMinutes" : 12,
+            "titlePosition": [530, 100, 0],
 			"characters": [
                 "Miriam",
 				"Haim",
@@ -140,6 +145,7 @@ export default
 		"name": "night",
 			"hour": 0,
 			"timeLimitMinutes" : 4,
+            "titlePosition": [0, -100, 0],
 			"characters": [
 				"Haim",
 				"Izchak",
