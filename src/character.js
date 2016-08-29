@@ -22,7 +22,8 @@ export default class Character extends THREE.Object3D {
             fileName: props.basePath + "_full.webm",
             uvdy: props.uvdy,
             uvdx: props.uvdx,
-            scale: props.scale
+            scale: props.scale,
+            volume: props.volume
         });
 
         console.log(props.name + " character constructed!");
