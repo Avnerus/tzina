@@ -15,7 +15,7 @@ export default class TimeController {
         this.rotateVelocity = 0;
         this.currentRotation = 0;
 
-        this.active = true;
+        this.active = false;
 
         this.clockRunning = false;
 
@@ -47,6 +47,11 @@ export default class TimeController {
             this.currentHour = closestHour;
 
             this.showChapterTitle();
+        });
+
+        events.on("intro_end", () => {
+            this.showChapterTitle();
+            this.active = true;
         });
 
         let TEXT_DEFINITION = {
@@ -178,6 +183,17 @@ export default class TimeController {
         console.log("Target rotationY ", targetRotationY, " from ", this.currentRotation);
 
         TweenMax.to(this, 1, {currentRotation: targetRotationY, onComplete: () => {
+            events.emit("angle_updated", this.currentHour);
+        }, onUpdate: () => {
+            this.updateSquare();
+        }});
+    }
+
+    transitionTo(hour, time) {
+        let targetRotationY = hour * 15;
+        TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {
+            this.currentHour = hour;
+            events.emit("hour_updated", this.currentHour);
             events.emit("angle_updated", this.currentHour);
         }, onUpdate: () => {
             this.updateSquare();

@@ -80,6 +80,7 @@ export default class ZoomController {
                 this.zoomCurve = null;
             }
         });
+        this.camera.position.copy(this.STARTING_POSITION);
     }
 
     getZoomOutPosition() {

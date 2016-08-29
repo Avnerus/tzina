@@ -116,14 +116,13 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
-        // Intro
-        this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
-
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
         this.zoomController.init();
 
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene);
         this.timeController.init();
+
+        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
 
         this.animations = {
             'Hannah' : new HannahAnimation(),
@@ -223,7 +222,7 @@ export default class Game {
             // Init the intro
             this.intro.init();
 
-            this.timeController.setTime(17);//17
+            //this.timeController.setTime(17);//17
         }
 
 
