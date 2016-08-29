@@ -97,7 +97,7 @@ export default class FBO {
             this.particles = new THREE.Mesh( geometry, renderMaterial );
             this.particles.matrixAutoUpdate = false;
             this.particles.rotation.z = Math.PI/2;
-            this.particles.rotation.x = Math.PI/ 2;
+            this.particles.rotation.x = Math.PI/2;
             this.particles.updateMatrix();
         }
         else {

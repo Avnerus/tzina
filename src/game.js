@@ -22,7 +22,7 @@ import DebugUtil from './util/debug'
 import HannahAnimation from './animations/hannah'
 import LupoAnimation from './animations/lupo'
 import MiriamAnimation from './animations/miriam'
-
+import HaimAnimation from './animations/haim'
 
 export default class Game {
     constructor(config) {
@@ -47,7 +47,6 @@ export default class Game {
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
-        console.log("SCENE: ", this.scene);
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
         
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
@@ -96,16 +95,11 @@ export default class Game {
         this.loadingManager = new THREE.LoadingManager();
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
-
         // Square
         this.square = new Square();
 
-        // Test characters
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
-
-
-
-
+      
         /*
         this.flood = new Flood();
         this.flood.init();
@@ -122,6 +116,7 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
+        // Intro
         this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
 
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
@@ -284,9 +279,7 @@ export default class Game {
                this.vrControls.update();
         }
         this.collisionManager.update(dt);
-        //this.flood.update(dt);
-        /*
-        //console.log(this.camera.rotation); */
+        //this.flood.update(dt);       
         this.intro.update();
     }
 
