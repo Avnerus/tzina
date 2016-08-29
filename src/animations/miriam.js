@@ -91,14 +91,14 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.animStart = false;
         this.sequenceConfig = [
             { time: 10, anim: ()=>{this.manAppear(10)} },           //10
-            { time: 20, anim: ()=>{this.manHold(8)} },              //40
-            { time: 30, anim: ()=>{this.manLean(6)} },              //65
-            { time: 40, anim: ()=>{this.manCircle(6)} },           //105
-            { time: 45, anim: ()=>{this.manSwirl(6)} },            //110
-            { time: 50, anim: ()=>{this.manSwirl2(6)} },           //115
-            { time: 55, anim: ()=>{this.manSwirl3(6)} },           //120
-            { time: 60, anim: ()=>{this.manSwirlNonstop()} },      //125
-            { time: 80, anim: ()=>{this.manSwirlSpeedup(20)} }     //220
+            { time: 20, anim: ()=>{this.manHold(40)} },              //40
+            { time: 30, anim: ()=>{this.manLean(65)} },              //65
+            { time: 40, anim: ()=>{this.manCircle(105)} },           //105
+            { time: 45, anim: ()=>{this.manSwirl(110)} },            //110
+            { time: 50, anim: ()=>{this.manSwirl2(115)} },           //115
+            { time: 55, anim: ()=>{this.manSwirl3(120)} },           //120
+            { time: 60, anim: ()=>{this.manSwirlNonstop(125)} },      //125
+            { time: 80, anim: ()=>{this.manSwirlSpeedup(220)} }     //220
         ];
 
         let GFClockTex = tex_loader.load(this.BASE_PATH + '/images/clockUV4.jpg');
