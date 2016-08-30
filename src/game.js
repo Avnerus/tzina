@@ -42,7 +42,7 @@ export default class Game {
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
-        this.gui.init();
+        //this.gui.init();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
@@ -64,10 +64,11 @@ export default class Game {
         //this.camera.rotation.x = 0.22;
 
 
+       /*
                  let helper = new THREE.GridHelper( 5000, 5000, 0xffffff, 0xffffff );
                  this.scene.add( helper );
                  let axis = new THREE.AxisHelper(75);
-                 this.scene.add(axis);
+                 this.scene.add(axis);*/
         //
 
         // LIGHT
@@ -288,12 +289,17 @@ export default class Game {
         events.on("character_ended", (name) => {
             this.charactersEnded.push(name);
             if (this.charactersEnded.length == 4) {
-                this.zoomController.velocityZ = -15.0;
-                this.zoomController.friction = 0;
-                document.getElementById("coming-soon").style.display = "block";
-                events.on("base_position", () => {
-                        document.getElementById("coming-img").style.opacity = 1;
-                });
+                this.timeController.setDaySpeed(0.15);
+                this.timeController.done = true;
+                this.timeController.chapterTitle.visible = false;
+                setTimeout(() => {
+                    this.zoomController.velocityZ = -15.0;
+                    this.zoomController.friction = 0;
+                    document.getElementById("coming-soon").style.display = "block";
+                    events.on("base_position", () => {
+                            document.getElementById("coming-img").style.opacity = 1;
+                    });
+                },40000);
             }
 
             else if (this.charactersEnded.indexOf("Itzik") != -1 && 

@@ -120,12 +120,16 @@ export default class Character extends THREE.Object3D {
     }
     play() {
         console.log(this.props.name + " Play idle");
-        this.idleVideo.play();
+        if (!this.done) {
+            this.idleVideo.play();
+        }
     }
 
     load() {
         console.log("Character " + this.props.name + ": Load");
-        this.idleVideo.load();
+        if (!this.done) {
+            this.idleVideo.load();
+        }
         this.active = true;
     }
 
@@ -135,10 +139,7 @@ export default class Character extends THREE.Object3D {
         if (this.subtitlesVideo) {
             this.subtitlesVideo.src = "";
         }
-        if (this.animation) {
-            this.animation.visible = false;
-        }
-        this.remove(this.animation);
+        //this.remove(this.animation);
         this.active = false;
     }
     
@@ -270,11 +271,13 @@ export default class Character extends THREE.Object3D {
         this.fullVideo.mesh.visible = true;
         this.idleVideo.mesh.visible = false;
 
+       /* 
         if (this.props.name == "Hannah") {
             this.fullVideo.video.currentTime = 285;
-        }/* else {
+        } else {
             this.fullVideo.video.currentTime = 280;
         }*/
+
         this.fullVideo.play();
         if (this.subtitlesReady) {
             this.subtitlesVideo.style.display = "block";

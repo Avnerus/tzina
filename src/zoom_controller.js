@@ -22,6 +22,12 @@ export default class ZoomController {
 
         this.friction = 0.01;
 
+        this.STARTING_ROTATION = new THREE.Euler(
+            -0.03997799566520428,
+            -0.001781628129114201, 
+            -0.00007126384840989064,
+            "XYZ"
+        )
         this.STARTING_POSITION = new THREE.Vector3(
             0,
             50,
@@ -84,6 +90,7 @@ export default class ZoomController {
             }
         });
         this.camera.position.copy(this.STARTING_POSITION);
+        this.camera.rotation.copy(this.STARTING_ROTATION);
     }
 
     getZoomOutPosition() {

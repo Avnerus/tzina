@@ -69,6 +69,9 @@ body {
     position: relative;
     top: 25%;
 }
+#arrows img {
+    width: 200px;
+}
 #zoom-arrow {
     display: inline-flex;
     align-items: center;

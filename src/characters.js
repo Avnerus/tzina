@@ -32,7 +32,7 @@ export default [
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 7,
-        introSpace: 17,
+        introSpace: 27,
         subtitles: null
     },
     {
@@ -50,7 +50,7 @@ export default [
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 10,
-        introSpace: 17,
+        introSpace: 28,
         subtitles: true
     },
     {
@@ -69,7 +69,7 @@ export default [
         animationPosition: [0.45, -0.3, 0.25],
         animationRotation: [-4, -23, -9],
         space: 15,
-        volume: 0.5,
+        volume: 0.1,
         subtitles: true
     }
 /*,
