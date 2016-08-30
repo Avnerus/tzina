@@ -16,10 +16,10 @@ export default class MiriamAnimation extends THREE.Object3D {
         const glslify = require('glslify');
 
         // Shaders
-        this.render_fs = glslify('../shaders/render_fs.glsl');
-        this.render_vs = glslify('../shaders/render_vs.glsl');
-        this.simulation_fs = glslify('../shaders/simulation_fs.glsl');
-        this.simulation_vs = glslify('../shaders/simulation_vs.glsl');
+        this.render_fs = glslify('../shaders/miriam/render_fs.glsl');
+        this.render_vs = glslify('../shaders/miriam/render_vs.glsl');
+        this.simulation_fs = glslify('../shaders/miriam/simulation_fs.glsl');
+        this.simulation_vs = glslify('../shaders/miriam/simulation_vs.glsl');
 
         this.width = 256;
         this.height = 256;
@@ -79,6 +79,7 @@ export default class MiriamAnimation extends THREE.Object3D {
     init(loadingManager) {
         this.loadingManager = loadingManager;
         this.setupAnim();
+        //this.parent.fullVideo.mesh.scale
     }
 
     setupAnim() {
@@ -88,17 +89,18 @@ export default class MiriamAnimation extends THREE.Object3D {
         let loader = new THREE.JSONLoader(this.loadingManager);
 
         // setup animation sequence
+        // time: when to happen, duration: how long / fast the animation is
         this.animStart = false;
         this.sequenceConfig = [
             { time: 10, anim: ()=>{this.manAppear(10)} },           //10
-            { time: 20, anim: ()=>{this.manHold(40)} },              //40
-            { time: 30, anim: ()=>{this.manLean(65)} },              //65
-            { time: 40, anim: ()=>{this.manCircle(105)} },           //105
-            { time: 45, anim: ()=>{this.manSwirl(110)} },            //110
-            { time: 50, anim: ()=>{this.manSwirl2(115)} },           //115
-            { time: 55, anim: ()=>{this.manSwirl3(120)} },           //120
-            { time: 60, anim: ()=>{this.manSwirlNonstop(125)} },      //125
-            { time: 80, anim: ()=>{this.manSwirlSpeedup(220)} }     //220
+            { time: 40, anim: ()=>{this.manHold(8)} },              //40
+            { time: 65, anim: ()=>{this.manLean(8)} },              //65
+            { time: 105, anim: ()=>{this.manCircle(8)} },           //105
+            { time: 110, anim: ()=>{this.manSwirl(8)} },            //110
+            { time: 115, anim: ()=>{this.manSwirl2(8)} },           //115
+            { time: 120, anim: ()=>{this.manSwirl3(8)} },           //120
+            { time: 125, anim: ()=>{this.manSwirlNonstop()} },      //125
+            { time: 220, anim: ()=>{this.manSwirlSpeedup(20)} }     //220
         ];
 
         let GFClockTex = tex_loader.load(this.BASE_PATH + '/images/clockUV4.jpg');
@@ -180,7 +182,7 @@ export default class MiriamAnimation extends THREE.Object3D {
                 morphPositions: { type: "t", value: morphPositions },
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0.001 },
-                frequency: { type: "f", value: 1 }
+                frequency: { type: "f", value: 0.8 }
             },
             vertexShader: this.simulation_vs,
             fragmentShader:  this.simulation_fs,
@@ -210,6 +212,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.timerAnim = null;
 
         this.fbo.update();
+
         //
         this.loadingManager.itemEnd("MiriamAnim");
     }
@@ -221,6 +224,8 @@ export default class MiriamAnimation extends THREE.Object3D {
     }
 
     manAppear (_duration) {
+        // DebugUtil.positionObject(this.parent.fullVideo.mesh, "Miriam");
+
         this.manFigure.material.opacity = 0.5;
         // TweenMax.to( this.manFigure.scale, _duration, { x:1,y:1,z:1, ease: Power3.easeOut } );
         TweenMax.fromTo( this.manFigure.scale, _duration, {x:0.01,y:0.01,z:0.01}, { x:1,y:1,z:1, ease: Power3.easeOut } );
@@ -285,6 +290,7 @@ export default class MiriamAnimation extends THREE.Object3D {
                                                        this.tl.kill();
                                                        // TweenMax.to( this.manFigure.scale, 2, { x:0.01,y:0.01,z:0.01, ease: Back.easeInOut, onComplete: ()=>{this.tl.kill()} } );
                                                        TweenMax.to( this.manFigure.scale, 1, { x:0.01,y:0.01,z:0.01, ease: Back.easeInOut } );
+                                                       TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut } );
                                                     } } );
     }
 

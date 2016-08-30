@@ -38,6 +38,10 @@ export default {
         events.emit("add_gui", {
                     folder:name + " - Rotation",
                     onChange: () => {object.rotation.z = object.angleRotation.z * Math.PI / 180}
-        }, object.angleRotation, "z"); 
+        }, object.angleRotation, "z");
+
+        events.emit("add_gui", {folder:name + " - Scale"}, object.scale, "x"); 
+        events.emit("add_gui", {folder:name + " - Scale"}, object.scale, "y"); 
+        events.emit("add_gui", {folder:name + " - Scale"}, object.scale, "z");
     }
 }
