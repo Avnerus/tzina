@@ -25,6 +25,7 @@ export default class HannahAnimation extends THREE.Object3D {
             { time: 65, anim: ()=>{this.beDome()} },    // 65
             { time: 86, anim: ()=>{this.showLeaf()} },  // 86
             { time: 172, anim: ()=>{this.beCollapse()} }// 172
+            { time: 182, anim: ()=>{this.characterDisappear()} }
         ];
 
         this.nextAnim = null;
@@ -316,7 +317,12 @@ export default class HannahAnimation extends THREE.Object3D {
             this.particleGroup.emitters[i].activeMultiplier = 1;
             this.particleGroup.emitters[i].acceleration.value = new THREE.Vector3(0,0.5,0);
         }
+    }
 
+    characterDisappear() {
+        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, onComplete: ()=>{
+                                                            this.parent.fullVideo.setOpacity(0.0);
+                                                       } } );
     }
 
     loadModelDome (modelS, modelD, modelC) {

@@ -290,7 +290,9 @@ export default class MiriamAnimation extends THREE.Object3D {
                                                        this.tl.kill();
                                                        // TweenMax.to( this.manFigure.scale, 2, { x:0.01,y:0.01,z:0.01, ease: Back.easeInOut, onComplete: ()=>{this.tl.kill()} } );
                                                        TweenMax.to( this.manFigure.scale, 1, { x:0.01,y:0.01,z:0.01, ease: Back.easeInOut } );
-                                                       TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut } );
+                                                       TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, onComplete: ()=>{
+                                                            this.parent.fullVideo.setOpacity(0.0);
+                                                       } } );
                                                     } } );
     }
 

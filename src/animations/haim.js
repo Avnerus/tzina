@@ -502,7 +502,9 @@ export default class HaimAnimation extends THREE.Object3D {
     }
 
     characterDisappear() {
-        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut } );
+        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, onComplete: ()=>{
+                                                            this.parent.fullVideo.setOpacity(0.0);
+                                                       } } );
     }
 
     transX(geo, n){
