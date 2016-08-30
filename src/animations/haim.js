@@ -199,11 +199,11 @@ export default class HaimAnimation extends THREE.Object3D {
                     // radius: 0.5
                 },
                 acceleration: {
-                    value: new THREE.Vector3(0,-1,0),
-                    spread: new THREE.Vector3(0,-2,0)
+                    value: new THREE.Vector3(0,-1.2,0),
+                    spread: new THREE.Vector3(0,-1,0)       //0,-2,0
                 },
                 velocity: {
-                    value: new THREE.Vector3(0.1,-0.5,0.1)
+                    value: new THREE.Vector3(0.1,-1,0.1)  //0.1,-0.5,0.1
                 },
                 // rotation: {
                 //     angle: 0.5
@@ -216,7 +216,7 @@ export default class HaimAnimation extends THREE.Object3D {
                     value: [.5,1,1,1,1,0]
                 },
                 size: {
-                    value: [1,2,3,3,2],
+                    value: [.1,2,3,3,2],
                     spread: 1
                 },
                 particleCount: 15
@@ -424,7 +424,10 @@ export default class HaimAnimation extends THREE.Object3D {
             targets.push( this.tubes[i].children[0].morphTargetInfluences );
         }
         // hide the liquid
-        this.tubes[0].children[1].visible = false;
+        this.tubes[0].children[1].material.transparent = true;
+        this.tubes[0].children[1].material.opacity = 0;
+        this.outTubes[0].children[1].material.transparent = true;
+        this.outTubes[0].children[1].material.opacity = 0;
 
         this.tl = new TimelineMax();    //{repeat: -1}
         this.tl.to( targets, _duration, { endArray: tmpEndArray, ease: Power0.easeNone, onStart: ()=>{
@@ -433,7 +436,7 @@ export default class HaimAnimation extends THREE.Object3D {
                .to( targets, _duration, { endArray: tmpEndArray2, ease: Power0.easeNone })
                .to( targets, _duration, { endArray: tmpEndArray3, ease: Power0.easeNone })
                .to( targets, _duration/1.5, { endArray: tmpEndArray4, ease: Back.easeInOut.config(2.5), onStart: ()=>{
-                    this.tubes[0].children[1].visible = true;
+                    this.tubes[0].children[1].material.opacity = 1;
                     this.tubes[0].children[1].material.map.offset.x=-1.5;
                     this.liquidDown = true;
                }, onComplete: ()=>{
@@ -463,10 +466,12 @@ export default class HaimAnimation extends THREE.Object3D {
                     // this.liquidOut = true;
                     // this.fbo.particles.position.y = 0;
 
+                    // scale up clouds
                     for(let i=0; i<this.outTubes.length; i++){
                         TweenMax.to( this.outTubes[i].children[2].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone } );
                         TweenMax.to( this.tubes[i].children[3].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone, onComplete: ()=>{
                             this.liquidOut = true;
+                            this.outTubes[0].children[1].material.opacity = 1;
                         } } );
                     }
                } });
