@@ -288,9 +288,10 @@ export default class Game {
         this.charactersEnded = [];
         events.on("character_ended", (name) => {
             this.charactersEnded.push(name);
-            if (this.charactersEnded.length == 4) {
-                this.timeController.setDaySpeed(0.15);
+            if (this.charactersEnded.length == 1) {
+                this.timeController.setDaySpeed(0.1);
                 this.timeController.done = true;
+                this.zoomController.done = true;
                 this.timeController.chapterTitle.visible = false;
                 setTimeout(() => {
                     this.zoomController.velocityZ = -15.0;
