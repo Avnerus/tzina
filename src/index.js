@@ -83,6 +83,7 @@ function start() {
 
 function animate(t) {
     requestAnimationFrame(animate);
+
     elapsed = t - lastTimestamp;
     if (elapsed >= FPS_INTERVAL) {
         lastTimestamp = t - (elapsed % FPS_INTERVAL);

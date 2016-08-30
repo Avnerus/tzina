@@ -290,7 +290,7 @@ export default class Game {
 
     update(dt,et) {
         this.sky.update(dt);
-        this.square.update();
+        this.square.update(dt);
         if (this.keyboardController) {
             this.keyboardController.update(dt);
             this.zoomController.update(dt);

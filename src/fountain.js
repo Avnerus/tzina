@@ -51,7 +51,7 @@ export default class Fountain extends THREE.Object3D  {
     }
 
     update(dt) {
-       this.particleGroup.tick(dt); 
+       this.particleGroup.tick(dt * 0.8); 
     }
 
     startCycle() {

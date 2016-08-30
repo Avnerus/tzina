@@ -193,6 +193,7 @@ export default class TimeController {
         let targetRotationY = hour * 15;
         TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {
             this.currentHour = hour;
+            this.updateNextHour();
             events.emit("hour_updated", this.currentHour);
             events.emit("angle_updated", this.currentHour);
         }, onUpdate: () => {

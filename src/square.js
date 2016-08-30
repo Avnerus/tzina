@@ -77,7 +77,7 @@ export default class Square extends THREE.Object3D{
         });
     }
     update(dt) {
-        this.fountain.update();
+        this.fountain.update(dt);
     }
 
     turnOffWindows() {
