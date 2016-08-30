@@ -11,7 +11,7 @@ export default [
         uvdx: -0.0245,
         scale: 0.003 * 0.25,
         animationScale: 0.25,
-        animationPosition: [0,-0.3,-0.5],
+        animationPosition: [0,-0.3,-0.55],
         animationRotation: [15, 0, 2],
         space: 7,
         volume: 0.2,
