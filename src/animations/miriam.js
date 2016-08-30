@@ -100,7 +100,7 @@ export default class MiriamAnimation extends THREE.Object3D {
             { time: 115, anim: ()=>{this.manSwirl2(8)} },           //115
             { time: 120, anim: ()=>{this.manSwirl3(8)} },           //120
             { time: 125, anim: ()=>{this.manSwirlNonstop()} },      //125
-            { time: 220, anim: ()=>{this.manSwirlSpeedup(20)} }     //220
+            { time: 220, anim: ()=>{this.manSwirlSpeedup(27)} }     //220, 20
         ];
 
         let GFClockTex = tex_loader.load(this.BASE_PATH + '/images/clockUV4.jpg');
