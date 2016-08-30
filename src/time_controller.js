@@ -167,7 +167,7 @@ export default class TimeController {
 
     handleMouseMove(e) {
 
-        if (!this.active) {
+        if (!this.active || this.done) {
             return;
         }
 

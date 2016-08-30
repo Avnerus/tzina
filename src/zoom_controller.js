@@ -17,6 +17,7 @@ export default class ZoomController {
         this.config = config;
         this.scene = scene;
         this.wasUsed = false;
+        this.done = false;
 
         this.distanceOnCurve = 0;
 
@@ -78,15 +79,17 @@ export default class ZoomController {
         //events.emit("add_gui",{}, this.camera.position, "z"); 
 
         events.on("angle_updated", (hour) => {
-            console.log("Zoom Controller: Hour angle updated to ", hour);
-            let entryPoint = _.find(this.square.ENTRY_POINTS, {hour: hour});
-            if (entryPoint) {
-                this.calculateZoomCurve(entryPoint);
-                this.lastEntryPoint = entryPoint;
-            } else {
-                this.calculateZoomVector();
-                this.velocityZ = null;
-                this.zoomCurve = null;
+            if (!this.done) {
+                console.log("Zoom Controller: Hour angle updated to ", hour);
+                let entryPoint = _.find(this.square.ENTRY_POINTS, {hour: hour});
+                if (entryPoint) {
+                    this.calculateZoomCurve(entryPoint);
+                    this.lastEntryPoint = entryPoint;
+                } else {
+                    this.calculateZoomVector();
+                    this.velocityZ = null;
+                    this.zoomCurve = null;
+                }
             }
         });
         this.camera.position.copy(this.STARTING_POSITION);
