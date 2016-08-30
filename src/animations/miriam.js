@@ -196,7 +196,7 @@ export default class MiriamAnimation extends THREE.Object3D {
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,
             transparent: true,
-            blending:THREE.AdditiveBlending,
+            blending:THREE.AdditiveBlending
         } );
 
         // Particle geometry? Just once particle
