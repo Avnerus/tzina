@@ -62,14 +62,12 @@ body {
   //overflow:visible;
   pointer-events:none;
 }
-#chapter-title {
+#arrows {
     display: inline-flex;
     align-items: center;
     margin: auto;
-    color: white;
-    font-size: 36px;
     position: relative;
-    bottom: 300px;
+    top: 25%;
 }
 #secure-access {
     display: inline-flex;

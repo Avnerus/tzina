@@ -134,6 +134,7 @@ export default class SoundManager {
         });
     }
     loadPositionalSound(fileName) {
+        console.log("Loading positional audio sound ", fileName);
         return new Promise((resolve, reject) => {
             let sound = new THREE.PositionalAudio(this.listener);
             this.loader.load(fileName, (audioBuffer) => {

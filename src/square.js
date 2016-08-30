@@ -16,12 +16,12 @@ export default class Square extends THREE.Object3D{
             {
                 hour: 19,
                 startPosition: [21, 20, 34],
-                endPosition: [15, 22, 14]
+                endPosition: [15, 22.1, 14]
             },
             {
                 hour: 17,
                 startPosition: [-3, 20, 43],
-                endPosition: [-3.5, 22, 18]
+                endPosition: [-3.5, 22.1, 18]
             }
         ]
 
@@ -77,7 +77,7 @@ export default class Square extends THREE.Object3D{
         });
     }
     update(dt) {
-        this.fountain.update();
+        this.fountain.update(dt);
     }
 
     turnOffWindows() {

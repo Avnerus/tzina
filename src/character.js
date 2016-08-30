@@ -90,14 +90,18 @@ export default class Character extends THREE.Object3D {
             }
 
 
-            this.soundManager.loadPositionalSound(this.props.basePath + "_intro.ogg")
-            .then((sound) => {
-                this.introSound = sound;
-                this.introSound.autoplay = false;
-                this.introSound.loop = false;
-                this.introSound.setRefDistance(7);
-                this.add(this.introSound);
-            });
+            if (this.props.introSpace) {
+                this.soundManager.loadPositionalSound(this.props.basePath + "_intro.ogg")
+                .then((sound) => {
+                    this.introSound = sound;
+                    this.introSound.autoplay = false;
+                    this.introSound.loop = false;
+                    this.introSound.setRefDistance(7);
+                    this.add(this.introSound);
+                });
+            } else {
+                this.introSound = null;
+            }
 
             events.on("character_playing", (name) => {
                 if (this.active && this.props.name != name) {
@@ -250,7 +254,7 @@ export default class Character extends THREE.Object3D {
     }
 
     onIntro() {
-        if (!this.playedIntro) {
+        if (!this.playedIntro && this.introSound) {
             console.log(this.props.name, " - Playing intro", this.introSound);
             this.playedIntro = true;
             this.introSound.play();
@@ -260,7 +264,9 @@ export default class Character extends THREE.Object3D {
     playFull() {
         this.playingFull = true;
         this.idleVideo.pause();
-        this.introSound.pause();
+        if (this.introSound) {
+            this.introSound.pause();
+        }
         this.fullVideo.mesh.visible = true;
         this.idleVideo.mesh.visible = false;
 
