@@ -27,6 +27,11 @@ export default class VideoRGBD  {
 
     init(loadingManager) {
         this.video = document.createElement( 'video' );
+        if (this.properties.volume) {
+            console.log("Video volume ", this.properties.volume);
+            this.video.volume = this.properties.volume;
+        }
+
         /*
         this.video.crossOrigin = "anonymous"
         console.log("Cross origin video ", this.video.crossOrigin); */

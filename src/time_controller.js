@@ -15,7 +15,7 @@ export default class TimeController {
         this.rotateVelocity = 0;
         this.currentRotation = 0;
 
-        this.active = true;
+        this.active = false;
 
         this.clockRunning = false;
 
@@ -47,6 +47,11 @@ export default class TimeController {
             this.currentHour = closestHour;
 
             this.showChapterTitle();
+        });
+
+        events.on("intro_end", () => {
+            this.showChapterTitle();
+            this.active = true;
         });
 
         let TEXT_DEFINITION = {
@@ -184,6 +189,17 @@ export default class TimeController {
         }});
     }
 
+    transitionTo(hour, time) {
+        let targetRotationY = hour * 15;
+        TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {
+            this.currentHour = hour;
+            events.emit("hour_updated", this.currentHour);
+            events.emit("angle_updated", this.currentHour);
+        }, onUpdate: () => {
+            this.updateSquare();
+        }});
+    }
+
     showChapterTitle() {
         let chapter = _.find(Chapters, {hour: this.currentHour });
         if (this.chapterTitle.visible) {
@@ -217,7 +233,9 @@ export default class TimeController {
         } else if (this.currentHour == 19) {
             this.square.turnOnSun("7");
         } else {
-            this.square.turnOffSun(this.square.currentSun);
+            if (this.square.currentSun) {
+                this.square.turnOffSun(this.square.currentSun);
+            }
         }
     }
 
@@ -226,6 +244,14 @@ export default class TimeController {
         this.currentRotation = hour * 15;
         this.updateSquare();
         this.showChapterTitle();
+        events.emit("hour_updated", this.currentHour);
+        events.emit("angle_updated", this.currentHour);
+        this.updateNextHour();
+    }
+
+    jumpToTime(hour) {
+        this.currentHour = hour;
+        this.sky.setTime(this.currentHour);
         events.emit("hour_updated", this.currentHour);
         events.emit("angle_updated", this.currentHour);
         this.updateNextHour();

@@ -15,6 +15,7 @@ export default [
         animationRotation: [15, 0, 2],
         space: 7,
         introSpace: 17,
+        volume: 0.2,
         subtitles: null
     },
     {
@@ -69,6 +70,7 @@ export default [
         animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 10,
         introSpace: 17,
+        volume: 0.5,
         subtitles: true
     }
 /*,
