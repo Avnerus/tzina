@@ -6,7 +6,7 @@ import EndArrayPlugin from '../util/EndArrayPlugin'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class IntroAnimation extends THREE.Object3D {
-    constructor( scene, renderer, square ) {
+    constructor( scene, renderer, square, timeController ) {
         super();
         this.BASE_PATH = 'assets/animations/intro';
 
@@ -28,6 +28,7 @@ export default class IntroAnimation extends THREE.Object3D {
         this.maxDepth = 50.0;
 
         this.square = square;
+        this.timeController = timeController;
 
         console.log("FBO Constructed!")
     }
@@ -169,12 +170,13 @@ export default class IntroAnimation extends THREE.Object3D {
         this.simulationShader = new THREE.ShaderMaterial({
             uniforms: {
                 positions: { type: "t", value: this.positionsForFBO },
-                timer: { type: "f", value: 0 },
+                deltaTime: { type: "f", value: 0 },
                 maxDepth : { type: "f", value: this.maxDepth },
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                gravity: { type: "f", value: 2 },
+                gravity: { type: "f", value: 50 }, // 2
+                mouseRotation: { type: "f", value: 0 }, // 2
                 squareRadius: {type: "f", value: this.sRadius*26},
                 squareCenterX: {type: "f", value: this.sCenter.x},
                 squareCenterY: {type: "f", value: this.sCenter.y},
@@ -259,6 +261,8 @@ export default class IntroAnimation extends THREE.Object3D {
     update(dt,et) {
         if(this.isStarted){
             // test
+            this.simulationShader.uniforms.deltaTime.value = dt;
+            this.simulationShader.uniforms.mouseRotation.value = this.timeController.rotateVelocity;
             this.fbo.update();
         }
     }
