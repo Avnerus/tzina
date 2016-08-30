@@ -32,6 +32,8 @@ export default class Game {
         this.config = config;
         this.started = false;
         this.shownWASD = false;
+        this.shownArrows = false;
+        this.shownZoom = false;
     }
     init() {
 
@@ -236,14 +238,39 @@ export default class Game {
             
             // Old people backup
             setTimeout(() => {
-                if (!this.timeController.wasUsed) {
-                    document.getElementById("guidance").style.display = "flex";
+                if (!this.timeController.wasUsed && !this.shownArrows) {
+                    document.getElementById("time-guidance").style.display = "flex";
                 }
             },5000);
         });
 
+        events.on("angle_updated", (hour) => {
+            if (this.timeController.wasUsed && !this.zoomController.wasUsed) {
+                let lastHour = hour;
+                setTimeout(() => {
+                    if (this.timeController.currentHour == lastHour && !this.zoomController.wasUsed) {
+                        document.getElementById("zoom-guidance").style.display = "flex";
+                    }
+                }, 3000);
+            } 
+        });
+
         events.on("time_rotated", () => {
-            document.getElementById("guidance").style.display = "none";
+            this.shownArrows = true;
+            document.getElementById("time-guidance").style.display = "none";
+        })
+
+        events.on("zoom_used", () => {
+            console.log("Zoom controller used!");
+            this.shownZoom = true;
+            document.getElementById("zoom-guidance").style.display = "none";
+        })
+
+        events.on("chapter_threshold", (passed) => {
+            if (passed && !this.shownArrows) {
+                this.shownArrows = true;
+                document.getElementById("time-guidance").style.display = "none";
+            }
         })
 
         events.on("control_threshold", () => {
@@ -261,8 +288,14 @@ export default class Game {
         events.on("character_ended", (name) => {
             this.charactersEnded.push(name);
             if (this.charactersEnded.length == 4) {
-
+                this.zoomController.velocityZ = -15.0;
+                this.zoomController.friction = 0;
+                document.getElementById("coming-soon").style.display = "block";
+                events.on("base_position", () => {
+                        document.getElementById("coming-img").style.opacity = 1;
+                });
             }
+
             else if (this.charactersEnded.indexOf("Itzik") != -1 && 
                 this.charactersEnded.indexOf("Hannah") != -1 &&
                 this.timeController.currentHour >= 17 &&
@@ -287,19 +320,6 @@ export default class Game {
     }
 
 
-    zoomOut() {
-        console.log("FINAL ZOOM OUT");
-        let zoomVector = new THREE.Vector3().copy(new THREE.Vector3(0, 0, 1) ).applyQuaternion(this.camera.quaternion);
-        zoomVector.y = 0.15;
-        zoomVector.multiplyScalar(1000);
-        let newPosition = new THREE.Vector3().copy(this.camera.position);
-        newPosition.add(zoomVector);
-        console.log("Move to ", newPosition);
-        TweenMax.to(this.camera.position, 20, {x: newPosition.x, y: newPosition.y, z: newPosition.z, onComplete: () => {
-            document.getElementById("coming-soon").style.display = "block";
-            document.getElementById("coming-img").style.opacity = 1;
-        }});
-    }
 
     animate(t) {
         this.update(this.clock.getDelta(), this.clock.getElapsedTime());

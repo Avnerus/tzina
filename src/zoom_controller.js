@@ -16,8 +16,11 @@ export default class ZoomController {
         this.lastCameraOrientation.y = 1;
         this.config = config;
         this.scene = scene;
+        this.wasUsed = false;
 
         this.distanceOnCurve = 0;
+
+        this.friction = 0.01;
 
         this.STARTING_POSITION = new THREE.Vector3(
             0,
@@ -171,6 +174,10 @@ export default class ZoomController {
                 }
             }
 
+            if (!this.wasUsed) {
+                this.wasUsed = true;
+                events.emit("zoom_used");
+            }
 
             this.distanceOnCurve = Math.max(0,Math.min(1, this.distanceOnCurve + this.velocityZ * dt * 0.001));
             //console.log(this.distanceOnCurve);
@@ -217,9 +224,9 @@ export default class ZoomController {
             }
 
             if (this.velocityZ > 0) {
-                this.velocityZ = Math.max(0, this.velocityZ - 0.01 * dt);
+                this.velocityZ = Math.max(0, this.velocityZ - this.friction * dt);
             } else {
-                this.velocityZ = Math.min(0, this.velocityZ + 0.01 * dt);
+                this.velocityZ = Math.min(0, this.velocityZ + this.friction * dt);
             }
 
             //console.log(this.camera.position, this.camera.rotation);
