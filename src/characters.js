@@ -4,7 +4,7 @@ export default [
         basePath : 'assets/characters/hanna',
         mindepth : 2138.454101562,
         maxdepth : 3047.334472656,
-        position : [-5.5, 21.93, 13.8],
+        position : [-5.5, 22.0, 13.8],
         rotation: [-22, 50, 14],
         animation: 'Hannah',
         uvdy: 0.4948,
