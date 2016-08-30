@@ -233,7 +233,18 @@ export default class Game {
         events.on("intro_end", () => {
             console.log("Intro ended");
             //this.introAni.start();
+            
+            // Old people backup
+            setTimeout(() => {
+                if (!this.timeController.wasUsed) {
+                    document.getElementById("guidance").style.display = "flex";
+                }
+            },5000);
         });
+
+        events.on("time_rotated", () => {
+            document.getElementById("guidance").style.display = "none";
+        })
 
         events.on("control_threshold", () => {
             //this.introAni.start();

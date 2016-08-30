@@ -20,6 +20,8 @@ export default class TimeController {
         this.clockRunning = false;
 
         this.daySpeed = config.daySpeed;
+
+        this.wasUsed = false;
     }
     init() {
         console.log("Initializing Time Controller", this.element)
@@ -73,6 +75,10 @@ export default class TimeController {
 
     update(dt) {
         if (this.active && this.rotateVelocity != 0) {
+            if (!this.wasUsed) {
+                this.wasUsed = true;
+                events.emit("time_rotated");
+            }
             this.square.mesh.rotateY(this.rotateVelocity * Math.PI /180 * dt * 20);
             //console.log("Square RotY: ", this.square.mesh.rotation.y);
             this.updateRotation();
