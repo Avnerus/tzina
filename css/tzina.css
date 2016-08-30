@@ -69,6 +69,16 @@ body {
     position: relative;
     top: 25%;
 }
+#arrows img {
+    width: 200px;
+}
+#zoom-arrow {
+    display: inline-flex;
+    align-items: center;
+    margin: auto;
+    position: relative;
+    top: 15%;
+}
 #secure-access {
     display: inline-flex;
     align-items: center;
