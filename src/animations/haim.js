@@ -28,7 +28,8 @@ export default class HaimAnimation extends THREE.Object3D {
         // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
             { time: 10,  anim: ()=>{this.tubeDown(1)} },
-            { time: 30, anim: ()=>{this.tubeOut(0.5)} }
+            { time: 30, anim: ()=>{this.tubeOut(0.5)} },
+            { time: 50, anim: ()=>{this.characterDisappear()} }
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -231,19 +232,37 @@ export default class HaimAnimation extends THREE.Object3D {
     }
 
     createGroundPuddle( tex_loader) {
+        this.puddles = new THREE.Object3D();
+        this.puddleAnimators = [];
         let puddleTex = tex_loader.load( this.BASE_PATH + '/images/puddle.png');
-        this.puddleAnimator = new TextureAnimator( puddleTex, 4, 1, 6, 60, [0,1,2,3,2,0] );
-        // starAnimators.push(starAnimator);
-        let puddleMat = new THREE.MeshBasicMaterial({map: puddleTex, transparent: true, side: THREE.DoubleSide});
-        var puddleGeo = new THREE.PlaneGeometry(.5,.5);
+        let puddleMats = [];
+        let orders = [ [0,1,2,3,2,0], [1,2,3,2,0,1], [2,3,2,0,1,2], [3,2,0,1,2,3] ];
+
+        for(let i=0; i<orders.length; i++){
+            let pTex = puddleTex.clone();
+            pTex.needsUpdate = true;
+            let puddleAni = new TextureAnimator( pTex, 4, 1, 6, 60, orders[i] );
+            let puddleMat = new THREE.MeshBasicMaterial({map: pTex, transparent: true, side: THREE.DoubleSide, opacity: 0.5});
+
+            this.puddleAnimators.push(puddleAni);
+            puddleMats.push(puddleMat);
+        }
+        
+        var puddleGeo = new THREE.PlaneGeometry(5,5);
         for(let i=0; i<50; i++){
-            let puddle = new THREE.Mesh(puddleGeo, puddleMat);
+            let puddle = new THREE.Mesh(puddleGeo, puddleMats[i%4]);
             puddle.position.set(Math.random()*14-7,
-                                -3,
+                                -1,
                                 Math.random()*16-8 +3);
             puddle.rotation.x = Math.PI/2;
-            this.add(puddle);
+            // puddle.scale.multiplyScalar( (Math.random()+1) );
+            this.puddles.add(puddle);
+            //this.add(puddle);
         }
+        this.add(this.puddles);
+        console.log(this.puddles);
+        console.log(this.puddleAnimators);
+        DebugUtil.positionObject(this.puddles, "puddle");
     }
 
     createCurve( pos, rot ){
@@ -477,6 +496,10 @@ export default class HaimAnimation extends THREE.Object3D {
                } });
     }
 
+    characterDisappear() {
+        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut } );
+    }
+
     transX(geo, n){
         for(let i=0; i<geo.vertices.length; i++){
             geo.vertices[i].x += n;
@@ -533,7 +556,9 @@ export default class HaimAnimation extends THREE.Object3D {
             // this.fbo.update();
             // SPE
             // this.particleGroup.tick( dt );
-            this.puddleAnimator.updateWithOrder( 300*dt );
+            for(let i=0; i<this.puddleAnimators.length; i++){
+                this.puddleAnimators[i].updateWithOrder( 300*dt );
+            }
         }
     }
 }
