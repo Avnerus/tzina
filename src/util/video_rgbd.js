@@ -27,9 +27,14 @@ export default class VideoRGBD  {
 
     init(loadingManager) {
         this.video = document.createElement( 'video' );
-        this.video.src = this.properties.fileName;
-        //this.video.crossOrigin = "anonymous"
-        console.log("Cross origin video ", this.video.crossOrigin);
+        if (this.properties.volume) {
+            console.log("Video volume ", this.properties.volume);
+            this.video.volume = this.properties.volume;
+        }
+
+        /*
+        this.video.crossOrigin = "anonymous"
+        console.log("Cross origin video ", this.video.crossOrigin); */
 
         this.isPlaying = false;
         this.videoTexture = new THREE.Texture( this.video );
@@ -45,7 +50,8 @@ export default class VideoRGBD  {
                 "map": { type: "t" },
                 "mindepth" : { type : "f", value : this.properties.mindepth },
                 "maxdepth" : { type : "f", value : this.properties.maxdepth },
-                "uvd" : { type : "f", value : this.properties.uvd },
+                "uvdy" : { type : "f", value : this.properties.uvdy },
+                "uvdx" : { type : "f", value : this.properties.uvdx },
                 "opacity" : { type : "f", value : 1.0 }
             },
 
@@ -60,18 +66,29 @@ export default class VideoRGBD  {
 
         let geometry = this.buildMeshGeometry();
 
-        //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
+       //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
-        //let mesh = new THREE.Mesh( geometry, material);
+        //this.mesh = new THREE.Mesh( geometry, material);
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         //mesh.frustumCulled = false;
 
-        /*
-        var bbox = new THREE.BoundingBoxHelper( this.mesh, 0x00ff00  );
-        bbox.update();
-        scene.add( bbox );*/
-    }
 
+       /*
+
+        if (scene) {
+            var bbox = new THREE.BoundingBoxHelper( this.mesh, 0xff0000  );
+            bbox.update();
+            scene.add( bbox );
+        }*/
+    }
+    load() {
+        this.video.src = this.properties.fileName;
+        this.video.load();
+    }
+    unload() {
+        this.pause();
+        this.video.src = "";
+    }
 
     buildMeshGeometry() {
         let meshGeometry = new THREE.Geometry();
@@ -79,7 +96,6 @@ export default class VideoRGBD  {
             for ( let x = 0; x < VERTS_WIDE; x++ ) {
                 meshGeometry.vertices.push(
                         new THREE.Vector3((-640 + x * 5), (480 -y * 5) , 0 ) );
-                    // new THREE.Vector3(-x / VERTS_WIDE ,  y / VERTS_TALL, 0 ) );
             }
         }
         for ( let y = 0; y < VERTS_TALL - 1; y++ ) {
@@ -122,8 +138,6 @@ export default class VideoRGBD  {
         if ( this.isPlaying === false ) return;
 
         this.video.pause();
-
-        this.meshMaterial.uniforms.map.value = this.imageTexture;
 
         this.isPlaying = false;
 

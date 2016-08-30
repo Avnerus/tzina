@@ -58,7 +58,7 @@ export default function ( emitter, object, onError ) {
 	// standing=true but the VRDisplay doesn't provide stageParameters.
 	this.userHeight = 1.6;
 
-    this.active = true;	// default: false
+    this.active = true;
 
     events.on('intro_start', () => {
         console.log("Intro starting - disabling vr control");
@@ -67,6 +67,14 @@ export default function ( emitter, object, onError ) {
     events.on('intro_end', () => {
         console.log("Intro starting - disabling vr control");
         this.active = true;
+    })
+
+    events.on("control_threshold", (passed) => {
+        if (passed) {
+            this.active = true;
+        } else {
+            this.active = false;
+        }
     })
 
 	this.update = function () {

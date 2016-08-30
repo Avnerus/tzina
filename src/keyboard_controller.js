@@ -1,3 +1,5 @@
+import lock from 'pointer-lock-chrome-tolerant';
+
 export default class KeyboardController {
     constructor(config, camera, square, collisionManager) {
 
@@ -19,13 +21,14 @@ export default class KeyboardController {
 
         this.height = config.basalHeight;
 
-        this.active = true;
+        this.active = false;
 
         this.zAxis = new THREE.Vector3(0,0,1);
     }
     init() {
 
         console.log("Keyboard controller init");
+        this.pointer = lock(document.getElementById('game'));
 
         events.on("start_zoom" ,() => {
             this.active = false;
@@ -39,6 +42,16 @@ export default class KeyboardController {
         events.on("intro_end" ,() => {
             this.active = true;
         });
+
+        events.on("control_threshold", (passed) => {
+            if (passed) {
+                this.active = true;
+                this.pointer.request();
+            } else {
+                this.active = false;
+                this.pointer.release();
+            }
+        })
 
         document.addEventListener('keydown', (event) => {
             switch ( event.keyCode ) {
@@ -113,12 +126,12 @@ export default class KeyboardController {
             this.velocity.z -= this.velocity.z * 10.0 * delta;
 
             //this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+            
+            if ( this.moveForward ) this.velocity.z -= 100.0 * delta * this.config.movementSpeed;
+            if ( this.moveBackward ) this.velocity.z += 100.0 * delta * this.config.movementSpeed;
 
-            if ( this.moveForward ) this.velocity.z -= 100.0 * delta;
-            if ( this.moveBackward ) this.velocity.z += 100.0 * delta;
-
-            if ( this.moveLeft ) this.velocity.x -= 100.0 * delta;
-            if ( this.moveRight ) this.velocity.x += 100.0 * delta;
+            if ( this.moveLeft ) this.velocity.x -= 100.0 * delta * this.config.movementSpeed;
+            if ( this.moveRight ) this.velocity.x += 100.0 * delta * this.config.movementSpeed;
 
             /*
             if (this.collisionManager.isClimbingStairs() && this.velocity.z != 0) {

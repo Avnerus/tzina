@@ -24,12 +24,21 @@
         <script src="lib/VREffect.js"></script>
         <script src="lib/webvr-polyfill.js"></script>
         <script src="lib/webvr-manager.js"></script>
-        <script src="bundle.js"></script>
-        <video id="subtitles" class="subtitles"><source src="" type="video/webm"></video>
-        <video id="subtitles2" class="subtitles"><source src="" type="video/webm"></video>
+        <script src="lib/aws-sdk-2.5.3.min.js"></script>
+        <script src="lib/jquery-2.2.4.min.js"></script>
+
+        
+        <script src="secure-access.js"></script>
+
+        <video id="subtitles" class="subtitles" src="" style="display:none;"></video>
         <div id="game"></div>
-        <div id="splash">
-            <div id="loading-container" class="splash-container">
+        <div class="splash">
+            <div id="chapter-title">
+                <span id="chapter-title-text"></span> 
+            </div>
+        </div>
+        <div class="splash">
+            <div id="loading-container" class="splash-container" style="display:none;">
                 <div id="loading-image">
                     <img src="assets/splash/loading_fountain.gif" width="200px"></img>
                 </div>
@@ -57,6 +66,14 @@
                 width: 200px;
             ">
                        </div>
+        </div>
+        <div id="secure-access-container" style="display:none;" class="splash">
+            <div id="secure-access">
+                <form id="secure-form" method="POST">
+                    <div>Enter Password</div>
+                    <div><input id="password" name="password" type="password"></div>
+                </form>
+            </div>
         </div>
     </body>
 </html>

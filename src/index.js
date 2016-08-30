@@ -16,60 +16,58 @@ var FPS_INTERVAL = 1000 / FPS;
 var elapsed = 0
 var lastTimestamp = 0;
 
-window.onload = function() {
-    console.log("Loading...");
-    game.init();
-    //var el = document.getElementsByTagName('body')[0];
-    //var el = document.getElementById('game');
-    var el = document.documentElement;
+console.log("Loading...");
+game.init();
+//var el = document.getElementsByTagName('body')[0];
+//var el = document.getElementById('game');
+var el = document.documentElement;
 
-    document.getElementById('start-button').addEventListener('click',function(event) {
-        /*
-        if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
-            
-            var pointer = lock(document.getElementById('game'));
-
-            pointer.on('attain', function() {
-                console.log("Pointer attained!");
-                if (!game.started) {
-                    start();
-                }
-                });
-
-                pointer.request(); 
-        }*/
-
+document.getElementById('start-button').addEventListener('click',function(event) {
+    /*
+    if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
         
-        if (fullscreen.available()) {
-            var fs = fullscreen(el);
+        var pointer = lock(document.getElementById('game'));
 
-            fs.on('attain',function() {
-                console.log("Full screen attained!");
-                if (typeof(pointer) != 'undefined' && !game.started) {
-                    pointer.request();
-                } else {
-                    if (!game.started) {
-                        start();
-                    }
-                }
-            });
-            fs.request();
-        } else {
+        pointer.on('attain', function() {
+            console.log("Pointer attained!");
             if (!game.started) {
                 start();
             }
+            });
+
+            pointer.request(); 
+    }*/
+
+    
+    if (fullscreen.available()) {
+        var fs = fullscreen(el);
+
+        fs.on('attain',function() {
+            console.log("Full screen attained!");
+            if (typeof(pointer) != 'undefined' && !game.started) {
+                pointer.request();
+            } else {
+                if (!game.started) {
+                    start();
+                }
+            }
+        });
+        fs.request();
+    } else {
+        if (!game.started) {
+            start();
         }
+    }
 
-        //start(); 
-    });
+    //start(); 
+});
 
 
 
-    game.load(function() {
-        document.getElementById('start-container').style.display = "flex";
-        document.getElementById('loading-container').style.display = "none";
-    });
-}
+game.load(function() {
+    document.getElementById('start-container').style.display = "flex";
+    document.getElementById('loading-container').style.display = "none";
+});
 
 function start() {
     document.getElementById('start-container').style.display = "none";

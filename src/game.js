@@ -13,8 +13,17 @@ import ZoomController from './zoom_controller'
 import TzinaVRControls from './tzina_vr_controls'
 import Intro from './intro'
 import SoundManager from './sound_manager'
+import TimeController from './time_controller'
+import CharacterController from './character_controller'
+
+import DebugUtil from './util/debug'
 
 // Animations
+import HannahAnimation from './animations/hannah'
+import LupoAnimation from './animations/lupo'
+import MiriamAnimation from './animations/miriam'
+import HaimAnimation from './animations/haim'
+
 import IntroAnimation from './animations/introAni'
 
 export default class Game {
@@ -35,6 +44,8 @@ export default class Game {
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
         this.renderer.setPixelRatio(window.devicePixelRatio);
+
+        this.container = document.getElementById('game');
         //this.renderer.setClearColor( 0x000000, 1 );
 
         this.scene = new THREE.Scene();
@@ -58,15 +69,23 @@ export default class Game {
 
         // LIGHT
         //this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
-        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0 );
+        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.0 );
         this.hemiLight.color.setHSL(1,1,1);
+
         //this.hemiLight.groundColor.setHSL( 0., 1, 0.75 );
         this.hemiLight.position.set( 0, 500, 0 );
         this.scene.add( this.hemiLight );
 
+        /*
+        events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1); 
+        events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y"); */
+
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
         this.dirLight.position.set( 0, 120, -200  );
         this.dirLight.color.setHSL(1,1,1);
+
+        //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity"); 
+
         //dirLight.target.position.set(0,100,0);
         //
         //
@@ -78,105 +97,11 @@ export default class Game {
         this.loadingManager = new THREE.LoadingManager();
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
-
         // Square
         this.square = new Square();
 
-        // Test characters
-        /*
-        this.testCharacter = new Character({
-            basePath : 'assets/characters/lupocomp',
-            mindepth : 2331.267333984,
-            maxdepth : 3446.559326172,
-            position : [30, 6, 42],
-            rotation: [0, 170, 0],
-            name: 'Hannah',
-            animation: 'Hannah'
-            });*/
-
-        // this.introAni = new Character({
-        //     //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
-        //     basePath : 'assets/characters/haim',
-        //     mindepth : 2138.454101562,
-        //     maxdepth : 3047.334472656,
-        //     position : [-32, 8.1, 152.5],
-        //     rotation: [0,0,0],
-        //     name: 'Haim',
-        //     animation: 'IntroAni',
-        //     uvd: 0.440277,
-        //     scale: 0.005,
-        //     animationPosition: [0,0,0],
-        //     animationRotation: [0,0,0],
-        //     space: 1,
-        //     subtitles: "subtitles"
-        // }, this.collisionManager);
-
-        /*
-        this.haim = new Character({
-            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
-            basePath : 'assets/characters/haim',
-            mindepth : 2138.454101562,
-            maxdepth : 3047.334472656,
-            position : [-32, 8.1, 152.5],
-            rotation: [0,0,0],
-            name: 'Haim',
-            animation: 'Haim',
-            uvd: 0.440277,
-            scale: 0.005,
-            animationPosition: [0.2,-1,-0.5],
-            animationRotation: [0, 0, 0],
-            space: 7,
-            subtitles: "subtitles"
-        }, this.collisionManager);
-
-        
-        this.hannah = new Character({
-            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
-            basePath : 'assets/characters/hanna',
-            mindepth : 2138.454101562,
-            maxdepth : 3047.334472656,
-            position : [-32, 8.1, 152.5],
-            rotation: [-19, 45, 15],
-            name: 'Hannah',
-            animation: 'Hannah',
-            uvd: 0.440277,
-            scale: 0.005,
-            animationPosition: [0,-1.5,-2.2],
-            animationRotation: [20, 0, 0],
-            space: 7,
-            subtitles: "subtitles"
-        }, this.collisionManager);
-
-        
-        this.lupo = new Character({
-            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/lupo',
-            basePath : 'assets/characters/lupo',
-            mindepth : 1500.681884766,
-            maxdepth : 3376.051757813,
-            position : [-51, 7.9, 126],//[51, 7.9, 77], // [-41, 7.9, 121], 
-            rotation: [-8,20,6],//[6, 195, 6], // [6,215,6],
-            name: 'Lupo',
-            uvd: 0.45,
-            scale: 0.006,
-            animation: 'Lupo',
-            animationPosition: [0, -1.8, -4],
-            animationRotation: [5, 0, -3],
-            space: 9 ,
-            subtitles: "subtitles2"
-        }, this.collisionManager);*/
-
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
-
-
-        // animations
-        this.animations = {
-            // 'Hannah': new HannahAnimation()
-           //  'Lupo': new LupoAnimation()
-            // 'Haim': new HaimAnimation( this.scene, this.renderer )
-            // 'IntroAni': new IntroAnimation( this.scene, this.renderer )
-        }
-
-
+      
         /*
         this.flood = new Flood();
         this.flood.init();
@@ -193,51 +118,53 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
-        // Intro
-        this.intro = new Intro(this.camera, this.square, this.sky, this.soundManager, this.scene);
-        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square );
-
-        this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square);
+        this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
         this.zoomController.init();
 
+        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene);
+        this.timeController.init();
+
+        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
+        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square  );
+
+        this.animations = {
+            'Hannah' : new HannahAnimation(),
+            'Miriam' : new MiriamAnimation(this.renderer),
+            'Haim' : new HaimAnimation(this.renderer)
+        }
+
+        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager);
     }
 
     load(onLoad) {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
-            //this.scene.add(this.lupo)
-            // this.scene.add(this.hannah)
+            /*
             this.introAni.initFBOParticle();
-            this.scene.add(this.introAni);
-
-
-            // DEBUG
-            var geometry = new THREE.BoxGeometry( 5, 5, 5 );
-            var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-            let cube = new THREE.Mesh( geometry, material );
-            this.square.mesh.updateMatrixWorld(true);
-            cube.position.fromArray(this.square.ENTRY_POINTS[0].position).applyMatrix4(this.square.mesh.matrixWorld);
-            this.scene.add( cube );
-            events.emit("add_gui",{}, cube.position, "x"); 
-            events.emit("add_gui",{}, cube.position, "y"); 
-            events.emit("add_gui",{}, cube.position, "z"); 
+            this.scene.add(this.introAni);*/
 
 
             /*
+            let cube = DebugUtil.adjustableCube(
+                new THREE.Vector3(),
+                "Red cube",
+                1,
+                0xff0000
+            )
+            this.scene.add(cube); */
 
-            this.lupo.rotationY = 20;
-            this.lupo.rotationX = -14;
-            this.lupo.rotationZ = 6; 
-            events.emit("add_gui", this.lupo.position, "x"); 
-            events.emit("add_gui", this.lupo.position, "z");
-            events.emit("add_gui", this.lupo.position, "y");
-            events.emit("add_gui", this.lupo, "rotationY"); 
-            events.emit("add_gui", this.lupo, "rotationZ"); 
-            events.emit("add_gui", this.lupo, "rotationX"); */
+            /*
+
+            cube = DebugUtil.adjustableCube(
+                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[1].endPosition),
+                "Ramp end",
+                1,
+                0x00ffff
+            )
+            this.square.mesh.add( cube );*/
 
             onLoad();
         };
@@ -251,17 +178,11 @@ export default class Game {
 
         this.sky.init();
         this.soundManager.init();
-        // this.hannah.init(this.loadingManager, this.animations)
-        //this.lupo.init(this.loadingManager, this.animations)
-        // this.haim.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
+        //this.introAni.init(this.loadingManager);
 
-        this.introAni.init(this.loadingManager);
-
-        // Animations init
-        Object.keys(this.animations).forEach((key) => {
-            this.animations[key].init(this.loadingManager);
-        });
+        // Characters
+        this.characterController.init(this.loadingManager);
 
         // WebVR
         this.vrEffect = new THREE.VREffect(this.renderer);
@@ -279,7 +200,6 @@ export default class Game {
         this.started = true;
         this.vrManager.setMode_(2);
         let element = this.renderer.domElement;
-        this.container = document.getElementById('game');
         this.container.appendChild(element);
         this.soundManager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
@@ -288,8 +208,6 @@ export default class Game {
                 this.vrControls.standing = true;
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
-
-
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
@@ -300,23 +218,20 @@ export default class Game {
         this.square.fountain.startCycle();
 
         if (this.config.skipIntro) {
-            // Get in the square
-            this.keyboardController.setPosition(-35, 10, 177);
-            this.sky.transitionTo(17,1);
-            // this.hannah.play(); 
-            // this.haim.play();
+            this.timeController.transitionTo(17,1);
+            setTimeout(() => {
+                events.emit("intro_end");
+            },6000)
         } else {
             // Init the intro
-            // this.keyboardController.setPosition(-35, 10, 177);
-            this.sky.transitionTo(17,1);
             this.intro.init();
-            
-            this.introAni.start();
+            //this.timeController.setTime(17);//17
         }
 
 
         events.on("intro_end", () => {
-            //this.lupo.play();
+            console.log("Intro ended");
+            //this.introAni.start();
             document.getElementById("wasd-container").style.display = "block";
             setTimeout(() => {
                 document.getElementById("wasd-container").style.display = "none";
@@ -324,14 +239,32 @@ export default class Game {
         });
 
 
-        this.charactersEnded = 0;
+        this.charactersEnded = [];
         events.on("character_ended", (name) => {
-            this.charactersEnded++;
+            this.charactersEnded.push(name);
+            if (this.charactersEnded.length == 4) {
+
+            }
+            else if (this.charactersEnded.indexOf("Itzik") != -1 && 
+                this.charactersEnded.indexOf("Hannah") != -1 &&
+                this.timeController.currentHour >= 17 &&
+                this.timeController.currentHour < 19
+               ) {
+                   this.timeController.setDaySpeed(0.06);
+            } 
+            else if (this.charactersEnded.indexOf("Miriam") != -1 && 
+                this.charactersEnded.indexOf("Haim") != -1 &&
+                this.timeController.currentHour >= 19
+               ) {
+                 this.timeController.jumpToTime(17);
+            } 
+        
+            /*
             if (this.charactersEnded == 1) {
                 setTimeout(() => {
                     this.zoomOut();
                 },30000)
-            }
+            }*/
         });
     }
 
@@ -362,25 +295,15 @@ export default class Game {
             this.keyboardController.update(dt);
             this.zoomController.update(dt);
         }
+        this.timeController.update(dt);
+        this.characterController.update(dt,et);
         if (this.vrControls) {
                this.vrControls.update();
-            }
-        // this.hannah.update(dt,et);
-        //this.lupo.update(dt,et);
-        // this.haim.update(dt,et);
-
-        /*
-
-        this.lupo.rotation.y = this.lupo.rotationY * Math.PI / 180;
-        this.lupo.rotation.x = this.lupo.rotationX * Math.PI / 180;
-        this.lupo.rotation.z = this.lupo.rotationZ * Math.PI / 180;*/
-
-        //this.flood.update(dt);
+        }
         this.collisionManager.update(dt);
-        //console.log(this.camera.rotation); */
+        //this.flood.update(dt);       
         this.intro.update();
-
-        this.introAni.update(dt,et);
+        //this.introAni.update(dt,et);
     }
 
     render() {

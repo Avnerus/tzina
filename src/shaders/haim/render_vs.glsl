@@ -2,13 +2,11 @@
 uniform sampler2D positions;
 attribute vec2 reference;
 varying vec3 vColor;
-varying vec2 vUv;
 
 //size
 uniform float pointSize;
 
 void main() {
-    vUv = uv;
 
     vec3 newPosition = position; 
     newPosition = mat3( modelMatrix ) * newPosition;
@@ -20,8 +18,8 @@ void main() {
 
     //pos now contains the position of a point in space that can be transformed
     //gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );
-    //vColor = newPosition;
-    gl_Position = projectionMatrix *  viewMatrix * vec4( newPosition, 1.0 );
+    vColor = newPosition;
+    gl_Position = projectionMatrix *  modelViewMatrix * vec4( newPosition, 1.0 );
 
     gl_PointSize = pointSize;
 

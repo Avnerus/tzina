@@ -3,6 +3,8 @@ import Fountain from "./fountain"
 
 const MODEL_PATH = "assets/square/scene.json"
 const WINDOWS_PATH = "assets/square/windows.json"
+const SUNS_PATH = "assets/square/suns.json"
+const TEXTURES_PATH = "assets/square/textures/textures.json"
 
 export default class Square extends THREE.Object3D{
     constructor() {
@@ -12,9 +14,18 @@ export default class Square extends THREE.Object3D{
 
         this.ENTRY_POINTS = [
             {
-                position: [22, 20, 34]
+                hour: 19,
+                startPosition: [21, 20, 34],
+                endPosition: [15, 22, 14]
+            },
+            {
+                hour: 17,
+                startPosition: [-3, 20, 43],
+                endPosition: [-3.5, 22, 18]
             }
         ]
+
+        this.currentSun = null;
     }
     init(collisionManager,loadingManager) {
         loadingManager.itemStart("Square");
@@ -24,7 +35,9 @@ export default class Square extends THREE.Object3D{
             this.loadSquare(loadingManager),
             trees.init(loadingManager),
             this.fountain.init(loadingManager),
-            this.loadWindows(loadingManager)
+            this.loadWindows(loadingManager),
+            this.loadSuns(loadingManager),
+            this.loadTextures(loadingManager)
         ])
         .then((results) => {
             console.log("Load results", results);
@@ -33,7 +46,19 @@ export default class Square extends THREE.Object3D{
             //obj.add(this.fountain);
             obj.add(this.fountain);
             this.windows = results[3];
+            this.suns = results[4];
+
             obj.add(this.windows);
+            /*
+            this.suns.scale.set(4,4,4);
+            this.suns.position.y = -80;
+            this.suns.rotation.y = Math.PI * 80 / 180;*/
+            obj.add(this.suns);
+
+            let textures = results[5];
+            obj.add(textures);
+
+            obj.rotation.order = "YXZ";
             this.mesh = obj;
             this.fountain.position.set(0.6,24.6, -0.8);
             this.fountain.scale.set(0.25, 0.25, 0.25);
@@ -42,21 +67,12 @@ export default class Square extends THREE.Object3D{
 
             // INITIAL STATE
             this.turnOffWindows();
+            this.turnOffSuns();
             
 /*            events.emit("add_gui", obj.position, "x"); */
             events.emit("add_gui",{}, obj.position, "y"); 
             //events.emit("add_gui", obj.position, "z");
             events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
-
-            /*
-
-            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-            let cube = new THREE.Mesh( geometry, material );
-            obj.add( cube );
-            events.emit("add_gui",{}, cube.position, "x"); 
-            events.emit("add_gui",{}, cube.position, "y"); 
-            events.emit("add_gui",{}, cube.position, "z"); */
 
         });
     }
@@ -68,6 +84,38 @@ export default class Square extends THREE.Object3D{
         this.windows.children.forEach((obj) => {obj.visible = false});
     }
 
+    turnOffSuns() {
+        this.suns.children.forEach((obj) => {
+            if (obj.children.length > 0) {
+                this.turnOffSun(obj.name);
+            }
+        })
+    }
+
+    turnOffSun(name) {
+        console.log("Turn off sun ", name);
+        let sun = this.suns.getObjectByName(name).children[0];
+        console.log("Turn off sun", sun);
+        sun.material.side = THREE.BackSide;
+        sun.material.color = new THREE.Color(0x000733);
+        sun.material.emissive = new THREE.Color(0x222223);
+        sun.material.specular = new THREE.Color(0x000000);
+        sun.material.opacity = .8;
+    }
+
+    turnOnSun(name) {
+        if (this.currentSun) {
+            this.turnOffSun(this.currentSun);
+        }
+        let sun = this.suns.getObjectByName(name).children[0];
+        console.log("Turn on sun", sun);
+        sun.material.color = new THREE.Color(0xF4F5DC);
+        sun.material.emissive = new THREE.Color(0xC8C5B9);
+        sun.material.specular = new THREE.Color(0xFFFFFF);
+        sun.material.side = THREE.DoubleSide;
+        this.currentSun = name;
+    }
+
     loadWindows(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
@@ -77,7 +125,24 @@ export default class Square extends THREE.Object3D{
             });
         });
     }
-
+    loadSuns(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(SUNS_PATH,( obj ) => {
+                console.log("Loaded suns ", obj );
+                resolve(obj);
+            });
+        });
+    }
+    loadTextures(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(TEXTURES_PATH,( obj ) => {
+                console.log("Loaded textures ", obj );
+                resolve(obj);
+            });
+        });
+    }
     loadSquare(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
@@ -89,8 +154,11 @@ export default class Square extends THREE.Object3D{
                 obj.position.x = 0;
                 obj.scale.set( 4, 4, 4 );
 
+                this.rotation.y = Math.PI * 80 / 180;
+                this.updateMatrixWorld();
+
                 this.add(obj);
-                obj.updateMatrixWorld();
+                //obj.updateMatrixWorld();
                 //collisionManager.addBoundingBoxes(obj,this);
 
                 this.squareMiddle  = obj.getObjectByName("basin");

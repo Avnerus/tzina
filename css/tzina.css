@@ -12,7 +12,7 @@ body {
     bottom: 0;
 }
 
-#splash {
+.splash {
     display: flex;
     align-items: center;
     height: 100%;
@@ -61,4 +61,28 @@ body {
   //height:0px;
   //overflow:visible;
   pointer-events:none;
+}
+#chapter-title {
+    display: inline-flex;
+    align-items: center;
+    margin: auto;
+    color: white;
+    font-size: 36px;
+    position: relative;
+    bottom: 300px;
+}
+#secure-access {
+    display: inline-flex;
+    align-items: center;
+    margin: auto;
+    color: white;
+    font-size: 36px;
+    position: relative;
+}
+#password {
+    width: 280px;
+    color: white;
+    background-color: black;
+    border: solid 2px;
+    height: 20px;
 }

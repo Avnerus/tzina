@@ -2,20 +2,6 @@ import Clouds from './clouds';
 
 const SUN_DISTANCE = 10000;
 
-const HOURS_DEFINITION = {
-    0: {
-        inclination: 0.6,
-        azimuth: 0.02
-    },
-    10: {
-        inclination: 0,
-        azimuth: 0.23
-    },
-    17 : {
-        inclination: 0.09,
-        azimuth: 0.42
-    }
-}
 
 const States = {
     STATIC: "static",
@@ -36,14 +22,50 @@ export default class Sky {
         this.sunPosition = new THREE.Vector3(0,0,0);
         this.dirLight = dirLight;
         this.hemiLight = hemiLight;
+
+        this.HOURS_DEFINITION = [
+            {
+                time: 0,
+                inclination: 0.6,
+                azimuth: 0.02
+            },
+            {
+                time: 7,
+                inclination: 0.1,
+                azimuth: 0.07
+            },
+            {
+                time: 9,
+                inclination: 0.1,
+                azimuth: 0.13
+            },
+            {
+                time: 12,
+                inclination: 0.1,
+                azimuth: 0.255
+            },
+            {
+                time: 17,
+                inclination: 0.1,
+                azimuth: 0.37
+            },
+            {
+                time: 23,
+                inclination: 0.6,
+                azimuth: 0.5
+            }
+        ]
     }
     init() {
 
         //var imageTexture = THREE.ImageUtils.loadTexture('assets/test/venice.jpeg');
 
         this.currentTime = 0;
-        this.inclination = HOURS_DEFINITION[this.currentTime].inclination;
-        this.azimuth = HOURS_DEFINITION[this.currentTime].azimuth;
+        this.baseTimeIndex = 0;
+        this.nextTimeIndex = 1;
+
+        this.inclination = this.HOURS_DEFINITION[this.currentTime].inclination;
+        this.azimuth = this.HOURS_DEFINITION[this.currentTime].azimuth;
 
         this.shader = new THREE.ShaderMaterial( {
             uniforms: {
@@ -69,6 +91,49 @@ export default class Sky {
 
         this.updateSunPosition();
 
+        events.emit("add_gui",{
+            onChange: () => {
+                this.updateSunPosition();
+            },
+            folder: "Sun",
+        }, this, "inclination", 0, 1); 
+        events.emit("add_gui",{
+            onChange: () => {
+                this.updateSunPosition();
+            },
+            folder: "Sun",
+        }, this, "azimuth", 0, 1); 
+
+    }
+
+    setTime(time) {
+        let baseTime = this.HOURS_DEFINITION[this.baseTimeIndex].time;
+        let nextTime = this.HOURS_DEFINITION[this.nextTimeIndex].time;
+        
+        if ((time > nextTime && nextTime > baseTime) || time < baseTime) {
+            let temp = this.nextTimeIndex;
+            this.nextTimeIndex = (this.nextTimeIndex + 1 > this.HOURS_DEFINITION.length -1 ) ? 0: this.nextTimeIndex +1; 
+            this.baseTimeIndex = temp;
+            this.setTime(time);
+        } else {
+            // Linear interpolation
+            this.currentTime = time;
+
+            let baseInclination = this.HOURS_DEFINITION[this.baseTimeIndex].inclination;
+            let baseAzimuth = this.HOURS_DEFINITION[this.baseTimeIndex].azimuth;
+            let nextInclination = this.HOURS_DEFINITION[this.nextTimeIndex].inclination;
+            let nextAzimuth = this.HOURS_DEFINITION[this.nextTimeIndex].azimuth;
+
+            if (nextTime == 0) {
+                nextTime = 24;
+            }
+            
+            this.inclination = baseInclination + ((time - baseTime) / (nextTime - baseTime)) * (nextInclination - baseInclination);
+            this.azimuth = baseAzimuth + ((time - baseTime) / (nextTime - baseTime)) * (nextAzimuth - baseAzimuth);
+
+            this.updateSunPosition();
+            this.updateHemiLght();
+        }
     }
 
     fadeSpin() {
@@ -95,8 +160,8 @@ export default class Sky {
             this.fadeSpin();
             this.setState(States.STATIC);
         }});
-        tl.to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[10], {ease: Linear.easeNone}))
-        .to(this, inSeconds / 2, Object.assign(HOURS_DEFINITION[time], {ease: Linear.easeNone}));
+        tl.to(this, inSeconds / 2, Object.assign(this.HOURS_DEFINITION[10], {ease: Linear.easeNone}))
+        .to(this, inSeconds / 2, Object.assign(this.HOURS_DEFINITION[time], {ease: Linear.easeNone}));
 
         TweenMax.to(this, inSeconds, {currentTime: time, onUpdate: () => {
             this.updateHemiLght();            
@@ -108,12 +173,6 @@ export default class Sky {
     update(dt) {
         this.geo.rotateY(this.spinFactor * Math.PI / 180);
         this.clouds.update(dt);
-        if (this.state == States.STATIC) {
-            this.azimuth += 0.0002 * dt;
-            this.inclination += 0.0002 * dt;
-            this.updateSunPosition();
-            this.updateHemiLght();
-        }
     }
 
     applyToMesh(mesh) {
@@ -144,7 +203,7 @@ export default class Sky {
             this.hemiLight.intensity = 0.3 * (this.currentTime / 14) * (this.currentTime / 14);
         } 
         else if (this.currentTime > 14 && this.currentTime <= 23) {
-            this.hemiLight = 0.3 * ((23 - this.currentTime) / 18) * ((23 - this.currentTime) / 18);
+            this.hemiLight.intensity = 0.3 * ((23 - this.currentTime) / 9) * ((23 - this.currentTime) / 9);
         }
         else {
             this.hemiLight.intensity = 0;

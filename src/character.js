@@ -1,13 +1,18 @@
 import VideoRGBD from './util/video_rgbd'
+import DebugUtil from './util/debug'
 
 export default class Character extends THREE.Object3D {
-    constructor(props, collisionManager) {
+    constructor(props, collisionManager, soundManager) {
         super();
+        this.collisionManager = collisionManager;
+        this.soundManager = soundManager;
+
         this.idleVideo = new VideoRGBD({
             mindepth: props.mindepth,
             maxdepth: props.maxdepth,
             fileName: props.basePath + "_idle.webm",
-            uvd: props.uvd,
+            uvdy: props.uvdy,
+            uvdx: props.uvdx,
             scale: props.scale
         });
 
@@ -15,10 +20,11 @@ export default class Character extends THREE.Object3D {
             mindepth: props.mindepth,
             maxdepth: props.maxdepth,
             fileName: props.basePath + "_full.webm",
-            uvd: props.uvd,
-            scale: props.scale
+            uvdy: props.uvdy,
+            uvdx: props.uvdx,
+            scale: props.scale,
+            volume: props.volume
         });
-        this.collisionManager = collisionManager;
 
         console.log(props.name + " character constructed!");
         
@@ -27,8 +33,16 @@ export default class Character extends THREE.Object3D {
         this.playingFull = false;
         this.isPaused = false;
         this.done = false;
+
+        this.active = false;
+
+        this.playedIntro = false;
+
+        this.subtitlesReady = false;
+        this.fullReady = false;
+
     }
-    init(loadingManager, animations) {
+    init(loadingManager) {
             this.idleVideo.init(loadingManager);
             this.fullVideo.init(loadingManager);
 
@@ -59,46 +73,77 @@ export default class Character extends THREE.Object3D {
                 this.props.rotation[2] * Math. PI / 180
             );
 
-            if (this.props.animation) {
-                this.animation = animations[this.props.animation];
+            if (this.animation) {
+                this.animation.init(loadingManager);
+
+                this.animation.scale.multiplyScalar(this.props.animationScale);
                 this.animation.position.fromArray(this.props.animationPosition);
                 this.animation.rotation.set(
                     this.props.animationRotation[0] * Math. PI / 180,
                     this.props.animationRotation[1] * Math. PI / 180,
                     this.props.animationRotation[2] * Math. PI / 180
                 );
-                this.add(this.animation);
+                //this.add(this.animation);
                 this.animation.visible = false;
             } else {
                 this.animation = null;
             }
 
-            this.collisionManager.addCharacter(this);
+
+            this.soundManager.loadPositionalSound(this.props.basePath + "_intro.ogg")
+            .then((sound) => {
+                this.introSound = sound;
+                this.introSound.autoplay = false;
+                this.introSound.loop = false;
+                this.introSound.setRefDistance(7);
+                this.add(this.introSound);
+            });
 
             events.on("character_playing", (name) => {
-                if (this.props.name != name) {
+                if (this.active && this.props.name != name) {
                     console.log(name, " is playing." , this.props.name, "is pausing");
                     this.idleVideo.pause();
                 }                
             });
             events.on("character_idle", (name) => {
-                if (this.props.name != name) {
+                if (this.active && this.props.name != name) {
                     console.log(name, " is idle." , this.props.name, "is playing");
                     this.idleVideo.play();
                 }                
             });
+
+
     }
     play() {
+        console.log(this.props.name + " Play idle");
         this.idleVideo.play();
     }
 
+    load() {
+        console.log("Character " + this.props.name + ": Load");
+        this.idleVideo.load();
+        this.active = true;
+    }
+
+    unload() {
+        this.fullVideo.unload();
+        this.idleVideo.unload();
+        if (this.subtitlesVideo) {
+            this.subtitlesVideo.src = "";
+        }
+        if (this.animation) {
+            this.animation.visible = false;
+        }
+        this.remove(this.animation);
+        this.active = false;
+    }
     
     update(dt,et) {
         if (!this.playingFull) {
             this.idleVideo.update(dt);
         } else {
             this.fullVideo.update(dt);
-            if (this.timeSinceCollision > 100) {
+            if (this.timeSinceCollision > 2) {
                 console.log("Time since collision ", this.timeSinceCollision, "Ending sequence");
                 this.pauseFull();
             }
@@ -111,14 +156,19 @@ export default class Character extends THREE.Object3D {
     }
 
     endFull() {
-        this.animation.visible = false;
+        if (this.animation) {
+            this.animation.visible = false;
+        }
         this.fullVideo.pause();
+        this.fullVideo.unload();
+
         this.idleVideo.mesh.visible = true;
         this.fullVideo.mesh.visible = false;
         this.idleVideo.play();
         this.playingFull = false;
-        let subtitlesVideo = document.getElementById(this.props.subtitles);
-        subtitlesVideo.src = "";
+        if (this.props.subtitles) {
+            this.subtitlesVideo.src = "";
+        }
         this.isPaused = false;
         this.done = true;
         events.emit("character_idle", this.props.name)
@@ -127,52 +177,107 @@ export default class Character extends THREE.Object3D {
 
 
     pauseFull() {
-        this.animation.visible = false;
+        if (this.animation) {
+            this.animation.visible = false;
+        }
         this.fullVideo.pause();
         this.idleVideo.mesh.visible = true;
         this.fullVideo.mesh.visible = false;
         this.idleVideo.play();
         this.playingFull = false;
-        let subtitlesVideo = document.getElementById(this.props.subtitles);
-        subtitlesVideo.pause();
-        subtitlesVideo.style.display = "none";
+        if (this.props.subtitles) {
+            this.subtitlesVideo.pause();
+            this.subtitlesVideo.style.display = "none";
+        }
         this.isPaused = true;
         events.emit("character_idle", this.props.name)
     }
 
     onCollision() {
         this.timeSinceCollision = 0;
-        if (!this.playingFull && !this.done && this.animation && !this.animation.visible) {
-            console.log("Character collision!");
-            this.animation.visible = true;
+        if (!this.playingFull && !this.done) {
+            this.playingFull = true;
+            console.log(this.props.name + " - Loading full video ");
+            if (this.animation) {
+                this.animation.visible = false;
+                this.add(this.animation);
+            }
 
             // load subtitles video
             if (!this.isPaused) {
-                this.animation.start()
 
-                let subtitlesVideo = document.getElementById(this.props.subtitles);
-                subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
-                subtitlesVideo.addEventListener('canplay',() => {
-                    subtitlesVideo.play();
-                    this.playFull();
+                if(this.props.subtitles) {
+                    this.subtitlesVideo = document.getElementById("subtitles");
+                    this.subtitlesVideo.addEventListener('canplay',() => {
+                        if (!this.subtitlesReady) {
+                            console.log(this.props.name + " - Subtitles Ready");
+                            this.subtitlesReady = true;
+                            this.checkReady();
+                        }
+                    },false);
+                    this.subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
+                    this.subtitlesVideo.load();
+                }
+                this.fullVideo.video.addEventListener('canplay',() => {
+                    if (!this.fullReady) {
+                        console.log(this.props.name + " - Full video ready");
+                        this.fullReady = true;
+                        this.checkReady();
+                    }
                 },false);
-                subtitlesVideo.load();
+                this.fullVideo.load();
+                this.fullVideo.pause();
+
             } else {
                 console.log("Resume");
-                let subtitlesVideo = document.getElementById(this.props.subtitles);
-                subtitlesVideo.style.display = "block";
-                subtitlesVideo.play();
+                if (this.props.subtitles) {
+                    this.subtitlesVideo.style.display = "block";
+                    this.subtitlesVideo.play();
+                }
                 this.playFull();
             }
+        }
+    }
+
+    checkReady() {
+        if (this.fullReady && (this.subtitlesReady || !this.props.subtitles)) {
+            if (this.animation) {
+                this.animation.start()
+            }
+            this.playFull();
+        }
+        
+    }
+
+    onIntro() {
+        if (!this.playedIntro) {
+            console.log(this.props.name, " - Playing intro", this.introSound);
+            this.playedIntro = true;
+            this.introSound.play();
         }
     }
 
     playFull() {
         this.playingFull = true;
         this.idleVideo.pause();
+        this.introSound.pause();
         this.fullVideo.mesh.visible = true;
-        //this.fullVideo.video.currentTime = 0;
+        this.idleVideo.mesh.visible = false;
+
+        /*
+        if (this.props.name == "Haim") {
+            this.fullVideo.video.currentTime = 250;
+        } else {
+            this.fullVideo.video.currentTime = 280;
+        }*/
         this.fullVideo.play();
+        if (this.subtitlesReady) {
+            this.subtitlesVideo.style.display = "block";
+            this.subtitlesVideo.play();
+        }
+        if (this.animation) {
+            this.animation.visible = true;
+        }
         events.emit("character_playing", this.props.name)
     }
 }

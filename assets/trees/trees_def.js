@@ -15,6 +15,10 @@ export default {
          {
             name: "single",
             fileName: "singleTree.ply"
+        },
+            {
+            name: "bush",
+            fileName: "bush.ply"
         }
     ],
     instances: [
@@ -107,7 +111,7 @@ export default {
         },
          {
             type: "palm",
-            position: [-38,20,-72],
+            position: [-38,20,-32],
             rotateX: 60,
             scale: 3.8
         },

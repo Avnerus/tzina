@@ -20,7 +20,6 @@ export default class HannahAnimation extends THREE.Object3D {
         this.perlin = new ImprovedNoise();
 
         // setup animation sequence
-        this.animStart = false;
         this.sequenceConfig = [
             { time: 1, anim: ()=>{this.appear()} },     // 1
             { time: 65, anim: ()=>{this.beDome()} },    // 65
@@ -157,8 +156,8 @@ export default class HannahAnimation extends THREE.Object3D {
                 hannahRoom.add(meshhh);
             });
         }
-        hannahRoom.scale.multiplyScalar(0.025);
-        hannahRoom.position.set(0.5,2.5,0.8);
+        hannahRoom.scale.multiplyScalar(0.015);
+        hannahRoom.position.set(0.5,2,0.8);
         this.add(hannahRoom);
 
         this.loadingManager.itemEnd("HannahAnim");
@@ -367,7 +366,7 @@ export default class HannahAnimation extends THREE.Object3D {
 
     updateVideoTime(time) {
         if (this.nextAnim && time >= this.nextAnim.time) {
-            console.log("do anim sequence ", this.nextAnim);
+            console.log("Hannah - do anim sequence ", this.nextAnim);
             this.nextAnim.anim();
             if (this.currentSequence.length > 0) {
                 this.nextAnim = this.currentSequence.shift();

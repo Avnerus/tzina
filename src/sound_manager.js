@@ -127,8 +127,18 @@ export default class SoundManager {
     loadSound(fileName) {
         return new Promise((resolve, reject) => {
             let sound = new THREE.Audio(this.listener);
-            this.loader.load(SOUND_PATH + fileName, (audioBuffer) => {
+            this.loader.load(fileName, (audioBuffer) => {
                 sound.setBuffer(audioBuffer)
+                resolve(sound);
+            });
+        });
+    }
+    loadPositionalSound(fileName) {
+        return new Promise((resolve, reject) => {
+            let sound = new THREE.PositionalAudio(this.listener);
+            this.loader.load(fileName, (audioBuffer) => {
+                sound.setBuffer(audioBuffer)
+                //this.scene.add(sound);
                 resolve(sound);
             });
         });

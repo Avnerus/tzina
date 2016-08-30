@@ -1,9 +1,11 @@
 import $ from 'jquery-browserify'
 import JQueryMouseWheel from 'jquery-mousewheel';
-import { easeOutQuad } from 'easing-utils';
+import { easeOutQuad, easeInQuart } from 'easing-utils';
+import DebugUtil from './util/debug'
+import _ from 'lodash'
 
 export default class ZoomController {
-    constructor(config, emitter, camera, square) {
+    constructor(config, emitter, camera, square, scene) {
         this.camera = camera;
         this.square = square;
         this.recalculateZoom = true;
@@ -13,10 +15,28 @@ export default class ZoomController {
         this.lastCameraOrientation = new THREE.Quaternion();
         this.lastCameraOrientation.y = 1;
         this.config = config;
+        this.scene = scene;
 
-        //this.MAX_DISTANCE = 830;
-        this.MAX_DISTANCE = 9500;
-        this.DISTANCE_BEFORE_RISING = 100;
+        this.distanceOnCurve = 0;
+
+        this.STARTING_POSITION = new THREE.Vector3(
+            0,
+            50,
+            1400
+        );
+        this.MID_ZOOM = new THREE.Vector3(
+            0,
+            30,
+            900
+        );
+
+        this.CHAPTER_THRESHOLD = 0.45;
+        this.CONTROL_THRESHOLD = 1;
+
+        this.passedChapterThreshold = false;
+        this.passedControlThreshold = false;
+
+        this.basePosition = true;
 
     }
     init() {
@@ -24,7 +44,7 @@ export default class ZoomController {
         console.log("Zoom controller init");
 
         $(document.documentElement).on('mousewheel', (event) => {
-                this.velocityZ = event.deltaY * 0.5;
+                this.velocityZ = event.deltaY * 10;
         });
 
         // keyboard zoom
@@ -40,13 +60,27 @@ export default class ZoomController {
                     break;
                 case 85: // u
                     event.preventDefault();
-                    this.calculateEntryQuaternion();
+                    this.calculateZoomCurve();
                     break;
             }
             return false;
         }, false);
 
-        events.emit("add_gui",{}, this.camera.position, "z"); 
+        //events.emit("add_gui",{}, this.camera.position, "z"); 
+
+        events.on("angle_updated", (hour) => {
+            console.log("Zoom Controller: Hour angle updated to ", hour);
+            let entryPoint = _.find(this.square.ENTRY_POINTS, {hour: hour});
+            if (entryPoint) {
+                this.calculateZoomCurve(entryPoint);
+                this.lastEntryPoint = entryPoint;
+            } else {
+                this.calculateZoomVector();
+                this.velocityZ = null;
+                this.zoomCurve = null;
+            }
+        });
+        this.camera.position.copy(this.STARTING_POSITION);
     }
 
     getZoomOutPosition() {
@@ -63,68 +97,129 @@ export default class ZoomController {
         this.zoomVector.y = 0;
     }
 
-    calculateEntryQuaternion() {
-        this.originalQuaternion = this.camera.quaternion;
+    calculateEaseQuaternion() {
+        // To east the camera rotation into the curve
         let cameraClone = this.camera.clone();
-        console.log("Camera clone quaternion: ", cameraClone.quaternion);
-        cameraClone.translateZ(1000);
-        let entryPoint = new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[0].position).applyMatrix4(this.square.mesh.matrixWorld);
-        cameraClone.lookAt(entryPoint);
-
-        this.entryQuaternion = cameraClone.quaternion;
-        this.entryQuaternion.x = 0;
-        console.log("Entet quaternion: ", this.entryQuaternion);
-        //this.camera.quaternion.copy(this.entryQuaternion);
+        this.easeQuaternionSource = new THREE.Quaternion().copy(cameraClone.quaternion);
+        cameraClone.position.copy(this.zoomCurve.getPoint(0.95));
+        cameraClone.lookAt(this.zoomCurve.getPoint(0.951));
+        this.easeQuaternionTarget = new THREE.Quaternion().copy(cameraClone.quaternion);
+        //console.log("Ease quaternion Source ", this.easeQuaternionSource, " Target: ", this.easeQuaternionTarget);
     }
-    
+
+    calculateZoomCurve(entryPoint) {
+        this.calculateZoomVector();
+        if (!entryPoint && this.passedControlThreshold) {
+            // Zooming back out
+            console.log("Zoom curve from camera in control position", this.camera.position);
+            let movement = new THREE.Vector3();
+            movement.copy(this.zoomVector).multiplyScalar(100);
+            let midPoint = new THREE.Vector3().copy(this.camera.position).add(movement);
+            midPoint.y = this.camera.position.y + 0.5 * (this.STARTING_POSITION.y - this.camera.position.y);
+
+            this.zoomCurve = new THREE.CatmullRomCurve3( [
+                new THREE.Vector3().copy(this.STARTING_POSITION),
+                this.MID_ZOOM,
+                midPoint,
+                new THREE.Vector3().copy(this.camera.position),
+            ] );
+            this.distanceOnCurve = 1;
+            this.calculateEaseQuaternion();
+        } else {
+            this.square.mesh.updateMatrixWorld();
+            this.easeQuaternionSource = null;
+            this.easeQuaternionTarget = null;
+            let startPoint = new THREE.Vector3().fromArray(entryPoint.startPosition).applyMatrix4(this.square.mesh.matrixWorld);
+            let endPoint = new THREE.Vector3().fromArray(entryPoint.endPosition).applyMatrix4(this.square.mesh.matrixWorld);
+
+            if (this.camera.position.equals(this.STARTING_POSITION)) {
+                this.zoomCurve = new THREE.CatmullRomCurve3( [
+                    new THREE.Vector3().copy(this.camera.position),
+                    this.MID_ZOOM,
+                    startPoint,
+                    endPoint
+                ] )
+            } else {
+                this.zoomCurve = new THREE.CatmullRomCurve3( [
+                    new THREE.Vector3().copy(this.STARTING_POSITION),
+                    new THREE.Vector3().copy(this.camera.position),
+                    startPoint,
+                    endPoint
+                ] )
+                // http://stackoverflow.com/questions/16650360/distance-of-a-specific-point-along-a-splinecurve3-tubegeometry-in-three-js
+                this.distanceOnCurve = 1 / 3;
+            }
+        }
+        console.log(this.zoomCurve);
+        //this.scene.add(DebugUtil.drawCurve(this.zoomCurve, 0x0000ff));
+    }
+
     update(dt) {
-        if (this.velocityZ != 0) {
+        if (this.velocityZ != 0 && this.zoomCurve) {
+            /*
             if (!this.camera.quaternion.equals(this.lastCameraOrientation)) {
                 this.lastCameraOrientation.copy(this.camera.quaternion);
                 this.calculateZoomVector();
-
-                //TweenMax.to(this.camera.position, 1, {x:zoomPosition.x, y: zoomPosition.y, z:zoomPosition.z});
-
-            }
-            let scalar = 0;
-            let distanceToSquare = this.camera.position.distanceTo(this.square.getCenterPosition());
-            if (distanceToSquare > this.MAX_DISTANCE && this.velocityZ < 0) {
-                scalar = 0;
-            } else if (distanceToSquare > this.DISTANCE_BEFORE_RISING) {
-                let progress = (distanceToSquare - this.DISTANCE_BEFORE_RISING) / (this.MAX_DISTANCE + 30 - this.DISTANCE_BEFORE_RISING);
-                let easedOutProgress = easeOutQuad(progress);
-                if (this.velocityZ > 0) {
-                    progress = 1 - progress;
-                }
-                scalar = this.velocityZ * -3.0 * dt * (2 - progress);
-            } else {
-                scalar = this.velocityZ * -3.5 * dt;
-            }
-            
-            //console.log(distanceToSquare);
-            /*
-            if (distanceToSquare > this.DISTANCE_BEFORE_RISING ) {
-                this.camera.position.y = this.config.basalHeight + 0.1 * (distanceToSquare - this.DISTANCE_BEFORE_RISING);
-            } else {
-                this.camera.position.y = this.config.basalHeight;
                 }*/
 
-                 
-            let movement = new THREE.Vector3();
-            movement.copy(this.zoomVector).multiplyScalar(scalar);
-            this.camera.position.add(movement);
+            if (this.passedControlThreshold) {
+                if (this.velocityZ < 0) {
+                    this.calculateZoomCurve();
+                } else {
+                    this.velocityZ = 0;
+                    return;
+                }
+            }
 
-            // SLERP into entry point
-            let p = Math.min(1,(1400 - this.camera.position.z)/1000);
-            console.log(p);
-            THREE.Quaternion.slerp(this.originalQuaternion, this.entryQuaternion, this.camera.quaternion, p);
-            this.camera.updateProjectionMatrix();
 
+            this.distanceOnCurve = Math.max(0,Math.min(1, this.distanceOnCurve + this.velocityZ * dt * 0.001));
+            //console.log(this.distanceOnCurve);
+            this.camera.position.copy(this.zoomCurve.getPoint(this.distanceOnCurve));
+            if (this.easeQuaternionTarget && this.distanceOnCurve >= 0.95) {
+                let easePercent = (1 - this.distanceOnCurve) / 0.05;
+                THREE.Quaternion.slerp(
+                    this.easeQuaternionSource, 
+                    this.easeQuaternionTarget,
+                    this.camera.quaternion,
+                    easePercent
+                );
+            }
+            else if (this.distanceOnCurve <= 0.99) {
+                this.camera.lookAt(this.zoomCurve.getPoint(this.distanceOnCurve + 0.01));
+            }
+
+            if (!this.passedChapterThreshold && this.distanceOnCurve > this.CHAPTER_THRESHOLD) {
+                this.passedChapterThreshold = true;
+                events.emit("chapter_threshold", this.passedChapterThreshold);
+            } else if (this.passedChapterThreshold && this.distanceOnCurve <= this.CHAPTER_THRESHOLD) {
+                this.passedChapterThreshold = false;
+                events.emit("chapter_threshold", this.passedChapterThreshold);
+            }
+        
+
+            if (!this.passedControlThreshold && this.distanceOnCurve >= this.CONTROL_THRESHOLD) {
+                this.passedControlThreshold = true;
+                this.velocityZ = 0;
+                events.emit("control_threshold", this.passedControlThreshold);
+            } else if (this.passedControlThreshold && this.distanceOnCurve <= this.CONTROL_THRESHOLD) {
+                this.passedControlThreshold = false;
+                events.emit("control_threshold", this.passedControlThreshold);
+            }
+
+            if (!this.basePosition && this.distanceOnCurve == 0) {
+                this.basePosition = true;
+                this.velocityZ = 0;
+                this.calculateZoomCurve(this.lastEntryPoint);
+                events.emit("base_position");
+                //this.camera.rotation.set(0,0,0);
+            } else if (this.basePosition && this.distanceOnCurve > 0) {
+                this.basePosition = false;
+            }
 
             if (this.velocityZ > 0) {
-                this.velocityZ = Math.max(0, this.velocityZ - 10 * dt);
+                this.velocityZ = Math.max(0, this.velocityZ - 0.01 * dt);
             } else {
-                this.velocityZ = Math.min(0, this.velocityZ + 10 * dt);
+                this.velocityZ = Math.min(0, this.velocityZ + 0.01 * dt);
             }
 
             //console.log(this.camera.position, this.camera.rotation);

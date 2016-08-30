@@ -1,9 +1,9 @@
 import boxIntersect from 'box-intersect'
 
 const PLAYER_SIZE = {
-    x: 1000,   //2
+    x: 2, 
     y: 100,
-    z: 1000    //2
+    z: 2 
 }
 
 const COLLIDERS = {
@@ -38,6 +38,8 @@ export default class CollisionManager {
         this.crossing = boxIntersect(this.playerBox, this.obstacles, (i,j) => {
             if (this.obstacleInfo[j].onCollision) {
                 this.obstacleInfo[j].onCollision();
+            } else if (this.obstacleInfo[j].intro) {
+                this.obstacleInfo[j].intro.onIntro();
             }
         });
     }
@@ -48,10 +50,23 @@ export default class CollisionManager {
     addCharacter(character) {
         console.log("COLLISION MANAGER - Adding character ", character);
         let space = character.props.space;
+        let introSpace = character.props.introSpace;
 
-        let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
-        bbox.update();
-        //this.scene.add(bbox);
+            /*
+            let geometry = new THREE.BoxGeometry( 5, 5, 5  );
+            let material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true}  );
+            let cube = new THREE.Mesh( geometry, material  );
+            cube.position.copy(new THREE.Vector3().setFromMatrixPosition(character.idleVideo.mesh.matrixWorld));
+            console.log("BBOX? ", cube);
+            this.scene.add(cube);*/
+
+           this.scene.updateMatrixWorld(true);
+
+             let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
+                bbox.update();
+            //this.scene.add(bbox);
+
+
 
         this.obstacles.push([
             bbox.box.min.x - space, 
@@ -60,9 +75,27 @@ export default class CollisionManager {
             bbox.box.max.x + space, 
             bbox.box.max.y + space, 
             bbox.box.max.z + space
-        ])
+        ]);
+
+        character.obstacleIndex = this.obstacles.length -1;
 
         this.obstacleInfo.push(character);
+        
+        this.obstacles.push([
+            bbox.box.min.x - introSpace, 
+            bbox.box.min.y - introSpace, 
+            bbox.box.min.z - introSpace, 
+            bbox.box.max.x + introSpace, 
+            bbox.box.max.y + introSpace, 
+            bbox.box.max.z + introSpace
+        ]);
+        this.obstacleInfo.push({intro: character});
+    }
+
+    removeCharacter(character) {
+        console.log("COLLISION MANAGER - Removing character ", character, "Obstacle index: ",character.obstacleIndex);
+        this.obstacles.splice(character.obstacleIndex, 2);
+        this.obstacleInfo.splice(character.obstacleIndex, 2);
     }
 
     addBoundingBoxes(obj, scene) {
