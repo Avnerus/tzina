@@ -243,23 +243,24 @@ export default class HaimAnimation extends THREE.Object3D {
                 pTex.needsUpdate = true;
 
                 let puddleAni = new TextureAnimator( pTex, 5, 1, 8, 40, orders[i] );
-                let puddleMat = new THREE.MeshBasicMaterial({map: pTex, transparent: true, opacity: 0.4}); //blending:THREE.AdditiveBlending, 
+                let puddleMat = new THREE.MeshBasicMaterial({map: pTex, transparent: true, blending:THREE.AdditiveBlending, opacity: 0.2}); // 
                 this.puddleAnimators.push(puddleAni);
                 puddleMats.push(puddleMat);
             }
             
-            var puddleGeo = new THREE.PlaneGeometry(2,2);
-            for(let i=0; i<50; i++){
+            var puddleGeo = new THREE.PlaneGeometry(1,1);
+
+            for(let i=0; i<40; i++){
                 let puddle = new THREE.Mesh(puddleGeo, puddleMats[i%4]);
-                puddle.position.set(Math.random()*14-7,
+                puddle.position.set(Math.random()*12-6,
                                     -1*i/25,
-                                    Math.random()*16-8 +3);
+                                    Math.random()*14-7 +3);
                 puddle.rotation.x = -Math.PI/2;
-                puddle.scale.multiplyScalar( (Math.random()+1) );
+                puddle.scale.multiplyScalar( (Math.random()+1)/4 );
                 this.puddles.add(puddle);
             }
             this.add(this.puddles);
-            // DebugUtil.positionObject(this.puddles, "puddle");
+            DebugUtil.positionObject(this.puddles, "puddle");
         });
     }
 
@@ -322,6 +323,9 @@ export default class HaimAnimation extends THREE.Object3D {
             this.tubes.push( tubeObject );
             this.add( tubeObject );
             // this.liquidInTubes.push( tubeLiquid );
+
+            this.tubes[0].children[1].material.transparent = true;
+            this.tubes[0].children[1].material.opacity = 0;
         }
     }
 
@@ -368,6 +372,9 @@ export default class HaimAnimation extends THREE.Object3D {
             tubeObject.rotation.set( rot.x, rot.y, rot.z );
             this.outTubes.push( tubeObject );
             this.add( tubeObject );
+
+            this.outTubes[0].children[1].material.transparent = true;
+            this.outTubes[0].children[1].material.opacity = 0;
         }
     }
 
@@ -535,7 +542,7 @@ export default class HaimAnimation extends THREE.Object3D {
 
     update(dt,et) {
         // test
-        this.particleGroup.tick( dt );
+        // this.particleGroup.tick( dt );
 
         if(this.liquidDown && !this.liquidOut){
             this.tubes[0].children[1].material.map.offset.x+=0.01;
@@ -550,10 +557,8 @@ export default class HaimAnimation extends THREE.Object3D {
             if(this.outTubes[0].children[1].material.map.offset.x<-1)
                 this.outTubes[0].children[1].material.map.offset.x=1;
 
-            // FBO
-            // this.fbo.update();
             // SPE
-            // this.particleGroup.tick( dt );
+            this.particleGroup.tick( dt );
             for(let i=0; i<this.puddleAnimators.length; i++){
                 this.puddleAnimators[i].updateWithOrder( 300*dt );
             }
