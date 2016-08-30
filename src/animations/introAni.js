@@ -131,7 +131,7 @@ export default class IntroAnimation extends THREE.Object3D {
         });
 
         loader.load(this.BASE_PATH + "/models/terrain4.json", (geometry, material) => {
-            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x4c5b6b, shininess:0, shading: THREE.FlatShading}) ); //0x005a78
+            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x17212c, shininess:10, shading: THREE.FlatShading}) ); //0x005a78
             // this.terrain.scale.set(150,50,110);//80,50,50
             this.terrain.scale.multiplyScalar(15);
             // this.terrain.rotation.y = Math.PI;
@@ -139,10 +139,10 @@ export default class IntroAnimation extends THREE.Object3D {
             this.add( this.terrain );
         });
 
-        let houseTex = tex_loader.load( this.BASE_PATH + '/images/house.jpg' );
+        let houseTex = tex_loader.load( this.BASE_PATH + '/images/house_lowSat.jpg' );
         let houseEmisTex = tex_loader.load( this.BASE_PATH + '/images/house_EMI.png' );
-        loader.load(this.BASE_PATH + "/models/house2.json", (geometry, material) => {
-            this.house = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({map:houseTex, emissiveMap:houseEmisTex, emissive:0xffff00, emissiveIntensity: 0.5}) );
+        loader.load(this.BASE_PATH + "/models/house3.json", (geometry, material) => {
+            this.house = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({map:houseTex, emissiveMap:houseEmisTex, emissive:0xffff00, emissiveIntensity: 0.3}) );
 
             TweenMax.to(this.house.material, 2, {emissiveIntensity:1.5, repeat:-1, yoyo:true, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: "none", randomize: true, clamp: false})});
 
@@ -218,10 +218,6 @@ export default class IntroAnimation extends THREE.Object3D {
         for(let i=0; i<this.sequenceConfig.length; i++){
             this.sequenceConfig[i].performed = false;
         }
-    }
-
-    something(_duration) {
-       //
     }
 
     transX(geo, n){

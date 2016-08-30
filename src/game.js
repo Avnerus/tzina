@@ -142,9 +142,9 @@ export default class Game {
             console.log("Done loading everything!");
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
-            /*
+            
             this.introAni.initFBOParticle();
-            this.scene.add(this.introAni);*/
+            this.scene.add(this.introAni);
 
 
             /*
@@ -179,7 +179,7 @@ export default class Game {
         this.sky.init();
         this.soundManager.init();
         this.square.init(this.collisionManager, this.loadingManager);
-        //this.introAni.init(this.loadingManager);
+        this.introAni.init(this.loadingManager);
 
         // Characters
         this.characterController.init(this.loadingManager);
@@ -231,7 +231,8 @@ export default class Game {
 
         events.on("intro_end", () => {
             console.log("Intro ended");
-            //this.introAni.start();
+            this.introAni.start();
+            
             document.getElementById("wasd-container").style.display = "block";
             setTimeout(() => {
                 document.getElementById("wasd-container").style.display = "none";
@@ -303,7 +304,7 @@ export default class Game {
         this.collisionManager.update(dt);
         //this.flood.update(dt);       
         this.intro.update();
-        //this.introAni.update(dt,et);
+        this.introAni.update(dt,et);
     }
 
     render() {
