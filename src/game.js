@@ -31,6 +31,7 @@ export default class Game {
         console.log("Game constructed!")
         this.config = config;
         this.started = false;
+        this.shownWASD = false;
     }
     init() {
 
@@ -232,12 +233,18 @@ export default class Game {
         events.on("intro_end", () => {
             console.log("Intro ended");
             //this.introAni.start();
-            document.getElementById("wasd-container").style.display = "block";
-            setTimeout(() => {
-                document.getElementById("wasd-container").style.display = "none";
-            },3000);
         });
 
+        events.on("control_threshold", () => {
+            //this.introAni.start();
+            if (!this.shownWASD) {
+                document.getElementById("wasd-container").style.display = "block";
+                setTimeout(() => {
+                    document.getElementById("wasd-container").style.display = "none";
+                },3000);
+                this.shownWASD = true;
+            }
+        });
 
         this.charactersEnded = [];
         events.on("character_ended", (name) => {

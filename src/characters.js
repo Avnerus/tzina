@@ -14,7 +14,6 @@ export default [
         animationPosition: [0,-0.3,-0.5],
         animationRotation: [15, 0, 2],
         space: 7,
-        introSpace: 17,
         volume: 0.2,
         subtitles: null
     },
@@ -68,8 +67,7 @@ export default [
         animationScale: 0.25,
         animationPosition: [0.45, -0.3, 0.25],
         animationRotation: [-4, -23, -9],
-        space: 10,
-        introSpace: 17,
+        space: 15,
         volume: 0.5,
         subtitles: true
     }

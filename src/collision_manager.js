@@ -80,22 +80,29 @@ export default class CollisionManager {
         character.obstacleIndex = this.obstacles.length -1;
 
         this.obstacleInfo.push(character);
-        
-        this.obstacles.push([
-            bbox.box.min.x - introSpace, 
-            bbox.box.min.y - introSpace, 
-            bbox.box.min.z - introSpace, 
-            bbox.box.max.x + introSpace, 
-            bbox.box.max.y + introSpace, 
-            bbox.box.max.z + introSpace
-        ]);
-        this.obstacleInfo.push({intro: character});
+
+        if (character.props.introSpace) {
+            this.obstacles.push([
+                bbox.box.min.x - introSpace, 
+                bbox.box.min.y - introSpace, 
+                bbox.box.min.z - introSpace, 
+                bbox.box.max.x + introSpace, 
+                bbox.box.max.y + introSpace, 
+                bbox.box.max.z + introSpace
+            ]);
+            this.obstacleInfo.push({intro: character});
+        }
     }
 
     removeCharacter(character) {
         console.log("COLLISION MANAGER - Removing character ", character, "Obstacle index: ",character.obstacleIndex);
-        this.obstacles.splice(character.obstacleIndex, 2);
-        this.obstacleInfo.splice(character.obstacleIndex, 2);
+        if (character.props.introSpace) {
+            this.obstacles.splice(character.obstacleIndex, 2);
+            this.obstacleInfo.splice(character.obstacleIndex, 2);
+        } else {
+            this.obstacles.splice(character.obstacleIndex, 1);
+            this.obstacleInfo.splice(character.obstacleIndex, 1);
+        }
     }
 
     addBoundingBoxes(obj, scene) {
