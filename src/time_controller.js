@@ -233,7 +233,9 @@ export default class TimeController {
         } else if (this.currentHour == 19) {
             this.square.turnOnSun("7");
         } else {
-            this.square.turnOffSun(this.square.currentSun);
+            if (this.square.currentSun) {
+                this.square.turnOffSun(this.square.currentSun);
+            }
         }
     }
 

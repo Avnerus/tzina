@@ -24,6 +24,8 @@ export default class Square extends THREE.Object3D{
                 endPosition: [-3.5, 22, 18]
             }
         ]
+
+        this.currentSun = null;
     }
     init(collisionManager,loadingManager) {
         loadingManager.itemStart("Square");
@@ -91,6 +93,7 @@ export default class Square extends THREE.Object3D{
     }
 
     turnOffSun(name) {
+        console.log("Turn off sun ", name);
         let sun = this.suns.getObjectByName(name).children[0];
         console.log("Turn off sun", sun);
         sun.material.side = THREE.BackSide;
@@ -98,8 +101,6 @@ export default class Square extends THREE.Object3D{
         sun.material.emissive = new THREE.Color(0x222223);
         sun.material.specular = new THREE.Color(0x000000);
         sun.material.opacity = .8;
-     
-
     }
 
     turnOnSun(name) {

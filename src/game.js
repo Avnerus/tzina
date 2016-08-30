@@ -24,6 +24,8 @@ import LupoAnimation from './animations/lupo'
 import MiriamAnimation from './animations/miriam'
 import HaimAnimation from './animations/haim'
 
+import IntroAnimation from './animations/introAni'
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
@@ -123,6 +125,7 @@ export default class Game {
         this.timeController.init();
 
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
+        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square  );
 
         this.animations = {
             'Hannah' : new HannahAnimation(),
@@ -139,6 +142,8 @@ export default class Game {
             console.log("Done loading everything!");
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
+            this.introAni.initFBOParticle();
+            this.scene.add(this.introAni);
 
 
             /*
@@ -173,6 +178,7 @@ export default class Game {
         this.sky.init();
         this.soundManager.init();
         this.square.init(this.collisionManager, this.loadingManager);
+        this.introAni.init(this.loadingManager);
 
         // Characters
         this.characterController.init(this.loadingManager);
@@ -211,23 +217,20 @@ export default class Game {
         this.square.fountain.startCycle();
 
         if (this.config.skipIntro) {
-            // Get in the square
-            //
-            
-           /*
-            this.keyboardController.setPosition(-15, 10, 167);
-            this.sky.transitionTo(17,1);
-            */
+            this.timeController.transitionTo(17,1);
+            setTimeout(() => {
+                events.emit("intro_end");
+            },6000)
         } else {
             // Init the intro
             this.intro.init();
-
             //this.timeController.setTime(17);//17
         }
 
 
         events.on("intro_end", () => {
-	    this.introAni.start();
+            console.log("Intro ended");
+            this.introAni.start();
             document.getElementById("wasd-container").style.display = "block";
             setTimeout(() => {
                 document.getElementById("wasd-container").style.display = "none";
@@ -299,6 +302,7 @@ export default class Game {
         this.collisionManager.update(dt);
         //this.flood.update(dt);       
         this.intro.update();
+        this.introAni.update(dt,et);
     }
 
     render() {
