@@ -3,6 +3,7 @@ import TextureAnimator from '../util/texture_animator'
 import GeometryUtils from '../util/GeometryUtils'
 import FBO from '../util/fbo'
 import EndArrayPlugin from '../util/EndArrayPlugin'
+import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class HaimAnimation extends THREE.Object3D {
@@ -50,6 +51,7 @@ export default class HaimAnimation extends THREE.Object3D {
     init(loadingManager) {
         this.loadingManager = loadingManager;
         this.setupAnim();
+        // DebugUtil.positionObject(this, "haim anim");
     }
 
     setupAnim() {
@@ -59,13 +61,13 @@ export default class HaimAnimation extends THREE.Object3D {
         let loader = new THREE.JSONLoader(this.loadingManager);
 
         // setup animation sequence
+        // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
             { time: 5,  anim: ()=>{this.tubeDown(1)} },
             { time: 20, anim: ()=>{this.tubeOut(0.5)} }
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
-
 
         this.lookupTable=[];
         for (let i=0; i<50; i++) {

@@ -66,8 +66,8 @@ export default [
         uvdx: 0.0,
         scale: 0.003 * 0.25,
         animationScale: 0.25,
-        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
-        animationRotation: [13, 0, 0],      // 20, 0, 0
+        animationPosition: [0.45, -0.3, 0.25],
+        animationRotation: [-4, -23, -9],
         space: 10,
         introSpace: 17,
         volume: 0.5,
