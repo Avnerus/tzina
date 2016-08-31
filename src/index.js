@@ -39,7 +39,7 @@ document.getElementById('start-button').addEventListener('click',function(event)
     }*/
 
     
-    if (fullscreen.available()) {
+    if (config.fullScreen && fullscreen.available()) {
         var fs = fullscreen(el);
 
         fs.on('attain',function() {
@@ -96,4 +96,3 @@ function animate(t) {
 function resize() {
     game.resize();
 }
-

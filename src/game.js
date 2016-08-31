@@ -42,11 +42,12 @@ export default class Game {
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
-        //this.gui.init();
+        this.gui.init();
 
-        this.renderer = new THREE.WebGLRenderer({antialias: true});
-        this.renderer.setClearColor( 0, 1 );
+        this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
         this.renderer.setPixelRatio(window.devicePixelRatio);
+        
+
 
         this.container = document.getElementById('game');
         //this.renderer.setClearColor( 0x000000, 1 );
@@ -210,8 +211,17 @@ export default class Game {
         if (this.config.controls == "locked") {
                 this.vrControls = new TzinaVRControls(this.emitter, this.camera);
                 this.vrControls.standing = true;
+
+                let name = "VR";
+                this.vrControls.basePosition.set(45,8,48);
+                events.emit("add_gui", {folder:name + " - Position"}, this.vrControls.basePosition, "x"); 
+                events.emit("add_gui", {folder:name + " - Position"}, this.vrControls.basePosition, "y"); 
+                events.emit("add_gui", {folder:name + " - Position"}, this.vrControls.basePosition, "z"); 
+
+
+                /*
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
-                this.keyboardController.init();
+                this.keyboardController.init();*/
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
@@ -222,10 +232,10 @@ export default class Game {
         this.square.fountain.startCycle();
 
         if (this.config.skipIntro) {
-            this.timeController.transitionTo(17,1);
-            setTimeout(() => {
-                events.emit("intro_end");
-            },6000)
+            this.timeController.setTime(17);
+            events.emit("intro_end");
+            events.emit("chapter_threshold", true);          
+            events.emit("control_threshold", true);                          
         } else {
             // Init the intro
             this.intro.init();

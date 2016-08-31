@@ -5,6 +5,7 @@ export default {
     enableFlying: false,
     skipIntro: true,
     movementSpeed: 1,
-    daySpeed: 0.003
+    daySpeed: 0.003,
+    fullScreen: false
 //    daySpeed: 0.08
 }
