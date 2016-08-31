@@ -129,7 +129,7 @@ export default class Game {
         this.timeController.init();
 
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
-        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square  );
+        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController  );
 
         this.animations = {
             'Hannah' : new HannahAnimation(),
@@ -146,9 +146,9 @@ export default class Game {
             console.log("Done loading everything!");
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
-            /*
+            
             this.introAni.initFBOParticle();
-            this.scene.add(this.introAni);*/
+            this.scene.add(this.introAni);
 
 
             /*
@@ -183,7 +183,7 @@ export default class Game {
         this.sky.init();
         this.soundManager.init();
         this.square.init(this.collisionManager, this.loadingManager);
-        //this.introAni.init(this.loadingManager);
+        this.introAni.init(this.loadingManager);
 
         // Characters
         this.characterController.init(this.loadingManager);
@@ -235,7 +235,7 @@ export default class Game {
 
         events.on("intro_end", () => {
             console.log("Intro ended");
-            //this.introAni.start();
+            this.introAni.start();
             
             // Old people backup
             setTimeout(() => {
@@ -288,7 +288,7 @@ export default class Game {
         this.charactersEnded = [];
         events.on("character_ended", (name) => {
             this.charactersEnded.push(name);
-            if (this.charactersEnded.length == 1) {
+            if (this.charactersEnded.length == 4) {
                 this.timeController.setDaySpeed(0.1);
                 this.timeController.done = true;
                 this.zoomController.done = true;
@@ -303,6 +303,7 @@ export default class Game {
                 },40000);
             }
 
+            }
             else if (this.charactersEnded.indexOf("Itzik") != -1 && 
                 this.charactersEnded.indexOf("Hannah") != -1 &&
                 this.timeController.currentHour >= 17 &&
@@ -327,6 +328,19 @@ export default class Game {
     }
 
 
+    zoomOut() {
+        console.log("FINAL ZOOM OUT");
+        let zoomVector = new THREE.Vector3().copy(new THREE.Vector3(0, 0, 1) ).applyQuaternion(this.camera.quaternion);
+        zoomVector.y = 0.15;
+        zoomVector.multiplyScalar(1000);
+        let newPosition = new THREE.Vector3().copy(this.camera.position);
+        newPosition.add(zoomVector);
+        console.log("Move to ", newPosition);
+        TweenMax.to(this.camera.position, 20, {x: newPosition.x, y: newPosition.y, z: newPosition.z, onComplete: () => {
+            document.getElementById("coming-soon").style.display = "block";
+            document.getElementById("coming-img").style.opacity = 1;
+        }});
+    }
 
     animate(t) {
         this.update(this.clock.getDelta(), this.clock.getElapsedTime());
@@ -348,7 +362,7 @@ export default class Game {
         this.collisionManager.update(dt);
         //this.flood.update(dt);       
         this.intro.update();
-        //this.introAni.update(dt,et);
+        this.introAni.update(dt,et);
     }
 
     render() {

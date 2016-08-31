@@ -6,7 +6,7 @@ import EndArrayPlugin from '../util/EndArrayPlugin'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class IntroAnimation extends THREE.Object3D {
-    constructor( scene, renderer, square ) {
+    constructor( scene, renderer, square, timeController ) {
         super();
         this.BASE_PATH = 'assets/animations/intro';
 
@@ -28,6 +28,7 @@ export default class IntroAnimation extends THREE.Object3D {
         this.maxDepth = 50.0;
 
         this.square = square;
+        this.timeController = timeController;
 
         console.log("FBO Constructed!")
     }
@@ -131,7 +132,7 @@ export default class IntroAnimation extends THREE.Object3D {
         });
 
         loader.load(this.BASE_PATH + "/models/terrain4.json", (geometry, material) => {
-            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x4c5b6b, shininess:0, shading: THREE.FlatShading}) ); //0x005a78
+            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x17212c, shininess:10, shading: THREE.FlatShading}) ); //0x005a78
             // this.terrain.scale.set(150,50,110);//80,50,50
             this.terrain.scale.multiplyScalar(15);
             // this.terrain.rotation.y = Math.PI;
@@ -139,10 +140,10 @@ export default class IntroAnimation extends THREE.Object3D {
             this.add( this.terrain );
         });
 
-        let houseTex = tex_loader.load( this.BASE_PATH + '/images/house.jpg' );
+        let houseTex = tex_loader.load( this.BASE_PATH + '/images/house_lowSat.jpg' );
         let houseEmisTex = tex_loader.load( this.BASE_PATH + '/images/house_EMI.png' );
-        loader.load(this.BASE_PATH + "/models/house2.json", (geometry, material) => {
-            this.house = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({map:houseTex, emissiveMap:houseEmisTex, emissive:0xffff00, emissiveIntensity: 0.5}) );
+        loader.load(this.BASE_PATH + "/models/house3.json", (geometry, material) => {
+            this.house = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({map:houseTex, emissiveMap:houseEmisTex, emissive:0xffff00, emissiveIntensity: 0.3}) );
 
             TweenMax.to(this.house.material, 2, {emissiveIntensity:1.5, repeat:-1, yoyo:true, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: "none", randomize: true, clamp: false})});
 
@@ -169,12 +170,13 @@ export default class IntroAnimation extends THREE.Object3D {
         this.simulationShader = new THREE.ShaderMaterial({
             uniforms: {
                 positions: { type: "t", value: this.positionsForFBO },
-                timer: { type: "f", value: 0 },
+                deltaTime: { type: "f", value: 0 },
                 maxDepth : { type: "f", value: this.maxDepth },
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                gravity: { type: "f", value: 2 },
+                gravity: { type: "f", value: 50 }, // 2
+                mouseRotation: { type: "f", value: 0 }, // 2
                 squareRadius: {type: "f", value: this.sRadius*26},
                 squareCenterX: {type: "f", value: this.sCenter.x},
                 squareCenterY: {type: "f", value: this.sCenter.y},
@@ -220,10 +222,6 @@ export default class IntroAnimation extends THREE.Object3D {
         }
     }
 
-    something(_duration) {
-       //
-    }
-
     transX(geo, n){
         for(let i=0; i<geo.vertices.length; i++){
             geo.vertices[i].x += n;
@@ -263,6 +261,8 @@ export default class IntroAnimation extends THREE.Object3D {
     update(dt,et) {
         if(this.isStarted){
             // test
+            this.simulationShader.uniforms.deltaTime.value = dt;
+            this.simulationShader.uniforms.mouseRotation.value = this.timeController.rotateVelocity;
             this.fbo.update();
         }
     }
