@@ -185,7 +185,7 @@ export default class IntroAnimation extends THREE.Object3D {
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                gravity: { type: "f", value: 300 }, // 2
+                gravity: { type: "f", value: 100 }, // 2
                 mouseRotation: { type: "f", value: 0 }, // 2
                 squareRadius: {type: "f", value: this.sRadius*26},
                 squareCenterX: {type: "f", value: this.sCenter.x},
