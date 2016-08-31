@@ -225,7 +225,7 @@ export default class Game {
             this.timeController.transitionTo(17,1);
             setTimeout(() => {
                 events.emit("intro_end");
-            },6000)
+            },3000)
         } else {
             // Init the intro
             this.intro.init();
@@ -302,8 +302,6 @@ export default class Game {
                     });
                 },40000);
             }
-
-            }
             else if (this.charactersEnded.indexOf("Itzik") != -1 && 
                 this.charactersEnded.indexOf("Hannah") != -1 &&
                 this.timeController.currentHour >= 17 &&
@@ -318,28 +316,7 @@ export default class Game {
                  this.timeController.jumpToTime(17);
             } 
         
-            /*
-            if (this.charactersEnded == 1) {
-                setTimeout(() => {
-                    this.zoomOut();
-                },30000)
-            }*/
         });
-    }
-
-
-    zoomOut() {
-        console.log("FINAL ZOOM OUT");
-        let zoomVector = new THREE.Vector3().copy(new THREE.Vector3(0, 0, 1) ).applyQuaternion(this.camera.quaternion);
-        zoomVector.y = 0.15;
-        zoomVector.multiplyScalar(1000);
-        let newPosition = new THREE.Vector3().copy(this.camera.position);
-        newPosition.add(zoomVector);
-        console.log("Move to ", newPosition);
-        TweenMax.to(this.camera.position, 20, {x: newPosition.x, y: newPosition.y, z: newPosition.z, onComplete: () => {
-            document.getElementById("coming-soon").style.display = "block";
-            document.getElementById("coming-img").style.opacity = 1;
-        }});
     }
 
     animate(t) {
