@@ -6,7 +6,7 @@ import EndArrayPlugin from '../util/EndArrayPlugin'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class IntroAnimation extends THREE.Object3D {
-    constructor( scene, renderer, square, timeController ) {
+    constructor( scene, renderer, square, element ) {
         super();
         this.BASE_PATH = 'assets/animations/intro';
 
@@ -28,7 +28,7 @@ export default class IntroAnimation extends THREE.Object3D {
         this.maxDepth = 50.0;
 
         this.square = square;
-        this.timeController = timeController;
+        this.element = element;
 
         console.log("FBO Constructed!")
     }
@@ -157,6 +157,16 @@ export default class IntroAnimation extends THREE.Object3D {
         this.completeSequenceSetup();
         //
         this.loadingManager.itemEnd("IntroAnim");
+
+        document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
+    }
+
+    handleMouseMove(e) {
+
+        if (this.simulationShader) {
+            let normalizedValue = (e.pageX - this.element.offsetWidth / 2) / (this.element.offsetWidth / 2);
+            this.simulationShader.uniforms.mouseRotation.value = normalizedValue;
+        }
     }
 
     initFBOParticle() {
@@ -175,7 +185,7 @@ export default class IntroAnimation extends THREE.Object3D {
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                gravity: { type: "f", value: 50 }, // 2
+                gravity: { type: "f", value: 300 }, // 2
                 mouseRotation: { type: "f", value: 0 }, // 2
                 squareRadius: {type: "f", value: this.sRadius*26},
                 squareCenterX: {type: "f", value: this.sCenter.x},
@@ -262,7 +272,6 @@ export default class IntroAnimation extends THREE.Object3D {
         if(this.isStarted){
             // test
             this.simulationShader.uniforms.deltaTime.value = dt;
-            this.simulationShader.uniforms.mouseRotation.value = this.timeController.rotateVelocity;
             this.fbo.update();
         }
     }
