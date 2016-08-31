@@ -118,7 +118,7 @@ export default class IntroAnimation extends THREE.Object3D {
 
             let refObj = new THREE.Object3D();
             refObj.scale.set( 70, 70, 10 );    // 110, 90, 80 // 110, 90, 10
-            refObj.position.set(0,800,300);    // 0,900,1100 // 0,1500,300
+            refObj.position.set(0,1100,300);    // 0,900,1100 // 0,1500,300
             refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
 
             // FBO_PARTICLES

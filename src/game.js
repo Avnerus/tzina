@@ -25,6 +25,7 @@ import MiriamAnimation from './animations/miriam'
 import HaimAnimation from './animations/haim'
 
 import IntroAnimation from './animations/introAni'
+import {MeshText2D, textAlign} from '../lib/text2d/index'
 
 export default class Game {
     constructor(config) {
@@ -139,6 +140,19 @@ export default class Game {
         }
 
         this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager);
+
+        let TEXT_DEFINITION = {
+             align: textAlign.center, 
+             font: '20px Arial',
+             fillStyle: '#FFFFFF',
+             antialias: true 
+        }
+        this.zoomGuidance = new MeshText2D("SCROLL TO ENTER", TEXT_DEFINITION)
+        this.zoomGuidance.position.set(0, -180, 0);
+        this.zoomGuidance.material.opacity = 0;
+        this.scene.add(this.zoomGuidance);
+
+        this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
     }
 
     load(onLoad) {
@@ -201,6 +215,14 @@ export default class Game {
 
     }
 
+    showZoomGuidance() {
+        let targetOpacity = 1;
+        TweenMax.to(this.zoomGuidance.material, 1, {opacity: targetOpacity});
+    }
+    hideZoomGuidance() {
+        this.scene.remove(this.zoomGuidance);
+    }
+
     start() {
         this.started = true;
         this.vrManager.setMode_(2);
@@ -237,43 +259,30 @@ export default class Game {
         events.on("intro_end", () => {
             console.log("Intro ended");
             this.introAni.start();
-            
-            // Old people backup
-            setTimeout(() => {
-                if (!this.timeController.wasUsed && !this.shownArrows) {
-                    document.getElementById("time-guidance").style.display = "flex";
-                }
-            },5000);
         });
 
+        this.counter = 0;
+
         events.on("angle_updated", (hour) => {
-            if (this.timeController.wasUsed && !this.zoomController.wasUsed) {
+            if (this.timeController.wasUsed && !this.zoomController.wasUsed && (hour == 17 || hour == 19)) {
                 let lastHour = hour;
+                this.counter++;
                 setTimeout(() => {
-                    if (this.timeController.currentHour == lastHour && !this.zoomController.wasUsed) {
-                        document.getElementById("zoom-guidance").style.display = "flex";
+                    if (this.counter >= 2 && this.timeController.currentHour == lastHour && !this.zoomController.wasUsed) {
+                        this.showZoomGuidance();
+                        setTimeout(() => {
+                            this.hideZoomGuidance();
+                        },3000);
                     }
                 }, 3000);
             } 
         });
 
-        events.on("time_rotated", () => {
-            this.shownArrows = true;
-            document.getElementById("time-guidance").style.display = "none";
-        })
-
         events.on("zoom_used", () => {
             console.log("Zoom controller used!");
             this.shownZoom = true;
-            document.getElementById("zoom-guidance").style.display = "none";
-        })
-
-        events.on("chapter_threshold", (passed) => {
-            if (passed && !this.shownArrows) {
-                this.shownArrows = true;
-                document.getElementById("time-guidance").style.display = "none";
-            }
-        })
+            this.hideZoomGuidance();
+        });
 
         events.on("control_threshold", () => {
             //this.introAni.start();
@@ -295,12 +304,17 @@ export default class Game {
                 this.zoomController.done = true;
                 this.timeController.chapterTitle.visible = false;
                 setTimeout(() => {
+                    this.vrControls.active = false;
                     this.zoomController.velocityZ = -15.0;
                     this.zoomController.friction = 0;
                     document.getElementById("coming-soon").style.display = "block";
                     events.on("base_position", () => {
                             document.getElementById("coming-img").style.opacity = 1;
                     });
+                    this.soundManager.loadSound(this.ZOOM_OUT_SOUND)
+                    .then((sound) => {
+                        sound.playIn(3);
+                    }); 
                 },40000);
             }
             else if (this.charactersEnded.indexOf("Itzik") != -1 && 

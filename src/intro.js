@@ -33,7 +33,7 @@ export default class Intro {
         
         this.INTRO_SOUND = 'assets/sound/INTRO_Shirin.ogg'
 
-        let titlePlaneGeo = new THREE.PlaneGeometry( 1024, 128 );
+        let titlePlaneGeo = new THREE.PlaneGeometry( 512, 128 );
         let loader = new THREE.TextureLoader();
         loader.load('assets/intro/title.png', (texture) => {
             this.titleTexture = texture;
