@@ -17,7 +17,7 @@ uniform float bounceFactor;
 vec3 acce = vec3(0.0,0.0,0.0);
 vec3 velocity = vec3(0.0,0.0,0.0);
 vec3 wind = vec3(1.0,0.0,0.0);
-vec3 force;
+vec3 force = vec3(0.0, 0.0, 0.0);
 vec3 squareCenter;
 varying vec2 vUv;
 

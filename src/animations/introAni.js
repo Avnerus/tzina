@@ -165,7 +165,7 @@ export default class IntroAnimation extends THREE.Object3D {
         console.log(squareMesh.geometry.boundingSphere);
         this.sRadius = squareMesh.geometry.boundingSphere.radius;
         this.sCenter = squareMesh.geometry.boundingSphere.center;
-        console.log(this.sCenter);
+        console.log("Square radius ", this.sRadius, "Center: ", this.sCenter);
 
         this.simulationShader = new THREE.ShaderMaterial({
             uniforms: {
