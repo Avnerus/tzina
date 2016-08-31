@@ -42,7 +42,7 @@ void main() {
     acce += force;
 
     // wind
-    wind *= (mouseRotation / disToSq * 1000.0);
+    wind *= (mouseRotation / disToSq * 300.0);
     acce += wind;
     
     // gravity
