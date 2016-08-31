@@ -42,7 +42,7 @@ export default class Game {
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
-        this.gui.init();
+      //  this.gui.init();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
         this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -211,9 +211,10 @@ export default class Game {
         if (this.config.controls == "locked") {
                 this.vrControls = new TzinaVRControls(this.emitter, this.camera);
                 this.vrControls.standing = true;
+                //this.vrControls.scale = 1.0;
 
                 let name = "VR";
-                this.vrControls.basePosition.set(45,8,48);
+                this.vrControls.basePosition.set(10, 21,12);
                 events.emit("add_gui", {folder:name + " - Position"}, this.vrControls.basePosition, "x"); 
                 events.emit("add_gui", {folder:name + " - Position"}, this.vrControls.basePosition, "y"); 
                 events.emit("add_gui", {folder:name + " - Position"}, this.vrControls.basePosition, "z"); 

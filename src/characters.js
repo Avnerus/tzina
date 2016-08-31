@@ -13,7 +13,7 @@ export default [
         animationScale: 0.25,
         animationPosition: [0,-0.3,-0.55],
         animationRotation: [15, 0, 2],
-        space: 7,
+        space: 5,
         volume: 0.2,
         subtitles: null
     },
@@ -28,11 +28,11 @@ export default [
         uvdy: 0.4847,
         uvdx: -0.025,
         scale: 0.003 * 0.25,
-        animationScale: 0.25,
+        animationScale: 1,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 7,
-        introSpace: 27,
+        space: 5,
+        introSpace: 5,
         subtitles: null
     },
     {
@@ -46,11 +46,11 @@ export default [
         uvdy: 0.4889,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
-        animationScale: 0.25,
+        animationScale: 1,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 10,
-        introSpace: 28,
+        space: 2,
+        introSpace: 5,
         subtitles: true
     },
     {
@@ -65,10 +65,10 @@ export default [
         uvdy: 0.4791,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
-        animationScale: 0.25,
+        animationScale: 1,
         animationPosition: [0.45, -0.3, 0.25],
         animationRotation: [-4, -23, -9],
-        space: 15,
+        space: 5,
         volume: 0.1,
         subtitles: true
     }

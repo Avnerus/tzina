@@ -87,7 +87,7 @@ export default function ( emitter, object, onError ) {
 
                     if ( pose.position !== null ) {
 
-                        object.position.fromArray( pose.position ).add(this.basePosition);
+                        object.position.fromArray(pose.position).multiplyScalar(this.scale).add(this.basePosition);
                         
                         if ( this.standing ) {
 

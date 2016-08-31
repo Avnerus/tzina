@@ -149,10 +149,10 @@ export default class Square extends THREE.Object3D{
             loader.load(MODEL_PATH,( obj ) => {
                 console.log("Loaded square ", obj);
 
-                obj.position.y = -80;
+                obj.position.y = 0
                 obj.position.z = 0;
                 obj.position.x = 0;
-                obj.scale.set( 4, 4, 4 );
+                //obj.scale.set( 1, 1, 1 );
 
                 this.rotation.y = Math.PI * 80 / 180;
                 this.updateMatrixWorld();
