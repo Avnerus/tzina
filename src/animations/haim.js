@@ -27,8 +27,8 @@ export default class HaimAnimation extends THREE.Object3D {
         // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
             { time: 10,  anim: ()=>{this.tubeDown(1)} },
-            { time: 40, anim: ()=>{this.tubeOut(0.5)} },
-            { time: 254, anim: ()=>{this.characterDisappear()} }
+            { time: 30, anim: ()=>{this.tubeOut(0.5)} },    // 30
+            { time: 50, anim: ()=>{this.characterDisappear()} }    //254
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -219,9 +219,9 @@ export default class HaimAnimation extends THREE.Object3D {
                     value: [.1,2,3,3,2],
                     spread: 1
                 },
-                particleCount: 15
+                particleCount: 300,
                 // drag: 0.1,
-                // activeMultiplier: 0.5
+                activeMultiplier: 0.05
             });
             this.particleGroup.addEmitter( emitter );
             // console.log( this.particleGroup.emitters[0] );
@@ -501,38 +501,55 @@ export default class HaimAnimation extends THREE.Object3D {
     }
 
     characterDisappear() {
-        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, onComplete: ()=>{
-                                                            this.parent.fullVideo.setOpacity(0.0);
-                                                       } } );
-        // 1. detach clouds from tubes
-        // 2. tubes & spine gone
-        for(let i=0; i<this.tubes.length; i++){
-            this.tubes[i].updateMatrixWorld();
-            this.detach( this.tubes[i].children[3], this.tubes[i], this );
-            // let child = this.tubes[i].children[3];
-            // child.applyMatrix( this.tubes[i].matrixWorld );
-            // this.tubes[i].remove( child );
-            // this.add( child );
-            TweenMax.to( this.tubes[i].scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
-                                                        this.tubes[i].visible = false;
-                                                    } } );
+        let rainOriginPositions = [];
+
+        for(let i=0; i<this.particleGroup.emitters.length; i++){
+            this.particleGroup.emitters[i].activeMultiplier = 1;
+            this.particleGroup.emitters[i].size.value = [.2,6,8,6,2];
+
+            let emitterPos = this.particleGroup.emitters[i].position.value;
+            rainOriginPositions.push( emitterPos );
+            this.particleGroup.emitters[i].position.value = new THREE.Vector3(0, emitterPos.y, 0);
         }
 
-        for(let i=0; i<this.outTubes.length; i++) {
-            this.outTubes[i].updateMatrixWorld();
-            this.detach( this.outTubes[i].children[2], this.outTubes[i], this );
-            // let child = this.outTubes[0].children[2];
-            // child.applyMatrix( this.outTubes[i].matrixWorld );
-            // this.outTubes[i].remove( child );
-            // this.add( child );
-            TweenMax.to( this.outTubes[i].scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
-                                                        this.outTubes[i].visible = false;
-                                                    } } );
-        }
+        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, delay: 5, onStart: ()=>{
+                        // 1. detach clouds from tubes
+                        // 2. tubes & spine gone
+                        for(let i=0; i<this.tubes.length; i++){
+                            this.tubes[i].updateMatrixWorld();
+                            this.detach( this.tubes[i].children[3], this.tubes[i], this );
+                            // let child = this.tubes[i].children[3];
+                            // child.applyMatrix( this.tubes[i].matrixWorld );
+                            // this.tubes[i].remove( child );
+                            // this.add( child );
+                            TweenMax.to( this.tubes[i].scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
+                                                                        this.tubes[i].visible = false;
+                                                                    } } );
+                        }
 
-        TweenMax.to( this.spine.scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
-                                                this.spine.visible = false;
-                                            } } );
+                        for(let i=0; i<this.outTubes.length; i++) {
+                            this.outTubes[i].updateMatrixWorld();
+                            this.detach( this.outTubes[i].children[2], this.outTubes[i], this );
+                            // let child = this.outTubes[0].children[2];
+                            // child.applyMatrix( this.outTubes[i].matrixWorld );
+                            // this.outTubes[i].remove( child );
+                            // this.add( child );
+                            TweenMax.to( this.outTubes[i].scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
+                                                                        this.outTubes[i].visible = false;
+                                                                    } } );
+                        }
+
+                        TweenMax.to( this.spine.scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
+                                                                this.spine.visible = false;
+                                                            } } );
+                    }, onComplete: ()=>{
+                        this.parent.fullVideo.setOpacity(0.0);
+                        for(let i=0; i<this.particleGroup.emitters.length; i++){
+                            this.particleGroup.emitters[i].activeMultiplier = 0.1;
+                            this.particleGroup.emitters[i].size.value = [.1,2,3,3,2];
+                            this.particleGroup.emitters[i].position.value = rainOriginPositions[i];
+                        }
+                    } } );
     }
 
     detach ( child, parent, scene ) {
