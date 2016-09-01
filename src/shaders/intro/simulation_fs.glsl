@@ -41,8 +41,14 @@ void main() {
     }
     acce += force;
 
-    // wind
+    // wind from mouse
     wind *= (mouseRotation / disToSq * 300.0);
+    // decreasing the wind gradually
+    if ( distance(wind, vec3(0.0))>0.1 ){
+        wind /= 2.0;
+    } else {
+        wind *= 0.0;
+    }
     acce += wind;
     
     // gravity
