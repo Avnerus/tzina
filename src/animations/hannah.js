@@ -30,6 +30,7 @@ export default class HannahAnimation extends THREE.Object3D {
 
         this.nextAnim = null;
 
+        this.noiseFactor = 160;
 
         let hannahRoomFiles = [this.BASE_PATH + "/models/hannah_room/hr_bookshelf.js", this.BASE_PATH + "/models/hannah_room/hr_chair.js",
                                this.BASE_PATH + "/models/hannah_room/hr_door.js", this.BASE_PATH + "/models/hannah_room/hr_fireplace.js",
@@ -278,6 +279,7 @@ export default class HannahAnimation extends THREE.Object3D {
     beDome() {
         let tmpEndArray = [1,0];
         TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
+        this.noiseFactor = 140;
     }
 
     showLeaf() {
@@ -392,7 +394,7 @@ export default class HannahAnimation extends THREE.Object3D {
             this.particleGroup.tick( dt );
         }
         for(let i=0; i < this.shieldGeo.vertices.length; i++){
-            let h = this.perlin.noise(et*0.1, i, 1)/140;
+            let h = this.perlin.noise(et*0.1, i, 1)/this.noiseFactor;
             this.domeMorphTargets[i].mesh.position.addScalar( h );
 
             if( i % 10==0 ){
