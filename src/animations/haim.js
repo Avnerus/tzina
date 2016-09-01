@@ -1,7 +1,6 @@
 import ImprovedNoise from '../util/improved_noise'
 import TextureAnimator from '../util/texture_animator'
 import GeometryUtils from '../util/GeometryUtils'
-import FBO from '../util/fbo'
 import EndArrayPlugin from '../util/EndArrayPlugin'
 import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
@@ -28,8 +27,8 @@ export default class HaimAnimation extends THREE.Object3D {
         // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
             { time: 10,  anim: ()=>{this.tubeDown(1)} },
-            { time: 30, anim: ()=>{this.tubeOut(0.5)} },
-            { time: 50, anim: ()=>{this.characterDisappear()} }
+            { time: 40, anim: ()=>{this.tubeOut(0.5)} },
+            { time: 254, anim: ()=>{this.characterDisappear()} }
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -489,7 +488,6 @@ export default class HaimAnimation extends THREE.Object3D {
                .to( targets, _duration*2, { endArray: tmpEndArray4, ease: Power0.easeNone, onComplete: ()=>{
                     // this.tubes[0].children[1].material.map.offset.x=-1.5;
                     // this.liquidOut = true;
-                    // this.fbo.particles.position.y = 0;
 
                     // scale up clouds
                     for(let i=0; i<this.outTubes.length; i++){
