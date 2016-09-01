@@ -22,10 +22,10 @@ export default class HannahAnimation extends THREE.Object3D {
         // setup animation sequence
         this.sequenceConfig = [
             { time: 1, anim: ()=>{this.appear()} },     // 1
-            { time: 65, anim: ()=>{this.beDome()} },    // 65
-            { time: 86, anim: ()=>{this.showLeaf()} },  // 86
-            { time: 172, anim: ()=>{this.beCollapse()} }, // 172
-            { time: 182, anim: ()=>{this.characterDisappear()} }
+            { time: 6, anim: ()=>{this.beDome()} },    // 65
+            { time: 12, anim: ()=>{this.showLeaf()} },  // 86
+            { time: 18, anim: ()=>{this.beCollapse()} }, // 172
+            { time: 24, anim: ()=>{this.characterDisappear()} } // 182
         ];
 
         this.nextAnim = null;
@@ -322,8 +322,13 @@ export default class HannahAnimation extends THREE.Object3D {
     }
 
     characterDisappear() {
-        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, onComplete: ()=>{
+        let tmpEndArray = [0.5,.9];
+        TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
+
+        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, delay: 5, onComplete: ()=>{
                                                             this.parent.fullVideo.setOpacity(0.0);
+                                                            tmpEndArray = [0,1];
+                                                            TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
                                                        } } );
     }
 
