@@ -55,6 +55,11 @@ export default class ZoomController {
 
         $(document.documentElement).on('mousewheel', (event) => {
                 this.velocityZ = event.deltaY * 10;
+                if (this.velocityZ > 0) {
+                    this.velocityZ = Math.max(this.velocityZ, 100);
+                } else if (this.velocityZ < 0) {
+                    this.velocityZ = Math.min(this.velocityZ,-100);
+                }
         });
 
         // keyboard zoom
