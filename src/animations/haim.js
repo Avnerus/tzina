@@ -142,9 +142,9 @@ export default class HaimAnimation extends THREE.Object3D {
                 this.cvMaterial = new THREE.MeshBasicMaterial({color: 0x00ffff, wireframe: true, morphTargets: true, transparent: true, opacity: 0.1});
                 this.liquidMaterial = new THREE.MeshBasicMaterial({map: liquidTex, transparent: true, opacity: 0.9});
                 this.liquidDown = false;
-                this.createCurve( new THREE.Vector3(), new THREE.Vector3() );
-                this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,0.25,0) );
-                this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,-0.5,0) );
+                this.createCurve( new THREE.Vector3(), new THREE.Vector3(), 0 );
+                this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,0.25,0), 1 );
+                this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,-0.5,0), 2 );
 
                 // CREATE OUT_BOUDN CURVE
                 this.cvOutMaterial = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true, morphTargets: true, transparent: true, opacity: 0.1});
@@ -264,7 +264,8 @@ export default class HaimAnimation extends THREE.Object3D {
         });
     }
 
-    createCurve( pos, rot ){
+    createCurve( pos, rot, index ){
+        let tubeNumber = this.tubesVec.length;
         for(let j=0; j<this.tubesVec.length; j++){
             let tubeObject = new THREE.Object3D();
 
@@ -307,8 +308,8 @@ export default class HaimAnimation extends THREE.Object3D {
             theBag.material = new THREE.MeshBasicMaterial( {map: this.bagTexs[j%4], transparent: true} );
             let lengthhh = liquidGeo.vertices.length-1;
             theBag.position.copy( liquidGeo.vertices[lengthhh] );
-            theBag.scale.multiplyScalar( this.clamp(this.lookupTable[j], 0.3, 1) );
-            theBag.rotation.y = -rot.y + this.lookupTable[j]/2;
+            theBag.scale.multiplyScalar( this.clamp(this.lookupTable[j+index*tubeNumber], 0.3, 1) );
+            theBag.rotation.y = -rot.y + this.lookupTable[j+index*tubeNumber]/2;
             tubeObject.add( theBag );
 
             // children_3 -> COULDS
@@ -505,7 +506,42 @@ export default class HaimAnimation extends THREE.Object3D {
         TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, onComplete: ()=>{
                                                             this.parent.fullVideo.setOpacity(0.0);
                                                        } } );
+        // 1. detach clouds from tubes
+        // 2. tubes & spine gone
+        for(let i=0; i<this.tubes.length; i++){
+            this.tubes[i].updateMatrixWorld();
+            this.detach( this.tubes[i].children[3], this.tubes[i], this );
+            // let child = this.tubes[i].children[3];
+            // child.applyMatrix( this.tubes[i].matrixWorld );
+            // this.tubes[i].remove( child );
+            // this.add( child );
+            TweenMax.to( this.tubes[i].scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
+                                                        this.tubes[i].visible = false;
+                                                    } } );
+        }
+
+        for(let i=0; i<this.outTubes.length; i++) {
+            this.outTubes[i].updateMatrixWorld();
+            this.detach( this.outTubes[i].children[2], this.outTubes[i], this );
+            // let child = this.outTubes[0].children[2];
+            // child.applyMatrix( this.outTubes[i].matrixWorld );
+            // this.outTubes[i].remove( child );
+            // this.add( child );
+            TweenMax.to( this.outTubes[i].scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
+                                                        this.outTubes[i].visible = false;
+                                                    } } );
+        }
+
+        TweenMax.to( this.spine.scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
+                                                this.spine.visible = false;
+                                            } } );
     }
+
+    detach ( child, parent, scene ) {
+        // child.applyMatrix( parent.matrixWorld );
+        parent.remove( child );
+        scene.add( child );
+    };
 
     transX(geo, n){
         for(let i=0; i<geo.vertices.length; i++){

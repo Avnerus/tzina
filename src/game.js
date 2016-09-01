@@ -245,7 +245,7 @@ export default class Game {
         this.square.fountain.startCycle();
 
         if (this.config.skipIntro) {
-            this.timeController.transitionTo(17,1);
+            this.timeController.transitionTo(19,1); //17
             setTimeout(() => {
                 events.emit("intro_end");
             },3000)
