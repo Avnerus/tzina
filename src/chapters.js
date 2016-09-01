@@ -92,7 +92,7 @@ export default
 			"timeLimitMinutes" : 12,
 			"characters": [
 				"Hannah",
-             //   "Itzik",
+                "Itzik",
 				"Lupo2",
 				"Dogs",
 				"shirin4"

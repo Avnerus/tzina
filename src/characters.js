@@ -16,7 +16,8 @@ export default [
         space: 5,
         volume: 0.2,
         subtitles: null
-    },
+    }
+    /*
     {
         name: 'Miriam',
         basePath : 'assets/characters/miriam',

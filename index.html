@@ -5,6 +5,18 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link type="text/css" href="css/tzina.css" rel="stylesheet">
+        <link href="css/normalize.css" rel="stylesheet" type="text/css">
+        <link href="css/webflow.css" rel="stylesheet" type="text/css">
+        <link href="css/vr-screen.webflow.css" rel="stylesheet" type="text/css">
+        <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+        <script type="text/javascript">
+        WebFont.load({
+            google: {
+                families: ["Lato:100,100italic,300,300italic,400,400italic,700,700italic,900,900italic"]
+                      
+            }
+        });
+        </script>
         <title>Tzina</title>
     </head>
     <body>
@@ -49,10 +61,45 @@
                     <img src="assets/splash/loading_fountain.gif" width="200px"></img>
                 </div>
             </div>
-            <div id="start-container" class="splash-container">
-                <a target="_self" href="#" id="start-button">
-                    <img src="assets/splash/chapter_title.png"></img>
-                </a>
+            <div id="start-container">
+              <div class="w-row">
+                <div class="w-col w-col-3"></div>
+                <div class="w-col w-col-6">
+                  <h1>This work is in development for webVR</h1>
+                  <div class="paragraph">You are about to meet Hannah , 88.
+                    <br>She is a part of chapter 4/7 focusing on mistrust and betrayal.
+                    <br>
+                    <br>Each chapter in the final experience, represents a different part of the day
+                    <br>from dawn to dusk, linking the chapter’s protagonists to a specific theme that emerges from their personal story.</div>
+                  <h1 class="h2">please make sure that you are:</h1>
+                </div>
+                <div class="w-col w-col-3"></div>
+              </div>
+              <div class="w-row">
+                <div class="w-col w-col-3"></div>
+                <div class="w-col w-col-2"><img class="icon" src="images/HI_icons_VR-04.png" width="59" style="position:relative;left:25px;top:10px;">
+                  <div class="makesure">using
+                    <br> <span class="chromium">Chromium</span>
+                  </div>
+                  <div class="link"><a class="link" target="_blank" href="https://webvr.info/">What's this?</a>
+                  </div>
+                </div>
+                <div class="w-col w-col-2"><img class="icon" src="images/HI_icons_VR-05.png" width="88">
+                  <div class="makesure">on a powerful
+                    <br>computer</div>
+                </div>
+                <div class="w-col w-col-2"><img class="icon" src="images/HI_VRicons-06.png" width="83">
+                  <div class="makesure">with a nice pair of headphones</div>
+                </div>
+                <div class="w-col w-col-3"></div>
+              </div>
+              <div class="button_row w-row">
+                <div class="w-col w-col-4"></div>
+                <div class="w-col w-col-4">
+                  <a id="start-button" class="buttonenter w-button" href="#"></a>
+                </div>
+                <div class="w-col w-col-4"></div>
+              </div>
             </div>
             <div id="coming-soon" class="splash-container" style="display:none;"><img id="coming-img" src="assets/splash/coming_soon.png" style="
                 width: 600px;

@@ -29,6 +29,7 @@ body {
 }
 #start-container {
     display:none;
+    width: 100%;
 }
 
 #start-button {

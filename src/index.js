@@ -65,7 +65,7 @@ document.getElementById('start-button').addEventListener('click',function(event)
 
 
 game.load(function() {
-    document.getElementById('start-container').style.display = "flex";
+    document.getElementById('start-container').style.display = "block";
     document.getElementById('loading-container').style.display = "none";
 });
 
