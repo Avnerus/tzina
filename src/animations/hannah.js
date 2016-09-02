@@ -98,7 +98,7 @@ export default class HannahAnimation extends THREE.Object3D {
             twigGeo = geometry;
         });
 
-        this.loadModelDome(this.BASE_PATH + '/models/shield_s.js', this.BASE_PATH + '/models/dome_s.js', this.BASE_PATH + '/models/collapse_s.js')
+        this.loadModelDome(this.BASE_PATH + '/models/shield_s.js', this.BASE_PATH + '/models/dome_s.js', this.BASE_PATH + '/models/collapse_s.js', this.BASE_PATH + '/models/exitCover.json')
         .then((dome) => {
 
             this.dome = dome;
@@ -253,11 +253,21 @@ export default class HannahAnimation extends THREE.Object3D {
             }
 
             vA.add( this.shieldGeo.vertices[i] );
-            tempA.set( this.lookupTable[i%50]*0.5, this.lookupTable[(i+1)%50]*0.5, this.lookupTable[(i+2)%50]*0.5 );
-            vA.add( tempA );
+            // if( _scale == null){
+                tempA.set( this.lookupTable[i%50]*0.5, this.lookupTable[(i+1)%50]*0.5, this.lookupTable[(i+2)%50]*0.5 );
+                vA.add( tempA );
+            // }
 
             this.domeMorphTargets[i].mesh.position.copy( vA );
 
+            // if( _scale != null){
+                // this.domeMorphTargets[i].mesh.children[1].scale.multiplyScalar( _scale );
+                // TweenMax.to( this.domeMorphTargets[i].mesh.children[1].scale, 1, { x: _scale, y: _scale, z: _scale, ease: Power2.easeOut } );
+                // TweenMax.to( this.domeMorphTargets[i].mesh.children[1].material, 1, { wireframeLinewidth: _scale } );
+            //     this.domeMorphTargets[i].mesh.children[1].material.wireframeLinewidth = _scale;
+            // }
+
+            // particles
             if(i%10==0){
                 if(i/10 != 38)
                     this.particleGroup.emitters[i/10].position.value = this.particleGroup.emitters[i/10].position.value.copy( vA );
@@ -277,7 +287,7 @@ export default class HannahAnimation extends THREE.Object3D {
     }
 
     beDome() {
-        let tmpEndArray = [1,0];
+        let tmpEndArray = [1,0,0];
         TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
         this.noiseFactor = 140;
     }
@@ -290,7 +300,7 @@ export default class HannahAnimation extends THREE.Object3D {
     }
 
     beCollapse() {
-        let tmpEndArray = [0,1];
+        let tmpEndArray = [0,1,0];
         TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
         // change leaf color
         let face, numberOfSides, vertexIndex, point, color;
@@ -322,17 +332,23 @@ export default class HannahAnimation extends THREE.Object3D {
     }
 
     characterDisappear() {
-        let tmpEndArray = [0.5,.9];
-        TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
+        TweenMax.to( this.domeMorphTargets[0].mesh.children[1].material, 1, { wireframeLinewidth: 3 } );
+        // this.noiseFactor = 10;
+        let tmpEndArray = [0,0,0.99];
+        TweenMax.to( this.dome.morphTargetInfluences, 2, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
 
-        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, delay: 5, onComplete: ()=>{
-                                                            this.parent.fullVideo.setOpacity(0.0);
-                                                            tmpEndArray = [0,1];
-                                                            TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
-                                                       } } );
+        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Power3.easeIn, delay: 1, onStart: ()=>{
+                TweenMax.to( this.parent.fullVideo.mesh.rotation, 1.5, { y:Math.PI*2, ease: Power3.easeIn });
+            }, onComplete: ()=>{
+                this.parent.fullVideo.setOpacity(0.0);
+                this.noiseFactor = 140;
+                tmpEndArray = [0,1,0];
+                TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
+                TweenMax.to( this.domeMorphTargets[0].mesh.children[1].material, 1, { wireframeLinewidth: 1 } );
+            } } );
     }
 
-    loadModelDome (modelS, modelD, modelC) {
+    loadModelDome (modelS, modelD, modelC, modelE) {
 
         let promise = new Promise( (resolve, reject) => {
 
@@ -345,7 +361,7 @@ export default class HannahAnimation extends THREE.Object3D {
             loader.load(modelS, (geometry, material) => {
 
                 this.shieldGeo = geometry;
-                console.log(this.shieldGeo.vertices.length);
+                // console.log(this.shieldGeo.vertices.length);
                 
                 loader.load(modelD, (geometryD, materialD) => {
                     let domeGeo = geometryD;
@@ -353,25 +369,20 @@ export default class HannahAnimation extends THREE.Object3D {
                     loader.load(modelC, (geometryC, materialC) => {
                         let collapseGeo = geometryC;
 
-                        // let tempDome = new THREE.Mesh(domeGeo, followMat);
-                        // tempDome.rotation.y = Math.PI;
-                        // tempDome.scale.multiplyScalar(90);
-                        // tempDome.updateMatrix();
+                        loader.load(modelE, (geometryE, materialE) => {
+                            let exitCoverGeo = geometryE;
 
-                        // domeGeo.applyMatrix( tempDome.matrix );
-                        // this.shieldGeo.applyMatrix( tempDome.matrix );
-                        // collapseGeo.applyMatrix( tempDome.matrix );
+                            this.shieldGeo.morphTargets[0] = {name: 't1', vertices: domeGeo.vertices};
+                            this.shieldGeo.morphTargets[1] = {name: 't2', vertices: collapseGeo.vertices};
+                            this.shieldGeo.morphTargets[2] = {name: 't3', vertices: exitCoverGeo.vertices};
+                            this.shieldGeo.computeMorphNormals();
 
-                        this.shieldGeo.morphTargets[0] = {name: 't1', vertices: domeGeo.vertices};
-                        this.shieldGeo.morphTargets[1] = {name: 't2', vertices: collapseGeo.vertices};
-                        this.shieldGeo.computeMorphNormals();
-
-                        let dome = new THREE.Mesh(this.shieldGeo, domeMat);
-                        dome.name = "dome";
-                        resolve(dome);
+                            let dome = new THREE.Mesh(this.shieldGeo, domeMat);
+                            dome.name = "dome";
+                            resolve(dome);
+                        });
                     });
                 });
-                
             });
         });
         return promise;
