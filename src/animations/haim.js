@@ -181,6 +181,7 @@ export default class HaimAnimation extends THREE.Object3D {
                 frameCount: 16,
                 loop: 3
             },
+            blending: 1,
             depthTest: false
         });
 
