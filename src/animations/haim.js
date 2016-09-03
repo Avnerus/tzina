@@ -28,7 +28,7 @@ export default class HaimAnimation extends THREE.Object3D {
         this.sequenceConfig = [
             { time: 10,  anim: ()=>{this.tubeDown(1)} },
             { time: 30, anim: ()=>{this.tubeOut(0.5)} },    // 30
-            { time: 254, anim: ()=>{this.characterDisappear()} }    //254
+            { time: 252, anim: ()=>{this.characterDisappear()} }    //254
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
