@@ -513,7 +513,7 @@ export default class HaimAnimation extends THREE.Object3D {
             this.particleGroup.emitters[i].position.value = new THREE.Vector3(0, emitterPos.y, 0);
         }
 
-        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, delay: 5, onStart: ()=>{
+        TweenMax.to( this.parent.fullVideo.mesh.scale, 1.5, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, delay: 5, onStart: ()=>{
                         // 1. detach clouds from tubes
                         // 2. tubes & spine gone
                         for(let i=0; i<this.tubes.length; i++){
