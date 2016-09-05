@@ -130,7 +130,7 @@ export default class Game {
         this.timeController.init();
 
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
-        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.container);
+        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
 
 
         this.animations = {
