@@ -87,15 +87,16 @@ export default class TimeController {
                 event.preventDefault();
                 this.rotateVelocity -= 0.03;
                 this.accelerating = true;
+                event.stopPropagation();
                 break;
             case 39: // right
             case 68: // d
                 event.preventDefault();
                 this.rotateVelocity += 0.03;
                 this.accelerating = true;
+                event.stopPropagation();
                 break;
         }
-        event.stopPropagation();
     }
 
     handleKeyUp(event) {
@@ -106,9 +107,9 @@ export default class TimeController {
             case 68: // d
                 event.preventDefault();
                 this.accelerating = false;
+                event.stopPropagation();
                 break;
         }
-        event.stopPropagation();
     }
 
     update(dt) {
