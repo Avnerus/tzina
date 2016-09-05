@@ -23,6 +23,8 @@ export default class TimeController {
 
         this.wasUsed = false;
         this.done = false;
+
+        this.accelerating = false;
     }
     init() {
         console.log("Initializing Time Controller", this.element)
@@ -30,7 +32,9 @@ export default class TimeController {
         this.angles = this.times.map((time) => {return time * 15});
         this.angles.push(360);
         console.log("Chapter times", this.times, this.angles);
-        document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
+        //document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
+        document.addEventListener('keydown', (e) => { this.handleKeyDown(e)});
+        document.addEventListener('keyup', (e) => { this.handleKeyUp(e)});
         this.currentHour = 0;
         this.nextHour = this.times[1];
 
@@ -76,6 +80,38 @@ export default class TimeController {
         this.scene.add(this.prevChapterTitle)
     }
 
+    handleKeyDown(event) {
+        switch( event.keyCode ) {
+            case 37: // left
+            case 65: // a
+                event.preventDefault();
+                this.rotateVelocity -= 0.03;
+                this.accelerating = true;
+                event.stopPropagation();
+                break;
+            case 39: // right
+            case 68: // d
+                event.preventDefault();
+                this.rotateVelocity += 0.03;
+                this.accelerating = true;
+                event.stopPropagation();
+                break;
+        }
+    }
+
+    handleKeyUp(event) {
+        switch( event.keyCode ) {
+            case 37: // left
+            case 65: // a
+            case 39: // right
+            case 68: // d
+                event.preventDefault();
+                this.accelerating = false;
+                event.stopPropagation();
+                break;
+        }
+    }
+
     update(dt) {
         if (this.active && this.rotateVelocity != 0) {
             if (!this.wasUsed) {
@@ -104,6 +140,19 @@ export default class TimeController {
                 }
             }
             this.sky.setTime(this.currentHour);
+        }
+        if (!this.accelerating) {
+            if (this.rotateVelocity < 0) {
+                this.rotateVelocity = Math.min(0, this.rotateVelocity + 0.03);
+                if (this.rotateVelocity == 0) {
+                    this.stoppedTurning();
+                }
+            } else if (this.rotateVelocity > 0) {
+                this.rotateVelocity = Math.max(0, this.rotateVelocity - 0.03);
+                if (this.rotateVelocity == 0) {
+                    this.stoppedTurning();
+                }
+            } 
         }
     }
 
@@ -179,16 +228,18 @@ export default class TimeController {
         } else {
             if (this.rotateVelocity != 0) {
                 // We stopped
-                
-                let closestAngle = MathUtil.closestValue(this.angles, this.currentRotation);
-                let closestHour = this.getHour(closestAngle);
-
-                this.stickToAngle(closestAngle);
-                this.currentHour = closestHour;
+                this.stoppedTurning();
             }
             this.rotateVelocity = 0;
         }
     } 
+    stoppedTurning() {
+        let closestAngle = MathUtil.closestValue(this.angles, this.currentRotation);
+        let closestHour = this.getHour(closestAngle);
+
+        this.stickToAngle(closestAngle);
+        this.currentHour = closestHour;
+    }
     stickToAngle(closestAngle) {
         let targetRotationY = closestAngle;
         console.log("Target rotationY ", targetRotationY, " from ", this.currentRotation);
@@ -205,6 +256,7 @@ export default class TimeController {
         TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {
             this.currentHour = hour;
             this.updateNextHour();
+            this.showChapterTitle();
             events.emit("hour_updated", this.currentHour);
             events.emit("angle_updated", this.currentHour);
         }, onUpdate: () => {
@@ -266,6 +318,7 @@ export default class TimeController {
         this.sky.setTime(this.currentHour);
         events.emit("hour_updated", this.currentHour);
         events.emit("angle_updated", this.currentHour);
+        this.showChapterTitle();
         this.updateNextHour();
     }
 }
