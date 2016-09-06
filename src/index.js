@@ -23,7 +23,6 @@ game.init();
 var el = document.documentElement;
 
 document.getElementById('start-button').addEventListener('click',function(event) {
-    /*
     if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
         
         var pointer = lock(document.getElementById('game'));
@@ -36,7 +35,7 @@ document.getElementById('start-button').addEventListener('click',function(event)
             });
 
             pointer.request(); 
-    }*/
+    }
 
     
     if (fullscreen.available()) {
