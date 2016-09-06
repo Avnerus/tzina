@@ -46,10 +46,8 @@ export default class KeyboardController {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 this.active = true;
-                this.pointer.request();
             } else {
                 this.active = false;
-                this.pointer.release();
             }
         })
 

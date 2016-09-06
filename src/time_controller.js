@@ -33,8 +33,8 @@ export default class TimeController {
         this.angles.push(360);
         console.log("Chapter times", this.times, this.angles);
         //document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
-        document.addEventListener('keydown', (e) => { this.handleKeyDown(e)});
-        document.addEventListener('keyup', (e) => { this.handleKeyUp(e)});
+        document.addEventListener('keydown', (e) => { this.handleKeyDown(e); return false;}, false);
+        document.addEventListener('keyup', (e) => { this.handleKeyUp(e); return false}, false);
         this.currentHour = 0;
         this.nextHour = this.times[1];
 
