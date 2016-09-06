@@ -4,7 +4,7 @@ var Stats = require('stats.js');
 
 var game = new Game(config);
 var stats = new Stats();
-stats.showPanel(0);
+//stats.showPanel(0);
 
 var fullscreen = require('fullscreen');
 var lock = require('pointer-lock-chrome-tolerant');

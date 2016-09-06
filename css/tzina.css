@@ -62,16 +62,6 @@ body {
   //overflow:visible;
   pointer-events:none;
 }
-#arrows {
-    display: inline-flex;
-    align-items: center;
-    margin: auto;
-    position: relative;
-    top: 25%;
-}
-#arrows img {
-    width: 200px;
-}
 #zoom-arrow {
     display: inline-flex;
     align-items: center;

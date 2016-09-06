@@ -43,7 +43,7 @@ export default class Game {
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
-        //this.gui.init();
+//        this.gui.init();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
@@ -152,6 +152,27 @@ export default class Game {
         this.zoomGuidance.material.opacity = 0;
         this.scene.add(this.zoomGuidance);
 
+
+        let arrowGeo = new THREE.PlaneGeometry( 256, 128 );
+        let loader = new THREE.TextureLoader();
+        loader.load('assets/splash/left_arrow.png', (texture) => {
+            let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
+            material.opacity = 0;
+            this.leftArrow = new THREE.Mesh(arrowGeo, material);
+            this.leftArrow.position.set(-200, -145, 0);
+            this.scene.add(this.leftArrow);
+        });
+        loader.load('assets/splash/right_arrow.png', (texture) => {
+            let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
+            material.opacity = 0;
+            this.rightArrow = new THREE.Mesh(arrowGeo, material);
+            this.rightArrow.position.set(200, -150, 0);
+            this.rightArrow.opacity = 0;
+            this.scene.add(this.rightArrow);
+        });
+
+
+
         this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
     }
 
@@ -220,7 +241,20 @@ export default class Game {
         TweenMax.to(this.zoomGuidance.material, 1, {opacity: targetOpacity});
     }
     hideZoomGuidance() {
-        this.scene.remove(this.zoomGuidance);
+        let targetOpacity = 0;
+        TweenMax.to(this.zoomGuidance.material, 1, {opacity: targetOpacity});
+    }
+
+    showArrows() {
+        let targetOpacity = 1;
+        TweenMax.to(this.leftArrow.material, 1, {opacity: targetOpacity});
+        TweenMax.to(this.rightArrow.material, 1, {opacity: targetOpacity});
+    }
+
+    hideArrows() {
+        let targetOpacity = 0;
+        TweenMax.to(this.leftArrow.material, 1, {opacity: targetOpacity});
+        TweenMax.to(this.rightArrow.material, 1, {opacity: targetOpacity});
     }
 
     start() {
@@ -259,6 +293,7 @@ export default class Game {
         events.on("intro_end", () => {
             console.log("Intro ended");
             this.introAni.start();
+            this.arrowTimer();
         });
 
         this.counter = 0;
@@ -266,9 +301,8 @@ export default class Game {
         events.on("angle_updated", (hour) => {
             if (this.timeController.wasUsed && !this.zoomController.wasUsed && (hour == 17 || hour == 19)) {
                 let lastHour = hour;
-                this.counter++;
                 setTimeout(() => {
-                    if (this.counter >= 2 && this.timeController.currentHour == lastHour && !this.zoomController.wasUsed) {
+                    if (this.timeController.currentHour == lastHour && !this.zoomController.wasUsed) {
                         this.showZoomGuidance();
                         setTimeout(() => {
                             this.hideZoomGuidance();
@@ -282,6 +316,22 @@ export default class Game {
             console.log("Zoom controller used!");
             this.shownZoom = true;
             this.hideZoomGuidance();
+            this.scene.remove(this.zoomGuidance);
+        });
+
+        events.on("time_rotated", () => {
+            this.shownArrows = true;
+            this.scene.remove(this.leftArrow);
+            this.scene.remove(this.rightArrow);
+        });
+
+        events.on("base_position", () => {
+            this.arrowTimer();
+        });
+        events.on("chapter_threshold", (passed) => {
+            if (passed) {
+                this.hideArrows();
+            }
         });
 
         events.on("control_threshold", () => {
@@ -332,6 +382,19 @@ export default class Game {
             } 
         
         });
+    }
+
+    arrowTimer() {
+        if (!this.timeController.wasUsed) {
+            setTimeout(() => {
+                if (!this.timeController.wasd) {
+                    this.showArrows();
+                    setTimeout(() => {
+                        this.hideArrows();
+                    },4000);
+                }
+            }, 3000);
+        } 
     }
 
     animate(t) {
