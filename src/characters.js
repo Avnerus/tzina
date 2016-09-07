@@ -40,12 +40,12 @@ export default [
         basePath : 'assets/characters/itzik',
         mindepth : 0.0,
         maxdepth : 3494.158935547,
-        position : [-14.5, 21.95, 1.57],
-        rotation: [-40, 30, 25],
+        position : [-14.5, 21.95, 1.73],
+        rotation: [-10, 20, 8],
         animation: null,
         uvdy: 0.4889,
         uvdx: 0.0,
-        scale: 0.003 * 0.25,
+        scale: 0.0027 * 0.25,
         animationScale: 0.25,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
