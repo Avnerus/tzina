@@ -131,9 +131,10 @@ export default class TimeController {
             if ((this.currentHour >= this.nextHour && this.nextHour != 0) ||
                 (this.nextHour == 0 && this.currentHour > 0 && this.currentHour < this.times[1])) {
                 this.currentHour = this.nextHour;
+                let roundHour = this.nextHour;
                 this.updateNextHour();
-                events.emit("hour_updated", this.currentHour);
-                events.emit("angle_updated", this.currentHour);
+                events.emit("hour_updated", roundHour);
+                events.emit("angle_updated", roundHour);
 
                 if (!this.done) {
                     this.daySpeed = this.config.daySpeed;
@@ -243,9 +244,10 @@ export default class TimeController {
     stickToAngle(closestAngle) {
         let targetRotationY = closestAngle;
         console.log("Target rotationY ", targetRotationY, " from ", this.currentRotation);
+        let roundHour = targetRotationY / 15;
 
         TweenMax.to(this, 1, {currentRotation: targetRotationY, onComplete: () => {
-            events.emit("angle_updated", this.currentHour);
+            events.emit("angle_updated", roundHour);
         }, onUpdate: () => {
             this.updateSquare();
         }});
