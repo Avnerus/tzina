@@ -4,7 +4,7 @@ var Stats = require('stats.js');
 
 var game = new Game(config);
 var stats = new Stats();
-//stats.showPanel(0);
+stats.showPanel(0);
 
 var fullscreen = require('fullscreen');
 var lock = require('pointer-lock-chrome-tolerant');
@@ -70,7 +70,7 @@ game.load(function() {
 
 function start() {
     document.getElementById('start-container').style.display = "none";
-    document.getElementById('game').appendChild(stats.dom);
+    //document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
     window.addEventListener('vrdisplaypresentchange', resize, true);
