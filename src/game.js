@@ -18,6 +18,7 @@ import SoundManager from './sound_manager'
 import HannahAnimation from './animations/hannah'
 import LupoAnimation from './animations/lupo'
 import HaimAnimation from './animations/haim'
+import ItzikAnimation from './animations/itzik'
 
 export default class Game {
     constructor(config) {
@@ -96,6 +97,24 @@ export default class Game {
             animation: 'Hannah'
             });*/
 
+        this.itzik = new Character({
+            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
+            basePath : 'assets/characters/itzik',
+            mindepth : 2138.454101562,
+            maxdepth : 3047.334472656,
+            position : [-32, 8.1, 152.5],
+            rotation: [0, 0, 0],
+            name: 'Itzik',
+            animation: 'Itzik',
+            uvd: 0.440277,
+            scale: 0.005,
+            animationPosition: [0, 0, 0],
+            animationRotation: [0, 0, 0],
+            space: 7,
+            subtitles: "subtitles"
+        }, this.collisionManager);
+
+        /*
         this.haim = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/haim',
@@ -113,7 +132,6 @@ export default class Game {
             subtitles: "subtitles"
         }, this.collisionManager);
 
-        /*
         this.hannah = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/hanna',
@@ -156,7 +174,8 @@ export default class Game {
         this.animations = {
             // 'Hannah': new HannahAnimation()
            //  'Lupo': new LupoAnimation()
-            'Haim': new HaimAnimation( this.scene, this.renderer )
+            // 'Haim': new HaimAnimation( this.scene, this.renderer )
+            'Itzik': new ItzikAnimation()
         }
 
 
@@ -193,7 +212,8 @@ export default class Game {
             this.sky.applyToMesh(this.square.getSphereMesh());
             //this.scene.add(this.lupo)
             // this.scene.add(this.hannah)
-            this.scene.add(this.haim)
+            // this.scene.add(this.haim)
+            this.scene.add(this.itzik)
 
 
             // DEBUG
@@ -234,7 +254,8 @@ export default class Game {
         this.soundManager.init();
         // this.hannah.init(this.loadingManager, this.animations)
         //this.lupo.init(this.loadingManager, this.animations)
-        this.haim.init(this.loadingManager, this.animations)
+        // this.haim.init(this.loadingManager, this.animations)
+        this.itzik.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
 
         // Animations init
@@ -283,7 +304,8 @@ export default class Game {
             this.keyboardController.setPosition(-35, 10, 177);
             this.sky.transitionTo(17,1);
             // this.hannah.play(); 
-            this.haim.play(); 
+            // this.haim.play(); 
+            this.itzik.play(); 
         } else {
             // Init the intro
 
@@ -343,8 +365,9 @@ export default class Game {
                this.vrControls.update();
             }
         // this.hannah.update(dt,et);
-        //this.lupo.update(dt,et);
-        this.haim.update(dt,et);
+        // this.lupo.update(dt,et);
+        // this.haim.update(dt,et);
+        this.itzik.update(dt,et);
 
         /*
 
