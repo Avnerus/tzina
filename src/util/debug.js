@@ -43,5 +43,9 @@ export default {
         events.emit("add_gui", {folder:name + " - Scale"}, object.scale, "x"); 
         events.emit("add_gui", {folder:name + " - Scale"}, object.scale, "y"); 
         events.emit("add_gui", {folder:name + " - Scale"}, object.scale, "z");
+    },
+
+    fastForward : function(video) {
+        video.currentTime = video.duration - 5;        
     }
 }

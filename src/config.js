@@ -3,7 +3,8 @@ export default {
     basalHeight: 10,
     fps: 60,
     enableFlying: false,
-    skipIntro: false,
+    skipIntro: true,
+    skipCharacters: true,
     movementSpeed: 1,
     daySpeed: 0.002
 //    daySpeed: 0.08

@@ -19,50 +19,57 @@ export default class CharacterController {
     init(loadingManager) {
         console.log("Initializing Character controller");
         Characters.forEach((characterProps) => {
-            let character = new Character(characterProps, this.collisionManager, this.soundManager);
+            let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager);
             character.animation = this.animations[characterProps.animation];
             character.init(loadingManager);
             this.characters[characterProps.name] = character;
         });
         events.on("hour_updated", (hour) => {
+            
+            let clone = this.activeCharacters.slice(0);
+            this.activeCharacters = [];
 
-            console.log("Unloading active characters");
-            this.activeCharacters.forEach((character) => {
-                this.square.mesh.remove(character);
-                character.unload();
-                if (this.addedColliders) {
-                    this.collisionManager.removeCharacter(character);
+            for (let i = 0; i < clone.length; i++) {
+                let character = clone[i];
+
+                if (!character.done) {
+                    this.square.mesh.remove(character);
+                    character.unload();
+                } else {
+                    console.log("Character " + character.props.name + " is still active");
+                    this.activeCharacters.push(character);
                 }
-            });
-            this.activeCharacters = [];            
+                if (character.addedColliders) {
+                    console.log("Removing colliders: " + character.props.name);
+                    this.collisionManager.removeCharacter(character);
+                    character.addedColliders = false;
+                }
+            }
 
             console.log("Loading characters for ", hour);
             
             let chapter = _.find(Chapters, {hour});
             chapter.characters.forEach((characterName) => {
-                if (this.characters[characterName]) {
-                    this.activeCharacters.push(this.characters[characterName]);
+                if (this.characters[characterName] && !this.characters[characterName].done) {
+                    let character = this.characters[characterName];
+                    this.activeCharacters.push(character);
+                    this.square.mesh.add(character);
+                    character.load();
+                    character.play();
                 }
             });
 
-            this.activeCharacters.forEach((character) => {
-                this.square.mesh.add(character);
-                character.load();
-                character.play();
                 //DebugUtil.positionObject(character, character.props.name, character.props.rotation);
-            });
-
-            this.addedColliders = false;
 
         });
         events.on("angle_updated", (hour) => {
-            if (!this.addedColliders) {
-                this.activeCharacters.forEach((character) => {
+            this.activeCharacters.forEach((character) => {
+                if (!character.done && !character.addedColliders) {
+                    console.log("Adding colliders: " + character.props.name);
                     this.collisionManager.addCharacter(character);
-                });
-
-                this.addedColliders = true;
-            }
+                    character.addedColliders = true;
+                }
+            });
         });
     }
 

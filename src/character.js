@@ -2,10 +2,11 @@ import VideoRGBD from './util/video_rgbd'
 import DebugUtil from './util/debug'
 
 export default class Character extends THREE.Object3D {
-    constructor(props, collisionManager, soundManager) {
+    constructor(config, props, collisionManager, soundManager) {
         super();
         this.collisionManager = collisionManager;
         this.soundManager = soundManager;
+        this.config = config;
 
         this.idleVideo = new VideoRGBD({
             mindepth: props.mindepth,
@@ -134,10 +135,12 @@ export default class Character extends THREE.Object3D {
     }
 
     unload() {
-        this.fullVideo.unload();
-        this.idleVideo.unload();
-        if (this.subtitlesVideo) {
-            this.subtitlesVideo.src = "";
+        if (!this.done) {
+            this.fullVideo.unload();
+            this.idleVideo.unload();
+            if (this.subtitlesVideo) {
+                this.subtitlesVideo.src = "";
+            }
         }
         //this.remove(this.animation);
         this.active = false;
@@ -270,12 +273,10 @@ export default class Character extends THREE.Object3D {
         }
         this.fullVideo.mesh.visible = true;
         this.idleVideo.mesh.visible = false;
-/*
-        if (this.props.name == "Hannah") {
-            this.fullVideo.video.currentTime = 285;
-        } else {
-            this.fullVideo.video.currentTime = 250;
-        }*/
+
+        if(this.config.skipCharacters) {
+            DebugUtil.fastForward(this.fullVideo.video);
+        }
 
         this.fullVideo.play();
         if (this.subtitlesReady) {

@@ -222,6 +222,7 @@ export default class Game {
         this.introAni.init(this.loadingManager);
 
         // Characters
+        console.log("Initializing characters");
         this.characterController.init(this.loadingManager);
 
         // WebVR
@@ -233,7 +234,7 @@ export default class Game {
           isUndistorted: false // Default: false.
         };
         this.vrManager = new WebVRManager(this.renderer, this.vrEffect, params);
-
+        console.log("VR Manager: ", this.vrManager);
     }
 
     showZoomGuidance() {
