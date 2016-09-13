@@ -70,12 +70,14 @@ export default class TimeController {
              antialias: true 
         }
         this.chapterTitle = new MeshText2D("SPRITE", TEXT_DEFINITION)
+        this.chapterTitle.scale.set(0.3, 0.3, 0.3);
         this.chapterTitle.visible = false;
 
         this.prevChapterTitle = new MeshText2D("SPRITE", TEXT_DEFINITION)
+        this.prevChapterTitle.scale.set(0.3, 0.3, 0.3);
         this.prevChapterTitle.visible = false;
 
-        //DebugUtil.positionObject(this.chapterTitle, "text");
+        DebugUtil.positionObject(this.chapterTitle, "text");
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
     }
@@ -275,12 +277,7 @@ export default class TimeController {
             this.prevChapterTitle.material.opacity = this.chapterTitle.material.opacity;
             TweenMax.to(this.prevChapterTitle.material, 1, {opacity: 0});
         }
-        let targetOpacity;
-        if (this.currentHour == 17 || this.currentHour == 19) {
-            targetOpacity = 1.0;
-        } else {
-            targetOpacity = 0.3;
-        }
+        let targetOpacity = 1.0;
         this.chapterTitle.text = chapter.hour + ":00 - " + chapter.name;
         this.chapterTitle.visible = true;
         this.chapterTitle.position.fromArray(chapter.titlePosition);
@@ -294,11 +291,14 @@ export default class TimeController {
     }
 
     turnOnChapterSun() {
-        if (this.currentHour == 17 ) {
+        if (this.currentHour == 17 || this.currentHour == 9 ) {
             this.square.turnOnSun("9");
-        } else if (this.currentHour == 19) {
+        } else if (this.currentHour == 19 || this.currentHour == 7) {
             this.square.turnOnSun("7");
-        } else {
+        } else if (this.currentHour == 12) {
+            this.square.turnOnSun("12");
+        }
+        else {
             if (this.square.currentSun) {
                 this.square.turnOffSun(this.square.currentSun);
             }

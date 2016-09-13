@@ -91,6 +91,7 @@ export default class Sky {
 
         this.updateSunPosition();
 
+        /*
         events.emit("add_gui",{
             onChange: () => {
                 this.updateSunPosition();
@@ -102,7 +103,7 @@ export default class Sky {
                 this.updateSunPosition();
             },
             folder: "Sun",
-        }, this, "azimuth", 0, 1); 
+        }, this, "azimuth", 0, 1); */
 
     }
 

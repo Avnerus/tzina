@@ -32,12 +32,13 @@ export default class ZoomController {
         this.STARTING_POSITION = new THREE.Vector3(
             0,
             50,
-            1400
+            350
+            
         );
         this.MID_ZOOM = new THREE.Vector3(
             0,
             30,
-            900
+            150 
         );
 
         this.CHAPTER_THRESHOLD = 0.45;
@@ -81,7 +82,8 @@ export default class ZoomController {
             return false;
         }, false);
 
-        //events.emit("add_gui",{}, this.camera.position, "z"); 
+        events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "z"); 
+        events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "y"); 
 
         events.on("angle_updated", (hour) => {
             if (!this.done) {

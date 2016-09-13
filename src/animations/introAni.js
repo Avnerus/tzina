@@ -117,13 +117,9 @@ export default class IntroAnimation extends THREE.Object3D {
             // this.add( this.tree );
 
             let refObj = new THREE.Object3D();
-            refObj.scale.set( 70, 70, 10 );    // 110, 90, 80 // 110, 90, 10
-            refObj.position.set(0,1100,300);    // 0,900,1100 // 0,1500,300
+            refObj.scale.set( 15, 15, 10 );    // 110, 90, 80 // 110, 90, 10
+            refObj.position.set(0,250,200);    // 0,900,1100 // 0,1500,300
             refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
-
-            // FBO_PARTICLES
-            // let particleGeo = new THREE.BoxGeometry(2000,1000,2000);
-            let particleGeo = new THREE.CylinderGeometry( 100, 1000, 500, 32 );
 
             this.positionsForFBO = this.initParticles( refObj, geometry );
 
@@ -175,9 +171,9 @@ export default class IntroAnimation extends THREE.Object3D {
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                gravity: { type: "f", value: 50 }, // 2
+                gravity: { type: "f", value: 12.5 }, // 2
                 mouseRotation: { type: "f", value: 0 }, // 2
-                squareRadius: {type: "f", value: this.sRadius*26},
+                squareRadius: {type: "f", value: this.sRadius*7.5},
                 squareCenterX: {type: "f", value: this.sCenter.x},
                 squareCenterY: {type: "f", value: this.sCenter.y},
                 squareCenterZ: {type: "f", value: this.sCenter.z},

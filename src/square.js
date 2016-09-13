@@ -1,5 +1,6 @@
 import Trees from "./trees"
 import Fountain from "./fountain"
+import DebugUtil from "./util/debug"
 
 const MODEL_PATH = "assets/square/scene.json"
 const WINDOWS_PATH = "assets/square/windows.json"
@@ -22,6 +23,26 @@ export default class Square extends THREE.Object3D{
                 hour: 17,
                 startPosition: [-3, 20, 43],
                 endPosition: [-3.5, 22.1, 18]
+            },
+            {
+                hour: 12,
+                startPosition: [38, 20.5, 8.5],
+                endPosition: [21, 22.1, 5]
+            },
+            {
+                hour: 9,
+                startPosition: [21, 21, 8],
+                endPosition: [21, 22.1, 5]
+            },
+            {
+                hour: 7,
+                startPosition: [-19.3, 20.5, -40],
+                endPosition: [-14.5, 22.1, -17]
+            },
+            {
+                hour: 0,
+                startPosition: [-60, 20.5, -30],
+                endPosition: [-20, 22.1, -8]
             }
         ]
 
@@ -43,16 +64,11 @@ export default class Square extends THREE.Object3D{
             console.log("Load results", results);
             let obj = results[0];
             obj.add(trees);
-            //obj.add(this.fountain);
             obj.add(this.fountain);
             this.windows = results[3];
             this.suns = results[4];
 
             obj.add(this.windows);
-            /*
-            this.suns.scale.set(4,4,4);
-            this.suns.position.y = -80;
-            this.suns.rotation.y = Math.PI * 80 / 180;*/
             obj.add(this.suns);
 
             let textures = results[5];
@@ -61,7 +77,8 @@ export default class Square extends THREE.Object3D{
             obj.rotation.order = "YXZ";
             this.mesh = obj;
             this.fountain.position.set(0.6,24.6, -0.8);
-            this.fountain.scale.set(0.25, 0.25, 0.25);
+            DebugUtil.positionObject(this.fountain, "Fountain");
+
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");
 
@@ -148,11 +165,6 @@ export default class Square extends THREE.Object3D{
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(MODEL_PATH,( obj ) => {
                 console.log("Loaded square ", obj);
-
-                obj.position.y = -80;
-                obj.position.z = 0;
-                obj.position.x = 0;
-                obj.scale.set( 4, 4, 4 );
 
                 this.rotation.y = Math.PI * 80 / 180;
                 this.updateMatrixWorld();

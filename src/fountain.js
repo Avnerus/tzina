@@ -4,8 +4,8 @@ export default class Fountain extends THREE.Object3D  {
         this.BASE_PATH = 'assets/fountain/'
         console.log("Fountain constructed!")
 
-        this.downVelocity = new THREE.Vector3(2,10,0);
-        this.upVelocity = new THREE.Vector3(2,20,0);
+        this.downVelocity = new THREE.Vector3(2,5,0);
+        this.upVelocity = new THREE.Vector3(2,10,0);
 
         this.outerUp = true;
 
@@ -24,7 +24,7 @@ export default class Fountain extends THREE.Object3D  {
         
         // First circle
         let angle = 30;
-        let radius = 8;
+        let radius = 2;
         let position = new THREE.Vector3(0,0,0);
         let rotation = 0;
 
@@ -38,8 +38,8 @@ export default class Fountain extends THREE.Object3D  {
         this.add(this.particleGroup.mesh);
 
         // Second
-        position.y = -2;
-        radius = 14;
+        position.y = -0.5;
+        radius = 3.5;
 
         for (let i = 0; i <= 360; i+= angle ) {
             rotation = i * Math.PI / 180;
@@ -92,7 +92,7 @@ export default class Fountain extends THREE.Object3D  {
                 value: new THREE.Color(0xB7C5C9)
             },
             size: {
-                value: [0.5, 1.0, 0.0]
+                value: [0.4, 0.8, 0.0]
             },
             particleCount: 200,
             opacity: {

@@ -30,7 +30,7 @@ void main() {
     if ( disToSq < squareRadius ) {
         force = normalize(pos - squareCenter);
         force *= bounceFactor;
-        force.x *= 5.0;
+        //force.x *= 5.0;
     }
 
     // decreasing the force gradually
@@ -42,7 +42,7 @@ void main() {
     acce += force;
 
     // wind from mouse
-    wind *= (mouseRotation / disToSq * 300.0);
+    wind *= (mouseRotation / disToSq * 20.0);
     // decreasing the wind gradually
     if ( distance(wind, vec3(0.0))>0.1 ){
         wind /= 2.0;

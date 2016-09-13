@@ -260,7 +260,7 @@ export default class HaimAnimation extends THREE.Object3D {
                 this.puddles.add(puddle);
             }
             this.add(this.puddles);
-            DebugUtil.positionObject(this.puddles, "puddle");
+            //DebugUtil.positionObject(this.puddles, "puddle");
         });
     }
 

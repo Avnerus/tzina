@@ -43,7 +43,7 @@ export default class Game {
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
-//        this.gui.init();
+        this.gui.init();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
@@ -187,24 +187,21 @@ export default class Game {
             this.scene.add(this.introAni);
 
 
-            /*
             let cube = DebugUtil.adjustableCube(
-                new THREE.Vector3(),
-                "Red cube",
+                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[5].startPosition),
+                "Ramp start",
                 1,
                 0xff0000
             )
-            this.scene.add(cube); */
+            this.square.mesh.add( cube );
 
-            /*
-
-            cube = DebugUtil.adjustableCube(
-                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[1].endPosition),
+            let cube2 = DebugUtil.adjustableCube(
+                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[5].endPosition),
                 "Ramp end",
                 1,
                 0x00ffff
             )
-            this.square.mesh.add( cube );*/
+            this.square.mesh.add( cube2 );
 
             onLoad();
         };
@@ -280,7 +277,7 @@ export default class Game {
         this.square.fountain.startCycle();
 
         if (this.config.skipIntro) {
-            this.timeController.transitionTo(17,1); //17
+            this.timeController.transitionTo(12,1); //17
             setTimeout(() => {
                 events.emit("intro_end");
             },3000)

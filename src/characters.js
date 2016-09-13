@@ -13,7 +13,7 @@ export default [
         animationScale: 0.25,
         animationPosition: [0,-0.3,-0.55],
         animationRotation: [15, 0, 2],
-        space: 12,
+        space: 3,
         volume: 0.2,
         subtitles: null
     },
@@ -31,8 +31,8 @@ export default [
         animationScale: 0.25,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 12,
-        introSpace: 25,
+        space: 3,
+        introSpace: 6,
         subtitles: null
     },
     {
@@ -49,8 +49,8 @@ export default [
         animationScale: 0.25,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 12,
-        introSpace: 28,
+        space: 3,
+        introSpace: 7,
         subtitles: true
     },
     {
@@ -68,7 +68,7 @@ export default [
         animationScale: 0.25,
         animationPosition: [0.45, -0.3, 0.25],
         animationRotation: [-4, -23, -9],
-        space: 16,
+        space: 4,
         volume: 0.1,
         subtitles: true
     }
