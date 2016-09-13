@@ -74,7 +74,7 @@ export default class KeyboardController {
                 case 39: // right
                 case 68: // d
                     event.preventDefault();
-              //      this.moveRight = true;
+                    this.moveRight = true;
                     break;
 
                 case 32: // space

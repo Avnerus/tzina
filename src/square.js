@@ -76,7 +76,7 @@ export default class Square extends THREE.Object3D{
 
             obj.rotation.order = "YXZ";
             this.mesh = obj;
-            this.fountain.position.set(0.6,24.6, -0.8);
+            this.fountain.position.set(0.8,23.6, -0.6);
             DebugUtil.positionObject(this.fountain, "Fountain");
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);

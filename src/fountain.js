@@ -4,8 +4,8 @@ export default class Fountain extends THREE.Object3D  {
         this.BASE_PATH = 'assets/fountain/'
         console.log("Fountain constructed!")
 
-        this.downVelocity = new THREE.Vector3(2,5,0);
-        this.upVelocity = new THREE.Vector3(2,10,0);
+        this.downVelocity = new THREE.Vector3(1.5,6,0);
+        this.upVelocity = new THREE.Vector3(1.5,8,0);
 
         this.outerUp = true;
 
@@ -24,7 +24,7 @@ export default class Fountain extends THREE.Object3D  {
         
         // First circle
         let angle = 30;
-        let radius = 2;
+        let radius = 2.0;
         let position = new THREE.Vector3(0,0,0);
         let rotation = 0;
 
@@ -34,7 +34,6 @@ export default class Fountain extends THREE.Object3D  {
             position.z = Math.sin(rotation) * radius;
             this.createTrickle(position, rotation, this.downVelocity);
         }
-        //this.particleGroup.mesh.frustumCulled = false;
         this.add(this.particleGroup.mesh);
 
         // Second
@@ -51,7 +50,7 @@ export default class Fountain extends THREE.Object3D  {
     }
 
     update(dt) {
-       this.particleGroup.tick(dt * 0.8); 
+       this.particleGroup.tick(dt * 0.4); 
     }
 
     startCycle() {
@@ -83,7 +82,7 @@ export default class Fountain extends THREE.Object3D  {
                 static: true
             },
             acceleration: {
-                value: new THREE.Vector3(0,-15,0)
+                value: new THREE.Vector3(0,-12,0)
             },
             velocity: {
                 value: velocity
@@ -92,7 +91,7 @@ export default class Fountain extends THREE.Object3D  {
                 value: new THREE.Color(0xB7C5C9)
             },
             size: {
-                value: [0.4, 0.8, 0.0]
+                value: [0.2, 0.4, 0.0]
             },
             particleCount: 200,
             opacity: {
@@ -101,7 +100,7 @@ export default class Fountain extends THREE.Object3D  {
             transparent: true,
             wiggle: {
                 value: 3,
-                spread: 3
+                spread: 2
             }
         });
 
