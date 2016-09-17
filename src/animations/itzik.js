@@ -39,6 +39,7 @@ export default class ItzikAnimation extends THREE.Object3D {
 
 
         //
+        this.perlin = new ImprovedNoise();
         this.loadingManager.itemStart("ItzikAnim");
         this.perlin = new ImprovedNoise();
         let tex_loader = new THREE.TextureLoader(this.loadingManager);
@@ -55,6 +56,10 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.b_radius = 20;
         this.clouds = [];
         this.items = [];
+        this.itemIsMoving = [];
+        for(let i=0; i<this.benchCount; i++){
+            this.itemIsMoving.push(false);
+        }
         
         this.cloudFiles = [ this.BASE_PATH + "/models/clouds/cloud_0.json", this.BASE_PATH + "/models/clouds/cloud_1.json",
                             this.BASE_PATH + "/models/clouds/cloud_2.json", this.BASE_PATH + "/models/clouds/cloud_3.json",
@@ -64,9 +69,9 @@ export default class ItzikAnimation extends THREE.Object3D {
 
         this.itemFiles = [ this.BASE_PATH + "/models/items/1_baguette.json", this.BASE_PATH + "/models/items/2_coke.json",
                            this.BASE_PATH + "/models/items/3_newspaper.json", this.BASE_PATH + "/models/items/4_soccer.json",
-                           this.BASE_PATH + "/models/items/5_dollhouse.json", this.BASE_PATH + "/models/items/1_baguette.json",
-                           this.BASE_PATH + "/models/items/2_coke.json", this.BASE_PATH + "/models/items/3_newspaper.json",
-                           this.BASE_PATH + "/models/items/4_soccer.json", this.BASE_PATH + "/models/items/5_dollhouse.json"];
+                           this.BASE_PATH + "/models/items/5_cigarettes.json", this.BASE_PATH + "/models/items/6_bags.json",
+                           this.BASE_PATH + "/models/items/7_bucket.json", this.BASE_PATH + "/models/items/8_soccerFlat.json",
+                           this.BASE_PATH + "/models/items/9_dollhouse.json", this.BASE_PATH + "/models/items/9_dollhouse.json"];
         this.lightColor = [ 0xfe4226, 0xfe7826, 0xfeae26, 0xfee426, 0xfff39a, 0xa2fff4, 0x87f0ff, 0x87d4ff, 0x0966f4, 0x053d96 ];
         
         let cloudTex = tex_loader.load( this.BASE_PATH + "/images/clouds.jpg" );
@@ -74,8 +79,12 @@ export default class ItzikAnimation extends THREE.Object3D {
 
         let itemsTex = tex_loader.load( this.BASE_PATH + "/images/items.jpg" );
         let itemsMat = new THREE.MeshLambertMaterial({map: itemsTex});
+        let itemsTex2 = tex_loader.load( this.BASE_PATH + "/images/items2.png" );
+        let itemsMat2 = new THREE.MeshLambertMaterial({map: itemsTex2, transparent: true});
+
         let smokeTex = tex_loader.load( this.BASE_PATH + "/images/smoke2.png" );
         this.smokeMat = new THREE.SpriteMaterial( { map: smokeTex, color: 0x053d96, transparent: true, opacity: 0 } ); //0x053d96
+        this.fog = new THREE.Object3D();
 
         for(let i=0; i<this.cloudFiles.length; i++){
             loader.load( this.cloudFiles[i], (geometry, material) => {
@@ -94,7 +103,7 @@ export default class ItzikAnimation extends THREE.Object3D {
 
                 if(i==9){
                     //this.loadModelBench( this.BASE_PATH + "/models/bench.json", loader );
-                    this.loadModelItems( this.itemFiles, itemsMat, loader );
+                    this.loadModelItems( this.itemFiles, itemsMat, itemsMat2, loader );
                 }
             });
         }
@@ -169,6 +178,13 @@ export default class ItzikAnimation extends THREE.Object3D {
                                                                                              onComplete: this.benchOut,
                                                                                              onCompleteParams: [this, i] } );
         }
+
+        this.itemIsMoving[_seq] = true;
+        if(_seq==3){
+            TweenMax.to( this.benchGroup.children[3].children[1].rotation, 1, {z:1, repeat: -1, yoyo: true, ease: Power1.easeInOut} );
+            // TweenMax.to( this.benchGroup.children[3].children[1].position, 1, {z:0.5, repeat: -1, yoyo: true, ease: Power1.easeInOut} );
+        }
+        
     }
 
     benchOut( _this, _index ) {
@@ -178,35 +194,47 @@ export default class ItzikAnimation extends THREE.Object3D {
     characterDisappear() {
         TweenMax.to( this.smokeMat, 2, {opacity: 1});
 
-        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Power3.easeIn, delay: 2.5, onComplete: ()=>{
+        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Power3.easeIn, delay: 3.5, onComplete: ()=>{
                 this.parent.fullVideo.setOpacity(0.0);
                 TweenMax.to( this.smokeMat, 3, {opacity: 0});
             } } );
     }
 
 
-    loadModelItems( urls, mat, loader) {
+    loadModelItems( urls, mat, mat2, loader) {
         for(let i=0; i<urls.length; i++){
             loader.load( urls[i], (geometry, material) => {
 
-                if(i!=9){
+                if(i==3){
+                    geometry.applyMatrix(new THREE.Matrix4().makeTranslation( -2, -1.5, 0 ) );
                     let tmpItem = new THREE.Mesh( geometry, mat );
+                    tmpItem.position.set(2,1.5,0);
                     this.items[i] = tmpItem;
-                } else {
+                }
+                else if(i==4 || i==5 || i==6){
+                    let tmpItem = new THREE.Mesh( geometry, mat2 );
+                    this.items[i] = tmpItem;
+                }
+                else if(i==9){
                     // let tmpItem = new THREE.Mesh( geometry, mat );
                     // this.items[i] = tmpItem;
-                    let fog = new THREE.Object3D();
+                    // this.fog = new THREE.Object3D();
+
                     // let spriteMat = new THREE.SpriteMaterial( { map: this.smokeTex, color: 0x053d96, transparent: true, opacity: 0 } ); //0x053d96
                     for(let j=0; j<50; j++){
                         let sprite = new THREE.Sprite( this.smokeMat );
                         sprite.scale.multiplyScalar(3);
                         sprite.position.set( -7*Math.random()+3.5, -10*Math.random()+10, 4+Math.random()*2);
-                        fog.add(sprite);
+                        this.fog.add(sprite);
                     }
 
-                    this.items[i] = fog;
+                    this.items[i] = this.fog;
 
                     this.loadModelBench( this.BASE_PATH + "/models/bench.json", loader );
+                }
+                else {
+                    let tmpItem = new THREE.Mesh( geometry, mat );
+                    this.items[i] = tmpItem;
                 }
             });
         }
@@ -217,16 +245,16 @@ export default class ItzikAnimation extends THREE.Object3D {
 
             for(let i=0; i<this.clouds.length; i++){
                 let benchMat;
-                if(i==0)
-                    benchMat = new THREE.MeshLambertMaterial({color: 0xff0000});
-                else
+                // if(i==0)
+                //     benchMat = new THREE.MeshLambertMaterial({color: 0xff0000});
+                // else
                     benchMat = new THREE.MeshLambertMaterial({color: 0xffffff});
 
                 let tmp_bench = new THREE.Mesh( geometry.clone(), benchMat );
 
                 tmp_bench.position.set( Math.sin(Math.PI*2/10*this.b_offset)*this.b_radius, 0, Math.cos(Math.PI*2/10*this.b_offset)*this.b_radius );
                 tmp_bench.rotation.y = Math.PI*2/10*this.b_offset + Math.PI;
-                tmp_bench.scale.multiplyScalar(0.0015);
+                tmp_bench.scale.multiplyScalar(0.005);
 
                 tmp_bench.add( this.clouds[i] );
                 tmp_bench.add( this.items[i] );
@@ -280,6 +308,12 @@ export default class ItzikAnimation extends THREE.Object3D {
     }
 
     update(dt,et) {
-        // 
+
+        if(this.itemIsMoving[9]){
+            for(let i=0; i<this.fog.children.length; i++){
+                let h = this.perlin.noise(et*0.1, i, 1)/50;
+                this.fog.children[i].position.addScalar( h );
+            }
+        }
     }
 }
