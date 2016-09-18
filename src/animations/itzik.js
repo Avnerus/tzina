@@ -73,7 +73,31 @@ export default class ItzikAnimation extends THREE.Object3D {
                            this.BASE_PATH + "/models/items/7_bucket.json", this.BASE_PATH + "/models/items/8_soccerFlat.json",
                            this.BASE_PATH + "/models/items/9_dollhouse.json", this.BASE_PATH + "/models/items/9_dollhouse.json"];
         this.lightColor = [ 0xfe4226, 0xfe7826, 0xfeae26, 0xfee426, 0xfff39a, 0xa2fff4, 0x87f0ff, 0x87d4ff, 0x0966f4, 0x053d96 ];
-        
+
+        this.benchTexFiles = [ this.BASE_PATH + "/images/benches/1_carpet.jpg", this.BASE_PATH + "/images/benches/2_metal.jpg",
+                               this.BASE_PATH + "/images/benches/3_marble.jpg", this.BASE_PATH + "/images/benches/4_rock.jpg",
+                               this.BASE_PATH + "/images/benches/5_photo.jpg", this.BASE_PATH + "/images/benches/6_wood.jpg",
+                               this.BASE_PATH + "/images/benches/7_sand.jpg", this.BASE_PATH + "/images/benches/8_rust.jpg",
+                               this.BASE_PATH + "/images/benches/9_tiles.jpg", this.BASE_PATH + "/images/benches/10_metal.jpg" ];
+        this.benchTexNRMFiles = [ this.BASE_PATH + "/images/benches/NRM/1_carpet_NRM.png", this.BASE_PATH + "/images/benches/NRM/2_metal_NRM.png",
+                               this.BASE_PATH + "/images/benches/NRM/3_marble_NRM.png", this.BASE_PATH + "/images/benches/NRM/4_rock_NRM.png",
+                               this.BASE_PATH + "/images/benches/NRM/5_photo_NRM.png", this.BASE_PATH + "/images/benches/NRM/6_wood_NRM.png",
+                               this.BASE_PATH + "/images/benches/NRM/7_sand_NRM.png", this.BASE_PATH + "/images/benches/NRM/8_rust_NRM.png",
+                               this.BASE_PATH + "/images/benches/NRM/9_tiles_NRM.png", this.BASE_PATH + "/images/benches/NRM/10_metal_NRM.png" ];
+
+        this.benchTextures = [];
+        this.benchTexturesNRM = [];
+        this.benchMats = [];
+
+        for(let i=0; i<this.benchTexFiles.length; i++){
+            let bt = tex_loader.load( this.benchTexFiles[i] );
+            this.benchTextures.push(bt);
+            let btNRM = tex_loader.load( this.benchTexNRMFiles[i] );
+            this.benchTexturesNRM.push(btNRM);
+            let bm = new THREE.MeshStandardMaterial({map:bt, normalMap:btNRM, roughness:1, metalness:0});
+            this.benchMats.push(bm);
+        }
+
         let cloudTex = tex_loader.load( this.BASE_PATH + "/images/clouds.jpg" );
         let cloudMat = new THREE.MeshLambertMaterial({map: cloudTex});
 
@@ -192,12 +216,21 @@ export default class ItzikAnimation extends THREE.Object3D {
     }
 
     characterDisappear() {
-        TweenMax.to( this.smokeMat, 2, {opacity: 1});
+        TweenMax.to( this.smokeMat, 1, {opacity: 1});
+        TweenMax.to( this.fog.position, 4, {x:0, delay:0.9, ease: Power1.easeInOut});
 
-        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Power3.easeIn, delay: 3.5, onComplete: ()=>{
+        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Power3.easeIn, delay: 9, onComplete: ()=>{
                 this.parent.fullVideo.setOpacity(0.0);
                 TweenMax.to( this.smokeMat, 3, {opacity: 0});
+
+                // rotate bench group infinitely
+                let mathStuff = Math.PI * 2 / this.benchCount;
+                this.benchGroupRotateOn(this, mathStuff);
             } } );
+    }
+
+    benchGroupRotateOn(_this, angle){
+        TweenMax.to( _this.benchGroup.rotation, 2, { y:"+="+angle, ease:Power3.easeInOut, delay:2, onComplete: _this.benchGroupRotateOn, onCompleteParams:[_this, angle]} );
     }
 
 
@@ -227,7 +260,7 @@ export default class ItzikAnimation extends THREE.Object3D {
                         sprite.position.set( -7*Math.random()+3.5, -10*Math.random()+10, 4+Math.random()*2);
                         this.fog.add(sprite);
                     }
-
+                    this.fog.position.x = 7;
                     this.items[i] = this.fog;
 
                     this.loadModelBench( this.BASE_PATH + "/models/bench.json", loader );
@@ -244,13 +277,13 @@ export default class ItzikAnimation extends THREE.Object3D {
         loader.load( url, (geometry, material) => {
 
             for(let i=0; i<this.clouds.length; i++){
-                let benchMat;
+                //let benchMat;
                 // if(i==0)
                 //     benchMat = new THREE.MeshLambertMaterial({color: 0xff0000});
                 // else
-                    benchMat = new THREE.MeshLambertMaterial({color: 0xffffff});
+                    //benchMat = new THREE.MeshLambertMaterial({color: 0xffffff});
 
-                let tmp_bench = new THREE.Mesh( geometry.clone(), benchMat );
+                let tmp_bench = new THREE.Mesh( geometry.clone(), this.benchMats[i] );
 
                 tmp_bench.position.set( Math.sin(Math.PI*2/10*this.b_offset)*this.b_radius, 0, Math.cos(Math.PI*2/10*this.b_offset)*this.b_radius );
                 tmp_bench.rotation.y = Math.PI*2/10*this.b_offset + Math.PI;
