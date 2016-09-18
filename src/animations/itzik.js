@@ -158,6 +158,8 @@ export default class ItzikAnimation extends THREE.Object3D {
         // });
         // 
 
+        this.dummy = {opacity: 1};
+
         //
         this.loadingManager.itemEnd("ItzikAnim");
     }
@@ -219,9 +221,12 @@ export default class ItzikAnimation extends THREE.Object3D {
         TweenMax.to( this.smokeMat, 1, {opacity: 1});
         TweenMax.to( this.fog.position, 4, {x:0, delay:0.9, ease: Power1.easeInOut});
 
-        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, { x:0.00001,y:0.00001,z:0.00001, ease: Power3.easeIn, delay: 9, onComplete: ()=>{
+        TweenMax.to( this.dummy, 3, { opacity:0, delay: 10, onUpdate: ()=>{
+                this.parent.fullVideo.setOpacity(this.dummy.opacity);
+            }, onStart: ()=>{
+                TweenMax.to( this.smokeMat, 4, {opacity: 0});
+            }, onComplete: ()=>{
                 this.parent.fullVideo.setOpacity(0.0);
-                TweenMax.to( this.smokeMat, 3, {opacity: 0});
 
                 // rotate bench group infinitely
                 let mathStuff = Math.PI * 2 / this.benchCount;
