@@ -23,6 +23,7 @@ import HannahAnimation from './animations/hannah'
 import LupoAnimation from './animations/lupo'
 import MiriamAnimation from './animations/miriam'
 import HaimAnimation from './animations/haim'
+import ItzikAnimation from './animations/itzik'
 
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from '../lib/text2d/index'
@@ -136,7 +137,8 @@ export default class Game {
         this.animations = {
             'Hannah' : new HannahAnimation(),
             'Miriam' : new MiriamAnimation(this.renderer),
-            'Haim' : new HaimAnimation(this.renderer)
+            'Haim' : new HaimAnimation(this.renderer),
+            'Itzik' : new ItzikAnimation()
         }
 
         this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager);
