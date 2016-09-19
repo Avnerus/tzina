@@ -1,6 +1,5 @@
 import ImprovedNoise from '../util/improved_noise'
 import DebugUtil from '../util/debug'
-TweenPlugin.activate([EndArrayPlugin]);
 
 export default class ItzikAnimation extends THREE.Object3D {
     constructor() {
