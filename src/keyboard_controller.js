@@ -31,7 +31,7 @@ export default class KeyboardController {
         this.pointer = lock(document.getElementById('game'));
 
         events.on("start_zoom" ,() => {
-            this.active = false;
+        //    this.active = false;
 
         });
 
@@ -62,7 +62,7 @@ export default class KeyboardController {
                 case 37: // left
                 case 65: // a
                     event.preventDefault();
-                    this.moveLeft = true; 
+                    //this.moveLeft = true; 
                     break;
 
                 case 40: // down
@@ -74,7 +74,7 @@ export default class KeyboardController {
                 case 39: // right
                 case 68: // d
                     event.preventDefault();
-                    this.moveRight = true;
+                    //this.moveRight = true;
                     break;
 
                 case 32: // space

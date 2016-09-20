@@ -77,7 +77,7 @@ export default class TimeController {
         this.prevChapterTitle.scale.set(0.3, 0.3, 0.3);
         this.prevChapterTitle.visible = false;
 
-        DebugUtil.positionObject(this.chapterTitle, "text");
+        //DebugUtil.positionObject(this.chapterTitle, "text");
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
     }

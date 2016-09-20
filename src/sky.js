@@ -1,6 +1,6 @@
 import Clouds from './clouds';
 
-const SUN_DISTANCE = 10000;
+const SUN_DISTANCE = 80;
 
 
 const States = {
@@ -9,7 +9,7 @@ const States = {
 }
 
 export default class Sky {
-    constructor(loadingManager, dirLight, hemiLight) {
+    constructor(loadingManager, scene, dirLight, hemiLight) {
         console.log("Sky constructed!")
         const glslify = require('glslify');
 
@@ -17,7 +17,7 @@ export default class Sky {
         this.sky_fs = glslify('./shaders/sky_fs.glsl')
         this.sky_vs = glslify('./shaders/sky_vs.glsl')
 
-        this.clouds = new Clouds(loadingManager);
+        this.scene = scene;
 
         this.sunPosition = new THREE.Vector3(0,0,0);
         this.dirLight = dirLight;
@@ -56,7 +56,7 @@ export default class Sky {
             }
         ]
     }
-    init() {
+    init(loadingManager) {
 
         //var imageTexture = THREE.ImageUtils.loadTexture('assets/test/venice.jpeg');
 
@@ -71,7 +71,7 @@ export default class Sky {
             uniforms: {
                 luminance:	 { type: "f", value: 1.1 },
                 turbidity:	 { type: "f", value: 5 },
-                reileigh:	 { type: "f", value: 1 },
+                reileigh:	 { type: "f", value: 1.5 },
                 mieCoefficient:	 { type: "f", value: 0.005 },
                 mieDirectionalG: { type: "f", value: 0.8 },
                 sunPosition: 	 { type: "v3", value: new THREE.Vector3() },
@@ -81,31 +81,94 @@ export default class Sky {
             fragmentShader: this.sky_fs
         } );
 
+        this.clouds = new Clouds(loadingManager);
+
         // Chrome Linux workaround
-        setTimeout(()=> {
-                 this.clouds.init(this.shader);
+        this.clouds.init(this.shader);
                  //this.clouds.startTransition();
-        },0);
 
         this.setState(States.STATIC);
 
+        this.loadLensFlare(loadingManager);
+
         this.updateSunPosition();
 
-        /*
+
+
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.luminance, "value"); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.turbidity, "value"); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.reileigh, "value"); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieCoefficient, "value"); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieDirectionalG, "value"); 
+
         events.emit("add_gui",{
             onChange: () => {
                 this.updateSunPosition();
             },
-            folder: "Sun",
+            folder: "Sun shader",
         }, this, "inclination", 0, 1); 
         events.emit("add_gui",{
             onChange: () => {
                 this.updateSunPosition();
             },
-            folder: "Sun",
-        }, this, "azimuth", 0, 1); */
+            folder: "Sun shader",
+        }, this, "azimuth", 0, 1);
 
     }
+
+    loadLensFlare(loadingManager) {
+        // Lens flares - http://threejs.org/examples/webgl_lensflares.html
+        console.log("Loading lens flares");
+
+        let textureLoader = new THREE.TextureLoader(loadingManager);
+
+        let textureFlare0 = textureLoader.load( "assets/lensflare/lensflare0.png" );
+        let textureFlare2 = textureLoader.load( "assets/lensflare/lensflare2.png" );
+        let textureFlare3 = textureLoader.load( "assets/lensflare/lensflare3.png" );
+
+        let lightHSL = this.dirLight.color.getHSL();
+        
+        let flareColor = new THREE.Color( 0xffffff );
+        flareColor.setHSL( lightHSL.h, lightHSL.s, lightHSL.l + 0.5 );
+
+        this.lensFlare = new THREE.LensFlare( textureFlare0, 200, 0.0, THREE.AdditiveBlending, flareColor );
+
+        this.lensFlare.add( textureFlare2, 512, 0.0, THREE.AdditiveBlending );
+        this.lensFlare.add( textureFlare2, 512, 0.0, THREE.AdditiveBlending );
+        this.lensFlare.add( textureFlare2, 512, 0.0, THREE.AdditiveBlending );
+
+        this.lensFlare.add( textureFlare3, 60, 0.6, THREE.AdditiveBlending );
+        this.lensFlare.add( textureFlare3, 70, 0.7, THREE.AdditiveBlending );
+        this.lensFlare.add( textureFlare3, 120, 0.9, THREE.AdditiveBlending );
+        this.lensFlare.add( textureFlare3, 70, 1.0, THREE.AdditiveBlending );
+
+        this.lensFlare.customUpdateCallback = this.lensFlareUpdateCallback;
+
+        this.scene.add( this.lensFlare );
+    }
+
+    lensFlareUpdateCallback( object ) {
+
+       let f, fl = object.lensFlares.length;
+       let flare;
+       let vecX = -object.positionScreen.x * 2;
+       let vecY = -object.positionScreen.y * 2;
+
+
+       for( f = 0; f < fl; f++ ) {
+
+           flare = object.lensFlares[ f ];
+
+           flare.x = object.positionScreen.x + vecX * flare.distance;
+           flare.y = object.positionScreen.y + vecY * flare.distance;
+
+           flare.rotation = 0;
+       }
+
+       object.lensFlares[ 2 ].y += 0.025;
+       object.lensFlares[ 3 ].rotation = object.positionScreen.x * 0.5 + THREE.Math.degToRad( 45 );
+
+   }
 
     setTime(time) {
         let baseTime = this.HOURS_DEFINITION[this.baseTimeIndex].time;
@@ -197,6 +260,9 @@ export default class Sky {
         this.shader.uniforms.sunPosition.value.copy(this.sunPosition);
 
         this.dirLight.position.copy(this.sunPosition);
+        if (this.lensFlare) {
+            this.lensFlare.position.copy(this.sunPosition);
+        }
     }
 
     updateHemiLght() {

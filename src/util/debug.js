@@ -47,5 +47,12 @@ export default {
 
     fastForward : function(video) {
         video.currentTime = video.duration - 5;        
+    },
+
+    colorPicker: function(name, object, prop) {
+        let lightPicker  = {color: [object[prop].r * 255, object[prop].g * 255, object[prop].b * 255]};
+        events.emit("add_gui", {folder:name, color: true, listen:true, onChange: () => {
+            object[prop].setRGB(lightPicker.color[0] / 255, lightPicker.color[1] / 255, lightPicker.color[2] / 255);
+        }}, lightPicker, "color"); 
     }
 }
