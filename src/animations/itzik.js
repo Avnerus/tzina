@@ -110,7 +110,7 @@ export default class ItzikAnimation extends THREE.Object3D {
                 let tmpCloud = new THREE.Mesh( geometry, cloudMat );
 
                 // add point light
-                    let pointLight = new THREE.PointLight( this.lightColor[i], 1, 15 );
+                    let pointLight = new THREE.PointLight( this.lightColor[i], 1, 2 );
                     pointLight.position.z = 10;
                     tmpCloud.add( pointLight );
 
@@ -154,6 +154,8 @@ export default class ItzikAnimation extends THREE.Object3D {
         // 
 
         this.dummy = {opacity: 1};
+
+        // DebugUtil.positionObject(this, "Itzik");
 
         //
         this.loadingManager.itemEnd("ItzikAnim");
@@ -341,7 +343,6 @@ export default class ItzikAnimation extends THREE.Object3D {
     }
 
     update(dt,et) {
-
         if(this.itemIsMoving[9]){
             for(let i=0; i<this.fog.children.length; i++){
                 let h = this.perlin.noise(et*0.1, i, 1)/50;

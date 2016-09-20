@@ -113,7 +113,7 @@ export default class IntroAnimation extends THREE.Object3D {
             this.trees.scale.multiplyScalar(0.2);
             this.trees.position.y = 140;
             this.add(this.trees);
-            DebugUtil.positionObject(this.trees, "TREE");
+            // DebugUtil.positionObject(this.trees, "TREE");
 
             // this.tree = new THREE.Points( geometry, material );
             // this.tree.scale.set( 150, 130, 100 );
