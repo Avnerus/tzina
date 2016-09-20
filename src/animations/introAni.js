@@ -2,6 +2,7 @@ import ImprovedNoise from '../util/improved_noise'
 import TextureAnimator from '../util/texture_animator'
 import GeometryUtils from '../util/GeometryUtils'
 import FBO from '../util/fbo'
+import DebugUtil from '../util/debug'
 import EndArrayPlugin from '../util/EndArrayPlugin'
 TweenPlugin.activate([EndArrayPlugin]);
 
@@ -90,25 +91,29 @@ export default class IntroAnimation extends THREE.Object3D {
             // geometry.computeFaceNormals();
             console.log(geometry);
 
-            let material = new THREE.PointsMaterial( { color: 0xffffff, size: 3 } );
-            let materials = [ new THREE.PointsMaterial( { color: 0xffffff, size: 3 } ),
-                              new THREE.PointsMaterial( { color: 0xff0000, size: 3 } ),
-                              new THREE.PointsMaterial( { color: 0x00ffff, size: 3 } ) ];
+            let material = new THREE.PointsMaterial( { color: 0xffffff, size: 1 } );
+            let materials = [ new THREE.PointsMaterial( { color: 0xffffff, size: 1 } ),
+                              new THREE.PointsMaterial( { color: 0xff0000, size: 1 } ),
+                              new THREE.PointsMaterial( { color: 0x00ffff, size: 1 } ) ];
 
             // scale, position, rotation
             let treeTransformer = [ [new THREE.Vector3(70, 70, 10), new THREE.Vector3(0,1100,300), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)],
                                     [new THREE.Vector3(50, 50, 50), new THREE.Vector3(500,800,1000), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2*(1-1/2)) ],
                                     [new THREE.Vector3(65, 40, 50), new THREE.Vector3(-500,900,1000), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2*(1+1/2))] ];
             
-            this.trees = [];
+            this.trees = new THREE.Object3D();
             for(let i=0; i<treeTransformer.length; i++){
                 let tree = new THREE.Points( geometry.clone(), materials[i] );
                 tree.scale.set( treeTransformer[i][0].x, treeTransformer[i][0].y, treeTransformer[i][0].z );
                 tree.position.set( treeTransformer[i][1].x, treeTransformer[i][1].y, treeTransformer[i][1].z );
                 tree.rotation.set( treeTransformer[i][2].x, treeTransformer[i][2].y, treeTransformer[i][2].z );
-                this.add( tree );
-                this.trees.push( tree );
+                //this.add( tree );
+                this.trees.add( tree );
             }
+            this.trees.scale.multiplyScalar(0.2);
+            this.trees.position.y = 140;
+            this.add(this.trees);
+            DebugUtil.positionObject(this.trees, "TREE");
 
             // this.tree = new THREE.Points( geometry, material );
             // this.tree.scale.set( 150, 130, 100 );
