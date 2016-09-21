@@ -199,22 +199,8 @@ export default class Game {
             this.introAni.initFBOParticle();
             this.scene.add(this.introAni);
 
+            DebugUtil.positionEntry(this.square.ENTRY_POINTS[4], this.square.mesh, this.scene);
 
-            let cube = DebugUtil.adjustableCube(
-                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[5].startPosition),
-                "Ramp start",
-                1,
-                0xff0000
-            )
-            this.square.mesh.add( cube );
-
-            let cube2 = DebugUtil.adjustableCube(
-                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[5].endPosition),
-                "Ramp end",
-                1,
-                0x00ffff
-            )
-            this.square.mesh.add( cube2 );
 
             onLoad();
         };
@@ -290,7 +276,7 @@ export default class Game {
         this.square.fountain.startCycle();
 
         if (this.config.skipIntro) {
-            this.timeController.transitionTo(9,1); //17
+            this.timeController.transitionTo(7,1); //17
             setTimeout(() => {
                 events.emit("intro_end");
             },3000)

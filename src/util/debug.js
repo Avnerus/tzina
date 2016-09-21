@@ -54,5 +54,34 @@ export default {
         events.emit("add_gui", {folder:name, color: true, listen:true, onChange: () => {
             object[prop].setRGB(lightPicker.color[0] / 255, lightPicker.color[1] / 255, lightPicker.color[2] / 255);
         }}, lightPicker, "color"); 
+    }, 
+
+    positionEntry : function (entry,square, scene) {
+    
+        let cube = this.adjustableCube(
+            new THREE.Vector3().fromArray(entry.startPosition),
+            "Ramp start",
+            1,
+            0xff0000
+        )
+        square.add( cube );
+
+        let cube2 = this.adjustableCube(
+            new THREE.Vector3().fromArray(entry.endPosition),
+            "Ramp end",
+            1,
+            0x00ffff
+        )
+        square.add( cube2 );
+
+        if (entry.worldPosition) {
+            let cube3 = this.adjustableCube(
+                new THREE.Vector3().fromArray(entry.worldPosition),
+                "World Point",
+                1,
+                0x00ff00
+            )
+            scene.add(cube3);
+        }
     }
 }

@@ -31,11 +31,12 @@ export default class Square extends THREE.Object3D{
             },
             {
                 hour: 9,
-                startPosition: [21, 21, 8],
+                startPosition: [41, 20.5, 8],
                 endPosition: [21, 22.1, 5]
             },
             {
                 hour: 7,
+                worldPosition: [110,40,130],
                 startPosition: [-19.3, 20.5, -40],
                 endPosition: [-14.5, 22.1, -17]
             },
