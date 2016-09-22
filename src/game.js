@@ -199,7 +199,7 @@ export default class Game {
             this.introAni.initFBOParticle();
             this.scene.add(this.introAni);
 
-            DebugUtil.positionEntry(this.square.ENTRY_POINTS[4], this.square.mesh, this.scene);
+            DebugUtil.positionEntry(this.square.ENTRY_POINTS[5], this.square.mesh, this.scene);
 
 
             onLoad();
@@ -276,7 +276,7 @@ export default class Game {
         this.square.fountain.startCycle();
 
         if (this.config.skipIntro) {
-            this.timeController.transitionTo(7,1); //17
+            this.timeController.transitionTo(0,1); //17
             setTimeout(() => {
                 events.emit("intro_end");
             },3000)

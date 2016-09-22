@@ -87,6 +87,7 @@ export default class ZoomController {
 
         events.on("angle_updated", (hour) => {
             if (!this.done) {
+                if (hour == 24) { hour = 0; }
                 console.log("Zoom Controller: Hour angle updated to ", hour);
                 let entryPoint = _.find(this.square.ENTRY_POINTS, {hour: hour});
                 if (entryPoint) {

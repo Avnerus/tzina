@@ -23,6 +23,8 @@ export default class Sky {
         this.dirLight = dirLight;
         this.hemiLight = hemiLight;
 
+        this.lensFlareActive = false;
+
         this.HOURS_DEFINITION = [
             {
                 time: 0,
@@ -144,7 +146,6 @@ export default class Sky {
 
         this.lensFlare.customUpdateCallback = this.lensFlareUpdateCallback;
 
-        this.scene.add( this.lensFlare );
     }
 
     lensFlareUpdateCallback( object ) {
@@ -197,6 +198,18 @@ export default class Sky {
 
             this.updateSunPosition();
             this.updateHemiLght();
+        }
+
+        if (time >= 11 && time <= 16) {
+            if (!this.lensFlareActive) {
+                this.lensFlareActive = true;
+                this.scene.add( this.lensFlare );
+            }
+        } else {
+            if (this.lensFlareActive) {
+                this.lensFlareActive = false;
+                this.scene.remove( this.lensFlare );
+            }
         }
     }
 

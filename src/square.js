@@ -16,18 +16,21 @@ export default class Square extends THREE.Object3D{
         this.ENTRY_POINTS = [
             {
                 hour: 19,
-                startPosition: [21, 20, 34],
-                endPosition: [15, 22.1, 14]
+                worldPosition: [-140,40,180],
+                startPosition: [-25, 20, -8],
+                endPosition: [-18, 22.1, -7]
             },
             {
                 hour: 17,
+                worldPosition: [130,40,80],
                 startPosition: [-3, 20, 43],
                 endPosition: [-3.5, 22.1, 18]
             },
             {
                 hour: 12,
-                startPosition: [38, 20.5, 8.5],
-                endPosition: [21, 22.1, 5]
+                worldPosition: [-100,40,270],
+                startPosition: [22, 20.5, 38.5],
+                endPosition: [17, 22.1, 15.5]
             },
             {
                 hour: 9,
@@ -36,9 +39,9 @@ export default class Square extends THREE.Object3D{
             },
             {
                 hour: 7,
-                worldPosition: [110,40,130],
-                startPosition: [-19.3, 20.5, -40],
-                endPosition: [-14.5, 22.1, -17]
+                worldPosition: [130,40,80],
+                startPosition: [-19, 20.5, -62],
+                endPosition: [-16, 22.1, -17.5]
             },
             {
                 hour: 0,
@@ -68,6 +71,7 @@ export default class Square extends THREE.Object3D{
             obj.add(this.fountain);
             this.windows = results[3];
             this.suns = results[4];
+            this.suns.rotation.y = Math.PI * -70 / 180;
 
             obj.add(this.windows);
             obj.add(this.suns);
