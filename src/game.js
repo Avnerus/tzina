@@ -138,7 +138,7 @@ export default class Game {
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
         this.zoomController.init();
 
-        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene);
+        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera);
         this.timeController.init();
 
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
@@ -199,7 +199,7 @@ export default class Game {
             this.introAni.initFBOParticle();
             this.scene.add(this.introAni);
 
-            DebugUtil.positionEntry(this.square.ENTRY_POINTS[5], this.square.mesh, this.scene);
+            // DebugUtil.positionEntry(this.square.ENTRY_POINTS[5], this.square.mesh, this.scene);
 
 
             onLoad();
@@ -276,7 +276,7 @@ export default class Game {
         this.square.fountain.startCycle();
 
         if (this.config.skipIntro) {
-            this.timeController.transitionTo(0,1); //17
+            this.timeController.transitionTo(17,1); //17
             setTimeout(() => {
                 events.emit("intro_end");
             },3000)

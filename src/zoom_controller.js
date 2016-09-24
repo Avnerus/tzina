@@ -65,19 +65,21 @@ export default class ZoomController {
 
         // keyboard zoom
         document.addEventListener('keydown', (event) => {
-            switch ( event.keyCode ) {
-                case 69: // e
-                    event.preventDefault();
-                    this.velocityZ += 5;
-                    break;
-                case 84: // t
-                    event.preventDefault();
-                    this.velocityZ -= 5;
-                    break;
-                case 85: // u
-                    event.preventDefault();
-                    this.calculateZoomCurve(this.lastEntryPoint);
-                    break;
+            if (!this.passedControlThreshold) {
+                switch ( event.keyCode ) {
+                    case 69: // e
+                        event.preventDefault();
+                        this.velocityZ += 5;
+                        break;
+                    case 84: // t
+                        event.preventDefault();
+                        this.velocityZ -= 5;
+                        break;
+                    case 85: // u
+                        event.preventDefault();
+                        this.calculateZoomCurve(this.lastEntryPoint);
+                        break;
+                }
             }
             return false;
         }, false);

@@ -51,6 +51,7 @@ export default class Square extends THREE.Object3D{
         ]
 
         this.currentSun = null;
+        this.activatedSun = null;
     }
     init(collisionManager,loadingManager) {
         loadingManager.itemStart("Square");
@@ -97,6 +98,17 @@ export default class Square extends THREE.Object3D{
             events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
 
         });
+
+        events.on("gaze_started", (name) => {
+            this.activateSun(name);
+        });
+        events.on("gaze_stopped", (name) => {
+            if (name == this.currentSun.name) {
+                this.turnOnSun(name);
+            } else {
+                this.turnOffSun(name);
+            }
+        });
     }
     update(dt) {
         this.fountain.update(dt);
@@ -125,17 +137,37 @@ export default class Square extends THREE.Object3D{
         sun.material.opacity = .8;
     }
 
+    activateSun(name) {
+
+    }
+
     turnOnSun(name) {
-        if (this.currentSun) {
-            this.turnOffSun(this.currentSun);
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            if (this.currentSun) {
+                this.turnOffSun(this.currentSun);
+            }
+            let sunMesh = sun.children[0];
+            console.log("Turn on sun", sun);
+            sunMesh.material.color = new THREE.Color(0xF4F5DC);
+            sunMesh.material.emissive = new THREE.Color(0xC8C5B9);
+            sunMesh.material.specular = new THREE.Color(0xFFFFFF);
+            sunMesh.material.side = THREE.DoubleSide;
+            this.currentSun = name;
         }
-        let sun = this.suns.getObjectByName(name).children[0];
-        console.log("Turn on sun", sun);
-        sun.material.color = new THREE.Color(0xF4F5DC);
-        sun.material.emissive = new THREE.Color(0xC8C5B9);
-        sun.material.specular = new THREE.Color(0xFFFFFF);
-        sun.material.side = THREE.DoubleSide;
-        this.currentSun = name;
+    }
+
+    activateSun(name) {
+        console.log("Activate sun! ", name);
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            let sunMesh = sun.children[0];
+            console.log("Turn on sun", sun);
+            sunMesh.material.color = new THREE.Color(0xF4050C);
+            sunMesh.material.emissive = new THREE.Color(0xC80509);
+            sunMesh.material.specular = new THREE.Color(0xFF0000);
+            sunMesh.material.side = THREE.DoubleSide;
+        }
     }
 
     loadWindows(loadingManager) {

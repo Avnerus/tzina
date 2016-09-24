@@ -3,9 +3,10 @@ import MathUtil from './util/math'
 import DebugUtil from './util/debug'
 import _ from 'lodash'
 import {MeshText2D, textAlign} from '../lib/text2d/index'
+import SunGazer from './sun_gazer'
 
 export default class TimeController {
-    constructor(config, element, square, sky, scene) {
+    constructor(config, element, square, sky, scene, camera) {
         this.square = square;
         this.config = config;
         this.element = element;
@@ -25,6 +26,8 @@ export default class TimeController {
         this.done = false;
 
         this.accelerating = false;
+
+        this.camera = camera;
     }
     init() {
         console.log("Initializing Time Controller", this.element)
@@ -43,6 +46,9 @@ export default class TimeController {
         });
 
         events.on("control_threshold", (passed) => {
+            if (passed) {
+                this.square.turnOnSun(this.currentHour.toString());
+            }
             this.clockRunning = passed;
         });
 
@@ -80,6 +86,11 @@ export default class TimeController {
         //DebugUtil.positionObject(this.chapterTitle, "text");
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
+
+        // Sun gazer
+        this.sunGazer = new SunGazer(this.square);
+        this.sunGazer.init();
+        this.camera.add(this.sunGazer);
     }
 
     handleKeyDown(event) {
