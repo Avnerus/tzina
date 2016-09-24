@@ -103,7 +103,7 @@ export default class Square extends THREE.Object3D{
             this.activateSun(name);
         });
         events.on("gaze_stopped", (name) => {
-            if (name == this.currentSun.name) {
+            if (name == this.currentSun) {
                 this.turnOnSun(name);
             } else {
                 this.turnOffSun(name);
