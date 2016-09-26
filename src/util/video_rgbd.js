@@ -43,6 +43,28 @@ export default class VideoRGBD  {
         this.videoTexture.format = THREE.RGBFormat;
         this.videoTexture.generateMipmaps = false;
 
+        this.linesMaterial = new THREE.ShaderMaterial( {
+          uniforms: {
+              "map": { type: "t" },
+              "mindepth" : { type : "f", value : this.properties.mindepth },
+              "maxdepth" : { type : "f", value : this.properties.maxdepth },
+              "uvdy" : { type : "f", value : this.properties.uvdy },
+              "uvdx" : { type : "f", value : this.properties.uvdx },
+              "opacity" : { type : "f", value : 1.0 }
+          },
+
+          vertexShader: this.rgbd_vs,
+          fragmentShader: this.rgbd_fs,
+          blending: THREE.AdditiveBlending,
+          depthTest:      false,
+          depthWrite:     false,
+          wireframe:      true,
+          transparent:    true
+        } );
+
+        linesMaterial.linewidth = 1;
+
+    		this.add( new THREE.Line( linesGeometry, linesMaterial, THREE.LinePieces ) );
 
         this.meshMaterial = new THREE.ShaderMaterial( {
 
@@ -59,6 +81,7 @@ export default class VideoRGBD  {
             fragmentShader: this.rgbd_fs,
             //blending: THREE.AdditiveBlending,
             transparent: true,
+            wireframe:false
             /*
             depthTest: false,
             depthWrite: false*/
@@ -130,6 +153,8 @@ export default class VideoRGBD  {
 
                 this.meshMaterial.uniforms.map.value = this.videoTexture;
 
+                this.linesMaterial.uniforms.map.value = this.videoTexture;
+
                 this.videoTexture.needsUpdate = true;
             }
         }
@@ -148,6 +173,6 @@ export default class VideoRGBD  {
     };
 
     setOpacity(opacity) {
-        this.meshMaterial.uniforms.opacity.value = opacity;        
+        this.meshMaterial.uniforms.opacity.value = opacity;
     }
 };
