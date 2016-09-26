@@ -49,7 +49,7 @@ export default class Sky {
             {
                 time: 17,
                 inclination: 0.1,
-                azimuth: 0.37
+                azimuth: 0.43
             },
             {
                 time: 23,
@@ -72,8 +72,8 @@ export default class Sky {
         this.shader = new THREE.ShaderMaterial( {
             uniforms: {
                 luminance:	 { type: "f", value: 1.1 },
-                turbidity:	 { type: "f", value: 5 },
-                reileigh:	 { type: "f", value: 1.5 },
+                turbidity:	 { type: "f", value: 10 },
+                reileigh:	 { type: "f", value: 30.0},
                 mieCoefficient:	 { type: "f", value: 0.005 },
                 mieDirectionalG: { type: "f", value: 0.8 },
                 sunPosition: 	 { type: "v3", value: new THREE.Vector3() },
@@ -97,12 +97,12 @@ export default class Sky {
 
 
 
-        /*
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.luminance, "value"); 
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.turbidity, "value"); 
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.reileigh, "value"); 
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieCoefficient, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieDirectionalG, "value"); */
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieDirectionalG, "value"); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this, "spinFactor"); 
 
         events.emit("add_gui",{
             onChange: () => {
@@ -117,6 +117,12 @@ export default class Sky {
             folder: "Sun shader",
         }, this, "azimuth", 0, 1);
 
+
+        events.on("gaze_started", () => {
+            TweenMax.to(this, 3, {spinFactor: 0.5, ease: Power2.easeIn});
+            TweenMax.to(this.shader.uniforms.luminance, 3, {value: 0.1, ease: Power2.easeIn});
+            TweenMax.to(this.shader.uniforms.turbidity, 3, {value: 160, ease: Power2.easeIn});
+        });
     }
 
     loadLensFlare(loadingManager) {

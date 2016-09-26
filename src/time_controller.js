@@ -91,6 +91,10 @@ export default class TimeController {
         this.sunGazer = new SunGazer(this.square);
         this.sunGazer.init();
         this.camera.add(this.sunGazer);
+
+        events.on("gaze_started", () => {
+            TweenMax.to(this, 3, {daySpeed: 0.1, ease: Power2.easeIn});
+        });
     }
 
     handleKeyDown(event) {
@@ -151,6 +155,7 @@ export default class TimeController {
 
                 if (!this.done) {
                     this.daySpeed = this.config.daySpeed;
+                    console.log("Time controller - next chapter");
                 }
             }
             this.sky.setTime(this.currentHour);
