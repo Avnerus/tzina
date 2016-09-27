@@ -55,7 +55,7 @@ export default class Game {
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
-        
+
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
         this.soundManager = new SoundManager(this.camera, this.scene);
 
@@ -83,14 +83,14 @@ export default class Game {
         this.scene.add( this.hemiLight );
 
         /*
-        events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1); 
+        events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
         events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y"); */
 
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
         this.dirLight.position.set( 0, 120, -200  );
         this.dirLight.color.setHSL(1,1,1);
 
-        //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity"); 
+        //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
 
         //dirLight.target.position.set(0,100,0);
         //
@@ -107,7 +107,7 @@ export default class Game {
         this.square = new Square();
 
         this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
-      
+
         /*
         this.flood = new Flood();
         this.flood.init();
@@ -144,10 +144,10 @@ export default class Game {
         this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager);
 
         let TEXT_DEFINITION = {
-             align: textAlign.center, 
+             align: textAlign.center,
              font: '20px Arial',
              fillStyle: '#FFFFFF',
-             antialias: true 
+             antialias: true
         }
         this.zoomGuidance = new MeshText2D("SCROLL TO ENTER", TEXT_DEFINITION)
         this.zoomGuidance.position.set(0, -180, 0);
@@ -184,7 +184,7 @@ export default class Game {
             console.log("Done loading everything!");
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
-            
+
             this.introAni.initFBOParticle();
             this.scene.add(this.introAni);
 
@@ -279,7 +279,7 @@ export default class Game {
         this.square.fountain.startCycle();
 
         if (this.config.skipIntro) {
-            this.timeController.transitionTo(12,1); //17
+            this.timeController.transitionTo(17,1); //17
             setTimeout(() => {
                 events.emit("intro_end");
             },3000)
@@ -309,7 +309,7 @@ export default class Game {
                         },3000);
                     }
                 }, 3000);
-            } 
+            }
         });
 
         events.on("zoom_used", () => {
@@ -364,23 +364,23 @@ export default class Game {
                     this.soundManager.loadSound(this.ZOOM_OUT_SOUND)
                     .then((sound) => {
                         sound.playIn(3);
-                    }); 
+                    });
                 },40000);
             }
-            else if (this.charactersEnded.indexOf("Itzik") != -1 && 
+            else if (this.charactersEnded.indexOf("Itzik") != -1 &&
                 this.charactersEnded.indexOf("Hannah") != -1 &&
                 this.timeController.currentHour >= 17 &&
                 this.timeController.currentHour < 19
                ) {
                    this.timeController.setDaySpeed(0.06);
-            } 
-            else if (this.charactersEnded.indexOf("Miriam") != -1 && 
+            }
+            else if (this.charactersEnded.indexOf("Miriam") != -1 &&
                 this.charactersEnded.indexOf("Haim") != -1 &&
                 this.timeController.currentHour >= 19
                ) {
                  this.timeController.jumpToTime(17);
-            } 
-        
+            }
+
         });
     }
 
@@ -394,7 +394,7 @@ export default class Game {
                     },4000);
                 }
             }, 3000);
-        } 
+        }
     }
 
     animate(t) {
@@ -415,7 +415,7 @@ export default class Game {
                this.vrControls.update();
         }
         this.collisionManager.update(dt);
-        //this.flood.update(dt);       
+        //this.flood.update(dt);
         this.intro.update();
         this.introAni.update(dt,et);
     }

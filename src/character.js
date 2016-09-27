@@ -28,7 +28,7 @@ export default class Character extends THREE.Object3D {
         });
 
         console.log(props.name + " character constructed!");
-        
+
         this.props = props;
 
         this.playingFull = false;
@@ -108,13 +108,13 @@ export default class Character extends THREE.Object3D {
                 if (this.active && !this.done && this.props.name != name) {
                     console.log(name, " is playing." , this.props.name, "is pausing");
                     this.idleVideo.pause();
-                }                
+                }
             });
             events.on("character_idle", (name) => {
                 if (this.active && !this.done && this.props.name != name) {
                     console.log(name, " is idle." , this.props.name, "is playing");
                     this.idleVideo.play();
-                }                
+                }
             });
 
 
@@ -145,7 +145,7 @@ export default class Character extends THREE.Object3D {
         //this.remove(this.animation);
         this.active = false;
     }
-    
+
     update(dt,et) {
         if (!this.done) {
             if (!this.playingFull) {
@@ -254,7 +254,7 @@ export default class Character extends THREE.Object3D {
             }
             this.playFull();
         }
-        
+
     }
 
     onIntro() {

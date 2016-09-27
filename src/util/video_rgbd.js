@@ -7,6 +7,7 @@
 const SEC_PER_RGBD_FRAME = 1 / 25;
 const VERTS_WIDE = 256;
 const VERTS_TALL = 256;
+const precision  = 3;
 
 
 export default class VideoRGBD  {
@@ -62,10 +63,6 @@ export default class VideoRGBD  {
           transparent:    true
         } );
 
-        linesMaterial.linewidth = 1;
-
-    		this.add( new THREE.Line( linesGeometry, linesMaterial, THREE.LinePieces ) );
-
         this.meshMaterial = new THREE.ShaderMaterial( {
 
             uniforms: {
@@ -79,7 +76,7 @@ export default class VideoRGBD  {
 
             vertexShader: this.rgbd_vs,
             fragmentShader: this.rgbd_fs,
-            //blending: THREE.AdditiveBlending,
+            blending: THREE.AdditiveBlending,
             transparent: true,
             wireframe:false
             /*
@@ -90,10 +87,15 @@ export default class VideoRGBD  {
         let geometry = this.buildMeshGeometry();
 
        //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
+
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //this.mesh = new THREE.Mesh( geometry, material);
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         //mesh.frustumCulled = false;
+
+        let wiregeo = this.buildWireGeometry();
+
+        this.wire = new THREE.Mesh( wiregeo, this.linesMaterial );
 
 
        /*
@@ -138,6 +140,19 @@ export default class VideoRGBD  {
             }
         }
         return meshGeometry;
+    }
+
+    buildWireGeometry() {
+        let wireGeometry = new THREE.Geometry();
+        for ( let y = 0; y < VERTS_TALL; y++) {
+            for ( let x = 0, x2 = precision; x < VERTS_WIDE; x += precision, x2 += precision ) {
+                /*wireGeometry.vertices.push(
+                        new THREE.Vector3((-640 + x * 5), (480 -y * 5) , 0 ) );*/
+                wireGeometry.vertices.push( new THREE.Vector3( x, y, 0 ) );
+                wireGeometry.vertices.push( new THREE.Vector3( x2, y, 0 ) );
+            }
+        }
+        return wireGeometry;
     }
 
     play() {
