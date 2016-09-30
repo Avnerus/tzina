@@ -37,8 +37,8 @@ export default class ZoomController {
         );
         this.MID_ZOOM = new THREE.Vector3(
             0,
-            30,
-            150 
+            45,
+            300 
         );
 
         this.CHAPTER_THRESHOLD = 0.45;
@@ -65,19 +65,21 @@ export default class ZoomController {
 
         // keyboard zoom
         document.addEventListener('keydown', (event) => {
-            switch ( event.keyCode ) {
-                case 69: // e
-                    event.preventDefault();
-                    this.velocityZ += 5;
-                    break;
-                case 84: // t
-                    event.preventDefault();
-                    this.velocityZ -= 5;
-                    break;
-                case 85: // u
-                    event.preventDefault();
-                    this.calculateZoomCurve();
-                    break;
+            if (!this.passedControlThreshold) {
+                switch ( event.keyCode ) {
+                    case 69: // e
+                        event.preventDefault();
+                        this.velocityZ += 5;
+                        break;
+                    case 84: // t
+                        event.preventDefault();
+                        this.velocityZ -= 5;
+                        break;
+                    case 85: // u
+                        event.preventDefault();
+                        this.calculateZoomCurve(this.lastEntryPoint);
+                        break;
+                }
             }
             return false;
         }, false);
@@ -87,6 +89,7 @@ export default class ZoomController {
 
         events.on("angle_updated", (hour) => {
             if (!this.done) {
+                if (hour == 24) { hour = 0; }
                 console.log("Zoom Controller: Hour angle updated to ", hour);
                 let entryPoint = _.find(this.square.ENTRY_POINTS, {hour: hour});
                 if (entryPoint) {
@@ -153,21 +156,38 @@ export default class ZoomController {
             let endPoint = new THREE.Vector3().fromArray(entryPoint.endPosition).applyMatrix4(this.square.mesh.matrixWorld);
 
             if (this.camera.position.equals(this.STARTING_POSITION)) {
-                this.zoomCurve = new THREE.CatmullRomCurve3( [
+                let points = [
                     new THREE.Vector3().copy(this.camera.position),
-                    this.MID_ZOOM,
+                ]
+                if (entryPoint.worldPosition) {
+                    points.push(new THREE.Vector3().fromArray(entryPoint.worldPosition));
+                } else {
+                    points.push(this.MID_ZOOM);
+                }
+                points.push(...[
                     startPoint,
                     endPoint
-                ] )
+                ])
+                console.log("Curve points", points);
+                this.zoomCurve = new THREE.CatmullRomCurve3(points);
             } else {
-                this.zoomCurve = new THREE.CatmullRomCurve3( [
+                let points = [
                     new THREE.Vector3().copy(this.STARTING_POSITION),
+                ]
+                if (entryPoint.worldPosition) {
+                    points.push(new THREE.Vector3().fromArray(entryPoint.worldPosition));
+                    this.distanceOnCurve = 2 / 4
+                } else {
+                    this.distanceOnCurve = 1 / 3;
+                }
+                // http://stackoverflow.com/questions/16650360/distance-of-a-specific-point-along-a-splinecurve3-tubegeometry-in-three-js
+                points.push(...[
                     new THREE.Vector3().copy(this.camera.position),
                     startPoint,
                     endPoint
-                ] )
-                // http://stackoverflow.com/questions/16650360/distance-of-a-specific-point-along-a-splinecurve3-tubegeometry-in-three-js
-                this.distanceOnCurve = 1 / 3;
+                ])
+                console.log("Curve points", points);
+                this.zoomCurve = new THREE.CatmullRomCurve3(points);
             }
         }
         console.log(this.zoomCurve);

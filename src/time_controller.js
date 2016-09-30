@@ -3,9 +3,10 @@ import MathUtil from './util/math'
 import DebugUtil from './util/debug'
 import _ from 'lodash'
 import {MeshText2D, textAlign} from '../lib/text2d/index'
+import SunGazer from './sun_gazer'
 
 export default class TimeController {
-    constructor(config, element, square, sky, scene) {
+    constructor(config, element, square, sky, scene, camera) {
         this.square = square;
         this.config = config;
         this.element = element;
@@ -25,6 +26,8 @@ export default class TimeController {
         this.done = false;
 
         this.accelerating = false;
+
+        this.camera = camera;
     }
     init() {
         console.log("Initializing Time Controller", this.element)
@@ -43,6 +46,9 @@ export default class TimeController {
         });
 
         events.on("control_threshold", (passed) => {
+            if (passed) {
+                this.square.turnOnSun(this.currentHour.toString());
+            }
             this.clockRunning = passed;
         });
 
@@ -77,9 +83,18 @@ export default class TimeController {
         this.prevChapterTitle.scale.set(0.3, 0.3, 0.3);
         this.prevChapterTitle.visible = false;
 
-        DebugUtil.positionObject(this.chapterTitle, "text");
+        //DebugUtil.positionObject(this.chapterTitle, "text");
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
+
+        // Sun gazer
+        this.sunGazer = new SunGazer(this.square);
+        this.sunGazer.init();
+        this.camera.add(this.sunGazer);
+
+        events.on("gaze_started", () => {
+            TweenMax.to(this, 3, {daySpeed: 0.1, ease: Power2.easeIn});
+        });
     }
 
     handleKeyDown(event) {
@@ -140,6 +155,7 @@ export default class TimeController {
 
                 if (!this.done) {
                     this.daySpeed = this.config.daySpeed;
+                    console.log("Time controller - next chapter");
                 }
             }
             this.sky.setTime(this.currentHour);

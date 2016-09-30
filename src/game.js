@@ -46,7 +46,7 @@ export default class Game {
         this.gui = new GuiManager(this.emitter);
         this.gui.init();
 
-        this.renderer = new THREE.WebGLRenderer({antialias: true});
+        this.renderer = new THREE.WebGLRenderer({antialias: true,alpha: false});
         this.renderer.setClearColor( 0, 1 );
         this.renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -86,11 +86,23 @@ export default class Game {
         events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
         events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y"); */
 
+       /*
+
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
         this.dirLight.position.set( 0, 120, -200  );
-        this.dirLight.color.setHSL(1,1,1);
+        this.dirLight.color.setHSL(1,1,1);*/
+
+        this.dirLight = new THREE.PointLight(0xffffff, 1, 200);
+        this.dirLight.color.setHSL(0.1,0.42,0.9);
 
         //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
+        //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
+        events.emit("add_gui", {folder:"Point light", listen:false}, this.dirLight, "intensity");
+        events.emit("add_gui", {folder:"Point light", listen:false}, this.dirLight, "distance");
+
+        events.emit("add_gui", {folder:"Hemi light", listen:false}, this.dirLight, "intensity");
+
+        DebugUtil.colorPicker("Point light", this.dirLight, "color");
 
         //dirLight.target.position.set(0,100,0);
         //
@@ -106,7 +118,7 @@ export default class Game {
         // Square
         this.square = new Square();
 
-        this.sky = new Sky(this.loadingManager, this.dirLight, this.hemiLight);
+        this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
         /*
         this.flood = new Flood();
@@ -127,7 +139,7 @@ export default class Game {
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
         this.zoomController.init();
 
-        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene);
+        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera);
         this.timeController.init();
 
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
@@ -188,22 +200,8 @@ export default class Game {
             this.introAni.initFBOParticle();
             this.scene.add(this.introAni);
 
+            // DebugUtil.positionEntry(this.square.ENTRY_POINTS[5], this.square.mesh, this.scene);
 
-            let cube = DebugUtil.adjustableCube(
-                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[5].startPosition),
-                "Ramp start",
-                1,
-                0xff0000
-            )
-            this.square.mesh.add( cube );
-
-            let cube2 = DebugUtil.adjustableCube(
-                new THREE.Vector3().fromArray(this.square.ENTRY_POINTS[5].endPosition),
-                "Ramp end",
-                1,
-                0x00ffff
-            )
-            this.square.mesh.add( cube2 );
 
             onLoad();
         };
@@ -215,10 +213,10 @@ export default class Game {
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
-        this.sky.init();
         this.soundManager.init();
         this.square.init(this.collisionManager, this.loadingManager);
         this.introAni.init(this.loadingManager);
+        this.sky.init(this.loadingManager);
 
         // Characters
         console.log("Initializing characters");

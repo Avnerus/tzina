@@ -16,28 +16,32 @@ export default class Square extends THREE.Object3D{
         this.ENTRY_POINTS = [
             {
                 hour: 19,
-                startPosition: [21, 20, 34],
-                endPosition: [15, 22.1, 14]
+                worldPosition: [-140,40,180],
+                startPosition: [-25, 20, -8],
+                endPosition: [-18, 22.1, -7]
             },
             {
                 hour: 17,
+                worldPosition: [130,40,80],
                 startPosition: [-3, 20, 43],
                 endPosition: [-3.5, 22.1, 18]
             },
             {
                 hour: 12,
-                startPosition: [38, 20.5, 8.5],
-                endPosition: [21, 22.1, 5]
+                worldPosition: [-100,40,270],
+                startPosition: [22, 20.5, 38.5],
+                endPosition: [17, 22.1, 15.5]
             },
             {
                 hour: 9,
-                startPosition: [21, 21, 8],
+                startPosition: [41, 20.5, 8],
                 endPosition: [21, 22.1, 5]
             },
             {
                 hour: 7,
-                startPosition: [-19.3, 20.5, -40],
-                endPosition: [-14.5, 22.1, -17]
+                worldPosition: [130,40,80],
+                startPosition: [-19, 20.5, -62],
+                endPosition: [-16, 22.1, -17.5]
             },
             {
                 hour: 0,
@@ -47,6 +51,7 @@ export default class Square extends THREE.Object3D{
         ]
 
         this.currentSun = null;
+        this.activatedSun = null;
     }
     init(collisionManager,loadingManager) {
         loadingManager.itemStart("Square");
@@ -67,6 +72,7 @@ export default class Square extends THREE.Object3D{
             obj.add(this.fountain);
             this.windows = results[3];
             this.suns = results[4];
+            this.suns.rotation.y = Math.PI * -70 / 180;
 
             obj.add(this.windows);
             obj.add(this.suns);
@@ -76,8 +82,9 @@ export default class Square extends THREE.Object3D{
 
             obj.rotation.order = "YXZ";
             this.mesh = obj;
+            //this.mesh.scale.set(4,4,4);
             this.fountain.position.set(0.8,23.6, -0.6);
-            DebugUtil.positionObject(this.fountain, "Fountain");
+            //DebugUtil.positionObject(this.fountain, "Fountain");
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");
@@ -91,6 +98,17 @@ export default class Square extends THREE.Object3D{
             //events.emit("add_gui", obj.position, "z");
             events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
 
+        });
+
+        events.on("gaze_started", (name) => {
+            this.activateSun(name);
+        });
+        events.on("gaze_stopped", (name) => {
+            if (name == this.currentSun) {
+                this.turnOnSun(name);
+            } else {
+                this.turnOffSun(name);
+            }
         });
     }
     update(dt) {
@@ -120,17 +138,37 @@ export default class Square extends THREE.Object3D{
         sun.material.opacity = .8;
     }
 
+    activateSun(name) {
+
+    }
+
     turnOnSun(name) {
-        if (this.currentSun) {
-            this.turnOffSun(this.currentSun);
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            if (this.currentSun) {
+                this.turnOffSun(this.currentSun);
+            }
+            let sunMesh = sun.children[0];
+            console.log("Turn on sun", sun);
+            sunMesh.material.color = new THREE.Color(0xF4F5DC);
+            sunMesh.material.emissive = new THREE.Color(0xC8C5B9);
+            sunMesh.material.specular = new THREE.Color(0xFFFFFF);
+            sunMesh.material.side = THREE.DoubleSide;
+            this.currentSun = name;
         }
-        let sun = this.suns.getObjectByName(name).children[0];
-        console.log("Turn on sun", sun);
-        sun.material.color = new THREE.Color(0xF4F5DC);
-        sun.material.emissive = new THREE.Color(0xC8C5B9);
-        sun.material.specular = new THREE.Color(0xFFFFFF);
-        sun.material.side = THREE.DoubleSide;
-        this.currentSun = name;
+    }
+
+    activateSun(name) {
+        console.log("Activate sun! ", name);
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            let sunMesh = sun.children[0];
+            console.log("Turn on sun", sun);
+            sunMesh.material.color = new THREE.Color(0xF4050C);
+            sunMesh.material.emissive = new THREE.Color(0xC80509);
+            sunMesh.material.specular = new THREE.Color(0xFF0000);
+            sunMesh.material.side = THREE.DoubleSide;
+        }
     }
 
     loadWindows(loadingManager) {
@@ -166,7 +204,7 @@ export default class Square extends THREE.Object3D{
             loader.load(MODEL_PATH,( obj ) => {
                 console.log("Loaded square ", obj);
 
-                this.rotation.y = Math.PI * 80 / 180;
+                this.rotation.y = Math.PI * 150 / 180;
                 this.updateMatrixWorld();
 
                 this.add(obj);

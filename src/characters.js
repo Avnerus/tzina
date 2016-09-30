@@ -32,7 +32,7 @@ export default [
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 3,
-        introSpace: 6,
+        //introSpace: 6,
         subtitles: null
     },
     {
@@ -42,15 +42,15 @@ export default [
         maxdepth : 3494.158935547,
         position : [-14.5, 21.95, 1.73],
         rotation: [-10, 20, 8],
-        animation: null,
+        animation: 'Itzik',
         uvdy: 0.4889,
         uvdx: 0.0,
         scale: 0.0027 * 0.25,
-        animationScale: 0.25,
-        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
-        animationRotation: [13, 0, 0],      // 20, 0, 0
+        animationScale: 0.18,
+        animationPosition: [0.13, -0.08, 0.48],   // 0,-1.5,-2.2
+        animationRotation: [10, 8.5, -4],      // 20, 0, 0
         space: 3,
-        introSpace: 7,
+        //introSpace: 7,
         subtitles: true
     },
     {

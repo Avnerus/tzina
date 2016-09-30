@@ -31,7 +31,7 @@ export default class KeyboardController {
         this.pointer = lock(document.getElementById('game'));
 
         events.on("start_zoom" ,() => {
-            this.active = false;
+        //    this.active = false;
 
         });
 

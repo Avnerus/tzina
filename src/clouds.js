@@ -18,6 +18,7 @@ export default class Clouds {
     
     }
     init(targetShader) {
+        console.log("Clounds init");
         this.cloudsVideo = new Video360(CLOUDS_SEQUENCE_PATH, targetShader.uniforms.cloudsMap);
         this.cloudsVideo.init();
 
