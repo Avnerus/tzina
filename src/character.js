@@ -48,9 +48,13 @@ export default class Character extends THREE.Object3D {
             this.fullVideo.init(loadingManager);
 
             this.fullVideo.mesh.visible = false;
+            this.fullVideo.wire.visible = false;
 
             this.add(this.fullVideo.mesh);
             this.add(this.idleVideo.mesh);
+
+            this.add(this.fullVideo.wire);
+            this.add(this.idleVideo.wire);
 
             this.fullVideo.video.addEventListener('timeupdate',() => {
                 if (this.playingFull && this.animation) {
@@ -173,6 +177,8 @@ export default class Character extends THREE.Object3D {
 
         this.idleVideo.mesh.visible = false;
         this.fullVideo.mesh.visible = false;
+        this.idleVideo.wire.visible = false;
+        this.fullVideo.wire.visible = false;
         this.playingFull = false;
         if (this.props.subtitles) {
             this.subtitlesVideo.src = "";
@@ -191,6 +197,8 @@ export default class Character extends THREE.Object3D {
         this.fullVideo.pause();
         this.idleVideo.mesh.visible = true;
         this.fullVideo.mesh.visible = false;
+        this.idleVideo.wire.visible = true;
+        this.fullVideo.wire.visible = false;
         this.idleVideo.play();
         this.playingFull = false;
         if (this.props.subtitles) {
@@ -273,6 +281,8 @@ export default class Character extends THREE.Object3D {
         }
         this.fullVideo.mesh.visible = true;
         this.idleVideo.mesh.visible = false;
+        this.fullVideo.wire.visible = true;
+        this.idleVideo.wire.visible = false;
 
         if(this.config.skipCharacters) {
             DebugUtil.fastForward(this.fullVideo.video);

@@ -51,7 +51,7 @@ export default class VideoRGBD  {
               "maxdepth" : { type : "f", value : this.properties.maxdepth },
               "uvdy" : { type : "f", value : this.properties.uvdy },
               "uvdx" : { type : "f", value : this.properties.uvdx },
-              "opacity" : { type : "f", value : 1.0 }
+              "opacity" : { type : "f", value : 1 }
           },
 
           vertexShader: this.rgbd_vs,
@@ -60,7 +60,7 @@ export default class VideoRGBD  {
           depthTest:      false,
           depthWrite:     false,
           wireframe:      true,
-          transparent:    true
+          transparent:    false
         } );
 
         this.meshMaterial = new THREE.ShaderMaterial( {
@@ -77,7 +77,7 @@ export default class VideoRGBD  {
             vertexShader: this.rgbd_vs,
             fragmentShader: this.rgbd_fs,
             blending: THREE.AdditiveBlending,
-            transparent: true,
+            transparent: false,
             wireframe:false
             /*
             depthTest: false,
@@ -89,13 +89,14 @@ export default class VideoRGBD  {
        //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
 
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
+
+        this.wire = new THREE.Mesh( geometry, this.linesMaterial );
+
         //this.mesh = new THREE.Mesh( geometry, material);
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         //mesh.frustumCulled = false;
+        this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
 
-        let wiregeo = this.buildWireGeometry();
-
-        this.wire = new THREE.Mesh( wiregeo, this.linesMaterial );
 
 
        /*
@@ -141,7 +142,7 @@ export default class VideoRGBD  {
         }
         return meshGeometry;
     }
-
+    //We don't really need this function since I am using the Mesh Geometry to create wireframe
     buildWireGeometry() {
         let wireGeometry = new THREE.Geometry();
         for ( let y = 0; y < VERTS_TALL; y++) {
