@@ -51,7 +51,7 @@ export default class VideoRGBD  {
               "maxdepth" : { type : "f", value : this.properties.maxdepth },
               "uvdy" : { type : "f", value : this.properties.uvdy },
               "uvdx" : { type : "f", value : this.properties.uvdx },
-              "opacity" : { type : "f", value : 1 }
+              "opacity" : { type : "f", value : 1.0 }
           },
 
           vertexShader: this.rgbd_vs,
@@ -91,6 +91,8 @@ export default class VideoRGBD  {
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
 
         this.wire = new THREE.Mesh( geometry, this.linesMaterial );
+
+        //this.mesh.position.z = -0.1;
 
         //this.mesh = new THREE.Mesh( geometry, material);
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
