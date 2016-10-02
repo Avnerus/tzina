@@ -92,8 +92,9 @@ export default class TimeController {
         this.sunGazer.init();
         this.camera.add(this.sunGazer);
 
-        events.on("gaze_started", () => {
+        events.on("gaze_started", (hour) => {
             TweenMax.to(this, 3, {daySpeed: 0.1, ease: Power2.easeIn});
+            this.showInsideChapterTitle(hour);
         });
     }
 
@@ -303,7 +304,15 @@ export default class TimeController {
 
         //document.getElementById("chapter-title-text").innerHTML = chapter.hour + ":00 - " + chapter.name;
         this.turnOnChapterSun(this.currentHour);
+    }
 
+    showInsideChapterTitle(hour) {
+        let sunPosition = this.square.getSunPosition(hour);
+        if (sunPosition) {
+                        
+        } else {
+            throw new Error("Invalid chapter sun " + hour);
+        }
     }
 
     turnOnChapterSun() {

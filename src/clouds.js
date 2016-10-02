@@ -38,4 +38,10 @@ export default class Clouds {
         this.currentState = States.TRANSITON;
         this.cloudsVideo.play();
     }
+
+    stopTransition() {
+        this.currentState = States.STATIC
+        this.cloudsVideo.pause();
+        this.targetShader.uniforms.cloudsMap.value = this.staticTexture;
+    }
 }

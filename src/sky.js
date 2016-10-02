@@ -97,12 +97,13 @@ export default class Sky {
 
 
 
+        /*
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.luminance, "value"); 
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.turbidity, "value"); 
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.reileigh, "value"); 
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieCoefficient, "value"); 
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieDirectionalG, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this, "spinFactor"); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this, "spinFactor"); */
 
         events.emit("add_gui",{
             onChange: () => {
@@ -119,9 +120,10 @@ export default class Sky {
 
 
         events.on("gaze_started", () => {
-            TweenMax.to(this, 3, {spinFactor: 0.5, ease: Power2.easeIn});
-            TweenMax.to(this.shader.uniforms.luminance, 3, {value: 0.1, ease: Power2.easeIn});
-            TweenMax.to(this.shader.uniforms.turbidity, 3, {value: 160, ease: Power2.easeIn});
+            this.clouds.startTransition();
+        });
+        events.on("gaze_stopped", () => {
+            this.clouds.stopTransition();
         });
     }
 

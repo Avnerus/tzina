@@ -235,4 +235,14 @@ export default class Square extends THREE.Object3D{
     getCenterPosition() {
         return this.squareCenter;
     }
+
+    getSunPosition(name) {
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            let sunMesh = sun.children[0]; 
+            return new THREE.Vector3().setFromMatrixPosition(sunMesh.matrixWorld);
+        } else {
+            return null;
+        }
+    }
 }
