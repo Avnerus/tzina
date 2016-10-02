@@ -4,6 +4,9 @@
  * @modified by avnerus / http://avner.js.org
  * @modified by juniorxsound / http://orfleisher.com
  */
+
+import DebugUtil from './debug'
+
 const SEC_PER_RGBD_FRAME = 1 / 25;
 const VERTS_WIDE = 256;
 const VERTS_TALL = 256;
@@ -57,8 +60,6 @@ export default class VideoRGBD  {
           vertexShader: this.rgbd_vs,
           fragmentShader: this.rgbd_fs,
           blending: THREE.AdditiveBlending,
-          depthTest:      false,
-          depthWrite:     false,
           wireframe:      true,
           transparent:    false
         } );
@@ -79,9 +80,6 @@ export default class VideoRGBD  {
             blending: THREE.AdditiveBlending,
             transparent: false,
             wireframe:false
-            /*
-            depthTest: false,
-            depthWrite: false*/
         } );
 
         let geometry = this.buildMeshGeometry();
@@ -89,14 +87,13 @@ export default class VideoRGBD  {
        //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
 
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
-
         this.wire = new THREE.Mesh( geometry, this.linesMaterial );
 
-        //this.mesh.position.z = -0.1;
+        //DebugUtil.positionObject(this.wire, this.properties.fileName + " - Wire", false);
 
-        //this.mesh = new THREE.Mesh( geometry, material);
+        this.wire.position.z = 0.1;
+
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
-        //mesh.frustumCulled = false;
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
 
 

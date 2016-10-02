@@ -54,12 +54,12 @@ export default class CharacterController {
                     let character = this.characters[characterName];
                     this.activeCharacters.push(character);
                     this.square.mesh.add(character);
+                    //DebugUtil.positionObject(character, character.props.name, character.props.rotation);
                     character.load();
                     character.play();
                 }
             });
 
-                //DebugUtil.positionObject(character, character.props.name, character.props.rotation);
 
         });
         events.on("angle_updated", (hour) => {
