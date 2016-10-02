@@ -35,3 +35,5 @@ node_modules
 *.swp
 public/assets/characters/*.webm
 public/assets/characters/*.ogg
+
+public/bundle.js

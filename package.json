@@ -4,7 +4,7 @@
   "description": "Tzina Experience",
   "main": "index.js",
   "scripts": {
-    "start": "budo src/index.js:bundle.js -- -t [ babelify --presets [ es2015  ]  ] -t [ glslify  ] -t [ browserify-shim  ]"
+    "start": "node ./node_modules/gulp/bin/gulp.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,13 @@
     "beefy": ">=0.7.1",
     "browserify": ">=3.20.0",
     "browserify-shim": "^3.8.10",
-    "glslify": "^2.3.1"
+    "glslify": "^2.3.1",
+    "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.1.0",
+    "lodash.assign": "^4.2.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
   },
   "window": {
     "title": "Tzina",
@@ -38,6 +44,7 @@
     "core-js": "^2.4.0",
     "earcut": "^2.1.1",
     "easing-utils": "0.0.5",
+    "express": "^4.14.0",
     "fullscreen": "^1.0.2",
     "gl-shader": "^4.2.0",
     "glsl-curl-noise": "0.0.4",

@@ -26,7 +26,7 @@ import HaimAnimation from './animations/haim'
 import ItzikAnimation from './animations/itzik'
 
 import IntroAnimation from './animations/introAni'
-import {MeshText2D, textAlign} from '../lib/text2d/index'
+import {MeshText2D, textAlign} from './lib/text2d/index'
 
 export default class Game {
     constructor(config) {

@@ -1,4 +1,4 @@
-import TreesDef from '../assets/trees/trees_def'
+import TreesDef from './trees/trees_def'
 const TREES_PATH = "assets/trees"
 
 export default class Trees extends THREE.Object3D {

@@ -2,7 +2,7 @@ import Chapters from './chapters'
 import MathUtil from './util/math'
 import DebugUtil from './util/debug'
 import _ from 'lodash'
-import {MeshText2D, textAlign} from '../lib/text2d/index'
+import {MeshText2D, textAlign} from './lib/text2d/index'
 import SunGazer from './sun_gazer'
 
 export default class TimeController {
