@@ -32,7 +32,6 @@ export default class Video360 {
         if (this.timer >= SEC_PER_360_FRAME) {
             this.timer = 0;
             if ( this.isPlaying && this.video.readyState === this.video.HAVE_ENOUGH_DATA ) {
-                console.log("UPDATE TEXTURE");
                 this.targetTexture.value = this.texture;
                 this.texture.needsUpdate = true;
 

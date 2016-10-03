@@ -28,8 +28,7 @@ export default class SunGazer extends THREE.Object3D  {
             if (this.gazingSun) {
                 let res = this.getDotProduct(camVector, this.gazingSun.children[0]);
                 if (res <= this.GAZE_THRESHOLD) {
-                    events.emit("gaze_stopped", this.gazingSun.name);
-                    this.gazingSun = null;
+                    this.stop();
                 }
             } else {
 
@@ -38,14 +37,21 @@ export default class SunGazer extends THREE.Object3D  {
                 // Skip the first child because it is a null parent
                 for (let i = 1; i < this.square.suns.children.length && !thresholdPassed; i++) {
                     let sun = this.square.suns.children[i];
-                    let res = this.getDotProduct(camVector, sun.children[0]);
-                    if (res > this.GAZE_THRESHOLD) {
-                        this.gazingSun = sun;
-                        events.emit("gaze_started", this.gazingSun.name);
+                    if (sun.name != this.square.currentSun) {
+                        let res = this.getDotProduct(camVector, sun.children[0]);
+                        if (res > this.GAZE_THRESHOLD) {
+                            this.gazingSun = sun;
+                            events.emit("gaze_started", this.gazingSun.name);
+                        }
                     }
                 }
             }
         }
+    }
+
+    stop() {
+        events.emit("gaze_stopped", this.gazingSun.name);
+        this.gazingSun = null;
     }
 
     getDotProduct(camVector, sunMesh) {

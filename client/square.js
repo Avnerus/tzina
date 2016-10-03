@@ -138,10 +138,6 @@ export default class Square extends THREE.Object3D{
         sun.material.opacity = .8;
     }
 
-    activateSun(name) {
-
-    }
-
     turnOnSun(name) {
         let sun = this.suns.getObjectByName(name)
         if (sun) {
@@ -234,6 +230,10 @@ export default class Square extends THREE.Object3D{
 
     getCenterPosition() {
         return this.squareCenter;
+    }
+
+    getSun(name) {
+        return this.suns.getObjectByName(name)
     }
 
     getSunPosition(name) {

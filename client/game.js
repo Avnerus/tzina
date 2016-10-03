@@ -146,10 +146,12 @@ export default class Game {
 
 
         this.animations = {
+            /*
             'Hannah' : new HannahAnimation(),
             'Miriam' : new MiriamAnimation(this.renderer),
             'Haim' : new HaimAnimation(this.renderer),
             'Itzik' : new ItzikAnimation()
+            */
         }
 
         this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager);

@@ -5,6 +5,7 @@ export default
 			"hour": 7,
 			"timeLimitMinutes" : 10,
             "titlePosition": [-143, 48, 0],
+            "insideTitlePosition": [0, 2, 0],
 			"characters": [
 				"Meir",
 				"Rami",
@@ -33,6 +34,7 @@ export default
 			"hour": 9,
 			"timeLimitMinutes" : 13,
             "titlePosition": [-90, 90, 0],
+            "insideTitlePosition": [0, -1, 0],
 			"characters": [
 				"Miryam",
 				"Itzik",
@@ -61,6 +63,7 @@ export default
 			"hour": 12,
 			"timeLimitMinutes" : 8,
             "titlePosition": [0, 110, 0],
+            "insideTitlePosition": [0, -1, 0],
 			"characters": [
 				"Mark",
 				"Lupo1",
@@ -89,6 +92,7 @@ export default
 		"name": "distrust / betrayal",
 			"hour": 17,
             "titlePosition": [85, 100, 0],
+            "insideTitlePosition": [0, -1, 0],
 			"timeLimitMinutes" : 12,
 			"characters": [
 				"Hannah",
@@ -118,6 +122,7 @@ export default
 			"hour": 19,
 			"timeLimitMinutes" : 12,
             "titlePosition": [120, 65, 0],
+            "insideTitlePosition": [0, -1, 0],
 			"characters": [
                 "Miriam",
 				"Haim",
@@ -147,6 +152,7 @@ export default
 			"hour": 0,
 			"timeLimitMinutes" : 4,
             "titlePosition": [0, -30, 0],
+            "insideTitlePosition": [0, -1, 0],
 			"characters": [
 				//"Haim",
 				"Izchak",
