@@ -40,10 +40,18 @@ export default class MeirAnimation extends THREE.Object3D {
         }
 
         this.birds = [];
-        this.birdsPos = [ new THREE.Vector3(2, 3, 1.5), new THREE.Vector3(2.5, 3, 1.5), new THREE.Vector3(-1, 3.3, 1),
-                          new THREE.Vector3(-1, -1, 3), new THREE.Vector3(-2, -0.5, 3), new THREE.Vector3(3.5, -1, 3),
+        /// ANI-SETTING ----------------------------------------------------
+        // 0: eat, 1: jump, 2: jumpandturnV1, 3: jumpandturnV2, 4: flap, 5: swing
+        this.birdsAniSetting = [ {seq: [6,6,0,5,5], timeGap: [2,1,1.5,4,1], label: ["swing_1", "swing_2", "jumpTurn", "swing_3", "swing_4"], seqNum: 5}, // {seq: [0,0,1], timeGap: [0,2,1], label: ["eat_1", "eat_2", "jump"], seqNum: 3},
+                                 {seq: [0,4,3], timeGap: [6,0,1], label: ["eat", "flap", "jumpTurn"], seqNum: 3},
+                                 {seq: [5,5,2,6,6], timeGap: [2,1,1.5,4,1], label: ["swing_1", "swing_2", "jumpTurn", "swing_3", "swing_4"], seqNum: 5},
+                                 {seq: [8,0,10,9], timeGap: [3,0,3,5], label: ["peakout", "eat", "turn", "peakback"], seqNum: 4},
+                                 {seq: [0,1,4], timeGap: [0,1,2], label: ["eat", "jump", "flap"], seqNum: 3} ];
+        this.birdsPos = [ new THREE.Vector3(1.5, 3, 1.5), new THREE.Vector3(3.5, -1, 3), new THREE.Vector3(-1, 3.3, 1),
+                          new THREE.Vector3(-1, -1, 3), new THREE.Vector3(-2, -0.5, 3), new THREE.Vector3(2.5, 3, 1.5),
                           new THREE.Vector3(4.5, -1, 2.5), new THREE.Vector3(5, -1, 2), new THREE.Vector3(0, -0.5, 3.5),
                           new THREE.Vector3(3, 2, 2) ];
+        this.birdTex = tex_loader.load( this.BASE_PATH + "/images/bird.jpg" );
         this.loadModelBird( this.BASE_PATH + "/models/bird/bird_body.json",
                        this.BASE_PATH + "/models/bird/bird_wingR.json",
                        this.BASE_PATH + "/models/bird/bird_wingL.json", loader );
@@ -66,7 +74,7 @@ export default class MeirAnimation extends THREE.Object3D {
     }
 
     loadModelBird( _body, _wingR, _wingL, loader ){
-        let birdMat = new THREE.MeshLambertMaterial({color: 0x00ffff});
+        let birdMat = new THREE.MeshLambertMaterial({map: this.birdTex});
 
         loader.load( _body, (geometry, material) => {
             this.bird = new THREE.Mesh(geometry, birdMat);
@@ -89,10 +97,76 @@ export default class MeirAnimation extends THREE.Object3D {
                         this.add(bd);
                     }
 
-                    this.createBirdAnimation();
+                    this.createBirdAnimations();
                 });
             });
         });
+    }
+
+    createBirdAnimations(){
+        for(let i=0; i<this.birds.length; i++){
+            let tl = new TimelineMax({repeat: -1, repeatDelay: 2, delay: i%3});
+
+            let birdAniSetting = this.birdsAniSetting[i%5];
+
+            for(let j=0; j<birdAniSetting.seqNum; j++){
+                let tweenLabelTime = "+="+birdAniSetting.timeGap[j];
+                tl.add( birdAniSetting.label[j], tweenLabelTime );
+
+                let tweenToBeAdded = this.selectBirdAnimation( this.birds[i], birdAniSetting.seq[j] );
+                tl.add( tweenToBeAdded, birdAniSetting.label[j] );
+            }
+        }
+    }
+
+    // 0: eat, 1: jump, 2: jumpandturnV1, 3: jumpandturnV2, 4: flap, 5: swing
+    selectBirdAnimation( bird, aniIndex ){
+        switch ( aniIndex ) {
+
+            case 0:
+                return this.birdEat( bird, 1 );
+                break;
+
+            case 1:
+                return this.birdJump( bird );
+                break;
+
+            case 2:
+                return this.birdJumpTurnV1( bird );
+                break;
+
+            case 3:
+                return this.birdJumpTurnV2( bird );
+                break;
+
+            case 4:
+                return this.birdFlap( bird );
+                break;
+
+            case 5:
+                return this.birdSwingRight( bird, true );
+                break;
+
+            case 6:
+                return this.birdSwingRight( bird, false );
+                break;
+
+            case 7:
+                return this.birdPeek( bird );
+                break;
+
+            case 8:
+                return this.birdPeekOut( bird, true );
+                break;
+
+            case 9:
+                return this.birdPeekOut( bird, false );
+                break;
+
+            case 10:
+                return this.birdTurn( bird );
+                break;
+        }
     }
 
     createBirdAnimation(){
@@ -138,34 +212,77 @@ export default class MeirAnimation extends THREE.Object3D {
         //             }} );
     }
 
+    birdSwingRight( _bird, _right ){
+        let direction = 1;
+        if(!_right) direction = -1;
+
+        return TweenMax.to( _bird.rotation, 0.2, { z:10*Math.PI/180*direction, onStart:()=>{
+            let mov = direction * 0.1;
+            TweenMax.to( _bird.position, 0.8, {x:"-="+mov});
+        }, onComplete: ()=>{
+            TweenMax.to( _bird.rotation, 0.4, { z:-10*Math.PI/180*direction, onComplete: ()=>{
+                TweenMax.to( _bird.rotation, 0.2, { z:0 } );
+            }} );
+        }} );
+    }
+
     birdEat( _bird, _repeat ){
         return TweenMax.to( _bird.rotation, 0.15, { x:20*Math.PI/180, repeat: _repeat, yoyo: true} );
+    }
+
+    birdPeek( _bird ){
+        let t1 = TweenMax.to( _bird.rotation, 0.5, { x:10*Math.PI/180, repeat: 1, repeatDelay: 3, yoyo: true} );
+        let t2 = TweenMax.to( _bird.position, 0.5, { z:"+=0.2", repeat: 1, repeatDelay: 3, yoyo: true} );
+        return [t1, t2];
+    }
+
+    birdPeekOut( _bird, _out ){
+        let direction, mov;
+
+        if(_out){
+            direction = 1;
+            mov = 0.2;
+        } else {
+            direction = 0;
+            mov = -0.2;
+        }
+
+        let t1 = TweenMax.to( _bird.rotation, 0.5, { x:10*Math.PI/180*direction} );
+        let t2 = TweenMax.to( _bird.position, 0.5, { z:"+="+mov} );
+        return [t1, t2];
     }
 
     birdFlap( _bird ){
         let t1 = TweenMax.to( _bird.children[0].rotation, 0.15, { x:10*Math.PI/180, y:40*Math.PI/180, repeat: 3, yoyo: true} );
         let t2 = TweenMax.to( _bird.children[1].rotation, 0.15, { x:10*Math.PI/180, y:-40*Math.PI/180, repeat: 3, yoyo: true} );
-        let t3 = TweenMax.to( _bird.position, 0.2, { y:"+=0.5", repeat: 1, yoyo: true, delay: 0.1 } );
+        let t3 = TweenMax.to( _bird.position, 0.2, { y:"+=0.1", repeat: 1, yoyo: true, delay: 0.1 } );
 
         return [t1, t2, t3];
     }
     
     birdJump( _bird ){
-        return TweenMax.to( _bird.position, 0.2, { y:"+=0.2", repeat: 3, yoyo: true} );
+        return TweenMax.to( _bird.position, 0.15, { y:"+=0.05", repeat: 3, yoyo: true} );
     }
 
-    birdJumpTurnV1( _bird, _label ){
-        TweenMax.to( _bird.position, 0.2, { y:"+=0.3", repeat: 1, yoyo: true, onComplete: ()=>{
-            TweenMax.to( _bird.position, 0.2, { y:"+=0.2", repeat: 1, yoyo: true, delay: 2 });
-            TweenMax.to( _bird.rotation, 0.2, { y:0, delay: 2.1 } );
-        }}, _label );
-        TweenMax.to( _bird.rotation, 0.2, { y:30*Math.PI/180, delay: 0.1}, _label );
+    birdTurn( _bird ){
+        return TweenMax.to( _bird.rotation, 0.2, { y:10*Math.PI/180, repeat: 1, yoyo: true, repeatDelay: 1, onComplete: ()=>{
+                TweenMax.to( _bird.rotation, 0.2, { y:-10*Math.PI/180, repeat: 1, yoyo: true, repeatDelay: 0.5});
+            }} );
+    }
+
+    birdJumpTurnV1( _bird ){
+        let t1 = TweenMax.to( _bird.position, 0.15, { y:"+=0.05", repeat: 1, yoyo: true, onComplete: ()=>{
+                TweenMax.to( _bird.position, 0.15, { y:"+=0.05", repeat: 1, yoyo: true, delay: 1 });
+                TweenMax.to( _bird.rotation, 0.2, { y:0, delay: 1.1 } );
+            }} );
+        let t2 = TweenMax.to( _bird.rotation, 0.2, { y:20*Math.PI/180, delay: 0.1} );
+        return [t1, t2];
     }
 
     birdJumpTurnV2( _bird ){
-        let t1 = TweenMax.to( _bird.position, 0.2, { y:"+=0.3", repeat: 1, yoyo: true, onComplete: ()=>{
-                TweenMax.to( _bird.position, 0.2, { y:"+=0.5", repeat: 1, yoyo: true, onComplete: ()=>{
-                    TweenMax.to( _bird.position, 0.15, { y:"+=0.1", repeat: 1, yoyo: true });
+        let t1 = TweenMax.to( _bird.position, 0.2, { y:"+=0.02", repeat: 1, yoyo: true, repeatDelay: 2, onComplete: ()=>{
+                TweenMax.to( _bird.position, 0.2, { y:"+=0.04", repeat: 1, yoyo: true, repeatDelay: 2, onComplete: ()=>{
+                    TweenMax.to( _bird.position, 0.15, { y:"+=0.02", repeat: 1, yoyo: true });
                     TweenMax.to( _bird.rotation, 0.15, { y:0 } );
                 } });
                 TweenMax.to( _bird.rotation, 0.2, { y:-10*Math.PI/180 } );
