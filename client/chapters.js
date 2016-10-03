@@ -5,7 +5,7 @@ export default
 			"hour": 7,
 			"timeLimitMinutes" : 10,
             "titlePosition": [-143, 48, 0],
-            "insideTitlePosition": [0, 2, 0],
+            "insideTitlePosition": [-5, 1, -1],
 			"characters": [
 				"Meir",
 				"Rami",
@@ -63,7 +63,7 @@ export default
 			"hour": 12,
 			"timeLimitMinutes" : 8,
             "titlePosition": [0, 110, 0],
-            "insideTitlePosition": [0, -1, 0],
+            "insideTitlePosition": [0.5, -1.5, -0.3],
 			"characters": [
 				"Mark",
 				"Lupo1",

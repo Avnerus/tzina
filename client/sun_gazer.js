@@ -15,6 +15,16 @@ export default class SunGazer extends THREE.Object3D  {
         events.on("control_threshold", (passed) => {
             this.active = passed;
         });
+
+        events.on("character_playing", () => {
+            this.active = false;
+        })
+        events.on("character_idle", () => {
+            this.active = true;
+        })
+        events.on("character_ended", () => {
+            this.active = true;
+        })
     }
 
     updateMatrixWorld(force) {
@@ -50,8 +60,10 @@ export default class SunGazer extends THREE.Object3D  {
     }
 
     stop() {
-        events.emit("gaze_stopped", this.gazingSun.name);
-        this.gazingSun = null;
+        if (this.gazingSun) {
+            events.emit("gaze_stopped", this.gazingSun.name);
+            this.gazingSun = null;
+        }
     }
 
     getDotProduct(camVector, sunMesh) {

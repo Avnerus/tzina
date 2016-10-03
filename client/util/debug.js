@@ -17,10 +17,10 @@ export default {
         events.emit("add_gui", {folder:name}, cube.position, "z"); 
         return cube;
     },
-    positionObject: function(object, name, listen = false, angles) {
-        events.emit("add_gui", {folder:name + " - Position", listen: listen}, object.position, "x"); 
-        events.emit("add_gui", {folder:name + " - Position", listen: listen}, object.position, "y"); 
-        events.emit("add_gui", {folder:name + " - Position", listen: listen}, object.position, "z"); 
+    positionObject: function(object, name, listen = false, min=-20,max=20, angles) {
+        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.1}, object.position, "x"); 
+        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.1}, object.position, "y");
+        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.1}, object.position, "z");
 
         if (angles) {
             object.angleRotation = {x: angles[0], y: angles[1], z: angles[2]};

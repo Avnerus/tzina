@@ -55,7 +55,7 @@ export default class Fountain extends THREE.Object3D  {
 
     startCycle() {
         setInterval(() => {
-            console.log("Fountain cycle!", this.particleGroup.emitters.length + " Emitters");
+            //console.log("Fountain cycle!", this.particleGroup.emitters.length + " Emitters");
             this.outerUp = !this.outerUp;
             for (let i = 0; i < this.particleGroup.emitters.length; i++) {
                 if (i < this.particleGroup.emitters.length / 2) {

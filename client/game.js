@@ -46,7 +46,7 @@ export default class Game {
         this.gui = new GuiManager(this.emitter);
         this.gui.init();
 
-        this.renderer = new THREE.WebGLRenderer({antialias: true,alpha: false});
+        this.renderer = new THREE.WebGLRenderer({antialias: true,alpha: true});
         this.renderer.setClearColor( 0, 1 );
         this.renderer.setPixelRatio(window.devicePixelRatio);
 

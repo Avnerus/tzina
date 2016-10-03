@@ -40,12 +40,18 @@ export default class Video360 {
     }
     play() {
         if ( this.isPlaying === true ) return;
+        console.log("Video360 - play");
         this.video.play();
         this.isPlaying = true;
     }
     pause() {
         if ( this.isPlaying === false ) return;
+        console.log("Video360 - pause");
         this.video.pause();
         this.isPlaying = false;
+    }
+    setRate(rate) {
+        this.video.playbackRate = rate;
+        console.log("Video360 playback rate = ", rate, this.video);
     }
 }

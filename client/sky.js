@@ -211,6 +211,7 @@ export default class Sky {
 
         if (time >= 11 && time <= 16) {
             if (!this.lensFlareActive) {
+                console.log("Sky - adding lens flare");
                 this.lensFlareActive = true;
                 this.scene.add( this.lensFlare );
             }
