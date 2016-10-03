@@ -78,7 +78,7 @@ export default [
         basePath : 'assets/characters/lupo',
         mindepth : 1500.681884766,
         maxdepth : 3376.051757813,
-        position : [-51, 7.9, 126],//[51, 7.9, 77], // [-41, 7.9, 121], 
+        position : [-51, 7.9, 126],//[51, 7.9, 77], // [-41, 7.9, 121],
         rotation: [-8,20,6],//[6, 195, 6], // [6,215,6],
         uvd: 0.45,
         scale: 0.006,
