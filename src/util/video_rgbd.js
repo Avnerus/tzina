@@ -24,6 +24,9 @@ export default class VideoRGBD  {
         this.rgbd_fs = glslify('../shaders/rgbd_fs.glsl')
         this.rgbd_vs = glslify('../shaders/rgbd_vs.glsl')
 
+        //SOME SPECIFIC CONTRAST & BRIGHNESS EFFECTS TO THE WIRE PIXEL SHADER
+        this.wire_rgbd_fs = glslify('../shaders/rgbd_wire_fs.glsl')
+
         this.timer = 0;
 
         console.log("VideoRGBD constructed: " , this.properties);
@@ -54,14 +57,15 @@ export default class VideoRGBD  {
               "maxdepth" : { type : "f", value : this.properties.maxdepth },
               "uvdy" : { type : "f", value : this.properties.uvdy },
               "uvdx" : { type : "f", value : this.properties.uvdx },
-              "opacity" : { type : "f", value : 1.0 }
+              "opacity" : { type : "f", value : 0.1 },
+              "brightness" : { type : "f", value : 0.3 }
           },
 
           vertexShader: this.rgbd_vs,
-          fragmentShader: this.rgbd_fs,
+          fragmentShader: this.wire_rgbd_fs,
           blending: THREE.AdditiveBlending,
           wireframe:      true,
-          transparent:    false
+          transparent:    true
         } );
 
         this.meshMaterial = new THREE.ShaderMaterial( {
@@ -91,7 +95,7 @@ export default class VideoRGBD  {
 
         //DebugUtil.positionObject(this.wire, this.properties.fileName + " - Wire", false);
 
-        this.wire.position.z = 0.1;
+        this.wire.position.z = 0.01;
 
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
