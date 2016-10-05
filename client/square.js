@@ -1,16 +1,20 @@
 import Trees from "./trees"
 import Fountain from "./fountain"
 import DebugUtil from "./util/debug"
+import _ from 'lodash';
 
 const MODEL_PATH = "assets/square/scene.json"
 const WINDOWS_PATH = "assets/square/windows.json"
 const SUNS_PATH = "assets/square/suns.json"
 const TEXTURES_PATH = "assets/square/textures/textures.json"
+const COLLIDERS_PATH = "assets/square/bench_bases.json"
 
 export default class Square extends THREE.Object3D{
-    constructor() {
+    constructor(collisionManager) {
         super();
         console.log("Square constructed!")
+
+        this.collisionManager = collisionManager;
 
 
         this.ENTRY_POINTS = [
@@ -53,7 +57,7 @@ export default class Square extends THREE.Object3D{
         this.currentSun = null;
         this.activatedSun = null;
     }
-    init(collisionManager,loadingManager) {
+    init(loadingManager) {
         loadingManager.itemStart("Square");
         let trees = new Trees();
         this.fountain = new Fountain();
@@ -63,7 +67,8 @@ export default class Square extends THREE.Object3D{
             this.fountain.init(loadingManager),
             this.loadWindows(loadingManager),
             this.loadSuns(loadingManager),
-            this.loadTextures(loadingManager)
+            this.loadTextures(loadingManager),
+            this.loadColliders(loadingManager)
         ])
         .then((results) => {
             console.log("Load results", results);
@@ -80,8 +85,15 @@ export default class Square extends THREE.Object3D{
             let textures = results[5];
             obj.add(textures);
 
+            this.colliders = results[6];
+            obj.add(this.colliders);
+
             obj.rotation.order = "YXZ";
             this.mesh = obj;
+
+            this.addColliders();
+            this.setSquareMiddle();
+
             //this.mesh.scale.set(4,4,4);
             this.fountain.position.set(0.8,23.6, -0.6);
             //DebugUtil.positionObject(this.fountain, "Fountain");
@@ -109,6 +121,11 @@ export default class Square extends THREE.Object3D{
             } else {
                 this.turnOffSun(name);
             }
+        });
+
+        events.on("angle_updated", (hour) => {
+            this.addColliders();
+            this.setSquareMiddle(); 
         });
     }
     update(dt) {
@@ -185,6 +202,18 @@ export default class Square extends THREE.Object3D{
             });
         });
     }
+    loadColliders(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(COLLIDERS_PATH,( obj ) => {
+                let colliders;
+                obj.children  = _.filter(obj.children, function(o) { return (o.name != "BenchColliders2" && o.name != "BenchColliders"); });
+                obj.children.forEach((o) => {o.children.splice(0,1)});
+                console.log("Loaded square colliders ", obj);
+                resolve(obj);
+            });
+        });
+    }
     loadTextures(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
@@ -204,17 +233,7 @@ export default class Square extends THREE.Object3D{
                 this.updateMatrixWorld();
 
                 this.add(obj);
-                //obj.updateMatrixWorld();
                 //collisionManager.addBoundingBoxes(obj,this);
-
-                this.squareMiddle  = obj.getObjectByName("basin");
-                if (this.squareMiddle) {
-                    this.squareCenter  = new THREE.Vector3();
-                    this.squareCenter.setFromMatrixPosition(this.squareMiddle.matrixWorld);
-                    console.log("Square center", this.squareCenter);
-                } else {
-                    this.squareCenter = new THREE.Vector3(0,0,0);
-                }
 
                 this.sphereMesh = obj.getObjectByName("SkySphere").children[0];
                 console.log("Sky sphere", this.sphereMesh);
@@ -222,6 +241,27 @@ export default class Square extends THREE.Object3D{
             });
 
         });
+    }
+
+    setSquareMiddle() {
+        this.squareMiddle  = this.mesh.getObjectByName("f_06");
+        if (this.squareMiddle) {
+            this.squareCenter  = new THREE.Vector3();
+            this.squareCenter.setFromMatrixPosition(this.squareMiddle.matrixWorld);
+            console.log("Square center", this.squareCenter);
+        } else {
+            this.squareCenter = new THREE.Vector3(0,0,0);
+        }
+    }
+
+    addColliders() {
+        this.mesh.updateMatrixWorld(true);
+        //let aroundFountain  = this.mesh.getObjectByName("f_11_SubMesh 0");
+        /*
+        this.colliders.forEach((collider) => {
+            collider.matrixWorld.multiply(this.mesh.matrixWorld);
+        })*/
+        this.collisionManager.refreshSquareColliders(this.colliders.children);
     }
 
     getSphereMesh() {

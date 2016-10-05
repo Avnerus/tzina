@@ -14,18 +14,38 @@ export default class CollisionManager {
     constructor(camera, scene) {
         console.log("Collision Manager constructed!")
 
-        this.obstacles = [];
+        this.characterObstacles = [];
         this.playerBox = [[0,0,0,0,0,0]]
+        this.characterObstacleInfo = [];
 
-        this.obstacleInfo = [];
+        this.squareObstacles = [];
+        this.squareDebug = [];
 
         this.climbingStairs = false;
         this.climbingRamp = false;
         this.scene = scene;
         this.player = camera;
+
+        this.debug = true;
     }
     init() {
     }
+
+
+    refreshSquareColliders(colliders) {
+        console.log("Refresh square colliders ", colliders);
+        if (this.debug) {
+            while(this.squareDebug.length > 0) {
+                let object = this.squareDebug.pop();
+                this.scene.remove(object);
+            }
+        }
+        this.squareObstacles.splice(0);
+        colliders.forEach((object) => {
+            this.addBoundingBox(object);
+        });
+    }
+
     update(dt) {
         this.playerBox[0] = [
             this.player.position.x - PLAYER_SIZE.x / 2,
@@ -35,11 +55,9 @@ export default class CollisionManager {
             this.player.position.y + PLAYER_SIZE.y / 2,
             this.player.position.z + PLAYER_SIZE.z / 2,
         ]
-        this.crossing = boxIntersect(this.playerBox, this.obstacles, (i,j) => {
-            if (this.obstacleInfo[j].onCollision) {
-                this.obstacleInfo[j].onCollision();
-            } else if (this.obstacleInfo[j].intro) {
-                this.obstacleInfo[j].intro.onIntro();
+        this.crossing = boxIntersect(this.playerBox, this.characterObstacles, (i,j) => {
+            if (this.characterObstacleInfo[j].onCollision) {
+                this.characterObstacleInfo[j].onCollision();
             }
         });
     }
@@ -68,7 +86,7 @@ export default class CollisionManager {
 
 
 
-        this.obstacles.push([
+        this.characterObstacles.push([
             bbox.box.min.x - space, 
             bbox.box.min.y - space, 
             bbox.box.min.z - space, 
@@ -77,12 +95,12 @@ export default class CollisionManager {
             bbox.box.max.z + space
         ]);
 
-        character.obstacleIndex = this.obstacles.length -1;
+        character.obstacleIndex = this.characterObstacles.length -1;
 
-        this.obstacleInfo.push(character);
+        this.characterObstacleInfo.push(character);
 
         if (character.props.introSpace) {
-            this.obstacles.push([
+            this.characterObstacles.push([
                 bbox.box.min.x - introSpace, 
                 bbox.box.min.y - introSpace, 
                 bbox.box.min.z - introSpace, 
@@ -90,22 +108,34 @@ export default class CollisionManager {
                 bbox.box.max.y + introSpace, 
                 bbox.box.max.z + introSpace
             ]);
-            this.obstacleInfo.push({intro: character});
+            this.characterObstacleInfo.push({intro: character});
         }
     }
 
     removeCharacter(character) {
         console.log("COLLISION MANAGER - Removing character ", character, "Obstacle index: ",character.obstacleIndex);
         if (character.props.introSpace) {
-            this.obstacles.splice(character.obstacleIndex, 2);
-            this.obstacleInfo.splice(character.obstacleIndex, 2);
+            this.characterObstacles.splice(character.obstacleIndex, 2);
+            this.characterObstacleInfo.splice(character.obstacleIndex, 2);
         } else {
-            this.obstacles.splice(character.obstacleIndex, 1);
-            this.obstacleInfo.splice(character.obstacleIndex, 1);
+            this.characterObstacles.splice(character.obstacleIndex, 1);
+            this.characterObstacleInfo.splice(character.obstacleIndex, 1);
+        }
+    }
+
+    addBoundingBox(obj) {
+        obj.children[0].updateMatrixWorld(true);
+        obj.children[0].material.wireframe = true;
+        let bbox = new THREE.BoundingBoxHelper(obj.children[0],0x00ff00);
+        bbox.update();
+        if (this.debug) {
+            this.scene.add(bbox);
+            this.squareDebug.push(bbox);
         }
     }
 
     addBoundingBoxes(obj, scene) {
+        /*
         obj.traverse( (child) => {
             if (child.type == "Object3D") {
                 for (let key of Object.keys(COLLIDERS)) {
@@ -129,7 +159,7 @@ export default class CollisionManager {
                 }
             }
         })
-        //console.log(this.obstacles, this.obstacleInfo);
+        //console.log(this.obstacles, this.obstacleInfo);*/
     }
     isClimbingStairs() {
         return this.climbingStairs
