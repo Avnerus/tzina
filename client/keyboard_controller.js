@@ -153,14 +153,20 @@ export default class KeyboardController {
                 let zVector = new THREE.Vector3().copy(this.zAxis).applyQuaternion(this.camera.quaternion);
                 if (!this.config.enableFlying) {
                     zVector.y = 0;
+                    xVector.y = 0
                 }
                 let target = new THREE.Vector3().copy(this.camera.position);
                 target.add(zVector.multiplyScalar(this.velocity.z * delta));
                 target.add(xVector.multiplyScalar(this.velocity.x * delta));
 
-                if (this.collisionManager.testMovement(this.camera.position, target)) {
-                    this.camera.position.copy(target);
-                }
+                this.collisionManager.testMovement(this.camera.position, target)
+                .then((result) => {
+                    if (result) {
+                        this.camera.position.copy(target);
+                    } else {
+                        console.log("NO GO");
+                    }
+                }); 
             }
         }
 

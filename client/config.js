@@ -5,8 +5,8 @@ export default {
     enableFlying: false,
     skipIntro: true,
     skipCharacters: false,
-    //movementSpeed: 0.25,
-    movementSpeed: 1,
+    movementSpeed: 0.25,
+    //    movementSpeed: 1,
     daySpeed: 0.003
 //    daySpeed: 0.08
 }

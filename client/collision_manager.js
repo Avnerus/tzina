@@ -29,10 +29,7 @@ export default class CollisionManager {
         this.player = camera;
         this.meshColliders = [];
 
-        this.debug = true;
-
-        this.legDistance = -10;
-        events.emit("add_gui", {folder:"Leg distance"}, this, "legDistance", -20, 0);
+        this.debug = false;
     }
     init() {
     }
@@ -76,25 +73,34 @@ export default class CollisionManager {
     }
 
     testMovement(source, destination) {
-        // Square
-        this.meshColliders.splice(0);
-        boxIntersect(this.playerBox, this.squareObstacles, (i,j) => {
-            this.meshColliders.push(this.squareMeshes[j]);
-        });
-        if (this.meshColliders.length > 0) {
-            let legs = new THREE.Vector3().copy(source);
-            legs.y += this.legDistance;
+        return new Promise((resolve, reject) => {
+            // Square
+            this.meshColliders.splice(0);
+            boxIntersect(this.playerBox, this.squareObstacles, (i,j) => {
+                this.meshColliders.push(this.squareMeshes[j]);
+            });
+            if (this.meshColliders.length > 0) {
+                let legs = new THREE.Vector3().copy(source);
+                legs.y = 21.7;
 
-            let directionVector = new THREE.Vector3().copy(destination);
-            directionVector.sub(source).normalize();
+                let directionVector = new THREE.Vector3().copy(destination);
+                directionVector.sub(source).normalize();
 
-            let ray = new THREE.Raycaster( legs, directionVector);
-            let collisionResults = ray.intersectObjects(this.meshColliders);
-            console.log(collisionResults.length + " SQUARE COLLISIONS ");
-            return true;
-        } else {
-            return true;
-        }
+                // console.log("Direction vector ", directionVector);
+                let ray = new THREE.Raycaster( legs, directionVector);
+                let collisionResults = ray.intersectObjects(this.meshColliders);
+
+                collisionResults.forEach((result) => {
+                    console.log(result.distance);
+                    if (result.distance < 0.5) {
+                        resolve(false);
+                    }
+                });
+                resolve(true);
+            } else {
+                resolve(true);
+            }
+        })
     }
 
     addCharacter(character) {
@@ -156,7 +162,8 @@ export default class CollisionManager {
     }
 
     addBoundingBox(obj) {
-        obj.children[0].material.wireframe = true;
+        //obj.children[0].material.wireframe = true;
+        obj.children[0].material.visible = false;
         let bbox = new THREE.BoundingBoxHelper(obj.children[0],0x00ff00);
         bbox.update();
         if (this.debug) {
