@@ -24,6 +24,7 @@ export default class KeyboardController {
         this.active = false;
 
         this.zAxis = new THREE.Vector3(0,0,1);
+        this.xAxis = new THREE.Vector3(1,0,0);
     }
     init() {
 
@@ -120,8 +121,16 @@ export default class KeyboardController {
     
     update(delta) {
         if (this.active && delta < 0.1) {
-            this.velocity.x -= this.velocity.x * 10.0 * delta;
-            this.velocity.z -= this.velocity.z * 10.0 * delta;
+            if (this.velocity.x > 0) {
+                this.velocity.x = Math.max(this.velocity.x - this.velocity.x * 10.0 * delta, 0);
+            } else {
+                this.velocity.x = Math.min(this.velocity.x - this.velocity.x * 10.0 * delta, 0);
+            }
+            if (this.velocity.z > 0) {
+                this.velocity.z = Math.max(this.velocity.z - this.velocity.z * 10.0 * delta, 0);
+            } else {
+                this.velocity.z = Math.min(this.velocity.z - this.velocity.z * 10.0 * delta, 0);
+            }
 
             //this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
             
@@ -136,42 +145,23 @@ export default class KeyboardController {
                 this.climbStairs();
                 }*/
 
-            if ( this.isOnObject === true)  {
-                this.velocity.y = Math.max( 0, this.velocity.y );
-
-                this.canJump = true;
-            }
-
-
             
-            this.camera.translateX( this.velocity.x * delta );
-            this.camera.position.y += this.velocity.y * delta;
-            if (this.config.enableFlying) {
-                this.camera.translateZ(this.velocity.z * delta);
-            } else {
+            if (this.velocity.z != 0 || this.velocity.x != 0) {
+
+                // Test the movement before actually moving
+                let xVector = new THREE.Vector3().copy(this.xAxis).applyQuaternion(this.camera.quaternion);
                 let zVector = new THREE.Vector3().copy(this.zAxis).applyQuaternion(this.camera.quaternion);
-                zVector.y = 0;
-                this.camera.position.add(zVector.multiplyScalar(this.velocity.z * delta));
+                if (!this.config.enableFlying) {
+                    zVector.y = 0;
+                }
+                let target = new THREE.Vector3().copy(this.camera.position);
+                target.add(zVector.multiplyScalar(this.velocity.z * delta));
+                target.add(xVector.multiplyScalar(this.velocity.x * delta));
+
+                if (this.collisionManager.testMovement(this.camera.position, target)) {
+                    this.camera.position.copy(target);
+                }
             }
-
-            /*
-
-            if ( this.camera.position.y < this.height) {
-                    if ( this.camera.position.y < this.height) {
-
-                         this.velocity.y = 0;
-                         this.camera.position.y = this.height;
-
-                         this.canJump = true;
-                    }
-
-
-                 this.canJump = true;
-                 }*/
-
-
-            //console.log(this.camera.position);
-            
         }
 
     }
