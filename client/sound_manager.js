@@ -10,7 +10,7 @@ export default class SoundManager {
 
     }
 
-    init() {
+    init(loadingManager) {
 
         // Extending THREE.Audio
 
@@ -87,7 +87,7 @@ export default class SoundManager {
         this.scene.add(highway_2);
 
         //BUFFER THE SOUNDS INTO THE PROPER ELEMENTS
-        this.loader = new THREE.AudioLoader();
+        this.loader = new THREE.AudioLoader(loadingManager);
 
         // Dynamically loaded sounds
         this.sounds = {}
@@ -96,21 +96,18 @@ export default class SoundManager {
         this.loader.load(SOUND_PATH + 'fountain_water.ogg', function(audioBuffer) {
             fountain.setBuffer(audioBuffer);
         }, function() {
-            console.log('Fountain sound loaded');
         });
 
         // HIGHWAY ONE
         this.loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
             highway_1.setBuffer(audioBuffer);
         }, function() {
-            console.log('Highway one sound loaded');
         });
 
         // HIGHWAY TWO
         this.loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
             highway_2.setBuffer(audioBuffer);
         }, function() {
-            console.log('Highway two sound loaded');
         });
 
     }
