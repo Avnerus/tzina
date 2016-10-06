@@ -156,18 +156,20 @@ export default class Square extends THREE.Object3D{
     }
 
     turnOnSun(name) {
-        let sun = this.suns.getObjectByName(name)
-        if (sun) {
-            if (this.currentSun) {
-                this.turnOffSun(this.currentSun);
+        if (this.suns) {
+            let sun = this.suns.getObjectByName(name)
+            if (sun) {
+                if (this.currentSun) {
+                    this.turnOffSun(this.currentSun);
+                }
+                let sunMesh = sun.children[0];
+                console.log("Turn on sun", sun);
+                sunMesh.material.color = new THREE.Color(0xF4F5DC);
+                sunMesh.material.emissive = new THREE.Color(0xC8C5B9);
+                sunMesh.material.specular = new THREE.Color(0xFFFFFF);
+                sunMesh.material.side = THREE.DoubleSide;
+                this.currentSun = name;
             }
-            let sunMesh = sun.children[0];
-            console.log("Turn on sun", sun);
-            sunMesh.material.color = new THREE.Color(0xF4F5DC);
-            sunMesh.material.emissive = new THREE.Color(0xC8C5B9);
-            sunMesh.material.specular = new THREE.Color(0xFFFFFF);
-            sunMesh.material.side = THREE.DoubleSide;
-            this.currentSun = name;
         }
     }
 

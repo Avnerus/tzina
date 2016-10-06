@@ -34,7 +34,6 @@ export default class Game {
         this.config = config;
         this.started = false;
         this.shownWASD = false;
-        this.shownArrows = false;
         this.shownZoom = false;
     }
     init() {
@@ -145,15 +144,17 @@ export default class Game {
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
 
-
-        this.animations = {
-            /*
-            'Hannah' : new HannahAnimation(),
-            'Miriam' : new MiriamAnimation(this.renderer),
-            'Haim' : new HaimAnimation(this.renderer),
-            'Itzik' : new ItzikAnimation()
-            */
+        if (!this.config.noAnimations) {
+            this.animations = {
+                'Hannah' : new HannahAnimation(),
+                'Miriam' : new MiriamAnimation(this.renderer),
+                'Haim' : new HaimAnimation(this.renderer),
+                'Itzik' : new ItzikAnimation()
+            }
+        } else {
+            this.animations = {};
         }
+
 
         this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager);
 
@@ -168,27 +169,6 @@ export default class Game {
         this.zoomGuidance.material.opacity = 0;
         this.scene.add(this.zoomGuidance);
 
-
-        let arrowGeo = new THREE.PlaneGeometry( 256, 128 );
-        let loader = new THREE.TextureLoader();
-        loader.load('assets/splash/left_arrow.png', (texture) => {
-            let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
-            material.opacity = 0;
-            this.leftArrow = new THREE.Mesh(arrowGeo, material);
-            this.leftArrow.position.set(-200, -145, 0);
-            this.scene.add(this.leftArrow);
-        });
-        loader.load('assets/splash/right_arrow.png', (texture) => {
-            let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
-            material.opacity = 0;
-            this.rightArrow = new THREE.Mesh(arrowGeo, material);
-            this.rightArrow.position.set(200, -150, 0);
-            this.rightArrow.opacity = 0;
-            this.scene.add(this.rightArrow);
-        });
-
-
-
         this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
     }
 
@@ -196,14 +176,14 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            this.scene.add(this.square);
-            this.sky.applyToMesh(this.square.getSphereMesh());
-
-            this.introAni.initFBOParticle();
-            this.scene.add(this.introAni);
+            if (!this.config.noSquare) {
+                this.scene.add(this.square);
+                this.sky.applyToMesh(this.square.getSphereMesh());
+                this.introAni.initFBOParticle();
+                this.scene.add(this.introAni);
+            }
 
             // DebugUtil.positionEntry(this.square.ENTRY_POINTS[5], this.square.mesh, this.scene);
-
 
             onLoad();
         };
@@ -215,14 +195,16 @@ export default class Game {
             console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
         }
 
-        this.soundManager.init();
-        this.square.init(this.loadingManager);
-        this.introAni.init(this.loadingManager);
-        this.sky.init(this.loadingManager);
+        if (!this.config.noSquare) {
+            this.square.init(this.loadingManager);
+            this.introAni.init(this.loadingManager);
+            this.sky.init(this.loadingManager);
 
-        // Characters
-        console.log("Initializing characters");
-        this.characterController.init(this.loadingManager);
+            // Characters
+            console.log("Initializing characters");
+            this.characterController.init(this.loadingManager);
+        }
+        this.soundManager.init(this.loadingManager);
 
         // WebVR
         this.vrEffect = new THREE.VREffect(this.renderer);
@@ -245,18 +227,6 @@ export default class Game {
         TweenMax.to(this.zoomGuidance.material, 1, {opacity: targetOpacity});
     }
 
-    showArrows() {
-        let targetOpacity = 1;
-        TweenMax.to(this.leftArrow.material, 1, {opacity: targetOpacity});
-        TweenMax.to(this.rightArrow.material, 1, {opacity: targetOpacity});
-    }
-
-    hideArrows() {
-        let targetOpacity = 0;
-        TweenMax.to(this.leftArrow.material, 1, {opacity: targetOpacity});
-        TweenMax.to(this.rightArrow.material, 1, {opacity: targetOpacity});
-    }
-
     start() {
         this.started = true;
         this.vrManager.setMode_(2);
@@ -276,7 +246,9 @@ export default class Game {
         this.resize();
 
 
-        this.square.fountain.startCycle();
+        if (!this.config.noSquare) {
+            this.square.fountain.startCycle();
+        }
 
         if (this.config.skipIntro) {
             this.timeController.transitionTo(17, 1); //17
@@ -292,8 +264,9 @@ export default class Game {
 
         events.on("intro_end", () => {
             console.log("Intro ended");
-            this.introAni.start();
-            this.arrowTimer();
+            if (!this.config.noSquare) {
+                this.introAni.start();
+            }
         });
 
         this.counter = 0;
@@ -320,22 +293,14 @@ export default class Game {
         });
 
         events.on("time_rotated", () => {
-            this.shownArrows = true;
-            this.scene.remove(this.leftArrow);
-            this.scene.remove(this.rightArrow);
         });
 
         events.on("base_position", () => {
-            this.arrowTimer();
         });
         events.on("chapter_threshold", (passed) => {
-            if (passed) {
-                this.hideArrows();
-            }
         });
 
         events.on("control_threshold", () => {
-            //this.introAni.start();
             if (!this.shownWASD) {
                 document.getElementById("wasd-container").style.display = "block";
                 setTimeout(() => {
@@ -384,40 +349,29 @@ export default class Game {
         });
     }
 
-    arrowTimer() {
-        if (!this.timeController.wasUsed) {
-            setTimeout(() => {
-                if (!this.timeController.wasd) {
-                    this.showArrows();
-                    setTimeout(() => {
-                        this.hideArrows();
-                    },4000);
-                }
-            }, 3000);
-        }
-    }
-
     animate(t) {
         this.update(this.clock.getDelta(), this.clock.getElapsedTime());
         this.render();
     }
 
     update(dt,et) {
-        this.sky.update(dt);
-        this.square.update(dt);
+        if (!this.config.noSquare) {
+            this.sky.update(dt);
+            this.square.update(dt);
+            this.timeController.update(dt);
+            this.characterController.update(dt,et);
+            this.intro.update();
+            this.introAni.update(dt,et);
+        }
         if (this.keyboardController) {
             this.keyboardController.update(dt);
-            this.zoomController.update(dt);
         }
-        this.timeController.update(dt);
-        this.characterController.update(dt,et);
+        this.zoomController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
         }
         this.collisionManager.update(dt);
         //this.flood.update(dt);
-        this.intro.update();
-        this.introAni.update(dt,et);
     }
 
     render() {

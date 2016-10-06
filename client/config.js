@@ -7,6 +7,8 @@ export default {
     skipCharacters: false,
     movementSpeed: 0.5,
     //    movementSpeed: 1,
-    daySpeed: 0.003
+    daySpeed: 0.003,
+    noSquare: false,
+    noAnimations: false
 //    daySpeed: 0.08
 }
