@@ -380,7 +380,7 @@ export default class Game {
                this.vrControls.update();
         }
         this.collisionManager.update(dt);
-        this.sunLoader.update(dt);
+        this.sunLoader.update(dt, et);
         //this.flood.update(dt);
     }
 

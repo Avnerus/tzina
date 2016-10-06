@@ -17,6 +17,8 @@ export default class SunLoader extends THREE.Object3D  {
         this.width = 64;
         this.height = 64;
 
+        this.timer = 0;
+
         this.renderer = renderer;
     }
     initParticles() {
@@ -40,7 +42,9 @@ export default class SunLoader extends THREE.Object3D  {
 
         this.simulationShader = new THREE.ShaderMaterial({
             uniforms: {
-                positions: { type: "t", value: positions }
+                positions: { type: "t", value: positions },
+                origin: { type: "t", value: positions },
+                timer: { type: "f", value: 0}
             },
             vertexShader: this.simulation_vs,
             fragmentShader:  this.simulation_fs,
@@ -67,7 +71,8 @@ export default class SunLoader extends THREE.Object3D  {
 
         this.fbo.update();
     }
-    update() {
+    update(dt,et) {
+        this.simulationShader.uniforms.timer.value = et;
         this.fbo.update();
     }
 }
