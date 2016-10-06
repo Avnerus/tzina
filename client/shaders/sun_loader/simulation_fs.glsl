@@ -9,7 +9,7 @@ varying vec2 vUv;
 void main() {
     vec3 pos;
         
-    if ( random(vUv + timer ) > 0.97 ) {
+    if ( random(vUv + timer ) > 0.99 ) {
         pos = texture2D( origin, vUv ).xyz;
     } else {
         pos = texture2D( positions, vUv ).rgb;
@@ -19,9 +19,9 @@ void main() {
         float z = pos.z;
 
 
-        pos.x += sin( y * 7.0 ) * cos( z * 12.0 ) * 0.05;
-        pos.y += sin( x * 8.0 ) * cos( z * 13.0 ) * 0.05;
-        pos.z += sin( x * 9.0 ) * cos( y * 14.0 ) * 0.05;
+        pos.x += sin( y * 12.0 ) * cos( z * 12.0 ) * 0.07;
+        pos.y += sin( x * 13.0 ) * cos( z * 13.0 ) * 0.07;
+        pos.z += sin( x * 14.0 ) * cos( y * 14.0 ) * 0.07;
     }
 
 
