@@ -92,7 +92,7 @@ export default class CollisionManager {
 
                 collisionResults.forEach((result) => {
                     console.log(result.distance);
-                    if (result.distance < 0.5) {
+                    if (result.distance < 0.1) {
                         resolve(false);
                     }
                 });
