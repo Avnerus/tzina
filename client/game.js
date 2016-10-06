@@ -28,6 +28,9 @@ import ItzikAnimation from './animations/itzik'
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
 
+
+import SunLoader from './sun_loader'
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
@@ -170,6 +173,8 @@ export default class Game {
         this.scene.add(this.zoomGuidance);
 
         this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
+
+        this.sunLoader = new SunLoader(this.renderer);
     }
 
     load(onLoad) {
@@ -182,6 +187,8 @@ export default class Game {
                 this.introAni.initFBOParticle();
                 this.scene.add(this.introAni);
             }
+
+            this.scene.add(this.sunLoader);
 
             // DebugUtil.positionEntry(this.square.ENTRY_POINTS[5], this.square.mesh, this.scene);
 
@@ -205,6 +212,7 @@ export default class Game {
             this.characterController.init(this.loadingManager);
         }
         this.soundManager.init(this.loadingManager);
+        this.sunLoader.init(this.loadingManager);
 
         // WebVR
         this.vrEffect = new THREE.VREffect(this.renderer);
@@ -251,10 +259,11 @@ export default class Game {
         }
 
         if (this.config.skipIntro) {
-            this.timeController.transitionTo(17, 1); //17
-            setTimeout(() => {
-                events.emit("intro_end");
-            },3000)
+            if (!this.config.noSquare) {
+                this.timeController.transitionTo(17, 1); //17
+            }
+            events.emit("intro_end");
+
         } else {
             // Init the intro
             this.intro.init();
@@ -371,6 +380,7 @@ export default class Game {
                this.vrControls.update();
         }
         this.collisionManager.update(dt);
+        this.sunLoader.update(dt);
         //this.flood.update(dt);
     }
 

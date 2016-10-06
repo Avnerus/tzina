@@ -8,7 +8,7 @@ export default {
     movementSpeed: 0.5,
     //    movementSpeed: 1,
     daySpeed: 0.003,
-    noSquare: false,
-    noAnimations: false
+    noSquare: true,
+    noAnimations: true
 //    daySpeed: 0.08
 }

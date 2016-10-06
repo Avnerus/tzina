@@ -70,7 +70,7 @@ game.load(function() {
 
 function start() {
     document.getElementById('start-container').style.display = "none";
-    //document.getElementById('game').appendChild(stats.dom);
+    document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
     window.addEventListener('vrdisplaypresentchange', resize, true);
@@ -83,13 +83,14 @@ function start() {
 function animate(t) {
     requestAnimationFrame(animate);
 
+    /*
     elapsed = t - lastTimestamp;
     if (elapsed >= FPS_INTERVAL) {
-        lastTimestamp = t - (elapsed % FPS_INTERVAL);
+        lastTimestamp = t - (elapsed % FPS_INTERVAL);*/
         game.animate(t);
         stats.end();
         stats.begin();
-    }
+   // }
 }
 
 function resize() {
