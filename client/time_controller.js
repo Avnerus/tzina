@@ -97,7 +97,7 @@ export default class TimeController {
 
         this.insideChapterTitle = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitle.scale.multiplyScalar(0.02);
-        DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+        //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
 
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
