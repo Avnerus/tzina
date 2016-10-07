@@ -77,6 +77,9 @@ export default class FBO {
         //console.log("Vertices array: ", vertices);
 
         let references  = new Float32Array( points * 2);
+        let bigX = 0;
+        let bigY = 0;
+
         for(var vert = 0; vert < points; vert++ ) {
 
             var i = ~~(vert / 3);
@@ -85,7 +88,16 @@ export default class FBO {
 
             references[ vert * 2     ] = x;
             references[ vert * 2 + 1 ] = y;
+
+            if (x > bigX) {
+                bigX = x;
+            }
+            if (y > bigY) {
+                bigY = y;
+            }
         }
+
+        console.log("BIG X ", bigX, " BIG Y ", bigY);
 
         //create the particles geometry
         let geometry = new THREE.BufferGeometry();
