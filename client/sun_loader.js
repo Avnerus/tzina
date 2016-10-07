@@ -14,15 +14,18 @@ export default class SunLoader extends THREE.Object3D  {
         this.simulation_fs = glslify('./shaders/sun_loader/simulation_fs.glsl');
         this.simulation_vs = glslify('./shaders/sun_loader/simulation_vs.glsl');
 
-        this.width = 64;
-        this.height = 64;
+        this.width = 128;
+        this.height = 128;
 
         this.timer = 0;
 
         this.renderer = renderer;
+
+        this.radius = 10;
+        this.tube = 3;
     }
     initParticles() {
-        let fboGeo = new THREE.TorusGeometry( 10, 3, 16, 100 );
+        let fboGeo = new THREE.TorusGeometry( this.radius, this.tube, 16, 100 );
 
         let data = new Float32Array( this.width * this.height * 3  );
 
@@ -53,7 +56,9 @@ export default class SunLoader extends THREE.Object3D  {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 5 }
+                pointSize: { type: "f", value: 2 },
+                radius: { type: "f", value: this.radius },
+                tube: { type: "f", value: this.tube }
             },
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,

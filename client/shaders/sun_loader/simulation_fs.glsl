@@ -24,6 +24,7 @@ void main() {
         pos.z += sin( x * 14.0 ) * cos( y * 14.0 ) * 0.07;
     }
 
+//    pos = texture2D( origin, vUv ).xyz;
 
     gl_FragColor = vec4( pos, 1.0 );
 }
