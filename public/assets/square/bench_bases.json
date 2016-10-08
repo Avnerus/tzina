@@ -274,9 +274,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -287,9 +284,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -300,9 +294,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -313,9 +304,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -326,9 +314,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -339,9 +324,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -352,9 +334,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -365,9 +344,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -378,9 +354,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -391,9 +364,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -404,9 +374,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -417,9 +384,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -430,9 +394,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -443,9 +404,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -456,9 +414,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -469,9 +424,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -482,9 +434,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -495,9 +444,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -508,9 +454,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -521,9 +464,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -534,9 +474,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -547,9 +484,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -560,9 +494,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -573,9 +504,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -586,9 +514,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -599,9 +524,6 @@
 			"color": "0xFFFFFF",
 			"emissive": "0x000000",
 			"opacity": 1,
-			"map": "d492f92f-0787-4623-9f96-3216b2c30444_MainTex",
-			"normalMap": "d492f92f-0787-4623-9f96-3216b2c30444_BumpMap",
-			"aoMap": "d492f92f-0787-4623-9f96-3216b2c30444_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		}

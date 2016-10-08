@@ -1,5 +1,7 @@
 import Trees from "./trees"
 import Fountain from "./fountain"
+import SunLoader from './sun_loader'
+
 import DebugUtil from "./util/debug"
 import _ from 'lodash';
 
@@ -10,11 +12,12 @@ const TEXTURES_PATH = "assets/square/textures/textures.json"
 const COLLIDERS_PATH = "assets/square/bench_bases.json"
 
 export default class Square extends THREE.Object3D{
-    constructor(collisionManager) {
+    constructor(collisionManager, renderer) {
         super();
         console.log("Square constructed!")
 
         this.collisionManager = collisionManager;
+        this.renderer = renderer;
 
 
         this.ENTRY_POINTS = [
@@ -79,7 +82,7 @@ export default class Square extends THREE.Object3D{
             this.suns = results[4];
             this.suns.rotation.y = Math.PI * -70 / 180;
 
-            obj.add(this.windows);
+            //obj.add(this.windows);
             obj.add(this.suns);
 
             let textures = results[5];
@@ -102,7 +105,7 @@ export default class Square extends THREE.Object3D{
             loadingManager.itemEnd("Square");
 
             // INITIAL STATE
-            this.turnOffWindows();
+            //this.turnOffWindows();
             this.turnOffSuns();
             
 /*            events.emit("add_gui", obj.position, "x"); */
@@ -128,8 +131,11 @@ export default class Square extends THREE.Object3D{
             this.setSquareMiddle(); 
         });
     }
-    update(dt) {
+    update(dt,et) {
         this.fountain.update(dt);
+        for (let i = 1; i < this.suns.children.length; i++) {
+            this.suns.children[i].children[1].update(dt,et)
+        }
     }
 
     turnOffWindows() {
@@ -188,18 +194,32 @@ export default class Square extends THREE.Object3D{
 
     loadWindows(loadingManager) {
         return new Promise((resolve, reject) => {
+            // No windows
+            resolve({});
+            /*
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(WINDOWS_PATH,( obj ) => {
                 console.log("Loaded Windows ", obj );
                 resolve(obj);
-            });
+            });*/
         });
     }
     loadSuns(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(SUNS_PATH,( obj ) => {
+                
+                // Add a loader to all  of the suns (First object is the nesting export)
+                for (let i = 1; i < obj.children.length; i++) {
+                    let sunLoader = new SunLoader(this.renderer);
+                    sunLoader.init();
+                    sunLoader.quaternion.copy(obj.children[i].children[0].quaternion);
+                    //obj.children[i].rotation.set(0,0,0);
+                    obj.children[i].add(sunLoader);
+                }
+
                 console.log("Loaded suns ", obj );
+
                 resolve(obj);
             });
         });

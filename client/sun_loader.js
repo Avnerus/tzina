@@ -14,19 +14,15 @@ export default class SunLoader extends THREE.Object3D  {
         this.simulation_fs = glslify('./shaders/sun_loader/simulation_fs.glsl');
         this.simulation_vs = glslify('./shaders/sun_loader/simulation_vs.glsl');
 
-        this.width = 128;
-        this.height = 128;
+        this.width = 32;
+        this.height = 32;
 
         this.timer = 0;
 
         this.renderer = renderer;
 
-        this.radius = 10;
-        this.tube = 3;
-
-        this.a = 1.0;
-        this.b = 1.1;
-        this.c = 0.84;
+        this.radius = 0.8;
+        this.tube = 0.2;
 
         this.orderTimer = 0.0;
     }
@@ -52,7 +48,7 @@ export default class SunLoader extends THREE.Object3D  {
         
         return positions;
     }
-    init(loadingManager) {
+    init() {
         let positions = this.initParticles();
 
         this.simulationShader = new THREE.ShaderMaterial({
@@ -62,9 +58,6 @@ export default class SunLoader extends THREE.Object3D  {
                 timer: { type: "f", value: 0},
                 radius: { type: "f", value: this.radius },
                 tube: { type: "f", value: this.tube },
-                a: { type: "f", value: this.a },
-                b: { type: "f", value: this.b },
-                c: { type: "f", value: this.c },
                 orderTimer: { type: "f", value: this.orderTimer }
             },
             vertexShader: this.simulation_vs,
@@ -74,7 +67,7 @@ export default class SunLoader extends THREE.Object3D  {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 4},
+                pointSize: { type: "f", value: 3},
                 radius: { type: "f", value: this.radius },
                 tube: { type: "f", value: this.tube }
             },
@@ -92,9 +85,6 @@ export default class SunLoader extends THREE.Object3D  {
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
         this.add( this.fbo.particles );
 
-        events.emit("add_gui", {folder:"Particles A", listen:false}, this.simulationShader.uniforms.a, "value", 0.0, 2.0); 
-        events.emit("add_gui", {folder:"Particles B", listen:false}, this.simulationShader.uniforms.b, "value", 0.0, 2.0); 
-        events.emit("add_gui", {folder:"Particles C", listen:false}, this.simulationShader.uniforms.c, "value", 0.0, 2.0); 
         events.emit("add_gui", {folder:"Particles Order", listen:false}, this.simulationShader.uniforms.orderTimer, "value", 0.0, 1.0); 
 
         events.emit("add_gui", {folder:"Command", listen:false}, this, "organize"); 

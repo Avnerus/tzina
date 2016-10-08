@@ -6,7 +6,7 @@ import {MeshText2D, SpriteText2D, textAlign} from './lib/text2d/index'
 import SunGazer from './sun_gazer'
 
 export default class TimeController {
-    constructor(config, element, square, sky, scene, camera) {
+    constructor(config, element, square, sky, scene, camera, renderer) {
         this.square = square;
         this.config = config;
         this.element = element;
@@ -30,9 +30,8 @@ export default class TimeController {
         this.done = false;
 
         this.accelerating = false;
-
     }
-    init() {
+    init(loadingManager) {
         console.log("Initializing Time Controller", this.element)
         this.times = Chapters.map((chapter) => {return chapter.hour}).sort((a,b) => {return a-b});
         this.angles = this.times.map((time) => {return time * 15});
@@ -97,7 +96,7 @@ export default class TimeController {
 
         this.insideChapterTitle = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitle.scale.multiplyScalar(0.02);
-        DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+        //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
 
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
@@ -156,7 +155,7 @@ export default class TimeController {
         }
     }
 
-    update(dt) {
+    update(dt,et) {
         if (this.active && this.rotateVelocity != 0) {
             if (!this.wasUsed) {
                 this.wasUsed = true;
@@ -205,7 +204,7 @@ export default class TimeController {
 
         if (this.gazeHour != -1) {
             this.gazeCounter += dt;
-            if (this.gazeCounter >= 3) {
+            if (this.gazeCounter >= 300) {
 
                 let targetHour = this.gazeHour;
                 this.gazeHour = -1;

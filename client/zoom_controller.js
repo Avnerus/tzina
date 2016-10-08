@@ -31,9 +31,8 @@ export default class ZoomController {
         )
         this.STARTING_POSITION = new THREE.Vector3(
             0,
-            0,
-            70
-            
+            50,
+            350
         );
         this.MID_ZOOM = new THREE.Vector3(
             0,

@@ -8,12 +8,7 @@ uniform float tube;
 
 varying vec2 vUv;
 
-uniform float a;
-uniform float b;
-uniform float c;
-
 uniform float orderTimer;
-
 
 const float PI = 3.1415926535897932384626433832795;
 
@@ -35,14 +30,14 @@ void main() {
             float z = pos.z;
 
 
-            pos.x += sin( y * 12.0 ) * cos( z * 12.0 ) * 0.07 * (1.0 - (orderTimer / 0.3));
-            pos.y += sin( x * 13.0 ) * cos( z * 13.0 ) * 0.07 * (1.0 - (orderTimer / 0.3));
-            pos.z += sin( x * 14.0 ) * cos( y * 14.0 ) * 0.07 * (1.0 - (orderTimer / 0.3));
+            pos.x += sin( y * 12.0 ) * cos( z * 12.0 ) * 0.007 * (1.0 - (orderTimer / 0.3));
+            pos.y += sin( x * 13.0 ) * cos( z * 13.0 ) * 0.007 * (1.0 - (orderTimer / 0.3));
+            pos.z += sin( x * 14.0 ) * cos( y * 14.0 ) * 0.007 * (1.0 - (orderTimer / 0.3));
         } 
     } else {
         // Try to organize the circle by color
         float particleRadius = distance(originPos, vec3(0, 0, 0));
-        float progressInCircle = (a - vUv.x) * (b - vUv.y) / c;
+        float progressInCircle = (1.0 - vUv.x) * (1.1 - vUv.y) / 0.84;
         if (progressInCircle > 1.0) {
             progressInCircle -= 0.3;
         }
