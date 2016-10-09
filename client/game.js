@@ -252,7 +252,7 @@ export default class Game {
 
         if (this.config.skipIntro) {
             if (!this.config.noSquare) {
-                this.timeController.transitionTo(17, 1); //17
+                this.timeController.transitionTo(this.config.startTime, 1);
             }
             setTimeout(() => {
                 events.emit("intro_end");
