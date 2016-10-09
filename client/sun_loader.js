@@ -74,7 +74,7 @@ export default class SunLoader extends THREE.Object3D  {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 0.5},
+                pointSize: { type: "f", value: 0.15},
                 radius: { type: "f", value: this.radius },
                 tube: { type: "f", value: this.tube },
                 boom: { type: "1", value: 0 }
@@ -96,7 +96,7 @@ export default class SunLoader extends THREE.Object3D  {
 
         events.on("control_threshold", (passed) => {
             if (passed) {
-                this.renderShader.uniforms.pointSize.value = 3.0;
+                this.renderShader.uniforms.pointSize.value = 2.0;
             }
         })
 
