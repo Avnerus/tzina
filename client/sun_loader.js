@@ -23,14 +23,20 @@ export default class SunLoader extends THREE.Object3D  {
 
         this.radius = 0.8;
         this.tube = 0.2;
-
-        this.orderTimer = 0.0;
     }
     organize() {
         TweenMax.to(this.simulationShader.uniforms.orderTimer, 1, {value: 1.0});
     }
     disorganize() {
         TweenMax.to(this.simulationShader.uniforms.orderTimer, 1, {value: 0.0});
+    }
+    explode() {
+        this.renderShader.uniforms.boom.value = 1;
+        TweenMax.to(this.simulationShader.uniforms.explodeTimer, 1, {ease: Linear.None, onComplete: () => {
+            this.simulationShader.uniforms.explodeTimer.value = 0;
+            this.simulationShader.uniforms.orderTimer.value = 0;
+            this.renderShader.uniforms.boom.value = 0;
+        },value: 1.0});
     }
     initParticles() {
         let fboGeo = new THREE.TorusGeometry( this.radius, this.tube, 20, 100 );
@@ -58,7 +64,8 @@ export default class SunLoader extends THREE.Object3D  {
                 timer: { type: "f", value: 0},
                 radius: { type: "f", value: this.radius },
                 tube: { type: "f", value: this.tube },
-                orderTimer: { type: "f", value: this.orderTimer }
+                orderTimer: { type: "f", value: 0.0 },
+                explodeTimer: { type: "f", value: 0.0 }
             },
             vertexShader: this.simulation_vs,
             fragmentShader:  this.simulation_fs,
@@ -67,9 +74,10 @@ export default class SunLoader extends THREE.Object3D  {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 3},
+                pointSize: { type: "f", value: 0.5},
                 radius: { type: "f", value: this.radius },
-                tube: { type: "f", value: this.tube }
+                tube: { type: "f", value: this.tube },
+                boom: { type: "1", value: 0 }
             },
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,
@@ -84,19 +92,30 @@ export default class SunLoader extends THREE.Object3D  {
         this.fbo = new FBO();
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
         this.add( this.fbo.particles );
+        this.fbo.update();
 
+        events.on("control_threshold", (passed) => {
+            if (passed) {
+                this.renderShader.uniforms.pointSize.value = 3.0;
+            }
+        })
+
+        /*
         events.emit("add_gui", {folder:"Particles Order", listen:false}, this.simulationShader.uniforms.orderTimer, "value", 0.0, 1.0); 
+        events.emit("add_gui", {folder:"Particles Explode",listen:false}, this.simulationShader.uniforms.explodeTimer, "value", 0.0, 1.0); 
+        events.emit("add_gui", {folder:"Particles Size",listen:false}, this.renderShader.uniforms.pointSize, "value", 0.0, 3.0); 
 
         events.emit("add_gui", {folder:"Command", listen:false}, this, "organize"); 
         events.emit("add_gui", {folder:"Command", listen:false}, this, "disorganize"); 
+        events.emit("add_gui", {folder:"Command", listen:false}, this, "explode"); */
 
 
-        this.fbo.update();
     }
     update(dt,et) {
         this.simulationShader.uniforms.timer.value = et;
         this.fbo.update();
-        if (this.simulationShader.uniforms.orderTimer.value > 0.3) {
+        if (this.simulationShader.uniforms.orderTimer.value > 0.3 && 
+           this.simulationShader.uniforms.explodeTimer.value == 0.0) {
             this.rotateZ(0.5 * dt);
         }
     }

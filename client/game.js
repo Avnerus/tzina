@@ -255,7 +255,9 @@ export default class Game {
             if (!this.config.noSquare) {
                 this.timeController.transitionTo(17, 1); //17
             }
-            events.emit("intro_end");
+            setTimeout(() => {
+                events.emit("intro_end");
+            },3000);
 
         } else {
             // Init the intro

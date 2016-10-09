@@ -119,14 +119,11 @@ export default class Square extends THREE.Object3D{
             this.activateSun(name);
         });
         events.on("gaze_stopped", (name) => {
-            if (name == this.currentSun) {
-                this.turnOnSun(name);
-            } else {
-                this.turnOffSun(name);
-            }
+            this.deactivateSun(name);
         });
 
         events.on("angle_updated", (hour) => {
+            console.log("Square angle updated. Adding colliders");
             this.addColliders();
             this.setSquareMiddle(); 
         });
@@ -189,6 +186,25 @@ export default class Square extends THREE.Object3D{
             sunMesh.material.emissive = new THREE.Color(0xC80509);
             sunMesh.material.specular = new THREE.Color(0xFF0000);
             sunMesh.material.side = THREE.DoubleSide;
+
+            let sunLoader = sun.children[1];
+            sunLoader.organize();
+        }
+    }
+
+    deactivateSun(name) {
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            let sunLoader = sun.children[1];
+            sunLoader.disorganize();
+        }
+    }
+
+    explodeSun(name) {
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            let sunLoader = sun.children[1];
+            sunLoader.explode();
         }
     }
 

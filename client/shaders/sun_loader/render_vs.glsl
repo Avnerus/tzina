@@ -9,6 +9,8 @@ uniform float pointSize;
 uniform float radius;
 uniform float tube;
 
+uniform int boom;
+
 void main() {
 
     //the mesh is a nomrliazed square so the uvs = the xy positions of the vertices
@@ -16,11 +18,15 @@ void main() {
 
     // Distance from center?
     /*
-    float distToCenter = distance(pos, vec3(0, 0, 0)) / (radius + tube);
     vColor = vec3(distToCenter, 0.5, 0.5);
     */
 
     vColor = vec3(1.0, reference);
+    if (boom == 1) {
+        float distToCenter = distance(pos, vec3(0, 0, 0)) / (radius + tube);
+        vColor.g += (25.0 - distToCenter) / 65.0;
+        vColor.b += (25.0 - distToCenter) / 65.0;
+    }
 
     gl_Position = projectionMatrix *  modelViewMatrix * vec4( pos, 1.0 );
 

@@ -91,7 +91,6 @@ export default class CollisionManager {
                 let collisionResults = ray.intersectObjects(this.meshColliders);
 
                 collisionResults.forEach((result) => {
-                    console.log(result.distance);
                     if (result.distance < 0.1) {
                         resolve(false);
                     }
@@ -116,11 +115,13 @@ export default class CollisionManager {
             console.log("BBOX? ", cube);
             this.scene.add(cube);*/
 
-           this.scene.updateMatrixWorld(true);
+        this.scene.updateMatrixWorld(true);
 
-             let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
-                bbox.update();
-            //this.scene.add(bbox);
+        let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
+        bbox.update();
+       if (this.debug) {
+        this.scene.add(bbox);
+       }
 
 
 
@@ -136,29 +137,12 @@ export default class CollisionManager {
         character.obstacleIndex = this.characterObstacles.length -1;
 
         this.characterObstacleInfo.push(character);
-
-        if (character.props.introSpace) {
-            this.characterObstacles.push([
-                bbox.box.min.x - introSpace, 
-                bbox.box.min.y - introSpace, 
-                bbox.box.min.z - introSpace, 
-                bbox.box.max.x + introSpace, 
-                bbox.box.max.y + introSpace, 
-                bbox.box.max.z + introSpace
-            ]);
-            this.characterObstacleInfo.push({intro: character});
-        }
     }
 
     removeCharacter(character) {
         console.log("COLLISION MANAGER - Removing character ", character, "Obstacle index: ",character.obstacleIndex);
-        if (character.props.introSpace) {
-            this.characterObstacles.splice(character.obstacleIndex, 2);
-            this.characterObstacleInfo.splice(character.obstacleIndex, 2);
-        } else {
-            this.characterObstacles.splice(character.obstacleIndex, 1);
-            this.characterObstacleInfo.splice(character.obstacleIndex, 1);
-        }
+        this.characterObstacles.splice(character.obstacleIndex, 1);
+        this.characterObstacleInfo.splice(character.obstacleIndex, 1);
     }
 
     addBoundingBox(obj) {

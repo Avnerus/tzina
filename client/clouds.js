@@ -42,6 +42,7 @@ export default class Clouds {
     stopTransition() {
         this.currentState = States.STATIC
         this.cloudsVideo.pause();
+        this.cloudsVideo.video.currentTime = 0;
         this.targetShader.uniforms.cloudsMap.value = this.staticTexture;
     }
 }

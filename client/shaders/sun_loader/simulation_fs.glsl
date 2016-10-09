@@ -9,6 +9,7 @@ uniform float tube;
 varying vec2 vUv;
 
 uniform float orderTimer;
+uniform float explodeTimer;
 
 const float PI = 3.1415926535897932384626433832795;
 
@@ -18,6 +19,10 @@ void main() {
         
     pos = texture2D( positions, vUv ).rgb;
     originPos = texture2D( origin, vUv ).rgb;
+
+    if (explodeTimer == 1.0) {
+        pos = originPos;
+    } 
 
     if (orderTimer <= 0.3) {
         if ( random(vUv + timer ) > 0.99 ) {
@@ -37,6 +42,15 @@ void main() {
     } else {
         // Try to organize the circle by color
         float particleRadius = distance(originPos, vec3(0, 0, 0));
+
+        if (explodeTimer > 0.0 && explodeTimer < 1.0) {
+            float variation = 0.2 + random(vUv + explodeTimer) * 0.8;
+            particleRadius += (50.0 * explodeTimer * explodeTimer * variation);
+//            pos.z = originPos.z + 10.0 * explodeTimer * explodeTimer * variation;
+        } else {
+ //           pos.z = originPos.z;
+        }
+
         float progressInCircle = (1.0 - vUv.x) * (1.1 - vUv.y) / 0.84;
         if (progressInCircle > 1.0) {
             progressInCircle -= 0.3;

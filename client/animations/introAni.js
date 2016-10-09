@@ -113,7 +113,6 @@ export default class IntroAnimation extends THREE.Object3D {
             this.trees.scale.multiplyScalar(0.2);
             this.trees.position.y = 140;
             this.add(this.trees);
-            //DebugUtil.positionObject(this.trees, "TREE");
 
             // this.tree = new THREE.Points( geometry, material );
             // this.tree.scale.set( 150, 130, 100 );
@@ -207,9 +206,11 @@ export default class IntroAnimation extends THREE.Object3D {
 
         this.fbo = new FBO();
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
+        //this.fbo.particles.frustumCulled = false;
+        DebugUtil.positionObject(this.fbo.particles, "TREE");
         this.add( this.fbo.particles );
         this.timerAnim = null;
-        this.fbo.particles.position.y = 1500;
+        //this.fbo.particles.position.y = 1500;
         this.fbo.update();
     }
 

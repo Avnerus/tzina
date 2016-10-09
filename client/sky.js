@@ -120,7 +120,7 @@ export default class Sky {
 
 
         events.on("gaze_started", () => {
-            this.clouds.startTransition();
+            //this.clouds.startTransition();
         });
         events.on("gaze_stopped", () => {
             this.clouds.stopTransition();
