@@ -96,12 +96,14 @@ export default class Game {
 
         //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
         //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
+        //
+        /*
         events.emit("add_gui", {folder:"Point light", listen:false}, this.dirLight, "intensity");
         events.emit("add_gui", {folder:"Point light", listen:false}, this.dirLight, "distance");
 
-        events.emit("add_gui", {folder:"Hemi light", listen:false}, this.dirLight, "intensity");
+        events.emit("add_gui", {folder:"Hemi light", listen:false}, this.dirLight, "intensity");*/
 
-        DebugUtil.colorPicker("Point light", this.dirLight, "color");
+        //DebugUtil.colorPicker("Point light", this.dirLight, "color");
 
         //dirLight.target.position.set(0,100,0);
         //

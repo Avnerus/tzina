@@ -1,6 +1,7 @@
 import Trees from "./trees"
 import Fountain from "./fountain"
 import SunLoader from './sun_loader'
+import Extras from './extras';
 
 import DebugUtil from "./util/debug"
 import _ from 'lodash';
@@ -63,6 +64,7 @@ export default class Square extends THREE.Object3D{
     init(loadingManager) {
         loadingManager.itemStart("Square");
         let trees = new Trees();
+        let extras = new Extras();
         this.fountain = new Fountain();
         Promise.all([
             this.loadSquare(loadingManager),
@@ -71,12 +73,14 @@ export default class Square extends THREE.Object3D{
             this.loadWindows(loadingManager),
             this.loadSuns(loadingManager),
             this.loadTextures(loadingManager),
-            this.loadColliders(loadingManager)
+            this.loadColliders(loadingManager),
+            extras.init(loadingManager)
         ])
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
             obj.add(trees);
+            obj.add(extras);
             obj.add(this.fountain);
             this.windows = results[3];
             this.suns = results[4];
@@ -109,9 +113,9 @@ export default class Square extends THREE.Object3D{
             this.turnOffSuns();
             
 /*            events.emit("add_gui", obj.position, "x"); */
-            events.emit("add_gui",{}, obj.position, "y"); 
+            //events.emit("add_gui",{}, obj.position, "y"); 
             //events.emit("add_gui", obj.position, "z");
-            events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
+            //events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
 
         });
 

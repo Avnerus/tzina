@@ -107,8 +107,8 @@ export default
 			],
 			"extraAssets": [
 				{
-					"fileName": "",
-					"position": [0,0,0]
+                    name: "palm",
+                    position: [10,20,0]
 				}
 			],
 			"effects" : [
@@ -136,10 +136,11 @@ export default
 				"Izchak"
 			],
 			"extraAssets": [
-				{
-					"fileName": "lightstreets",
-					"position": [0,0,0]
-				}
+                {
+                    name: "singleTree",
+                    position: [0, 60, 0],
+                    rotation: [0, 0, 160]
+                }
 			],
 			"effects" : [
 				{
