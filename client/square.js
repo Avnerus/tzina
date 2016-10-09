@@ -6,7 +6,7 @@ import DebugUtil from "./util/debug"
 import _ from 'lodash';
 
 const MODEL_PATH = "assets/square/scene.json"
-const WINDOWS_PATH = "assets/square/windows.json"
+const BUILDINGS_PATH = "assets/square/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
 const TEXTURES_PATH = "assets/square/textures/textures.json"
 const COLLIDERS_PATH = "assets/square/bench_bases.json"
@@ -68,7 +68,7 @@ export default class Square extends THREE.Object3D{
             this.loadSquare(loadingManager),
             trees.init(loadingManager),
             this.fountain.init(loadingManager),
-            this.loadWindows(loadingManager),
+            this.loadBuildings(loadingManager),
             this.loadSuns(loadingManager),
             this.loadTextures(loadingManager),
             this.loadColliders(loadingManager)
@@ -78,11 +78,11 @@ export default class Square extends THREE.Object3D{
             let obj = results[0];
             obj.add(trees);
             obj.add(this.fountain);
-            this.windows = results[3];
+            this.buildings = results[3];
             this.suns = results[4];
             this.suns.rotation.y = Math.PI * -70 / 180;
 
-            //obj.add(this.windows);
+            obj.add(this.buildings);
             obj.add(this.suns);
 
             let textures = results[5];
@@ -105,7 +105,6 @@ export default class Square extends THREE.Object3D{
             loadingManager.itemEnd("Square");
 
             // INITIAL STATE
-            //this.turnOffWindows();
             this.turnOffSuns();
             
 /*            events.emit("add_gui", obj.position, "x"); */
@@ -133,10 +132,6 @@ export default class Square extends THREE.Object3D{
         for (let i = 1; i < this.suns.children.length; i++) {
             this.suns.children[i].children[1].update(dt,et)
         }
-    }
-
-    turnOffWindows() {
-        this.windows.children.forEach((obj) => {obj.visible = false});
     }
 
     turnOffSuns() {
@@ -208,16 +203,13 @@ export default class Square extends THREE.Object3D{
         }
     }
 
-    loadWindows(loadingManager) {
+    loadBuildings(loadingManager) {
         return new Promise((resolve, reject) => {
-            // No windows
-            resolve({});
-            /*
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(WINDOWS_PATH,( obj ) => {
-                console.log("Loaded Windows ", obj );
+            loader.load(BUILDINGS_PATH,( obj ) => {
+                console.log("Loaded Buildings ", obj );
                 resolve(obj);
-            });*/
+            })
         });
     }
     loadSuns(loadingManager) {
