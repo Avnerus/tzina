@@ -190,8 +190,12 @@ export default class Game {
             console.log("Error during load", err);
         };
 
+        this.loadingManager.onStart = (url,itemsLoaded, itemsTotal) => {
+            console.log("Loading ", url, "(" + itemsLoaded + "/" + itemsLoaded  + ")");
+        };
+
         this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
+            console.log("Loaded " + itemsLoaded + "/" +  itemsTotal);
         }
 
         if (!this.config.noSquare) {
