@@ -6,7 +6,7 @@ import {MeshText2D, SpriteText2D, textAlign} from './lib/text2d/index'
 import SunGazer from './sun_gazer'
 
 export default class TimeController {
-    constructor(config, element, square, sky, scene, camera) {
+    constructor(config, element, square, sky, scene, camera, renderer) {
         this.square = square;
         this.config = config;
         this.element = element;
@@ -30,17 +30,14 @@ export default class TimeController {
         this.done = false;
 
         this.accelerating = false;
-
     }
-    init() {
+    init(loadingManager) {
         console.log("Initializing Time Controller", this.element)
         this.times = Chapters.map((chapter) => {return chapter.hour}).sort((a,b) => {return a-b});
         this.angles = this.times.map((time) => {return time * 15});
         this.angles.push(360);
         console.log("Chapter times", this.times, this.angles);
         //document.addEventListener("mousemove", (e) => {this.handleMouseMove(e)})
-        document.addEventListener('keydown', (e) => { this.handleKeyDown(e); return false;}, false);
-        document.addEventListener('keyup', (e) => { this.handleKeyUp(e); return false}, false);
         this.currentHour = 0;
         this.nextHour = this.times[1];
 
@@ -124,39 +121,7 @@ export default class TimeController {
         });
     }
 
-    handleKeyDown(event) {
-        switch( event.keyCode ) {
-            case 37: // left
-            case 65: // a
-                event.preventDefault();
-                this.rotateVelocity -= 0.03;
-                this.accelerating = true;
-                event.stopPropagation();
-                break;
-            case 39: // right
-            case 68: // d
-                event.preventDefault();
-                this.rotateVelocity += 0.03;
-                this.accelerating = true;
-                event.stopPropagation();
-                break;
-        }
-    }
-
-    handleKeyUp(event) {
-        switch( event.keyCode ) {
-            case 37: // left
-            case 65: // a
-            case 39: // right
-            case 68: // d
-                event.preventDefault();
-                this.accelerating = false;
-                event.stopPropagation();
-                break;
-        }
-    }
-
-    update(dt) {
+    update(dt,et) {
         if (this.active && this.rotateVelocity != 0) {
             if (!this.wasUsed) {
                 this.wasUsed = true;
@@ -205,7 +170,10 @@ export default class TimeController {
 
         if (this.gazeHour != -1) {
             this.gazeCounter += dt;
-            if (this.gazeCounter >= 3) {
+            if (this.gazeCounter > 1 && this.sky.clouds.currentState != "transition" ) {
+                this.sky.clouds.startTransition();
+            }
+            if (this.gazeCounter >= 4) {
 
                 let targetHour = this.gazeHour;
                 this.gazeHour = -1;
@@ -213,22 +181,25 @@ export default class TimeController {
                 this.clockRunning = false;
 
                 TweenMax.to(this, 3, {ease: Power2.easeInOut, currentHour: targetHour, onComplete: () => {
-                    this.sunGazer.stop();
-                    this.sunGazer.active = false;
-                    this.square.turnOnSun(this.currentHour.toString());
-                    events.emit("hour_updated", this.currentHour);
-                    let targetRotationY = this.currentHour * 15;
-                    if (targetRotationY > 180) {
-                        targetRotationY -= 360;
-                    }
-                    targetRotationY *= Math.PI / 180;
-                    console.log("Time controller - rotating square from ", this.square.mesh.rotation.y, " to ", targetRotationY);
-                    TweenMax.to(this.square.mesh.rotation, 7, {ease: Power2.easeInOut, delay: 1, y: targetRotationY, onComplete: () => {
-                        events.emit("angle_updated", this.currentHour);
-                        this.updateNextHour();
-                        this.sunGazer.active = true;
-                        this.clockRunning = true;
-                    }});
+                    this.square.explodeSun(this.currentHour.toString());
+                    setTimeout(() => {
+                        this.sunGazer.stop();
+                        this.sunGazer.active = false;
+                        this.square.turnOnSun(this.currentHour.toString());
+                        events.emit("hour_updated", this.currentHour);
+                        let targetRotationY = this.currentHour * 15;
+                        if (targetRotationY > 180) {
+                            targetRotationY -= 360;
+                        }
+                        targetRotationY *= Math.PI / 180;
+                        console.log("Time controller - rotating square from ", this.square.mesh.rotation.y, " to ", targetRotationY);
+                        TweenMax.to(this.square.mesh.rotation, 7, {ease: Power2.easeInOut, delay: 1, y: targetRotationY, onComplete: () => {
+                            events.emit("angle_updated", this.currentHour);
+                            this.updateNextHour();
+                            this.sunGazer.active = true;
+                            this.clockRunning = true;
+                        }});
+                    },1000);
                 }, onUpdate: () => {
                     this.sky.setTime(this.currentHour);
                 }});

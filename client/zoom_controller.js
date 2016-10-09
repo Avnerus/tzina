@@ -33,7 +33,6 @@ export default class ZoomController {
             0,
             50,
             350
-            
         );
         this.MID_ZOOM = new THREE.Vector3(
             0,

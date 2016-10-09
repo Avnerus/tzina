@@ -9,6 +9,6 @@ export default {
     //    movementSpeed: 1,
     daySpeed: 0.003,
     noSquare: false,
-    noAnimations: false
+    noAnimations: true
 //    daySpeed: 0.08
 }

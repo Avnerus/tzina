@@ -115,7 +115,7 @@ export default class Game {
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
         // Square
-        this.square = new Square(this.collisionManager);
+        this.square = new Square(this.collisionManager, this.renderer);
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
@@ -139,7 +139,6 @@ export default class Game {
         this.zoomController.init();
 
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera);
-        this.timeController.init();
 
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
@@ -205,6 +204,7 @@ export default class Game {
             this.characterController.init(this.loadingManager);
         }
         this.soundManager.init(this.loadingManager);
+        this.timeController.init(this.loadingManager);
 
         // WebVR
         this.vrEffect = new THREE.VREffect(this.renderer);
@@ -251,10 +251,13 @@ export default class Game {
         }
 
         if (this.config.skipIntro) {
-            this.timeController.transitionTo(19, 1); //17
+            if (!this.config.noSquare) {
+                this.timeController.transitionTo(17, 1); //17
+            }
             setTimeout(() => {
                 events.emit("intro_end");
-            },3000)
+            },3000);
+
         } else {
             // Init the intro
             this.intro.init();
@@ -357,8 +360,8 @@ export default class Game {
     update(dt,et) {
         if (!this.config.noSquare) {
             this.sky.update(dt);
-            this.square.update(dt);
-            this.timeController.update(dt);
+            this.square.update(dt,et);
+            this.timeController.update(dt,et);
             this.characterController.update(dt,et);
             this.intro.update();
             this.introAni.update(dt,et);

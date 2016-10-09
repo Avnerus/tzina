@@ -64,9 +64,6 @@
 			"color": "0x5B5B5B",
 			"emissive": "0xC8C5B9",
 			"opacity": 1,
-			"map": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_MainTex",
-			"normalMap": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_BumpMap",
-			"aoMap": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -77,9 +74,6 @@
 			"color": "0x5B5B5B",
 			"emissive": "0xC8C5B9",
 			"opacity": 1,
-			"map": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_MainTex",
-			"normalMap": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_BumpMap",
-			"aoMap": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -90,9 +84,6 @@
 			"color": "0x5B5B5B",
 			"emissive": "0xC8C5B9",
 			"opacity": 1,
-			"map": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_MainTex",
-			"normalMap": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_BumpMap",
-			"aoMap": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -103,9 +94,6 @@
 			"color": "0xF54876FF",
 			"emissive": "0xC8C5B9",
 			"opacity": 1,
-			"map": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_MainTex",
-			"normalMap": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_BumpMap",
-			"aoMap": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		},
@@ -116,9 +104,6 @@
 			"color": "0x5B5B5B",
 			"emissive": "0xC8C5B9",
 			"opacity": 1,
-			"map": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_MainTex",
-			"normalMap": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_BumpMap",
-			"aoMap": "5b2bcf52-fce3-4a2b-9319-e205e68c9880_OcclusionMap",
 			"transparent": false,
 			"wireframe": false
 		}
