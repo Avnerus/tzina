@@ -93,13 +93,13 @@ export default [
         maxdepth : 2514.773681641,
         position : [-1, 21.96, -7.1],
         rotation: [7, -192, 8],
-        animation: null,
+        animation: 'Meir',
         uvdy: 0.478125,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
-        animationScale: 0.25,
-        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
-        animationRotation: [13, 0, 0],      // 20, 0, 0
+        animationScale: 0.18,
+        animationPosition: [-0.5,0,-0.4],
+        animationRotation: [7,25,-8],
         space: 4,
         subtitles: null
     }
