@@ -59,7 +59,6 @@ export default [
         position : [19, 21.75, 4],
         rotation: [0, -23, 8],
         animation: 'Haim',
-        //uvdy: 0.4861,
         uvdy: 0.4791,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
@@ -69,6 +68,40 @@ export default [
         space: 4,
         volume: 0.1,
         subtitles: true
+    },
+    {
+        name: 'Rami',
+        basePath : 'assets/characters/rami',
+        mindepth : 2225.287353516,
+        maxdepth : 3252.206298828,
+        position : [-12.3, 22.0, 2.2],
+        rotation: [36, -140, 10],
+        animation: null,
+        uvdy: 0.4889,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        animationScale: 0.25,
+        animationPosition: [0.45, -0.3, 0.25],
+        animationRotation: [-4, -23, -9],
+        space: 4,
+        subtitles: false
+    },
+    {
+        name: 'Meir',
+        basePath : 'assets/characters/meir',
+        mindepth : 1482.958618164,
+        maxdepth : 2514.773681641,
+        position : [-1, 21.96, -7.1],
+        rotation: [7, -192, 8],
+        animation: null,
+        uvdy: 0.478125,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        animationScale: 0.25,
+        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
+        animationRotation: [13, 0, 0],      // 20, 0, 0
+        space: 4,
+        subtitles: null
     }
 /*,
     {
