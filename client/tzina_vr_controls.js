@@ -52,25 +52,22 @@ export default function ( emitter, object, onError ) {
 
 	// If true will use "standing space" coordinate system where y=0 is the
 	// floor and x=0, z=0 is the center of the room.
-	this.standing = false;
+	this.standing = true;
 
 	// Distance from the users eyes to the floor in meters. Used when
 	// standing=true but the VRDisplay doesn't provide stageParameters.
-	this.userHeight = 1.6;
+	this.userHeight = 22.1;
 
     this.active = false;
 
-    /*
+    this.basePosition = new THREE.Vector3(0,0,0);
+
     events.on("control_threshold", (passed) => {
         if (passed) {
             this.active = true;
         } else {
             this.active = false;
-        }
-    })*/
-
-    events.on("intro_end", (passed) => {
-        this.active = true;
+        }        
     })
 
 	this.update = function () {
@@ -90,15 +87,16 @@ export default function ( emitter, object, onError ) {
 
                     if ( pose.position !== null ) {
 
-                        object.position.fromArray( pose.position );
-
+                        object.position.fromArray(pose.position).multiplyScalar(this.scale).add(this.basePosition);
+                        
                         if ( this.standing ) {
 
                             if ( vrInput.stageParameters ) {
-
+                            	
                                 object.updateMatrix();
 
                                 standingMatrix.fromArray(vrInput.stageParameters.sittingToStandingTransform);
+
                                 object.applyMatrix( standingMatrix );
 
                             } else {
