@@ -100,6 +100,7 @@ export default class Square extends THREE.Object3D{
             //this.mesh.scale.set(4,4,4);
             this.fountain.position.set(0.8,23.6, -0.6);
             //DebugUtil.positionObject(this.fountain, "Fountain");
+            DebugUtil.positionObject(this.buildings, "Buildings");
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");
