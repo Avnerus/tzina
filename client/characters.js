@@ -22,8 +22,8 @@ export default [
         basePath : 'assets/characters/miriam',
         mindepth : 1983.749877930,
         maxdepth : 3119.456298828,
-        position : [11.3, 21.85, -7.8],
-        rotation: [-17, 28, 12],
+        position : [7.7, 21.85, -15.0],
+        rotation: [341, 20, 12],
         animation: 'Miriam',
         uvdy: 0.4847,
         uvdx: -0.025,
@@ -39,8 +39,8 @@ export default [
         basePath : 'assets/characters/itzik',
         mindepth : 0.0,
         maxdepth : 3494.158935547,
-        position : [-14.5, 21.95, 1.73],
-        rotation: [-10, 20, 8],
+        position : [11.7, 21.83, -8],
+        rotation: [337, 24, 15],
         animation: 'Itzik',
         uvdy: 0.4889,
         uvdx: 0.0,
@@ -48,7 +48,7 @@ export default [
         animationScale: 0.18,
         animationPosition: [0.13, -0.08, 0.48],   // 0,-1.5,-2.2
         animationRotation: [10, 8.5, -4],      // 20, 0, 0
-        space: 3,
+        space: 2,
         subtitles: true
     },
     {

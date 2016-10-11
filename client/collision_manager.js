@@ -45,9 +45,9 @@ export default class CollisionManager {
         }
         this.squareObstacles.splice(0);
         this.squareMeshes.splice(0);
-        colliders.forEach((object) => {
-            this.addBoundingBox(object);
-        });
+        for (let i = 1; i < colliders.length; i++) {
+            this.addBoundingBox(colliders[i]);
+        }
     }
 
     update(dt) {
