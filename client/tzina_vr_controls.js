@@ -58,7 +58,7 @@ export default function ( emitter, object, onError ) {
 	// standing=true but the VRDisplay doesn't provide stageParameters.
 	this.userHeight = 22.1;
 
-    this.active = false;
+    this.active = true;
 
     this.basePosition = new THREE.Vector3(0,0,0);
 
