@@ -22,8 +22,8 @@ export default [
         basePath : 'assets/characters/miriam',
         mindepth : 1983.749877930,
         maxdepth : 3119.456298828,
-        position : [11.3, 21.85, -7.8],
-        rotation: [-17, 28, 12],
+        position : [7.7, 21.85, -15.0],
+        rotation: [341, 20, 12],
         animation: 'Miriam',
         uvdy: 0.4847,
         uvdx: -0.025,
@@ -39,8 +39,8 @@ export default [
         basePath : 'assets/characters/itzik',
         mindepth : 0.0,
         maxdepth : 3494.158935547,
-        position : [-14.5, 21.95, 1.73],
-        rotation: [-10, 20, 8],
+        position : [11.7, 21.83, -8],
+        rotation: [337, 24, 15],
         animation: 'Itzik',
         uvdy: 0.4889,
         uvdx: 0.0,
@@ -48,7 +48,7 @@ export default [
         animationScale: 0.18,
         animationPosition: [0.13, -0.08, 0.48],   // 0,-1.5,-2.2
         animationRotation: [10, 8.5, -4],      // 20, 0, 0
-        space: 3,
+        space: 2,
         subtitles: true
     },
     {
@@ -93,14 +93,27 @@ export default [
         maxdepth : 2514.773681641,
         position : [-1, 21.96, -7.1],
         rotation: [7, -192, 8],
-        animation: null,
+        animation: 'Meir',
         uvdy: 0.478125,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
-        animationScale: 0.25,
-        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
-        animationRotation: [13, 0, 0],      // 20, 0, 0
+        animationScale: 0.18,
+        animationPosition: [-0.5,0,-0.4],
+        animationRotation: [7,25,-8],
         space: 4,
+        subtitles: null
+    },
+    {
+        name: 'Sasha',
+        basePath : 'assets/characters/sasha',
+        mindepth : 2131.298583984375,
+        maxdepth : 3802.192626953125,
+        position : [31.6, 20.6, -7.9],
+        rotation: [353.4, 290, 357.3],
+        animation: null,
+        uvdy: 0.571527778,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
         subtitles: null
     }
 /*,

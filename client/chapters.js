@@ -36,7 +36,7 @@ export default
             "titlePosition": [-90, 90, 0],
             "insideTitlePosition": [0, -1, 0],
 			"characters": [
-				"Miryam",
+				"Miriam",
 				"Itzik",
 				"shirin2"
 			],

@@ -142,7 +142,7 @@ export default class Sky {
         let flareColor = new THREE.Color( 0xffffff );
         flareColor.setHSL( lightHSL.h, lightHSL.s, lightHSL.l + 0.5 );
 
-        this.lensFlare = new THREE.LensFlare( textureFlare0, 200, 0.0, THREE.AdditiveBlending, flareColor );
+        this.lensFlare = new THREE.LensFlare( textureFlare0, 100, 0.0, THREE.AdditiveBlending, flareColor );
 
         this.lensFlare.add( textureFlare2, 512, 0.0, THREE.AdditiveBlending );
         this.lensFlare.add( textureFlare2, 512, 0.0, THREE.AdditiveBlending );

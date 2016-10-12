@@ -8,7 +8,7 @@ import _ from 'lodash';
 const MODEL_PATH = "assets/square/scene.json"
 const BUILDINGS_PATH = "assets/square/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
-const COLLIDERS_PATH = "assets/square/bench_bases.json"
+const COLLIDERS_PATH = "assets/square/colliders.json"
 
 export default class Square extends THREE.Object3D{
     constructor(collisionManager, renderer) {
@@ -95,7 +95,8 @@ export default class Square extends THREE.Object3D{
             //this.mesh.scale.set(4,4,4);
             this.fountain.position.set(0.8,23.6, -0.6);
             //DebugUtil.positionObject(this.fountain, "Fountain");
-            DebugUtil.positionObject(this.buildings, "Buildings");
+            //DebugUtil.positionObject(this.buildings, "Buildings");
+
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");
@@ -278,11 +279,7 @@ export default class Square extends THREE.Object3D{
         this.colliders.forEach((collider) => {
             collider.matrixWorld.multiply(this.mesh.matrixWorld);
         })*/
-        let colliders = []
-        colliders.push(...this.colliders.children);
-        let fountainCollider = this.mesh.getObjectByName("f_11");
-        colliders.push(fountainCollider);
-        this.collisionManager.refreshSquareColliders(colliders);
+        this.collisionManager.refreshSquareColliders(this.colliders.children);
     }
 
     getSphereMesh() {
