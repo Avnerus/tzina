@@ -102,6 +102,19 @@ export default [
         animationRotation: [7,25,-8],
         space: 4,
         subtitles: null
+    },
+    {
+        name: 'Sasha',
+        basePath : 'assets/characters/sasha',
+        mindepth : 2131.298583984375,
+        maxdepth : 3802.192626953125,
+        position : [31.6, 20.6, -7.9],
+        rotation: [353.4, 290, 357.3],
+        animation: null,
+        uvdy: 0.571527778,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        subtitles: null
     }
 /*,
     {
