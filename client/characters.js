@@ -46,8 +46,8 @@ export default [
         uvdx: 0.0,
         scale: 0.0027 * 0.25,
         animationScale: 0.18,
-        animationPosition: [0.13, -0.08, 0.48],   // 0,-1.5,-2.2
-        animationRotation: [10, 8.5, -4],      // 20, 0, 0
+        animationPosition: [-0.1, -0.05, 0.5],
+        animationRotation: [21, 3, 355],
         space: 2,
         subtitles: true
     },
