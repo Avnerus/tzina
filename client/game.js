@@ -29,6 +29,8 @@ import MeirAnimation from './animations/meir'
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
 
+import PidgeonController from './clientSockets/index'
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
@@ -223,6 +225,12 @@ export default class Game {
         };
         this.vrManager = new WebVRManager(this.renderer, this.vrEffect, params);
         console.log("VR Manager: ", this.vrManager);
+        //question: looks arbitrart that scene is provided in constructor while
+        //camera on init. Shall both be provided on constructor? or would that
+        //interfere with what threeObkect3d does on construction?
+        console.log("pidgeon first");
+        this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
+        this.pidgeonController.init();
     }
 
     showZoomGuidance() {
@@ -248,9 +256,9 @@ export default class Game {
                 this.keyboardController.init();
                 this.vrControls.basePosition.set(10, 21,12);
                 // --- hide by laura --- start
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x"); 
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y"); 
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z"); 
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x");
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y");
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z");
                 // --- hide by laura --- end
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
@@ -387,6 +395,17 @@ export default class Game {
                this.vrControls.update();
         }
         this.collisionManager.update(dt);
+
+        var tthis=this;
+        if(!this.pidgeonfailed){
+          console.log("pidgeon second");
+          try{
+            this.pidgeonController.socketEmitCameraPosition();
+          }catch(e){
+            console.log("pidgeonContoller failed",e);
+            tthis.pidgeonfailed=true;
+          }
+        }
         //this.flood.update(dt);
     }
 
