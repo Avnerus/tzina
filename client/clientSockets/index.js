@@ -35,7 +35,10 @@ export default class PidgeonController {
         // message.no
         let remoteSprite=characters.remote(message.pointer);
         if(remoteSprite){
-          remoteSprite.transform.rotation(remoteSprite.transform.position({x:message.data[0],y:message.data[1],z:message.data[2]}).getMovementDirection()* 180 / Math.PI);
+          //Positioning reception is multiplied by 0.001, and emission is multiplied
+          //by 1000 because the server is int based and we want to have more detailed
+          //pidgeon positioning than whole values
+          remoteSprite.transform.rotation(remoteSprite.transform.position({x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001}).getMovementDirection()* 180 / Math.PI);
           console.log("retrieved",remoteSprite);
         }else{
           console.warn("couldn't retrieve the corresponding sprite",message);
@@ -70,7 +73,9 @@ export default class PidgeonController {
           let stateObjectUnique=batch[a];
           //check if we already have a sprite for this remote object
           let dataOwner=characters.remote(stateObjectUnique);
-          let dataCoordinates={x:batch[a+1],y:batch[a+2],z:batch[a+3]};
+
+          let dataCoordinates={x:batch[a+1]*0.001,y:batch[a+2]*0.001,z:batch[a+3]*0.001};
+
           if(dataOwner){
             console.log("object "+stateObjectUnique+" found apply");
             //if we have it, will apply all the data to it. So far only position
@@ -95,17 +100,14 @@ export default class PidgeonController {
   socketEmitCameraPosition(){
     let position=this.camera.position;
     console.log("pidgeon tweets position",this.camera.position);
-    wsock.emit({header:"changeposition",pointer:myClientId,data:[position.x,position.y,position.z]},function(err,pl){
+    wsock.emit({header:"changeposition",pointer:myClientId,data:[position.x*1000,position.y*1000,position.z*1000]},function(err,pl){
       if(err){
         console.log("not sent",err);
       }else{
-        //console.log(pl);
       }
     });
     if(localSprite){
-      // console.log("clientid",myClientId,characters)
-      // localSprite=characters.remote(myClientId);
-      // console.log(localSprite);
+      //pendant: this may no longer be needed
       localSprite.transform.rotation(localSprite.transform.position({x:e.clientX,y:e.clientY}).getMovementDirection()* 180 / Math.PI);
     }
   }
