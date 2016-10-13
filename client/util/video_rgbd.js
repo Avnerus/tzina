@@ -82,7 +82,7 @@ export default class VideoRGBD  {
             vertexShader: this.rgbd_vs,
             fragmentShader: this.rgbd_fs,
             blending: THREE.AdditiveBlending,
-            transparent: false,
+            transparent: true,
             wireframe:false
         } );
 
@@ -193,5 +193,6 @@ export default class VideoRGBD  {
 
     setOpacity(opacity) {
         this.meshMaterial.uniforms.opacity.value = opacity;
+        this.linesMaterial.uniforms.opacity.value = Math.min(opacity,0.1);
     }
 };

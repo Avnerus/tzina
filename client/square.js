@@ -7,10 +7,10 @@ import DebugUtil from "./util/debug"
 import _ from 'lodash';
 
 const MODEL_PATH = "assets/square/scene.json"
-const WINDOWS_PATH = "assets/square/windows.json"
+const BUILDINGS_PATH = "assets/square/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
-const TEXTURES_PATH = "assets/square/textures/textures.json"
-const COLLIDERS_PATH = "assets/square/bench_bases.json"
+const COLLIDERS_PATH = "assets/square/colliders.json"
+const BENCHES_PATH = "assets/square/benches.json"
 
 export default class Square extends THREE.Object3D{
     constructor(collisionManager, renderer) {
@@ -64,36 +64,35 @@ export default class Square extends THREE.Object3D{
     init(loadingManager) {
         loadingManager.itemStart("Square");
         let trees = new Trees();
-        let extras = new Extras();
         this.fountain = new Fountain();
         Promise.all([
             this.loadSquare(loadingManager),
             trees.init(loadingManager),
             this.fountain.init(loadingManager),
-            this.loadWindows(loadingManager),
+            this.loadBuildings(loadingManager),
             this.loadSuns(loadingManager),
-            this.loadTextures(loadingManager),
             this.loadColliders(loadingManager),
-            extras.init(loadingManager)
+            this.loadBenches(loadingManager),
+	    extras.init(loadingManager)
         ])
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
             obj.add(trees);
-            obj.add(extras);
             obj.add(this.fountain);
-            this.windows = results[3];
+	    obj.add(this.extras);
+            this.buildings = results[3];
             this.suns = results[4];
             this.suns.rotation.y = Math.PI * -70 / 180;
 
-            //obj.add(this.windows);
+            obj.add(this.buildings);
             obj.add(this.suns);
 
-            let textures = results[5];
-            obj.add(textures);
-
-            this.colliders = results[6];
+            this.colliders = results[5];
             obj.add(this.colliders);
+
+            this.benches = results[6];
+            obj.add(this.benches);
 
             obj.rotation.order = "YXZ";
             this.mesh = obj;
@@ -109,13 +108,12 @@ export default class Square extends THREE.Object3D{
             loadingManager.itemEnd("Square");
 
             // INITIAL STATE
-            //this.turnOffWindows();
             this.turnOffSuns();
             
 /*            events.emit("add_gui", obj.position, "x"); */
-            //events.emit("add_gui",{}, obj.position, "y"); 
+            events.emit("add_gui",{}, obj.position, "y"); 
             //events.emit("add_gui", obj.position, "z");
-            //events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
+            events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
 
         });
 
@@ -138,11 +136,7 @@ export default class Square extends THREE.Object3D{
             this.suns.children[i].children[1].update(dt,et)
         }
     }
-
-    turnOffWindows() {
-        this.windows.children.forEach((obj) => {obj.visible = false});
-    }
-
+    
     turnOffSuns() {
         this.suns.children.forEach((obj) => {
             if (obj.children.length > 0) {
@@ -212,16 +206,13 @@ export default class Square extends THREE.Object3D{
         }
     }
 
-    loadWindows(loadingManager) {
+    loadBuildings(loadingManager) {
         return new Promise((resolve, reject) => {
-            // No windows
-            resolve({});
-            /*
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(WINDOWS_PATH,( obj ) => {
-                console.log("Loaded Windows ", obj );
+            loader.load(BUILDINGS_PATH,( obj ) => {
+                console.log("Loaded Buildings ", obj );
                 resolve(obj);
-            });*/
+            })
         });
     }
     loadSuns(loadingManager) {
@@ -256,11 +247,11 @@ export default class Square extends THREE.Object3D{
             });
         });
     }
-    loadTextures(loadingManager) {
+    loadBenches(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(TEXTURES_PATH,( obj ) => {
-                console.log("Loaded textures ", obj );
+            loader.load(BENCHES_PATH,( obj ) => {
+                console.log("Loaded square benches ", obj);
                 resolve(obj);
             });
         });
@@ -303,11 +294,7 @@ export default class Square extends THREE.Object3D{
         this.colliders.forEach((collider) => {
             collider.matrixWorld.multiply(this.mesh.matrixWorld);
         })*/
-        let colliders = []
-        colliders.push(...this.colliders.children);
-        let fountainCollider = this.mesh.getObjectByName("f_11");
-        colliders.push(fountainCollider);
-        this.collisionManager.refreshSquareColliders(colliders);
+        this.collisionManager.refreshSquareColliders(this.colliders.children);
     }
 
     getSphereMesh() {

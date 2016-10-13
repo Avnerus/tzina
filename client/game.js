@@ -24,6 +24,7 @@ import LupoAnimation from './animations/lupo'
 import MiriamAnimation from './animations/miriam'
 import HaimAnimation from './animations/haim'
 import ItzikAnimation from './animations/itzik'
+import MeirAnimation from './animations/meir'
 
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
@@ -40,6 +41,7 @@ export default class Game {
 
         class TzinaEmitter extends EventEmitter {}
         this.emitter = new TzinaEmitter();
+        this.emitter.setMaxListeners(20);
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
@@ -150,7 +152,8 @@ export default class Game {
                 'Hannah' : new HannahAnimation(),
                 'Miriam' : new MiriamAnimation(this.renderer),
                 'Haim' : new HaimAnimation(this.renderer),
-                'Itzik' : new ItzikAnimation()
+                'Itzik' : new ItzikAnimation(),
+                'Meir' : new MeirAnimation()
             }
         } else {
             this.animations = {};
@@ -192,8 +195,12 @@ export default class Game {
             console.log("Error during load", err);
         };
 
+        this.loadingManager.onStart = (url,itemsLoaded, itemsTotal) => {
+            console.log("Loading ", url, "(" + itemsLoaded + "/" + itemsLoaded  + ")");
+        };
+
         this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
+            console.log("Loaded " + itemsLoaded + "/" +  itemsTotal);
         }
 
         if (!this.config.noSquare) {

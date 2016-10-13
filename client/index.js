@@ -61,12 +61,16 @@ document.getElementById('start-button').addEventListener('click',function(event)
     //start(); 
 });
 
+try {
+    game.load(function() {
+        document.getElementById('start-container').style.display = "flex";
+        document.getElementById('loading-container').style.display = "none";
+    });
+}
+catch(e) {
+    console.error("Exception during game load ", e);
+}
 
-
-game.load(function() {
-    document.getElementById('start-container').style.display = "flex";
-    document.getElementById('loading-container').style.display = "none";
-});
 
 function start() {
     document.getElementById('start-container').style.display = "none";
