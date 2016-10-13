@@ -64,6 +64,7 @@ export default class Square extends THREE.Object3D{
     init(loadingManager) {
         loadingManager.itemStart("Square");
         let trees = new Trees();
+        this.extras = new  Extras();
         this.fountain = new Fountain();
         Promise.all([
             this.loadSquare(loadingManager),
@@ -73,14 +74,14 @@ export default class Square extends THREE.Object3D{
             this.loadSuns(loadingManager),
             this.loadColliders(loadingManager),
             this.loadBenches(loadingManager),
-	    extras.init(loadingManager)
+            this.extras.init(loadingManager)
         ])
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
             obj.add(trees);
             obj.add(this.fountain);
-	    obj.add(this.extras);
+            obj.add(this.extras);
             this.buildings = results[3];
             this.suns = results[4];
             this.suns.rotation.y = Math.PI * -70 / 180;
