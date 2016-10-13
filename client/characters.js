@@ -114,7 +114,8 @@ export default [
         uvdy: 0.571527778,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
-        subtitles: null
+        subtitles: null,
+        idleOnly: true
     },
     {
         name: 'Agam12PM',
@@ -127,7 +128,36 @@ export default [
         uvdy: 0.475,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
-        subtitles: null
+        subtitles: null,
+        idleOnly: true
+    },
+    {
+        name: 'LupoDogs12PM',
+        basePath : 'assets/characters/lupo-dogs',
+        mindepth : 1500.681884765625,
+        maxdepth : 3376.0517578125,
+        position : [15.6, 22.6, 0.2],
+        rotation: [340, 32, 8],
+        animation: null,
+        uvdy: 0.717013889,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        subtitles: null,
+        idleOnly: true
+    },
+    {
+        name: 'LupoDogs17',
+        basePath : 'assets/characters/lupo-dogs',
+        mindepth : 1500.681884765625,
+        maxdepth : 3376.0517578125,
+        position : [6.0, 21.96, 5],
+        rotation: [357, 49, 8],
+        animation: null,
+        uvdy: 0.717013889,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        subtitles: null,
+        idleOnly: true
     }
 /*,
     {

@@ -66,10 +66,9 @@ export default
             "insideTitlePosition": [0.5, -1.5, -0.3],
 			"characters": [
 				"Mark",
-				"Lupo1",
-				"Shimi1",
+                "LupoDogs12PM",                
+                "Lupo1",
 				"Sasha",
-				"kokaracha",
 				"shirin3"
 			],
             "eventAfter" : 0,
