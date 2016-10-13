@@ -49,6 +49,8 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.benchCount = 10;
         this.b_offset = 5;
         this.b_radius = 20;
+        this.b_open_index = 0;
+
         this.clouds = [];
         this.items = [];
         this.itemIsMoving = [];
@@ -155,7 +157,7 @@ export default class ItzikAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        // DebugUtil.positionObject(this, "Itzik");
+        DebugUtil.positionObject(this, "Itzik");
 
         //
         this.loadingManager.itemEnd("ItzikAnim");
@@ -172,46 +174,28 @@ export default class ItzikAnimation extends THREE.Object3D {
     }
 
     benchOutFirst() {
-        TweenMax.to( this.benchGroup.children[0].scale, 1, { x: 1, y: 1, z: 1, ease: Back.easeInOut } );
+        TweenMax.to( this.benchGroup.children[0].scale, 1.5, { x: 1, y: 1, z: 1, ease: Back.easeInOut } );
     }
-
-    // benchOutSecond() {
-    //     TweenMax.to( _this.benchGroup.children[0].position, 1, { x: Math.sin( Math.PI*2/_this.benchCount*(_seq-_index+1) )*15, z: Math.cos( Math.PI*2/_this.benchCount*(_seq-_index+1) )*15, ease: Power1.easeInOut } );
-    //     TweenMax.to( _this.benchGroup.children[0].rotation, 1, { y: Math.PI*2/_this.benchCount*(_seq-_index+1) + Math.PI, ease: Power1.easeInOut } );
-    // }
-
-    // benchOut( _seq ) {
-    //     for(let i=0; i<=_seq; i++){
-    //         TweenMax.to( this.benchGroup.children[i].scale, 1, { x: 1, y: 1, z: 1, ease: Back.easeInOut,
-    //                                                                                onComplete: this.benchMove,
-    //                                                                                onCompleteParams: [ this, _seq, i] } );
-    //     }
-    // }
-
-    // benchMove( _this, _seq, _index ) {
-    //     TweenMax.to( _this.benchGroup.children[_index].position, 1, { x: Math.sin( Math.PI*2/_this.benchCount*(_seq-_index+_this.b_offset) )*_this.b_radius, z: Math.cos( Math.PI*2/_this.benchCount*(_seq-_index+_this.b_offset) )*_this.b_radius, ease: Power1.easeInOut } );
-    //     TweenMax.to( _this.benchGroup.children[_index].rotation, 1, { y: Math.PI*2/_this.benchCount*(_seq-_index+_this.b_offset) + Math.PI, ease: Power1.easeInOut } );
-    // }
 
     benchMove( _seq ) {
         for(let i=0; i<=_seq; i++){
             let mathStuff = Math.PI * 2 / this.benchCount * ( _seq - i + this.b_offset );
-            TweenMax.to( this.benchGroup.children[i].position, 1, { x: Math.sin( mathStuff )*this.b_radius, z: Math.cos( mathStuff )*this.b_radius, ease: Power1.easeInOut } );
-            TweenMax.to( this.benchGroup.children[i].rotation, 1, { y: mathStuff + Math.PI, ease: Power1.easeInOut,
+            TweenMax.to( this.benchGroup.children[i].position, 2, { x: Math.sin( mathStuff )*this.b_radius, z: Math.cos( mathStuff )*this.b_radius, ease: Power3.easeInOut } );
+            TweenMax.to( this.benchGroup.children[i].rotation, 2, { y: mathStuff + Math.PI, ease: Power3.easeInOut,
                                                                                              onComplete: this.benchOut,
                                                                                              onCompleteParams: [this, i] } );
         }
 
         this.itemIsMoving[_seq] = true;
         if(_seq==3){
-            TweenMax.to( this.benchGroup.children[3].children[1].rotation, 1, {z:1, repeat: -1, yoyo: true, ease: Power1.easeInOut} );
+            TweenMax.to( this.benchGroup.children[3].children[1].rotation, 2, {z:1, repeat: -1, yoyo: true, ease: Power3.easeInOut} );
             // TweenMax.to( this.benchGroup.children[3].children[1].position, 1, {z:0.5, repeat: -1, yoyo: true, ease: Power1.easeInOut} );
         }
         
     }
 
     benchOut( _this, _index ) {
-        TweenMax.to( _this.benchGroup.children[_index].scale, 1, { x: 1, y: 1, z: 1, ease: Back.easeInOut } );
+        TweenMax.to( _this.benchGroup.children[_index].scale, 1.5, { x: 1, y: 1, z: 1, ease: Back.easeInOut } );
     }
 
     characterDisappear() {
@@ -228,10 +212,23 @@ export default class ItzikAnimation extends THREE.Object3D {
                 // rotate bench group infinitely
                 let mathStuff = Math.PI * 2 / this.benchCount;
                 this.benchGroupRotateOn(this, mathStuff);
+
+                // loose the clouds and suns
+                for(let i=0; i<this.benchGroup.children.length; i++){
+                    this.benchGroup.children[i].children[0].visible = false;
+                }
             } } );
     }
 
     benchGroupRotateOn(_this, angle){
+        let closeIndex = (_this.b_open_index+7) % _this.benchCount;
+        let openIndex = (_this.b_open_index+8) % _this.benchCount;
+        // _this.benchGroup.children[ closeIndex ].visible = true;
+        // _this.benchGroup.children[ openIndex ].visible = false;
+        TweenMax.to( _this.benchGroup.children[ closeIndex ].scale, 1, { x: 1, y: 1, z: 1, ease: Power1.easeInOut } );
+        TweenMax.to( _this.benchGroup.children[ openIndex ].scale, 0.5, { x: 0.01, y: 0.01, z: 0.01, ease: Power1.easeInOut } );
+        _this.b_open_index ++;
+
         TweenMax.to( _this.benchGroup.rotation, 2, { y:"+="+angle, ease:Power3.easeInOut, delay:2, onComplete: _this.benchGroupRotateOn, onCompleteParams:[_this, angle]} );
     }
 
