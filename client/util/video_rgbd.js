@@ -193,5 +193,6 @@ export default class VideoRGBD  {
 
     setOpacity(opacity) {
         this.meshMaterial.uniforms.opacity.value = opacity;
+        this.linesMaterial.uniforms.opacity.value = Math.min(opacity,0.1);
     }
 };
