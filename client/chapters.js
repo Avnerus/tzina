@@ -126,7 +126,6 @@ export default
             "titlePosition": [120, 65, 0],
             "insideTitlePosition": [0, -1, 0],
 			"characters": [
-                "Miriam",
 				"Haim",
 				"Izchak",
 				"Waterman",
@@ -137,6 +136,10 @@ export default
 				"Haim",
 				"Izchak"
 			],
+            "eventAfter" : 1,
+            "eventCharacters" : [
+                "Agam7PM"
+            ],
 			"extraAssets": [
 				{
 					"fileName": "lightstreets",
