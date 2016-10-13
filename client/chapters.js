@@ -99,9 +99,8 @@ export default
 			"timeLimitMinutes" : 12,
 			"characters": [
 				"Hannah",
-                "Itzik",
 				"Lupo2",
-				"Dogs",
+				"LupoDogs5PM",
 				"shirin4"
 			],
 			"introfile": [

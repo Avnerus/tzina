@@ -146,12 +146,12 @@ export default [
         idleOnly: true
     },
     {
-        name: 'LupoDogs17',
+        name: 'LupoDogs5PM',
         basePath : 'assets/characters/lupo-dogs',
         mindepth : 1500.681884765625,
         maxdepth : 3376.0517578125,
-        position : [6.0, 21.96, 5],
-        rotation: [357, 49, 8],
+        position : [-10.2, 22.6, 3.5],
+        rotation: [348, 49, 7.4],
         animation: null,
         uvdy: 0.717013889,
         uvdx: 0.0,
