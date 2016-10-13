@@ -15,10 +15,6 @@ export default {
          {
             name: "single",
             fileName: "singleTree.ply"
-        },
-            {
-            name: "bush",
-            fileName: "bush.ply"
         }
     ],
     instances: [
