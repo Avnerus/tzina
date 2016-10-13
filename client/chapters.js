@@ -72,6 +72,10 @@ export default
 				"kokaracha",
 				"shirin3"
 			],
+            "eventAfter" : 0,
+            "eventCharacters" : [
+                "Agam12PM"
+            ],
 			"introfile": [
 				"Mark",
 				"Lupo1"

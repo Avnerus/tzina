@@ -115,6 +115,19 @@ export default [
         uvdx: 0.0,
         scale: 0.003 * 0.25,
         subtitles: null
+    },
+    {
+        name: 'Agam12PM',
+        basePath : 'assets/characters/agam12pm',
+        mindepth : 1656.909729004,
+        maxdepth : 2789.562011719,
+        position : [6.0, 21.96, 3],
+        rotation: [357, 49, 8],
+        animation: null,
+        uvdy: 0.475,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        subtitles: null
     }
 /*,
     {
