@@ -53,14 +53,16 @@ export default class Character extends THREE.Object3D {
             
             this.idleVideo.video.loop = true;
 
-            this.fullVideo.init(loadingManager);
-            this.fullVideo.mesh.visible = false;
-            this.fullVideo.wire.visible = false;
 
-            this.add(this.fullVideo.mesh);
-            this.add(this.fullVideo.wire);
 
             if (!this.props.idleOnly) {
+                this.fullVideo.init(loadingManager);
+                this.fullVideo.mesh.visible = false;
+                this.fullVideo.wire.visible = false;
+
+                this.add(this.fullVideo.mesh);
+                this.add(this.fullVideo.wire);
+
                 this.fullVideo.video.addEventListener('timeupdate',() => {
                     if (this.playingFull && this.animation) {
                         this.animation.updateVideoTime(this.fullVideo.video.currentTime);

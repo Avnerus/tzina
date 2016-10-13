@@ -56,8 +56,8 @@ export default [
         basePath : 'assets/characters/haim',
         mindepth : 1029.795776367,
         maxdepth : 2834.144287109,
-        position : [19, 21.75, 4],
-        rotation: [0, -23, 8],
+        position : [-7.2, 21.75, -15.4],
+        rotation: [0, 300, 8],
         animation: 'Haim',
         uvdy: 0.4791,
         uvdx: 0.0,
@@ -114,7 +114,50 @@ export default [
         uvdy: 0.571527778,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
-        subtitles: null
+        subtitles: null,
+        idleOnly: true
+    },
+    {
+        name: 'Agam12PM',
+        basePath : 'assets/characters/agam12pm',
+        mindepth : 1656.909729004,
+        maxdepth : 2789.562011719,
+        position : [6.0, 21.96, 3],
+        rotation: [357, 49, 8],
+        animation: null,
+        uvdy: 0.475,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        subtitles: null,
+        idleOnly: true
+    },
+    {
+        name: 'LupoDogs12PM',
+        basePath : 'assets/characters/lupo-dogs',
+        mindepth : 1500.681884765625,
+        maxdepth : 3376.0517578125,
+        position : [15.6, 22.6, 0.2],
+        rotation: [340, 32, 8],
+        animation: null,
+        uvdy: 0.717013889,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        subtitles: null,
+        idleOnly: true
+    },
+    {
+        name: 'LupoDogs5PM',
+        basePath : 'assets/characters/lupo-dogs',
+        mindepth : 1500.681884765625,
+        maxdepth : 3376.0517578125,
+        position : [-10.2, 22.6, 3.5],
+        rotation: [348, 49, 7.4],
+        animation: null,
+        uvdy: 0.717013889,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        subtitles: null,
+        idleOnly: true
     }
 /*,
     {

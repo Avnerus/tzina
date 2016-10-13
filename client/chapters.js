@@ -66,12 +66,15 @@ export default
             "insideTitlePosition": [0.5, -1.5, -0.3],
 			"characters": [
 				"Mark",
-				"Lupo1",
-				"Shimi1",
+                "LupoDogs12PM",                
+                "Lupo1",
 				"Sasha",
-				"kokaracha",
 				"shirin3"
 			],
+            "eventAfter" : 0,
+            "eventCharacters" : [
+                "Agam12PM"
+            ],
 			"introfile": [
 				"Mark",
 				"Lupo1"
@@ -96,9 +99,8 @@ export default
 			"timeLimitMinutes" : 12,
 			"characters": [
 				"Hannah",
-                "Itzik",
 				"Lupo2",
-				"Dogs",
+				"LupoDogs5PM",
 				"shirin4"
 			],
 			"introfile": [
@@ -124,7 +126,6 @@ export default
             "titlePosition": [120, 65, 0],
             "insideTitlePosition": [0, -1, 0],
 			"characters": [
-                "Miriam",
 				"Haim",
 				"Izchak",
 				"Waterman",
@@ -135,6 +136,10 @@ export default
 				"Haim",
 				"Izchak"
 			],
+            "eventAfter" : 1,
+            "eventCharacters" : [
+                "Agam7PM"
+            ],
 			"extraAssets": [
 				{
 					"fileName": "lightstreets",
