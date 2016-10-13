@@ -14,20 +14,21 @@ export default class PidgeonController {
     let host = window.document.location.host.replace(/:.*/, '');
     this.scene = scene;
     this.camera=camera;
+    this.lastCameraPosition={x:0,y:0,z:0};
     wsock=new Wsock('ws://' + host + ':9966');
   }
   init(loadingManager) {
     console.log("init PidgeonController");
     Pidgeon.initMesh(loadingManager);
+    // let pidgeon = new Pidgeon();
+    // pidgeon.init();
+    // pidgeon.position.y=30;
 
-    let pidgeon = new Pidgeon();
-    pidgeon.init();
-    pidgeon.position.y=30;
+    // console.log("pidgeon",this.scene,pidgeon);
 
-    console.log("pidgeon",this.scene,pidgeon);
-    this.scene.add(pidgeon);
 
     wsock.on("message",function(message){
+
       console.log(message.header+" of "+message.pointer+" is:",message.data);
 
       // console.log("incoming message",message);
@@ -38,7 +39,8 @@ export default class PidgeonController {
           //Positioning reception is multiplied by 0.001, and emission is multiplied
           //by 1000 because the server is int based and we want to have more detailed
           //pidgeon positioning than whole values
-          remoteSprite.transform.rotation(remoteSprite.transform.position({x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001}).getMovementDirection()* 180 / Math.PI);
+          //remoteSprite.transform.rotation(remoteSprite.transform.position({x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001}).getMovementDirection()* 180 / Math.PI);
+          remoteSprite.transform.position({x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001});
           console.log("retrieved",remoteSprite);
         }else{
           console.warn("couldn't retrieve the corresponding sprite",message);
@@ -91,24 +93,41 @@ export default class PidgeonController {
         }
       }else if(message.header=="newclient"){
         // console.log("new client",message);
-        new characters.Character({unique:message.pointer});
+        let pidgeon=new Pidgeon({unique:message.pointer});
+        this.scene.add(pidgeon);
       }else{
         console.warn("unexpected message header:",message);
       }
     });
   }
   socketEmitCameraPosition(){
+
     let position=this.camera.position;
-    console.log("pidgeon tweets position",this.camera.position);
-    wsock.emit({header:"changeposition",pointer:myClientId,data:[position.x*1000,position.y*1000,position.z*1000]},function(err,pl){
-      if(err){
-        console.log("not sent",err);
+    let different=false;
+    //check that the movement is big enough to send
+    for(let a in {x:0,y:0,z:0}){
+      console.log(this.camera.position[a]+"!="+this.lastCameraPosition[a]);
+      if(this.camera.position[a]!=this.lastCameraPosition[a]){
+        this.lastCameraPosition[a]=this.camera.position[a];
+        different=true;
       }else{
       }
-    });
+    }
+    // console.log("pidgeon tweets position",this.camera.position);
+
+    if(different){
+      console.log("pos!=lastpos");
+      wsock.emit({header:"changeposition",pointer:myClientId,data:[position.x*1000,position.y*1000,position.z*1000]},function(err,pl){
+        if(err){
+          console.log("not sent",err);
+        }else{
+        }
+      });
+    }
     if(localSprite){
-      //pendant: this may no longer be needed
-      localSprite.transform.rotation(localSprite.transform.position({x:e.clientX,y:e.clientY}).getMovementDirection()* 180 / Math.PI);
+      //pendant: this may no longer be needed. place where the local sprite is moved, but camera is inside it by definition
+      // localSprite.transform.rotation(localSprite.transform.position({x:e.clientX,y:e.clientY}).getMovementDirection()* 180 / Math.PI);
+      // localSprite.transform.position({x:e.clientX,y:e.clientY});
     }
   }
 }

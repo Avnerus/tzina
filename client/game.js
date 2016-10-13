@@ -402,7 +402,7 @@ export default class Game {
           try{
             this.pidgeonController.socketEmitCameraPosition();
           }catch(e){
-            console.log("pidgeonContoller failed",e);
+            console.error("pidgeonContoller failed",e);
             tthis.pidgeonfailed=true;
           }
         }
