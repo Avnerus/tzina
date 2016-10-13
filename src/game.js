@@ -20,6 +20,7 @@ import LupoAnimation from './animations/lupo'
 import HaimAnimation from './animations/haim'
 import ItzikAnimation from './animations/itzik'
 import MeirAnimation from './animations/meir'
+import MarkAnimation from './animations/mark'
 
 export default class Game {
     constructor(config) {
@@ -98,6 +99,24 @@ export default class Game {
             animation: 'Hannah'
             });*/
 
+        this.mark = new Character({
+            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
+            basePath : 'assets/characters/mark',
+            mindepth : 1482.958618164,
+            maxdepth : 2514.773681641,
+            position : [-30, 8, 150],
+            rotation: [0, 0, 0],
+            name: 'Mark',
+            animation: 'Mark',
+            uvd: 0.440277,
+            scale: 0.005,
+            animationPosition: [0, 0, 1],
+            animationRotation: [0, 0, 0],
+            space: 7,
+            subtitles: null
+        }, this.collisionManager);
+
+        /*
         this.meir = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/meir',
@@ -115,7 +134,6 @@ export default class Game {
             subtitles: "subtitles"
         }, this.collisionManager);
 
-        /*
         this.itzik = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/itzik',
@@ -195,7 +213,8 @@ export default class Game {
            //  'Lupo': new LupoAnimation()
             // 'Haim': new HaimAnimation( this.scene, this.renderer )
             // 'Itzik': new ItzikAnimation()
-            'Meir': new MeirAnimation()
+            // 'Meir': new MeirAnimation()
+            'Mark': new MarkAnimation()
         }
 
 
@@ -234,7 +253,8 @@ export default class Game {
             // this.scene.add(this.hannah)
             // this.scene.add(this.haim)
             // this.scene.add(this.itzik)
-            this.scene.add(this.meir);
+            // this.scene.add(this.meir);
+            this.scene.add(this.mark);
 
 
             // DEBUG
@@ -244,9 +264,9 @@ export default class Game {
             this.square.mesh.updateMatrixWorld(true);
             cube.position.fromArray(this.square.ENTRY_POINTS[0].position).applyMatrix4(this.square.mesh.matrixWorld);
             this.scene.add( cube );
-            events.emit("add_gui",{}, cube.position, "x"); 
-            events.emit("add_gui",{}, cube.position, "y"); 
-            events.emit("add_gui",{}, cube.position, "z"); 
+            // events.emit("add_gui",{}, cube.position, "x"); 
+            // events.emit("add_gui",{}, cube.position, "y"); 
+            // events.emit("add_gui",{}, cube.position, "z"); 
 
 
             /*
@@ -277,7 +297,8 @@ export default class Game {
         //this.lupo.init(this.loadingManager, this.animations)
         // this.haim.init(this.loadingManager, this.animations)
         //this.itzik.init(this.loadingManager, this.animations)
-        this.meir.init(this.loadingManager, this.animations)
+        // this.meir.init(this.loadingManager, this.animations)
+        this.mark.init(this.loadingManager, this.animations);
         this.square.init(this.collisionManager, this.loadingManager);
 
         // Animations init
@@ -328,7 +349,8 @@ export default class Game {
             // this.hannah.play(); 
             // this.haim.play(); 
             //this.itzik.play(); 
-            this.meir.play(); 
+            // this.meir.play(); 
+            this.mark.play(); 
         } else {
             // Init the intro
 
@@ -391,10 +413,10 @@ export default class Game {
         // this.lupo.update(dt,et);
         // this.haim.update(dt,et);
         //this.itzik.update(dt,et);
-        this.meir.update(dt,et);
+        // this.meir.update(dt,et);
+        this.mark.update(dt,et);
 
         /*
-
         this.lupo.rotation.y = this.lupo.rotationY * Math.PI / 180;
         this.lupo.rotation.x = this.lupo.rotationX * Math.PI / 180;
         this.lupo.rotation.z = this.lupo.rotationZ * Math.PI / 180;*/
