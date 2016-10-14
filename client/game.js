@@ -239,16 +239,18 @@ export default class Game {
 
     start() {
         this.started = true;
-        this.vrManager.setMode_(2);
+        if (this.config.fullscreen) {
+            this.vrManager.setMode_(2);
+        }
         let element = this.renderer.domElement;
         this.container.appendChild(element);
         this.soundManager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
-        if (this.config.controls == "locked") {
-                this.vrControls = new TzinaVRControls(this.emitter, this.camera);
-                this.vrControls.standing = true;
+        if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
+                this.vrControls = new TzinaVRControls(this.emitter, this.camera);
+                this.vrControls.standing = true;
                 this.vrControls.basePosition.set(-5.5, 22,14);
                 // --- hide by laura --- start
                 events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x"); 
@@ -256,7 +258,10 @@ export default class Game {
                 events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z"); 
                 // --- hide by laura --- end
         } else {
-            this.controls = new THREE.OrbitControls( this.camera, element );
+            console.log("Orbit controls");
+            this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+            this.keyboardController.init();
+            this.controls = new THREE.OrbitControls( this.camera  );
         }
 
         this.resize();
@@ -388,6 +393,8 @@ export default class Game {
         this.zoomController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
+        } else {
+            this.controls.update();
         }
         this.collisionManager.update(dt);
         //this.flood.update(dt);
@@ -402,6 +409,7 @@ export default class Game {
     resize() {
         let width = this.container.offsetWidth;
         let height = this.container.offsetHeight;
+        console.log("Tzina set size ", width, height);
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
