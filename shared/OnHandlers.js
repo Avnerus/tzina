@@ -41,7 +41,7 @@ exports.onHandlers=function(){
           // console.log(this.ons[fname][n][1]);
           this.ons[fname][n][1](params);
         }catch(e){
-          console.log("onHandler: error with "+fname+" callback:",e);
+          console.error("onHandler: error with "+fname+" callback:",e);
         }
       }
     }

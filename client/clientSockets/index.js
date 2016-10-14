@@ -7,7 +7,8 @@ let myClientId;
 //pendant: this probably is no longer needed:
 //my own sprite instance.
 let localSprite;
-let wsock;
+//holds websocket and flags wether has been initialized
+let wsock=false;
 let insideSquare;
 
 export default class PidgeonController {
@@ -15,19 +16,21 @@ export default class PidgeonController {
     this.scene = scene;
     this.camera=camera;
     this.lastCameraPosition={x:0,y:0,z:0};
-    events.on("control_threshold", (passed) => {
-      if (passed){
-        console.log("Pidgeon entered the square");
-        insideSquare=true;
-      }
-    }
   }
-  init(loadingManager) {
+  init(loadingManager){
+    Pidgeon.initMesh(loadingManager);
+    events.on("control_threshold", (passed) => {
+      //when we enter the park square, if the socket has not been initialized already
+      if (passed&&!wsock){
+        this.startSocket();
+      }
+    })
+  }
+  startSocket() {
     let host = window.document.location.host.replace(/:.*/, '');
     wsock=new Wsock('ws://' + host + ':9966');
-    console.log("init PidgeonController");
+    console.log("Started pidgeon socket");
 
-    Pidgeon.initMesh(loadingManager);
     let thisPidgeonController=this;
     // let pidgeon = new Pidgeon();
     // pidgeon.init();
@@ -116,7 +119,7 @@ export default class PidgeonController {
     });
   }
   socketEmitCameraPosition(){
-    if(insideSquare){
+    if(wsock){
       let position=this.camera.position;
       let different=false;
       //check that the movement is big enough to send
