@@ -67,7 +67,7 @@ export default class Pidgeon extends THREE.Object3D{
   static initMesh(loadingManager){
     console.log("pidgeon init mesh");
     //initialize graphics, create mesh?
-    this.geometry = new THREE.BoxGeometry(2,2,2);
+    this.geometry = new THREE.BoxGeometry(2,10,2);
     this.material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
   }
   static each (callback) {
@@ -80,4 +80,7 @@ export default class Pidgeon extends THREE.Object3D{
   static remote(unique){
     return characterAssoc[unique+""];
   }
+  // static remove(unique){
+  //
+  // }
 }

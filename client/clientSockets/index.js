@@ -9,16 +9,18 @@ let myClientId;
 let localSprite;
 let wsock;
 
+// events.on("control_threshold", (passed) => {
+//   if (passed) // I am now in the square and should start reporting and receiving positions
+// }
 export default class PidgeonController {
   constructor(scene,camera) {
-    let host = window.document.location.host.replace(/:.*/, '');
     this.scene = scene;
     this.camera=camera;
     this.lastCameraPosition={x:0,y:0,z:0};
-    wsock=new Wsock('ws://' + host + ':9966');
   }
   init(loadingManager) {
-    //pendant: events.on("control_threshold", (passed) => { if (passed) // I am now in the square and should start reporting and receiving positions }
+    let host = window.document.location.host.replace(/:.*/, '');
+    wsock=new Wsock('ws://' + host + ':9966');
     console.log("init PidgeonController");
 
     Pidgeon.initMesh(loadingManager);
@@ -32,7 +34,7 @@ export default class PidgeonController {
 
     wsock.on("message",function(message){
 
-      console.log(message.header+" of "+message.pointer+" is:",message.data);
+      console.log("pidgeon "+message.header+" of "+message.pointer+" is:",message.data);
 
       // console.log("incoming message",message);
       if(message.header=="changeposition"){
@@ -46,13 +48,15 @@ export default class PidgeonController {
           try{
             remoteSprite.transform.position({x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001});
           }catch(e){
-            console.log("with remotesprite "+message.pointer,remoteSprite);
+            console.log("pidgeon with remotesprite "+message.pointer,remoteSprite);
             console.error(e);
           }
-          console.log("retrieved",remoteSprite);
+          console.log("pidgeon retrieved",remoteSprite);
         }else{
-          console.warn("couldn't retrieve the corresponding sprite",message);
-          console.log(Pidgeon.chac);
+          console.warn("couldn't retrieve the corresponding pidgeon. Creating a new one ",message);
+          //if we don't have it, we create it. Comment this if many pidgeon sprites start appearing
+          let newCharacter=new Pidgeon({position:{x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001},unique:message.pointer});
+          thisPidgeonController.scene.add(newCharacter);
         }
         // console.log(message.data);
         // Pidgeon.each(function(ch){
@@ -62,13 +66,14 @@ export default class PidgeonController {
         //pendant:this should be inside
         let remoteSprite=Pidgeon.remote(message.pointer);
         if(remoteSprite){
-          remoteSprite.remove();
+          this.scene.remove(remoteSprite);
+          //remoteSprite.remove();
         }else{
-          console.warn("couldn't retrieve the corresponding sprite",message);
+          console.warn("couldn't retrieve the corresponding pidgeon ",message);
         }
       }else if(message.header=="newid"){
         myClientId=message.pointer;
-        console.log("client id:"+myClientId);
+        console.log("pidgeon client id:"+myClientId);
         //localSprite=new characters.Character({unique:myClientId});
         //console.log("new client Id",message);
       }else if(message.header=="statebatch"){
@@ -87,17 +92,14 @@ export default class PidgeonController {
           let dataCoordinates={x:batch[a+1]*0.001,y:batch[a+2]*0.001,z:batch[a+3]*0.001};
 
           if(dataOwner){
-            console.log("object "+stateObjectUnique+" found apply");
+            console.log("pidgeon object "+stateObjectUnique+" found apply");
             //if we have it, will apply all the data to it. So far only position
             dataOwner.transform.position(dataCoordinates);
           }else{
-            console.log("object "+stateObjectUnique+" notfound create");
+            console.log("pidgeon object "+stateObjectUnique+" notfound create");
             //if we don't have it, we create it.
             let newCharacter=new Pidgeon({position:dataCoordinates,unique:stateObjectUnique});
             thisPidgeonController.scene.add(newCharacter);
-            //if the character id is of my same server id, means that is the localSprite
-            console.log("myclient",myClientId);
-            if(message.pointer==myClientId){ localSprite=newCharacter; }
           }
         }
       }else if(message.header=="newclient"){
@@ -105,7 +107,7 @@ export default class PidgeonController {
         let pidgeon=new Pidgeon({unique:message.pointer});
         thisPidgeonController.scene.add(pidgeon);
       }else{
-        console.warn("unexpected message header:",message);
+        console.warn("pidgeon unexpected message header:",message);
       }
     });
   }
