@@ -49,7 +49,7 @@ export default class Square extends THREE.Object3D{
                 hour: 7,
                 worldPosition: [130,40,80],
                 startPosition: [-19, 20.5, -62],
-                endPosition: [-16, 22.1, -17.5]
+                endPosition: [-10, 22.1, -17.5]
             },
             {
                 hour: 0,
