@@ -2,8 +2,6 @@ export default class GuiManager {
     constructor(emitter) {
         this.emitter = emitter;
         this.folders = {};
-        this.controls = [];
-       
     }
     init() {
         this.gui = new dat.GUI();
@@ -36,5 +34,12 @@ export default class GuiManager {
                 control.listen();
             }
         })
+
+        this.emitter.on('remove_gui_folder', (name) => {
+            console.log("GUI - remove folder ", name);
+            if (this.folders[name]) {
+                this.folders[name].domElement.parentNode.removeChild(this.folders[name].domElement);
+            }            
+        });
     }
 }

@@ -8,7 +8,8 @@ import _ from 'lodash';
 const MODEL_PATH = "assets/square/scene.json"
 const BUILDINGS_PATH = "assets/square/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
-const COLLIDERS_PATH = "assets/square/bench_bases.json"
+const COLLIDERS_PATH = "assets/square/colliders.json"
+const BENCHES_PATH = "assets/square/benches.json"
 
 export default class Square extends THREE.Object3D{
     constructor(collisionManager, renderer) {
@@ -69,7 +70,8 @@ export default class Square extends THREE.Object3D{
             this.fountain.init(loadingManager),
             this.loadBuildings(loadingManager),
             this.loadSuns(loadingManager),
-            this.loadColliders(loadingManager)
+            this.loadColliders(loadingManager),
+            this.loadBenches(loadingManager)
         ])
         .then((results) => {
             console.log("Load results", results);
@@ -86,6 +88,9 @@ export default class Square extends THREE.Object3D{
             this.colliders = results[5];
             obj.add(this.colliders);
 
+            this.benches = results[6];
+            obj.add(this.benches);
+
             obj.rotation.order = "YXZ";
             this.mesh = obj;
 
@@ -95,7 +100,8 @@ export default class Square extends THREE.Object3D{
             //this.mesh.scale.set(4,4,4);
             this.fountain.position.set(0.8,23.6, -0.6);
             //DebugUtil.positionObject(this.fountain, "Fountain");
-            DebugUtil.positionObject(this.buildings, "Buildings");
+            //DebugUtil.positionObject(this.buildings, "Buildings");
+
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");
@@ -240,6 +246,15 @@ export default class Square extends THREE.Object3D{
             });
         });
     }
+    loadBenches(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(BENCHES_PATH,( obj ) => {
+                console.log("Loaded square benches ", obj);
+                resolve(obj);
+            });
+        });
+    }
     loadSquare(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
@@ -278,11 +293,7 @@ export default class Square extends THREE.Object3D{
         this.colliders.forEach((collider) => {
             collider.matrixWorld.multiply(this.mesh.matrixWorld);
         })*/
-        let colliders = []
-        colliders.push(...this.colliders.children);
-        let fountainCollider = this.mesh.getObjectByName("f_11");
-        colliders.push(fountainCollider);
-        this.collisionManager.refreshSquareColliders(colliders);
+        this.collisionManager.refreshSquareColliders(this.colliders.children);
     }
 
     getSphereMesh() {

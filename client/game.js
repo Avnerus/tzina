@@ -24,6 +24,7 @@ import LupoAnimation from './animations/lupo'
 import MiriamAnimation from './animations/miriam'
 import HaimAnimation from './animations/haim'
 import ItzikAnimation from './animations/itzik'
+import MeirAnimation from './animations/meir'
 
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
@@ -40,6 +41,7 @@ export default class Game {
 
         class TzinaEmitter extends EventEmitter {}
         this.emitter = new TzinaEmitter();
+        this.emitter.setMaxListeners(20);
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
@@ -96,12 +98,15 @@ export default class Game {
 
         //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
         //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
-        events.emit("add_gui", {folder:"Point light", listen:false}, this.dirLight, "intensity");
-        events.emit("add_gui", {folder:"Point light", listen:false}, this.dirLight, "distance");
 
-        events.emit("add_gui", {folder:"Hemi light", listen:false}, this.dirLight, "intensity");
-
+        // --- hide by laura --- start
+        events.emit("add_gui", {folder:"Point light", listen:true}, this.dirLight, "intensity",0,1);
+        events.emit("add_gui", {folder:"Point light", listen:true}, this.dirLight, "distance");
+        events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,1);
+        events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
         DebugUtil.colorPicker("Point light", this.dirLight, "color");
+        DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
+        // --- hide by laura --- end
 
         //dirLight.target.position.set(0,100,0);
         //
@@ -148,7 +153,8 @@ export default class Game {
                 'Hannah' : new HannahAnimation(),
                 'Miriam' : new MiriamAnimation(this.renderer),
                 'Haim' : new HaimAnimation(this.renderer),
-                'Itzik' : new ItzikAnimation()
+                'Itzik' : new ItzikAnimation(),
+                'Meir' : new MeirAnimation()
             }
         } else {
             this.animations = {};
@@ -244,9 +250,11 @@ export default class Game {
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
                 this.vrControls.basePosition.set(10, 21,12);
+                // --- hide by laura --- start
                 events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x"); 
                 events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y"); 
                 events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z"); 
+                // --- hide by laura --- end
         } else {
             this.controls = new THREE.OrbitControls( this.camera, element );
         }
