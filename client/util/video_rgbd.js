@@ -81,13 +81,15 @@ export default class VideoRGBD  {
 
             vertexShader: this.rgbd_vs,
             fragmentShader: this.rgbd_fs,
-            blending: THREE.AdditiveBlending,
+            //blending: THREE.AdditiveBlending,
             transparent: true,
             wireframe:false
         } );
 
         let geometry = this.buildMeshGeometry();
 
+        //events.emit("add_gui", {folder: "UVDX", step: 0.01}, this.meshMaterial.uniforms.uvdx, "value", -1,0);
+        //events.emit("add_gui", {folder: "UVDY", step: 0.01}, this.meshMaterial.uniforms.uvdy, "value", -1,1);
        //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
 
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );

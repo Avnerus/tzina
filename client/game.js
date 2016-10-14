@@ -249,7 +249,7 @@ export default class Game {
                 this.vrControls.standing = true;
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
-                this.vrControls.basePosition.set(10, 21,12);
+                this.vrControls.basePosition.set(-13, 21,1.3);
                 // --- hide by laura --- start
                 events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x"); 
                 events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y"); 
