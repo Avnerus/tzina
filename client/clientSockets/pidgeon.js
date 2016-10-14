@@ -5,6 +5,7 @@ var characterAssoc={};
 export default class Pidgeon extends THREE.Object3D{
   constructor(props){
     super();
+    let thisPidgeon=this;
     let properties = props || {};
     // console.log("c",properties);
     characterList.push(this);
@@ -14,15 +15,10 @@ export default class Pidgeon extends THREE.Object3D{
     }else{
       console.warn("you created a character without providing server unique. This renders the character unreachable");
     }
-  }
-  init() {
-    this.camera=camera;
-    this.socketController=socketController;
     console.log("pidgeon",Pidgeon.geometry);
     this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
     this.add(this.mesh);
-    /*
-    pendant: these will become useful later:*/
+    /*pendant: these may become handy later, but currently unused:*/
     let transformReturnFunctions = {
       prevCoords: {x:0,y:0,z:0},
       newCoords: {x:0,y:0,z:0},
@@ -41,14 +37,14 @@ export default class Pidgeon extends THREE.Object3D{
       },
     }
     this.transform = {
-      position: function(a) {
+      position: function(newPosition) {
         //transfer all the position properties to the mesh position
         //we are trusting that a looks like {x:int,y:int,z:int}
         //we are not requiring all the three corrdinates
-        for(let b in a){
-          transformReturnFunctions.prevCoords[b]=this.mesh.position[b];
-          this.mesh.position[b]=b[a];
-          transformReturnFunctions.newCoords[b]=b[a];
+        for(let b in newPosition){
+          transformReturnFunctions.prevCoords[b]=thisPidgeon.position[b];
+          thisPidgeon.position[b]=newPosition[b];
+          transformReturnFunctions.newCoords[b]=b[newPosition];
         }
         return transformReturnFunctions;
       },
@@ -71,7 +67,7 @@ export default class Pidgeon extends THREE.Object3D{
   static initMesh(loadingManager){
     console.log("pidgeon init mesh");
     //initialize graphics, create mesh?
-    this.geometry = new THREE.BoxGeometry(10,10,10);
+    this.geometry = new THREE.BoxGeometry(2,2,2);
     this.material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
   }
   static each (callback) {

@@ -12,7 +12,7 @@ let ev = require('events');
 let events = new ev.EventEmitter();
 
 
-// clientsMan.setKeepaliveTimer(5000);
+clientsMan.setKeepaliveTimer(5000);
 
 //when socketServerManager gets a client, we instance a client in clientsMan
 socketSM.on('connection',function(ws){

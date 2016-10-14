@@ -228,7 +228,7 @@ export default class Game {
         //question: looks arbitrart that scene is provided in constructor while
         //camera on init. Shall both be provided on constructor? or would that
         //interfere with what threeObkect3d does on construction?
-        console.log("pidgeon first");
+        // console.log("pidgeon first");
         this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
         this.pidgeonController.init();
     }
@@ -398,7 +398,7 @@ export default class Game {
 
         var tthis=this;
         if(!this.pidgeonfailed){
-          console.log("pidgeon second");
+          // console.log("pidgeon second");
           try{
             this.pidgeonController.socketEmitCameraPosition();
           }catch(e){
