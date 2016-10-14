@@ -50,6 +50,18 @@ export default
 					"position": [0,0,0],
 					"fileName": "Jacobcloths",
 					"position": [0,0,0],
+				},
+				{
+					name: "firstcouple",
+					position: [10,19.8,10],
+					rotation: [0,0,0],
+					scale: 0.25,
+				},
+				{
+					name: "guard",
+					position: [-12,19.8,35.23],
+					rotation:[0,156,0],
+					scale: 0.7,
 				}
 			],
 			"effects" : [
@@ -81,8 +93,22 @@ export default
 			],
 			"extraAssets": [
 				{
-					"fileName": "",
-					"position": [0,0,0]
+					name: "guard",
+					position: [-12,19.8,35.23],
+					rotation:[0,156,0],
+					scale: 0.7,
+				},
+				{
+					name: "bikeHottie",
+					position: [7.08,21.8,11.5],
+					rotation:[0,315,0],
+					scale: 0.25,
+				},
+				{
+					name: "100_",
+					position: [-5.24,22.1,8.84],
+					rotation:[0,73,0],
+					scale: 0.15,
 				}
 			],
 			"effects" : [
@@ -109,8 +135,16 @@ export default
 			],
 			"extraAssets": [
 				{
-                    name: "palm",
-                    position: [10,20,0]
+                    name: "bridegroom",
+                    position: [3.56,22.4,9.77],
+                    rotation: [0,307,0],
+                    scale: 0.25
+				},
+					{
+                    name: "yukalele",
+                    position: [-14.91,22.4,-7],
+                    rotation: [0,271,0],
+                    scale: 0.26
 				}
 			],
 			"effects" : [
@@ -143,9 +177,22 @@ export default
 			"extraAssets": [
                 {
                     name: "singleTree",
-                    position: [0, 60, 0],
-                    rotation: [0, 0, 160]
-                }
+                    position: [-32.51, 19.7, -3.48],
+                    rotation: [0, 0, 93],
+                    scale: 0.7
+                },
+                	{
+                    name: "blueLady",
+                    position: [10.2,21.85,-12],
+                    rotation: [0,0,0],
+                    scale: 0.13
+				},
+				{
+                    name: "manOnBench",
+                    position: [15.2,21.85,-12],
+                    rotation: [0,0,0],
+                    scale: 0.13
+				}
 			],
 			"effects" : [
 				{
