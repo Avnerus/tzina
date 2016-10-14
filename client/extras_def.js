@@ -6,7 +6,7 @@ export default {
         },
         {
             name: "singleTree",
-            fileName: "singleTree.ply"
+            fileName: "singleTree.ply",
             pointSize: 0.015
         },
         {
@@ -42,10 +42,74 @@ export default {
          {
             name: "firstcouple",
             fileName: "firstcouple.ply",
+            pointSize : 0.010
+        },
+         {
+            name: "manOnBench",
+            fileName: "manOnBench.ply",
             pointSize : 0.013
+        },
+        {
+            name: "junkie",
+            fileName: "junkie.ply",
+            pointSize : 0.013
+        },
+        {
+            name: "coolPair",
+            fileName: "coolPair.ply",
+            pointSize : 0.010
+        },
+        {
+            name: "dude",
+            fileName: "dude.ply",
+            pointSize : 0.011
+        },
+         {
+            name: "dadOnBike",
+            fileName: "dadOnBike.ply",
+            pointSize : 0.011
+        },
+          {
+            name: "pocketCam",
+            fileName: "pocketCam.ply",
+            pointSize : 0.011
+        },
+          {
+            name: "twoNiceJewishMen",
+            fileName: "twoNiceJewishMen.ply",
+            pointSize : 0.011
+        },
+        {
+            name: "grandpa",
+            fileName: "grandpa.ply",
+            pointSize : 0.011
+        },
+          {
+            name: "grandma",
+            fileName: "grandma.ply",
+            pointSize : 0.011
+        },
+           {
+            name: "kadafi",
+            fileName: "kadafi.ply",
+            pointSize : 0.014
+        },
+           {
+            name: "Gyno",
+            fileName: "Gyno.ply",
+            pointSize : 0.012
+        },
+         {
+            name: "oldmansit",
+            fileName: "oldmansit.ply",
+            pointSize : 0.012
+        },
+         {
+          name: "DAN",
+           fileName: "DAN.ply",
+            pointSize : 0.011
         }
     ]
+
 }
-
-
 
