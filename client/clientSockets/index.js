@@ -8,15 +8,19 @@ let myClientId;
 //my own sprite instance.
 let localSprite;
 let wsock;
+let insideSquare;
 
-// events.on("control_threshold", (passed) => {
-//   if (passed) // I am now in the square and should start reporting and receiving positions
-// }
 export default class PidgeonController {
   constructor(scene,camera) {
     this.scene = scene;
     this.camera=camera;
     this.lastCameraPosition={x:0,y:0,z:0};
+    events.on("control_threshold", (passed) => {
+      if (passed){
+        console.log("Pidgeon entered the square");
+        insideSquare=true;
+      }
+    }
   }
   init(loadingManager) {
     let host = window.document.location.host.replace(/:.*/, '');
@@ -112,33 +116,34 @@ export default class PidgeonController {
     });
   }
   socketEmitCameraPosition(){
-
-    let position=this.camera.position;
-    let different=false;
-    //check that the movement is big enough to send
-    for(let a in {x:0,y:0,z:0}){
-      //console.log(this.camera.position[a]+"!="+this.lastCameraPosition[a]);
-      if(this.camera.position[a]!=this.lastCameraPosition[a]){
-        this.lastCameraPosition[a]=this.camera.position[a];
-        different=true;
-      }else{
-      }
-    }
-    // console.log("pidgeon tweets position",this.camera.position);
-
-    if(different){
-      //console.log("pos!=lastpos");
-      wsock.emit({header:"changeposition",pointer:myClientId,data:[position.x*1000,position.y*1000,position.z*1000]},function(err,pl){
-        if(err){
-          console.log("not sent",err);
+    if(insideSquare){
+      let position=this.camera.position;
+      let different=false;
+      //check that the movement is big enough to send
+      for(let a in {x:0,y:0,z:0}){
+        //console.log(this.camera.position[a]+"!="+this.lastCameraPosition[a]);
+        if(this.camera.position[a]!=this.lastCameraPosition[a]){
+          this.lastCameraPosition[a]=this.camera.position[a];
+          different=true;
         }else{
         }
-      });
-    }
-    if(localSprite){
-      //pendant: this may no longer be needed. place where the local sprite is moved, but camera is inside it by definition
-      // localSprite.transform.rotation(localSprite.transform.position({x:e.clientX,y:e.clientY}).getMovementDirection()* 180 / Math.PI);
-      // localSprite.transform.position({x:e.clientX,y:e.clientY});
+      }
+      // console.log("pidgeon tweets position",this.camera.position);
+
+      if(different){
+        //console.log("pos!=lastpos");
+        wsock.emit({header:"changeposition",pointer:myClientId,data:[position.x*1000,position.y*1000,position.z*1000]},function(err,pl){
+          if(err){
+            console.log("not sent",err);
+          }else{
+          }
+        });
+      }
+      if(localSprite){
+        //pendant: this may no longer be needed. place where the local sprite is moved, but camera is inside it by definition
+        // localSprite.transform.rotation(localSprite.transform.position({x:e.clientX,y:e.clientY}).getMovementDirection()* 180 / Math.PI);
+        // localSprite.transform.position({x:e.clientX,y:e.clientY});
+      }
     }
   }
 }
