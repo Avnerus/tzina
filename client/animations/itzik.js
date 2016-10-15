@@ -157,7 +157,7 @@ export default class ItzikAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        // DebugUtil.positionObject(this, "Itzik");
+        //DebugUtil.positionObject(this, "Itzik");
 
         //
         this.loadingManager.itemEnd("ItzikAnim");
@@ -207,7 +207,7 @@ export default class ItzikAnimation extends THREE.Object3D {
             }, onStart: ()=>{
                 TweenMax.to( this.smokeMat, 4, {opacity: 0});
             }, onComplete: ()=>{
-                this.parent.fullVideo.setOpacity(0);
+                this.parent.fullVideo.setOpacity(0.0);
 
                 // rotate bench group infinitely
                 let mathStuff = Math.PI * 2 / this.benchCount;

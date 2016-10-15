@@ -1,6 +1,7 @@
 import Trees from "./trees"
 import Fountain from "./fountain"
 import SunLoader from './sun_loader'
+import Extras from './extras';
 
 import DebugUtil from "./util/debug"
 import _ from 'lodash';
@@ -63,6 +64,7 @@ export default class Square extends THREE.Object3D{
     init(loadingManager) {
         loadingManager.itemStart("Square");
         let trees = new Trees();
+        this.extras = new  Extras();
         this.fountain = new Fountain();
         Promise.all([
             this.loadSquare(loadingManager),
@@ -71,13 +73,15 @@ export default class Square extends THREE.Object3D{
             this.loadBuildings(loadingManager),
             this.loadSuns(loadingManager),
             this.loadColliders(loadingManager),
-            this.loadBenches(loadingManager)
+            this.loadBenches(loadingManager),
+            this.extras.init(loadingManager)
         ])
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
             obj.add(trees);
             obj.add(this.fountain);
+            obj.add(this.extras);
             this.buildings = results[3];
             this.suns = results[4];
             this.suns.rotation.y = Math.PI * -70 / 180;
@@ -100,8 +104,6 @@ export default class Square extends THREE.Object3D{
             //this.mesh.scale.set(4,4,4);
             this.fountain.position.set(0.8,23.6, -0.6);
             //DebugUtil.positionObject(this.fountain, "Fountain");
-            //DebugUtil.positionObject(this.buildings, "Buildings");
-
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             loadingManager.itemEnd("Square");
@@ -135,7 +137,7 @@ export default class Square extends THREE.Object3D{
             this.suns.children[i].children[1].update(dt,et)
         }
     }
-
+    
     turnOffSuns() {
         this.suns.children.forEach((obj) => {
             if (obj.children.length > 0) {
