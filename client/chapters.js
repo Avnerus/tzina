@@ -135,12 +135,12 @@ export default
 				"Lupo1"
 			],
 			"extraAssets": [
-				{
-					name: "guard",
-					position: [-12,19.8,35.23],
-					rotation:[0,156,0],
-					scale: 0.7
-				},
+			//	{
+			//		name: "guard",
+			//		position: [-12,19.8,35.23],
+			//		rotation:[0,156,0],
+			//		scale: 0.7
+			//	},
 				{
 					name: "100_",
 					position: [-5.24,22.1,8.84],
@@ -203,16 +203,16 @@ export default
 				},
 				{
                     name: "sweetLady",
-                    position: [14.6.21.8,-2.5],
+                    position: [14.6,21.8,-2.5],
                     rotation: [0,0,0],
                     scale: 0.2
-				},
-					{
-					name: "DAN",
-					position: [-3.48,23.7,-8.75],
-					rotation:[184,208,0],
-					scale: 0.22
 				}
+				//	{
+				//	name: "DAN",
+				//	position: [-3.48,23.7,-8.75],
+				//	rotation:[184,208,0],
+				//	scale: 0.22
+				//}
 			],
 
 			"effects" : [
@@ -243,12 +243,12 @@ export default
                 "Agam7PM"
             ],
 			"extraAssets": [
-                {
-                    name: "singleTree",
-                    position: [-32.51, 19.7, -3.48],
-                    rotation: [0, 0, 93],
-                    scale: 0.7
-                },
+                //{
+                  //  name: "singleTree",
+                  //  position: [-32.51, 19.7, -3.48],
+                    //rotation: [0, 0, 93],
+                    //scale: 0.7
+                //},
                 	{
                     name: "blueLady",
                     position: [10.2,21.85,-12],
