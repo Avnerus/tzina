@@ -4,21 +4,21 @@ export default {
             name: "palm",
             fileName: "palm.ply"
         },
-        {
-            name: "singleTree",
-            fileName: "singleTree.ply",
-            pointSize: 0.015
-        },
+        //{
+          //  name: "singleTree",
+            //fileName: "singleTree.ply",
+           // pointSize: 0.015
+        //},
         {
             name: "bridegroom",
             fileName: "bridegroom.ply",
             pointSize : 0.015
         },
-        {
-            name: "guard",
-            fileName: "guard.ply",
-            pointSize: 0.13
-        },
+        //{
+          //  name: "guard",
+         //   fileName: "guard.ply",
+        //    pointSize: 0.13
+     //   },
         {
             name: "bikeHottie",
             fileName: "bikeHottie.ply",
@@ -74,11 +74,11 @@ export default {
             fileName: "pocketCam.ply",
             pointSize : 0.011
         },
-          {
-            name: "twoNiceJewishMen",
-            fileName: "twoNiceJewishMen.ply",
-            pointSize : 0.011
-        },
+   //       {
+  //          name: "twoNiceJewishMen",
+  //          fileName: "twoNiceJewishMen.ply",
+   //         pointSize : 0.011
+   //     },
         {
             name: "grandpa",
             fileName: "grandpa.ply",
@@ -94,21 +94,21 @@ export default {
             fileName: "kadafi.ply",
             pointSize : 0.014
         },
-           {
-            name: "Gyno",
-            fileName: "Gyno.ply",
-            pointSize : 0.012
-        },
+        //   {
+         //   name: "Gyno",
+         //   fileName: "Gyno.ply",
+         //   pointSize : 0.012
+       // },
          {
             name: "oldmansit",
             fileName: "oldmansit.ply",
             pointSize : 0.012
         },
-         {
-          name: "DAN",
-           fileName: "DAN.ply",
-            pointSize : 0.011
-        },
+       //  {
+         // name: "DAN",
+           //fileName: "DAN.ply",
+            //pointSize : 0.011
+        //},
            {
           name: "BlackGuy",
            fileName: "BlackGuy.ply",
