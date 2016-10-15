@@ -77,7 +77,7 @@ export default class CharacterController {
             let character = this.characters[characterName];
             this.activeCharacters.push(character);
             this.square.mesh.add(character);
-            //DebugUtil.positionObject(character, character.props.name, false, -40, 40, character.props.rotation);
+            DebugUtil.positionObject(character, character.props.name, false, -40, 40, character.props.rotation);
             character.load();
             character.play();
         }
