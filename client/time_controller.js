@@ -197,7 +197,7 @@ export default class TimeController {
                             events.emit("angle_updated", this.currentHour);
                             this.updateNextHour();
                             this.sunGazer.active = true;
-                            this.clockRunning = true;
+                            //this.clockRunning = true;
                         }});
                     },1000);
                 }, onUpdate: () => {
