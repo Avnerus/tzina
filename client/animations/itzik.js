@@ -17,17 +17,17 @@ export default class ItzikAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{this.benchOutFirst()} },
-            { time: 10, anim: ()=>{this.benchMove(1)} },
-            { time: 15, anim: ()=>{this.benchMove(2)} },
-            { time: 20, anim: ()=>{this.benchMove(3)} },
-            { time: 25, anim: ()=>{this.benchMove(4)} },
-            { time: 30, anim: ()=>{this.benchMove(5)} },
-            { time: 35, anim: ()=>{this.benchMove(6)} },
-            { time: 40, anim: ()=>{this.benchMove(7)} },
-            { time: 45, anim: ()=>{this.benchMove(8)} },
-            { time: 50, anim: ()=>{this.benchMove(9)} },
-            { time: 55, anim: ()=>{this.characterDisappear(0)} }
+            { time: 25,  anim: ()=>{this.benchOutFirst()} },
+            { time: 35, anim: ()=>{this.benchMove(1)} },
+            { time: 43, anim: ()=>{this.benchMove(2)} },
+            { time: 50, anim: ()=>{this.benchMove(3)} },
+            { time: 55, anim: ()=>{this.benchMove(4)} },
+            { time: 60, anim: ()=>{this.benchMove(5)} },
+            { time: 65, anim: ()=>{this.benchMove(6)} },
+            { time: 70, anim: ()=>{this.benchMove(7)} },
+            { time: 75, anim: ()=>{this.benchMove(8)} },
+            { time: 80, anim: ()=>{this.benchMove(9)} },
+            { time: 210, anim: ()=>{this.characterDisappear(0)} }
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
