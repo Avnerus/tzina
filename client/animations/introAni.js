@@ -207,7 +207,7 @@ export default class IntroAnimation extends THREE.Object3D {
         this.fbo = new FBO();
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
         //this.fbo.particles.frustumCulled = false;
-//        DebugUtil.positionObject(this.fbo.particles, "TREE");
+        //DebugUtil.positionObject(this.fbo.particles, "TREE");
         this.add( this.fbo.particles );
         this.timerAnim = null;
         //this.fbo.particles.position.y = 1500;

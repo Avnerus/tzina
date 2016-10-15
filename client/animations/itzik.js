@@ -17,17 +17,17 @@ export default class ItzikAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{this.benchOutFirst()} },
-            { time: 10, anim: ()=>{this.benchMove(1)} },
-            { time: 15, anim: ()=>{this.benchMove(2)} },
-            { time: 20, anim: ()=>{this.benchMove(3)} },
-            { time: 25, anim: ()=>{this.benchMove(4)} },
-            { time: 30, anim: ()=>{this.benchMove(5)} },
-            { time: 35, anim: ()=>{this.benchMove(6)} },
-            { time: 40, anim: ()=>{this.benchMove(7)} },
-            { time: 45, anim: ()=>{this.benchMove(8)} },
-            { time: 50, anim: ()=>{this.benchMove(9)} },
-            { time: 55, anim: ()=>{this.characterDisappear(0)} }
+            { time: 35,  anim: ()=>{this.benchOutFirst()} },    //25
+            { time: 35, anim: ()=>{this.benchMove(1)} },        //35
+            { time: 43, anim: ()=>{this.benchMove(2)} },        //43
+            { time: 50, anim: ()=>{this.benchMove(3)} },        //50
+            { time: 55, anim: ()=>{this.benchMove(4)} },        //55
+            { time: 60, anim: ()=>{this.benchMove(5)} },        //60
+            // { time: 35, anim: ()=>{this.benchMove(6)} },        //65
+            // { time: 40, anim: ()=>{this.benchMove(7)} },        //70
+            // { time: 75, anim: ()=>{this.benchMove(8)} },        //75
+            // { time: 80, anim: ()=>{this.benchMove(9)} },        //80
+            { time: 210, anim: ()=>{this.characterDisappear(0)} }//210
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -46,9 +46,9 @@ export default class ItzikAnimation extends THREE.Object3D {
         }
 
         this.benchGroup = new THREE.Object3D();
-        this.benchCount = 10;
+        this.benchCount = 6;   //10
         this.b_offset = 5;
-        this.b_radius = 20;
+        this.b_radius = 11.5;
         this.b_open_index = 0;
 
         this.clouds = [];
@@ -73,20 +73,20 @@ export default class ItzikAnimation extends THREE.Object3D {
 
         this.benchTexFiles = [ this.BASE_PATH + "/images/benches/1_carpet.jpg", this.BASE_PATH + "/images/benches/2_metal.jpg",
                                this.BASE_PATH + "/images/benches/3_marble.jpg", this.BASE_PATH + "/images/benches/4_rock.jpg",
-                               this.BASE_PATH + "/images/benches/5_photo.jpg", this.BASE_PATH + "/images/benches/6_wood.jpg",
+                               this.BASE_PATH + "/images/benches/5_photo.jpg", this.BASE_PATH + "/images/benches/9_tiles.jpg",
                                this.BASE_PATH + "/images/benches/7_sand.jpg", this.BASE_PATH + "/images/benches/8_rust.jpg",
-                               this.BASE_PATH + "/images/benches/9_tiles.jpg", this.BASE_PATH + "/images/benches/10_metal.jpg" ];
+                               this.BASE_PATH + "/images/benches/6_wood.jpg", this.BASE_PATH + "/images/benches/10_metal.jpg" ];
         this.benchTexNRMFiles = [ this.BASE_PATH + "/images/benches/NRM/1_carpet_NRM.png", this.BASE_PATH + "/images/benches/NRM/2_metal_NRM.png",
                                this.BASE_PATH + "/images/benches/NRM/3_marble_NRM.png", this.BASE_PATH + "/images/benches/NRM/4_rock_NRM.png",
-                               this.BASE_PATH + "/images/benches/NRM/5_photo_NRM.png", this.BASE_PATH + "/images/benches/NRM/6_wood_NRM.png",
+                               this.BASE_PATH + "/images/benches/NRM/5_photo_NRM.png", this.BASE_PATH + "/images/benches/NRM/9_tiles_NRM.png",
                                this.BASE_PATH + "/images/benches/NRM/7_sand_NRM.png", this.BASE_PATH + "/images/benches/NRM/8_rust_NRM.png",
-                               this.BASE_PATH + "/images/benches/NRM/9_tiles_NRM.png", this.BASE_PATH + "/images/benches/NRM/10_metal_NRM.png" ];
+                               this.BASE_PATH + "/images/benches/NRM/6_wood_NRM.png", this.BASE_PATH + "/images/benches/NRM/10_metal_NRM.png" ];
 
         this.benchTextures = [];
         this.benchTexturesNRM = [];
         this.benchMats = [];
 
-        for(let i=0; i<this.benchTexFiles.length; i++){
+        for(let i=0; i<this.benchCount; i++){
             let bt = tex_loader.load( this.benchTexFiles[i] );
             this.benchTextures.push(bt);
             let btNRM = tex_loader.load( this.benchTexNRMFiles[i] );
@@ -107,7 +107,7 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.smokeMat = new THREE.SpriteMaterial( { map: smokeTex, color: 0x053d96, transparent: true, opacity: 0 } ); //0x053d96
         this.fog = new THREE.Object3D();
 
-        for(let i=0; i<this.cloudFiles.length; i++){
+        for(let i=0; i<this.benchCount; i++){
             loader.load( this.cloudFiles[i], (geometry, material) => {
                 let tmpCloud = new THREE.Mesh( geometry, cloudMat );
 
@@ -122,7 +122,7 @@ export default class ItzikAnimation extends THREE.Object3D {
                 TweenMax.to( tmpCloud.position, 1, { y: 15.1, repeat: -1, yoyo: true, ease: Power1.easeInOut } );
                 this.clouds[i] = tmpCloud;
 
-                if(i==9){
+                if( i==(this.benchCount-1) ){
                     //this.loadModelBench( this.BASE_PATH + "/models/bench.json", loader );
                     this.loadModelItems( this.itemFiles, itemsMat, itemsMat2, loader );
                 }
@@ -179,7 +179,8 @@ export default class ItzikAnimation extends THREE.Object3D {
 
     benchMove( _seq ) {
         for(let i=0; i<=_seq; i++){
-            let mathStuff = Math.PI * 2 / this.benchCount * ( _seq - i + this.b_offset );
+            let mathStuff = Math.PI * 2 / this.benchCount * ( _seq - i + this.b_offset - 2 );
+
             TweenMax.to( this.benchGroup.children[i].position, 2, { x: Math.sin( mathStuff )*this.b_radius, z: Math.cos( mathStuff )*this.b_radius, ease: Power3.easeInOut } );
             TweenMax.to( this.benchGroup.children[i].rotation, 2, { y: mathStuff + Math.PI, ease: Power3.easeInOut,
                                                                                              onComplete: this.benchOut,
@@ -207,7 +208,7 @@ export default class ItzikAnimation extends THREE.Object3D {
             }, onStart: ()=>{
                 TweenMax.to( this.smokeMat, 4, {opacity: 0});
             }, onComplete: ()=>{
-                this.parent.fullVideo.setOpacity(0);
+                this.parent.fullVideo.setOpacity(0.0);
 
                 // rotate bench group infinitely
                 let mathStuff = Math.PI * 2 / this.benchCount;
@@ -221,8 +222,8 @@ export default class ItzikAnimation extends THREE.Object3D {
     }
 
     benchGroupRotateOn(_this, angle){
-        let closeIndex = (_this.b_open_index+7) % _this.benchCount;
-        let openIndex = (_this.b_open_index+8) % _this.benchCount;
+        let closeIndex = ( _this.b_open_index+(_this.benchCount-3) ) % _this.benchCount;
+        let openIndex = ( _this.b_open_index+(_this.benchCount-2) ) % _this.benchCount;
         // _this.benchGroup.children[ closeIndex ].visible = true;
         // _this.benchGroup.children[ openIndex ].visible = false;
         TweenMax.to( _this.benchGroup.children[ closeIndex ].scale, 1, { x: 1, y: 1, z: 1, ease: Power1.easeInOut } );
@@ -243,11 +244,11 @@ export default class ItzikAnimation extends THREE.Object3D {
                     tmpItem.position.set(2,1.5,0);
                     this.items[i] = tmpItem;
                 }
-                else if(i==4 || i==5 || i==6){
+                else if(i==4 || i==6){
                     let tmpItem = new THREE.Mesh( geometry, mat2 );
                     this.items[i] = tmpItem;
                 }
-                else if(i==9){
+                else if(i==5){
                     // let tmpItem = new THREE.Mesh( geometry, mat );
                     // this.items[i] = tmpItem;
                     // this.fog = new THREE.Object3D();
@@ -340,7 +341,7 @@ export default class ItzikAnimation extends THREE.Object3D {
     }
 
     update(dt,et) {
-        if(this.itemIsMoving[9]){
+        if(this.itemIsMoving[ (this.benchCount-1) ]){
             for(let i=0; i<this.fog.children.length; i++){
                 let h = this.perlin.noise(et*0.1, i, 1)/50;
                 this.fog.children[i].position.addScalar( h );
