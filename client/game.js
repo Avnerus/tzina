@@ -100,8 +100,8 @@ export default class Game {
         //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
 
         // --- hide by laura --- start
-        events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,1);
-        events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,1);
+        events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,2);
+        events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
         DebugUtil.colorPicker("Dir light", this.dirLight, "color");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
@@ -115,6 +115,35 @@ export default class Game {
         this.dirLight.shadow.camera.far = 3500;
         this.dirLight.shadow.bias = -0.000001;*/
         this.scene.add(this.dirLight);
+
+
+
+        // More lights
+        for (let i = 0; i < 2; i++) {
+            let pointLight = new THREE.PointLight( i == 0 ? 0xff0000 : 0x0000ff, 1, 100 );
+            pointLight.position.set(i * 5, 30, 0);
+            this.scene.add(pointLight);
+            events.emit("add_gui", {folder:"Point Light " + i, listen:true}, pointLight, "intensity",0,2);
+            events.emit("add_gui", {folder:"Point Light " + i, listen:true}, pointLight, "distance",0,100);
+            events.emit("add_gui", {folder:"Point Light " + i, listen: true, step: 0.01}, pointLight.position, "x", -40, 40);
+            events.emit("add_gui", {folder:"Point Light " + i, listen: true, step: 0.01}, pointLight.position, "y", -40, 40);
+            events.emit("add_gui", {folder:"Point Light " + i, listen: true, step: 0.01}, pointLight.position, "z", -40, 40);
+            DebugUtil.colorPicker("Point Light " + i, pointLight, "color");
+        }
+
+        let spotLight = new THREE.SpotLight( 0x00ff00 );
+        spotLight.position.set( 10, 30, 0 );
+        spotLight.castShadow = true;
+        events.emit("add_gui", {folder:"Spotlight", listen: true, step: 0.01}, spotLight.position, "x", -40, 40);
+        events.emit("add_gui", {folder:"Spotlight", listen: true, step: 0.01}, spotLight.position, "y", -40, 40);
+        events.emit("add_gui", {folder:"Spotlight", listen: true, step: 0.01}, spotLight.position, "z", -40, 40);
+        events.emit("add_gui", {folder:"Spotlight", listen:true}, spotLight, "intensity",0,2);
+        events.emit("add_gui", {folder:"Spotlight", listen: true, step: 0.1}, spotLight, "angle", 0, Math.PI / 2);
+        events.emit("add_gui", {folder:"Spotlight", listen:true}, spotLight, "distance",0,100);
+        events.emit("add_gui", {folder:"Spotlight", listen:true, step: 0.1}, spotLight, "decay",1,2);
+        events.emit("add_gui", {folder:"Spotlight", listen:true, step: 0.1}, spotLight, "penumbra",0,1);
+        DebugUtil.colorPicker("Spotlight", spotLight, "color");
+        this.scene.add(spotLight);
 
         this.loadingManager = new THREE.LoadingManager();
         this.collisionManager = new CollisionManager(this.camera, this.scene);
