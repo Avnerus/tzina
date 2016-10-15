@@ -81,7 +81,7 @@ export default class VideoRGBD  {
 
             vertexShader: this.rgbd_vs,
             fragmentShader: this.rgbd_fs,
-            blending: THREE.AdditiveBlending,
+            //blending: THREE.AdditiveBlending,
             transparent: true,
             wireframe:false
         } );
