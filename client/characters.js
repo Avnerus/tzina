@@ -158,6 +158,23 @@ export default [
         scale: 0.003 * 0.25,
         subtitles: null,
         idleOnly: true
+    },
+    {
+        name: 'Mark',
+        basePath : 'assets/characters/mark',
+        mindepth : 2094.850646973,
+        maxdepth : 4473.095214844,
+        position : [13.2, 22.3, -5],
+        rotation: [353.2, 20, 0],
+        animation: null,
+        uvdy: 0.633333333,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        animationScale: 0.18,
+        animationPosition: [-0.5,0,-0.4],
+        animationRotation: [7,25,-8],
+        space: 2,
+        subtitles: null
     }
 /*,
     {
