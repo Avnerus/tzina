@@ -30,15 +30,21 @@ export default
 				},
 					{
 					name: "pocketCam",
-					position: [7.96,21.8,-12.27],
+					position: [10,21.8,-12],
 					rotation: [0,275,0],
 					scale: 0.17
 				},
 					{
 					name: "oldmansit",
-					position: [9.72,22.2,-9.63],
+					position: [12.36,22.2,-10.5],
 					rotation: [180,255,0],
 					scale: 0.19
+				},
+					{
+					name: "BlackGuy",
+					position: [-5.9,22.02,-1.73],
+					rotation: [0,263,0],
+					scale: 0.25
 				}
 			],
 
@@ -136,12 +142,6 @@ export default
 					scale: 0.7
 				},
 				{
-					name: "bikeHottie",
-					position: [7.08,21.8,11.5],
-					rotation:[0,315,0],
-					scale: 0.25
-				},
-				{
 					name: "100_",
 					position: [-5.24,22.1,8.84],
 					rotation:[0,73,0],
@@ -158,12 +158,6 @@ export default
 					position: [-0.84,22.2,15],
 					rotation:[176,125,0],
 					scale: 0.23
-				},
-				{
-					name: "DAN",
-					position: [-3.5,23.3,9.2],
-					rotation:[176,69,0],
-					scale: 0.22
 				}
 			],
 			"effects" : [
@@ -206,8 +200,21 @@ export default
                     position: [12.36,23.4,16.76],
                     rotation: [184,42,342],
                     scale: 0.27
+				},
+				{
+                    name: "sweetLady",
+                    position: [14.6.21.8,-2.5],
+                    rotation: [0,0,0],
+                    scale: 0.2
+				},
+					{
+					name: "DAN",
+					position: [-3.48,23.7,-8.75],
+					rotation:[184,208,0],
+					scale: 0.22
 				}
 			],
+
 			"effects" : [
 				{
 					"name": ""
@@ -259,6 +266,12 @@ export default
                     position: [-9.63,21.75,7.08],
                     rotation: [0,105,0],
                     scale: 0.13
+				},
+					{
+					name: "bikeHottie",
+					position: [4.28,22,-8.29],
+					rotation:[0,22,0],
+					scale: 0.27
 				},
 				{
                     name: "Gyno",

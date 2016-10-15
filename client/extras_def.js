@@ -108,8 +108,17 @@ export default {
           name: "DAN",
            fileName: "DAN.ply",
             pointSize : 0.011
+        },
+           {
+          name: "BlackGuy",
+           fileName: "BlackGuy.ply",
+            pointSize : 0.012
+        },
+           {
+          name: "sweetLady",
+           fileName: "sweetLady.ply",
+            pointSize : 0.012
         }
     ]
-
 }
 
