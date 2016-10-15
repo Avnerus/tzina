@@ -51,7 +51,7 @@ export default class TimeController {
                 this.scene.remove(this.prevChapterTitle);
                 this.square.turnOnSun(this.currentHour.toString());
             }
-            this.clockRunning = passed;
+            //this.clockRunning = passed;
         });
 
         events.on("base_position", () => {

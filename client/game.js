@@ -106,6 +106,7 @@ export default class Game {
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
         DebugUtil.colorPicker("Point light", this.dirLight, "color");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
+        DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");
         // --- hide by laura --- end
 
         //dirLight.target.position.set(0,100,0);
