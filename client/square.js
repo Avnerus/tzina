@@ -13,12 +13,13 @@ const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PATH = "assets/square/benches.json"
 
 export default class Square extends THREE.Object3D{
-    constructor(collisionManager, renderer) {
+    constructor(collisionManager, renderer, config) {
         super();
         console.log("Square constructed!")
 
         this.collisionManager = collisionManager;
         this.renderer = renderer;
+        this.config = config;
 
 
         this.ENTRY_POINTS = [
@@ -66,16 +67,20 @@ export default class Square extends THREE.Object3D{
         let trees = new Trees();
         this.extras = new  Extras();
         this.fountain = new Fountain();
-        Promise.all([
+
+        let loaders = [
             this.loadSquare(loadingManager),
             trees.init(loadingManager),
             this.fountain.init(loadingManager),
             this.loadBuildings(loadingManager),
             this.loadSuns(loadingManager),
             this.loadColliders(loadingManager),
-            this.loadBenches(loadingManager),
-            this.extras.init(loadingManager)
-        ])
+            this.loadBenches(loadingManager)
+        ];
+        if (!this.config.noExtras) {
+            loaders.push(this.extras.init(loadingManager));
+        }
+        Promise.all(loaders)
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];

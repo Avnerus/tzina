@@ -10,7 +10,7 @@ export default class Extras extends THREE.Object3D {
         super();
 
         this.currentExtras = [];
-        this.debug = true;
+        this.debug = false;
 
     }
 
