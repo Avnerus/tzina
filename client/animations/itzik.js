@@ -17,17 +17,17 @@ export default class ItzikAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{this.benchOutFirst()} },    //25
-            { time: 10, anim: ()=>{this.benchMove(1)} },        //35
-            { time: 15, anim: ()=>{this.benchMove(2)} },        //43
-            { time: 20, anim: ()=>{this.benchMove(3)} },        //50
-            { time: 25, anim: ()=>{this.benchMove(4)} },        //55
-            { time: 30, anim: ()=>{this.benchMove(5)} },        //60
+            { time: 35,  anim: ()=>{this.benchOutFirst()} },    //25
+            { time: 35, anim: ()=>{this.benchMove(1)} },        //35
+            { time: 43, anim: ()=>{this.benchMove(2)} },        //43
+            { time: 50, anim: ()=>{this.benchMove(3)} },        //50
+            { time: 55, anim: ()=>{this.benchMove(4)} },        //55
+            { time: 60, anim: ()=>{this.benchMove(5)} },        //60
             // { time: 35, anim: ()=>{this.benchMove(6)} },        //65
             // { time: 40, anim: ()=>{this.benchMove(7)} },        //70
             // { time: 75, anim: ()=>{this.benchMove(8)} },        //75
             // { time: 80, anim: ()=>{this.benchMove(9)} },        //80
-            { time: 35, anim: ()=>{this.characterDisappear(0)} }//210
+            { time: 210, anim: ()=>{this.characterDisappear(0)} }//210
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
