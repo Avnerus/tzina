@@ -184,7 +184,7 @@ export default [
         position : [2.3, 22.51, 5],
         rotation: [350, 0, 7.3],
         animation: null,
-        uvdy: 0.645,
+        uvdy: 0.649305556,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
         subtitles: null,
