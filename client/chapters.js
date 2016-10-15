@@ -69,6 +69,7 @@ export default
                 "LupoDogs12PM",                
                 "Lupo1",
 				"Sasha",
+                "FatmanSleep",
 				"shirin3"
 			],
             "eventAfter" : 0,

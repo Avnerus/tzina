@@ -175,6 +175,20 @@ export default [
         animationRotation: [7,25,-8],
         space: 2,
         subtitles: null
+    },
+    {
+        name: 'FatmanSleep',
+        basePath : 'assets/characters/fatman-sleep',
+        mindepth : 1370.90380859375,
+        maxdepth : 3802.21240234375,
+        position : [2.3, 22.51, 5],
+        rotation: [350, 0, 7.3],
+        animation: null,
+        uvdy: 0.645,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        subtitles: null,
+        idleOnly: true
     }
 /*,
     {
