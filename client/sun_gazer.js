@@ -12,6 +12,7 @@ export default class SunGazer extends THREE.Object3D  {
         this.gazingSun = null;
     }
     init() {
+        /*
         events.on("control_threshold", (passed) => {
             this.active = passed;
         });
@@ -24,7 +25,7 @@ export default class SunGazer extends THREE.Object3D  {
         })
         events.on("character_ended", () => {
             this.active = true;
-        })
+        })*/
     }
 
     updateMatrixWorld(force) {

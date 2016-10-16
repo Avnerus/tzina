@@ -92,14 +92,10 @@ export default class IntroAnimation extends THREE.Object3D {
             console.log(geometry);
 
             let material = new THREE.PointsMaterial( { color: 0xffffff, size: 1 } );
-            let materials = [ new THREE.PointsMaterial( { color: 0xffffff, size: 1 } ),
-                              new THREE.PointsMaterial( { color: 0xff0000, size: 1 } ),
-                              new THREE.PointsMaterial( { color: 0x00ffff, size: 1 } ) ];
+            let materials = [ new THREE.PointsMaterial( { color: 0xffffff, size: 1 } )];
 
             // scale, position, rotation
-            let treeTransformer = [ [new THREE.Vector3(70, 70, 10), new THREE.Vector3(0,1100,300), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)],
-                                    [new THREE.Vector3(50, 50, 50), new THREE.Vector3(500,800,1000), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2*(1-1/2)) ],
-                                    [new THREE.Vector3(65, 40, 50), new THREE.Vector3(-500,900,1000), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2*(1+1/2))] ];
+            let treeTransformer = [ [new THREE.Vector3(70, 70, 10), new THREE.Vector3(0,1100,300), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)]];
             
             this.trees = new THREE.Object3D();
             for(let i=0; i<treeTransformer.length; i++){
