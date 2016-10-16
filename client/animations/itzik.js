@@ -17,16 +17,12 @@ export default class ItzikAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 35,  anim: ()=>{this.benchOutFirst()} },    //25
+            { time: 25, anim: ()=>{this.benchOutFirst()} },     //25
             { time: 35, anim: ()=>{this.benchMove(1)} },        //35
             { time: 43, anim: ()=>{this.benchMove(2)} },        //43
             { time: 50, anim: ()=>{this.benchMove(3)} },        //50
             { time: 55, anim: ()=>{this.benchMove(4)} },        //55
             { time: 60, anim: ()=>{this.benchMove(5)} },        //60
-            // { time: 35, anim: ()=>{this.benchMove(6)} },        //65
-            // { time: 40, anim: ()=>{this.benchMove(7)} },        //70
-            // { time: 75, anim: ()=>{this.benchMove(8)} },        //75
-            // { time: 80, anim: ()=>{this.benchMove(9)} },        //80
             { time: 210, anim: ()=>{this.characterDisappear(0)} }//210
         ];
         this.nextAnim = null;
@@ -115,6 +111,7 @@ export default class ItzikAnimation extends THREE.Object3D {
                     let pointLight = new THREE.PointLight( this.lightColor[i], 1, 2 );
                     pointLight.position.z = 10;
                     tmpCloud.add( pointLight );
+                    pointLight.visible = false;
 
                 tmpCloud.scale.multiplyScalar(0.5);
                 tmpCloud.position.y = 15;
@@ -123,43 +120,14 @@ export default class ItzikAnimation extends THREE.Object3D {
                 this.clouds[i] = tmpCloud;
 
                 if( i==(this.benchCount-1) ){
-                    //this.loadModelBench( this.BASE_PATH + "/models/bench.json", loader );
                     this.loadModelItems( this.itemFiles, itemsMat, itemsMat2, loader );
                 }
             });
         }
-        
-        // loader.load( url, (geometry, material) => {
-        //     for(let i=0; i<this.benchCount; i++){
-        //         let benchMat;
-        //         if(i==0)
-        //             benchMat = new THREE.MeshLambertMaterial({color: 0xff0000});
-        //         else
-        //             benchMat = new THREE.MeshLambertMaterial({color: 0xffffff});
-
-        //         let tmp_bench = new THREE.Mesh( geometry.clone(), benchMat );
-
-        //         tmp_bench.position.set( Math.sin(Math.PI*2/10*this.b_offset)*this.b_radius, 0, Math.cos(Math.PI*2/10*this.b_offset)*this.b_radius );
-        //         tmp_bench.rotation.y = Math.PI*2/10*this.b_offset + Math.PI;
-                
-        //         tmp_bench.scale.multiplyScalar(0.0015);
-        //         this.benchGroup.add( tmp_bench );
-        //     }
-        //     this.benchGroup.position.set( 0, -4, 15 );
-        //     // this.benchGroup.rotation.y = 182 * Math.PI/180;
-        //     this.add( this.benchGroup );
-
-        //     // let tmp_bench = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({color: 0xffffff}) );
-        //     // this.add( tmp_bench );
-        //     // this.benches.push( tmp_bench );
-        // });
-        // 
 
         this.dummy = {opacity: 1};
 
         // DebugUtil.positionObject(this, "Itzik");
-
-        //
         this.loadingManager.itemEnd("ItzikAnim");
     }
 
@@ -249,11 +217,6 @@ export default class ItzikAnimation extends THREE.Object3D {
                     this.items[i] = tmpItem;
                 }
                 else if(i==5){
-                    // let tmpItem = new THREE.Mesh( geometry, mat );
-                    // this.items[i] = tmpItem;
-                    // this.fog = new THREE.Object3D();
-
-                    // let spriteMat = new THREE.SpriteMaterial( { map: this.smokeTex, color: 0x053d96, transparent: true, opacity: 0 } ); //0x053d96
                     for(let j=0; j<50; j++){
                         let sprite = new THREE.Sprite( this.smokeMat );
                         sprite.scale.multiplyScalar(3);
@@ -277,12 +240,6 @@ export default class ItzikAnimation extends THREE.Object3D {
         loader.load( url, (geometry, material) => {
 
             for(let i=0; i<this.clouds.length; i++){
-                //let benchMat;
-                // if(i==0)
-                //     benchMat = new THREE.MeshLambertMaterial({color: 0xff0000});
-                // else
-                    //benchMat = new THREE.MeshLambertMaterial({color: 0xffffff});
-
                 let tmp_bench = new THREE.Mesh( geometry.clone(), this.benchMats[i] );
 
                 tmp_bench.position.set( Math.sin(Math.PI*2/10*this.b_offset)*this.b_radius, 0, Math.cos(Math.PI*2/10*this.b_offset)*this.b_radius );
@@ -291,36 +248,12 @@ export default class ItzikAnimation extends THREE.Object3D {
 
                 tmp_bench.add( this.clouds[i] );
                 tmp_bench.add( this.items[i] );
-                // console.log( this.clouds[i].children[0] );
 
                 this.benchGroup.add( tmp_bench );
             }
             this.benchGroup.position.set( 0, -4, 15 );
-            // this.benchGroup.rotation.y = 182 * Math.PI/180;
             this.add( this.benchGroup );
-
-            // let tmp_bench = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({color: 0xffffff}) );
-            // this.add( tmp_bench );
-            // this.benches.push( tmp_bench );
         });
-    }
-
-    transX(geo, n){
-        for(let i=0; i<geo.vertices.length; i++){
-            geo.vertices[i].x += n;
-        }
-    }
-
-    transZ(geo, n){
-        for(let i=0; i<geo.vertices.length; i++){
-            geo.vertices[i].z += n;
-        }
-    }
-
-    transY(geo, n){
-        for(let i=0; i<geo.vertices.length; i++){
-            geo.vertices[i].y += n;
-        }
     }
 
     start() {

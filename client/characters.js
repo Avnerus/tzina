@@ -46,9 +46,9 @@ export default [
         uvdx: 0.0,
         scale: 0.0027 * 0.25,
         animationScale: 0.18,
-        animationPosition: [-0.24, 0.55, -1.01],
+        animationPosition: [-0.07, 0.43, -.95],
         animationRotation: [21, 3, 355],
-        space: 6,
+        space: 3,
         subtitles: true
     },
     {
@@ -131,8 +131,8 @@ export default [
         animationScale: 0.18,
         animationPosition: [0,0,0],
         animationRotation: [0,0,0],
-        subtitles: null
-        // idleOnly: true
+        subtitles: null,
+        idleOnly: true
     },
     {
         name: 'LupoDogs12PM',
