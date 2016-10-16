@@ -138,7 +138,7 @@ export default class MeirAnimation extends THREE.Object3D {
         for(let i=0; i<this.neon1.children.length; i++){
             this.neon1.children[i].tween.pause();
             if(i==0){
-                TweenMax.fromTo( this.neon1.children[i].material, 0.2,
+                TweenMax.fromTo( this.neon1.children[i].material, 0.15,
                                     { emissiveIntensity: 0 },
                                     { emissiveIntensity: 1, ease: Power0.easeNone, repeat: 15, yoyo: true,
                                         onComplete:()=>{
@@ -157,7 +157,7 @@ export default class MeirAnimation extends THREE.Object3D {
         for(let i=0; i<this.neon2.children.length; i++){
             this.neon2.children[i].tween.pause();
             if(i==0){
-                TweenMax.fromTo( this.neon2.children[i].material, 0.2,
+                TweenMax.fromTo( this.neon2.children[i].material, 0.15,
                                     { emissiveIntensity: 0 },
                                     { emissiveIntensity: 1, ease: Power0.easeNone, repeat: 15, yoyo: true,
                                         onComplete:()=>{
