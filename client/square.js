@@ -117,9 +117,9 @@ export default class Square extends THREE.Object3D{
             this.turnOffSuns();
             
 /*            events.emit("add_gui", obj.position, "x"); */
-            events.emit("add_gui",{}, obj.position, "y"); 
+            //events.emit("add_gui",{}, obj.position, "y"); 
             //events.emit("add_gui", obj.position, "z");
-            events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
+           // events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
 
         });
 
@@ -155,10 +155,9 @@ export default class Square extends THREE.Object3D{
         console.log("Turn off sun ", name);
         let sun = this.suns.getObjectByName(name).children[0];
         console.log("Turn off sun", sun);
-        sun.material.side = THREE.BackSide;
-        sun.material.color = new THREE.Color(0x000733);
-        sun.material.emissive = new THREE.Color(0x222223);
-        sun.material.specular = new THREE.Color(0x000000);
+        //sun.material.side = THREE.BackSide;
+        sun.material.color = new THREE.Color(0x888788);
+        //sun.material.specular = new THREE.Color(0x000000);
         sun.material.opacity = .8;
     }
 
@@ -172,9 +171,9 @@ export default class Square extends THREE.Object3D{
                 let sunMesh = sun.children[0];
                 console.log("Turn on sun", sun);
                 sunMesh.material.color = new THREE.Color(0xF4F5DC);
-                sunMesh.material.emissive = new THREE.Color(0xC8C5B9);
-                sunMesh.material.specular = new THREE.Color(0xFFFFFF);
-                sunMesh.material.side = THREE.DoubleSide;
+          //      sunMesh.material.specular = new THREE.Color(0x000000);
+                //sunMesh.material.side = THREE.DoubleSide;
+                sunMesh.material.opacity = .8;
                 this.currentSun = name;
             }
         }
@@ -226,6 +225,7 @@ export default class Square extends THREE.Object3D{
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(SUNS_PATH,( obj ) => {
                 
+                console.log("Loaded suns ", obj);
                 // Add a loader to all  of the suns (First object is the nesting export)
                 for (let i = 1; i < obj.children.length; i++) {
                     let sunLoader = new SunLoader(this.renderer);
@@ -233,6 +233,14 @@ export default class Square extends THREE.Object3D{
                     sunLoader.quaternion.copy(obj.children[i].children[0].quaternion);
                     //obj.children[i].rotation.set(0,0,0);
                     obj.children[i].add(sunLoader);
+                    obj.children[i].children[0].material.transparent = true;
+                    obj.children[i].children[0].geometry.dispose();
+                    obj.children[i].children[0].geometry = new THREE.SphereBufferGeometry( 0.3, 32, 32  );
+
+                    //debug
+                    events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "x", 0, 1);
+                    events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "y", 0, 1);
+
                 }
 
                 console.log("Loaded suns ", obj );
