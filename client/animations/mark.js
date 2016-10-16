@@ -1,10 +1,4 @@
-import ImprovedNoise from '../util/improved_noise'
-import TextureAnimator from '../util/texture_animator'
-import GeometryUtils from '../util/GeometryUtils'
-import FBO from '../util/fbo'
-import EndArrayPlugin from '../util/EndArrayPlugin'
 import DebugUtil from '../util/debug'
-TweenPlugin.activate([EndArrayPlugin]);
 
 export default class MeirAnimation extends THREE.Object3D {
     constructor( scene, renderer ) {
@@ -22,10 +16,13 @@ export default class MeirAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{this.neonRotate()} },
-            { time: 15,  anim: ()=>{this.neonRotateBack()} },
-            { time: 20, anim: ()=>{this.neonFlickering()} }, 
-            { time: 30,  anim: ()=>{this.characterDisappear()} }
+            { time: 5,  anim: ()=>{ this.pinkNeonOn() } },
+            { time: 10, anim: ()=>{ this.blueNeonOn() } },
+            { time: 15, anim: ()=>{ this.neonRotate() } },
+            { time: 20, anim: ()=>{ this.neonFlickering( 0.2, 3 ) } },    // neonFlickering( speed, time ) <-- how fast & how many times of flickering
+            { time: 25, anim: ()=>{ this.neonRotateBack() } },
+            { time: 30, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } }, 
+            { time: 45, anim: ()=>{ this.characterDisappear() } }
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -33,7 +30,6 @@ export default class MeirAnimation extends THREE.Object3D {
         this.loadingManager.itemStart("MarkAnim");
 
         //        
-        this.perlin = new ImprovedNoise();
         let tex_loader = new THREE.TextureLoader(this.loadingManager);
         let loader = new THREE.JSONLoader(this.loadingManager);
 
@@ -43,9 +39,9 @@ export default class MeirAnimation extends THREE.Object3D {
         }
 
         // NEON       
-            this.neon1_light = new THREE.PointLight( 0xff0055, 1, 5 );
+            this.neon1_light = new THREE.PointLight( 0xff0055, 0, 5 );
             this.neon1_light.position.set(0.2, 1, 1);
-            this.neon2_light = new THREE.PointLight( 0x00ffff, 1, 5 );
+            this.neon2_light = new THREE.PointLight( 0x00eaff, 0, 5 );
             this.neon2_light.position.set(-0.2, 1, -1);
 
             let neonFiles = [];
@@ -106,7 +102,7 @@ export default class MeirAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        // DebugUtil.positionObject(this, "mark");
+        DebugUtil.positionObject(this, "mark");
         //
         this.loadingManager.itemEnd("MarkAnim");
     }
@@ -119,6 +115,14 @@ export default class MeirAnimation extends THREE.Object3D {
         for(let i=0; i<this.sequenceConfig.length; i++){
             this.sequenceConfig[i].performed = false;
         }
+    }
+
+    pinkNeonOn(){
+        this.neon1_light.intensity = 1;
+    }
+
+    blueNeonOn(){
+        this.neon2_light.intensity = 1;
     }
 
     neonRotate(){
@@ -134,13 +138,14 @@ export default class MeirAnimation extends THREE.Object3D {
         TweenMax.to( this.neon2.position, 2, { x: 1.56, y: -0.3, z: 0.42, ease: Back.easeInOut } );
     }
 
-    neonFlickering(){
+    neonFlickering( _speed, _times ){
+        let repeatTimes = 1 + (_times-1)*2;
         for(let i=0; i<this.neon1.children.length; i++){
             this.neon1.children[i].tween.pause();
             if(i==0){
-                TweenMax.fromTo( this.neon1.children[i].material, 0.15,
-                                    { emissiveIntensity: 0 },
-                                    { emissiveIntensity: 1, ease: Power0.easeNone, repeat: 15, yoyo: true,
+                TweenMax.fromTo( this.neon1.children[i].material, _speed,
+                                    { emissiveIntensity: 1 },
+                                    { emissiveIntensity: 0, ease: Power0.easeNone, repeat: repeatTimes, yoyo: true,
                                         onComplete:()=>{
                                             this.neon1.children[i].tween.resume();
                                         }, onUpdate:()=>{
@@ -149,7 +154,7 @@ export default class MeirAnimation extends THREE.Object3D {
                                     }
                                 );
             }else{
-                TweenMax.fromTo( this.neon1.children[i].material, 0.2, { emissiveIntensity: 0 }, { emissiveIntensity: 1, ease: Power0.easeNone, repeat: 15, yoyo: true, onComplete:()=>{
+                TweenMax.fromTo( this.neon1.children[i].material, _speed, { emissiveIntensity: 0 }, { emissiveIntensity: 1, ease: Power0.easeNone, repeat: repeatTimes, yoyo: true, onComplete:()=>{
                     this.neon1.children[i].tween.resume();
                 } } );
             }
@@ -157,9 +162,9 @@ export default class MeirAnimation extends THREE.Object3D {
         for(let i=0; i<this.neon2.children.length; i++){
             this.neon2.children[i].tween.pause();
             if(i==0){
-                TweenMax.fromTo( this.neon2.children[i].material, 0.15,
-                                    { emissiveIntensity: 0 },
-                                    { emissiveIntensity: 1, ease: Power0.easeNone, repeat: 15, yoyo: true,
+                TweenMax.fromTo( this.neon2.children[i].material, _speed,
+                                    { emissiveIntensity: 1 },
+                                    { emissiveIntensity: 0, ease: Power0.easeNone, repeat: repeatTimes, yoyo: true,
                                         onComplete:()=>{
                                             this.neon2.children[i].tween.resume();
                                         }, onUpdate:()=>{
@@ -168,7 +173,7 @@ export default class MeirAnimation extends THREE.Object3D {
                                     }
                                 );
             }else{
-                TweenMax.fromTo( this.neon2.children[i].material, 0.2, { emissiveIntensity: 0 }, { emissiveIntensity: 1, ease: Power0.easeNone, repeat: 15, yoyo: true, onComplete:()=>{
+                TweenMax.fromTo( this.neon2.children[i].material, _speed, { emissiveIntensity: 0 }, { emissiveIntensity: 1, ease: Power0.easeNone, repeat: repeatTimes, yoyo: true, onComplete:()=>{
                     this.neon2.children[i].tween.resume();
                 } } );
             }
@@ -177,6 +182,8 @@ export default class MeirAnimation extends THREE.Object3D {
     }
 
     characterDisappear() {
+        this.neonFlickering( 0.05, 40 );
+
         TweenMax.to( this.dummy, 5, { opacity:0, ease: SteppedEase.config(3), onUpdate: ()=>{
                 this.parent.fullVideo.setOpacity(this.dummy.opacity);
             }, onStart: ()=>{
@@ -199,24 +206,6 @@ export default class MeirAnimation extends THREE.Object3D {
                                                             randomize: true,
                                                             clamp: false})} );
         return tweenM;
-    }
-
-    transX(geo, n){
-        for(let i=0; i<geo.vertices.length; i++){
-            geo.vertices[i].x += n;
-        }
-    }
-
-    transZ(geo, n){
-        for(let i=0; i<geo.vertices.length; i++){
-            geo.vertices[i].z += n;
-        }
-    }
-
-    transY(geo, n){
-        for(let i=0; i<geo.vertices.length; i++){
-            geo.vertices[i].y += n;
-        }
     }
 
     start() {

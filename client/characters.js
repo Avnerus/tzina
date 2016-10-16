@@ -173,9 +173,9 @@ export default [
         uvdy: 0.633333333,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
-        animationScale: 0.19,
-        animationPosition: [-.38, -.49, -.6],
-        animationRotation: [0,0,0],
+        animationScale: 0.20,
+        animationPosition: [-.4, -.46, -.55],
+        animationRotation: [0,-25,0],
         space: 3.5,
         subtitles: null
     },
