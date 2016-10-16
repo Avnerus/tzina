@@ -186,7 +186,8 @@ export default class Square extends THREE.Object3D{
         if (sun) {
             let sunMesh = sun.children[0];
             console.log("Turn on sun", sun);
-            sunMesh.material.color = new THREE.Color(0xF4050C);
+            sunMesh.material.color = new THREE.Color(0x000733);
+            //sunMesh.material.color = new THREE.Color(0xF4050C);
             sunMesh.material.emissive = new THREE.Color(0xC80509);
             sunMesh.material.specular = new THREE.Color(0xFF0000);
             sunMesh.material.side = THREE.DoubleSide;
