@@ -11,8 +11,11 @@ let clientsMan=new(require('./ClientsManager').ClientsManager)();
 let ev = require('events');
 let events = new ev.EventEmitter();
 
+clientsMan.setKeepaliveTimer(5000);
 
-clientsMan.setKeepaliveTimer(10000);
+setInterval(function(){
+  if(clientsMan.flushPositions()){};//else{console.log("nothing to send");};
+},200);
 
 //when socketServerManager gets a client, we instance a client in clientsMan
 socketSM.on('connection',function(ws){
@@ -27,7 +30,7 @@ socketSM.on('connection',function(ws){
   });
 
   client.send(clientsMan.getAllStates());
-  //inform all the other clients about the nuw user
+  //inform all the other clients about the new user
   client.broadcast({
     header: "newclient",//newClient
     pointer: client.unique

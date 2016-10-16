@@ -11,6 +11,10 @@ let localSprite;
 let wsock=false;
 let insideSquare;
 
+let emitInterval=0.5;
+//last dt time a position was emitted to server
+let lastEmitTime=0;
+
 export default class PidgeonController {
   constructor(scene,camera) {
     this.scene = scene;
@@ -70,10 +74,11 @@ export default class PidgeonController {
         //   ch.transform.rotation(ch.transform.position(message).getMovementDirection()* 180 / Math.PI);
         // });
       }else if(message.header=="remove"){
+        console.log("pidgeon remove "+message.pointer);
         //pendant:this should be inside
         let remoteSprite=Pidgeon.remote(message.pointer);
         if(remoteSprite){
-          this.scene.remove(remoteSprite);
+          thisPidgeonController.scene.remove(remoteSprite);
           //remoteSprite.remove();
         }else{
           console.warn("couldn't retrieve the corresponding pidgeon ",message);
@@ -93,20 +98,23 @@ export default class PidgeonController {
         for(let a = 0; a<batch.length; a+=4){
           //the unique index of the object over which the data will be applied
           let stateObjectUnique=batch[a];
-          //check if we already have a sprite for this remote object
-          let dataOwner=Pidgeon.remote(stateObjectUnique);
+          //check that the batch unique is not my own.
+          if(stateObjectUnique!=myClientId){
+            //check if we already have a sprite for this remote object
+            let dataOwner=Pidgeon.remote(stateObjectUnique);
 
-          let dataCoordinates={x:batch[a+1]*0.001,y:batch[a+2]*0.001,z:batch[a+3]*0.001};
+            let dataCoordinates={x:batch[a+1]*0.001,y:batch[a+2]*0.001,z:batch[a+3]*0.001};
 
-          if(dataOwner){
-            console.log("pidgeon object "+stateObjectUnique+" found apply");
-            //if we have it, will apply all the data to it. So far only position
-            dataOwner.transform.position(dataCoordinates);
-          }else{
-            console.log("pidgeon object "+stateObjectUnique+" notfound create");
-            //if we don't have it, we create it.
-            let newCharacter=new Pidgeon({position:dataCoordinates,unique:stateObjectUnique});
-            thisPidgeonController.scene.add(newCharacter);
+            if(dataOwner){
+              console.log("pidgeon object "+stateObjectUnique+" found apply");
+              //if we have it, will apply all the data to it. So far only position
+              dataOwner.transform.position(dataCoordinates);
+            }else{
+              console.log("pidgeon object "+stateObjectUnique+" notfound create");
+              //if we don't have it, we create it.
+              let newCharacter=new Pidgeon({position:dataCoordinates,unique:stateObjectUnique});
+              thisPidgeonController.scene.add(newCharacter);
+            }
           }
         }
       }else if(message.header=="newclient"){
@@ -117,6 +125,15 @@ export default class PidgeonController {
         console.warn("pidgeon unexpected message header:",message);
       }
     });
+  }
+  frame(dt){
+    if(!this.time) this.time=0;
+    this.time+=dt;
+    // console.log("pidgeon",this.time);
+    if(this.time-lastEmitTime>=emitInterval){
+      this.socketEmitCameraPosition();
+      lastEmitTime=this.time;
+    }
   }
   socketEmitCameraPosition(){
     if(wsock){

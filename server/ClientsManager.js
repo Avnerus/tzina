@@ -90,9 +90,10 @@ export function ClientsManager(){
       if(event.parsedMessage){
         //track changes and broadcast the ones that need
         thisClient.trackChange(event.parsedMessage);
+        thisClientsManager.enqueuePosition(thisClient);
         if(event.parsedMessage.header=="changeposition"){
           console.log("position",event.parsedMessage);
-          thisClient.broadcast(event.rawMessage);
+          // thisClient.broadcast(event.rawMessage);
         }
         event.client=thisClient;
         thisClient.handle('message',event);
@@ -106,33 +107,35 @@ export function ClientsManager(){
     }
     //some functions to this client
     this.broadcast=function(data) {
-      console.log("broadcast->");
-      //execute send to all the clients exept this client
-      var except=thisClient.unique;
-      thisClientsManager.forEach(function(client) {
-        console.log(" iterate client"+client.unique);
-        var d = true;
-        if (except) {
-          if (client.unique == except) {
-            d = false;
-          }
-        }
-        //ws was provided on connection event to each new client listing
-        if (d) {
-          try {
-            client.send(data);
-            console.log("client "+client.unique+" sent");
-          } catch (e) {
-            console.warn("object " + client.unique + " missed some data", data);
-            console.warn(e);
-          }
-        }
-      });
+      //broadcast exept this.
+      thisClientsManager.broadcast(data,thisClient.unique);
+      // console.log("broadcast->");
+      // //execute send to all the clients exept this client
+      // var except=thisClient.unique;
+      // thisClientsManager.forEach(function(client) {
+      //   console.log(" iterate client"+client.unique);
+      //   var d = true;
+      //   if (except) {
+      //     if (client.unique == except) {
+      //       d = false;
+      //     }
+      //   }
+      //   //ws was provided on connection event to each new client listing
+      //   if (d) {
+      //     try {
+      //       client.send(data);
+      //       console.log("client "+client.unique+" sent");
+      //     } catch (e) {
+      //       console.warn("object " + client.unique + " missed some data", data);
+      //       console.warn(e);
+      //     }
+      //   }
+      // });
     };
 
 
 
-    console.log("kk"+this.unique);
+    // console.log("kk"+this.unique);
     this.id=this.unique;
 
     //keeps the record for current client's state, so we can make aware new clients
@@ -167,9 +170,74 @@ export function ClientsManager(){
         }
       }
     });
-    console.log(outGoing);
+    // console.log(outGoing);
     return outGoing;
   }
+  let enqueuedClientPositions=[];
+  //these will be statics when I update to es6 syntax
+  this.enqueuePosition=function(ofClient){
+    if(enqueuedClientPositions.indexOf(ofClient)==-1)
+      enqueuedClientPositions.push(ofClient);
+  }
+  this.flushPositions=function(){
+    if(enqueuedClientPositions.length==1){
+      let thisClient=enqueuedClientPositions[0];
+      console.log(thisClient.unique+"broadcast single pos",{
+        header:"changeposition",
+        pointer:thisClient.unique,
+        data:thisClient.currentState.changeposition
+      });
+      thisClient.broadcast({
+        header:"changeposition",
+        pointer:thisClient.unique,
+        data:thisClient.currentState.changeposition
+      });
+    }else if(enqueuedClientPositions.length>=1){
+      let outGoing={header:"statebatch",pointer:0,data:[]};
+      for(let b in enqueuedClientPositions){
+        let thisClient=enqueuedClientPositions[b];
+        if(thisClient.currentState.changeposition){
+          outGoing.data.push(thisClient.unique);
+          for (let a in thisClient.currentState.changeposition){
+            outGoing.data.push(thisClient.currentState.changeposition[a]);
+          }
+        }
+      }
+      console.log("broadcasting some points to many clients",outGoing);
+      //clear the array
+      thisClientsManager.broadcast(outGoing);
+    }else{
+      return false;
+    }
+    enqueuedClientPositions=[];
+    return true;
+
+  }
+  this.broadcast=function(data,exceptUnique) {
+    console.log("broadcast->");
+
+
+    thisClientsManager.forEach(function(client) {
+      console.log(" iterate client"+client.unique);
+      var d = true;
+      if (exceptUnique) {
+        if (client.unique == exceptUnique) {
+          d = false;
+        }
+      }
+      //ws was provided on connection event to each new client listing
+      if (d) {
+        try {
+          client.send(data);
+          console.log("client "+client.unique+" sent");
+        } catch (e) {
+          console.warn("object " + client.unique + " missed some data", data);
+          console.warn(e);
+        }
+      }
+    });
+  };
+
   this.removeClient=function(client){
     return delete clients[client.getIndexInArray()];
   }

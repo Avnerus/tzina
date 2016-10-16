@@ -5,7 +5,7 @@ adn decompressing the data */
 
 //first header in lookup is misspelled to let know the developer that a message was not well spelled or undefined.
 let charLookup=["misspelled","newid","changeposition","newclient","statebatch","remove","ping","pong"];
-
+let verbose=false;
 
 function decode(bufferArray){
   try{
@@ -33,8 +33,8 @@ function decode(bufferArray){
 
     return(retArr);
   }catch(e){
-    console.log("error while decoding data from a socket",e);
-    console.log("the recieved data was:",bufferArray);
+    if (verbose) console.log("error while decoding data from a socket",e);
+    if (verbose) console.log("the recieved data was:",bufferArray);
   }
 }
 export {decode}
@@ -64,7 +64,7 @@ function encode(data){
         outGoing.data[a]=data.data[a];
       }
     }else{
-      //console.log("payloadless message",data);
+      //if (verbose) console.log("payloadless message",data);
       for(let a=0;a<outGoing.data.length;a++){
         outGoing.data[a]=0;
       }
@@ -77,12 +77,12 @@ function encode(data){
     //encode reference as uint32
     // outGoing.pointer=data.pointer;
 
-    // console.log(data[1].length);
+    // if (verbose) console.log(data[1].length);
     return bufferArray;
   }
   catch(e){
-    console.log("exception while trying to encode the data into the socket.",e);
-    console.log("the data is expected to look like this:",{header:"vect",pointer:18,data:[-1,2,-3]}," but you provided:",data);
+    if (verbose) console.log("exception while trying to encode the data into the socket.",e);
+    if (verbose) console.log("the data is expected to look like this:",{header:"vect",pointer:18,data:[-1,2,-3]}," but you provided:",data);
     return false;
   }
 }

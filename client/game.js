@@ -396,11 +396,10 @@ export default class Game {
         }
         this.collisionManager.update(dt);
 
-        var tthis=this;
         if(!this.pidgeonfailed){
           // console.log("pidgeon second");
           try{
-            this.pidgeonController.socketEmitCameraPosition();
+            this.pidgeonController.frame(dt);
           }catch(e){
             console.error("pidgeonContoller failed",e);
             tthis.pidgeonfailed=true;
