@@ -23,8 +23,8 @@ export default class MeirAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 10, anim: ()=>{this.birdsOut()} },
-            { time: 20, anim: ()=>{this.characterDisappear()} }
+            { time: 20, anim: ()=>{this.birdsOut()} },
+            { time: 102, anim: ()=>{this.characterDisappear()} }
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -215,7 +215,7 @@ export default class MeirAnimation extends THREE.Object3D {
 
     loadModelBird( _body, _wingR, _wingL, loader ){
         // let birdMat = new THREE.MeshLambertMaterial({map: this.birdTex});
-        let birdMat = new THREE.MeshBasicMaterial({color: 0x76ffd1, map: this.birdTex});
+        let birdMat = new THREE.MeshBasicMaterial({color: 0xa5d0c3, map: this.birdTex});
 
         loader.load( _body, (geometry, material) => {
             this.bird = new THREE.Mesh(geometry, birdMat);
