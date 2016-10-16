@@ -1,9 +1,5 @@
 export default {
     types: [
-         {
-            name: "palm",
-            fileName: "palm.ply"
-        },
         //{
           //  name: "singleTree",
             //fileName: "singleTree.ply",
@@ -13,7 +9,7 @@ export default {
             name: "bridegroom",
             fileName: "bridegroom.ply",
             pointSize : 0.015
-        },
+        }/*,
         //{
           //  name: "guard",
          //   fileName: "guard.ply",
@@ -118,7 +114,7 @@ export default {
           name: "sweetLady",
            fileName: "sweetLady.ply",
             pointSize : 0.012
-        }
+        }*/
     ]
 }
 
