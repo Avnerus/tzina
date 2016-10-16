@@ -17,6 +17,8 @@ export default class Pidgeon extends THREE.Object3D{
     }
     console.log("pidgeon",Pidgeon.geometry);
     this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
+    this.mesh.position.set(0,0.07,0);
+    this.mesh.scale.set(0.3,0.3,0.3);
     this.add(this.mesh);
     /*pendant: these may become handy later, but currently unused:*/
     let transformReturnFunctions = {
@@ -67,8 +69,30 @@ export default class Pidgeon extends THREE.Object3D{
   static initMesh(loadingManager){
     console.log("pidgeon init mesh");
     //initialize graphics, create mesh?
-    this.geometry = new THREE.BoxGeometry(2,10,2);
-    this.material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+    this.geometry = new THREE.BoxGeometry(0.2,0.2,0.2);
+    this.material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true} );
+
+    let loader = new THREE.JSONLoader(loadingManager);
+    // let createMesh = function( geometry )
+    // {
+    //   console.log("pidgeon mesh loaded from file");
+    //   this.geometry=geometry;
+    //   // this.zmesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial() );
+    //   // zmesh.position.set( 0, 0, 0 );
+    //   // zmesh.scale.set( 3, 3, 3 );
+    //   // zmesh.overdraw = true;
+    // };
+    try{
+      loader.load( "assets/pidgeons/birrd.json", function(geometry){
+        Pidgeon.geometry=geometry;
+      },function(){
+        console.log("pidgeon profress");
+      },function(e){
+        console.error("pidgeon",e);
+      });
+    }catch(e){
+    console.error("pidgeon",e);
+    }
   }
   static each (callback) {
     for (var characterIndex in characterList) {

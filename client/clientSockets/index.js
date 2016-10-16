@@ -22,6 +22,7 @@ export default class PidgeonController {
     this.lastCameraPosition={x:0,y:0,z:0};
   }
   init(loadingManager){
+
     Pidgeon.initMesh(loadingManager);
     events.on("control_threshold", (passed) => {
       //when we enter the park square, if the socket has not been initialized already
