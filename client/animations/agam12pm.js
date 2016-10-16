@@ -40,17 +40,41 @@ export default class Agam12PMAnimation extends THREE.Object3D {
           this.lookupTable.push(Math.random());
         }
 
-        let agamTex = tex_loader.load( this.BASE_PATH + "/images/agam.jpg" );
+        let agamTex = tex_loader.load( this.BASE_PATH + "/images/agamFigure.jpg" );
         let agamMat = new THREE.MeshLambertMaterial({map: agamTex});
-        loader.load( this.BASE_PATH + "/models/agam.json", (geometry, material) => {
+        loader.load( this.BASE_PATH + "/models/agamFigure.json", (geometry, material) => {
             this.agamArt = new THREE.Mesh( geometry, agamMat );
+            this.agamArt.position.set(-.44, .32, -4.78);
+            this.agamArt.scale.multiplyScalar(1.31);
             this.add(this.agamArt);
-            DebugUtil.positionObject(this.agamArt, "agamArt");
+            // DebugUtil.positionObject(this.agamArt, "agamArt");
         });
+
+        let agamSmallTex_1 = tex_loader.load( this.BASE_PATH + "/images/agamSmall_1.jpg" );
+        let agamSmallTex_2 = tex_loader.load( this.BASE_PATH + "/images/agamSmall_2.jpg" );
+        let agamSMat1 = new THREE.MeshLambertMaterial({map: agamSmallTex_1});
+        let agamSMat2 = new THREE.MeshLambertMaterial({map: agamSmallTex_2});
+        loader.load( this.BASE_PATH + "/models/agamSmall.json", (geometry, material) => {
+            this.agamSmall_1 = new THREE.Mesh( geometry, agamSMat1 );
+            this.agamSmall_1.position.set(2.88, .26, -2.21);
+            this.agamSmall_1.scale.multiplyScalar(0.56);
+            this.add(this.agamSmall_1);
+            // DebugUtil.positionObject(this.agamSmall_1, "agamSmall_1");
+
+            this.agamSmall_2 = new THREE.Mesh( geometry, agamSMat2 );
+            this.agamSmall_2.position.set(-2, .18, -1.85);
+            this.agamSmall_2.scale.multiplyScalar(0.5);
+            this.add(this.agamSmall_2);
+            // DebugUtil.positionObject(this.agamSmall_2, "agamSmall_2");
+        });
+
+        // let testCube = new THREE.Mesh( new THREE.BoxGeometry(4,1,1), new THREE.MeshLambertMaterial({color: 0xff0000}) );
+        // this.add(testCube);
+        // DebugUtil.positionObject(testCube, "testCube");
 
         this.dummy = {opacity: 1};
 
-        // DebugUtil.positionObject(this, "mark");
+        // DebugUtil.positionObject(this, "agam");
         //
         this.loadingManager.itemEnd("Agam12PMAnim");
     }

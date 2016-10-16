@@ -129,8 +129,8 @@ export default [
         uvdx: 0.0,
         scale: 0.003 * 0.25,
         animationScale: 0.18,
-        animationPosition: [0,0,0],
-        animationRotation: [0,0,0],
+        animationPosition: [-.38, 0, .39],
+        animationRotation: [0, 0, -6],
         subtitles: null,
         idleOnly: true
     },
