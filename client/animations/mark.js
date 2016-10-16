@@ -102,7 +102,7 @@ export default class MeirAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        DebugUtil.positionObject(this, "mark");
+        // DebugUtil.positionObject(this, "mark");
         //
         this.loadingManager.itemEnd("MarkAnim");
     }
