@@ -155,7 +155,7 @@ export default class Square extends THREE.Object3D{
         console.log("Turn off sun ", name);
         let sun = this.suns.getObjectByName(name).children[0];
         console.log("Turn off sun", sun);
-        sun.material.side = THREE.BackSide;
+        //sun.material.side = THREE.BackSide;
         sun.material.color = new THREE.Color(0x888788);
         //sun.material.specular = new THREE.Color(0x000000);
         sun.material.opacity = .8;
@@ -172,7 +172,7 @@ export default class Square extends THREE.Object3D{
                 console.log("Turn on sun", sun);
                 sunMesh.material.color = new THREE.Color(0xF4F5DC);
           //      sunMesh.material.specular = new THREE.Color(0x000000);
-                sunMesh.material.side = THREE.DoubleSide;
+                //sunMesh.material.side = THREE.DoubleSide;
                 sunMesh.material.opacity = .8;
                 this.currentSun = name;
             }
@@ -234,6 +234,8 @@ export default class Square extends THREE.Object3D{
                     //obj.children[i].rotation.set(0,0,0);
                     obj.children[i].add(sunLoader);
                     obj.children[i].children[0].material.transparent = true;
+                    obj.children[i].children[0].geometry.dispose();
+                    obj.children[i].children[0].geometry = new THREE.SphereBufferGeometry( 0.3, 32, 32  );
 
                     //debug
                     events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "x", 0, 1);
