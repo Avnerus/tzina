@@ -182,7 +182,8 @@ export default class HaimAnimation extends THREE.Object3D {
                 loop: 3
             },
             blending: 1,
-            depthTest: false
+            depthTest: true,
+            maxParticleCount: 3000
         });
 
         // reduce emitter amount to be 1/5 of domeMorphTargets.length
