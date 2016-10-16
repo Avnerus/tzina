@@ -124,12 +124,15 @@ export default [
         maxdepth : 2789.562011719,
         position : [6.0, 22.04, 3],
         rotation: [357, 49, 8],
-        animation: null,
+        animation: 'Agam12PM',
         uvdy: 0.475,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
-        subtitles: null,
-        idleOnly: true
+        animationScale: 0.18,
+        animationPosition: [0,0,0],
+        animationRotation: [0,0,0],
+        subtitles: null
+        // idleOnly: true
     },
     {
         name: 'LupoDogs12PM',
