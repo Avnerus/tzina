@@ -25,7 +25,7 @@ export default class HannahAnimation extends THREE.Object3D {
             { time: 65, anim: ()=>{this.beDome()} },    // 65
             { time: 86, anim: ()=>{this.showLeaf()} },  // 86
             { time: 172, anim: ()=>{this.beCollapse()} }, // 172
-            { time: 287, anim: ()=>{this.characterDisappear()} } // 182
+            { time: 182, anim: ()=>{this.characterDisappear()} } // 182
         ];
 
         this.nextAnim = null;
@@ -47,18 +47,18 @@ export default class HannahAnimation extends THREE.Object3D {
 
         let p_tex_loader = new THREE.TextureLoader(this.loadingManager);
 
-        let twigGeo, leafGeo, evilGeo, twigMat, leafMat, evilMat;
+        let twigGeo, leafGeo, twigMat, leafMat; //evilGeo, evilMat
 
         leafMat = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors, wireframe: true } );
 
-        let evilTex = p_tex_loader.load(this.BASE_PATH + '/images/spike3.jpg');
+        this.evilTex = p_tex_loader.load(this.BASE_PATH + '/images/spike3.jpg');
 
         twigMat = new THREE.MeshBasicMaterial( {color: 0x985a17, wireframe: true} );
 
-        evilTex.wrapS = THREE.RepeatWrapping;
-        evilTex.wrapT = THREE.RepeatWrapping;
-        evilTex.repeat.set( 1, 4 );
-        evilMat = new THREE.MeshLambertMaterial( {map: evilTex} );
+        this.evilTex.wrapS = THREE.RepeatWrapping;
+        this.evilTex.wrapT = THREE.RepeatWrapping;
+        this.evilTex.repeat.set( 1, 4 );
+        this.evilMat = new THREE.MeshLambertMaterial( {map: this.evilTex} );
 
         this.center = new THREE.Mesh( new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({color: 0xff0000}));
         this.center.position.set(0,-5,2);
@@ -66,7 +66,7 @@ export default class HannahAnimation extends THREE.Object3D {
 
         let loader = new THREE.JSONLoader(this.loadingManager);
         loader.load(this.BASE_PATH + "/models/spike_curvey_s.js", (geometry, material) => {
-            evilGeo = geometry;
+            this.evilGeo = geometry;
         });
         loader.load(this.BASE_PATH + "/models/leavesss_less_s.js", (geometry, material) => {
             this.leafGeo = geometry;
@@ -108,10 +108,10 @@ export default class HannahAnimation extends THREE.Object3D {
             let centerV = this.center.position.clone();
             let upp = new THREE.Vector3(0,-1,0);
 
-            for(let i = 0; i < this.dome.geometry.vertices.length-2; i+=2){
+            for(let i = 0; i < this.dome.geometry.vertices.length-9; i+=9){
                 let fMesh = new Thing( this.dome.geometry.vertices[i],
-                                       twigGeo, this.leafGeo, evilGeo,
-                                       twigMat, leafMat, evilMat );
+                                       twigGeo, this.leafGeo, this.evilGeo,
+                                       twigMat, leafMat, this.evilMat );
 
                 this.add(fMesh.mesh);
 
@@ -126,7 +126,7 @@ export default class HannahAnimation extends THREE.Object3D {
 
                 this.domeMorphTargets.push( fMesh );
             }
-            // console.log("domeMorphTargets length: " + this.domeMorphTargets.length);
+            console.log("domeMorphTargets length: " + this.domeMorphTargets.length);
 
             // this.updateVertices();
             this.initParticles();
@@ -191,7 +191,7 @@ export default class HannahAnimation extends THREE.Object3D {
         });
 
         // reduce emitter amount to be 1/5 of domeMorphTargets.length
-        for(let i = 0; i < this.domeMorphTargets.length-5; i+=5){
+        for(let i = 0; i < this.domeMorphTargets.length-2; i+=2){
             let emitter = new SPE.Emitter({
                 type: SPE.distributions.SPHERE,
                 // duration: 10,
@@ -220,7 +220,7 @@ export default class HannahAnimation extends THREE.Object3D {
                     value: [0,1,1,1,0]
                 },
                 size: {
-                    value: [.10,.4,.4,.4,.3]
+                    value: [.05,.1,.2,.2,.1]
                 },
                 particleCount: 15,
                 drag: 0.6,
@@ -229,7 +229,7 @@ export default class HannahAnimation extends THREE.Object3D {
             this.particleGroup.addEmitter( emitter );
         }
         this.add( this.particleGroup.mesh );
-        console.log( this.particleGroup.emitters.length );
+        // console.log( this.particleGroup.emitters.length );
     }
 
     updateVertices() {
@@ -242,7 +242,7 @@ export default class HannahAnimation extends THREE.Object3D {
         let upp = new THREE.Vector3(0,-1,0);
 
         // get morph geometry update position data
-        for(let i=0; i<this.shieldGeo.vertices.length-2; i+=2){
+        for(let i=0; i<this.shieldGeo.vertices.length-9; i+=9){
             let centerV = this.center.position.clone();
             let vA = new THREE.Vector3();
             let tempA = new THREE.Vector3();
@@ -259,7 +259,7 @@ export default class HannahAnimation extends THREE.Object3D {
                 vA.add( tempA );
             // }
 
-            this.domeMorphTargets[i/2].mesh.position.copy( vA );
+            this.domeMorphTargets[i/9].mesh.position.copy( vA );
 
             // if( _scale != null){
                 // this.domeMorphTargets[i].mesh.children[1].scale.multiplyScalar( _scale );
@@ -269,21 +269,22 @@ export default class HannahAnimation extends THREE.Object3D {
             // }
 
             // particles
-            if((i/2)%5==0){
-                if(i/10 != 37)
-                    this.particleGroup.emitters[i/10].position.value = this.particleGroup.emitters[i/10].position.value.copy( vA );
+            if((i/9)%2==0){
+                if(i/18 != 20)
+                    this.particleGroup.emitters[i/18].position.value = this.particleGroup.emitters[i/18].position.value.copy( vA );
             }
                         
             // rotate
             let m1 = new THREE.Matrix4();
             m1.lookAt( centerV, vA, upp );
-            this.domeMorphTargets[i/2].mesh.quaternion.setFromRotationMatrix( m1 );
+            this.domeMorphTargets[i/9].mesh.quaternion.setFromRotationMatrix( m1 );
         }
     }
 
     appear() {
         for(let i=0; i<this.domeMorphTargets.length; i++){
-            TweenMax.to( this.domeMorphTargets[i].mesh.children[2].scale, 4, { x: 1, y: 1, z: 1, ease: Power4.easeIn } );
+            this.domeMorphTargets[i].mesh.children[2].visible = true;
+            TweenMax.to( this.domeMorphTargets[i].mesh.children[2].scale, 4, { x: 1.5, y: 1.5, z: 1.5, ease: Power4.easeIn } );
         }
     }
 
@@ -295,8 +296,14 @@ export default class HannahAnimation extends THREE.Object3D {
 
     showLeaf() {
         for(let i=0; i<this.domeMorphTargets.length; i++){
-            TweenMax.to( this.domeMorphTargets[i].mesh.children[1].scale, 2, { x: 1, y: 1, z: 1, ease: Power2.easeOut } );
-            TweenMax.to( this.domeMorphTargets[i].mesh.children[2].scale, 4, { x: 0.01, y: 0.01, z: 0.01, ease: Power4.easeIn } );
+            this.domeMorphTargets[i].mesh.children[1].visible = true;
+            TweenMax.to( this.domeMorphTargets[i].mesh.children[1].scale, 2, { x: 1.5, y: 1.5, z: 1.5, ease: Power2.easeOut } );
+            TweenMax.to( this.domeMorphTargets[i].mesh.children[2].scale, 4, { x: 0.01, y: 0.01, z: 0.01, ease: Power4.easeIn, onComplete:()=>{
+                this.remove( this.domeMorphTargets[i].mesh.children[2] );
+                this.evilGeo.dispose();
+                this.evilMat.dispose();
+                this.evilTex.dispose();
+            } } );
         }
     }
 
@@ -410,14 +417,14 @@ export default class HannahAnimation extends THREE.Object3D {
         if(this.particleGroup) {
             this.particleGroup.tick( dt );
         }
-        for(let i=0; i < this.shieldGeo.vertices.length-2; i+=2){
+        for(let i=0; i < this.shieldGeo.vertices.length-9; i+=9){
             let h = this.perlin.noise(et*0.1, i, 1)/this.noiseFactor;
-            this.domeMorphTargets[i/2].mesh.position.addScalar( h );
+            this.domeMorphTargets[i/9].mesh.position.addScalar( h );
 
-            if( (i/2) % 5==0 ){
-                if(i/10 != 37){
+            if( (i/9) % 2==0 ){
+                if(i/18 != 20){
                     // this.particleGroup.emitters[i/6].position.value = this.particleGroup.emitters[i/6].position.value.addScalar( h );
-                    this.particleGroup.emitters[i/10].position.value = this.particleGroup.emitters[i/10].position.value.copy( this.domeMorphTargets[i/2].mesh.position );
+                    this.particleGroup.emitters[i/18].position.value = this.particleGroup.emitters[i/18].position.value.copy( this.domeMorphTargets[i/9].mesh.position );
                 }
             }
         }
@@ -450,6 +457,10 @@ function Thing( pos, geoTwig, geoLeaf, geoEvil, twigMat, leafMat, evilMat ){
     this.mesh.children[1].scale.set(0.01, 0.01, 0.01);
     this.mesh.children[0].scale.set(0.01, 0.01, 0.01);
     this.mesh.children[2].scale.set(0.01, 0.01, 0.01);
+
+    this.mesh.children[1].visible = false;
+    this.mesh.children[0].visible = false;
+    this.mesh.children[2].visible = false;
 }
 
 function map_range(value, low1, high1, low2, high2) {
