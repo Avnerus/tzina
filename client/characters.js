@@ -49,7 +49,7 @@ export default [
         animationPosition: [-0.1, -0.05, 0.5],
         animationRotation: [21, 3, 355],
         space: 2,
-        subtitles: true
+        subtitles: false
     },
     {
         name: 'Haim',
@@ -67,7 +67,7 @@ export default [
         animationRotation: [-4, -23, -9],
         space: 4,
         volume: 0.1,
-        subtitles: true
+        subtitles: false
     },
     {
         name: 'Rami',

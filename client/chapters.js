@@ -250,37 +250,32 @@ export default
                     //rotation: [0, 0, 93],
                     //scale: 0.7
                 //},
-                	{
-                    name: "blueLady",
-                    position: [10.2,21.85,-12],
-                    rotation: [0,0,0],
-                    scale: 0.13
-				},
 				{
                     name: "manOnBench",
-                    position: [8.6,21.8,-17],
-                    rotation: [0,133,0],
-                    scale: 0.17
+                    position: [6.8,21.9,-14.8],
+                    rotation: [6,152,0],
+                    scale: 0.19
 				},
 				{
                     name: "coolPair",
-                    position: [-9.63,21.75,7.08],
-                    rotation: [0,105,0],
-                    scale: 0.13
+                    position: [-3.63,22,-6.33],
+                    rotation: [0,135,0],
+                    scale: 0.25
 				},
 					{
 					name: "bikeHottie",
-					position: [4.28,22,-8.29],
+					position: [-13.51,21.8,-8.12],
 					rotation:[0,22,0],
 					scale: 0.27
 				},
-				{
-                    name: "Gyno",
-                    position: [0.92,23.7,13.24],
-                    rotation: [165,263,0],
-                    scale: 0.22
+					{
+                    name: "sweetLady",
+                    position: [-10.81,22,1.75],
+                    rotation: [0,168,0],
+                    scale: 0.2
 				}
 			],
+
 			"effects" : [
 				{
 					"name": "buildinglights"
