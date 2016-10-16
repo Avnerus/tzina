@@ -108,7 +108,7 @@ export default class HannahAnimation extends THREE.Object3D {
             let centerV = this.center.position.clone();
             let upp = new THREE.Vector3(0,-1,0);
 
-            for(let i = 0; i < this.dome.geometry.vertices.length; i++){
+            for(let i = 0; i < this.dome.geometry.vertices.length-2; i+=2){
                 let fMesh = new Thing( this.dome.geometry.vertices[i],
                                        twigGeo, this.leafGeo, evilGeo,
                                        twigMat, leafMat, evilMat );
@@ -186,11 +186,12 @@ export default class HannahAnimation extends THREE.Object3D {
             texture: {
                 value: particleTex
             },
-            depthTest: false
+            depthTest: false,
+            maxParticleCount: 1000
         });
 
         // reduce emitter amount to be 1/5 of domeMorphTargets.length
-        for(let i = 0; i < this.domeMorphTargets.length-10; i+=10){
+        for(let i = 0; i < this.domeMorphTargets.length-5; i+=5){
             let emitter = new SPE.Emitter({
                 type: SPE.distributions.SPHERE,
                 // duration: 10,
@@ -219,16 +220,16 @@ export default class HannahAnimation extends THREE.Object3D {
                     value: [0,1,1,1,0]
                 },
                 size: {
-                    value: [.10,.5,.5,.5,.3]
+                    value: [.10,.4,.4,.4,.3]
                 },
                 particleCount: 15,
                 drag: 0.6,
                 activeMultiplier: 0.3
             });
             this.particleGroup.addEmitter( emitter );
-            // console.log( this.particleGroup.emitters[0] );
         }
         this.add( this.particleGroup.mesh );
+        console.log( this.particleGroup.emitters.length );
     }
 
     updateVertices() {
@@ -241,7 +242,7 @@ export default class HannahAnimation extends THREE.Object3D {
         let upp = new THREE.Vector3(0,-1,0);
 
         // get morph geometry update position data
-        for(let i=0; i<this.shieldGeo.vertices.length; i++){
+        for(let i=0; i<this.shieldGeo.vertices.length-2; i+=2){
             let centerV = this.center.position.clone();
             let vA = new THREE.Vector3();
             let tempA = new THREE.Vector3();
@@ -258,7 +259,7 @@ export default class HannahAnimation extends THREE.Object3D {
                 vA.add( tempA );
             // }
 
-            this.domeMorphTargets[i].mesh.position.copy( vA );
+            this.domeMorphTargets[i/2].mesh.position.copy( vA );
 
             // if( _scale != null){
                 // this.domeMorphTargets[i].mesh.children[1].scale.multiplyScalar( _scale );
@@ -268,15 +269,15 @@ export default class HannahAnimation extends THREE.Object3D {
             // }
 
             // particles
-            if(i%10==0){
-                if(i/10 != 38)
+            if((i/2)%5==0){
+                if(i/10 != 37)
                     this.particleGroup.emitters[i/10].position.value = this.particleGroup.emitters[i/10].position.value.copy( vA );
             }
                         
             // rotate
             let m1 = new THREE.Matrix4();
             m1.lookAt( centerV, vA, upp );
-            this.domeMorphTargets[i].mesh.quaternion.setFromRotationMatrix( m1 );
+            this.domeMorphTargets[i/2].mesh.quaternion.setFromRotationMatrix( m1 );
         }
     }
 
@@ -409,14 +410,14 @@ export default class HannahAnimation extends THREE.Object3D {
         if(this.particleGroup) {
             this.particleGroup.tick( dt );
         }
-        for(let i=0; i < this.shieldGeo.vertices.length; i++){
+        for(let i=0; i < this.shieldGeo.vertices.length-2; i+=2){
             let h = this.perlin.noise(et*0.1, i, 1)/this.noiseFactor;
-            this.domeMorphTargets[i].mesh.position.addScalar( h );
+            this.domeMorphTargets[i/2].mesh.position.addScalar( h );
 
-            if( i % 10==0 ){
-                if(i/10 != 38){
+            if( (i/2) % 5==0 ){
+                if(i/10 != 37){
                     // this.particleGroup.emitters[i/6].position.value = this.particleGroup.emitters[i/6].position.value.addScalar( h );
-                    this.particleGroup.emitters[i/10].position.value = this.particleGroup.emitters[i/10].position.value.copy( this.domeMorphTargets[i].mesh.position );
+                    this.particleGroup.emitters[i/10].position.value = this.particleGroup.emitters[i/10].position.value.copy( this.domeMorphTargets[i/2].mesh.position );
                 }
             }
         }
