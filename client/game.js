@@ -418,7 +418,7 @@ export default class Game {
             this.timeController.update(dt,et);
             this.characterController.update(dt,et);
             this.intro.update();
-            //this.introAni.update(dt,et);
+            this.introAni.update(dt,et);
         }
         if (this.keyboardController) {
             this.keyboardController.update(dt);
