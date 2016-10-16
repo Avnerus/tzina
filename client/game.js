@@ -25,6 +25,8 @@ import MiriamAnimation from './animations/miriam'
 import HaimAnimation from './animations/haim'
 import ItzikAnimation from './animations/itzik'
 import MeirAnimation from './animations/meir'
+import MarkAnimation from './animations/mark'
+import Agam12PMAnimation from './animations/agam12pm'
 
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
@@ -183,7 +185,9 @@ export default class Game {
                 'Miriam' : new MiriamAnimation(this.renderer),
                 'Haim' : new HaimAnimation(this.renderer),
                 'Itzik' : new ItzikAnimation(),
-                'Meir' : new MeirAnimation()
+                'Meir' : new MeirAnimation(),
+                'Mark' : new MarkAnimation(),
+                'Agam12PM' : new Agam12PMAnimation()
             }
         } else {
             this.animations = {};
