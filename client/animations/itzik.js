@@ -44,7 +44,7 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.benchGroup = new THREE.Object3D();
         this.benchCount = 6;   //10
         this.b_offset = 5;
-        this.b_radius = 11.5;
+        this.b_radius = 10.5;
         this.b_open_index = 0;
 
         this.clouds = [];

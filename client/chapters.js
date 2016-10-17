@@ -28,22 +28,28 @@ export default
 					rotation: [176,89,0],
 					scale: 0.23
 				},
+				{
+					name: "dadOnBike",
+					position: [-3.48,22.6,-13.15],
+					rotation:[0,109,0],
+					scale: 0.23
+				},
 					{
 					name: "pocketCam",
-					position: [10,21.8,-12],
+					position: [8.1,21.9,-12],
 					rotation: [0,275,0],
-					scale: 0.17
+					scale: 0.18
 				},
 					{
 					name: "oldmansit",
-					position: [12.36,22.2,-10.5],
+					position: [12.7,22.3,-10],
 					rotation: [180,255,0],
-					scale: 0.19
+					scale: 0.21
 				},
 					{
 					name: "BlackGuy",
-					position: [-5.9,22.02,-1.73],
-					rotation: [0,263,0],
+					position: [-6,22.02,-1.9],
+					rotation: [0,227,0],
 					scale: 0.25
 				}
 			],
@@ -76,37 +82,38 @@ export default
 					"fileName": "Jacobcloths",
 					"position": [0,0,0]
 				},
-				{
-					name: "firstcouple",
-					position: [1.8,22.2,12.36],
-					rotation: [0,255,0],
-					scale: 0.18
-				},
-				{
-					name: "guard",
-					position: [-12,19.8,35.23],
-					rotation:[0,156,0],
-					scale: 0.7
-				},
-				{
-					name: "dadOnBike",
-					position: [-3.48,22.6,-13.15],
-					rotation:[0,109,0],
-					scale: 0.23
-				},
-					{
-					name: "grandpa",
-					position: [10.6,22,5.32],
-					rotation:[0,251,0],
-					scale: 0.21
+				 {
+                    name: "blueLady",
+                    position: [-5.4,21.9,12.7],
+                    rotation: [0,215,0],
+                    scale: 0.17
+   			     },
+    		     {
+                    name: "sweetLady",
+                    position: [-6.57,21.9,10.2],
+                    rotation: [0,86,0],
+                    scale: 0.22
+     		   },
+       			 {
+                    name: "manOnBench",
+                    position: [-12.3,21.9,4.2],
+                    rotation: [0,292,0],
+                    scale: 0.21
 				},
 					{
-					name: "grandma",
-					position: [10.3,21.9,4.1],
-					rotation:[0,141,0],
+					name: "pocketCam",
+					position: [-1.71,22,0.61],
+					rotation: [0,138,0],
 					scale: 0.1
+				},
+					{
+					name: "oldmansit",
+					position: [12.7,22.3,-10],
+					rotation: [180,255,0],
+					scale: 0.21
 				}
 			],
+
 			"effects" : [
 				{
 					"name": ""
@@ -203,11 +210,11 @@ export default
                     scale: 0.27
 				},
 				{
-                    name: "sweetLady",
-                    position: [14.6,21.8,-2.5],
+                    name: "blueLady",
+                    position: [10.2,21.85,-12],
                     rotation: [0,0,0],
-                    scale: 0.2
-				}
+                    scale: 0.13
+    		    }
 				//	{
 				//	name: "DAN",
 				//	position: [-3.48,23.7,-8.75],
