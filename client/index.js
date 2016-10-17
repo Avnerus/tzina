@@ -79,7 +79,7 @@ catch(e) {
 
 function start() {
     document.getElementById('start-container').style.display = "none";
-    document.getElementById('game').appendChild(stats.dom);
+  //  document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
     window.addEventListener('vrdisplaypresentchange', resize, true);

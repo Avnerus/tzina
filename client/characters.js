@@ -49,7 +49,7 @@ export default [
         animationPosition: [-0.1, -0.05, 0.5],
         animationRotation: [21, 3, 355],
         space: 2,
-        subtitles: true
+        subtitles: false
     },
     {
         name: 'Haim',
@@ -67,7 +67,7 @@ export default [
         animationRotation: [-4, -23, -9],
         space: 4,
         volume: 0.1,
-        subtitles: true
+        subtitles: false
     },
     {
         name: 'Rami',
@@ -91,7 +91,7 @@ export default [
         basePath : 'assets/characters/meir',
         mindepth : 1482.958618164,
         maxdepth : 2514.773681641,
-        position : [-1, 21.96, -7.1],
+        position : [-1, 21.96, -7.55],
         rotation: [7, -192, 8],
         animation: 'Meir',
         uvdy: 0.478125,
