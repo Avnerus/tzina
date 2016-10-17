@@ -13,14 +13,13 @@ const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PATH = "assets/square/benches.json"
 
 export default class Square extends THREE.Object3D{
-    constructor(collisionManager, renderer, config) {
+    constructor(collisionManager, renderer, config, soundManager) {
         super();
         console.log("Square constructed!")
 
         this.collisionManager = collisionManager;
         this.renderer = renderer;
         this.config = config;
-
 
         this.ENTRY_POINTS = [
             {
@@ -61,12 +60,15 @@ export default class Square extends THREE.Object3D{
 
         this.currentSun = null;
         this.activatedSun = null;
+
+        this.soundManager = soundManager;
     }
     init(loadingManager) {
         loadingManager.itemStart("Square");
         let trees = new Trees();
         this.extras = new  Extras();
-        this.fountain = new Fountain();
+        this.fountain = new Fountain( this, this.soundManager );
+        this.fountainMeshes = [];
 
         let loaders = [
             this.loadSquare(loadingManager),
@@ -141,6 +143,10 @@ export default class Square extends THREE.Object3D{
         for (let i = 1; i < this.suns.children.length; i++) {
             this.suns.children[i].children[1].update(dt,et)
         }
+    }
+
+    getFountainMeshes() {
+        return this.fountainMeshes;
     }
     
     turnOffSuns() {
@@ -238,8 +244,8 @@ export default class Square extends THREE.Object3D{
                     obj.children[i].children[0].geometry = new THREE.SphereBufferGeometry( 0.3, 32, 32  );
 
                     //debug
-                    events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "x", 0, 1);
-                    events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "y", 0, 1);
+                    // events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "x", 0, 1);
+                    // events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "y", 0, 1);
 
                 }
 
@@ -266,6 +272,9 @@ export default class Square extends THREE.Object3D{
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(BENCHES_PATH,( obj ) => {
                 console.log("Loaded square benches ", obj);
+
+                this.fountainMeshes[0] = obj.getObjectByName("fountain3_SubMesh 0");
+
                 resolve(obj);
             });
         });
@@ -284,6 +293,11 @@ export default class Square extends THREE.Object3D{
 
                 this.sphereMesh = obj.getObjectByName("SkySphere").children[0];
                 console.log("Sky sphere", this.sphereMesh);
+
+                this.fountainMeshes[2] = obj.getObjectByName("fountain1_SubMesh 0");
+                this.fountainMeshes[1] = obj.getObjectByName("fountain2_SubMesh 0");
+                // this.fountainMeshes[2] = obj.getObjectByName("f_02_SubMesh 0");
+
                 resolve(obj);
             });
 

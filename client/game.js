@@ -106,8 +106,8 @@ export default class Game {
         events.emit("add_gui", {folder:"Point light", listen:true}, this.dirLight, "distance");
         events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,1);
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
-        DebugUtil.colorPicker("Point light", this.dirLight, "color");
-        DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
+        // DebugUtil.colorPicker("Point light", this.dirLight, "color");
+        // DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
         // --- hide by laura --- end
 
         //dirLight.target.position.set(0,100,0);
@@ -122,7 +122,7 @@ export default class Game {
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
         // Square
-        this.square = new Square(this.collisionManager, this.renderer, this.config);
+        this.square = new Square(this.collisionManager, this.renderer, this.config, this.soundManager);
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
@@ -208,6 +208,7 @@ export default class Game {
             console.log("Loaded " + itemsLoaded + "/" +  itemsTotal);
         }
 
+        this.soundManager.init(this.loadingManager);
         if (!this.config.noSquare) {
             this.square.init(this.loadingManager);
             this.introAni.init(this.loadingManager);
@@ -217,7 +218,6 @@ export default class Game {
             console.log("Initializing characters");
             this.characterController.init(this.loadingManager);
         }
-        this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
 
         // WebVR
