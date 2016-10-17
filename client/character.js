@@ -53,8 +53,6 @@ export default class Character extends THREE.Object3D {
             
             this.idleVideo.video.loop = true;
 
-
-
             if (!this.props.idleOnly) {
                 this.fullVideo.init(loadingManager);
                 this.fullVideo.mesh.visible = false;
@@ -99,6 +97,12 @@ export default class Character extends THREE.Object3D {
                 this.animation.visible = false;
             } else {
                 this.animation = null;
+            }
+
+            // for event character
+            if (this.props.idleOnly && this.animation) {
+                this.animation.visible = true;
+                this.add(this.animation);
             }
 
             events.on("character_playing", (name) => {
@@ -246,6 +250,10 @@ export default class Character extends THREE.Object3D {
                 this.playFull();
             }
         }
+    }
+
+    showAnimation(){
+        //
     }
 
     checkReady() {
