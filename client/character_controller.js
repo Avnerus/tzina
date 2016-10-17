@@ -33,7 +33,8 @@ export default class CharacterController {
                 let character = clone[i];
 
                 if (!character.done) {
-                    this.square.mesh.remove(character);
+                    console.log("Removing character ", character, " from ", this.square.getClockwork());
+                    this.square.clockwork.remove(character);
                     character.unload();
                 } else {
                     console.log("Character " + character.props.name + " is still active");
@@ -76,7 +77,7 @@ export default class CharacterController {
             console.log("Adding character " + characterName);
             let character = this.characters[characterName];
             this.activeCharacters.push(character);
-            this.square.mesh.add(character);
+            this.square.clockwork.add(character);
             //DebugUtil.positionObject(character, character.props.name, false, -40, 40, character.props.rotation);
             character.load();
             character.play();
