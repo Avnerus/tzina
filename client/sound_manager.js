@@ -1,6 +1,6 @@
 const SOUND_PATH = "assets/sound/"
 
-let fountain, highway_1, highway_2, innerKikar;
+let fountain, highway_1, highway_2, innerKikar, wind;
 
 export default class SoundManager {
     constructor(camera, scene) {
@@ -81,25 +81,23 @@ export default class SoundManager {
         innerKikar.autoplay = false;
         innerKikar.loop = true;
 
-        //DEBUG CUBES
+        //Wind in the Trees
+        wind = new THREE.PositionalAudio(this.listener);
+        wind.position.set(0, 30, 20);
+        wind.autoplay = false;
+        wind.loop = true;
 
+        //DEBUG CUBE so I can show where the sound is coming from
         this.testCubeone = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
-        this.testCubeone.position.set(-25, 15, 0);
-        this.scene.add(this.testCubeone);
-
-        this.testCubetwo = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
-        this.testCubetwo.position.set(0, 20, 0);
-        this.scene.add(this.testCubetwo);
-
-        this.testCubethree = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
-        this.testCubethree.position.set(25, 15, 0);
-        this.scene.add(this.testCubethree);
+        this.testCubeone.position.set(0, 30, 20);
+        //this.scene.add(this.testCubeone);
 
         //SOUND ADDING
         this.scene.add(fountain);
         this.scene.add(highway_1);
         this.scene.add(highway_2);
         this.scene.add(innerKikar);
+        this.scene.add(wind);
 
         //BUFFER THE SOUNDS INTO THE PROPER ELEMENTS
         this.loader = new THREE.AudioLoader(loadingManager);
@@ -131,6 +129,12 @@ export default class SoundManager {
         }, function() {
         });
 
+        // Wind
+        this.loader.load(SOUND_PATH + 'WindinTrees.ogg', function(audioBuffer) {
+            wind.setBuffer(audioBuffer);
+        }, function() {
+        });
+
     }
 
     play() {
@@ -141,6 +145,8 @@ export default class SoundManager {
         highway_2.play();
 
         innerKikar.play();
+
+        wind.play();
 
     }
 
@@ -176,6 +182,9 @@ export default class SoundManager {
 
         innerKikar.pause();
         innerKikar.currentTime = 0;
+
+        wind.pause();
+        wind.currentTime = 0;
 
     }
 }
