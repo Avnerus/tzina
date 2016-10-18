@@ -1,6 +1,6 @@
 const SOUND_PATH = "assets/sound/"
 
-let fountain, highway_1, highway_2;
+let fountain, highway_1, highway_2, innerKikar;
 
 export default class SoundManager {
     constructor(camera, scene) {
@@ -55,21 +55,31 @@ export default class SoundManager {
         this.camera.add(this.listener);
 
         //SOUNDS
+
+        //Fontain Water
         fountain = new THREE.PositionalAudio(this.listener);
         fountain.position.set(0, 20, 0);
         fountain.setRefDistance( 1 );
         fountain.autoplay = false;
         fountain.loop = true;
 
+        //Street Sound 1
         highway_1 = new THREE.PositionalAudio(this.listener);
         highway_1.position.set(-25, 15, 0);
         highway_1.autoplay = false;
         highway_1.loop = true;
 
+        //Street Sound 2
         highway_2 = new THREE.PositionalAudio(this.listener);
         highway_2.position.set(25, 15, 0);
         highway_2.autoplay = false;
         highway_2.loop = true;
+
+        //Inner Kikar Sound
+        innerKikar = new THREE.PositionalAudio(this.listener);
+        innerKikar.position.set(0, 20, 0);
+        innerKikar.autoplay = false;
+        innerKikar.loop = true;
 
         //DEBUG CUBES
 
@@ -89,6 +99,7 @@ export default class SoundManager {
         this.scene.add(fountain);
         this.scene.add(highway_1);
         this.scene.add(highway_2);
+        this.scene.add(innerKikar);
 
         //BUFFER THE SOUNDS INTO THE PROPER ELEMENTS
         this.loader = new THREE.AudioLoader(loadingManager);
@@ -97,7 +108,7 @@ export default class SoundManager {
         this.sounds = {}
 
         // FOUNTAIN
-        this.loader.load(SOUND_PATH + 'fountain_water.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'Kikar_Inner.ogg', function(audioBuffer) {
             fountain.setBuffer(audioBuffer);
         }, function() {
         });
@@ -114,6 +125,12 @@ export default class SoundManager {
         }, function() {
         });
 
+        // Inner Kikar sound
+        this.loader.load(SOUND_PATH + 'Pigeons_Center_Kikar.ogg', function(audioBuffer) {
+            innerKikar.setBuffer(audioBuffer);
+        }, function() {
+        });
+
     }
 
     play() {
@@ -122,6 +139,8 @@ export default class SoundManager {
         highway_1.play();
 
         highway_2.play();
+
+        innerKikar.play();
 
     }
 
@@ -154,6 +173,9 @@ export default class SoundManager {
 
         highway_2.pause();
         highway_2.currentTime = 0;
+
+        innerKikar.pause();
+        innerKikar.currentTime = 0;
 
     }
 }
