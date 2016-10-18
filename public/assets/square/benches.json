@@ -1330,7 +1330,7 @@
 			"type": "MeshPhongMaterial",
 			"color": "0x838383",
 			"specular": "0x577D90",
-			"emissive": "0x272727",
+			"emissive": "0x000000",
 			"opacity": 0.766,
 			"normalMap": "27a440f2-7b6e-4032-95af-be17b952ae88_BumpMap",
 			"transparent": false,
