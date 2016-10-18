@@ -56,7 +56,7 @@ export default class SoundManager {
 
         //SOUNDS
         fountain = new THREE.PositionalAudio(this.listener);
-        fountain.position.set(3, 15, 95);
+        fountain.position.set(0, 20, 0);
         fountain.setRefDistance( 1 );
         fountain.autoplay = false;
         fountain.loop = true;
@@ -67,7 +67,7 @@ export default class SoundManager {
         highway_1.loop = true;
 
         highway_2 = new THREE.PositionalAudio(this.listener);
-        highway_2.position.set(3, 15, 170);
+        highway_2.position.set(25, 15, 0);
         highway_2.autoplay = false;
         highway_2.loop = true;
 
@@ -78,8 +78,12 @@ export default class SoundManager {
         this.scene.add(this.testCubeone);
 
         this.testCubetwo = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
-        this.testCubetwo.position.set(30, 10, 190);
+        this.testCubetwo.position.set(0, 20, 0);
         this.scene.add(this.testCubetwo);
+
+        this.testCubethree = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
+        this.testCubethree.position.set(25, 15, 0);
+        this.scene.add(this.testCubethree);
 
         //SOUND ADDING
         this.scene.add(fountain);
