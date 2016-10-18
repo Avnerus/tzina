@@ -103,13 +103,13 @@ export default class SoundManager {
         });
 
         // HIGHWAY ONE
-        this.loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'Kikar_Ambiance_1_Loud.ogg', function(audioBuffer) {
             highway_1.setBuffer(audioBuffer);
         }, function() {
         });
 
         // HIGHWAY TWO
-        this.loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'Kikar_Ambiance_2_Loud.ogg', function(audioBuffer) {
             highway_2.setBuffer(audioBuffer);
         }, function() {
         });
