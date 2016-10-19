@@ -127,7 +127,7 @@ export default class TimeController {
                 this.wasUsed = true;
                 events.emit("time_rotated");
             }
-            this.square.mesh.rotateY(this.rotateVelocity * Math.PI /180 * dt * 20);
+            this.square.getClockwork().rotateY(this.rotateVelocity * Math.PI /180 * dt * 20);
             //console.log("Square RotY: ", this.square.mesh.rotation.y);
             this.updateRotation();
         }
@@ -192,8 +192,8 @@ export default class TimeController {
                             targetRotationY -= 360;
                         }
                         targetRotationY *= Math.PI / 180;
-                        console.log("Time controller - rotating square from ", this.square.mesh.rotation.y, " to ", targetRotationY);
-                        TweenMax.to(this.square.mesh.rotation, 7, {ease: Power2.easeInOut, delay: 1, y: targetRotationY, onComplete: () => {
+                        console.log("Time controller - rotating square from ", this.square.getClockwork().rotation.y, " to ", targetRotationY);
+                        TweenMax.to(this.square.getClockwork().rotation, 7, {ease: Power2.easeInOut, delay: 1, y: targetRotationY, onComplete: () => {
                             events.emit("angle_updated", this.currentHour);
                             this.updateNextHour();
                             this.sunGazer.active = true;
@@ -213,7 +213,7 @@ export default class TimeController {
     }
 
     updateRotation() {
-        let rotationY = this.square.mesh.rotation.y;
+        let rotationY = this.square.getClockwork().rotation.y;
         if (rotationY < 0) {
             rotationY = 2 * Math.PI + rotationY;
         }
@@ -247,7 +247,7 @@ export default class TimeController {
             if (rotationY > 180) {
                 rotationY -= 360;
             }
-            this.square.mesh.rotation.y = rotationY * Math.PI / 180;
+            this.square.getClockwork().rotation.y = rotationY * Math.PI / 180;
             this.sky.setTime(this.currentRotation / 15);
         }
     }

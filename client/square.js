@@ -22,6 +22,7 @@ export default class Square extends THREE.Object3D{
         this.config = config;
 
 
+
         this.ENTRY_POINTS = [
             {
                 hour: 19,
@@ -84,24 +85,33 @@ export default class Square extends THREE.Object3D{
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
-            obj.add(trees);
-            obj.add(this.fountain);
-            obj.add(this.extras);
             this.buildings = results[3];
             this.suns = results[4];
             this.suns.rotation.y = Math.PI * -70 / 180;
 
-            obj.add(this.buildings);
-            obj.add(this.suns);
+            this.mesh = obj;
+            this.mesh.rotation.order = "YXZ";
+
+            // Clockwork rotation object
+            this.clockwork = new THREE.Object3D();
+            this.clockwork.rotation.order = "YXZ;"
+
+            // Starts as a child of the square which does the actual rotation
+            this.mesh.add(this.clockwork);
+            this.activeClockwork = this.mesh;
+
+            this.mesh.add(trees);
+            this.mesh.add(this.fountain);
+            this.mesh.add(this.extras);
+            this.mesh.add(this.buildings);
+            this.mesh.add(this.suns);
 
             this.colliders = results[5];
-            obj.add(this.colliders);
+            this.mesh.add(this.colliders);
 
             this.benches = results[6];
-            obj.add(this.benches);
+            this.clockwork.add(this.benches);
 
-            obj.rotation.order = "YXZ";
-            this.mesh = obj;
 
             this.addColliders();
             this.setSquareMiddle();
@@ -134,6 +144,15 @@ export default class Square extends THREE.Object3D{
             console.log("Square angle updated. Adding colliders");
             this.addColliders();
             this.setSquareMiddle(); 
+        });
+
+        events.on("control_threshold", (passed) => {
+            if (passed) {
+                this.mesh.remove(this.clockwork);
+                this.add(this.clockwork);
+                this.clockwork.rotation.copy(this.mesh.rotation);
+                this.activeClockwork = this.clockwork;
+            }
         });
     }
     update(dt,et) {
@@ -331,5 +350,10 @@ export default class Square extends THREE.Object3D{
         } else {
             return null;
         }
+    }
+
+    getClockwork() {
+        return this.activeClockwork;
+
     }
 }
