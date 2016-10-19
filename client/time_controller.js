@@ -51,7 +51,7 @@ export default class TimeController {
                 this.scene.remove(this.prevChapterTitle);
                 this.square.turnOnSun(this.currentHour.toString());
             }
-            //this.clockRunning = passed;
+            this.clockRunning = passed;
         });
 
         events.on("base_position", () => {
@@ -197,7 +197,7 @@ export default class TimeController {
                             events.emit("angle_updated", this.currentHour);
                             this.updateNextHour();
                             this.sunGazer.active = true;
-                            //this.clockRunning = true;
+                            this.clockRunning = true;
                         }});
                     },1000);
                 }, onUpdate: () => {
