@@ -14,7 +14,7 @@ let insideSquare;
 let emitInterval=0.5;
 //last dt time a position was emitted to server
 let lastEmitTime=0;
-
+let verbose=false;
 export default class PidgeonController {
   constructor(scene,camera) {
     this.scene = scene;
@@ -34,7 +34,7 @@ export default class PidgeonController {
   startSocket() {
     let host = window.document.location.host.replace(/:.*/, '');
     wsock=new Wsock('ws://' + host + ':9966');
-    console.log("Started pidgeon socket");
+if(verbose)     console.log("Started pidgeon socket");
 
     let thisPidgeonController=this;
     // let pidgeon = new Pidgeon();
@@ -46,7 +46,7 @@ export default class PidgeonController {
 
     wsock.on("message",function(message){
 
-      console.log("pidgeon "+message.header+" of "+message.pointer+" is:",message.data);
+      if(verbose)console.log("pidgeon "+message.header+" of "+message.pointer+" is:",message.data);
 
       // console.log("incoming message",message);
       if(message.header=="changeposition"){
@@ -60,10 +60,9 @@ export default class PidgeonController {
           try{
             remoteSprite.transform.position({x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001});
           }catch(e){
-            console.log("pidgeon with remotesprite "+message.pointer,remoteSprite);
-            console.error(e);
+            console.error(e,"pidgeon with remotesprite "+message.pointer,remoteSprite);
           }
-          console.log("pidgeon retrieved",remoteSprite);
+          if(verbose)console.log("pidgeon retrieved",remoteSprite);
         }else{
           console.warn("couldn't retrieve the corresponding pidgeon. Creating a new one ",message);
           //if we don't have it, we create it. Comment this if many pidgeon sprites start appearing
@@ -75,7 +74,7 @@ export default class PidgeonController {
         //   ch.transform.rotation(ch.transform.position(message).getMovementDirection()* 180 / Math.PI);
         // });
       }else if(message.header=="remove"){
-        console.log("pidgeon remove "+message.pointer);
+        if(verbose)console.log("pidgeon remove "+message.pointer);
         //pendant:this should be inside
         let remoteSprite=Pidgeon.remote(message.pointer);
         if(remoteSprite){
@@ -86,7 +85,7 @@ export default class PidgeonController {
         }
       }else if(message.header=="newid"){
         myClientId=message.pointer;
-        console.log("pidgeon client id:"+myClientId);
+        if(verbose)console.log("pidgeon client id:"+myClientId);
         //localSprite=new characters.Character({unique:myClientId});
         //console.log("new client Id",message);
       }else if(message.header=="statebatch"){
@@ -107,11 +106,11 @@ export default class PidgeonController {
             let dataCoordinates={x:batch[a+1]*0.001,y:batch[a+2]*0.001,z:batch[a+3]*0.001};
 
             if(dataOwner){
-              console.log("pidgeon object "+stateObjectUnique+" found apply");
+              if(verbose)console.log("pidgeon object "+stateObjectUnique+" found apply");
               //if we have it, will apply all the data to it. So far only position
               dataOwner.transform.position(dataCoordinates);
             }else{
-              console.log("pidgeon object "+stateObjectUnique+" notfound create");
+              if(verbose)console.log("pidgeon object "+stateObjectUnique+" notfound create");
               //if we don't have it, we create it.
               let newCharacter=new Pidgeon({position:dataCoordinates,unique:stateObjectUnique});
               thisPidgeonController.scene.add(newCharacter);
@@ -155,7 +154,7 @@ export default class PidgeonController {
         //console.log("pos!=lastpos");
         wsock.emit({header:"changeposition",pointer:myClientId,data:[position.x*1000,position.y*1000,position.z*1000]},function(err,pl){
           if(err){
-            console.log("not sent",err);
+            console.error("changePosition not sent",err);
           }else{
           }
         });

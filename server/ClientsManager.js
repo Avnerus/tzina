@@ -11,7 +11,7 @@ and client.send.
 
 let eemiter=require('../shared/OnHandlers');
 // let interpreter=require('../shared/MessageInterpreter');
-
+let verbose=false;
 export function ClientsManager(){
   let clients={};
   //uncomment to have access to the client list.
@@ -45,13 +45,13 @@ export function ClientsManager(){
       thisClientsManager.forEach(function(thisClient){
         if(thisClient.waitingPong){
           thisClientsManager.removeClient(thisClient);
-          console.log('stopping client '+thisClient.unique+" from ping-pong death");
+if(verbose)           console.log('stopping client '+thisClient.unique+" from ping-pong death");
           thisClient.broadcast({
             header: "remove",
             pointer: thisClient.unique
           });
         }else{
-          console.log("iter"+thisClient.unique);
+if(verbose)           console.log("iter"+thisClient.unique);
           thisClient.send({header:"ping"});
           thisClient.waitingPong=true;
         }
@@ -92,7 +92,7 @@ export function ClientsManager(){
         thisClient.trackChange(event.parsedMessage);
         thisClientsManager.enqueuePosition(thisClient);
         if(event.parsedMessage.header=="changeposition"){
-          console.log("position",event.parsedMessage);
+if(verbose)           console.log("position",event.parsedMessage);
           // thisClient.broadcast(event.rawMessage);
         }
         event.client=thisClient;
@@ -141,7 +141,7 @@ export function ClientsManager(){
     //keeps the record for current client's state, so we can make aware new clients
     //about the state of each other client
     this.trackChange=function(data){
-      console.log(data.header+" of "+this.unique+" is "+data.data||false);
+      if(verbose) console.log(data.header+" of "+this.unique+" is "+data.data||false);
       this.currentState[data.header]=data.data||false;
       // for(var a in data){
       //   this.currentState[a]=data[a];
@@ -182,7 +182,7 @@ export function ClientsManager(){
   this.flushPositions=function(){
     if(enqueuedClientPositions.length==1){
       let thisClient=enqueuedClientPositions[0];
-      console.log(thisClient.unique+"broadcast single pos",{
+      if(verbose)console.log(thisClient.unique+"broadcast single pos",{
         header:"changeposition",
         pointer:thisClient.unique,
         data:thisClient.currentState.changeposition
@@ -203,7 +203,7 @@ export function ClientsManager(){
           }
         }
       }
-      console.log("broadcasting some points to many clients",outGoing);
+      if(verbose)console.log("broadcasting some points to many clients",outGoing);
       //clear the array
       thisClientsManager.broadcast(outGoing);
     }else{
@@ -214,11 +214,11 @@ export function ClientsManager(){
 
   }
   this.broadcast=function(data,exceptUnique) {
-    console.log("broadcast->");
+    if(verbose)console.log("broadcast->");
 
 
     thisClientsManager.forEach(function(client) {
-      console.log(" iterate client"+client.unique);
+      if(verbose)console.log(" iterate client"+client.unique);
       var d = true;
       if (exceptUnique) {
         if (client.unique == exceptUnique) {
@@ -229,7 +229,7 @@ export function ClientsManager(){
       if (d) {
         try {
           client.send(data);
-          console.log("client "+client.unique+" sent");
+          if(verbose)console.log("client "+client.unique+" sent");
         } catch (e) {
           console.warn("object " + client.unique + " missed some data", data);
           console.warn(e);
