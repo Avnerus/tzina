@@ -51,7 +51,7 @@ export default class TimeController {
                 this.scene.remove(this.prevChapterTitle);
                 this.square.turnOnSun(this.currentHour.toString());
             }
-            this.clockRunning = passed;
+            //this.clockRunning = passed;
         });
 
         events.on("base_position", () => {
@@ -62,12 +62,12 @@ export default class TimeController {
                 this.stickToAngle(closestAngle);
                 this.currentHour = closestHour;
 
-                this.showChapterTitle();
+               // this.showChapterTitle();
             }
         });
 
         events.on("intro_end", () => {
-            this.showChapterTitle();
+           // this.showChapterTitle();
             this.active = true;
         });
 
@@ -197,7 +197,7 @@ export default class TimeController {
                             events.emit("angle_updated", this.currentHour);
                             this.updateNextHour();
                             this.sunGazer.active = true;
-                            this.clockRunning = true;
+                            //this.clockRunning = true;
                         }});
                     },1000);
                 }, onUpdate: () => {
@@ -226,7 +226,7 @@ export default class TimeController {
         if (closestHour != this.currentHour) {
             this.currentHour = closestHour;
             this.updateNextHour();
-            this.showChapterTitle();
+           // this.showChapterTitle();
             events.emit("hour_updated", this.currentHour);
         }
     }
@@ -307,7 +307,7 @@ export default class TimeController {
         TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {
             this.currentHour = hour;
             this.updateNextHour();
-            this.showChapterTitle();
+           // this.showChapterTitle();
             events.emit("hour_updated", this.currentHour);
             events.emit("angle_updated", this.currentHour);
         }, onUpdate: () => {
@@ -381,7 +381,7 @@ export default class TimeController {
         this.currentHour = hour;
         this.currentRotation = hour * 15;
         this.updateSquare();
-        this.showChapterTitle();
+        //this.showChapterTitle();
         events.emit("hour_updated", this.currentHour);
         events.emit("angle_updated", this.currentHour);
         this.updateNextHour();
@@ -392,7 +392,7 @@ export default class TimeController {
         this.sky.setTime(this.currentHour);
         events.emit("hour_updated", this.currentHour);
         events.emit("angle_updated", this.currentHour);
-        this.showChapterTitle();
+        //this.showChapterTitle();
         this.updateNextHour();
     }
 }
