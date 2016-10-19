@@ -257,9 +257,9 @@ export default class Game {
                 this.vrControls.standing = true;
                 this.vrControls.basePosition.set(-5.5, 22,14);
                 // --- hide by laura --- start
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x"); 
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y"); 
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z"); 
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x");
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y");
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z");
                 // --- hide by laura --- end
         } else {
             console.log("Orbit controls");
