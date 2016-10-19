@@ -38,7 +38,7 @@ document.getElementById('start-button').addEventListener('click',function(event)
     }
 
     
-    if (fullscreen.available()) {
+    if (config.fullscreen && fullscreen.available()) {
         var fs = fullscreen(el);
 
         fs.on('attain',function() {
@@ -53,20 +53,29 @@ document.getElementById('start-button').addEventListener('click',function(event)
         });
         fs.request();
     } else {
-        if (!game.started) {
-            start();
+        if (pointer) {
+            pointer.request();
+        }
+        else {
+            if (!game.started) {
+                start();
+            }
         }
     }
 
     //start(); 
 });
 
+try {
+    game.load(function() {
+        document.getElementById('start-container').style.display = "flex";
+        document.getElementById('loading-container').style.display = "none";
+    });
+}
+catch(e) {
+    console.error("Exception during game load ", e);
+}
 
-
-game.load(function() {
-    document.getElementById('start-container').style.display = "flex";
-    document.getElementById('loading-container').style.display = "none";
-});
 
 function start() {
     document.getElementById('start-container').style.display = "none";

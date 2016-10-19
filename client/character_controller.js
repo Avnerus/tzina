@@ -33,7 +33,8 @@ export default class CharacterController {
                 let character = clone[i];
 
                 if (!character.done) {
-                    this.square.mesh.remove(character);
+                    console.log("Removing character ", character, " from ", this.square.getClockwork());
+                    this.square.clockwork.remove(character);
                     character.unload();
                 } else {
                     console.log("Character " + character.props.name + " is still active");
@@ -50,17 +51,15 @@ export default class CharacterController {
             
             let chapter = _.find(Chapters, {hour});
             chapter.characters.forEach((characterName) => {
-                if (this.characters[characterName] && !this.characters[characterName].done) {
-                    let character = this.characters[characterName];
-                    this.activeCharacters.push(character);
-                    this.square.mesh.add(character);
-                    //DebugUtil.positionObject(character, character.props.name, character.props.rotation);
-                    character.load();
-                    character.play();
-                }
+                this.addCharacter(characterName);
             });
 
-
+            // Is there an event character
+            if (chapter.eventCharacters && chapter.eventAfter == 0) {
+                chapter.eventCharacters.forEach((characterName) => {
+                    this.addCharacter(characterName);
+                });
+            }
         });
         events.on("angle_updated", (hour) => {
             this.activeCharacters.forEach((character) => {
@@ -71,6 +70,18 @@ export default class CharacterController {
                 }
             });
         });
+    }
+
+    addCharacter(characterName) {
+        if (this.characters[characterName] && !this.characters[characterName].done) {
+            console.log("Adding character " + characterName);
+            let character = this.characters[characterName];
+            this.activeCharacters.push(character);
+            this.square.clockwork.add(character);
+            //DebugUtil.positionObject(character, character.props.name, false, -40, 40, character.props.rotation);
+            character.load();
+            character.play();
+        }
     }
 
     update(dt,et) {

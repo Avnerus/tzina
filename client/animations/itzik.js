@@ -17,17 +17,13 @@ export default class ItzikAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{this.benchOutFirst()} },
-            { time: 10, anim: ()=>{this.benchMove(1)} },
-            { time: 15, anim: ()=>{this.benchMove(2)} },
-            { time: 20, anim: ()=>{this.benchMove(3)} },
-            { time: 25, anim: ()=>{this.benchMove(4)} },
-            { time: 30, anim: ()=>{this.benchMove(5)} },
-            { time: 35, anim: ()=>{this.benchMove(6)} },
-            { time: 40, anim: ()=>{this.benchMove(7)} },
-            { time: 45, anim: ()=>{this.benchMove(8)} },
-            { time: 50, anim: ()=>{this.benchMove(9)} },
-            { time: 55, anim: ()=>{this.characterDisappear(0)} }
+            { time: 25, anim: ()=>{this.benchOutFirst()} },     //25
+            { time: 35, anim: ()=>{this.benchMove(1)} },        //35
+            { time: 43, anim: ()=>{this.benchMove(2)} },        //43
+            { time: 50, anim: ()=>{this.benchMove(3)} },        //50
+            { time: 55, anim: ()=>{this.benchMove(4)} },        //55
+            { time: 60, anim: ()=>{this.benchMove(5)} },        //60
+            { time: 210, anim: ()=>{this.characterDisappear(0)} }//210
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -46,9 +42,11 @@ export default class ItzikAnimation extends THREE.Object3D {
         }
 
         this.benchGroup = new THREE.Object3D();
-        this.benchCount = 10;
+        this.benchCount = 6;   //10
         this.b_offset = 5;
-        this.b_radius = 20;
+        this.b_radius = 11.5;
+        this.b_open_index = 0;
+
         this.clouds = [];
         this.items = [];
         this.itemIsMoving = [];
@@ -71,20 +69,20 @@ export default class ItzikAnimation extends THREE.Object3D {
 
         this.benchTexFiles = [ this.BASE_PATH + "/images/benches/1_carpet.jpg", this.BASE_PATH + "/images/benches/2_metal.jpg",
                                this.BASE_PATH + "/images/benches/3_marble.jpg", this.BASE_PATH + "/images/benches/4_rock.jpg",
-                               this.BASE_PATH + "/images/benches/5_photo.jpg", this.BASE_PATH + "/images/benches/6_wood.jpg",
+                               this.BASE_PATH + "/images/benches/5_photo.jpg", this.BASE_PATH + "/images/benches/9_tiles.jpg",
                                this.BASE_PATH + "/images/benches/7_sand.jpg", this.BASE_PATH + "/images/benches/8_rust.jpg",
-                               this.BASE_PATH + "/images/benches/9_tiles.jpg", this.BASE_PATH + "/images/benches/10_metal.jpg" ];
+                               this.BASE_PATH + "/images/benches/6_wood.jpg", this.BASE_PATH + "/images/benches/10_metal.jpg" ];
         this.benchTexNRMFiles = [ this.BASE_PATH + "/images/benches/NRM/1_carpet_NRM.png", this.BASE_PATH + "/images/benches/NRM/2_metal_NRM.png",
                                this.BASE_PATH + "/images/benches/NRM/3_marble_NRM.png", this.BASE_PATH + "/images/benches/NRM/4_rock_NRM.png",
-                               this.BASE_PATH + "/images/benches/NRM/5_photo_NRM.png", this.BASE_PATH + "/images/benches/NRM/6_wood_NRM.png",
+                               this.BASE_PATH + "/images/benches/NRM/5_photo_NRM.png", this.BASE_PATH + "/images/benches/NRM/9_tiles_NRM.png",
                                this.BASE_PATH + "/images/benches/NRM/7_sand_NRM.png", this.BASE_PATH + "/images/benches/NRM/8_rust_NRM.png",
-                               this.BASE_PATH + "/images/benches/NRM/9_tiles_NRM.png", this.BASE_PATH + "/images/benches/NRM/10_metal_NRM.png" ];
+                               this.BASE_PATH + "/images/benches/NRM/6_wood_NRM.png", this.BASE_PATH + "/images/benches/NRM/10_metal_NRM.png" ];
 
         this.benchTextures = [];
         this.benchTexturesNRM = [];
         this.benchMats = [];
 
-        for(let i=0; i<this.benchTexFiles.length; i++){
+        for(let i=0; i<this.benchCount; i++){
             let bt = tex_loader.load( this.benchTexFiles[i] );
             this.benchTextures.push(bt);
             let btNRM = tex_loader.load( this.benchTexNRMFiles[i] );
@@ -105,7 +103,7 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.smokeMat = new THREE.SpriteMaterial( { map: smokeTex, color: 0x053d96, transparent: true, opacity: 0 } ); //0x053d96
         this.fog = new THREE.Object3D();
 
-        for(let i=0; i<this.cloudFiles.length; i++){
+        for(let i=0; i<this.benchCount; i++){
             loader.load( this.cloudFiles[i], (geometry, material) => {
                 let tmpCloud = new THREE.Mesh( geometry, cloudMat );
 
@@ -113,6 +111,7 @@ export default class ItzikAnimation extends THREE.Object3D {
                     let pointLight = new THREE.PointLight( this.lightColor[i], 1, 2 );
                     pointLight.position.z = 10;
                     tmpCloud.add( pointLight );
+                    pointLight.visible = false;
 
                 tmpCloud.scale.multiplyScalar(0.5);
                 tmpCloud.position.y = 15;
@@ -120,44 +119,15 @@ export default class ItzikAnimation extends THREE.Object3D {
                 TweenMax.to( tmpCloud.position, 1, { y: 15.1, repeat: -1, yoyo: true, ease: Power1.easeInOut } );
                 this.clouds[i] = tmpCloud;
 
-                if(i==9){
-                    //this.loadModelBench( this.BASE_PATH + "/models/bench.json", loader );
+                if( i==(this.benchCount-1) ){
                     this.loadModelItems( this.itemFiles, itemsMat, itemsMat2, loader );
                 }
             });
         }
-        
-        // loader.load( url, (geometry, material) => {
-        //     for(let i=0; i<this.benchCount; i++){
-        //         let benchMat;
-        //         if(i==0)
-        //             benchMat = new THREE.MeshLambertMaterial({color: 0xff0000});
-        //         else
-        //             benchMat = new THREE.MeshLambertMaterial({color: 0xffffff});
-
-        //         let tmp_bench = new THREE.Mesh( geometry.clone(), benchMat );
-
-        //         tmp_bench.position.set( Math.sin(Math.PI*2/10*this.b_offset)*this.b_radius, 0, Math.cos(Math.PI*2/10*this.b_offset)*this.b_radius );
-        //         tmp_bench.rotation.y = Math.PI*2/10*this.b_offset + Math.PI;
-                
-        //         tmp_bench.scale.multiplyScalar(0.0015);
-        //         this.benchGroup.add( tmp_bench );
-        //     }
-        //     this.benchGroup.position.set( 0, -4, 15 );
-        //     // this.benchGroup.rotation.y = 182 * Math.PI/180;
-        //     this.add( this.benchGroup );
-
-        //     // let tmp_bench = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({color: 0xffffff}) );
-        //     // this.add( tmp_bench );
-        //     // this.benches.push( tmp_bench );
-        // });
-        // 
 
         this.dummy = {opacity: 1};
 
         // DebugUtil.positionObject(this, "Itzik");
-
-        //
         this.loadingManager.itemEnd("ItzikAnim");
     }
 
@@ -172,46 +142,29 @@ export default class ItzikAnimation extends THREE.Object3D {
     }
 
     benchOutFirst() {
-        TweenMax.to( this.benchGroup.children[0].scale, 1, { x: 1, y: 1, z: 1, ease: Back.easeInOut } );
+        TweenMax.to( this.benchGroup.children[0].scale, 1.5, { x: 1, y: 1, z: 1, ease: Back.easeInOut } );
     }
-
-    // benchOutSecond() {
-    //     TweenMax.to( _this.benchGroup.children[0].position, 1, { x: Math.sin( Math.PI*2/_this.benchCount*(_seq-_index+1) )*15, z: Math.cos( Math.PI*2/_this.benchCount*(_seq-_index+1) )*15, ease: Power1.easeInOut } );
-    //     TweenMax.to( _this.benchGroup.children[0].rotation, 1, { y: Math.PI*2/_this.benchCount*(_seq-_index+1) + Math.PI, ease: Power1.easeInOut } );
-    // }
-
-    // benchOut( _seq ) {
-    //     for(let i=0; i<=_seq; i++){
-    //         TweenMax.to( this.benchGroup.children[i].scale, 1, { x: 1, y: 1, z: 1, ease: Back.easeInOut,
-    //                                                                                onComplete: this.benchMove,
-    //                                                                                onCompleteParams: [ this, _seq, i] } );
-    //     }
-    // }
-
-    // benchMove( _this, _seq, _index ) {
-    //     TweenMax.to( _this.benchGroup.children[_index].position, 1, { x: Math.sin( Math.PI*2/_this.benchCount*(_seq-_index+_this.b_offset) )*_this.b_radius, z: Math.cos( Math.PI*2/_this.benchCount*(_seq-_index+_this.b_offset) )*_this.b_radius, ease: Power1.easeInOut } );
-    //     TweenMax.to( _this.benchGroup.children[_index].rotation, 1, { y: Math.PI*2/_this.benchCount*(_seq-_index+_this.b_offset) + Math.PI, ease: Power1.easeInOut } );
-    // }
 
     benchMove( _seq ) {
         for(let i=0; i<=_seq; i++){
-            let mathStuff = Math.PI * 2 / this.benchCount * ( _seq - i + this.b_offset );
-            TweenMax.to( this.benchGroup.children[i].position, 1, { x: Math.sin( mathStuff )*this.b_radius, z: Math.cos( mathStuff )*this.b_radius, ease: Power1.easeInOut } );
-            TweenMax.to( this.benchGroup.children[i].rotation, 1, { y: mathStuff + Math.PI, ease: Power1.easeInOut,
+            let mathStuff = Math.PI * 2 / this.benchCount * ( _seq - i + this.b_offset - 2 );
+
+            TweenMax.to( this.benchGroup.children[i].position, 2, { x: Math.sin( mathStuff )*this.b_radius, z: Math.cos( mathStuff )*this.b_radius, ease: Power3.easeInOut } );
+            TweenMax.to( this.benchGroup.children[i].rotation, 2, { y: mathStuff + Math.PI, ease: Power3.easeInOut,
                                                                                              onComplete: this.benchOut,
                                                                                              onCompleteParams: [this, i] } );
         }
 
         this.itemIsMoving[_seq] = true;
         if(_seq==3){
-            TweenMax.to( this.benchGroup.children[3].children[1].rotation, 1, {z:1, repeat: -1, yoyo: true, ease: Power1.easeInOut} );
+            TweenMax.to( this.benchGroup.children[3].children[1].rotation, 2, {z:1, repeat: -1, yoyo: true, ease: Power3.easeInOut} );
             // TweenMax.to( this.benchGroup.children[3].children[1].position, 1, {z:0.5, repeat: -1, yoyo: true, ease: Power1.easeInOut} );
         }
         
     }
 
     benchOut( _this, _index ) {
-        TweenMax.to( _this.benchGroup.children[_index].scale, 1, { x: 1, y: 1, z: 1, ease: Back.easeInOut } );
+        TweenMax.to( _this.benchGroup.children[_index].scale, 1.5, { x: 1, y: 1, z: 1, ease: Back.easeInOut } );
     }
 
     characterDisappear() {
@@ -228,10 +181,23 @@ export default class ItzikAnimation extends THREE.Object3D {
                 // rotate bench group infinitely
                 let mathStuff = Math.PI * 2 / this.benchCount;
                 this.benchGroupRotateOn(this, mathStuff);
+
+                // loose the clouds and suns
+                for(let i=0; i<this.benchGroup.children.length; i++){
+                    this.benchGroup.children[i].children[0].visible = false;
+                }
             } } );
     }
 
     benchGroupRotateOn(_this, angle){
+        let closeIndex = ( _this.b_open_index+(_this.benchCount-3) ) % _this.benchCount;
+        let openIndex = ( _this.b_open_index+(_this.benchCount-2) ) % _this.benchCount;
+        // _this.benchGroup.children[ closeIndex ].visible = true;
+        // _this.benchGroup.children[ openIndex ].visible = false;
+        TweenMax.to( _this.benchGroup.children[ closeIndex ].scale, 1, { x: 1, y: 1, z: 1, ease: Power1.easeInOut } );
+        TweenMax.to( _this.benchGroup.children[ openIndex ].scale, 0.5, { x: 0.01, y: 0.01, z: 0.01, ease: Power1.easeInOut } );
+        _this.b_open_index ++;
+
         TweenMax.to( _this.benchGroup.rotation, 2, { y:"+="+angle, ease:Power3.easeInOut, delay:2, onComplete: _this.benchGroupRotateOn, onCompleteParams:[_this, angle]} );
     }
 
@@ -246,16 +212,11 @@ export default class ItzikAnimation extends THREE.Object3D {
                     tmpItem.position.set(2,1.5,0);
                     this.items[i] = tmpItem;
                 }
-                else if(i==4 || i==5 || i==6){
+                else if(i==4 || i==6){
                     let tmpItem = new THREE.Mesh( geometry, mat2 );
                     this.items[i] = tmpItem;
                 }
-                else if(i==9){
-                    // let tmpItem = new THREE.Mesh( geometry, mat );
-                    // this.items[i] = tmpItem;
-                    // this.fog = new THREE.Object3D();
-
-                    // let spriteMat = new THREE.SpriteMaterial( { map: this.smokeTex, color: 0x053d96, transparent: true, opacity: 0 } ); //0x053d96
+                else if(i==5){
                     for(let j=0; j<50; j++){
                         let sprite = new THREE.Sprite( this.smokeMat );
                         sprite.scale.multiplyScalar(3);
@@ -279,12 +240,6 @@ export default class ItzikAnimation extends THREE.Object3D {
         loader.load( url, (geometry, material) => {
 
             for(let i=0; i<this.clouds.length; i++){
-                //let benchMat;
-                // if(i==0)
-                //     benchMat = new THREE.MeshLambertMaterial({color: 0xff0000});
-                // else
-                    //benchMat = new THREE.MeshLambertMaterial({color: 0xffffff});
-
                 let tmp_bench = new THREE.Mesh( geometry.clone(), this.benchMats[i] );
 
                 tmp_bench.position.set( Math.sin(Math.PI*2/10*this.b_offset)*this.b_radius, 0, Math.cos(Math.PI*2/10*this.b_offset)*this.b_radius );
@@ -293,36 +248,12 @@ export default class ItzikAnimation extends THREE.Object3D {
 
                 tmp_bench.add( this.clouds[i] );
                 tmp_bench.add( this.items[i] );
-                // console.log( this.clouds[i].children[0] );
 
                 this.benchGroup.add( tmp_bench );
             }
             this.benchGroup.position.set( 0, -4, 15 );
-            // this.benchGroup.rotation.y = 182 * Math.PI/180;
             this.add( this.benchGroup );
-
-            // let tmp_bench = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({color: 0xffffff}) );
-            // this.add( tmp_bench );
-            // this.benches.push( tmp_bench );
         });
-    }
-
-    transX(geo, n){
-        for(let i=0; i<geo.vertices.length; i++){
-            geo.vertices[i].x += n;
-        }
-    }
-
-    transZ(geo, n){
-        for(let i=0; i<geo.vertices.length; i++){
-            geo.vertices[i].z += n;
-        }
-    }
-
-    transY(geo, n){
-        for(let i=0; i<geo.vertices.length; i++){
-            geo.vertices[i].y += n;
-        }
     }
 
     start() {
@@ -343,7 +274,7 @@ export default class ItzikAnimation extends THREE.Object3D {
     }
 
     update(dt,et) {
-        if(this.itemIsMoving[9]){
+        if(this.itemIsMoving[ (this.benchCount-1) ]){
             for(let i=0; i<this.fog.children.length; i++){
                 let h = this.perlin.noise(et*0.1, i, 1)/50;
                 this.fog.children[i].position.addScalar( h );

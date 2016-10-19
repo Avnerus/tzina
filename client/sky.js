@@ -105,6 +105,7 @@ export default class Sky {
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieDirectionalG, "value"); 
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this, "spinFactor"); */
 
+       /*
         events.emit("add_gui",{
             onChange: () => {
                 this.updateSunPosition();
@@ -116,7 +117,7 @@ export default class Sky {
                 this.updateSunPosition();
             },
             folder: "Sun shader",
-        }, this, "azimuth", 0, 1);
+        }, this, "azimuth", 0, 1);*/
 
 
         events.on("gaze_started", () => {
@@ -142,7 +143,7 @@ export default class Sky {
         let flareColor = new THREE.Color( 0xffffff );
         flareColor.setHSL( lightHSL.h, lightHSL.s, lightHSL.l + 0.5 );
 
-        this.lensFlare = new THREE.LensFlare( textureFlare0, 200, 0.0, THREE.AdditiveBlending, flareColor );
+        this.lensFlare = new THREE.LensFlare( textureFlare0, 100, 0.0, THREE.AdditiveBlending, flareColor );
 
         this.lensFlare.add( textureFlare2, 512, 0.0, THREE.AdditiveBlending );
         this.lensFlare.add( textureFlare2, 512, 0.0, THREE.AdditiveBlending );
@@ -290,10 +291,10 @@ export default class Sky {
 
     updateHemiLght() {
         if (this.currentTime > 0 && this.currentTime <= 14  ) {
-            this.hemiLight.intensity = 0.3 * (this.currentTime / 14) * (this.currentTime / 14);
+            this.hemiLight.intensity = 0.6 * (this.currentTime / 14) * (this.currentTime / 14);
         } 
         else if (this.currentTime > 14 && this.currentTime <= 23) {
-            this.hemiLight.intensity = 0.3 * ((23 - this.currentTime) / 9) * ((23 - this.currentTime) / 9);
+            this.hemiLight.intensity = 0.6 * ((23 - this.currentTime) / 9) * ((23 - this.currentTime) / 9);
         }
         else {
             this.hemiLight.intensity = 0;
