@@ -272,7 +272,7 @@ export default class Game {
 
 
         if (!this.config.noSquare) {
-            this.square.fountain.startCycle();
+            // this.square.fountain.startCycle();
         }
 
         if (this.config.skipIntro) {

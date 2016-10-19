@@ -179,7 +179,7 @@ export default class Fountain extends THREE.Object3D  {
             target[2] = e.acceleration._value;
             target[3] = e.acceleration._spread;
 
-            TweenMax.to( target[0], 2, { y: 19, onStart:()=>{
+            TweenMax.to( target[0], 5, { y: 19, onStart:()=>{
                 TweenMax.to( target[1], 5, {x:9, z:9});
                 TweenMax.to( target[2], 5, {y:-24});
             },
