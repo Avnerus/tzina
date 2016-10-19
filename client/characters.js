@@ -78,6 +78,7 @@ export default [
         rotation: [10, 224 , 6],
         animation: null,
         uvdy: 0.4889,
+        uvdy_idle: 0.484863281,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
         animationScale: 0.25,
