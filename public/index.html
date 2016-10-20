@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link type="text/css" href="css/tzina.css" rel="stylesheet">
+        <title>Tzina</title>
+    </head>
+    <body>
+        <script>
+            window.WebVRConfig = {FORCE_ENABLE_VR : false}
+        </script>
+        <script src="lib/modernizr-custom.js"></script>
+        <script src="lib/TweenMax.min.js"></script>
+        <script src="lib/dat.gui.min.js"></script>
+        <script src="lib/three.js"></script>
+        <script src="lib/SPE.min.js"></script>
+        <script src="lib/OrbitControls.js"></script>
+        <script src="lib/PointerLockControls.js"></script>
+        <script src="lib/PLYLoader.js"></script>
+        <script src="lib/CopyShader.js"></script>
+        <script src="lib/EffectComposer.js"></script>
+        <script src="lib/RenderPass.js"></script>
+        <script src="lib/ShaderPass.js"></script>
+        <script src="lib/MaskPass.js"></script>
+        <script src="lib/webvr-polyfill.js"></script>
+        <script src="lib/webvr-manager.js"></script>
+        <script src="lib/VREffect.js"></script>
+        <script src="lib/aws-sdk-2.5.3.min.js"></script>
+        <script src="lib/jquery-2.2.4.min.js"></script>
+
+        
+        <script src="secure-access.js"></script>
+
+        <video id="subtitles" class="subtitles" src="" style="display:none;"></video>
+        <div id="game"></div>
+        <div class="splash">
+            <div id="loading-container" class="splash-container" style="display:none;">
+                <div id="loading-image">
+                    <img src="assets/splash/loading_fountain.gif" width="200px"></img>
+                </div>
+            </div>
+            <div id="start-container" class="splash-container">
+                <a target="_self" href="#" id="start-button">
+                    <img src="assets/splash/chapter_title.png"></img>
+                </a>
+            </div>
+            <div id="coming-soon" class="splash-container" style="display:none;"><img id="coming-img" src="assets/splash/coming_soon.png" style="
+                width: 600px;
+                position: relative;
+                top: 200px;
+                opacity: 0;
+                transition: opacity .5s ease-in-out;
+            ">
+            </div>
+            <div id="wasd-container" class="splash-container" style="
+                position: relative;
+                left: 40%;
+                top: 35%;
+                display: none;
+            ">
+                            <img id="wasd-img" src="assets/splash/wasd.png" style="
+                width: 200px;
+            ">
+           </div>
+        </div>
+        <div id="secure-access-container" style="display:none;" class="splash">
+            <div id="secure-access">
+                <form id="secure-form" method="POST">
+                    <div>Enter Password</div>
+                    <div><input id="password" name="password" type="password"></div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
