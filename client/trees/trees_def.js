@@ -18,71 +18,72 @@ export default {
          {
             type: "ThreeTrees",
             position: [4,22,14],
-            rotateX: -10,
-            scale: 4.3
+            rotation: [-10,0,90],
+            scale: 1.075
         },
          {
             type: "ThreeTrees",
             position: [4,22,14],
-            rotateX: -10,
-            scale: 4
+            rotation: [-10,0,90],
+            scale: 1
         },
          {
             type: "ThreeTrees",
             position: [42,24,2],
-            rotateX: 0,
-            scale: 4.4
+            rotation: [0,0,90],
+            scale: 1.1
         }, 
         {
             type: "ThreeTrees",
             position: [43,24,3],
-            rotateX: 0,
-            scale: 4.4
+            rotation: [0,0,90],
+            scale: 1.1
         },
         {
             type: "ThreeTrees",
             position: [40,24,2],
-            rotateX: 0,
-            scale: 4.4
+            rotation: [0,0,90],
+            scale: 1.1
         },
         {
             type: "ThreeTrees",
             position: [20,24,-23],
-            rotateX: 80,
-            scale: 4.4
+            rotation: [80,0,90],
+            scale: 1.1
         },
       {
             type: "ThreeTrees",
             position: [30,24,-20],
-            rotateX: 20,
-            scale: 4.4
+            rotation: [20,0,90],
+            scale: 1.1
         },
 
  {
             type: "ThreeTrees",
             position: [30,24,-20],
-            rotateX: 60,
-            scale: 4.4
+            rotation: [60,0,90],
+            scale: 1.1
         },
 
  {
             type: "ThreeTrees",
             position: [30,24,-20],
-            rotateX: 60,
-            scale: 4.4
+            rotation: [60,0,90],
+            scale: 1.1
         },
     {
             type: "ThreeTrees",
             position: [6,23,-10],
             rotateX: 180,
-            scale: 4.4
+            rotation: [180,0,90],
+            scale: 1.1
         },
    
     {
             type: "ThreeTrees",
             position: [-20,26,-20],
-            rotateX: -30,
-            scale: 4
+            rotation: [330,0,90],
+            scale: 1
         },
    
 
@@ -91,22 +92,22 @@ export default {
         {
             type: "palm",
             position: [-18,16,10],
-            rotateX: -100,
-            scale: 3
+            rotation: [260,0,90],
+            scale: 0.75
         },
 
         {
             type: "palm",
             position: [8,22,6],
-            rotateX: 60,
-            scale: 3
+            rotation: [60,0,90],
+            scale: 0.75
         },
          {
             type: "palm",
             position: [-38,20,-32],
-            rotateX: 60,
-            scale: 3.8
-        },
+            rotation: [60,0,90],
+            scale: 0.95
+        }
         // {
         //     type: "single",
         //     position: [-52,18,2],
