@@ -27,25 +27,25 @@ export default class Fountain extends THREE.Object3D  {
                         } },
             { time: 37, action: () => {
                             this.fourthAni();
+                        } },
+            { time: 54, action: () => {
+                            this.fifthAni();
+                        } },
+            { time: 62, action: () => {
+                            this.sixthAni();
+                        } },
+            { time: 78, action: () => {
+                            this.seventhAni();
+                        } },
+            { time: 97, action: () => {
+                            this.eighthAni();
+                        } },
+            { time: 107, action: () => {
+                            this.ninethAni();
+                        } },
+            { time: 117, action: () => {
+                            this.tenthAni();
                         } }
-            // { time: 54, action: () => {
-            //                 this.fifthAni();
-            //             } },
-            // { time: 62, action: () => {
-            //                 this.sixthAni();
-            //             } },
-            // { time: 78, action: () => {
-            //                 this.seventhAni();
-            //             } },
-            // { time: 97, action: () => {
-            //                 this.eighthAni();
-            //             } },
-            // { time: 107, action: () => {
-            //                 this.ninethAni();
-            //             } },
-            // { time: 117, action: () => {
-            //                 this.tenthAni();
-            //             } }
         ]
         
         this.event12pm_file = 'assets/sound/event12pm.wav';
@@ -173,12 +173,7 @@ export default class Fountain extends THREE.Object3D  {
         this.playSound();
         console.log("play sound!");
 
-        // Water
-
-        // Fire
-
-        // Central water
-        
+        // Fire        
     }
 
     updateEmittersValue( emitters, arrayOfIndex, arrayOfValue, time, _yoyo, _repeatTime, _delay, _repeatDelay ){
@@ -262,14 +257,14 @@ export default class Fountain extends THREE.Object3D  {
         // time, yoyo, repeatTime, delay, repeatDelay
         this.updateEmittersValue( this.centerRingEmitters,
                                  [ 0,1,2 ],
-                                 [ {x:0, y:16, z:0}, {x:8, y:0.5, z:8}, {x:0, y: -30, z:0} ],
-                                 4, true, 1, 0, 0);
+                                 [ {x:0, y:16, z:0}, {x:3, y:0, z:3}, {x:0, y: -30, z:0} ],
+                                 3, true, 1, 0, 1);
     }
 
     secAni() {
         this.updateEmittersValue( this.centerRingEmitters,
-                                 [ 0,1,2 ],
-                                 [ {x:0, y:14, z:0}, {x:3, y:0.5, z:3}, {x:0, y: -25, z:0} ],
+                                 [ 0,3,2 ],
+                                 [ {x:0, y:14, z:0}, {x:3, y:0, z:3}, {x:0, y: -25, z:0} ],
                                  0, false, 3, 0, 5);
 
         this.updateEmittersValue( this.centerRingEmitters,
@@ -280,13 +275,76 @@ export default class Fountain extends THREE.Object3D  {
 
     thirdAni() {
         this.updateEmittersValue( this.centerRingEmitters,
-                                 [ 0, 1 ],
-                                 [ {x:0, y:14, z:0}, {x:5, y:0.5, z:5} ],
-                                 1, true, 5, 0, 2);
+                                 [ 0, 3 ],
+                                 [ {x:0, y:14, z:0}, {x:5, y:0, z:5} ],
+                                 0.5, true, 3, 1, 2);
     }
 
     fourthAni() {
-        //
+        // tall & thin
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0,2,3 ],
+                                 [ {x:0, y:16, z:0}, {x:0, y: -30, z:0}, {x:1, y:0, z:1} ],
+                                 0, false, 0, 0, 0);
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:14, z:0} ],
+                                 0, false, 0, 1, 0);
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 1 ],
+                                 [ {x:3, y:.5, z:3} ],
+                                 1, true, 3, 1, 2);
+    }
+
+    fifthAni() {
+        // slow down
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0,2 ],
+                                 [ {x:0, y:9, z:0}, {x:0, y: -20, z:0} ],
+                                 8, false, 0, 0, 0);
+    }
+
+    sixthAni() {
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:14, z:0} ],
+                                 1, true, 7, 0, 1);
+    }
+
+    seventhAni() {
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 1 ],
+                                 [ {x:2, y:.5, z:2} ],
+                                 0, false, 0, 0, 0);
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:13, z:0} ],
+                                 1, true, 7, 0, 1);
+    }
+
+    eighthAni() {
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0, 1, 2, 3 ],
+                                 [ {x:0, y:16, z:0}, {x:1, y:0.5, z:1}, {x:0, y:-30, z:0}, {x:3, y:0, z:3} ],
+                                 8, false, 0, 0, 0);
+    }
+
+    ninethAni() {
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:12, z:0} ],
+                                 0, true, 7, 0, 1);
+    }
+
+    tenthAni() {
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0, 3 ],
+                                 [ {x:0, y:18, z:0}, {x:1, y:0, z:1} ],
+                                 0, false, 0, 0, 0);
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:9, z:0} ],
+                                 8, false, 0, 2, 0);
     }
 
     createTrickle(position, rotation, velocity, colorCode) {
