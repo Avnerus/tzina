@@ -172,12 +172,17 @@ export default class Square extends THREE.Object3D{
 
     turnOffSun(name) {
         console.log("Turn off sun ", name);
-        let sun = this.suns.getObjectByName(name).children[0];
-        console.log("Turn off sun", sun);
-        //sun.material.side = THREE.BackSide;
-        sun.material.color = new THREE.Color(0x888788);
-        //sun.material.specular = new THREE.Color(0x000000);
-        sun.material.opacity = .8;
+        let sun = this.suns.getObjectByName(name);
+        if (sun) {
+            let sunMesh = sun.children[0];
+            console.log("Turn off sun", sun);
+            //sun.material.side = THREE.BackSide;
+            sunMesh.material.color = new THREE.Color(0x888788);
+            //sun.material.specular = new THREE.Color(0x000000);
+            sunMesh.material.opacity = .8;
+            sunMesh.material.map = null;
+            sun.children[1].visible = false;
+        }
     }
 
     turnOnSun(name) {
@@ -188,12 +193,18 @@ export default class Square extends THREE.Object3D{
                     this.turnOffSun(this.currentSun);
                 }
                 let sunMesh = sun.children[0];
-                console.log("Turn on sun", sun);
                 sunMesh.material.color = new THREE.Color(0xF4F5DC);
           //      sunMesh.material.specular = new THREE.Color(0x000000);
                 //sunMesh.material.side = THREE.DoubleSide;
                 sunMesh.material.opacity = .8;
+                sunMesh.material.map = this.sunTexture;
+                sunMesh.material.needsUpdate = true;
                 this.currentSun = name;
+
+                // Show loader
+                sun.children[1].visible = true;
+
+                console.log("Turned on sun", sun);
             }
         }
     }
@@ -204,7 +215,8 @@ export default class Square extends THREE.Object3D{
         if (sun) {
             let sunMesh = sun.children[0];
             console.log("Turn on sun", sun);
-            sunMesh.material.color = new THREE.Color(0xF4050C);
+            sunMesh.material.color = new THREE.Color(0x000733);
+            //sunMesh.material.color = new THREE.Color(0xF4050C);
             sunMesh.material.emissive = new THREE.Color(0xC80509);
             sunMesh.material.specular = new THREE.Color(0xFF0000);
             sunMesh.material.side = THREE.DoubleSide;
@@ -256,11 +268,16 @@ export default class Square extends THREE.Object3D{
                     obj.children[i].children[0].geometry.dispose();
                     obj.children[i].children[0].geometry = new THREE.SphereBufferGeometry( 0.3, 32, 32  );
 
-                    //debug
-                    events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "x", 0, 1);
-                    events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "y", 0, 1);
+                    //debug 
+                /*
+events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "x", 0, 1);
+events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "y", 0, 1);
+*/
 
                 }
+
+                // Save the map
+                this.sunTexture = obj.children[1].children[0].material.map;
 
                 console.log("Loaded suns ", obj );
 

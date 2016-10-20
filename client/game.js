@@ -97,19 +97,19 @@ export default class Game {
         this.dirLight.position.set( 0, 120, -200  );
         this.dirLight.color.setHSL(1,1,1);*/
 
-        this.dirLight = new THREE.PointLight(0xffffff, 1, 200);
+        this.dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
         this.dirLight.color.setHSL(0.1,0.42,0.9);
 
         //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
         //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
 
         // --- hide by laura --- start
-        events.emit("add_gui", {folder:"Point light", listen:true}, this.dirLight, "intensity",0,1);
-        events.emit("add_gui", {folder:"Point light", listen:true}, this.dirLight, "distance");
-        events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,1);
+        events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,2);
+        events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
-        DebugUtil.colorPicker("Point light", this.dirLight, "color");
+        DebugUtil.colorPicker("Dir light", this.dirLight, "color");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
+        DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");
         // --- hide by laura --- end
 
         //dirLight.target.position.set(0,100,0);
