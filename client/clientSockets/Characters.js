@@ -4,6 +4,7 @@ var a = require('../../shared/OnHandlers');
 var characterList = [];
 //an array of the associations between server id's and client side id's
 var characterAssoc={};
+let verbose=false;
 exports.chac=characterAssoc;
 //functions to access characters:
 //iterate all with callback
@@ -26,7 +27,7 @@ exports.Character = function(properties) {
   // console.log("c",properties);
   characterList.push(this);
   if(properties.hasOwnProperty("unique")){
-    console.log("new character",properties);
+if(verbose)     console.log("new character",properties);
     characterAssoc[properties.unique+""]=this;
   }else{
     console.warn("you created a character without providing server unique. This renders the character unreachable");

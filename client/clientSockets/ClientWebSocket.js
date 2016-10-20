@@ -1,9 +1,10 @@
-let a=require('../../shared/OnHandlers');
+// let a=require('../../shared/OnHandlers');
+import onHandlers from '../../shared/OnHandlers';
 let interpreter=require('../../shared/MessageInterpreter');
 
 export default class ClientWebSocket {
   constructor(address){
-    a.onHandlers.call(this);
+    onHandlers.onHandlers.call(this);
     console.log("ClientWebSocket constructed!");
     if(address){
       this.init(address);
