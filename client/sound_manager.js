@@ -4,16 +4,11 @@ let fountain, highway_1, highway_2, innerKikar, wind;
 
 export default class SoundManager {
     constructor(camera, scene) {
-
         this.camera = camera;
         this.scene = scene;
-
     }
-
     init(loadingManager) {
-
         // Extending THREE.Audio
-
         THREE.Audio.prototype.playIn = function(seconds) {
             if ( this.isPlaying === true ) {
 
@@ -134,10 +129,18 @@ export default class SoundManager {
             wind.setBuffer(audioBuffer);
         }, function() {
         });
-
+        this.activateEventListeners();
     }
-
-    play() {
+    activateEventListeners(){
+      //here we set listeners and assign a play function upon the call of each listener
+    }
+    play(setName) {
+      //choose which sounds to trigger
+      //of course that all the other sound objects must have the play function to call at once from here.
+      if(setName=="sunGazedSound"){
+      }else if(setName=="flyingSound"){
+      }else if(!setName){
+        console.warn("SoundManager was called to play without providing a setName");
         fountain.play();
 
         highway_1.play();
@@ -147,7 +150,9 @@ export default class SoundManager {
         innerKikar.play();
 
         wind.play();
-
+      }else{
+        console.warn("SoundManager was called to play but the parameter setName didn't match any statement "+setName);
+      }
     }
 
     loadSound(fileName) {
