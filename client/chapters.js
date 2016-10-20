@@ -1,11 +1,11 @@
 export default 
 	 [
 		{
-			"name": "excitement / awakeness",
+			"name": "excitement/awakeness",
 			"hour": 7,
 			"timeLimitMinutes" : 10,
-            "titlePosition": [-143, 48, 0],
-            "insideTitlePosition": [-5, 1, -1],
+            "titlePosition": [-105, 45, 0],
+            "insideTitlePosition": [-5, 2, -1],
 			"characters": [
 				"Meir",
 				"Rami",
@@ -61,7 +61,7 @@ export default
 			]
 		},
 		{
-		"name": "family / home",
+		"name": "family/home",
 			"hour": 9,
 			"timeLimitMinutes" : 13,
             "titlePosition": [-90, 90, 0],
@@ -121,7 +121,7 @@ export default
 			]
 		}, 
 		{
-		"name": "emptiness / boredom",
+		"name": "emptiness/boredom",
 			"hour": 12,
 			"timeLimitMinutes" : 8,
             "titlePosition": [0, 110, 0],
@@ -175,10 +175,10 @@ export default
 			]
 		},
         {
-		"name": "distrust / betrayal",
+		"name": "distrust/betrayal",
 			"hour": 17,
             "titlePosition": [85, 100, 0],
-            "insideTitlePosition": [0, -1, 0],
+            "insideTitlePosition": [0, 2, 0],
 			"timeLimitMinutes" : 12,
 			"characters": [
 				"Hannah",
@@ -230,11 +230,11 @@ export default
             ]
         },
         {
-		"name": "despair / loneliness",
+		"name": "despair/loneliness",
 			"hour": 19,
 			"timeLimitMinutes" : 12,
             "titlePosition": [120, 65, 0],
-            "insideTitlePosition": [0, -1, 0],
+            "insideTitlePosition": [0, 2, 0],
 			"characters": [
 				"Haim",
 				"Izchak",
