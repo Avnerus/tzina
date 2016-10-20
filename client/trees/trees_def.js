@@ -1,10 +1,6 @@
 export default {
     types: [
         {
-            name: "Test",
-            fileName: "points.ply",
-        },
-                {
             name: "ThreeTrees",
             fileName: "3tress_2.ply"
         },
