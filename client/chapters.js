@@ -125,7 +125,7 @@ export default
 			"hour": 12,
 			"timeLimitMinutes" : 8,
             "titlePosition": [0, 110, 0],
-            "insideTitlePosition": [0.5, -1.5, -0.3],
+            "insideTitlePosition": [4, -7, -2],
 			"characters": [
 				"Mark",
                 "LupoDogs12PM",                
@@ -178,7 +178,7 @@ export default
 		"name": "distrust/betrayal",
 			"hour": 17,
             "titlePosition": [85, 100, 0],
-            "insideTitlePosition": [0, 2, 0],
+            "insideTitlePosition": [0, 5, 0],
 			"timeLimitMinutes" : 12,
 			"characters": [
 				"Hannah",

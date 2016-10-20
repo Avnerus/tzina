@@ -73,13 +73,13 @@ export default class TimeController {
 
         let TEXT_DEFINITION = {
              align: textAlign.center, 
-             font: '16px Miriam Libre',
+             font: '22px Miriam Libre',
              fillStyle: '#FFFFFF',
              antialias: true 
         }
         let INSIDE_TEXT_DEFINITION = {
              align: textAlign.center, 
-             font: '22px Miriam Libre',
+             font: '18px Miriam Libre',
              fillStyle: '#FFFFFF',
              antialias: true 
         }
@@ -93,8 +93,8 @@ export default class TimeController {
         this.prevChapterTitle.visible = false;
 
         this.insideChapterTitle = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
-        this.insideChapterTitle.scale.multiplyScalar(0.02);
-        //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+        this.insideChapterTitle.scale.multiplyScalar(0.04);
+        DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
 
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
