@@ -16,24 +16,36 @@ export default class Fountain extends THREE.Object3D  {
         this.square = square;
         this.soundManager = soundManager;
         this.soundEvents = [
-            {
-                time: 5,
-                action: () => {
-                    this.firstAni()
-                }
-            },
-            {
-                time: 10,
-                action: () => {
-                    this.secAni();
-                }
-            },
-            {
-                time: 15,
-                action: () => {
-                    this.thirdAni();
-                }
-            }
+            { time: 6, action: () => {
+                            this.firstAni();
+                        } },
+            { time: 14.5, action: () => {
+                            this.secAni();
+                        } },
+            { time: 27, action: () => {
+                            this.thirdAni();
+                        } },
+            { time: 37, action: () => {
+                            this.fourthAni();
+                        } }
+            // { time: 54, action: () => {
+            //                 this.fifthAni();
+            //             } },
+            // { time: 62, action: () => {
+            //                 this.sixthAni();
+            //             } },
+            // { time: 78, action: () => {
+            //                 this.seventhAni();
+            //             } },
+            // { time: 97, action: () => {
+            //                 this.eighthAni();
+            //             } },
+            // { time: 107, action: () => {
+            //                 this.ninethAni();
+            //             } },
+            // { time: 117, action: () => {
+            //                 this.tenthAni();
+            //             } }
         ]
         
         this.event12pm_file = 'assets/sound/event12pm.wav';
@@ -104,7 +116,7 @@ export default class Fountain extends THREE.Object3D  {
                 // this.playSound();
                 // console.log("play sound!");
                 this.startEvent();
-            },15000);
+            },10000);
         });
 
         // water: velocity
@@ -130,6 +142,7 @@ export default class Fountain extends THREE.Object3D  {
        //
        if (this.sound_12pm && this.sound_12pm.isPlaying && this.currentEvent) {
             if (this.sound_12pm.getCurrentTime() >= this.currentEvent.time) {
+                 console.log("do anim sequence ", this.currentEvent);
                 this.currentEvent.action();
                 if (this.soundEvents.length > 0) {
                     this.currentEvent = this.soundEvents.shift();
@@ -168,40 +181,112 @@ export default class Fountain extends THREE.Object3D  {
         
     }
 
-    firstAni() {
-        console.log("do first ani!");
+    updateEmittersValue( emitters, arrayOfIndex, arrayOfValue, time, _yoyo, _repeatTime, _delay, _repeatDelay ){
 
-        for(let i=0; i<this.centerRingEmitters.length; i++){
-            let e = this.centerRingEmitters[i];
-            let target = [];
-            target[0] = e.velocity._value;
-            target[1] = e.velocity._spread;
-            target[2] = e.acceleration._value;
-            target[3] = e.acceleration._spread;
+            let dummyVectors = [];
+            
+            for(let j=0; j<arrayOfIndex.length; j++){
+                dummyVectors.push( this.selectToChangeValue(emitters[0], arrayOfIndex[j]) );
+            }
 
-            TweenMax.to( target[0], 5, { y: 19, onStart:()=>{
-                TweenMax.to( target[1], 5, {x:9, z:9});
-                TweenMax.to( target[2], 5, {y:-24});
-            },
-            onUpdateParams:[e],
-            onUpdate: (e)=>{
-                e.updateFlags.velocity = true;
-                e.updateFlags.acceleration = true;
-            },
-            onCompleteParams:[e],
-            onComplete: (e)=>{
-                e.updateFlags.velocity = true;
-                e.updateFlags.acceleration = true;
-            }} );
+            TweenMax.to( dummyVectors[0], time, { x: arrayOfValue[0].x,
+                                                  y: arrayOfValue[0].y,
+                                                  z: arrayOfValue[0].z,
+                                                  yoyo: _yoyo, repeat: _repeatTime,
+                                                  delay: _delay, repeatDelay: _repeatDelay,
+                    onStart:()=>{
+                        if(dummyVectors.length>1){
+                            for(let k=1; k<dummyVectors.length; k++){
+                                 TweenMax.to( dummyVectors[k], time, { x: arrayOfValue[k].x,
+                                                                       y: arrayOfValue[k].y,
+                                                                       z: arrayOfValue[k].z,
+                                                                       yoyo: _yoyo, repeat: _repeatTime,
+                                                                       delay: _delay, repeatDelay: _repeatDelay });
+                            }
+                        }
+                    },
+                    onUpdate: ()=>{
+                        for(let i=0; i<emitters.length; i++){
+                            for(let k=0; k<dummyVectors.length; k++){
+                                this.setEmitterValue( emitters[i], arrayOfIndex[k], dummyVectors[k] );
+                            }
+                        }
+                    }
+                }
+            );  
+        //}
+    }
+
+    setEmitterValue( emitter, valueIndex, value ){
+        switch ( valueIndex ) {
+            case 0:
+                emitter.velocity.value = value;
+                break;
+
+            case 1:
+                emitter.velocity.spread = value;
+                break;
+
+            case 2:
+                emitter.acceleration.value = value;
+                break;
+
+            case 3:
+                emitter.acceleration.spread = value;
+                break;
         }
     }
 
+    selectToChangeValue( emitter, valueIndex ){
+        switch ( valueIndex ) {
+            case 0:
+                return emitter.velocity.value.clone();
+                break;
+
+            case 1:
+                return emitter.velocity.spread.clone();
+                break;
+
+            case 2:
+                return emitter.acceleration.value.clone();
+                break;
+
+            case 3:
+                return emitter.acceleration.spread.clone();
+                break;
+        }
+    }
+
+    firstAni() {
+        // emitters, arrayOfIndex, _arrayOfValue,
+        // time, yoyo, repeatTime, delay, repeatDelay
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0,1,2 ],
+                                 [ {x:0, y:16, z:0}, {x:8, y:0.5, z:8}, {x:0, y: -30, z:0} ],
+                                 4, true, 1, 0, 0);
+    }
+
     secAni() {
-        console.log("do sec ani!");
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0,1,2 ],
+                                 [ {x:0, y:14, z:0}, {x:3, y:0.5, z:3}, {x:0, y: -25, z:0} ],
+                                 0, false, 3, 0, 5);
+
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:8, z:0} ],
+                                 4, false, 2, 1, 1);
     }
 
     thirdAni() {
-        console.log("do third ani!");
+        this.updateEmittersValue( this.centerRingEmitters,
+                                 [ 0, 1 ],
+                                 [ {x:0, y:14, z:0}, {x:5, y:0.5, z:5} ],
+                                 1, true, 5, 0, 2);
+    }
+
+    fourthAni() {
+        //
     }
 
     createTrickle(position, rotation, velocity, colorCode) {
