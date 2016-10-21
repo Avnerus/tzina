@@ -13,16 +13,26 @@ export default {
             fileName: "singleTree.ply"
         },
            {
-            name: "bush",
+            name: "bush1",
             fileName: "sidetwo.ply"
+        },
+             {
+            name: "bush2",
+            fileName: "sideone.ply"
         }
     ],
     instances: [
           {
-            type: "bush",
-            position: [-20,26,-20],
-            rotation: [330,0,90],
-            scale: 1
+            type: "bush1",
+            position: [-5.36,20.08,-2.65],
+            rotation: [180,172,184],
+            scale: 0.42
+        }, 
+          {
+            type: "bush2",
+            position: [0.96,16.03,-3.55],
+            rotation: [176,156,184],
+            scale: 0.51
         }, 
          {
             type: "ThreeTrees",
