@@ -59,7 +59,8 @@ export default class VideoRGBD  {
               "uvdy" : { type : "f", value : this.properties.uvdy },
               "uvdx" : { type : "f", value : this.properties.uvdx },
               "opacity" : { type : "f", value : 0.1 },
-              "brightness" : { type : "f", value : 0.3 }
+              "brightness" : { type : "f", value : 0.3 },
+              "holes" : { type : "f", value: 1}
           },
 
           vertexShader: this.wire_rgbd_vs,

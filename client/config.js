@@ -11,7 +11,7 @@ export default {
     daySpeed: 0.003,
     noSquare: false,
     fullscreen: false,
-    noAnimations: false,
-    noExtras: false
+    noAnimations: true,
+    noExtras: true
 //    daySpeed: 0.08,
 }

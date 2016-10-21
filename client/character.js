@@ -51,6 +51,8 @@ export default class Character extends THREE.Object3D {
             this.add(this.idleVideo.mesh);
             this.add(this.idleVideo.wire);
 
+            
+
             this.idleVideo.video.loop = true;
 
             if (!this.props.idleOnly) {
