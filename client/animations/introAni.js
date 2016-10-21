@@ -173,9 +173,9 @@ export default class IntroAnimation extends THREE.Object3D {
                 frequency: { type: "f", value: 1 },
                 gravity: { type: "f", value: 12.5 }, // 2
                 mouseRotation: { type: "f", value: 0 }, // 2
-                squareRadius: {type: "f", value: this.sRadius*7.5},
+                squareRadius: {type: "f", value: this.sRadius*6.5},
                 squareCenterX: {type: "f", value: this.sCenter.x},
-                squareCenterY: {type: "f", value: this.sCenter.y},
+                squareCenterY: {type: "f", value: this.sCenter.y+10},
                 squareCenterZ: {type: "f", value: this.sCenter.z},
                 bounceFactor: {type: "f", value: 2}
             },

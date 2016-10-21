@@ -4,14 +4,14 @@ export default {
     fps: 60,
     enableFlying: false,
     skipIntro: true,
-    startTime: 9,
+    startTime: 7,
     skipCharacters: false,
-    movementSpeed: 0.5,
+    movementSpeed: 0.2,
     //    movementSpeed: 1,
     daySpeed: 0.003,
     noSquare: false,
     fullscreen: false,
     noAnimations: false,
-    noExtras: true
+    noExtras: false
 //    daySpeed: 0.08,
 }

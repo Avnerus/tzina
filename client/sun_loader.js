@@ -74,7 +74,7 @@ export default class SunLoader extends THREE.Object3D  {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 0.15},
+                pointSize: { type: "f", value: 0},
                 radius: { type: "f", value: this.radius },
                 tube: { type: "f", value: this.tube },
                 boom: { type: "1", value: 0 }

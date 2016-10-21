@@ -67,7 +67,7 @@ export default class TimeController {
         });
 
         events.on("intro_end", () => {
-            this.showChapterTitle();
+           this.showChapterTitle();
             this.active = true;
         });
 
