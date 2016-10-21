@@ -2,43 +2,231 @@ const SOUND_PATH = "assets/sound/"
 
 let fountain, highway_1, highway_2, innerKikar, wind;
 
+class BlurModule{
+  constructor(audioContext){
+    this.filterLowestCut=80;
+    this.filterHighestCut=20000;
+
+    this.audioContext=audioContext;
+
+    this.inputNode=audioContext.createGain();
+    this.outputNode=audioContext.createGain();
+  }
+  init(loadingManager){
+    // console.log("blurmodule init");
+    let thisBlurModule=this;
+    let audioContext=this.audioContext;
+    this.biquadFilter = audioContext.createBiquadFilter();
+    this.convolver=audioContext.createConvolver();
+
+    let inputNode=this.inputNode;
+    let outputNode=this.outputNode;
+
+    this.dryLevel=audioContext.createGain();
+    this.wetLevel=audioContext.createGain();
+    /*
+    [input node _______________________]
+      V
+    [Low pass filte ___________________]
+      V                    V
+    [dryLevel node]     [wetLevel node]
+      |                    V
+      |                 [convolver]
+      V                    V
+    [output node _____________________]
+    */
+
+    inputNode.connect(this.biquadFilter);
+
+    this.biquadFilter.connect(this.dryLevel);
+    this.biquadFilter.connect(this.wetLevel);
+
+    this.dryLevel.connect(outputNode);
+    this.wetLevel.connect(this.convolver);
+
+    this.convolver.connect(outputNode);
+
+
+    this.biquadFilter.type = "lowpass";
+    this.biquadFilter.frequency.value = 300;
+
+    //most code of this function comes from http://middleearmedia.com/web-audio-api-convolver-node/
+    function getImpulse(impulseUrl) {
+      let ajaxRequest = new XMLHttpRequest();
+      ajaxRequest.open('GET', impulseUrl, true);
+      ajaxRequest.responseType = 'arraybuffer';
+      ajaxRequest.onload = function() {
+        let impulseData = ajaxRequest.response;
+        audioContext.decodeAudioData(impulseData, function(buffer) {
+          let myImpulseBuffer = buffer;
+          thisBlurModule.convolver.buffer = myImpulseBuffer;
+          thisBlurModule.convolver.loop = true;
+          thisBlurModule.convolver.normalize = true;
+        },
+        function(e){"Error with decoding audio data" + e.err});
+
+      }
+
+      ajaxRequest.send();
+    }
+    // getImpulse("audio/Batcave.wav");
+    getImpulse(SOUND_PATH + "ui/Tunnel_impulse_response.wav");
+  }
+  setRange(min,max){
+    this.filterLowestCut=min;
+    this.filterHighestCut=max;
+  }
+  connect(audioInputNode){
+    this.outputNode.connect(audioInputNode);
+  }
+  control(value){
+    let wet=value;
+    let filterCut=(1-value*value)*this.filterHighestCut+this.filterLowestCut;
+    console.log(filterCut);
+    this.biquadFilter.frequency.value=filterCut;
+    this.dryLevel.gain.value=1-wet;
+    this.wetLevel.gain.value=wet;
+  };
+}
+class StaticSoundSampler{
+  constructor(audioContext,sampleUrl){
+    this.blurModule=new BlurModule(audioContext);
+    this.sampleUrl=sampleUrl;
+    this.audioContext=audioContext;
+  }
+  setBlur(value){
+    this.blurModule.control(value);
+  }
+  init(loadingManager,loadReadyCallback){
+    let audioContext=this.audioContext;
+    let thisStaticSoundSampler=this;
+    //blurModule loads a impulse response audio file
+    this.blurModule.init(loadingManager);
+    //so we can more safely check if (thisStaticSoundSampler.source)
+    this.source=false;
+    //pendant: I don't know what to do with the loadingManager
+    let source = audioContext.createBufferSource();
+    //connect my buffer source to the blur module, and then the blur module to the output.
+    try{
+      source.connect(this.blurModule.inputNode);
+      this.blurModule.connect(audioContext.destination);
+    }catch(e){
+      console.log(this.blurModule,this.blurModule.inputNode,audioContext.destination);
+      console.error(e);
+    }
+    let request = new XMLHttpRequest();
+    request.open('GET', this.sampleUrl, true);
+
+    request.responseType = 'arraybuffer';
+
+    request.onload = function() {
+      console.log("request",request);
+      var audioData = request.response;
+
+      audioContext.decodeAudioData(audioData, function(buffer) {
+          var myBuffer = buffer;
+          source.buffer = myBuffer;
+          thisStaticSoundSampler.source=source;
+          if(loadReadyCallback){
+            loadReadyCallback(thisStaticSoundSampler);
+          }
+
+        },
+
+        function(e){"Error with decoding audio data" + e.err});
+
+    }
+    request.send();
+  }
+  play(loop){
+    if(this.source){
+      this.source.start();
+      this.source.loop = loop||false;
+    }else{
+      console.warn("thisStaticSoundSampler mistake: you requested to play, but the source has not been loaded yet");
+    }
+  }
+  // will we need these functions?
+  // stop(){
+  //   if(this.source){
+  //     this.source.stop();
+  //     source.loop = loop||false;
+  //   }else{
+  //     console.warn("thisStaticSoundSampler mistake: you requested to stop, but the source has not been loaded yet");
+  //   }
+  // }
+  // pause(){}
+}
+//this is a proposition of how to manage positional sounds:
+/*
+class positionalSoundSampler{
+  constructor(properties){
+    //set default properties to myself
+    this.position=[0,0,0];
+    //apply properties to myself overwriting defaults
+    for(let a in properties){
+      this[a]=properites[a];
+    }
+    positionalAudio = new THREE.PositionalAudio(this.listener);
+    positionalAudio.position.set(this.position[0], this.position[1], this.position[2]);
+    positionalAudio.setRefDistance( 1 );
+    positionalAudio.autoplay = false;
+    positionalAudio.loop = true;
+
+  }
+  // [...]
+}
+*/
+
 export default class SoundManager {
     constructor(camera, scene) {
         this.camera = camera;
         this.scene = scene;
     }
     init(loadingManager) {
-        // Extending THREE.Audio
-        THREE.Audio.prototype.playIn = function(seconds) {
-            if ( this.isPlaying === true ) {
+      console.log("initializing a SoundManager");
 
-                        console.warn( 'THREE.Audio: Audio is already playing.' );
-                        return;
+      // test sound player
+      window.setTimeout(function () {
+        console.log("Sound trying to play testsampler");
+        let staticAudioContext=new (window.AudioContext || window.webkitAudioContext)();
+        let testSampler=new StaticSoundSampler(staticAudioContext, SOUND_PATH + 'ui/Button_Click.ogg');
+        testSampler.init(loadingManager,function(thisSampler){
+          thisSampler.play(true);
+          document.addEventListener('mousemove',function(e){
+            // console.log(document.width);
+            thisSampler.setBlur(e.clientX/(window.innerWidth-5));
+          });
+        });
+      }, 15000);
 
-                    }
 
-                    if ( this.hasPlaybackControl === false ) {
+      // Extending THREE.Audio
+      THREE.Audio.prototype.playIn = function(seconds) {
+          if ( this.isPlaying === true ) {
+              console.warn( 'THREE.Audio: Audio is already playing.' );
+              return;
+          }
 
-                        console.warn( 'THREE.Audio: this Audio has no playback control.' );
-                        return;
+          if ( this.hasPlaybackControl === false ) {
+              console.warn( 'THREE.Audio: this Audio has no playback control.' );
+              return;
+          }
 
-                    }
+          this.playStartTime = this.context.currentTime + seconds;
+          var source = this.context.createBufferSource();
 
-                    this.playStartTime = this.context.currentTime + seconds;
+          source.buffer = this.source.buffer;
+          source.loop = this.source.loop;
+          source.onended = this.source.onended;
+          source.start( this.playStartTime, this.startTime );
+          source.playbackRate.value = this.playbackRate;
 
-                    var source = this.context.createBufferSource();
+          this.isPlaying = true;
 
-                    source.buffer = this.source.buffer;
-                    source.loop = this.source.loop;
-                    source.onended = this.source.onended;
-                    source.start( this.playStartTime, this.startTime );
-                    source.playbackRate.value = this.playbackRate;
+          this.source = source;
 
-                    this.isPlaying = true;
-
-                    this.source = source;
-
-            return this.connect();
+          return this.connect();
         }
 
         THREE.Audio.prototype.getCurrentTime = function() {
