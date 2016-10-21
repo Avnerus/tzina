@@ -33,7 +33,6 @@ export default class ZoomController {
             0,
             50,
             350
-            
         );
         this.MID_ZOOM = new THREE.Vector3(
             0,
@@ -57,7 +56,7 @@ export default class ZoomController {
         $(document.documentElement).on('mousewheel', (event) => {
                 this.velocityZ = event.deltaY * 10;
                 if (this.velocityZ > 0) {
-                    this.velocityZ = Math.max(this.velocityZ, 100);
+                    this.velocityZ = Math.max(this.velocityZ, 60);
                 } else if (this.velocityZ < 0) {
                     this.velocityZ = Math.min(this.velocityZ,-100);
                 }
@@ -84,8 +83,10 @@ export default class ZoomController {
             return false;
         }, false);
 
+        /*
         events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "z"); 
         events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "y"); 
+        */
 
         events.on("angle_updated", (hour) => {
             if (!this.done) {
@@ -149,45 +150,47 @@ export default class ZoomController {
             this.distanceOnCurve = 1;
             this.calculateEaseQuaternion();
         } else {
-            this.square.mesh.updateMatrixWorld();
-            this.easeQuaternionSource = null;
-            this.easeQuaternionTarget = null;
-            let startPoint = new THREE.Vector3().fromArray(entryPoint.startPosition).applyMatrix4(this.square.mesh.matrixWorld);
-            let endPoint = new THREE.Vector3().fromArray(entryPoint.endPosition).applyMatrix4(this.square.mesh.matrixWorld);
+            if (this.square.mesh) {
+                this.square.mesh.updateMatrixWorld();
+                this.easeQuaternionSource = null;
+                this.easeQuaternionTarget = null;
+                let startPoint = new THREE.Vector3().fromArray(entryPoint.startPosition).applyMatrix4(this.square.mesh.matrixWorld);
+                let endPoint = new THREE.Vector3().fromArray(entryPoint.endPosition).applyMatrix4(this.square.mesh.matrixWorld);
 
-            if (this.camera.position.equals(this.STARTING_POSITION)) {
-                let points = [
-                    new THREE.Vector3().copy(this.camera.position),
-                ]
-                if (entryPoint.worldPosition) {
-                    points.push(new THREE.Vector3().fromArray(entryPoint.worldPosition));
+                if (this.camera.position.equals(this.STARTING_POSITION)) {
+                    let points = [
+                        new THREE.Vector3().copy(this.camera.position),
+                    ]
+                    if (entryPoint.worldPosition) {
+                        points.push(new THREE.Vector3().fromArray(entryPoint.worldPosition));
+                    } else {
+                        points.push(this.MID_ZOOM);
+                    }
+                    points.push(...[
+                        startPoint,
+                        endPoint
+                    ])
+                    console.log("Curve points", points);
+                    this.zoomCurve = new THREE.CatmullRomCurve3(points);
                 } else {
-                    points.push(this.MID_ZOOM);
+                    let points = [
+                        new THREE.Vector3().copy(this.STARTING_POSITION),
+                    ]
+                    if (entryPoint.worldPosition) {
+                        points.push(new THREE.Vector3().fromArray(entryPoint.worldPosition));
+                        this.distanceOnCurve = 2 / 4
+                    } else {
+                        this.distanceOnCurve = 1 / 3;
+                    }
+                    // http://stackoverflow.com/questions/16650360/distance-of-a-specific-point-along-a-splinecurve3-tubegeometry-in-three-js
+                    points.push(...[
+                        new THREE.Vector3().copy(this.camera.position),
+                        startPoint,
+                        endPoint
+                    ])
+                    console.log("Curve points", points);
+                    this.zoomCurve = new THREE.CatmullRomCurve3(points);
                 }
-                points.push(...[
-                    startPoint,
-                    endPoint
-                ])
-                console.log("Curve points", points);
-                this.zoomCurve = new THREE.CatmullRomCurve3(points);
-            } else {
-                let points = [
-                    new THREE.Vector3().copy(this.STARTING_POSITION),
-                ]
-                if (entryPoint.worldPosition) {
-                    points.push(new THREE.Vector3().fromArray(entryPoint.worldPosition));
-                    this.distanceOnCurve = 2 / 4
-                } else {
-                    this.distanceOnCurve = 1 / 3;
-                }
-                // http://stackoverflow.com/questions/16650360/distance-of-a-specific-point-along-a-splinecurve3-tubegeometry-in-three-js
-                points.push(...[
-                    new THREE.Vector3().copy(this.camera.position),
-                    startPoint,
-                    endPoint
-                ])
-                console.log("Curve points", points);
-                this.zoomCurve = new THREE.CatmullRomCurve3(points);
             }
         }
         console.log(this.zoomCurve);

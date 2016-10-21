@@ -1,16 +1,26 @@
 import Trees from "./trees"
 import Fountain from "./fountain"
+import SunLoader from './sun_loader'
+import Extras from './extras';
+
 import DebugUtil from "./util/debug"
+import _ from 'lodash';
 
 const MODEL_PATH = "assets/square/scene.json"
-const WINDOWS_PATH = "assets/square/windows.json"
+const BUILDINGS_PATH = "assets/square/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
-const TEXTURES_PATH = "assets/square/textures/textures.json"
+const COLLIDERS_PATH = "assets/square/colliders.json"
+const BENCHES_PATH = "assets/square/benches.json"
 
 export default class Square extends THREE.Object3D{
-    constructor() {
+    constructor(collisionManager, renderer, config) {
         super();
         console.log("Square constructed!")
+
+        this.collisionManager = collisionManager;
+        this.renderer = renderer;
+        this.config = config;
+
 
 
         this.ENTRY_POINTS = [
@@ -41,7 +51,7 @@ export default class Square extends THREE.Object3D{
                 hour: 7,
                 worldPosition: [130,40,80],
                 startPosition: [-19, 20.5, -62],
-                endPosition: [-16, 22.1, -17.5]
+                endPosition: [-10, 22.1, -17.5]
             },
             {
                 hour: 0,
@@ -53,35 +63,59 @@ export default class Square extends THREE.Object3D{
         this.currentSun = null;
         this.activatedSun = null;
     }
-    init(collisionManager,loadingManager) {
+    init(loadingManager) {
         loadingManager.itemStart("Square");
         let trees = new Trees();
+        this.extras = new  Extras();
         this.fountain = new Fountain();
-        Promise.all([
+
+        let loaders = [
             this.loadSquare(loadingManager),
             trees.init(loadingManager),
             this.fountain.init(loadingManager),
-            this.loadWindows(loadingManager),
+            this.loadBuildings(loadingManager),
             this.loadSuns(loadingManager),
-            this.loadTextures(loadingManager)
-        ])
+            this.loadColliders(loadingManager),
+            this.loadBenches(loadingManager)
+        ];
+        if (!this.config.noExtras) {
+            loaders.push(this.extras.init(loadingManager));
+        }
+        Promise.all(loaders)
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
-            obj.add(trees);
-            obj.add(this.fountain);
-            this.windows = results[3];
+            this.buildings = results[3];
             this.suns = results[4];
             this.suns.rotation.y = Math.PI * -70 / 180;
 
-            obj.add(this.windows);
-            obj.add(this.suns);
-
-            let textures = results[5];
-            obj.add(textures);
-
-            obj.rotation.order = "YXZ";
             this.mesh = obj;
+            this.mesh.rotation.order = "YXZ";
+
+            // Clockwork rotation object
+            this.clockwork = new THREE.Object3D();
+            this.clockwork.rotation.order = "YXZ;"
+
+            // Starts as a child of the square which does the actual rotation
+            this.mesh.add(this.clockwork);
+            this.activeClockwork = this.mesh;
+
+            this.mesh.add(trees);
+            this.mesh.add(this.fountain);
+            this.mesh.add(this.extras);
+            this.mesh.add(this.buildings);
+            this.mesh.add(this.suns);
+
+            this.colliders = results[5];
+            this.mesh.add(this.colliders);
+
+            this.benches = results[6];
+            this.clockwork.add(this.benches);
+
+
+            this.addColliders();
+            this.setSquareMiddle();
+
             //this.mesh.scale.set(4,4,4);
             this.fountain.position.set(0.8,23.6, -0.6);
             //DebugUtil.positionObject(this.fountain, "Fountain");
@@ -90,13 +124,12 @@ export default class Square extends THREE.Object3D{
             loadingManager.itemEnd("Square");
 
             // INITIAL STATE
-            this.turnOffWindows();
             this.turnOffSuns();
             
 /*            events.emit("add_gui", obj.position, "x"); */
-            events.emit("add_gui",{}, obj.position, "y"); 
+            //events.emit("add_gui",{}, obj.position, "y"); 
             //events.emit("add_gui", obj.position, "z");
-            events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
+           // events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
 
         });
 
@@ -104,21 +137,31 @@ export default class Square extends THREE.Object3D{
             this.activateSun(name);
         });
         events.on("gaze_stopped", (name) => {
-            if (name == this.currentSun) {
-                this.turnOnSun(name);
-            } else {
-                this.turnOffSun(name);
+            this.deactivateSun(name);
+        });
+
+        events.on("angle_updated", (hour) => {
+            console.log("Square angle updated. Adding colliders");
+            this.addColliders();
+            this.setSquareMiddle(); 
+        });
+
+        events.on("control_threshold", (passed) => {
+            if (passed) {
+                this.mesh.remove(this.clockwork);
+                this.add(this.clockwork);
+                this.clockwork.rotation.copy(this.mesh.rotation);
+                this.activeClockwork = this.clockwork;
             }
         });
     }
-    update(dt) {
+    update(dt,et) {
         this.fountain.update(dt);
+        for (let i = 1; i < this.suns.children.length; i++) {
+            this.suns.children[i].children[1].update(dt,et)
+        }
     }
-
-    turnOffWindows() {
-        this.windows.children.forEach((obj) => {obj.visible = false});
-    }
-
+    
     turnOffSuns() {
         this.suns.children.forEach((obj) => {
             if (obj.children.length > 0) {
@@ -129,28 +172,40 @@ export default class Square extends THREE.Object3D{
 
     turnOffSun(name) {
         console.log("Turn off sun ", name);
-        let sun = this.suns.getObjectByName(name).children[0];
-        console.log("Turn off sun", sun);
-        sun.material.side = THREE.BackSide;
-        sun.material.color = new THREE.Color(0x000733);
-        sun.material.emissive = new THREE.Color(0x222223);
-        sun.material.specular = new THREE.Color(0x000000);
-        sun.material.opacity = .8;
+        let sun = this.suns.getObjectByName(name);
+        if (sun) {
+            let sunMesh = sun.children[0];
+            console.log("Turn off sun", sun);
+            //sun.material.side = THREE.BackSide;
+            sunMesh.material.color = new THREE.Color(0x888788);
+            //sun.material.specular = new THREE.Color(0x000000);
+            sunMesh.material.opacity = .8;
+            sunMesh.material.map = null;
+            sun.children[1].visible = false;
+        }
     }
 
     turnOnSun(name) {
-        let sun = this.suns.getObjectByName(name)
-        if (sun) {
-            if (this.currentSun) {
-                this.turnOffSun(this.currentSun);
+        if (this.suns) {
+            let sun = this.suns.getObjectByName(name)
+            if (sun) {
+                if (this.currentSun) {
+                    this.turnOffSun(this.currentSun);
+                }
+                let sunMesh = sun.children[0];
+                sunMesh.material.color = new THREE.Color(0xF4F5DC);
+          //      sunMesh.material.specular = new THREE.Color(0x000000);
+                //sunMesh.material.side = THREE.DoubleSide;
+                sunMesh.material.opacity = .8;
+                sunMesh.material.map = this.sunTexture;
+                sunMesh.material.needsUpdate = true;
+                this.currentSun = name;
+
+                // Show loader
+                sun.children[1].visible = true;
+
+                console.log("Turned on sun", sun);
             }
-            let sunMesh = sun.children[0];
-            console.log("Turn on sun", sun);
-            sunMesh.material.color = new THREE.Color(0xF4F5DC);
-            sunMesh.material.emissive = new THREE.Color(0xC8C5B9);
-            sunMesh.material.specular = new THREE.Color(0xFFFFFF);
-            sunMesh.material.side = THREE.DoubleSide;
-            this.currentSun = name;
         }
     }
 
@@ -160,36 +215,93 @@ export default class Square extends THREE.Object3D{
         if (sun) {
             let sunMesh = sun.children[0];
             console.log("Turn on sun", sun);
-            sunMesh.material.color = new THREE.Color(0xF4050C);
+            sunMesh.material.color = new THREE.Color(0x000733);
+            //sunMesh.material.color = new THREE.Color(0xF4050C);
             sunMesh.material.emissive = new THREE.Color(0xC80509);
             sunMesh.material.specular = new THREE.Color(0xFF0000);
             sunMesh.material.side = THREE.DoubleSide;
+
+            let sunLoader = sun.children[1];
+            sunLoader.organize();
         }
     }
 
-    loadWindows(loadingManager) {
+    deactivateSun(name) {
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            let sunLoader = sun.children[1];
+            sunLoader.disorganize();
+        }
+    }
+
+    explodeSun(name) {
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            let sunLoader = sun.children[1];
+            sunLoader.explode();
+        }
+    }
+
+    loadBuildings(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(WINDOWS_PATH,( obj ) => {
-                console.log("Loaded Windows ", obj );
+            loader.load(BUILDINGS_PATH,( obj ) => {
+                console.log("Loaded Buildings ", obj );
                 resolve(obj);
-            });
+            })
         });
     }
     loadSuns(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(SUNS_PATH,( obj ) => {
+                
+                console.log("Loaded suns ", obj);
+                // Add a loader to all  of the suns (First object is the nesting export)
+                for (let i = 1; i < obj.children.length; i++) {
+                    let sunLoader = new SunLoader(this.renderer);
+                    sunLoader.init();
+                    sunLoader.quaternion.copy(obj.children[i].children[0].quaternion);
+                    //obj.children[i].rotation.set(0,0,0);
+                    obj.children[i].add(sunLoader);
+                    obj.children[i].children[0].material.transparent = true;
+                    obj.children[i].children[0].geometry.dispose();
+                    obj.children[i].children[0].geometry = new THREE.SphereBufferGeometry( 0.3, 32, 32  );
+
+                    //debug 
+                /*
+events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "x", 0, 1);
+events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "y", 0, 1);
+*/
+
+                }
+
+                // Save the map
+                this.sunTexture = obj.children[1].children[0].material.map;
+
                 console.log("Loaded suns ", obj );
+
                 resolve(obj);
             });
         });
     }
-    loadTextures(loadingManager) {
+    loadColliders(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(TEXTURES_PATH,( obj ) => {
-                console.log("Loaded textures ", obj );
+            loader.load(COLLIDERS_PATH,( obj ) => {
+                let colliders;
+                obj.children  = _.filter(obj.children, function(o) { return (o.name != "BenchColliders2" && o.name != "BenchColliders"); });
+                obj.children.forEach((o) => {o.children.splice(0,1)});
+                console.log("Loaded square colliders ", obj);
+                resolve(obj);
+            });
+        });
+    }
+    loadBenches(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(BENCHES_PATH,( obj ) => {
+                console.log("Loaded square benches ", obj);
                 resolve(obj);
             });
         });
@@ -204,17 +316,7 @@ export default class Square extends THREE.Object3D{
                 this.updateMatrixWorld();
 
                 this.add(obj);
-                //obj.updateMatrixWorld();
                 //collisionManager.addBoundingBoxes(obj,this);
-
-                this.squareMiddle  = obj.getObjectByName("basin");
-                if (this.squareMiddle) {
-                    this.squareCenter  = new THREE.Vector3();
-                    this.squareCenter.setFromMatrixPosition(this.squareMiddle.matrixWorld);
-                    console.log("Square center", this.squareCenter);
-                } else {
-                    this.squareCenter = new THREE.Vector3(0,0,0);
-                }
 
                 this.sphereMesh = obj.getObjectByName("SkySphere").children[0];
                 console.log("Sky sphere", this.sphereMesh);
@@ -222,6 +324,27 @@ export default class Square extends THREE.Object3D{
             });
 
         });
+    }
+
+    setSquareMiddle() {
+        this.squareMiddle  = this.mesh.getObjectByName("f_06");
+        if (this.squareMiddle) {
+            this.squareCenter  = new THREE.Vector3();
+            this.squareCenter.setFromMatrixPosition(this.squareMiddle.matrixWorld);
+            console.log("Square center", this.squareCenter);
+        } else {
+            this.squareCenter = new THREE.Vector3(0,0,0);
+        }
+    }
+
+    addColliders() {
+        this.mesh.updateMatrixWorld(true);
+        //let aroundFountain  = this.mesh.getObjectByName("f_11_SubMesh 0");
+        /*
+        this.colliders.forEach((collider) => {
+            collider.matrixWorld.multiply(this.mesh.matrixWorld);
+        })*/
+        this.collisionManager.refreshSquareColliders(this.colliders.children);
     }
 
     getSphereMesh() {
@@ -244,5 +367,10 @@ export default class Square extends THREE.Object3D{
         } else {
             return null;
         }
+    }
+
+    getClockwork() {
+        return this.activeClockwork;
+
     }
 }

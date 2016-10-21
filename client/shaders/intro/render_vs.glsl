@@ -10,11 +10,9 @@ uniform float pointSize;
 void main() {
     vUv = uv;
 
-    vec3 newPosition = position; 
 
     //the mesh is a nomrliazed square so the uvs = the xy positions of the vertices
     vec3 pos = texture2D( positions, reference).xyz;
-
 
     //pos now contains the position of a point in space that can be transformed
     //gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );

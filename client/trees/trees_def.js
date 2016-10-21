@@ -15,10 +15,6 @@ export default {
          {
             name: "single",
             fileName: "singleTree.ply"
-        },
-            {
-            name: "bush",
-            fileName: "bush.ply"
         }
     ],
     instances: [
@@ -29,18 +25,18 @@ export default {
             rotateX: -10,
             scale: 4.3
         },
-        //  {
-        //     type: "ThreeTrees",
-        //     position: [4,22,14],
-        //     rotateX: -10,
-        //     scale: 4
-        // },
-        //  {
-        //     type: "ThreeTrees",
-        //     position: [42,24,2],
-        //     rotateX: 0,
-        //     scale: 4.4
-        // }, 
+         {
+            type: "ThreeTrees",
+            position: [4,22,14],
+            rotateX: -10,
+            scale: 4
+        },
+         {
+            type: "ThreeTrees",
+            position: [42,24,2],
+            rotateX: 0,
+            scale: 4.4
+        }, 
         {
             type: "ThreeTrees",
             position: [43,24,3],

@@ -24,6 +24,9 @@ import LupoAnimation from './animations/lupo'
 import MiriamAnimation from './animations/miriam'
 import HaimAnimation from './animations/haim'
 import ItzikAnimation from './animations/itzik'
+import MeirAnimation from './animations/meir'
+import MarkAnimation from './animations/mark'
+import Agam12PMAnimation from './animations/agam12pm'
 
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
@@ -34,13 +37,13 @@ export default class Game {
         this.config = config;
         this.started = false;
         this.shownWASD = false;
-        this.shownArrows = false;
         this.shownZoom = false;
     }
     init() {
 
         class TzinaEmitter extends EventEmitter {}
         this.emitter = new TzinaEmitter();
+        this.emitter.setMaxListeners(20);
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
@@ -92,17 +95,20 @@ export default class Game {
         this.dirLight.position.set( 0, 120, -200  );
         this.dirLight.color.setHSL(1,1,1);*/
 
-        this.dirLight = new THREE.PointLight(0xffffff, 1, 200);
+        this.dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
         this.dirLight.color.setHSL(0.1,0.42,0.9);
 
         //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
         //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
-        events.emit("add_gui", {folder:"Point light", listen:false}, this.dirLight, "intensity");
-        events.emit("add_gui", {folder:"Point light", listen:false}, this.dirLight, "distance");
 
-        events.emit("add_gui", {folder:"Hemi light", listen:false}, this.dirLight, "intensity");
-
-        DebugUtil.colorPicker("Point light", this.dirLight, "color");
+        // --- hide by laura --- start
+        events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,2);
+        events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,2);
+        events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
+        DebugUtil.colorPicker("Dir light", this.dirLight, "color");
+        DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
+        DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");
+        // --- hide by laura --- end
 
         //dirLight.target.position.set(0,100,0);
         //
@@ -116,7 +122,7 @@ export default class Game {
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
         // Square
-        this.square = new Square();
+        this.square = new Square(this.collisionManager, this.renderer, this.config);
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
@@ -140,20 +146,24 @@ export default class Game {
         this.zoomController.init();
 
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera);
-        this.timeController.init();
 
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
 
-
-        this.animations = {
-            /*
-            'Hannah' : new HannahAnimation(),
-            'Miriam' : new MiriamAnimation(this.renderer),
-            'Haim' : new HaimAnimation(this.renderer),
-            'Itzik' : new ItzikAnimation()
-            */
+        if (!this.config.noAnimations) {
+            this.animations = {
+                'Hannah' : new HannahAnimation(),
+                'Miriam' : new MiriamAnimation(this.renderer),
+                'Haim' : new HaimAnimation(this.renderer),
+                'Itzik' : new ItzikAnimation(),
+                'Meir' : new MeirAnimation(),
+                'Mark' : new MarkAnimation(),
+                'Agam12PM' : new Agam12PMAnimation()
+            }
+        } else {
+            this.animations = {};
         }
+
 
         this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager);
 
@@ -168,27 +178,6 @@ export default class Game {
         this.zoomGuidance.material.opacity = 0;
         this.scene.add(this.zoomGuidance);
 
-
-        let arrowGeo = new THREE.PlaneGeometry( 256, 128 );
-        let loader = new THREE.TextureLoader();
-        loader.load('assets/splash/left_arrow.png', (texture) => {
-            let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
-            material.opacity = 0;
-            this.leftArrow = new THREE.Mesh(arrowGeo, material);
-            this.leftArrow.position.set(-200, -145, 0);
-            this.scene.add(this.leftArrow);
-        });
-        loader.load('assets/splash/right_arrow.png', (texture) => {
-            let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
-            material.opacity = 0;
-            this.rightArrow = new THREE.Mesh(arrowGeo, material);
-            this.rightArrow.position.set(200, -150, 0);
-            this.rightArrow.opacity = 0;
-            this.scene.add(this.rightArrow);
-        });
-
-
-
         this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
     }
 
@@ -196,14 +185,14 @@ export default class Game {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
-            this.scene.add(this.square);
-            this.sky.applyToMesh(this.square.getSphereMesh());
-
-            this.introAni.initFBOParticle();
-            this.scene.add(this.introAni);
+            if (!this.config.noSquare) {
+                this.scene.add(this.square);
+                this.sky.applyToMesh(this.square.getSphereMesh());
+                this.introAni.initFBOParticle();
+                this.scene.add(this.introAni);
+            }
 
             // DebugUtil.positionEntry(this.square.ENTRY_POINTS[5], this.square.mesh, this.scene);
-
 
             onLoad();
         };
@@ -211,18 +200,25 @@ export default class Game {
             console.log("Error during load", err);
         };
 
+        this.loadingManager.onStart = (url,itemsLoaded, itemsTotal) => {
+            console.log("Loading ", url, "(" + itemsLoaded + "/" + itemsLoaded  + ")");
+        };
+
         this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            console.log("Loaded ", url, "(" + itemsLoaded + "/" +  itemsTotal + ")");
+            console.log("Loaded " + itemsLoaded + "/" +  itemsTotal);
         }
 
-        this.soundManager.init();
-        this.square.init(this.collisionManager, this.loadingManager);
-        this.introAni.init(this.loadingManager);
-        this.sky.init(this.loadingManager);
+        if (!this.config.noSquare) {
+            this.square.init(this.loadingManager);
+            this.introAni.init(this.loadingManager);
+            this.sky.init(this.loadingManager);
 
-        // Characters
-        console.log("Initializing characters");
-        this.characterController.init(this.loadingManager);
+            // Characters
+            console.log("Initializing characters");
+            this.characterController.init(this.loadingManager);
+        }
+        this.soundManager.init(this.loadingManager);
+        this.timeController.init(this.loadingManager);
 
         // WebVR
         this.vrEffect = new THREE.VREffect(this.renderer);
@@ -245,44 +241,48 @@ export default class Game {
         TweenMax.to(this.zoomGuidance.material, 1, {opacity: targetOpacity});
     }
 
-    showArrows() {
-        let targetOpacity = 1;
-        TweenMax.to(this.leftArrow.material, 1, {opacity: targetOpacity});
-        TweenMax.to(this.rightArrow.material, 1, {opacity: targetOpacity});
-    }
-
-    hideArrows() {
-        let targetOpacity = 0;
-        TweenMax.to(this.leftArrow.material, 1, {opacity: targetOpacity});
-        TweenMax.to(this.rightArrow.material, 1, {opacity: targetOpacity});
-    }
-
     start() {
         this.started = true;
-        this.vrManager.setMode_(2);
+        if (this.config.fullscreen) {
+            this.vrManager.setMode_(2);
+        }
         let element = this.renderer.domElement;
         this.container.appendChild(element);
         this.soundManager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
-        if (this.config.controls == "locked") {
-                this.vrControls = new TzinaVRControls(this.emitter, this.camera);
-                this.vrControls.standing = true;
+        if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
+                this.vrControls = new TzinaVRControls(this.emitter, this.camera);
+                this.vrControls.standing = true;
+                this.vrControls.basePosition.set(-5.5, 22,14);
+                // --- hide by laura --- start
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x");
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y");
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z");
+                // --- hide by laura --- end
         } else {
-            this.controls = new THREE.OrbitControls( this.camera, element );
+            console.log("Orbit controls");
+            this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+            this.keyboardController.init();
+            this.controls = new THREE.OrbitControls( this.camera  );
         }
 
         this.resize();
 
 
-        this.square.fountain.startCycle();
+        if (!this.config.noSquare) {
+            this.square.fountain.startCycle();
+        }
 
         if (this.config.skipIntro) {
-            this.timeController.transitionTo(17, 1); //17
+            if (!this.config.noSquare) {
+                this.timeController.transitionTo(this.config.startTime, 1);
+            }
             setTimeout(() => {
                 events.emit("intro_end");
-            },3000)
+            },3000);
+
         } else {
             // Init the intro
             this.intro.init();
@@ -292,8 +292,9 @@ export default class Game {
 
         events.on("intro_end", () => {
             console.log("Intro ended");
-            this.introAni.start();
-            this.arrowTimer();
+            if (!this.config.noSquare) {
+                this.introAni.start();
+            }
         });
 
         this.counter = 0;
@@ -320,22 +321,14 @@ export default class Game {
         });
 
         events.on("time_rotated", () => {
-            this.shownArrows = true;
-            this.scene.remove(this.leftArrow);
-            this.scene.remove(this.rightArrow);
         });
 
         events.on("base_position", () => {
-            this.arrowTimer();
         });
         events.on("chapter_threshold", (passed) => {
-            if (passed) {
-                this.hideArrows();
-            }
         });
 
         events.on("control_threshold", () => {
-            //this.introAni.start();
             if (!this.shownWASD) {
                 document.getElementById("wasd-container").style.display = "block";
                 setTimeout(() => {
@@ -384,40 +377,31 @@ export default class Game {
         });
     }
 
-    arrowTimer() {
-        if (!this.timeController.wasUsed) {
-            setTimeout(() => {
-                if (!this.timeController.wasd) {
-                    this.showArrows();
-                    setTimeout(() => {
-                        this.hideArrows();
-                    },4000);
-                }
-            }, 3000);
-        }
-    }
-
     animate(t) {
         this.update(this.clock.getDelta(), this.clock.getElapsedTime());
         this.render();
     }
 
     update(dt,et) {
-        this.sky.update(dt);
-        this.square.update(dt);
+        if (!this.config.noSquare) {
+            this.sky.update(dt);
+            this.square.update(dt,et);
+            this.timeController.update(dt,et);
+            this.characterController.update(dt,et);
+            this.intro.update();
+            this.introAni.update(dt,et);
+        }
         if (this.keyboardController) {
             this.keyboardController.update(dt);
-            this.zoomController.update(dt);
         }
-        this.timeController.update(dt);
-        this.characterController.update(dt,et);
+        this.zoomController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
+        } else {
+            this.controls.update();
         }
         this.collisionManager.update(dt);
         //this.flood.update(dt);
-        this.intro.update();
-        this.introAni.update(dt,et);
     }
 
     render() {
@@ -429,6 +413,7 @@ export default class Game {
     resize() {
         let width = this.container.offsetWidth;
         let height = this.container.offsetHeight;
+        console.log("Tzina set size ", width, height);
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);

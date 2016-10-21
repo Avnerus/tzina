@@ -1,6 +1,6 @@
 import Video360 from './util/video360'
 
-const CLOUDS_SEQUENCE_PATH = "assets/clouds/sequence.webm";
+const CLOUDS_SEQUENCE_PATH = "assets/clouds/sequence_r.webm";
 const CLOUDS_STATIC_PATH = "assets/clouds/static.png";
 
 const States = {
@@ -42,6 +42,7 @@ export default class Clouds {
     stopTransition() {
         this.currentState = States.STATIC
         this.cloudsVideo.pause();
+        this.cloudsVideo.video.currentTime = 0;
         this.targetShader.uniforms.cloudsMap.value = this.staticTexture;
     }
 }

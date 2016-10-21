@@ -1,6 +1,6 @@
 const SOUND_PATH = "assets/sound/"
 
-let fountain, highway_1, highway_2;
+let fountain, highway_1, highway_2, innerKikar, wind;
 
 export default class SoundManager {
     constructor(camera, scene) {
@@ -10,7 +10,7 @@ export default class SoundManager {
 
     }
 
-    init() {
+    init(loadingManager) {
 
         // Extending THREE.Audio
 
@@ -55,62 +55,84 @@ export default class SoundManager {
         this.camera.add(this.listener);
 
         //SOUNDS
+
+        //Fontain Water
         fountain = new THREE.PositionalAudio(this.listener);
-        fountain.position.set(3, 15, 95);
+        fountain.position.set(0, 20, 0);
         fountain.setRefDistance( 1 );
         fountain.autoplay = false;
         fountain.loop = true;
 
+        //Street Sound 1
         highway_1 = new THREE.PositionalAudio(this.listener);
         highway_1.position.set(-25, 15, 0);
         highway_1.autoplay = false;
         highway_1.loop = true;
 
+        //Street Sound 2
         highway_2 = new THREE.PositionalAudio(this.listener);
-        highway_2.position.set(3, 15, 170);
+        highway_2.position.set(25, 15, 0);
         highway_2.autoplay = false;
         highway_2.loop = true;
 
-        //DEBUG CUBES
-        /*
-        this.testCubeone = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
-        this.testCubeone.position.set(-25, 15, 0);
-        this.scene.add(this.testCubeone);
+        //Inner Kikar Sound
+        innerKikar = new THREE.PositionalAudio(this.listener);
+        innerKikar.position.set(0, 20, 0);
+        innerKikar.autoplay = false;
+        innerKikar.loop = true;
 
-        this.testCubetwo = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
-        this.testCubetwo.position.set(30, 10, 190);
-        this.scene.add(this.testCubetwo);*/
+        //Wind in the Trees
+        wind = new THREE.PositionalAudio(this.listener);
+        wind.position.set(0, 30, 20);
+        wind.autoplay = false;
+        wind.loop = true;
+
+        //DEBUG CUBE so I can show where the sound is coming from
+        this.testCubeone = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
+        this.testCubeone.position.set(0, 30, 20);
+        //this.scene.add(this.testCubeone);
 
         //SOUND ADDING
         this.scene.add(fountain);
         this.scene.add(highway_1);
         this.scene.add(highway_2);
+        this.scene.add(innerKikar);
+        this.scene.add(wind);
 
         //BUFFER THE SOUNDS INTO THE PROPER ELEMENTS
-        this.loader = new THREE.AudioLoader();
+        this.loader = new THREE.AudioLoader(loadingManager);
 
         // Dynamically loaded sounds
         this.sounds = {}
 
         // FOUNTAIN
-        this.loader.load(SOUND_PATH + 'fountain_water.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'Kikar_Inner.ogg', function(audioBuffer) {
             fountain.setBuffer(audioBuffer);
         }, function() {
-            console.log('Fountain sound loaded');
         });
 
         // HIGHWAY ONE
-        this.loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'Kikar_Ambiance_1_Loud.ogg', function(audioBuffer) {
             highway_1.setBuffer(audioBuffer);
         }, function() {
-            console.log('Highway one sound loaded');
         });
 
         // HIGHWAY TWO
-        this.loader.load(SOUND_PATH + 'ambient.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'Kikar_Ambiance_2_Loud.ogg', function(audioBuffer) {
             highway_2.setBuffer(audioBuffer);
         }, function() {
-            console.log('Highway two sound loaded');
+        });
+
+        // Inner Kikar sound
+        this.loader.load(SOUND_PATH + 'Pigeons_Center_Kikar.ogg', function(audioBuffer) {
+            innerKikar.setBuffer(audioBuffer);
+        }, function() {
+        });
+
+        // Wind
+        this.loader.load(SOUND_PATH + 'WindinTrees.ogg', function(audioBuffer) {
+            wind.setBuffer(audioBuffer);
+        }, function() {
         });
 
     }
@@ -121,6 +143,10 @@ export default class SoundManager {
         highway_1.play();
 
         highway_2.play();
+
+        innerKikar.play();
+
+        wind.play();
 
     }
 
@@ -153,6 +179,12 @@ export default class SoundManager {
 
         highway_2.pause();
         highway_2.currentTime = 0;
+
+        innerKikar.pause();
+        innerKikar.currentTime = 0;
+
+        wind.pause();
+        wind.currentTime = 0;
 
     }
 }

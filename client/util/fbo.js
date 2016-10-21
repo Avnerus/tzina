@@ -1,6 +1,4 @@
 // https://github.com/nicoptere/FBO
-import THREE from 'three'
-
 export default class FBO {
     constructor() {
         console.log("FBO Constructed")
@@ -52,15 +50,15 @@ export default class FBO {
 
 
         let particleVertices = particleGeometry.vertices;
-        console.log(particleVertices.length + " Particle vertices in each 'particle' ");
+        //console.log(particleVertices.length + " Particle vertices in each 'particle' ");
 
         // l is the number of 'elements'
         let l = (width * height );
-        console.log("Surface of the FBO: " + l);
+        //console.log("Surface of the FBO: " + l);
 
         // Each element is either one particle or a collection of particle vertices
         let points = l * particleVertices.length;
-        console.log("Number of points: " + points);
+        //console.log("Number of points: " + points);
 
         // Now let's fill up the vertices array
         let vertices = new Float32Array( points * 3 );
@@ -77,6 +75,9 @@ export default class FBO {
         //console.log("Vertices array: ", vertices);
 
         let references  = new Float32Array( points * 2);
+        let bigX = 0;
+        let bigY = 0;
+
         for(var vert = 0; vert < points; vert++ ) {
 
             var i = ~~(vert / 3);
@@ -85,7 +86,16 @@ export default class FBO {
 
             references[ vert * 2     ] = x;
             references[ vert * 2 + 1 ] = y;
+
+            if (x > bigX) {
+                bigX = x;
+            }
+            if (y > bigY) {
+                bigY = y;
+            }
         }
+
+        console.log("BIG X ", bigX, " BIG Y ", bigY);
 
         //create the particles geometry
         let geometry = new THREE.BufferGeometry();
@@ -102,7 +112,6 @@ export default class FBO {
         }
         else {
             this.particles = new THREE.Points( geometry, renderMaterial );
-            this.particles.frustumCulled = false;
         }
         this.renderer = renderer;
 
@@ -120,11 +129,11 @@ export default class FBO {
         this.rttIn = this.rttOut;
         this.rttOut = tmp;
 
-        this.simulationMaterial.uniforms.positions.value = this.rttIn;
+        this.simulationMaterial.uniforms.positions.value = this.rttIn.texture;
         this.renderer.render(this.scene, this.orthoCamera, this.rttOut, true );
 
         //2 use the result of the swap as the new position for the particles' renderer
-        this.particles.material.uniforms.positions.value = this.rttOut;
+        this.particles.material.uniforms.positions.value = this.rttOut.texture;
 
    }
 }

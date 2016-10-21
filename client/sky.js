@@ -71,11 +71,11 @@ export default class Sky {
 
         this.shader = new THREE.ShaderMaterial( {
             uniforms: {
-                luminance:	 { type: "f", value: 1.1 },
-                turbidity:	 { type: "f", value: 10 },
-                reileigh:	 { type: "f", value: 30.0},
+                luminance:	 { type: "f", value: 1.16 },
+                turbidity:	 { type: "f", value: -84 },
+                reileigh:	 { type: "f", value: 14.0},
                 mieCoefficient:	 { type: "f", value: 0.005 },
-                mieDirectionalG: { type: "f", value: 0.8 },
+                mieDirectionalG: { type: "f", value: 1.0 },
                 sunPosition: 	 { type: "v3", value: new THREE.Vector3() },
                 cloudsMap:   { type: "t"}
             },
@@ -97,13 +97,12 @@ export default class Sky {
 
 
 
-        /*
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.luminance, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.turbidity, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.reileigh, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieCoefficient, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieDirectionalG, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this, "spinFactor"); */
+        events.emit("add_gui", {folder:"Sun shader", step: 0.01, listen:false}, this.shader.uniforms.luminance, "value", 1.0,2.0); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.turbidity, "value",-200,200); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.reileigh, "value",-200.0, 200.0); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false,step:0.001}, this.shader.uniforms.mieCoefficient, "value",0,1); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieDirectionalG, "value",0,1); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this, "spinFactor"); 
 
         events.emit("add_gui",{
             onChange: () => {
@@ -120,7 +119,7 @@ export default class Sky {
 
 
         events.on("gaze_started", () => {
-            this.clouds.startTransition();
+            //this.clouds.startTransition();
         });
         events.on("gaze_stopped", () => {
             this.clouds.stopTransition();
@@ -142,7 +141,7 @@ export default class Sky {
         let flareColor = new THREE.Color( 0xffffff );
         flareColor.setHSL( lightHSL.h, lightHSL.s, lightHSL.l + 0.5 );
 
-        this.lensFlare = new THREE.LensFlare( textureFlare0, 200, 0.0, THREE.AdditiveBlending, flareColor );
+        this.lensFlare = new THREE.LensFlare( textureFlare0, 100, 0.0, THREE.AdditiveBlending, flareColor );
 
         this.lensFlare.add( textureFlare2, 512, 0.0, THREE.AdditiveBlending );
         this.lensFlare.add( textureFlare2, 512, 0.0, THREE.AdditiveBlending );
@@ -290,10 +289,10 @@ export default class Sky {
 
     updateHemiLght() {
         if (this.currentTime > 0 && this.currentTime <= 14  ) {
-            this.hemiLight.intensity = 0.3 * (this.currentTime / 14) * (this.currentTime / 14);
+            this.hemiLight.intensity = 0.6 * (this.currentTime / 14) * (this.currentTime / 14);
         } 
         else if (this.currentTime > 14 && this.currentTime <= 23) {
-            this.hemiLight.intensity = 0.3 * ((23 - this.currentTime) / 9) * ((23 - this.currentTime) / 9);
+            this.hemiLight.intensity = 0.6 * ((23 - this.currentTime) / 9) * ((23 - this.currentTime) / 9);
         }
         else {
             this.hemiLight.intensity = 0;

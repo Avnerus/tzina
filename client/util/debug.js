@@ -17,10 +17,10 @@ export default {
         events.emit("add_gui", {folder:name}, cube.position, "z"); 
         return cube;
     },
-    positionObject: function(object, name, listen = false, min=-20,max=20, angles) {
-        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.1}, object.position, "x"); 
-        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.1}, object.position, "y");
-        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.1}, object.position, "z");
+    positionObject: function(object, name, listen = false, min=-40,max=40, angles) {
+        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "x", min, max); 
+        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "y", min, max * 2);
+        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "z", min, max);
 
         if (angles) {
             object.angleRotation = {x: angles[0], y: angles[1], z: angles[2]};
@@ -30,19 +30,20 @@ export default {
         events.emit("add_gui", {
                     folder:name + " - Rotation",
                     onChange: () => {object.rotation.x = object.angleRotation.x * Math.PI / 180}
-        }, object.angleRotation, "x"); 
+        }, object.angleRotation, "x", 0, 360); 
         events.emit("add_gui", {
                     folder:name + " - Rotation",
                     onChange: () => {object.rotation.y = object.angleRotation.y * Math.PI / 180}
-        }, object.angleRotation, "y"); 
+        }, object.angleRotation, "y", 0, 360); 
         events.emit("add_gui", {
                     folder:name + " - Rotation",
                     onChange: () => {object.rotation.z = object.angleRotation.z * Math.PI / 180}
-        }, object.angleRotation, "z");
+        }, object.angleRotation, "z", 0, 360);
 
-        events.emit("add_gui", {folder:name + " - Scale", listen: listen}, object.scale, "x"); 
-        events.emit("add_gui", {folder:name + " - Scale",  listen: listen}, object.scale, "y"); 
-        events.emit("add_gui", {folder:name + " - Scale", listen: listen}, object.scale, "z");
+        object.global = object.scale.x;
+        events.emit("add_gui", {folder:name + " - Scale", listen: listen, step: 0.01, onChange: () => {
+           object.scale.set(object.global, object.global, object.global);
+        }}, object, "global",0,4); 
     },
 
     fastForward : function(video) {
@@ -83,5 +84,11 @@ export default {
             )
             scene.add(cube3);
         }
+    },
+
+    donePositioning: function(name) {
+        events.emit("remove_gui_folder", name + " - Position");
+        events.emit("remove_gui_folder", name + " - Rotation");
+        events.emit("remove_gui_folder", name + " - Scale");
     }
 }
