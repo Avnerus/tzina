@@ -125,7 +125,7 @@ export default
 			"hour": 12,
 			"timeLimitMinutes" : 8,
             "titlePosition": [0, 110, 0],
-            "insideTitlePosition": [4, -7, -2],
+            "insideTitlePosition": [3, -4, -2],
 			"characters": [
 				"Mark",
                 "LupoDogs12PM",                
