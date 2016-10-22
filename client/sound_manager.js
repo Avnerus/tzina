@@ -158,25 +158,32 @@ class StaticSoundSampler{
   // pause(){}
 }
 //this is a proposition of how to manage positional sounds:
-class PositionalSampler extends THREE.PositionalAudio{
+class PositionalSampler{
   constructor(listener){
-    super(listener);
-    let audioContext=this.context;
     //create the module for sound blur
-    this.blurModule=new BlurModule(audioContext);
+    this.context=listener.context;
+    this.positionalAudio = new THREE.PositionalAudio(listener);
+    this.blurModule=new BlurModule(this.context);
+    this.context=this.positionalAudio.context;
+    //allows positionalSampler.position.set()
+    // this.position=this.positionalAudio.postion;
+    this.position={
+      set:function(i){console.log(i);}
+    }
   }
   setBlur(value){
     this.blurModule.control(value);
   }
   init(sampleUrl,loadingManager,scene,loadReadyCallback){
     console.log("initializing a positionalSampler",[sampleUrl,loadingManager,scene,loadReadyCallback]);
+    let positionalAudio=this.positionalAudio;
+    let context=this.context;
+    let thisPositionalSampler=this;
     //pendant: probably we want to use Promise here
     this.loader = new THREE.AudioLoader(loadingManager);
     this.sampleUrl=sampleUrl;
     this.scene=scene;
-    let audioContext=this.context;
-    let thisPositionalSampler=this;
-    //blurModule loads a impulse response audio file
+    //blurModule loads an impulse response audio file
     this.blurModule.init(loadingManager);
 
 
@@ -185,17 +192,14 @@ class PositionalSampler extends THREE.PositionalAudio{
 
     //load the sample that was provided through call parameter before
     this.loader.load(this.sampleUrl, function(audioBuffer) {
-
       //onload
-      thisPositionalSampler.setBuffer(audioBuffer);
-      var source = thisPositionalSampler.context.createBufferSource();
-      thisPositionalSampler.source=source;
-
+      console.log("audiobuffer loaded");
+      positionalAudio.setBuffer(audioBuffer);
+      // var source = thisPositionalSampler.context.createBufferSource();
+      // thisPositionalSampler.source=source;
       if(loadReadyCallback){
         loadReadyCallback(thisPositionalSampler);
       }
-
-
     }, function() {
       //onprogress
     }, function(e) {
@@ -210,26 +214,17 @@ class PositionalSampler extends THREE.PositionalAudio{
     //DEBUG CUBE so I can show where the sound is coming from
     this.testCube = new THREE.Mesh(new THREE.BoxGeometry(1, 20, 1), new THREE.MeshBasicMaterial({color:0x00ff00}));
     this.testCube.position.set(this.position.x,this.position.y,this.position.z);
-
     this.scene.add(this.testCube);
-
   }
-  play(loop){
+  play(){
     console.log("playing a positionalSampler");
-    if ( this.isPlaying === true ) {
-			console.warn( 'THREE.Audio: Audio is already playing.' );
-			return;
-		}
-		if ( this.hasPlaybackControl === false ) {
-			console.warn( 'THREE.Audio: this Audio has no playback control.' );
-			return;
-    }
-    if(this.source){
-      this.source.loop = loop||false;
-      this.source.start();
-    }else{
-      console.warn("thisStaticSoundSampler mistake: you requested to play, but the source has not been loaded yet");
-    }
+    // super.play();
+
+    // if(this.source){
+      this.source.play();
+    // }else{
+      // console.warn("thisStaticSoundSampler mistake: you requested to play, but the source has not been loaded yet");
+    // }
   }
   // will we need these functions?
   // stop(){
@@ -307,6 +302,8 @@ export default class SoundManager {
         //Fontain Water
         fountain=new PositionalSampler(this.listener);
         // fountain = new THREE.PositionalAudio(this.listener);
+        console.log("sound","following line is error");
+        console.log("sound",fountain.position);
         fountain.position.set(0, 20, 0);
         fountain.setRefDistance( 1 );
         // fountain.autoplay = false;
