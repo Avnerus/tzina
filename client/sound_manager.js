@@ -1,6 +1,6 @@
 const SOUND_PATH = "assets/sound/"
 
-let fountain, highway_1, highway_2, innerKikar, wind;
+let fountain, highway_1, highway_2, innerKikar, wind, testsound;
 
 class BlurModule{
   constructor(audioContext){
@@ -158,25 +158,90 @@ class StaticSoundSampler{
   // pause(){}
 }
 //this is a proposition of how to manage positional sounds:
-/*
-class positionalSoundSampler{
-  constructor(properties){
-    //set default properties to myself
-    this.position=[0,0,0];
-    //apply properties to myself overwriting defaults
-    for(let a in properties){
-      this[a]=properites[a];
-    }
-    positionalAudio = new THREE.PositionalAudio(this.listener);
-    positionalAudio.position.set(this.position[0], this.position[1], this.position[2]);
-    positionalAudio.setRefDistance( 1 );
-    positionalAudio.autoplay = false;
-    positionalAudio.loop = true;
+class PositionalSampler extends THREE.PositionalAudio{
+  constructor(listener){
+    super(listener);
+    let audioContext=this.context;
+    //create the module for sound blur
+    this.blurModule=new BlurModule(audioContext);
+  }
+  setBlur(value){
+    this.blurModule.control(value);
+  }
+  init(sampleUrl,loadingManager,scene,loadReadyCallback){
+    console.log("initializing a positionalSampler",[sampleUrl,loadingManager,scene,loadReadyCallback]);
+    //pendant: probably we want to use Promise here
+    this.loader = new THREE.AudioLoader(loadingManager);
+    this.sampleUrl=sampleUrl;
+    this.scene=scene;
+    let audioContext=this.context;
+    let thisPositionalSampler=this;
+    //blurModule loads a impulse response audio file
+    this.blurModule.init(loadingManager);
+
+
+    // source.connect(this.blurModule.inputNode);
+    // this.blurModule.connect(context.destination);
+
+    //load the sample that was provided through call parameter before
+    this.loader.load(this.sampleUrl, function(audioBuffer) {
+
+      //onload
+      thisPositionalSampler.setBuffer(audioBuffer);
+      var source = thisPositionalSampler.context.createBufferSource();
+      thisPositionalSampler.source=source;
+
+      if(loadReadyCallback){
+        loadReadyCallback(thisPositionalSampler);
+      }
+
+
+    }, function() {
+      //onprogress
+    }, function(e) {
+      console.error(e);
+    });
+
+
+    scene.add(this);
 
   }
-  // [...]
+  createDebugCube(){
+    //DEBUG CUBE so I can show where the sound is coming from
+    this.testCube = new THREE.Mesh(new THREE.BoxGeometry(1, 20, 1), new THREE.MeshBasicMaterial({color:0x00ff00}));
+    this.testCube.position.set(this.position.x,this.position.y,this.position.z);
+
+    this.scene.add(this.testCube);
+
+  }
+  play(loop){
+    console.log("playing a positionalSampler");
+    if ( this.isPlaying === true ) {
+			console.warn( 'THREE.Audio: Audio is already playing.' );
+			return;
+		}
+		if ( this.hasPlaybackControl === false ) {
+			console.warn( 'THREE.Audio: this Audio has no playback control.' );
+			return;
+    }
+    if(this.source){
+      this.source.loop = loop||false;
+      this.source.start();
+    }else{
+      console.warn("thisStaticSoundSampler mistake: you requested to play, but the source has not been loaded yet");
+    }
+  }
+  // will we need these functions?
+  // stop(){
+  //   if(this.source){
+  //     this.source.stop();
+  //     source.loop = loop||false;
+  //   }else{
+  //     console.warn("thisStaticSoundSampler mistake: you requested to stop, but the source has not been loaded yet");
+  //   }
+  // }
+  // pause(){}
 }
-*/
 
 export default class SoundManager {
     constructor(camera, scene) {
@@ -240,47 +305,80 @@ export default class SoundManager {
         //SOUNDS
 
         //Fontain Water
-        fountain = new THREE.PositionalAudio(this.listener);
+        fountain=new PositionalSampler(this.listener);
+        // fountain = new THREE.PositionalAudio(this.listener);
         fountain.position.set(0, 20, 0);
         fountain.setRefDistance( 1 );
-        fountain.autoplay = false;
-        fountain.loop = true;
+        // fountain.autoplay = false;
+        // fountain.loop = true;
+        fountain.init(SOUND_PATH + 'Kikar_Inner.ogg',loadingManager,this.scene,function(){
+          console.log("fountain sound loaded and initialized");
+          fountain.createDebugCube();
+        });
 
         //Street Sound 1
-        highway_1 = new THREE.PositionalAudio(this.listener);
+        highway_1=new PositionalSampler(this.listener);
+        // highway_1 = new THREE.PositionalAudio(this.listener);
         highway_1.position.set(-25, 15, 0);
-        highway_1.autoplay = false;
-        highway_1.loop = true;
+        // highway_1.autoplay = false;
+        // highway_1.loop = true;
+        highway_1.init(SOUND_PATH + 'Kikar_Ambiance_1_Loud.ogg',loadingManager,this.scene,function(){
+          console.log("highway_1 sound loaded and initialized");
+          highway_1.createDebugCube();
+        });
 
         //Street Sound 2
-        highway_2 = new THREE.PositionalAudio(this.listener);
+        highway_2=new PositionalSampler(this.listener);
+        // highway_2 = new THREE.PositionalAudio(this.listener);
         highway_2.position.set(25, 15, 0);
-        highway_2.autoplay = false;
-        highway_2.loop = true;
+        // highway_2.autoplay = false;
+        // highway_2.loop = true;
+        highway_2.init(SOUND_PATH + 'Kikar_Ambiance_2_Loud.ogg',loadingManager,this.scene,function(){
+          console.log("highway_2 sound loaded and initialized");
+          highway_2.createDebugCube();
+        });
 
         //Inner Kikar Sound
-        innerKikar = new THREE.PositionalAudio(this.listener);
+        innerKikar = new PositionalSampler(this.listener);
+        // innerKikar = new THREE.PositionalAudio(this.listener);
         innerKikar.position.set(0, 20, 0);
-        innerKikar.autoplay = false;
-        innerKikar.loop = true;
+        // innerKikar.autoplay = false;
+        // innerKikar.loop = true;
+        innerKikar.init(SOUND_PATH + 'Pigeons_Center_Kikar.ogg',loadingManager,this.scene,function(){
+          console.log("innerKikar sound loaded and initialized");
+          innerKikar.createDebugCube();
+        });
 
         //Wind in the Trees
-        wind = new THREE.PositionalAudio(this.listener);
+        wind = new PositionalSampler(this.listener);
+        // wind = new THREE.PositionalAudio(this.listener);
         wind.position.set(0, 30, 20);
-        wind.autoplay = false;
-        wind.loop = true;
+        // wind.autoplay = false;
+        // wind.loop = true;
+        wind.init(SOUND_PATH + 'WindinTrees.ogg',loadingManager,this.scene,function(){
+          console.log("wind sound loaded and initialized");
+          wind.createDebugCube();
+        });
 
-        //DEBUG CUBE so I can show where the sound is coming from
-        this.testCubeone = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
-        this.testCubeone.position.set(0, 30, 20);
-        //this.scene.add(this.testCubeone);
+        //Fontain Water
+        testsound=new PositionalSampler(this.listener);
+        // fountain = new THREE.PositionalAudio(this.listener);
+        testsound.position.set(0, 20, 0);
+        // testsound.setRefDistance( 1 );
+        // fountain.autoplay = false;
+        // fountain.loop = true;
+        testsound.init(SOUND_PATH + 'testsound.wav',loadingManager,this.scene,function(){
+          console.log("fountain sound loaded and initialized");
+          testsound.createDebugCube();
+        });
+
 
         //SOUND ADDING
-        this.scene.add(fountain);
-        this.scene.add(highway_1);
-        this.scene.add(highway_2);
-        this.scene.add(innerKikar);
-        this.scene.add(wind);
+        // this.scene.add(fountain);
+        // this.scene.add(highway_1);
+        // this.scene.add(highway_2);
+        // this.scene.add(innerKikar);
+        // this.scene.add(wind);
 
         //BUFFER THE SOUNDS INTO THE PROPER ELEMENTS
         this.loader = new THREE.AudioLoader(loadingManager);
@@ -289,34 +387,34 @@ export default class SoundManager {
         this.sounds = {}
 
         // FOUNTAIN
-        this.loader.load(SOUND_PATH + 'Kikar_Inner.ogg', function(audioBuffer) {
-            fountain.setBuffer(audioBuffer);
-        }, function() {
-        });
-
-        // HIGHWAY ONE
-        this.loader.load(SOUND_PATH + 'Kikar_Ambiance_1_Loud.ogg', function(audioBuffer) {
-            highway_1.setBuffer(audioBuffer);
-        }, function() {
-        });
-
-        // HIGHWAY TWO
-        this.loader.load(SOUND_PATH + 'Kikar_Ambiance_2_Loud.ogg', function(audioBuffer) {
-            highway_2.setBuffer(audioBuffer);
-        }, function() {
-        });
-
-        // Inner Kikar sound
-        this.loader.load(SOUND_PATH + 'Pigeons_Center_Kikar.ogg', function(audioBuffer) {
-            innerKikar.setBuffer(audioBuffer);
-        }, function() {
-        });
-
-        // Wind
-        this.loader.load(SOUND_PATH + 'WindinTrees.ogg', function(audioBuffer) {
-            wind.setBuffer(audioBuffer);
-        }, function() {
-        });
+        // this.loader.load(SOUND_PATH + 'Kikar_Inner.ogg', function(audioBuffer) {
+        //     // fountain.setBuffer(audioBuffer);
+        // }, function() {
+        // });
+        //
+        // // HIGHWAY ONE
+        // this.loader.load(SOUND_PATH + 'Kikar_Ambiance_1_Loud.ogg', function(audioBuffer) {
+        //     // highway_1.setBuffer(audioBuffer);
+        // }, function() {
+        // });
+        //
+        // // HIGHWAY TWO
+        // this.loader.load(SOUND_PATH + 'Kikar_Ambiance_2_Loud.ogg', function(audioBuffer) {
+        //     // highway_2.setBuffer(audioBuffer);
+        // }, function() {
+        // });
+        //
+        // // Inner Kikar sound
+        // this.loader.load(SOUND_PATH + 'Pigeons_Center_Kikar.ogg', function(audioBuffer) {
+        //     // innerKikar.setBuffer(audioBuffer);
+        // }, function() {
+        // });
+        //
+        // // Wind
+        // this.loader.load(SOUND_PATH + 'WindinTrees.ogg', function(audioBuffer) {
+        //     // wind.setBuffer(audioBuffer);
+        // }, function() {
+        // });
         this.activateEventListeners();
     }
     activateEventListeners(){
@@ -329,15 +427,12 @@ export default class SoundManager {
       }else if(setName=="flyingSound"){
       }else if(!setName){
         console.warn("SoundManager was called to play without providing a setName");
-        fountain.play();
-
-        highway_1.play();
-
-        highway_2.play();
-
-        innerKikar.play();
-
-        wind.play();
+        fountain.play(true);
+        highway_1.play(true);
+        highway_2.play(true);
+        innerKikar.play(true);
+        wind.play(true);
+        testsound.play(true);
       }else{
         console.warn("SoundManager was called to play but the parameter setName didn't match any statement "+setName);
       }
@@ -364,20 +459,20 @@ export default class SoundManager {
         });
     }
     pause() {
-        fountain.pause();
-        fountain.currentTime = 0;
+        // fountain.pause();
+        // fountain.currentTime = 0;
 
-        highway_1.pause();
-        highway_1.currentTime = 0;
+        // highway_1.pause();
+        // highway_1.currentTime = 0;
 
         highway_2.pause();
         highway_2.currentTime = 0;
 
-        innerKikar.pause();
-        innerKikar.currentTime = 0;
+        // innerKikar.pause();
+        // innerKikar.currentTime = 0;
 
-        wind.pause();
-        wind.currentTime = 0;
+        // wind.pause();
+        // wind.currentTime = 0;
 
     }
 }
