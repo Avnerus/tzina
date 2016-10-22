@@ -5,7 +5,7 @@ import DebugUtil from './util/debug'
 export default class Trees extends THREE.Object3D {
     constructor() {
         super();
-        this.debug = true;
+        this.debug = false;
     }
 
     init(loadingManager) {
