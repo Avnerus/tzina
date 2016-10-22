@@ -282,7 +282,7 @@ export default class Square extends THREE.Object3D{
                         stroke.position.set(0,0,0);
                         stroke.scale.set(1,1,1);
                         stroke.children[0].geometry.dispose();
-                        stroke.children[0].geometry = new THREE.SphereBufferGeometry( 2.5, 32, 32  );
+                        stroke.children[0].geometry = new THREE.SphereBufferGeometry( 2.1, 32, 32  );
                         parent.add(stroke);
 
                         reorderedSuns.add(parent);
