@@ -45,7 +45,7 @@ export default class SunGazer extends THREE.Object3D  {
                 let thresholdPassed = false;
 
                 // Skip the first child because it is a null parent
-                for (let i = 1; i < this.square.suns.children.length && !thresholdPassed; i++) {
+                for (let i = 0; i < this.square.suns.children.length && !thresholdPassed; i++) {
                     let sun = this.square.suns.children[i];
                     if (sun.name != this.square.currentSun) {
                         let res = this.getDotProduct(camVector, sun.children[0]);

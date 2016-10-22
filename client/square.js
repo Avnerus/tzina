@@ -63,6 +63,7 @@ export default class Square extends THREE.Object3D{
 
         this.currentSun = null;
         this.activatedSun = null;
+        this.controlPassed = false;
     }
     init(loadingManager) {
         loadingManager.itemStart("Square");
@@ -149,11 +150,18 @@ export default class Square extends THREE.Object3D{
         });
 
         events.on("control_threshold", (passed) => {
+            this.controlPassed = passed;
             if (passed) {
                 this.mesh.remove(this.clockwork);
                 this.add(this.clockwork);
                 this.clockwork.rotation.copy(this.mesh.rotation);
                 this.activeClockwork = this.clockwork;
+
+                // Show the hidden loader
+                let sun = this.suns.getObjectByName(this.currentSun)
+                if (sun) {
+                    sun.getObjectByName(this.currentSun + "_L").visible = true;
+                }
             }
         });
     }
@@ -204,7 +212,9 @@ export default class Square extends THREE.Object3D{
                 this.currentSun = name;
 
                 // Show loader
-                sun.getObjectByName(name + "_L").visible = true;
+                if (this.controlPassed) {
+                    sun.getObjectByName(name + "_L").visible = true;
+                }
 
                 console.log("Turned on sun", sun);
             }

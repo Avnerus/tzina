@@ -176,6 +176,7 @@ export default class TimeController {
             if (this.gazeCounter >= 4) {
 
                 let targetHour = this.gazeHour;
+                let baseHour = this.currentHour;
                 this.gazeHour = -1;
                 console.log("Time controller - Performing transition to " + targetHour + "!");
                 this.clockRunning = false;
@@ -193,7 +194,7 @@ export default class TimeController {
                         }
                         targetRotationY *= Math.PI / 180;
                         console.log("Time controller - rotating square from ", this.square.getClockwork().rotation.y, " to ", targetRotationY);
-                        TweenMax.to(this.square.getClockwork().rotation, 7, {ease: Power2.easeInOut, delay: 1, y: targetRotationY, onComplete: () => {
+                        TweenMax.to(this.square.getClockwork().rotation, 7 * (Math.abs(targetHour - baseHour) * 0.5), {ease: Power2.easeInOut, delay: 1, y: targetRotationY, onComplete: () => {
                             events.emit("angle_updated", this.currentHour);
                             this.updateNextHour();
                             this.sunGazer.active = true;
