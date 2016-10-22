@@ -172,10 +172,9 @@ export default class Character extends THREE.Object3D {
         this.idleVideo.pause();
         this.idleVideo.unload();
 
-        this.idleVideo.mesh.visible = true;
-        this.fullVideo.mesh.visible = false;
-        this.idleVideo.wire.visible = true;
-        this.fullVideo.wire.visible = false;
+        this.remove(this.fullVideo);
+        this.remove(this.idleVideo);
+
         this.playingFull = false;
         if (this.props.subtitles) {
             this.subtitlesVideo.src = "";
