@@ -127,15 +127,26 @@ export default class IntroAnimation extends THREE.Object3D {
             // this.initFBOParticle( positions );
         });
 
-        loader.load(this.BASE_PATH + "/models/terrain4.json", (geometry, material) => {
-            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x17212c, shininess:10, shading: THREE.FlatShading}) ); //0x005a78
+        let blueprint = tex_loader.load( this.BASE_PATH + '/images/blueprint_edit.jpg' );
+        let blueprintEmi = tex_loader.load( this.BASE_PATH + '/images/blueprint_emi.png' );
+        blueprint.wrapS = THREE.RepeatWrapping;
+        blueprint.wrapT = THREE.RepeatWrapping;
+        blueprintEmi.wrapS = THREE.RepeatWrapping;
+        blueprintEmi.wrapT = THREE.RepeatWrapping;
+        loader.load(this.BASE_PATH + "/models/terrain5.json", (geometry, material) => {
+            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({ map:blueprint, color: 0x31475e,
+                                                                                   emissiveMap:blueprintEmi, emissive:0xffffff, emissiveIntensity: 0,
+                                                                                   shininess:10, shading: THREE.FlatShading}) ); //0x17212c
+            TweenMax.to(this.terrain.material, 2, {emissiveIntensity:.4, repeat:-1, yoyo:true, repeatDelay:4, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: .5, points: 20, taper: "none", randomize: true, clamp: false})});
+
             // this.terrain.scale.set(150,50,110);//80,50,50
             this.terrain.scale.multiplyScalar(15);
             // this.terrain.rotation.y = Math.PI;
-            this.terrain.position.set(0,-3000,200);
+            this.terrain.position.set(-1000,-3000,200);
             this.add( this.terrain );
         });
 
+        /*
         let houseTex = tex_loader.load( this.BASE_PATH + '/images/house_lowSat.jpg' );
         let houseEmisTex = tex_loader.load( this.BASE_PATH + '/images/house_EMI.png' );
         loader.load(this.BASE_PATH + "/models/house3.json", (geometry, material) => {
@@ -148,7 +159,7 @@ export default class IntroAnimation extends THREE.Object3D {
             this.house.position.set(0,-3000,200);
             this.add( this.house );
         });
-
+        */
 
         this.completeSequenceSetup();
         //
