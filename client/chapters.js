@@ -9,8 +9,7 @@ export default
 			"characters": [
 				"Meir",
 				"Rami",
-				"Yedida",
-				"shirin1"
+				"Shirin7AM"
 			],
 			"introfile": [
 				"Meir",

@@ -255,12 +255,15 @@ export default class Game {
                 this.keyboardController.init();
                 this.vrControls = new TzinaVRControls(this.emitter, this.camera);
                 this.vrControls.standing = true;
-                this.vrControls.basePosition.set(-5.5, 22,14);
+                this.vrControls.basePosition.set(5.7,8.3,1);
+                // this.vrControls.scale = 1.5;
+
                 // --- hide by laura --- start
                 events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x");
                 events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y");
                 events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z");
                 // --- hide by laura --- end
+                events.emit("add_gui", {folder: "Camera"}, this.camera.position, "y");
         } else {
             console.log("Orbit controls");
             this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)

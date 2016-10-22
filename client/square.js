@@ -118,9 +118,16 @@ export default class Square extends THREE.Object3D{
             this.addColliders();
             this.setSquareMiddle();
 
-            //this.mesh.scale.set(4,4,4);
+            // VIVE SCALES
+            /*
+            this.mesh.scale.set(0.4, 0.4, 0.4);
+            this.benches.scale.set(2,2,2);
+            this.benches.position.set(7.13,-34,8);
+            this.buildings.scale.set(3,3,3); 
+                */
+
             this.fountain.position.set(0.8,23.6, -0.6);
-            //DebugUtil.positionObject(this.fountain, "Fountain");
+            DebugUtil.positionObject(this.benches, "Benches");
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             console.log("Finished loading square");

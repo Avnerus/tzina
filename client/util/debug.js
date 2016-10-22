@@ -17,7 +17,7 @@ export default {
         events.emit("add_gui", {folder:name}, cube.position, "z"); 
         return cube;
     },
-    positionObject: function(object, name, listen = false, min=-40,max=40, angles) {
+    positionObject: function(object, name, listen = false, min=-50,max=50, angles) {
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "x", min, max); 
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "y", min, max * 2);
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "z", min, max);
