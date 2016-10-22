@@ -7,9 +7,9 @@ uniform float uvdy;
 uniform float uvdx;
 
 varying float clipping;
-varying float holes;
 
-uniform float treshold;
+varying float holes_y;
+varying float holes_x;
 
 varying vec2 vUv;
 
@@ -17,7 +17,9 @@ void main() {
 
     if ( clipping < 0.75 ) discard;
 
-    if ( holes < 1.7 ) discard;
+    if ( holes_y < 1.7 ) discard;
+
+    if ( holes_x < 1.2 ) discard;
 
     vec3 bright = vec3(brightness,brightness,brightness);
 

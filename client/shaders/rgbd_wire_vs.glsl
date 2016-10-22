@@ -8,7 +8,8 @@ const float fy = 0.832305;
 uniform sampler2D map;
 
 varying float clipping;
-varying float holes;
+varying float holes_y;
+varying float holes_x;
 varying vec2 vUv;
 
 vec3 rgb2hsl( vec3 color ) {
@@ -65,7 +66,9 @@ void main() {
 
     clipping = hsl.z * 2.1;
 
-    holes = hsl.y * 1.7;
+    holes_y = hsl.y * 1.7;
+
+    holes_x = hsl.x * 1.7;
 
     gl_Position = projectionMatrix * modelViewMatrix * pos;
 }

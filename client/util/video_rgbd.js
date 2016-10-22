@@ -99,7 +99,7 @@ export default class VideoRGBD  {
 
         //DebugUtil.positionObject(this.wire, this.properties.fileName + " - Wire", false);
 
-        this.wire.position.z = 0.01;
+        this.wire.position.z = 0.03;
 
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
