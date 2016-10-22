@@ -101,6 +101,7 @@ export default class VideoRGBD  {
 
         this.wire.position.z = 0.03;
 
+
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
 
