@@ -30,21 +30,21 @@ export default
 				},
 					{
 					name: "pocketCam",
-					position: [10,21.8,-12],
-					rotation: [0,275,0],
-					scale: 0.17
+					position: [10.1,21.75,-12.94],
+					rotation: [0,271,0],
+					scale: 0.18
 				},
 					{
-					name: "oldmansit",
-					position: [12.36,22.2,-10.5],
-					rotation: [180,255,0],
+					name: "manOnBench",
+					position: [8.68,21.8,-16.83],
+					rotation: [0,108,0],
 					scale: 0.19
 				},
 					{
-					name: "BlackGuy",
-					position: [-5.9,22.02,-1.73],
-					rotation: [0,263,0],
-					scale: 0.25
+					name: "tashlih",
+					position: [-1,21.8.-21.23],
+					rotation: [360,360,187],
+					scale: 0.7
 				}
 			],
 
