@@ -77,39 +77,39 @@ export default
 				},
 				       {
      		       name: "oldmansit",
-       			   position: [12.7,22.3,-10],
-      			   rotation: [180,255,0],
-         			 scale: 0.21
+       			   position: [0.72,22.5,-7.55],
+      			   rotation: [183,0,0],
+         			 scale: 0.22
     			    },
     		     {
                     name: "sweetLady",
-                    position: [-6.57,21.9,10.2],
-                    rotation: [0,86,0],
-                    scale: 0.22
+                    position: [16.7,21.3,-3.8],
+                    rotation: [0,312,0],
+                    scale: 0.2
      		   },
 				    {
       			    name: "grandpa",
-        			  position: [10.6,22,5.32],
-      	  			  rotation:[0,251,0],
-       				  scale: 0.21
+        			  position: [12.36,21.3,0.69],
+      	  			  rotation:[360,0,0],
+       				  scale: 0.22
     	    },
          	 {
        			   name: "grandma",
-      			   position: [10.3,21.9,4.1],
-        		   rotation:[0,141,0],
+      			   position: [13.26,21.3,0.69],
+        		   rotation:[0,320,0],
          		   scale: 0.1
        		 },
        		 {
           name: "firstcouple",
-          position: [1.8,22.2,12.36],
-          rotation: [0,255,0],
-          scale: 0.18
+          position: [1.59,21.3,-14.57],
+          rotation: [0,244,0],
+          scale: 0.21
         },
         	 {
           name: "AnlenGrandma",
-          position: [2.8,22.2,12.36],
-          rotation: [0,255,0],
-          scale: 0.18
+          position: [12.36,21.3,10.56],
+          rotation: [0,90,0],
+          scale: 0.15
         }
 			],
 
