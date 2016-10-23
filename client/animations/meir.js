@@ -330,8 +330,9 @@ export default class MeirAnimation extends THREE.Object3D {
     }
 
     createBackBirdAnimations( again ){
+        let b_b_length = this.backBirds.children.length;
         for(let i=0; i<this.backBirds.children.length; i++){
-            let tl = new TimelineMax({repeat: -1, repeatDelay: 2, delay: i%5});
+            let tl = new TimelineMax({repeat: -1, repeatDelay: 1+(i/b_b_length), delay: (i%5)+(i/b_b_length) });
 
             let index = this.birdAniConfig[i];
             let birdAniSetting = this.birdsAniSetting[ i%3 ];
