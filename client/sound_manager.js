@@ -8,6 +8,9 @@ class StaticSoundSampler{
   constructor(audioContext){
     this.blurModule=new BlurModule(audioContext);
     this.audioContext=audioContext;
+    //in practical terms, where to connect the blurmodule:
+    //if static, will be an audiocontext, but if positional, will be positional audionode
+    this.staticSoundOutputDestination=audioContext.destination;
   }
   setToLoop(loopValue){
     if(loopValue!==undefined){
@@ -32,7 +35,7 @@ class StaticSoundSampler{
     //connect my buffer source to the blur module, and then the blur module to the output.
     try{
       source.connect(this.blurModule.inputNode);
-      this.blurModule.connect(audioContext.destination);
+      this.blurModule.connect(this.staticSoundOutputDestination);
     }catch(e){
       console.log(this.blurModule,this.blurModule.inputNode,audioContext.destination);
       console.error(e);
@@ -71,18 +74,24 @@ class StaticSoundSampler{
 class PositionalSoundSampler extends StaticSoundSampler{
   constructor(listener){
     let audioContext=listener.context;
-    super(audioContext,sampleUrl);
+    super(audioContext);
+    let connectorNode=audioContext.createGain();
+    this.staticSoundOutputDestination=connectorNode;
     this.positionalAudio=new THREE.PositionalAudio(listener);
-    this.positionalAudio.setNodeSource(this.BlurModule.outputNode);
+    this.positionalAudio.setNodeSource(connectorNode);
     this.position=this.positionalAudio.position;
+    // this.position=this.positionalAudio.position;
   }
   init(sampleUrl,loadingManager,loadReadyCallback){
     super.init(sampleUrl,loadingManager,loadReadyCallback);
+    this.positionalAudio.setRefDistance( 1 );
+    this.positionalAudio.autoplay = false;
+    // this.positionalAudio.setLoop(true);
   }
 
-  createDebugCube(scene){
+  createDebugCube(scene,incolor){
     //DEBUG CUBE so I can show where the sound is coming from
-    this.testCube = new THREE.Mesh(new THREE.BoxGeometry(1, 20, 1), new THREE.MeshBasicMaterial({color:0x00ff00}));
+    this.testCube = new THREE.Mesh(new THREE.BoxGeometry(0.3, 10, 0.3), new THREE.MeshBasicMaterial({color:incolor||0x0000FFCC}));
     this.testCube.position.set(this.position.x,this.position.y,this.position.z);
     scene.add(this.testCube);
   }
@@ -95,6 +104,7 @@ export default class SoundManager {
         this.scene = scene;
     }
     init(loadingManager) {
+      let thisSoundManager=this;
       console.log("initializing a SoundManager");
 
       // test sound player
@@ -163,35 +173,36 @@ export default class SoundManager {
         fountain.setRefDistance( 1 );
         fountain.autoplay = false;
         fountain.setLoop(true);
-        fountain.createDebugCube(this.scene);
+        // fountain.createDebugCube(this.scene);
 
         //Street Sound 1
         highway_1 = new THREE.PositionalAudio(this.listener);
         highway_1.position.set(-25, 15, 0);
         highway_1.autoplay = false;
         highway_1.setLoop(true);
-        highway_1.createDebugCube(this.scene);
+        // highway_1.createDebugCube(this.scene);
 
         //Street Sound 2
         highway_2 = new THREE.PositionalAudio(this.listener);
         highway_2.position.set(25, 15, 0);
         highway_2.autoplay = false;
         highway_2.setLoop(true);
-        highway_2.createDebugCube(this.scene);
+        // highway_2.createDebugCube(this.scene);
 
         //Inner Kikar Sound
         innerKikar = new THREE.PositionalAudio(this.listener);
         innerKikar.position.set(0, 20, 0);
         innerKikar.autoplay = false;
         innerKikar.setLoop(true);
-        innerKikar.createDebugCube(this.scene,{color:0xFF0000});
+        // innerKikar.createDebugCube(this.scene);
 
         //Wind in the Trees
         wind = new THREE.PositionalAudio(this.listener);
         wind.position.set(0, 30, 20);
         wind.autoplay = false;
         wind.setLoop(true);
-        wind.createDebugCube(this.scene);
+        // wind.createDebugCube(this.scene);
+
 
         //DEBUG CUBE so I can show where the sound is coming from
         // this.testCubeone = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshNormalMaterial());
@@ -207,6 +218,15 @@ export default class SoundManager {
 
         //BUFFER THE SOUNDS INTO THE PROPER ELEMENTS
         this.loader = new THREE.AudioLoader(loadingManager);
+
+        let testsound=new PositionalSoundSampler(this.listener);
+        testsound.position.set(0, 5, 5);
+        testsound.createDebugCube(this.scene,0xFF0000);
+        testsound.init(SOUND_PATH + "testsound.ogg",loadingManager,function(a){
+          console.log("testsound loaded",a);
+          a.setToLoop();
+          a.play();
+        });
 
         // Dynamically loaded sounds
         this.sounds = {}
@@ -230,7 +250,7 @@ export default class SoundManager {
         });
 
         // Inner Kikar sound
-        this.loader.load(SOUND_PATH + "testsound.ogg"/*'Pigeons_Center_Kikar.ogg'*/, function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'Pigeons_Center_Kikar.ogg', function(audioBuffer) {
             innerKikar.setBuffer(audioBuffer);
         }, function() {
         });
