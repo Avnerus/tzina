@@ -3,9 +3,12 @@ const TREES_PATH = "assets/trees"
 import DebugUtil from './util/debug'
 
 export default class Trees extends THREE.Object3D {
-    constructor() {
+    constructor(camera, renderer) {
         super();
         this.debug = false;
+
+        this.camera = camera;
+        this.renderer = renderer;
     }
 
     init(loadingManager) {
@@ -20,7 +23,11 @@ export default class Trees extends THREE.Object3D {
                 let material = new THREE.PointsMaterial( { size: 0.13, vertexColors: true } );
                 let counter = 0;
                 TreesDef.instances.forEach((instance) => {
-                    let mesh = new THREE.Points( treeTypes[instance.type], material );
+        //            let mesh = new THREE.Points( treeTypes[instance.type], material );
+                    let mesh = new Potree.PointCloudOctree(treeTypes[instance.type]);
+                    //mesh.material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+                    mesh.material.size = 0.1;
+                    mesh.material.lights = false;
                     mesh.position.fromArray(instance.position);
                     if (instance.scale) {
                         mesh.scale.multiplyScalar(instance.scale);
@@ -51,10 +58,16 @@ export default class Trees extends THREE.Object3D {
     loadType(props,store) {
         return new Promise((resolve, reject) => {
             console.log("Loading tree type ", props);
-            this.treesLoader.load(TREES_PATH + "/" + props.fileName ,( geometry ) => {
+            Potree.POCLoader.load(TREES_PATH + "/" + props.fileName,( geometry ) => {
                 store[props.name] = geometry;
                 resolve();
             });
         });
+    }
+
+    update(dt,et) {
+        for (let i = 0; i < this.children.length; i++) {
+            this.children[i].update(this.camera, this.renderer);
+        }  
     }
 }
