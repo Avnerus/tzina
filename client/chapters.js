@@ -150,21 +150,33 @@ export default
 			//	},
 				{
 					name: "100_",
-					position: [-5.24,22.1,8.84],
-					rotation:[0,73,0],
+					position: [10.73,21.3,11.62],
+					rotation:[18,139,349],
 					scale: 0.15
 				},
 				{
 					name: "dude",
-					position: [8.84,22,-1.72],
+					position: [8.93,21.4,-8.12],
 					rotation:[0,65,0],
 					scale: 0.2
 				},
+				{
+                    name: "twoNiceJewishMen",
+                    position: [16.11,22.8,14.32],
+                    rotation: [184,75,342],
+                    scale: 0.27
+				},
 					{
 					name: "kadafi",
-					position: [-0.84,22.2,15],
+					position: [7.14,23.2,-7.22],
 					rotation:[176,125,0],
-					scale: 0.23
+					scale: 0.24
+				},
+					{
+					name: "BlackGuy",
+					position: [17.91,21.4,-2.3],
+					rotation:[360,289,0],
+					scale: 0.24
 				}
 			],
 			"effects" : [
@@ -202,12 +214,7 @@ export default
                     rotation: [0,271,0],
                     scale: 0.26
 				},
-				{
-                    name: "twoNiceJewishMen",
-                    position: [12.36,23.4,16.76],
-                    rotation: [184,42,342],
-                    scale: 0.27
-				},
+				
 				{
                     name: "blueLady",
                     position: [10.2,21.85,-12],

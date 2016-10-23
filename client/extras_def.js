@@ -49,8 +49,32 @@ export default {
             name: "firstcouple",
             fileName: "firstcouple/cloud.js",
             pointSize : 0.010
+        },
+              {
+            name: "kadafi",
+            fileName: "kadafi/cloud.js",
+            pointSize : 0.014
+        },
+          {
+            name: "100_",
+            fileName: "100_/cloud.js",
+            pointSize : 0.012
+        },
+         {
+            name: "twoNiceJewishMen",
+           fileName: "twoNiceJewishMen/cloud.js",
+            pointSize : 0.011
+      },
+       {
+            name: "dude",
+            fileName: "dude/cloud.js",
+            pointSize : 0.011
+        },
+       {
+          name: "BlackGuy",
+           fileName: "BlackGuy/cloud.js",
+            pointSize : 0.012
         }
-
     ]
 }
 
