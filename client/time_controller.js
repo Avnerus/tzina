@@ -30,6 +30,10 @@ export default class TimeController {
         this.done = false;
 
         this.accelerating = false;
+
+        this.currentChapter;
+
+        this.chapterProgress = {};
     }
     init(loadingManager) {
         console.log("Initializing Time Controller", this.element)
@@ -41,6 +45,16 @@ export default class TimeController {
         this.currentHour = 0;
         this.nextHour = this.times[1];
 
+        // Chapter progress
+        Chapters.forEach((chapter) => {
+            this.chapterProgress[chapter.hour] = {};
+            chapter.characters.forEach((character) => {
+                this.chapterProgress[chapter.hour][character] = 0;
+            });
+        });
+        console.log("Chapters progress ", this.chapterProgress);
+
+
         events.on("chapter_threshold", (passed) => {
             this.active = !passed;
         });
@@ -50,6 +64,7 @@ export default class TimeController {
                 this.scene.remove(this.chapterTitle);
                 this.scene.remove(this.prevChapterTitle);
                 this.square.turnOnSun(this.currentHour.toString());
+                this.updateSunProgress();
             }
             this.clockRunning = passed;
         });
@@ -62,13 +77,26 @@ export default class TimeController {
                 this.stickToAngle(closestAngle);
                 this.currentHour = closestHour;
 
+                this.setCurrentChapter();
                 this.showChapterTitle();
             }
         });
 
         events.on("intro_end", () => {
-           this.showChapterTitle();
+            this.setCurrentChapter();
+            this.showChapterTitle();
             this.active = true;
+        });
+
+        events.on("character_progress", (data) => {
+            if (
+                this.chapterProgress[this.currentChapter.hour] &&
+                typeof(this.chapterProgress[this.currentChapter.hour][data.name]) != 'undefined'
+            ) {
+
+                this.chapterProgress[this.currentChapter.hour][data.name] = data.time;
+                this.updateSunProgress();
+            }            
         });
 
         let TEXT_DEFINITION = {
@@ -94,7 +122,7 @@ export default class TimeController {
 
         this.insideChapterTitle = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitle.scale.multiplyScalar(0.04);
-        DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+        //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
 
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
@@ -121,6 +149,15 @@ export default class TimeController {
         });
     }
 
+    updateSunProgress() {
+        let sum = 0;
+        _.forEach(this.chapterProgress[this.currentChapter.hour], (value, key) => {
+            sum += value;
+        });
+
+        this.square.updateSunProgress(this.currentChapter.hour.toString(), sum / this.currentChapter.totalTime);
+    }
+
     update(dt,et) {
         if (this.active && this.rotateVelocity != 0) {
             if (!this.wasUsed) {
@@ -143,6 +180,7 @@ export default class TimeController {
                   {
                 this.currentHour = this.nextHour;
                 let roundHour = this.nextHour;
+                this.setCurrentChapter();
                 events.emit("hour_updated", roundHour);
                 this.square.turnOnSun(this.currentHour.toString());
                 console.log("Time controller - next chapter");
@@ -187,6 +225,7 @@ export default class TimeController {
                         this.sunGazer.stop();
                         this.sunGazer.active = false;
                         this.square.turnOnSun(this.currentHour.toString());
+                        this.setCurrentChapter();
                         events.emit("hour_updated", this.currentHour);
                         let targetRotationY = this.currentHour * 15;
                         if (targetRotationY > 180) {
@@ -227,6 +266,7 @@ export default class TimeController {
         if (closestHour != this.currentHour) {
             this.currentHour = closestHour;
             this.updateNextHour();
+            this.setCurrentChapter();
             this.showChapterTitle();
             events.emit("hour_updated", this.currentHour);
         }
@@ -308,6 +348,7 @@ export default class TimeController {
         TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {
             this.currentHour = hour;
             this.updateNextHour();
+            this.setCurrentChapter();
             this.showChapterTitle();
             events.emit("hour_updated", this.currentHour);
             events.emit("angle_updated", this.currentHour);
@@ -316,8 +357,11 @@ export default class TimeController {
         }});
     }
 
+    setCurrentChapter() {
+        this.currentChapter = _.find(Chapters, {hour: this.currentHour });
+    }
+
     showChapterTitle() {
-        let chapter = _.find(Chapters, {hour: this.currentHour });
         if (this.chapterTitle.visible) {
             this.prevChapterTitle.visible = true;
             this.prevChapterTitle.text = this.chapterTitle.text;
@@ -326,9 +370,9 @@ export default class TimeController {
             TweenMax.to(this.prevChapterTitle.material, 1, {opacity: 0});
         }
         let targetOpacity = 1.0;
-        this.chapterTitle.text = chapter.hour + ":00 - " + chapter.name;
+        this.chapterTitle.text = this.currentChapter.hour + ":00 - " + this.currentChapter.name;
         this.chapterTitle.visible = true;
-        this.chapterTitle.position.fromArray(chapter.titlePosition);
+        this.chapterTitle.position.fromArray(this.currentChapter.titlePosition);
         this.chapterTitle.material.opacity = 0;
 
         TweenMax.to(this.chapterTitle.material, 1, {opacity: targetOpacity});
@@ -381,7 +425,9 @@ export default class TimeController {
     setTime(hour) {
         this.currentHour = hour;
         this.currentRotation = hour * 15;
+        this.setCurrentChapter();
         this.updateSquare();
+        this.setCurrentChapter();
         this.showChapterTitle();
         events.emit("hour_updated", this.currentHour);
         events.emit("angle_updated", this.currentHour);
@@ -391,8 +437,10 @@ export default class TimeController {
     jumpToTime(hour) {
         this.currentHour = hour;
         this.sky.setTime(this.currentHour);
+        this.setCurrentChapter();
         events.emit("hour_updated", this.currentHour);
         events.emit("angle_updated", this.currentHour);
+        this.setCurrentChapter();
         this.showChapterTitle();
         this.updateNextHour();
     }

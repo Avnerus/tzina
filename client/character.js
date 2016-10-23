@@ -62,8 +62,11 @@ export default class Character extends THREE.Object3D {
                 this.add(this.fullVideo.wire);
 
                 this.fullVideo.video.addEventListener('timeupdate',() => {
-                    if (this.playingFull && this.animation) {
-                        this.animation.updateVideoTime(this.fullVideo.video.currentTime);
+                    if (this.playingFull) {
+                        if (this.animation) {
+                            this.animation.updateVideoTime(this.fullVideo.video.currentTime);
+                        }
+                        events.emit("character_progress", {name: this.props.name, time: this.fullVideo.video.currentTime});
                     }
                 },false);
 

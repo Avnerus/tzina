@@ -4,6 +4,7 @@ export default
 			"name": "excitement/awakeness",
 			"hour": 7,
 			"timeLimitMinutes" : 10,
+            "totalTime" : 330,
             "titlePosition": [-105, 45, 0],
             "insideTitlePosition": [-5, 2, -1],
 			"characters": [
@@ -63,6 +64,7 @@ export default
 		"name": "family/home",
 			"hour": 9,
 			"timeLimitMinutes" : 13,
+            "totalTime" : 540,
             "titlePosition": [-90, 90, 0],
             "insideTitlePosition": [0, -1, 0],
 			"characters": [
@@ -123,6 +125,7 @@ export default
 		"name": "emptiness/boredom",
 			"hour": 12,
 			"timeLimitMinutes" : 8,
+            "totalTime" : 590,
             "titlePosition": [0, 110, 0],
             "insideTitlePosition": [3, -4, -2],
 			"characters": [
@@ -177,6 +180,7 @@ export default
 		"name": "distrust/betrayal",
 			"hour": 17,
             "titlePosition": [85, 100, 0],
+            "totalTime" : 500,
             "insideTitlePosition": [0, 5, 0],
 			"timeLimitMinutes" : 12,
 			"characters": [
@@ -232,6 +236,7 @@ export default
 		"name": "despair/loneliness",
 			"hour": 19,
 			"timeLimitMinutes" : 12,
+            "totalTime" : 610,
             "titlePosition": [120, 65, 0],
             "insideTitlePosition": [0, 2, 0],
 			"characters": [
