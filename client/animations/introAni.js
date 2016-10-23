@@ -137,7 +137,7 @@ export default class IntroAnimation extends THREE.Object3D {
             this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({ map:blueprint, color: 0x31475e,
                                                                                    emissiveMap:blueprintEmi, emissive:0xffffff, emissiveIntensity: 0,
                                                                                    shininess:10, shading: THREE.FlatShading}) ); //0x17212c
-            TweenMax.to(this.terrain.material, 2, {emissiveIntensity:.4, repeat:-1, yoyo:true, repeatDelay:4, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: .5, points: 20, taper: "none", randomize: true, clamp: false})});
+            //TweenMax.to(this.terrain.material, 2, {emissiveIntensity:.4, repeat:-1, yoyo:true, repeatDelay:4, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: .5, points: 20, taper: "none", randomize: true, clamp: false})});
 
             // this.terrain.scale.set(150,50,110);//80,50,50
             this.terrain.scale.multiplyScalar(15);

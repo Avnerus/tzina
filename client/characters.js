@@ -93,7 +93,7 @@ export default [
         basePath : 'assets/characters/meir',
         mindepth : 1482.958618164,
         maxdepth : 2514.773681641,
-        position : [-1, 21.96, -7.55],
+        position : [-1, 22, -7.55],
         rotation: [7, -192, 8],
         animation: 'Meir',
         uvdy: 0.4931640625,
@@ -101,7 +101,7 @@ export default [
         uvdx: 0.0,
         scale: 0.003 * 0.25,
         animationScale: 0.18,
-        animationPosition: [-0.5,0,-0.4],
+        animationPosition: [-0.45,0,-0.4],
         animationRotation: [7,25,-8],
         space: 4,
         subtitles: null
