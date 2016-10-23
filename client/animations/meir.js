@@ -42,6 +42,9 @@ export default class MeirAnimation extends THREE.Object3D {
         }
 
         this.birds = [];
+        
+        this.backBirds = new THREE.Object3D();
+
         /// ANI-SETTING ----------------------------------------------------
 
         //v.1
@@ -124,6 +127,7 @@ export default class MeirAnimation extends THREE.Object3D {
             0,0,2,1
         ];
         this.birdAniTimelines = [];
+        this.backbirdAniTimelines = [];
 
         // behind bear, behind shoulder, 4 appearing
         let birdPosNum = [
@@ -164,6 +168,13 @@ export default class MeirAnimation extends THREE.Object3D {
         // this.add(testCube);
 
         this.dummy = {opacity: 1};
+
+        this.pinBall = new THREE.Mesh( new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide}) );
+        //this.pinBall.position.copy( this.parent.fullVideo.mesh.geometry.faces[100].position );
+        this.add(this.pinBall);
+        // console.log(this.parent);
+        // this.parent.fullvideo.updateMatrixWorld();
+
         //
         this.loadingManager.itemEnd("MeirAnim");
     }
@@ -193,9 +204,16 @@ export default class MeirAnimation extends THREE.Object3D {
         for(let i=0; i<this.birdAniTimelines.length; i++){
             this.birdAniTimelines[i].kill();
         }
+        for(let i=0; i<this.backbirdAniTimelines.length; i++){
+            this.backbirdAniTimelines[i].kill();
+        }
+
         // flap and down to the rail
         for(let i=0; i<this.birds.length; i++){
             this.birdFlapDown( this.birds[i], i );
+        }
+        for(let i=0; i<this.backBirds.children.length; i++){
+            this.backBirdFlapDown( this.backBirds.children[i], i );
         }
 
         // TweenMax.to( this.smokeMat, 1, {opacity: 1});
@@ -210,6 +228,7 @@ export default class MeirAnimation extends THREE.Object3D {
 
                 // back to animation routine
                 this.createBirdAnimations( true );
+                this.createBackBirdAnimations( true );
             } } );
     }
 
@@ -242,7 +261,38 @@ export default class MeirAnimation extends THREE.Object3D {
                             // DebugUtil.positionObject(bd, "bird_"+i);
                     }
 
+                    for(let i=3; i<10; i++){
+                        let mathStuff = Math.PI*2/12*i;
+                        for(let j=0; j<15; j++){
+                            let bd = this.bird.clone();
+                            bd.scale.multiplyScalar(0.2);
+
+                            let tempA = new THREE.Vector3();
+                            if(j>9)
+                                tempA.set( Math.sin(mathStuff)*(1-j/18), j/3, Math.cos(mathStuff)*(1-j/18) );
+                            else if(j<3)
+                                tempA.set( Math.sin(mathStuff)*(1+(3-j)/4), j/3, Math.cos(mathStuff)*(1+(3-j)/4) );
+                            else
+                                tempA.set( Math.sin(mathStuff)*1, j/3, Math.cos(mathStuff)*1 );
+                            
+                            tempA.set( tempA.x + this.lookupTable[(i*j)%49]*0.3,
+                                       tempA.y + this.lookupTable[(i*j)%50]*0.3,
+                                       tempA.z + this.lookupTable[(i*j)%51]*0.3 );
+                            
+                            bd.position.copy( tempA );
+                            bd.rotation.y = mathStuff - Math.PI*2;
+                            
+                            this.backBirds.add(bd);
+                        }
+                    }
+                    this.add(this.backBirds);
+                    this.backBirds.position.set(1.1, -0.1, 3.3);
+                    this.backBirds.rotation.x = 4.5 * Math.PI/180;
+                    DebugUtil.positionObject(this.backBirds, "backBirds");
+
                     this.createBirdAnimations( false );
+
+                    this.createBackBirdAnimations( false );
                 });
             });
         });
@@ -276,6 +326,28 @@ export default class MeirAnimation extends THREE.Object3D {
                 this.birdAniTimelines[i] = tl;
             }
             
+        }
+    }
+
+    createBackBirdAnimations( again ){
+        for(let i=0; i<this.backBirds.children.length; i++){
+            let tl = new TimelineMax({repeat: -1, repeatDelay: 2, delay: i%5});
+
+            let index = this.birdAniConfig[i];
+            let birdAniSetting = this.birdsAniSetting[ i%3 ];
+
+            for(let j=0; j<birdAniSetting.seqNum; j++){
+                let tweenLabelTime = "+="+birdAniSetting.timeGap[j];
+                tl.add( birdAniSetting.label[j], tweenLabelTime );
+
+                let tweenToBeAdded = this.selectBirdAnimation( this.backBirds.children[i], birdAniSetting.seq[j] );
+                tl.add( tweenToBeAdded, birdAniSetting.label[j] );
+            }
+            if(!again){
+                this.backbirdAniTimelines.push( tl );
+            } else {
+                this.backbirdAniTimelines[i] = tl;
+            }
         }
     }
 
@@ -402,10 +474,10 @@ export default class MeirAnimation extends THREE.Object3D {
 
         if(_out){
             direction = 1;
-            mov = .9;
+            mov = 1.1;
         } else {
             direction = 0;
-            mov = -.9;
+            mov = -1.1;
         }
 
         let t1 = TweenMax.to( _bird.rotation, 0.5, { x:10*Math.PI/180*direction} );
@@ -414,18 +486,34 @@ export default class MeirAnimation extends THREE.Object3D {
     }
 
     birdFlap( _bird ){
-        let t1 = TweenMax.to( _bird.children[0].rotation, 0.15, { x:10*Math.PI/180, y:40*Math.PI/180, repeat: 3, yoyo: true} );
-        let t2 = TweenMax.to( _bird.children[1].rotation, 0.15, { x:10*Math.PI/180, y:-40*Math.PI/180, repeat: 3, yoyo: true} );
+        let rotY = 40*Math.PI/180;
+        let t1 = TweenMax.to( _bird.children[0].rotation, 0.15, { x:10*Math.PI/180, y:"+="+rotY, repeat: 3, yoyo: true} );
+        let t2 = TweenMax.to( _bird.children[1].rotation, 0.15, { x:10*Math.PI/180, y:"-="+rotY, repeat: 3, yoyo: true} );
         let t3 = TweenMax.to( _bird.position, 0.2, { y:"+=0.1", repeat: 1, yoyo: true, delay: 0.1 } );
 
         return [t1, t2, t3];
     }
 
     birdFlapDown( _bird, index ){
-        TweenMax.to( _bird.children[0].rotation, 0.15, { x:10*Math.PI/180, y:40*Math.PI/180, repeat: 7, yoyo: true, delay: index*0.1} );
-        TweenMax.to( _bird.children[1].rotation, 0.15, { x:10*Math.PI/180, y:-40*Math.PI/180, repeat: 7, yoyo: true, delay: index*0.1} );
+        let rotY = 40*Math.PI/180;
+        TweenMax.to( _bird.children[0].rotation, 0.15, { x:10*Math.PI/180, y:"+="+rotY, repeat: 7, yoyo: true, delay: index*0.1} );
+        TweenMax.to( _bird.children[1].rotation, 0.15, { x:10*Math.PI/180, y:"-="+rotY, repeat: 7, yoyo: true, delay: index*0.1} );
         TweenMax.to( _bird.position, 0.2, { y:"+=0.1", delay: index*0.1+1, onComplete: ()=>{
             TweenMax.to( _bird.position, 2, { x:this.birdsDownPos[index].x, y:this.birdsDownPos[index].y, z:this.birdsDownPos[index].z} );
+        } } );
+    }
+
+    backBirdFlapDown( _bird, index ){
+        let rotY = 40*Math.PI/180;
+        TweenMax.to( _bird.children[0].rotation, 0.15, { x:10*Math.PI/180, y:"+="+rotY, repeat: 7, yoyo: true, delay: (index*0.1)%1.5} );
+        TweenMax.to( _bird.children[1].rotation, 0.15, { x:10*Math.PI/180, y:"-="+rotY, repeat: 7, yoyo: true, delay: (index*0.1)%1.5} );
+        TweenMax.to( _bird.position, 0.2, { y:"+=0.1", delay: (index*0.1+1)%1.5, onComplete: ()=>{
+            let xPos = this.birdsDownPos[index%14].x + this.lookupTable[index%49]*3 - this.backBirds.position.x;
+            let yPos = this.birdsDownPos[index%14].y - this.backBirds.position.y;
+            let zPos = this.birdsDownPos[index%14].z + this.lookupTable[index%51]*2 - this.backBirds.position.z - 2;
+            
+            TweenMax.to( _bird.position, 2, { x:xPos, y:yPos, z:zPos} );
+            TweenMax.to( _bird.rotation, 2, { y:0 } );
         } } );
     }
     
@@ -434,29 +522,35 @@ export default class MeirAnimation extends THREE.Object3D {
     }
 
     birdTurn( _bird ){
-        return TweenMax.to( _bird.rotation, 0.2, { y:10*Math.PI/180, repeat: 1, yoyo: true, repeatDelay: 1, onComplete: ()=>{
-                TweenMax.to( _bird.rotation, 0.2, { y:-10*Math.PI/180, repeat: 1, yoyo: true, repeatDelay: 0.5});
+        let rotY = 10*Math.PI/180;
+        return TweenMax.to( _bird.rotation, 0.2, { y:"+="+rotY, repeat: 1, yoyo: true, repeatDelay: 1, onComplete: ()=>{
+                TweenMax.to( _bird.rotation, 0.2, { y:"-="+rotY, repeat: 1, yoyo: true, repeatDelay: 0.5});
             }} );
     }
 
     birdJumpTurnV1( _bird ){
+        let oriRotY = _bird.rotation.y;
+        let rotY = 20*Math.PI/180;
         let t1 = TweenMax.to( _bird.position, 0.15, { y:"+=0.05", repeat: 1, yoyo: true, onComplete: ()=>{
                 TweenMax.to( _bird.position, 0.15, { y:"+=0.05", repeat: 1, yoyo: true, delay: 1 });
-                TweenMax.to( _bird.rotation, 0.2, { y:0, delay: 1.1 } );
+                TweenMax.to( _bird.rotation, 0.2, { y:oriRotY, delay: 1.1 } );
             }} );
-        let t2 = TweenMax.to( _bird.rotation, 0.2, { y:20*Math.PI/180, delay: 0.1} );
+        let t2 = TweenMax.to( _bird.rotation, 0.2, { y:"+="+rotY, delay: 0.1} );
         return [t1, t2];
     }
 
     birdJumpTurnV2( _bird ){
+        let oriRotY = _bird.rotation.y;
+        let rotY = 10*Math.PI/180;
+        let rotY2 = 30*Math.PI/180;
         let t1 = TweenMax.to( _bird.position, 0.2, { y:"+=0.02", repeat: 1, yoyo: true, repeatDelay: 2, onComplete: ()=>{
                 TweenMax.to( _bird.position, 0.2, { y:"+=0.04", repeat: 1, yoyo: true, repeatDelay: 2, onComplete: ()=>{
                     TweenMax.to( _bird.position, 0.15, { y:"+=0.02", repeat: 1, yoyo: true });
-                    TweenMax.to( _bird.rotation, 0.15, { y:0 } );
+                    TweenMax.to( _bird.rotation, 0.15, { y:oriRotY } );
                 } });
-                TweenMax.to( _bird.rotation, 0.2, { y:-10*Math.PI/180 } );
+                TweenMax.to( _bird.rotation, 0.2, { y:"-="+rotY } );
             }} );
-        let t2 = TweenMax.to( _bird.rotation, 0.2, { y:30*Math.PI/180} );
+        let t2 = TweenMax.to( _bird.rotation, 0.2, { y:"+="+rotY2} );
 
         return [t1, t2];
     }
@@ -479,7 +573,9 @@ export default class MeirAnimation extends THREE.Object3D {
         }
     }
 
-    start() {
+    start() {   
+        this.parent.updateMatrixWorld();
+        this.parent.fullVideo.mesh.updateMatrixWorld();     
         this.currentSequence = this.sequenceConfig.slice(0);
         this.nextAnim = this.currentSequence.shift();
     }
@@ -497,7 +593,13 @@ export default class MeirAnimation extends THREE.Object3D {
     }
 
     update(dt,et) {
-        // 
-        // console.log("birdddd");
+        let facePos = new THREE.Vector3( this.parent.fullVideo.mesh.geometry.faces[100].a,
+                                  this.parent.fullVideo.mesh.geometry.faces[100].b,
+                                  this.parent.fullVideo.mesh.geometry.faces[100].c);
+        facePos.multiplyScalar( this.parent.fullVideo.mesh.scale );
+        facePos.applyMatrix4( this.parent.fullVideo.mesh.matrixWorld );
+
+
+        this.pinBall.position.copy( facePos );
     }
 }
