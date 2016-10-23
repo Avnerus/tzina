@@ -69,7 +69,7 @@ export default class Square extends THREE.Object3D{
     init(loadingManager) {
         loadingManager.itemStart("Square");
         this.trees = new Trees(this.camera, this.renderer);
-        this.extras = new  Extras();
+        this.extras = new  Extras(this.camera, this.renderer);
         this.fountain = new Fountain();
 
         let loaders = [
@@ -128,7 +128,7 @@ export default class Square extends THREE.Object3D{
                 */
 
             this.fountain.position.set(0.8,23.6, -0.6);
-            DebugUtil.positionObject(this.benches, "Benches");
+            //DebugUtil.positionObject(this.benches, "Benches");
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             console.log("Finished loading square");
@@ -176,6 +176,7 @@ export default class Square extends THREE.Object3D{
     update(dt,et) {
         this.fountain.update(dt);
         this.trees.update(dt);
+        this.extras.update(dt);
         for (let i = 0; i < this.suns.children.length; i++) {
             this.suns.children[i].children[2].update(dt,et)
         }

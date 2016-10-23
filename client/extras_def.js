@@ -2,7 +2,7 @@ export default {
     types: [
           {
             name: "bridegroom",
-            fileName: "bridegroom.ply",
+            fileName: "bridegroom/cloud.js",
             pointSize : 0.015
         }
     ]

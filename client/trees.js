@@ -29,6 +29,7 @@ export default class Trees extends THREE.Object3D {
                     mesh.material.size = 0.1;
                     mesh.material.lights = false;
                     mesh.position.fromArray(instance.position);
+                    mesh.position.y -= 1.1;
                     if (instance.scale) {
                         mesh.scale.multiplyScalar(instance.scale);
                     }
