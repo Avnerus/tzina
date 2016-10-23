@@ -63,7 +63,7 @@ export default class Extras extends THREE.Object3D {
                 mesh.material.size = type.pointSize ? type.pointSize : 0.1;
                 mesh.material.lights = false;
                 mesh.position.fromArray(asset.position);
-                mesh.position.y -= 1.1;
+               // mesh.position.y -= 1.1;
                 if (asset.rotation) {
                     mesh.rotation.set(
                         asset.rotation[0] * Math.PI / 180,

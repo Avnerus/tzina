@@ -20,8 +20,8 @@ export default {
             name: "bush2",
             fileName: "sideone/cloud.js"
         }
-
     ],
+
     instances: [
         {
             type: "bush1",

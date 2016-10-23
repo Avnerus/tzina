@@ -26,7 +26,7 @@ export default class Trees extends THREE.Object3D {
         //            let mesh = new THREE.Points( treeTypes[instance.type], material );
                     let mesh = new Potree.PointCloudOctree(treeTypes[instance.type]);
                     //mesh.material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-                    mesh.material.size = 0.1;
+                    mesh.material.size = 0.09;
                     mesh.material.lights = false;
                     mesh.position.fromArray(instance.position);
                     mesh.position.y -= 1.1;
