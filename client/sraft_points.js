@@ -147,9 +147,19 @@ export default {
           scale: 0.1
         }
 
-
+  {
+          name: "oldmansit",
+          position: [12.7,22.3,-10],
+          rotation: [180,255,0],
+          scale: 0.21
+        },
    ,
-
+  {
+          name: "dadOnBike",
+          position: [-3.48,22.6,-13.15],
+          rotation:[0,109,0],
+          scale: 0.23
+        },
 
           {
                     name: "Gyno",
@@ -178,4 +188,22 @@ export default {
           position: [12.7,22.3,-10],
           rotation: [180,255,0],
           scale: 0.21
+        },
+         {
+            name: "dadOnBike",
+            fileName: "dadOnBike/cloud.js",
+            pointSize : 0.010
+        },
+
+         {
+                    name: "blueLady",
+                    position: [-5.4,21.9,12.7],
+                    rotation: [0,215,0],
+                    scale: 0.17
+             },
+              {
+                    name: "manOnBench",
+                    position: [-12.3,21.9,4.2],
+                    rotation: [0,292,0],
+                    scale: 0.21
         },

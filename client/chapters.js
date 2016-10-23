@@ -204,29 +204,40 @@ export default
 			"extraAssets": [
 				{
                     name: "bridegroom",
-                    position: [3.56,22.4,9.77],
-                    rotation: [0,307,0],
+                    position: [3.55,21.3,7.14],
+                    rotation: [0,301,0],
                     scale: 0.25
 				},
 					{
                     name: "yukalele",
-                    position: [-14.91,22.4,-7],
-                    rotation: [0,271,0],
+                    position: [-13.51,21.3,-2.74],
+                    rotation: [0,277,0],
                     scale: 0.26
 				},
-				
-				{
-                    name: "blueLady",
-                    position: [10.2,21.85,-12],
+					{
+					name: "bikeHottie",
+					position: [8.03,21.4,7.14],
+					rotation:[0,55,0],
+					scale: 0.3
+				},
+					{
+					name: "mom",
+					position: [-8.12,21.3,-0.94],
+					rotation:[0,244,0],
+					scale: 0.32
+				},
+					{
+                    name: "cat",
+                    position: [-9.42,21.7,5.38],
                     rotation: [0,0,0],
-                    scale: 0.13
-    		    }
-				//	{
-				//	name: "DAN",
-				//	position: [-3.48,23.7,-8.75],
-				//	rotation:[184,208,0],
-				//	scale: 0.22
-				//}
+                    scale: 0.26
+				},
+					{
+                    name: "cart",
+                    position: [-4.53,22.6,21.5],
+                    rotation: [188,75,0],
+                    scale: 0.26
+				}
 			],
 
 			"effects" : [
@@ -275,18 +286,26 @@ export default
                     rotation: [0,135,0],
                     scale: 0.25
 				},
-					{
-					name: "bikeHottie",
-					position: [-13.51,21.8,-8.12],
-					rotation:[0,22,0],
-					scale: 0.27
-				},
+				
 					{
                     name: "sweetLady",
                     position: [-10.81,22,1.75],
                     rotation: [0,168,0],
                     scale: 0.2
-				}
+                },
+		
+                  {
+                   name: "blueLady",
+                    position: [10.2,21.85,-12],
+                    rotation: [0,0,0],
+                    scale: 0.13
+    		    }
+				//	{
+				//	name: "DAN",
+				//	position: [-3.48,23.7,-8.75],
+				//	rotation:[184,208,0],
+				//	scale: 0.22
+				//}
 			],
 
 			"effects" : [

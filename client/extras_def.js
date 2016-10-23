@@ -74,6 +74,36 @@ export default {
           name: "BlackGuy",
            fileName: "BlackGuy/cloud.js",
             pointSize : 0.012
+        },
+           {
+            name: "bridegroom",
+            fileName: "bridegroom/cloud.js",
+            pointSize : 0.015
+        },
+          {
+            name: "bikeHottie",
+            fileName: "bikeHottie/cloud.js",
+            pointSize : 0.010
+        },
+           {
+            name: "yukalele",
+            fileName: "yukalele/cloud.js",
+            pointSize : 0.013
+        },
+           {
+            name: "cat",
+            fileName: "cat/cloud.js",
+            pointSize : 0.013
+        },
+            {
+            name: "mom",
+            fileName: "mom/cloud.js",
+            pointSize : 0.011
+        },
+         {
+            name: "cart",
+            fileName: "cart/cloud.js",
+            pointSize : 0.011
         }
     ]
 }
