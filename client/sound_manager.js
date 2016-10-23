@@ -9,6 +9,13 @@ class StaticSoundSampler{
     this.blurModule=new BlurModule(audioContext);
     this.audioContext=audioContext;
   }
+  setToLoop(loopValue){
+    if(loopValue!==undefined){
+      this.source.loop=loopValue;
+    }else{
+      this.source.loop=true;
+    }
+  }
   setBlur(value){
     this.blurModule.control(value);
   }
@@ -72,13 +79,7 @@ class PositionalSoundSampler extends StaticSoundSampler{
   init(sampleUrl,loadingManager,loadReadyCallback){
     super.init(sampleUrl,loadingManager,loadReadyCallback);
   }
-  setToLoop(loopValue){
-    if(loop!==undefined){
-      this.source.loop=loopValue;
-    }else{
-      this.source.loop=true;
-    }
-  }
+
   createDebugCube(scene){
     //DEBUG CUBE so I can show where the sound is coming from
     this.testCube = new THREE.Mesh(new THREE.BoxGeometry(1, 20, 1), new THREE.MeshBasicMaterial({color:0x00ff00}));
@@ -97,18 +98,18 @@ export default class SoundManager {
       console.log("initializing a SoundManager");
 
       // test sound player
-      window.setTimeout(function () {
-        console.log("Sound trying to play testsampler");
-        let staticAudioContext=new (window.AudioContext || window.webkitAudioContext)();
-        let testSampler=new StaticSoundSampler(staticAudioContext);
-        testSampler.init(SOUND_PATH + 'ui/Button_Click.ogg',loadingManager,function(thisSampler){
-          thisSampler.play(true);
-          document.addEventListener('mousemove',function(e){
-            // console.log(document.width);
-            thisSampler.setBlur(e.clientX/(window.innerWidth-5));
-          });
-        });
-      }, 15000);
+      // window.setTimeout(function () {
+      //   console.log("Sound trying to play testsampler");
+      //   let staticAudioContext=new (window.AudioContext || window.webkitAudioContext)();
+      //   let testSampler=new StaticSoundSampler(staticAudioContext);
+      //   testSampler.init(SOUND_PATH + 'testsound.wav',loadingManager,function(thisSampler){
+      //     thisSampler.setToLoop();
+      //     thisSampler.play();
+      //     document.addEventListener('mousemove',function(e){
+      //       thisSampler.setBlur(e.clientX/(window.innerWidth-5));
+      //     });
+      //   });
+      // }, 15000);
 
 
       // Extending THREE.Audio
@@ -143,9 +144,9 @@ export default class SoundManager {
           return this.context.currentTime - this.playStartTime;
         }
 
-        THREE.PositionalAudio.prototype.createDebugCube=function(scene){
+        THREE.PositionalAudio.prototype.createDebugCube=function(scene,material){
           //DEBUG CUBE so I can show where the sound is coming from
-          this.testCube = new THREE.Mesh(new THREE.BoxGeometry(1, 20, 1), new THREE.MeshBasicMaterial({color:0x00ff00}));
+          this.testCube = new THREE.Mesh(new THREE.BoxGeometry(1, 20, 1), new THREE.MeshBasicMaterial(material||{color:0x00ff00}));
           this.testCube.position.set(this.position.x,this.position.y,this.position.z);
           scene.add(this.testCube);
         }
@@ -176,7 +177,7 @@ export default class SoundManager {
         highway_2.position.set(25, 15, 0);
         highway_2.autoplay = false;
         highway_2.loop = true;
-        highway_2.createDebugCube(this.scene);
+        highway_2.createDebugCube(this.scene,{color:0xFF0000});
 
         //Inner Kikar Sound
         innerKikar = new THREE.PositionalAudio(this.listener);
@@ -211,7 +212,7 @@ export default class SoundManager {
         this.sounds = {}
 
         // FOUNTAIN
-        this.loader.load(SOUND_PATH + "testsound.wav"/*'Kikar_Inner.ogg'*/, function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'Kikar_Inner.ogg', function(audioBuffer) {
             fountain.setBuffer(audioBuffer);
         }, function() {
         });
@@ -223,7 +224,7 @@ export default class SoundManager {
         });
 
         // HIGHWAY TWO
-        this.loader.load(SOUND_PATH + 'Kikar_Ambiance_2_Loud.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + "testsound.wav"/*'Kikar_Ambiance_2_Loud.ogg'*/, function(audioBuffer) {
             highway_2.setBuffer(audioBuffer);
         }, function() {
         });
