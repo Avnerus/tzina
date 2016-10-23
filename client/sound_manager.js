@@ -162,35 +162,35 @@ export default class SoundManager {
         fountain.position.set(0, 20, 0);
         fountain.setRefDistance( 1 );
         fountain.autoplay = false;
-        fountain.loop = true;
+        fountain.setLoop(true);
         fountain.createDebugCube(this.scene);
 
         //Street Sound 1
         highway_1 = new THREE.PositionalAudio(this.listener);
         highway_1.position.set(-25, 15, 0);
         highway_1.autoplay = false;
-        highway_1.loop = true;
+        highway_1.setLoop(true);
         highway_1.createDebugCube(this.scene);
 
         //Street Sound 2
         highway_2 = new THREE.PositionalAudio(this.listener);
         highway_2.position.set(25, 15, 0);
         highway_2.autoplay = false;
-        highway_2.loop = true;
-        highway_2.createDebugCube(this.scene,{color:0xFF0000});
+        highway_2.setLoop(true);
+        highway_2.createDebugCube(this.scene);
 
         //Inner Kikar Sound
         innerKikar = new THREE.PositionalAudio(this.listener);
         innerKikar.position.set(0, 20, 0);
         innerKikar.autoplay = false;
-        innerKikar.loop = true;
-        innerKikar.createDebugCube(this.scene);
+        innerKikar.setLoop(true);
+        innerKikar.createDebugCube(this.scene,{color:0xFF0000});
 
         //Wind in the Trees
         wind = new THREE.PositionalAudio(this.listener);
         wind.position.set(0, 30, 20);
         wind.autoplay = false;
-        wind.loop = true;
+        wind.setLoop(true);
         wind.createDebugCube(this.scene);
 
         //DEBUG CUBE so I can show where the sound is coming from
@@ -224,13 +224,13 @@ export default class SoundManager {
         });
 
         // HIGHWAY TWO
-        this.loader.load(SOUND_PATH + "testsound.wav"/*'Kikar_Ambiance_2_Loud.ogg'*/, function(audioBuffer) {
+        this.loader.load(SOUND_PATH + 'Kikar_Ambiance_2_Loud.ogg', function(audioBuffer) {
             highway_2.setBuffer(audioBuffer);
         }, function() {
         });
 
         // Inner Kikar sound
-        this.loader.load(SOUND_PATH + 'Pigeons_Center_Kikar.ogg', function(audioBuffer) {
+        this.loader.load(SOUND_PATH + "testsound.ogg"/*'Pigeons_Center_Kikar.ogg'*/, function(audioBuffer) {
             innerKikar.setBuffer(audioBuffer);
         }, function() {
         });
