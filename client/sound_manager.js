@@ -230,10 +230,7 @@ export default class SoundManager {
         testsound.createDebugCube(0xFF0000);
         testsound.init(SOUND_PATH + "testsound.ogg",loadingManager,function(thisSampler){
           console.log("testsound loaded",thisSampler);
-          // document.addEventListener('mousemove',function(e){
-          //   thisSampler.blurModule.controlBlur(e.clientX/(window.innerWidth));
-          // });
-          events.emit("add_gui", {folder: "Sound Focus", step:0.01, onChange:function(a){thisSampler.blurModule.controlBlur(a)}},{controlBlur:0},"controlBlur",0,1);
+          events.emit("add_gui", {folder: "Sound Blur", step:0.01, onChange:function(a){thisSampler.blurModule.controlBlur(a)}},{testSound:1},"testSound",0,1);
         });
 
         // Dynamically loaded sounds

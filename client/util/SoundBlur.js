@@ -3,7 +3,7 @@ const SOUND_PATH = "assets/sound/";
 
 export default class BlurModule{
   constructor(audioContext){
-    this.filterLowestCut=80;
+    this.filterLowestCut=380;
     this.filterHighestCut=20000;
 
     this.audioContext=audioContext;
@@ -16,6 +16,8 @@ export default class BlurModule{
     let thisBlurModule=this;
     let audioContext=this.audioContext;
     this.biquadFilter = audioContext.createBiquadFilter();
+    //this is low given the range of 0.0001 to 1000;
+    this.biquadFilter.Q.value=0.01;
     this.convolver=audioContext.createConvolver();
 
     let inputNode=this.inputNode;
