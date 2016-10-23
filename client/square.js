@@ -221,6 +221,7 @@ export default class Square extends THREE.Object3D{
                 // Show loader
                 if (this.controlPassed) {
                     sun.getObjectByName(name + "_L").visible = true;
+                    sun.getObjectByName(name + "_L").disorganize();
                 }
 
                 console.log("Turned on sun", sun);
@@ -229,28 +230,26 @@ export default class Square extends THREE.Object3D{
     }
 
     activateSun(name) {
-        /*
         console.log("Activate sun! ", name);
         let sun = this.suns.getObjectByName(name)
         if (sun) {
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
             console.log("Turn on sun", sun);
-            sunMesh.material.color = new THREE.Color(0x000733);
-            //sunMesh.material.color = new THREE.Color(0xF4050C);
-            sunMesh.material.emissive = new THREE.Color(0xC80509);
-            sunMesh.material.specular = new THREE.Color(0xFF0000);
-            sunMesh.material.side = THREE.DoubleSide;
-
+            sunMesh.material.color = new THREE.Color(0xF4F5DC);
             let sunLoader = sun.getObjectByName(name + "_L");
+            sunLoader.visible = true;
             sunLoader.organize();
-            }*/
+        }
     }
 
     deactivateSun(name) {
         let sun = this.suns.getObjectByName(name)
         if (sun) {
             let sunLoader = sun.getObjectByName(name + "_L");
+            let sunMesh = sun.getObjectByName(name + "_F").children[0];
+            sunMesh.material.color = new THREE.Color(0x888788);
             sunLoader.disorganize();
+            sunLoader.visible = false;
         }
     }
 
@@ -308,6 +307,8 @@ export default class Square extends THREE.Object3D{
                         let sunLoader = new SunLoader(this.renderer);
                         sunLoader.init();
                         sunLoader.name = chapter.hour.toString() + "_L";
+                        //DebugUtil.positionObject(sunLoader, sunLoader.name, true);
+                        sunLoader.rotation.y = 110 * Math.PI / 180;
                         parent.add(sunLoader);
 
                         
