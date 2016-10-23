@@ -288,7 +288,7 @@ export default class MeirAnimation extends THREE.Object3D {
                     this.add(this.backBirds);
                     this.backBirds.position.set(1.1, -0.1, 3.3);
                     this.backBirds.rotation.x = 4.5 * Math.PI/180;
-                    DebugUtil.positionObject(this.backBirds, "backBirds");
+                    // DebugUtil.positionObject(this.backBirds, "backBirds");
 
                     this.createBirdAnimations( false );
 
