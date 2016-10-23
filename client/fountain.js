@@ -63,6 +63,14 @@ export default class Fountain extends THREE.Object3D  {
             maxParticleCount: 10000
         });
 
+        this.fireParticleGroup = new SPE.Group({
+            texture: {
+                // value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'water_splash.png')
+                value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'smokeparticle.png')
+            },
+            maxParticleCount: 6000
+        });
+
 
         // Create fountains
         let angle = 30;
