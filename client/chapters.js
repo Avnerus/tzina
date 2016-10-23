@@ -276,36 +276,34 @@ export default
                 //},
 				{
                     name: "manOnBench",
-                    position: [6.8,21.9,-14.8],
-                    rotation: [6,152,0],
-                    scale: 0.19
+                    position: [7.7,21.3,-16.2],
+                    rotation: [0,115,0],
+                    scale: 0.2
 				},
 				{
                     name: "coolPair",
-                    position: [-3.63,22,-6.33],
-                    rotation: [0,135,0],
+                    position: [-5.6,21.5,0.85],
+                    rotation: [0,180,0],
                     scale: 0.25
 				},
-				
-					{
-                    name: "sweetLady",
-                    position: [-10.81,22,1.75],
-                    rotation: [0,168,0],
-                    scale: 0.2
-                },
-		
                   {
                    name: "blueLady",
-                    position: [10.2,21.85,-12],
-                    rotation: [0,0,0],
-                    scale: 0.13
-    		    }
-				//	{
-				//	name: "DAN",
-				//	position: [-3.48,23.7,-8.75],
-				//	rotation:[184,208,0],
-				//	scale: 0.22
-				//}
+                    position: [-11.4,21.5,1.79],
+                    rotation: [0,265,0],
+                    scale: 0.15
+    		    },
+    		       {
+                    name: "Gyno",
+                    position: [0.92,23.2,13],
+                    rotation: [176,309,18],
+                    scale: 0.24
+      			  },
+					{
+					name: "DAN",
+					position: [-0.94,23.1,-9.02],
+					rotation:[184,257,0],
+					scale: 0.23
+				}
 			],
 
 			"effects" : [

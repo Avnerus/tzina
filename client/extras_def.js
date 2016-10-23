@@ -104,6 +104,31 @@ export default {
             name: "cart",
             fileName: "cart/cloud.js",
             pointSize : 0.011
+        },
+          {
+            name: "coolPair",
+            fileName: "coolPair/cloud.js",
+            pointSize : 0.010
+        },
+           {
+            name: "blueLady",
+            fileName: "blueLady/cloud.js",
+            pointSize : 0.013
+        },
+         {
+            name: "manOnBench",
+            fileName: "manOnBench/cloud.js",
+            pointSize : 0.013
+        },
+         {
+          name: "DAN",
+           fileName: "DAN/cloud.js",
+            pointSize : 0.011
+        },
+         {
+           name: "Gyno",
+           fileName: "Gyno/cloud.js",
+           pointSize : 0.012
         }
     ]
 }
