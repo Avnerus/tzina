@@ -81,8 +81,18 @@ export default class BlurModule{
   // disconnect(audioInputNode){
   //   this.outputNode.disconnect(audioInputNode);
   // }
-
-  control(value){
+  control(values){
+    if(values.volume){
+      this.controlVolume(values.volume);
+    }
+    if(values.Blur){
+      this.controlVolume(values.Blur);
+    }
+  }
+  controlVolume(value){
+    this.inputNode.gain.value=value;
+  }
+  controlBlur(value){
     let wet=value;
     let filterCut=(1-value*value)*this.filterHighestCut+this.filterLowestCut;
     // console.log(filterCut);

@@ -1,7 +1,7 @@
 import BlurModule from "./util/SoundBlur";
 const SOUND_PATH = "assets/sound/"
 
-let fountain, highway_1, highway_2, innerKikar, wind;
+let fountain, highway_1, highway_2, innerKikar, wind, testsound;
 
 
 class StaticSoundSampler{
@@ -19,9 +19,7 @@ class StaticSoundSampler{
       this.source.loop=true;
     }
   }
-  setBlur(value){
-    this.blurModule.control(value);
-  }
+
   init(sampleUrl,loadingManager,loadReadyCallback){
     this.sampleUrl=sampleUrl;
     let audioContext=this.audioContext;
@@ -72,14 +70,21 @@ class StaticSoundSampler{
   }
 }
 class PositionalSoundSampler extends StaticSoundSampler{
-  constructor(listener){
+  constructor(listener,scene){
     let audioContext=listener.context;
     super(audioContext);
+    this.listener=listener;
+    this.scene=scene;
     let connectorNode=audioContext.createGain();
     this.staticSoundOutputDestination=connectorNode;
-    this.positionalAudio=new THREE.PositionalAudio(listener);
+    let pa=new THREE.PositionalAudio(listener);
+    this.positionalAudio=pa;
     this.positionalAudio.setNodeSource(connectorNode);
-    this.position=this.positionalAudio.position;
+    this.scene.add(this.positionalAudio);
+    this.position={
+      set:function(a,b,c){return pa.position.set(a,b,c)},
+      get:function(){return pa.position.get()}
+    }
     // this.position=this.positionalAudio.position;
   }
   init(sampleUrl,loadingManager,loadReadyCallback){
@@ -89,11 +94,11 @@ class PositionalSoundSampler extends StaticSoundSampler{
     // this.positionalAudio.setLoop(true);
   }
 
-  createDebugCube(scene,incolor){
+  createDebugCube(incolor){
     //DEBUG CUBE so I can show where the sound is coming from
-    this.testCube = new THREE.Mesh(new THREE.BoxGeometry(0.3, 10, 0.3), new THREE.MeshBasicMaterial({color:incolor||0x0000FFCC}));
-    this.testCube.position.set(this.position.x,this.position.y,this.position.z);
-    scene.add(this.testCube);
+    this.testCube = new THREE.Mesh(new THREE.BoxGeometry(2, 15, 2), new THREE.MeshBasicMaterial({color:incolor||0x0000FF}));
+    this.testCube.position.set(0,0,0);
+    this.positionalAudio.add(this.testCube);
   }
 }
 
@@ -170,7 +175,7 @@ export default class SoundManager {
         //Fontain Water
         fountain = new THREE.PositionalAudio(this.listener);
         fountain.position.set(0, 20, 0);
-        fountain.setRefDistance( 1 );
+        // fountain.setRefDistance( 1 );
         fountain.autoplay = false;
         fountain.setLoop(true);
         // fountain.createDebugCube(this.scene);
@@ -219,13 +224,15 @@ export default class SoundManager {
         //BUFFER THE SOUNDS INTO THE PROPER ELEMENTS
         this.loader = new THREE.AudioLoader(loadingManager);
 
-        let testsound=new PositionalSoundSampler(this.listener);
-        testsound.position.set(0, 5, 5);
-        testsound.createDebugCube(this.scene,0xFF0000);
-        testsound.init(SOUND_PATH + "testsound.ogg",loadingManager,function(a){
-          console.log("testsound loaded",a);
-          a.setToLoop();
-          a.play();
+        testsound=new PositionalSoundSampler(this.listener,this.scene);
+        testsound.blurModule.controlVolume(1.8);
+        testsound.position.set(0, 25, 15);
+        testsound.createDebugCube(0xFF0000);
+        testsound.init(SOUND_PATH + "testsound.ogg",loadingManager,function(thisSampler){
+          console.log("testsound loaded",thisSampler);
+          document.addEventListener('mousemove',function(e){
+            thisSampler.blurModule.controlBlur(e.clientX/(window.innerWidth));
+          });
         });
 
         // Dynamically loaded sounds
@@ -281,6 +288,9 @@ export default class SoundManager {
         innerKikar.play();
 
         wind.play();
+
+        testsound.setToLoop();
+        testsound.play();
       }else{
         console.warn("SoundManager was called to play but the parameter setName didn't match any statement "+setName);
       }
