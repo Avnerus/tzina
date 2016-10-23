@@ -93,6 +93,7 @@ export default class VideoRGBD  {
        //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
 
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
+//        console.log("Character mesh ", this.mesh);
         this.wire = new THREE.Mesh( geometry, this.linesMaterial );
 
         //DebugUtil.positionObject(this.wire, this.properties.fileName + " - Wire", false);

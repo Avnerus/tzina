@@ -25,7 +25,8 @@ export default [
         position : [7.7, 21.85, -15.0],
         rotation: [341, 20, 12],
         animation: 'Miriam',
-        uvdy: 0.4847,
+        uvdy_idle: 0.47900390625,
+        uvdy: 0.50634765625,
         uvdx: -0.025,
         scale: 0.003 * 0.25,
         animationScale: 0.25,
@@ -77,7 +78,7 @@ export default [
         position : [-12.3, 22.0, 2.2],
         rotation: [36, -140, 10],
         animation: null,
-        uvdy: 0.4889,
+        uvdy: 0.50537109375,
         uvdy_idle: 0.484863281,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
@@ -95,7 +96,7 @@ export default [
         position : [-1, 21.96, -7.55],
         rotation: [7, -192, 8],
         animation: 'Meir',
-        uvdy: 0.478125,
+        uvdy: 0.4931640625,
         uvdy_idle: 0.483398438,
         uvdx: 0.0,
         scale: 0.003 * 0.25,
@@ -194,6 +195,24 @@ export default [
         scale: 0.003 * 0.25,
         subtitles: null,
         idleOnly: true
+    },
+    {
+        name: 'Shirin7AM',
+        basePath : 'assets/characters/miriam',
+        mindepth : 1983.749877930,
+        maxdepth : 3119.456298828,
+        position : [-10, 21.85, 17.0],
+        rotation: [341, 180, 12],
+        animation: 'Miriam',
+        uvdy_idle: 0.47900390625,
+        uvdy: 0.50634765625,
+        uvdx: -0.025,
+        scale: 0.003 * 0.25,
+        animationScale: 0.25,
+        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
+        animationRotation: [13, 0, 0],      // 20, 0, 0
+        space: 2,
+        subtitles: null
     }
 /*,
     {

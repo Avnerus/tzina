@@ -96,6 +96,7 @@ export default class Sky {
         this.updateSunPosition();
 
 
+        /*
 
         events.emit("add_gui", {folder:"Sun shader", step: 0.01, listen:false}, this.shader.uniforms.luminance, "value", 1.0,2.0); 
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.turbidity, "value",-200,200); 
@@ -115,7 +116,7 @@ export default class Sky {
                 this.updateSunPosition();
             },
             folder: "Sun shader",
-        }, this, "azimuth", 0, 1);
+        }, this, "azimuth", 0, 1); */
 
 
         events.on("gaze_started", () => {

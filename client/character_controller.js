@@ -33,7 +33,7 @@ export default class CharacterController {
                 let character = clone[i];
 
                 if (!character.done) {
-                    this.square.mesh.remove(character);
+                    this.square.clockwork.remove(character);
                     character.unload();
                 } else {
                     console.log("Character " + character.props.name + " is still active");

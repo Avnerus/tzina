@@ -73,13 +73,13 @@ export default class TimeController {
 
         let TEXT_DEFINITION = {
              align: textAlign.center, 
-             font: '25px Arial',
+             font: '22px Miriam Libre',
              fillStyle: '#FFFFFF',
              antialias: true 
         }
         let INSIDE_TEXT_DEFINITION = {
              align: textAlign.center, 
-             font: '20px Arial',
+             font: '18px Miriam Libre',
              fillStyle: '#FFFFFF',
              antialias: true 
         }
@@ -93,8 +93,8 @@ export default class TimeController {
         this.prevChapterTitle.visible = false;
 
         this.insideChapterTitle = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
-        this.insideChapterTitle.scale.multiplyScalar(0.02);
-        //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+        this.insideChapterTitle.scale.multiplyScalar(0.04);
+        DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
 
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
@@ -176,6 +176,7 @@ export default class TimeController {
             if (this.gazeCounter >= 4) {
 
                 let targetHour = this.gazeHour;
+                let baseHour = this.currentHour;
                 this.gazeHour = -1;
                 console.log("Time controller - Performing transition to " + targetHour + "!");
                 this.clockRunning = false;
@@ -193,7 +194,7 @@ export default class TimeController {
                         }
                         targetRotationY *= Math.PI / 180;
                         console.log("Time controller - rotating square from ", this.square.getClockwork().rotation.y, " to ", targetRotationY);
-                        TweenMax.to(this.square.getClockwork().rotation, 7, {ease: Power2.easeInOut, delay: 1, y: targetRotationY, onComplete: () => {
+                        TweenMax.to(this.square.getClockwork().rotation, 7 * (Math.abs(targetHour - baseHour) * 0.5), {ease: Power2.easeInOut, delay: 1, y: targetRotationY, onComplete: () => {
                             events.emit("angle_updated", this.currentHour);
                             this.updateNextHour();
                             this.sunGazer.active = true;

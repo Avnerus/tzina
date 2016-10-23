@@ -35,9 +35,9 @@ void main() {
             float z = pos.z;
 
 
-            pos.x += sin( y * 12.0 ) * cos( z * 12.0 ) * 0.007 * (1.0 - (orderTimer / 0.3));
-            pos.y += sin( x * 13.0 ) * cos( z * 13.0 ) * 0.007 * (1.0 - (orderTimer / 0.3));
-            pos.z += sin( x * 14.0 ) * cos( y * 14.0 ) * 0.007 * (1.0 - (orderTimer / 0.3));
+            pos.x += sin( y * 13.0 ) * cos( z * 13.0 ) * 0.02 * (1.0 - (orderTimer / 0.3));
+            pos.y += sin( x * 13.0 ) * cos( z * 13.0 ) * 0.01 * (1.0 - (orderTimer / 0.3));
+            pos.z += sin( x * 14.0 ) * cos( y * 14.0 ) * 0.01 * (1.0 - (orderTimer / 0.3));
         } 
     } else {
         // Try to organize the circle by color

@@ -21,7 +21,7 @@ export default class SunLoader extends THREE.Object3D  {
 
         this.renderer = renderer;
 
-        this.radius = 0.8;
+        this.radius = 3;
         this.tube = 0.2;
     }
     organize() {
