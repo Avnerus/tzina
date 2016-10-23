@@ -19,7 +19,7 @@ export default {
              {
             name: "bush2",
             fileName: "sideone.ply"
-        },
+        }
 
     ],
     instances: [

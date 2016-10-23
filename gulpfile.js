@@ -10,6 +10,7 @@ var gutil = require('gulp-util');
 var assign = require('lodash.assign');
 var babelify = require("babelify");
 var nodemon = require('gulp-nodemon');
+var beeper = require('beeper');
 
 // add custom browserify options here
 var customOpts = {
@@ -30,7 +31,10 @@ b.on('log', gutil.log); // output build logs to terminal
 function bundle() {
   return b.bundle()
     // log errors if they happen
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+    .on('error', function(err) {
+        beeper();
+        console.log("Browserify error",err);
+     })
     .pipe(source('bundle.js'))
     .pipe(buffer())
     .pipe(gulp.dest('./public'));
