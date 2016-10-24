@@ -14,13 +14,14 @@ const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PATH = "assets/square/benches.json"
 
 export default class Square extends THREE.Object3D{
-    constructor(collisionManager, renderer, config) {
+    constructor(collisionManager, renderer, camera, config) {
         super();
         console.log("Square constructed!")
 
         this.collisionManager = collisionManager;
         this.renderer = renderer;
         this.config = config;
+        this.camera = camera;
 
         this.sunTextureOffsets = {
             19 : 0.5,
@@ -73,13 +74,13 @@ export default class Square extends THREE.Object3D{
     }
     init(loadingManager) {
         loadingManager.itemStart("Square");
-        let trees = new Trees();
-        this.extras = new  Extras();
+        this.trees = new Trees(this.camera, this.renderer);
+        this.extras = new  Extras(this.camera, this.renderer);
         this.fountain = new Fountain();
 
         let loaders = [
             this.loadSquare(loadingManager),
-            trees.init(loadingManager),
+            this.trees.init(loadingManager),
             this.fountain.init(loadingManager),
             this.loadBuildings(loadingManager),
             this.loadSuns(loadingManager),
@@ -108,7 +109,7 @@ export default class Square extends THREE.Object3D{
             this.mesh.add(this.clockwork);
             this.activeClockwork = this.mesh;
 
-            this.mesh.add(trees);
+            this.mesh.add(this.trees);
             this.mesh.add(this.fountain);
             this.mesh.add(this.extras);
             this.mesh.add(this.buildings);
@@ -133,7 +134,7 @@ export default class Square extends THREE.Object3D{
                 */
 
             this.fountain.position.set(0.8,23.6, -0.6);
-            // DebugUtil.positionObject(this.benches, "Benches");
+            //DebugUtil.positionObject(this.benches, "Benches");
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             console.log("Finished loading square");
@@ -180,6 +181,8 @@ export default class Square extends THREE.Object3D{
     }
     update(dt,et) {
         this.fountain.update(dt);
+        this.trees.update(dt);
+        this.extras.update(dt);
         for (let i = 0; i < this.suns.children.length; i++) {
             this.suns.children[i].children[2].update(dt,et)
         }

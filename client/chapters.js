@@ -24,33 +24,27 @@ export default
 				},
 					{
 					name: "junkie",
-					position: [-4.36,22.2,12],
+					position: [-4.12,23,12],
 					rotation: [176,89,0],
-					scale: 0.23
-				},
-				{
-					name: "dadOnBike",
-					position: [-3.48,22.6,-13.15],
-					rotation:[0,109,0],
 					scale: 0.23
 				},
 					{
 					name: "pocketCam",
-					position: [8.1,21.9,-12],
-					rotation: [0,275,0],
+					position: [-15.55,21,3],
+					rotation: [0,94,0],
 					scale: 0.18
 				},
+				   {
+       			   name: "dadOnBike",
+        		   position: [-3.88,21.3,7.79],
+         		   rotation:[0,280,0],
+          		   scale: 0.23
+      		    },
 					{
-					name: "oldmansit",
-					position: [12.7,22.3,-10],
-					rotation: [180,255,0],
-					scale: 0.21
-				},
-					{
-					name: "BlackGuy",
-					position: [-6,22.02,-1.9],
-					rotation: [0,227,0],
-					scale: 0.25
+					name: "tashlih",
+					position: [4.2,23.8,-8.37],
+					rotation: [175,211,0],
+					scale: 0.5
 				}
 			],
 
@@ -83,36 +77,42 @@ export default
 					"fileName": "Jacobcloths",
 					"position": [0,0,0]
 				},
-				 {
-                    name: "blueLady",
-                    position: [-5.4,21.9,12.7],
-                    rotation: [0,215,0],
-                    scale: 0.17
-   			     },
+				       {
+     		       name: "oldmansit",
+       			   position: [0.72,22.5,-7.55],
+      			   rotation: [183,0,0],
+         			 scale: 0.22
+    			    },
     		     {
                     name: "sweetLady",
-                    position: [-6.57,21.9,10.2],
-                    rotation: [0,86,0],
-                    scale: 0.22
+                    position: [16.7,21.3,-3.8],
+                    rotation: [0,312,0],
+                    scale: 0.2
      		   },
-       			 {
-                    name: "manOnBench",
-                    position: [-12.3,21.9,4.2],
-                    rotation: [0,292,0],
-                    scale: 0.21
-				},
-					{
-					name: "pocketCam",
-					position: [-1.71,22,0.61],
-					rotation: [0,138,0],
-					scale: 0.1
-				},
-					{
-					name: "oldmansit",
-					position: [12.7,22.3,-10],
-					rotation: [180,255,0],
-					scale: 0.21
-				}
+				    {
+      			    name: "grandpa",
+        			  position: [12.36,21.3,0.69],
+      	  			  rotation:[360,0,0],
+       				  scale: 0.22
+    	    },
+         	 {
+       			   name: "grandma",
+      			   position: [13.26,21.3,0.69],
+        		   rotation:[0,320,0],
+         		   scale: 0.1
+       		 },
+       		 {
+          name: "firstcouple",
+          position: [1.59,21.3,-14.57],
+          rotation: [0,244,0],
+          scale: 0.21
+        },
+        	 {
+          name: "AnlenGrandma",
+          position: [12.36,21.3,10.56],
+          rotation: [0,90,0],
+          scale: 0.15
+        }
 			],
 
 			"effects" : [
@@ -153,21 +153,33 @@ export default
 			//	},
 				{
 					name: "100_",
-					position: [-5.24,22.1,8.84],
-					rotation:[0,73,0],
+					position: [10.73,21.3,11.62],
+					rotation:[18,139,349],
 					scale: 0.15
 				},
 				{
 					name: "dude",
-					position: [8.84,22,-1.72],
+					position: [8.93,21.4,-8.12],
 					rotation:[0,65,0],
 					scale: 0.2
 				},
+				{
+                    name: "twoNiceJewishMen",
+                    position: [16.11,22.8,14.32],
+                    rotation: [184,75,342],
+                    scale: 0.27
+				},
 					{
 					name: "kadafi",
-					position: [-0.84,22.2,15],
+					position: [7.14,23.2,-7.22],
 					rotation:[176,125,0],
-					scale: 0.23
+					scale: 0.24
+				},
+					{
+					name: "BlackGuy",
+					position: [17.91,21.4,-2.3],
+					rotation:[360,289,0],
+					scale: 0.24
 				}
 			],
 			"effects" : [
@@ -196,34 +208,40 @@ export default
 			"extraAssets": [
 				{
                     name: "bridegroom",
-                    position: [3.56,22.4,9.77],
-                    rotation: [0,307,0],
+                    position: [3.55,21.3,7.14],
+                    rotation: [0,301,0],
                     scale: 0.25
 				},
 					{
                     name: "yukalele",
-                    position: [-14.91,22.4,-7],
-                    rotation: [0,271,0],
+                    position: [-13.51,21.3,-2.74],
+                    rotation: [0,277,0],
                     scale: 0.26
 				},
-				{
-                    name: "twoNiceJewishMen",
-                    position: [12.36,23.4,16.76],
-                    rotation: [184,42,342],
-                    scale: 0.27
+					{
+					name: "bikeHottie",
+					position: [8.03,21.4,7.14],
+					rotation:[0,55,0],
+					scale: 0.3
 				},
-				{
-                    name: "blueLady",
-                    position: [10.2,21.85,-12],
+					{
+					name: "mom",
+					position: [-8.12,21.3,-0.94],
+					rotation:[0,244,0],
+					scale: 0.32
+				},
+					{
+                    name: "cat",
+                    position: [-9.42,21.7,5.38],
                     rotation: [0,0,0],
-                    scale: 0.13
-    		    }
-				//	{
-				//	name: "DAN",
-				//	position: [-3.48,23.7,-8.75],
-				//	rotation:[184,208,0],
-				//	scale: 0.22
-				//}
+                    scale: 0.26
+				},
+					{
+                    name: "cart",
+                    position: [-4.53,22.6,21.5],
+                    rotation: [188,75,0],
+                    scale: 0.26
+				}
 			],
 
 			"effects" : [
@@ -263,27 +281,33 @@ export default
                 //},
 				{
                     name: "manOnBench",
-                    position: [6.8,21.9,-14.8],
-                    rotation: [6,152,0],
-                    scale: 0.19
+                    position: [7.7,21.3,-16.2],
+                    rotation: [0,115,0],
+                    scale: 0.2
 				},
 				{
                     name: "coolPair",
-                    position: [-3.63,22,-6.33],
-                    rotation: [0,135,0],
+                    position: [-5.6,21.5,0.85],
+                    rotation: [0,180,0],
                     scale: 0.25
 				},
+                  {
+                   name: "blueLady",
+                    position: [-11.4,21.5,1.79],
+                    rotation: [0,265,0],
+                    scale: 0.15
+    		    },
+    		       {
+                    name: "Gyno",
+                    position: [0.92,23.2,13],
+                    rotation: [176,309,18],
+                    scale: 0.24
+      			  },
 					{
-					name: "bikeHottie",
-					position: [-13.51,21.8,-8.12],
-					rotation:[0,22,0],
-					scale: 0.27
-				},
-					{
-                    name: "sweetLady",
-                    position: [-10.81,22,1.75],
-                    rotation: [0,168,0],
-                    scale: 0.2
+					name: "DAN",
+					position: [-0.94,23.1,-9.02],
+					rotation:[184,257,0],
+					scale: 0.23
 				}
 			],
 

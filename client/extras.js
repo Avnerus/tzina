@@ -6,12 +6,13 @@ import DebugUtil from './util/debug'
 const EXTRAS_PATH = "assets/extras"
 
 export default class Extras extends THREE.Object3D {
-    constructor() {
+    constructor(camera, renderer) {
         super();
 
         this.currentExtras = [];
+        this.camera = camera;
+        this.renderer = renderer;
         this.debug = true;
-
     }
 
     init(loadingManager) {
@@ -35,7 +36,7 @@ export default class Extras extends THREE.Object3D {
     loadType(props) {
         return new Promise((resolve, reject) => {
             console.log("Loading extra type ", props);
-            this.extrasLoader.load(EXTRAS_PATH + "/" + props.fileName ,( geometry ) => {
+            Potree.POCLoader.load(EXTRAS_PATH + "/" + props.fileName,( geometry ) => {
                 props.geometry = geometry;
                 this.store[props.name] = props;
                 resolve();
@@ -57,10 +58,12 @@ export default class Extras extends THREE.Object3D {
             if (this.store[asset.name]) {
                 console.log("Loading extra asset ", asset);
                 let type = this.store[asset.name];
-                let pointSize = type.pointSize ? type.pointSize : 0.13;
-                let material = new THREE.PointsMaterial( { size: pointSize, vertexColors: true } );
-                let mesh = new THREE.Points( type.geometry, material );
+                
+                let mesh = new Potree.PointCloudOctree(type.geometry);
+                mesh.material.size = type.pointSize ? type.pointSize : 0.1;
+                mesh.material.lights = false;
                 mesh.position.fromArray(asset.position);
+               // mesh.position.y -= 1.1;
                 if (asset.rotation) {
                     mesh.rotation.set(
                         asset.rotation[0] * Math.PI / 180,
@@ -79,5 +82,10 @@ export default class Extras extends THREE.Object3D {
                 }
             }            
         });
+    }
+    update(dt,et) {
+        for (let i = 0; i < this.children.length; i++) {
+            this.children[i].update(this.camera, this.renderer);
+        }  
     }
 }

@@ -2,28 +2,28 @@ export default {
     types: [
         {
             name: "ThreeTrees",
-            fileName: "3tress_2.ply"
+            fileName: "3tress_2/cloud.js"
         },
          {
             name: "palm",
-            fileName: "palm.ply"
+            fileName: "palm/cloud.js"
         },
          {
             name: "single",
-            fileName: "singleTree.ply"
+            fileName: "singleTree/cloud.js"
         },
            {
             name: "bush1",
-            fileName: "sidetwo.ply"
+            fileName: "sidetwo/cloud.js"
         },
              {
             name: "bush2",
-            fileName: "sideone.ply"
+            fileName: "sideone/cloud.js"
         }
-
     ],
+
     instances: [
-          {
+        {
             type: "bush1",
             position: [-4.45,18.73,1.86],
             rotation: [180,172,184],
@@ -118,13 +118,12 @@ export default {
             rotation: [260,0,90],
             scale: 0.75
         },
-
         {
             type: "palm",
             position: [8,22,6],
             rotation: [60,0,90],
             scale: 0.75
-        },
+         },
          {
             type: "palm",
             position: [-38,20,-32],
@@ -137,6 +136,8 @@ export default {
         //     rotation: [6,6,103],
         //     scale: 0.95
         // },
+        // 
+    
         {
             type: "ThreeTrees",
             position: [-20,26,-20],
