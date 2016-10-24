@@ -23,24 +23,24 @@ export default {
 
     ],
     instances: [
-          {
-            type: "bush1",
-            position: [-4.45,18.73,1.86],
-            rotation: [180,172,184],
-            scale: 0.42
-        }, 
+        //   {
+        //     type: "bush1",
+        //     position: [-4.45,18.73,1.86],
+        //     rotation: [180,172,184],
+        //     scale: 0.42
+        // }, 
              {
             type: "ThreeTrees",
             position: [-16.18,20.08,12.68],
             rotation: [270,6,83],
             scale: 1.1
         },
-          {
-            type: "bush2",
-            position: [0.96,16.03,-3.55],
-            rotation: [176,156,184],
-            scale: 0.51
-        }, 
+        //   {
+        //     type: "bush2",
+        //     position: [2.76,17.38,-2.65],
+        //     rotation: [176,156,184],
+        //     scale: 0.47
+        // }, 
          {
             type: "ThreeTrees",
             position: [4,22,14],
