@@ -12,6 +12,8 @@ const BUILDINGS_PATH = "assets/square/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PATH = "assets/square/benches.json"
+const FOUNTAIN_PATH = "assets/square/fountain.json"
+const TEXTURES_PATH = "assets/square/textures.json"
 
 export default class Square extends THREE.Object3D{
     constructor(collisionManager, renderer, camera, config) {
@@ -85,7 +87,9 @@ export default class Square extends THREE.Object3D{
             this.loadBuildings(loadingManager),
             this.loadSuns(loadingManager),
             this.loadColliders(loadingManager),
-            this.loadBenches(loadingManager)
+            this.loadBenches(loadingManager),
+            this.loadFountain(loadingManager),
+            this.loadTextures(loadingManager)
         ];
         if (!this.config.noExtras) {
             loaders.push(this.extras.init(loadingManager));
@@ -98,27 +102,33 @@ export default class Square extends THREE.Object3D{
             this.suns = results[4];
             this.suns.rotation.y = Math.PI * -70 / 180;
 
+            this.benches = results[6];
+            this.fountainMesh = results[7];
+            this.textures = results[8];
+
             this.mesh = obj;
             this.mesh.rotation.order = "YXZ";
 
             // Clockwork rotation object
             this.clockwork = new THREE.Object3D();
-            this.clockwork.rotation.order = "YXZ;"
+            //this.clockwork.rotation.order = "YXZ;"
+
+            this.clockwork.add(this.benches);
+            this.clockwork.add(this.fountainMesh)
 
             // Starts as a child of the square which does the actual rotation
             this.mesh.add(this.clockwork);
             this.activeClockwork = this.mesh;
-
             this.mesh.add(this.trees);
             this.mesh.add(this.fountain);
             this.mesh.add(this.extras);
             this.mesh.add(this.buildings);
             this.mesh.add(this.suns);
+            this.mesh.add(this.textures);
 
             this.colliders = results[5];
             this.mesh.add(this.colliders);
 
-            this.benches = results[6];
             this.clockwork.add(this.benches);
 
 
@@ -126,15 +136,18 @@ export default class Square extends THREE.Object3D{
             this.setSquareMiddle();
 
             // VIVE SCALES
-            /*
             this.mesh.scale.set(0.4, 0.4, 0.4);
+                /*
             this.benches.scale.set(2,2,2);
             this.benches.position.set(7.13,-34,8);
             this.buildings.scale.set(3,3,3); 
                 */
 
             this.fountain.position.set(0.8,23.6, -0.6);
-            //DebugUtil.positionObject(this.benches, "Benches");
+
+            DebugUtil.positionObject(this.benches, "Benches");
+            DebugUtil.positionObject(this.fountainMesh, "Fountain");
+            //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
             console.log("Finished loading square");
@@ -166,9 +179,6 @@ export default class Square extends THREE.Object3D{
         events.on("control_threshold", (passed) => {
             this.controlPassed = passed;
             if (passed) {
-                this.mesh.remove(this.clockwork);
-                this.add(this.clockwork);
-                this.clockwork.rotation.copy(this.mesh.rotation);
                 this.activeClockwork = this.clockwork;
 
                 // Show the hidden loader
@@ -375,6 +385,24 @@ export default class Square extends THREE.Object3D{
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(BENCHES_PATH,( obj ) => {
                 console.log("Loaded square benches ", obj);
+                resolve(obj);
+            });
+        });
+    }
+    loadFountain(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(FOUNTAIN_PATH,( obj ) => {
+                console.log("Loaded square fountain ", obj);
+                resolve(obj);
+            });
+        });
+    }
+    loadTextures(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(TEXTURES_PATH,( obj ) => {
+                console.log("Loaded square textures ", obj);
                 resolve(obj);
             });
         });
