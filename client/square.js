@@ -121,6 +121,37 @@ export default class Square extends THREE.Object3D{
             //events.emit("add_gui", obj.position, "z");
            // events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
 
+        // More lights
+        for (let i = 0; i < 3; i++) {
+            let pointLight = new THREE.PointLight( i == 0 ? 0xff0000 :  i == 1 ? 0x0000ff : 0x00ff00, 1, 100 );
+            pointLight.position.set(i * 5, 25, 0);
+            pointLight.intensity = 0;
+            this.mesh.add(pointLight);
+            events.emit("add_gui", {folder:"Point Light " + i, listen:true}, pointLight, "intensity",0,2);
+            events.emit("add_gui", {folder:"Point Light " + i, listen:true}, pointLight, "distance",0,100);
+            events.emit("add_gui", {folder:"Point Light " + i, listen: true, step: 0.01}, pointLight.position, "x", -100, 100);
+            events.emit("add_gui", {folder:"Point Light " + i, listen: true, step: 0.01}, pointLight.position, "y", -100, 100);
+            events.emit("add_gui", {folder:"Point Light " + i, listen: true, step: 0.01}, pointLight.position, "z", -100, 100);
+            DebugUtil.colorPicker("Point Light " + i, pointLight, "color");
+        }
+
+        for (let i = 0; i < 3; i++) {
+            let spotLight = new THREE.SpotLight( i == 0 ? 0xff0000 :  i == 1 ? 0x0000ff : 0x00ff00, 1, 100 );
+            spotLight.position.set( i * 5, 30, 0 );
+            spotLight.intensity = 0;
+            spotLight.castShadow = false;
+            events.emit("add_gui", {folder:"Spotlight " + i, listen: true}, spotLight, "castShadow");
+            events.emit("add_gui", {folder:"Spotlight " + i, listen: true, step: 0.01}, spotLight.position, "x", -100, 100);
+            events.emit("add_gui", {folder:"Spotlight " + i, listen: true, step: 0.01}, spotLight.position, "y", -100, 100);
+            events.emit("add_gui", {folder:"Spotlight " + i, listen: true, step: 0.01}, spotLight.position, "z", -100, 100);
+            events.emit("add_gui", {folder:"Spotlight " + i, listen:true}, spotLight, "intensity",0,2);
+            events.emit("add_gui", {folder:"Spotlight " + i, listen: true, step: 0.1}, spotLight, "angle", 0, Math.PI / 2);
+            events.emit("add_gui", {folder:"Spotlight " + i, listen:true}, spotLight, "distance",0,100);
+            events.emit("add_gui", {folder:"Spotlight " + i, listen:true, step: 0.1}, spotLight, "decay",1,2);
+            events.emit("add_gui", {folder:"Spotlight " + i, listen:true, step: 0.1}, spotLight, "penumbra",0,1);
+            DebugUtil.colorPicker("Spotlight " + i, spotLight, "color");
+            this.mesh.add(spotLight);
+        }
         });
 
         events.on("gaze_started", (name) => {
@@ -250,9 +281,10 @@ export default class Square extends THREE.Object3D{
                     obj.children[i].children[0].geometry = new THREE.SphereBufferGeometry( 0.3, 32, 32  );
 
                     //debug
+                    /*
                     events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "x", 0, 1);
                     events.emit("add_gui", {folder: obj.children[i].name, step: 0.01} ,obj.children[i].children[0].material.map.offset, "y", 0, 1);
-
+*/
                 }
 
                 // Save the map
