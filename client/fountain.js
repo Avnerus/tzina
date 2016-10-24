@@ -66,16 +66,21 @@ export default class Fountain extends THREE.Object3D  {
         this.fireParticleGroup = new SPE.Group({
             texture: {
                 // value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'water_splash.png')
-                value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'smokeparticle.png')
+                value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'fire.jpg'),
+                frames: new THREE.Vector2(4,1),
+                loop: 4
             },
             maxParticleCount: 6000
         });
 
+        let position = new THREE.Vector3(0,0.5,0);
+
+        this.createFire(position, 0xffffff);
+        this.add(this.fireParticleGroup.mesh);
 
         // Create fountains
         let angle = 30;
         let radius = 2.0;
-        let position = new THREE.Vector3(0,0.5,0);
         let rotation = 0;
 
         // Center Water
@@ -152,6 +157,7 @@ export default class Fountain extends THREE.Object3D  {
 
     update(dt) {
        this.particleGroup.tick(dt * 0.4);
+       this.fireParticleGroup.tick(dt * 0.4);
        //
        if (this.sound_12pm && this.sound_12pm.isPlaying && this.currentEvent) {
             if (this.sound_12pm.getCurrentTime() >= this.currentEvent.time) {
@@ -263,6 +269,9 @@ export default class Fountain extends THREE.Object3D  {
         }
     }
 
+    // velocity, velocity.spread, acceleration, acceleration.spread
+    // emitters, arrayOfIndex, _arrayOfValue,
+    // time, yoyo, repeatTime, delay, repeatDelay
     trueFirstAni() {
         this.updateEmittersValue( this.firstRingEmitters,
                                  [ 0 ],
@@ -276,11 +285,14 @@ export default class Fountain extends THREE.Object3D  {
     }
 
     firstAni() {
-        // emitters, arrayOfIndex, _arrayOfValue,
-        // time, yoyo, repeatTime, delay, repeatDelay
         this.updateEmittersValue( this.centerRingEmitters,
                                  [ 0,1,2 ],
                                  [ {x:0, y:16, z:0}, {x:3, y:0, z:3}, {x:0, y: -30, z:0} ],
+                                 3, true, 1, 0, 1);
+
+        this.updateEmittersValue( this.fireParticleGroup.emitters,
+                                 [ 0 ],
+                                 [ {x:0, y:12, z:0} ],
                                  3, true, 1, 0, 1);
     }
 
@@ -487,7 +499,10 @@ export default class Fountain extends THREE.Object3D  {
     createTrickle(position, rotation, velocity, colorCode) {
         // Get the velocity after rotation
         let emitter = new SPE.Emitter({
-            maxAge: 5,
+            maxAge: {
+                value: 2,
+                spread: 0
+            },
             type: SPE.distributions.BOX,
             position : {
                 value: position
@@ -525,7 +540,10 @@ export default class Fountain extends THREE.Object3D  {
     createTrickleCenter(position, velocity, colorCode) {
         // Get the velocity after rotation
         let emitter = new SPE.Emitter({
-            maxAge: 5,
+            maxAge: {
+                value: 2,
+                spread: 0
+            },
             type: SPE.distributions.BOX,
             position : {
                 value: position,
@@ -552,6 +570,45 @@ export default class Fountain extends THREE.Object3D  {
             transparent: true
         });
         this.particleGroup.addEmitter(emitter);
+    }
+
+    createFire(position, colorCode) {
+        // Get the velocity after rotation
+        let emitter = new SPE.Emitter({
+            maxAge: {
+                value: 0.5,
+                spread: 0
+            },
+            type: SPE.distributions.BOX,
+            position : {
+                value: position,
+                spread: new THREE.Vector3( .2, 0, .2 )
+            },
+            velocity: {
+                value: new THREE.Vector3( 0, 5, 0 ),
+                spread: new THREE.Vector3( 0, 1, 0 )
+            },
+            acceleration: {
+                value: new THREE.Vector3( 0.3, 0, 0.2 ),
+                spread: new THREE.Vector3()
+            },
+            color: {
+                value: new THREE.Color(colorCode)
+            },
+            size: {
+                value: [4, 3, 2, 0]
+            },
+            particleCount: 200,
+            opacity: {
+                value: [1, 0.8, 0.6, 0]
+            },
+            transparent: true,
+            drag: {
+                value: 0.5,
+                spread: 0
+            }
+        });
+        this.fireParticleGroup.addEmitter(emitter);
     }
 
     transX(geo, n){
