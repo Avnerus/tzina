@@ -145,7 +145,8 @@ export default class Square extends THREE.Object3D{
 
             this.fountain.position.set(0.8,23.6, -0.6);
 
-            DebugUtil.positionObject(this.benches, "Benches");
+            DebugUtil.positionObject(this.benches.children[0], "Benches1");
+            DebugUtil.positionObject(this.benches.children[1], "Benches2");
             DebugUtil.positionObject(this.fountainMesh, "Fountain");
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
