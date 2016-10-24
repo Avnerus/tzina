@@ -1,10 +1,14 @@
-
+//note:
+//the current implementation doesn't allow you to provide a soundBlur instance as
+//parameter to a connect() function. You rather need to provide the BlurModule.inputNode
 const SOUND_PATH = "assets/sound/";
 
 export default class BlurModule{
   constructor(audioContext){
     this.filterLowestCut=380;
     this.filterHighestCut=20000;
+
+    this.defaultBlurValue=0;
 
     this.audioContext=audioContext;
 
@@ -72,6 +76,7 @@ export default class BlurModule{
     }
     // getImpulse("audio/Batcave.wav");
     getImpulse(SOUND_PATH + "ui/Tunnel_impulse_response.wav");
+    this.controlBlur(this.defaultBlurValue);
   }
   setRange(min,max){
     this.filterLowestCut=min;
