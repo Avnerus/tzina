@@ -43,7 +43,7 @@ export default [
         position : [11.7, 21.83, -8],
         rotation: [337, 24, 15],
         animation: 'Itzik',
-        uvdy: 0.4889,
+        uvdy: 0.50244140625,
         uvdx: 0.0,
         scale: 0.0027 * 0.25,
         animationScale: 0.18,
@@ -213,6 +213,20 @@ export default [
         animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 2,
         subtitles: null
+    },
+    {
+        name: 'Lupo12PM',
+        basePath : 'assets/characters/lupo_12',
+        mindepth : 2160,
+        maxdepth : 6120.20654296875,
+        position : [19.47, 21.16, -30.82],
+        rotation: [350, 300, 7.3],
+        animation: null,
+        uvdy: 0.38916015625,
+        uvdx: 0.0,
+        scale: 0.003 * 0.25,
+        subtitles: null,
+        idleOnly: true
     }
 /*,
     {

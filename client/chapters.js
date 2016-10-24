@@ -63,8 +63,8 @@ export default
             "insideTitlePosition": [0, -1, 0],
 			"characters": [
 				"Miriam",
-				"Itzik",
-				"shirin2"
+                "Itzik",
+                "Lupo12PM"
 			],
 			"introfile": [
 				"Miryam",
