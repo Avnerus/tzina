@@ -5,6 +5,10 @@ export default {
             fileName: "3tress_2.ply"
         },
          {
+            name: "Threeshirin",
+            fileName: "3tress_2.ply"
+        },
+         {
             name: "palm",
             fileName: "palm.ply"
         },
@@ -34,6 +38,168 @@ export default {
             position: [-16.18,20.08,12.68],
             rotation: [270,6,83],
             scale: 1.1
+        },
+                {
+            type: "Threeshirin",
+            position: [-24.2,18.5,5.42],
+            rotation: [0,2.5,91],
+            scale: 0.2
+        },
+                  {
+            type: "Threeshirin",
+            position: [-22.4,18.6,1.83],
+            rotation: [20,2.5,91],
+            scale: 0.2
+        },
+                   {
+            type: "Threeshirin",
+            position: [-40,19,25.17],
+            rotation: [20,2.5,91],
+            scale: 0.2
+        },
+                    {
+            type: "Threeshirin",
+            position: [-27.8,18.3,21.58],
+            rotation: [208,0,91],
+            scale: 0.2
+        },
+              {
+            type: "Threeshirin",
+            position: [-20.61,17,31.45],
+            rotation: [360,192,281],
+            scale: 0.17
+        },
+           {
+            type: "Threeshirin",
+            position: [-11.63,17,38.63],
+            rotation: [212,23,360],
+            scale: 0.15
+        },
+           {
+            type: "Threeshirin",
+            position: [-9.84,16,34.14],
+            rotation: [360,204,277],
+            scale: 0.15
+        },
+           {
+            type: "Threeshirin",
+            position: [-2.66,17,23.37],
+            rotation: [31,204,281],
+            scale: 0.15
+        },
+          {
+            type: "Threeshirin",
+            position: [3.63,18,29.96],
+            rotation: [313,204,281],
+            scale: 0.15
+        },
+        {
+            type: "Threeshirin",
+            position: [22.48,15.3,33.25],
+            rotation: [305,212,277],
+            scale: 0.22
+        },
+            {
+            type: "Threeshirin",
+            position: [27.86,15.5,28.76],
+            rotation: [289,208,265],
+            scale: 0.22
+        },
+          {
+            type: "Threeshirin",
+            position: [24.27,15.3,18],
+            rotation: [305,208,269],
+            scale: 0.22
+        },
+         {
+            type: "Threeshirin",
+            position: [25.17,18.71,-9.84],
+            rotation: [257,99,360],
+            scale: 0.15
+        },
+         {
+            type: "Threeshirin",
+            position: [32.35,18.71,-13.43],
+            rotation: [265,103,204],
+            scale: 0.14
+        },
+         {
+            type: "Threeshirin",
+            position: [20.68,18.71,-17.02],
+            rotation: [253,95,212],
+            scale: 0.14
+        },
+         {
+            type: "Threeshirin",
+            position: [22.48,19,-21.5],
+            rotation: [253,95,212],
+            scale: 0.14
+        },
+         {
+            type: "Threeshirin",
+            position: [18.89,19.9,-25.99],
+            rotation: [172,309,132],
+            scale: 0.18
+        },
+          {
+            type: "Threeshirin",
+            position: [14.4,19,-37.66],
+            rotation: [140,317,132],
+            scale: 0.18
+        },
+         {
+            type: "Threeshirin",
+            position: [-2.66,19,-33.17],
+            rotation: [116,317,132],
+            scale: 0.18
+        },
+           {
+            type: "Threeshirin",
+            position: [-0.86,18.4,-25.99],
+            rotation: [95,317,132],
+            scale: 0.18
+        },
+         {
+            type: "Threeshirin",
+            position: [-12.53,19.4,-36.76],
+            rotation: [221,0,112],
+            scale: 0.18
+        },
+           {
+            type: "Threeshirin",
+            position: [-20.61,19.9,-12.53],
+            rotation: [221,0,112],
+            scale: 0.18
+        },
+          {
+            type: "Threeshirin",
+            position: [-27.79,18,-24.2],
+            rotation: [95,2,103],
+            scale: 0.18
+        },
+           {
+            type: "Threeshirin",
+            position: [-34.07,19,-27.79],
+            rotation: [233,2,83],
+            scale: 0.18
+        },
+           {
+            type: "Threeshirin",
+            position: [-24.2,20,5.42],
+            rotation: [208,2,148],
+            scale: 0.17
+        },
+         {
+            type: "Threeshirin",
+            position: [-26.89,18,-25.99],
+            rotation: [289,18.6,95],
+            scale: 0.17
+        },
+         {
+            type: "Threeshirin",
+            position: [-26.89,18,3.63],
+            rotation: [289,18.6,95],
+            scale: 0.17
         },
         //   {
         //     type: "bush2",
