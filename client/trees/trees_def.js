@@ -2,45 +2,45 @@ export default {
     types: [
         {
             name: "ThreeTrees",
-            fileName: "3tress_2/cloud.js"
+            fileName: "3tress_2.ply"
         },
          {
             name: "palm",
-            fileName: "palm/cloud.js"
+            fileName: "palm.ply"
         },
          {
             name: "single",
-            fileName: "singleTree/cloud.js"
+            fileName: "singleTree.ply"
         },
            {
             name: "bush1",
-            fileName: "sidetwo/cloud.js"
+            fileName: "sidetwo.ply"
         },
              {
             name: "bush2",
-            fileName: "sideone/cloud.js"
-        }
-    ],
+            fileName: "sideone.ply"
+        },
 
+    ],
     instances: [
-        {
-            type: "bush1",
-            position: [-4.45,18.73,1.86],
-            rotation: [180,172,184],
-            scale: 0.42
-        }, 
+        //   {
+        //     type: "bush1",
+        //     position: [-4.45,18.73,1.86],
+        //     rotation: [180,172,184],
+        //     scale: 0.42
+        // }, 
              {
             type: "ThreeTrees",
             position: [-16.18,20.08,12.68],
             rotation: [270,6,83],
             scale: 1.1
         },
-          {
-            type: "bush2",
-            position: [0.96,16.03,-3.55],
-            rotation: [176,156,184],
-            scale: 0.51
-        }, 
+        //   {
+        //     type: "bush2",
+        //     position: [2.76,17.38,-2.65],
+        //     rotation: [176,156,184],
+        //     scale: 0.47
+        // }, 
          {
             type: "ThreeTrees",
             position: [4,22,14],
@@ -118,12 +118,13 @@ export default {
             rotation: [260,0,90],
             scale: 0.75
         },
+
         {
             type: "palm",
             position: [8,22,6],
             rotation: [60,0,90],
             scale: 0.75
-         },
+        },
          {
             type: "palm",
             position: [-38,20,-32],
@@ -136,8 +137,6 @@ export default {
         //     rotation: [6,6,103],
         //     scale: 0.95
         // },
-        // 
-    
         {
             type: "ThreeTrees",
             position: [-20,26,-20],
