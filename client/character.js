@@ -16,7 +16,8 @@ export default class Character extends THREE.Object3D {
             uvdx: props.uvdx,
             scale: props.scale,
             width: props.width,
-            height: props.height
+            height: props.height,
+            fps: 15
         });
 
         if (!props.idleOnly) {
@@ -29,7 +30,8 @@ export default class Character extends THREE.Object3D {
                 scale: props.scale,
                 volume: props.volume,
                 width: props.width,
-                height: props.height
+                height: props.height,
+                fps: 25
             });
         }
 

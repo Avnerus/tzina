@@ -7,7 +7,6 @@
 
 import DebugUtil from './debug'
 
-const SEC_PER_RGBD_FRAME = 1 / 25;
 const VERTS_WIDE = 256;
 const VERTS_TALL = 256;
 const precision  = 3;
@@ -28,6 +27,8 @@ export default class VideoRGBD  {
         this.wire_rgbd_fs = glslify('../shaders/rgbd_wire_fs.glsl')
 
         this.timer = 0;
+
+        this.SEC_PER_RGBD_FRAME = 1 / this.properties.fps;
 
         console.log("VideoRGBD constructed: " , this.properties);
     }
@@ -171,7 +172,7 @@ export default class VideoRGBD  {
     }
     update(dt) {
         this.timer += dt;
-        if (this.timer >= SEC_PER_RGBD_FRAME) {
+        if (this.timer >= this.SEC_PER_RGBD_FRAME) {
             this.timer = 0;
             if ( this.isPlaying && this.video.readyState === this.video.HAVE_ENOUGH_DATA ) {
 
