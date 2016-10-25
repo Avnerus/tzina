@@ -96,8 +96,8 @@ export default class Game {
         
         this.hannah = new Character({
             basePath : 'assets/characters/hanna',
-            mindepth : 0,
-            maxdepth : 3494.158935547,
+            mindepth : 1656,
+            maxdepth : 2789,
             position : [30, 6, 42],
             rotation: [0, 170, 0],
             name: 'Hanna',

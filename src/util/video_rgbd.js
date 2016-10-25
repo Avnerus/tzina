@@ -60,9 +60,9 @@ export default class VideoRGBD  {
             x1: 610,
             x2: 1150,
             x3: 920,
-            y1: 600,
-            y2: 1100,
-            y3: 720,
+            y1: 512,
+            y2: 1024,
+            y3: 1024,
             uvdy: 0.478,
             uvdx: 0,
             posz: 2600.0,
@@ -112,7 +112,7 @@ export default class VideoRGBD  {
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
         //this.mesh = new THREE.Mesh( geometry, material);
         //this.mesh.scale.set(0.0016, 0.0016, 0.0016);
-        this.mesh.scale.set(0.003, 0.003, 0.003);
+        this.mesh.scale.set(0.005, 0.005, 0.005);
         this.mesh.rotation.set(
             this.properties.rotation[0],
             this.properties.rotation[1],
