@@ -35,3 +35,5 @@ node_modules
 *.swp
 *.webm
 *.ogg
+
+public
