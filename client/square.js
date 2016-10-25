@@ -36,32 +36,33 @@ export default class Square extends THREE.Object3D{
         this.ENTRY_POINTS = [
             {
                 hour: 19,
-                worldPosition: [-140,40,180],
+                worldPosition: [-12,13,40],
                 startPosition: [-25, 20, -8],
                 endPosition: [-18, 22.1, -7]
             },
             {
                 hour: 17,
-                worldPosition: [130,40,80],
+                worldPosition: [50,13,26],
                 startPosition: [-3, 20, 43],
                 endPosition: [-3.5, 22.1, 18]
             },
             {
                 hour: 12,
-                worldPosition: [-100,40,270],
+                worldPosition: [-14,12,41],
                 startPosition: [22, 20.5, 38.5],
-                endPosition: [17, 22.1, 15.5]
+                endPosition: [14, 22.1, 8.5]
             },
             {
                 hour: 9,
-                startPosition: [41, 20.5, 8],
-                endPosition: [21, 22.1, 5]
+                worldPosition: [-7.5 ,12,51],
+                startPosition: [40, 20.5, 17.6],
+                endPosition: [15, 22.1, -1]
             },
             {
                 hour: 7,
-                worldPosition: [130,40,80],
-                startPosition: [-19, 20.5, -62],
-                endPosition: [-10, 22.1, -17.5]
+                worldPosition: [63,12,5],
+                startPosition: [-26, 20.5, -62],
+                endPosition: [-13, 22.1, -12]
             },
             {
                 hour: 0,
@@ -145,9 +146,13 @@ export default class Square extends THREE.Object3D{
 
             this.fountain.position.set(0.8,23.6, -0.6);
 
+            this.buildings.rotation.y = 4 * Math.PI / 180;
+            //DebugUtil.positionObject(this.buildings, "Buildings");
+
+            /*
             DebugUtil.positionObject(this.benches.children[0], "Benches1");
             DebugUtil.positionObject(this.benches.children[1], "Benches2");
-            DebugUtil.positionObject(this.fountainMesh, "Fountain");
+            DebugUtil.positionObject(this.fountainMesh, "Fountain") */
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
@@ -356,8 +361,9 @@ export default class Square extends THREE.Object3D{
                     }
                 })
 
+                /*
                 events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "x", 0, 1);
-                events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
+                events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1); */
 
                 console.log("Reordered suns", reorderedSuns);
                 

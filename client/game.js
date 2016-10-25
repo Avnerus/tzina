@@ -193,7 +193,7 @@ export default class Game {
                 this.scene.add(this.introAni);
             }
 
-            // DebugUtil.positionEntry(this.square.ENTRY_POINTS[5], this.square.mesh, this.scene);
+            //DebugUtil.positionEntry(this.square.ENTRY_POINTS[0], this.square.mesh, this.scene);
 
             onLoad();
         };

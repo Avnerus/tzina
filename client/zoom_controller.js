@@ -31,13 +31,13 @@ export default class ZoomController {
         )
         this.STARTING_POSITION = new THREE.Vector3(
             0,
-            50,
-            350
+            15,
+            100
         );
         this.MID_ZOOM = new THREE.Vector3(
             0,
-            45,
-            300 
+            10,
+            50 
         );
 
         this.CHAPTER_THRESHOLD = 0.45;
