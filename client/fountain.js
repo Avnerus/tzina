@@ -17,7 +17,7 @@ export default class Fountain extends THREE.Object3D  {
         this.soundManager = soundManager;
         this.soundEvents = [
             { time: 1, action: () => {
-                            this.trueFirstAni();
+                            this.zeroAni();
                         } }, 
             { time: 6, action: () => {
                             this.firstAni();
@@ -73,10 +73,16 @@ export default class Fountain extends THREE.Object3D  {
             maxParticleCount: 6000
         });
 
-        let position = new THREE.Vector3(0,0.5,0);
+        // Create fire
+            let position = new THREE.Vector3(0,0.5,0);
+            this.createFire(position, 0xffffff);
+            this.add(this.fireParticleGroup.mesh);
 
-        this.createFire(position, 0xffffff);
-        this.add(this.fireParticleGroup.mesh);
+            // EmittersGroup
+            this.fireEmitters = [];
+            for(let i=0; i<this.fireParticleGroup.emitters.length; i++){
+                this.fireEmitters.push( this.fireParticleGroup.emitters[i] );
+            }
 
         // Create fountains
         let angle = 30;
@@ -121,8 +127,8 @@ export default class Fountain extends THREE.Object3D  {
             }
         }
 
-        console.log( this.firstRingEmitters.length );
-        console.log( this.secondRingEmitters.length );
+        // console.log( this.firstRingEmitters.length );
+        // console.log( this.secondRingEmitters.length );
 
         // Sound
         this.soundManager.loadSound(this.event12pm_file)
@@ -161,7 +167,7 @@ export default class Fountain extends THREE.Object3D  {
        //
        if (this.sound_12pm && this.sound_12pm.isPlaying && this.currentEvent) {
             if (this.sound_12pm.getCurrentTime() >= this.currentEvent.time) {
-                 console.log("do anim sequence ", this.currentEvent.action );
+                 console.log("do anim sequence at ", this.currentEvent.time );
                 this.currentEvent.action();
                 if (this.soundEvents.length > 0) {
                     this.currentEvent = this.soundEvents.shift();
@@ -270,9 +276,11 @@ export default class Fountain extends THREE.Object3D  {
     }
 
     // velocity, velocity.spread, acceleration, acceleration.spread
+
     // emitters, arrayOfIndex, _arrayOfValue,
     // time, yoyo, repeatTime, delay, repeatDelay
-    trueFirstAni() {
+
+    zeroAni() {
         this.updateEmittersValue( this.firstRingEmitters,
                                  [ 0 ],
                                  [ {x:1.5, y:8, z:0} ],
@@ -285,14 +293,16 @@ export default class Fountain extends THREE.Object3D  {
     }
 
     firstAni() {
+        // from 9
         this.updateEmittersValue( this.centerRingEmitters,
                                  [ 0,1,2 ],
                                  [ {x:0, y:16, z:0}, {x:3, y:0, z:3}, {x:0, y: -30, z:0} ],
                                  3, true, 1, 0, 1);
-
-        this.updateEmittersValue( this.fireParticleGroup.emitters,
+        //
+        // from 5
+        this.updateEmittersValue( this.fireEmitters,
                                  [ 0 ],
-                                 [ {x:0, y:12, z:0} ],
+                                 [ {x:0, y:10, z:0} ],
                                  3, true, 1, 0, 1);
     }
 
@@ -305,7 +315,7 @@ export default class Fountain extends THREE.Object3D  {
         this.updateEmittersValue( this.centerRingEmitters,
                                  [ 0 ],
                                  [ {x:0, y:8, z:0} ],
-                                 4, false, 2, 1, 1);
+                                 4, false, 3, 1, 1);
 
         //
 
@@ -328,6 +338,15 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:1.5, y:11, z:0} ],
                                  4, false, 2, 1, 1);
+        //
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:12, z:0} ],
+                                 0, false, 3, 0, 5);
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:4, z:0} ],
+                                 4, false, 3, 1, 1);
     }
 
     thirdAni() {
@@ -344,6 +363,12 @@ export default class Fountain extends THREE.Object3D  {
         this.updateEmittersValue( this.secondRingEmitters,
                                  [ 0 ],
                                  [ {x:2, y:6, z:0} ],
+                                 0.5, true, 3, 1, 2);
+        //
+        // time, yoyo, repeatTime, delay, repeatDelay
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:7, z:0} ],
                                  0.5, true, 3, 1, 2);
     }
 
@@ -372,6 +397,11 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:1.5, y:12, z:0} ],
                                  1, true, 3, 1, 2);
+        //
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:8.5, z:0} ],
+                                 1, true, 3, 1, 2);
     }
 
     fifthAni() {
@@ -390,6 +420,11 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:1.5, y:7, z:0} ],
                                  8, false, 0, 0, 0);
+        //
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:5, z:0} ],
+                                 8, false, 0, 0, 0);
     }
 
     sixthAni() {
@@ -406,6 +441,11 @@ export default class Fountain extends THREE.Object3D  {
         this.updateEmittersValue( this.secondRingEmitters,
                                  [ 0 ],
                                  [ {x:2.5, y:9, z:0} ],
+                                 1, true, 7, 0, 1);
+        //
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:6, z:0} ],
                                  1, true, 7, 0, 1);
     }
 
@@ -428,6 +468,11 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:1.5, y:12, z:0} ],
                                  1, true, 7, 0, 1);
+        //
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:6.5, z:0} ],
+                                 1, true, 7, 0, 1);
     }
 
     eighthAni() {
@@ -446,23 +491,33 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:1.5, y:12, z:0} ],
                                  8, false, 0, 0, 0);
+        //
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:9.5, z:0} ],
+                                 6, false, 0, 2, 0);
     }
 
     ninethAni() {
         this.updateEmittersValue( this.centerRingEmitters,
                                  [ 0 ],
                                  [ {x:0, y:12, z:0} ],
-                                 0, true, 7, 0, 1);
+                                 0.1, true, 7, 0, 1);
         //
         this.updateEmittersValue( this.firstRingEmitters,
                                  [ 0 ],
                                  [ {x:1, y:6, z:0} ],
-                                 0, true, 7, 0, 1);
+                                 0.1, true, 7, 0, 1);
 
         this.updateEmittersValue( this.secondRingEmitters,
                                  [ 0 ],
                                  [ {x:1.5, y:9, z:0} ],
-                                 0, true, 7, 0, 1);
+                                 0.1, true, 7, 0, 1);
+        //
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:6, z:0} ],
+                                 0.1, true, 7, 0, 1);
     }
 
     tenthAni() {
@@ -494,6 +549,15 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:1.5, y:7, z:0} ],
                                  8, false, 0, 2, 0);
+        //
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:12, z:0} ],
+                                 0, false, 0, 0, 0);
+        this.updateEmittersValue( this.fireEmitters,
+                                 [ 0 ],
+                                 [ {x:0, y:4, z:0} ],
+                                 5, false, 0, 2, 0);
     }
 
     createTrickle(position, rotation, velocity, colorCode) {
