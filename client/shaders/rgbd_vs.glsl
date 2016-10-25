@@ -52,19 +52,18 @@ vec3 rgb2hsl( vec3 color ) {
 
 vec3 xyz( float x, float y, float depth ) {
     float z = depth * ( maxdepth - mindepth ) + mindepth;
-    return vec3( ( x / (width * 2.0) ) * z * fx, ( y / (height / 2.0) ) * z * fy, - z );
+    return vec3( ( x / height  ) * z * fx, ( y / height  ) * z * fy, - z );
 }
 
 void main() {
 
-    vUv = vec2( ( position.x + (width / 2.0 + 10.0) ) / width , ( position.y + (height / 2.0)  ) / (height / 2.0) );
+    vUv = vec2( ( position.x + (width / 2.0) ) / width , ( position.y + (512.0)  ) / (height / 2.0) );
 
     vUv.y = vUv.y * 0.5;// + 0.5;
 
     vec3 hsl = rgb2hsl( texture2D( map, vUv ).xyz );
     vec4 pos = vec4( xyz( position.x, position.y, hsl.x ), 1.0 );
     pos.z += 2600.0;
-    pos.y += 350.0;
 
     visibility = hsl.z * 2.1;
 
