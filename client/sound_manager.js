@@ -17,7 +17,7 @@ let ambientSamples=[
   {name: "highway_2", path:'Kikar_Ambiance_2_Loud.ogg', color:0x0Fff00, position:[25, 15, 0]},
   {name: "innerKikar", path:'Pigeons_Center_Kikar.ogg', color:0x00ff0F, position:[0, 20, 0]},
   {name: "wind", path:'WindinTrees.ogg', color:0x00ffF0, position:[0, 30, 20]},
-  {name: "testsound", path:'testsound.ogg', color:0xFF0000, position:[0, 25, 15], disable:true}
+  {name: "testsound", path:'testsound.ogg', color:0xFF0000, position:[0, 25, 15], disable:false}
 ];
 
 
@@ -48,23 +48,31 @@ export default class SoundManager {
         },
         eachSampler:function(what,except){
           for(var a in this.samplers){
-            if(except!==undefined && except!=this.samplers[a]){
+            if(except===undefined || except!=this.samplers[a]){
               what(this.samplers[a],a);
             }
           }
         },
         //you can also name it as blurAll(except)
-        setFocus:function(on){
+        setFocus:function(on,time){
           //blurr all except the one in focus
           this.eachSampler(function(thisSampler,n){
-            thisSampler.controlBlur(0.9);
+            thisSampler.controlBlur(1,time);
           },on);
           //focus the one we are focusing, if there is any
           if(on!==undefined) if(typeof(on.controlBlur)==='function'){
-            on.controlBlur(0);
+            on.controlBlur(0,time);
           }else{
             console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
           }
+        },
+        //go back to normal without focusing any sound
+        unsetFocus:function(time){
+          console.log("here 2");
+          this.eachSampler(function(thisSampler,n){
+            console.log("refocus"+n);
+            thisSampler.controlBlur(0,time);
+          });
         },
       };
     }
@@ -114,6 +122,7 @@ export default class SoundManager {
         //LISTENER
         this.listener = new THREE.AudioListener();
         this.camera.add(this.listener);
+
         //create positional samples
         for(var a in ambientSamples){
 
@@ -130,19 +139,19 @@ export default class SoundManager {
               thisSampler.setToLoop();
 
               let thisSamplerGuiControl={
-                blur:0.5,
+                // blur:0.5,
                 focus:function(){
-                  thisSoundManager.panorama.setFocus(thisSampler);
+                  thisSoundManager.panorama.setFocus(thisSampler,3);
                 },
               }
 
-              events.emit("add_gui", {
-                folder: "Sound Blur",
-                step:0.01,
-                onChange:function(a){
-                  thisSampler.blurModule.controlBlur(a)
-                }
-              },thisSamplerGuiControl,"blur",0,1);
+              // events.emit("add_gui", {
+              //   folder: "Sound Blur",
+              //   step:0.01,
+              //   onChange:function(a){
+              //     thisSampler.blurModule.controlBlur(a)
+              //   }
+              // },thisSamplerGuiControl,"blur",0,1);
 
               events.emit("add_gui", {
                 folder: "Sound setFocus",
@@ -153,7 +162,10 @@ export default class SoundManager {
             thisSample.sampler=pSampler;
           }
         }
-
+        //gui control for back to normal
+        events.emit("add_gui", {
+          folder: "Sound setFocus",
+        },{unset:function(){console.log("here1");thisSoundManager.panorama.unsetFocus(3);}},"unset");
         // Dynamically loaded sounds
         this.sounds = {}
         this.activateEventListeners();
@@ -311,9 +323,10 @@ class PositionalSoundSampler extends StaticSoundSampler{
       set:function(a,b,c){return pa.position.set(a,b,c)},
       get:function(){return pa.position.get()}
     }
-    this.control=function(...a){this.blurModule.control(a)};
-    this.controlBlur=function(...a){this.blurModule.controlBlur(a)};
-    this.controlVolume=function(...a){this.blurModule.controlVolume(a)};
+    //using apply because there are n arguments
+    this.control=function(...a){this.blurModule.control.apply(this.blurModule,a)};
+    this.controlBlur=function(...a){this.blurModule.controlBlur.apply(this.blurModule,a)};
+    this.controlVolume=function(...a){this.blurModule.controlVolume.apply(this.blurModule,a)};
     // this.position=this.positionalAudio.position;
   }
   init(sampleUrl,loadingManager,loadReadyCallback){

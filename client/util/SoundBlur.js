@@ -7,6 +7,7 @@ export default class BlurModule{
   constructor(audioContext){
     this.filterLowestCut=380;
     this.filterHighestCut=20000;
+    this.volumeWhenBLurred=0.7;
 
     this.defaultBlurValue=0;
 
@@ -95,16 +96,26 @@ export default class BlurModule{
     if(values.Blur){
       this.controlVolume(values.Blur);
     }
+    if(values.interpolateBlur){
+      this.interpolateBlur(values.Blur);
+    }
   }
   controlVolume(value){
     this.inputNode.gain.value=value;
   }
-  controlBlur(value){
+  controlBlur(value,changeRate){
     let wet=value;
-    let filterCut=(1-value*value)*this.filterHighestCut+this.filterLowestCut;
-    // console.log(filterCut);
-    this.biquadFilter.frequency.value=filterCut;
-    this.dryLevel.gain.value=1-wet;
-    this.wetLevel.gain.value=wet;
-  };
+    let filterCut=(1-value/**value*/)*this.filterHighestCut+this.filterLowestCut;
+    if(changeRate){
+      let interpolationStart=this.audioContext.currentTime+0.01;
+      this.biquadFilter.frequency.setTargetAtTime(filterCut,interpolationStart,changeRate);
+      this.dryLevel.gain.setTargetAtTime(1-wet,interpolationStart,changeRate);
+      this.wetLevel.gain.setTargetAtTime(wet*this.volumeWhenBLurred,interpolationStart,changeRate);
+    }else{
+      console.log("set value is "+wet);
+      this.biquadFilter.frequency.value=filterCut;
+      this.dryLevel.gain.value=1-wet;
+      this.wetLevel.gain.value=wet*this.volumeWhenBLurred;
+    }
+  }
 }
