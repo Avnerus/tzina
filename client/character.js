@@ -14,7 +14,9 @@ export default class Character extends THREE.Object3D {
             fileName: props.basePath + "_idle.webm",
             uvdy: props.uvdy_idle ? props.uvdy_idle : props.uvdy,
             uvdx: props.uvdx,
-            scale: props.scale
+            scale: props.scale,
+            width: props.width,
+            height: props.height
         });
 
         if (!props.idleOnly) {
@@ -25,7 +27,9 @@ export default class Character extends THREE.Object3D {
                 uvdy: props.uvdy,
                 uvdx: props.uvdx,
                 scale: props.scale,
-                volume: props.volume
+                volume: props.volume,
+                width: props.width,
+                height: props.height
             });
         }
 

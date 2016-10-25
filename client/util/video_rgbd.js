@@ -76,6 +76,8 @@ export default class VideoRGBD  {
                 "maxdepth" : { type : "f", value : this.properties.maxdepth },
                 "uvdy" : { type : "f", value : this.properties.uvdy },
                 "uvdx" : { type : "f", value : this.properties.uvdx },
+                "width" : { type : "f", value : this.properties.width },
+                "height" : { type : "f", value : this.properties.height },
                 "opacity" : { type : "f", value : 1.0 }
             },
 
