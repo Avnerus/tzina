@@ -34,7 +34,7 @@ export default class Game {
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setClearColor( 0, 1 );
         this.renderer.setPixelRatio(window.devicePixelRatio);
-        //this.renderer.setClearColor( 0x000000, 1 );
+        this.renderer.setClearColor( 0x0e0e0e, 1 );
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 1, 2000000);
@@ -96,8 +96,8 @@ export default class Game {
         
         this.hannah = new Character({
             basePath : 'assets/characters/hanna',
-            mindepth : 2138.454101562,
-            maxdepth : 3047.334472656,
+            mindepth : 0,
+            maxdepth : 3494.158935547,
             position : [30, 6, 42],
             rotation: [0, 170, 0],
             name: 'Hanna',
@@ -160,7 +160,7 @@ export default class Game {
         this.sky.init();
         this.soundManager.init();
         this.hannah.init(this.loadingManager, this.animations)
-        this.square.init(this.collisionManager, this.loadingManager);
+        //this.square.init(this.collisionManager, this.loadingManager);
 
         // Animations init
         Object.keys(this.animations).forEach((key) => {
@@ -209,7 +209,7 @@ export default class Game {
         this.resize();
 
 
-        this.square.fountain.startCycle();
+        //this.square.fountain.startCycle();
 
         // Init the intro
         //this.intro.init();
@@ -225,8 +225,9 @@ export default class Game {
     }
 
     update(dt,et) {
+        /*
         this.sky.update(dt);
-        this.square.update();
+        this.square.update();*/
         if (this.keyboardController) {
             this.keyboardController.update(dt);
             this.zoomController.update(dt);
