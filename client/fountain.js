@@ -143,17 +143,67 @@ export default class Fountain extends THREE.Object3D  {
             },10000);
         });
 
-        // water: velocity
+        // Light
+        let geo = new THREE.SphereGeometry( .3 );
+        let mat = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+        this.center = new THREE.Mesh(geo, mat);
 
-        // fire: another group
+        this.spotLights = [];
+        this.spotLights[0] = this.createSpotLight( new THREE.Vector3(4.47, -1.71, 0.96),
+                                                   new THREE.Vector3(0.3, 1, -0.3),
+                                                   1,   // intensity
+                                                   0.6, // angle
+                                                   20,  // distance
+                                                   1.5, // decay
+                                                   0.3  // penumbra
+                                                );
+        this.spotLights[1] = this.createSpotLight( new THREE.Vector3(-3.61, -1.71, 2.82),
+                                                   new THREE.Vector3(-0.3, 1, 0.3),
+                                                   1,   // intensity
+                                                   0.6, // angle
+                                                   20,  // distance
+                                                   1.5, // decay
+                                                   0.3  // penumbra
+                                                );
+        this.spotLights[2] = this.createSpotLight( new THREE.Vector3(-0.93, -1.65, -4.9),
+                                                   new THREE.Vector3(-0.3, 1, -0.3),
+                                                   1,   // intensity
+                                                   0.7, // angle
+                                                   20,  // distance
+                                                   1.5, // decay
+                                                   0.3  // penumbra
+                                                );
+        this.spotLightCenters = new THREE.Object3D();
+        this.spotLightCenters.add(this.spotLights[0].target);
+        this.spotLightCenters.add(this.spotLights[1].target);
+        this.spotLightCenters.add(this.spotLights[2].target);
+        this.add( this.spotLightCenters );
 
-        // central: another loop
+        DebugUtil.positionObject(this.spotLightCenters, "target");
+        // DebugUtil.positionObject(this.spotLights[0], "light 0");
+        // DebugUtil.positionObject(this.spotLights[1], "light 1");
+        // DebugUtil.positionObject(this.spotLights[2], "light 2");
 
         // cylinder: pass in through constructor; add function in square.js to get cylinders; getObjectByName
         this.fountainMeshes = this.square.getFountainMeshes();
         // DebugUtil.positionObject(this.fountainMeshes[0], "Fountain 0");
         // DebugUtil.positionObject(this.fountainMeshes[1], "Fountain 1");
         // DebugUtil.positionObject(this.fountainMeshes[2], "Fountain 2"); // doesn't move
+    }
+
+    createSpotLight( pos, pos2, _intensity, _angle, _distance, _decay, _penumbra ) {
+        let geometry = new THREE.ConeGeometry( .1, .2, 8 );
+        let material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+        let cone = new THREE.Mesh( geometry, material );
+
+        let s_l = new THREE.SpotLight( 0xfff291, _intensity, _distance, _angle, _penumbra, _decay );
+        // s_l.target.add( this.center.clone() );
+        s_l.target.position.copy( pos2 );
+        s_l.position.copy( pos );
+        s_l.add(cone);
+        this.add(s_l);
+        // this.add(s_l.target);
+        return s_l;
     }
 
     playSound() {
@@ -304,6 +354,10 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:0, y:10, z:0} ],
                                  3, true, 1, 0, 1);
+        //
+        TweenMax.to( this.spotLightCenters.position, 3, { y: 1.4,
+                                                 yoyo: true, repeat: 1,
+                                                 delay: 0, repeatDelay: 1} );
     }
 
     secAni() {
@@ -347,6 +401,13 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:0, y:4, z:0} ],
                                  4, false, 3, 1, 1);
+        //
+        TweenMax.to( this.spotLightCenters.position, 2, { y: 1.4,
+                                                 yoyo: false, repeat: 3,
+                                                 delay: 1.5, repeatDelay: 2} );
+        TweenMax.to( this.spotLightCenters.position, 4, { y: -1,
+                                                 yoyo: false, repeat: 2,
+                                                 delay: 1.5, repeatDelay: 1} );
     }
 
     thirdAni() {
@@ -370,6 +431,11 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:0, y:7, z:0} ],
                                  0.5, true, 3, 1, 2);
+        //
+        TweenMax.to( this.spotLightCenters.position, 2, { y: 1.4 } );
+        TweenMax.to( this.spotLightCenters.rotation, 2, { y: 4,
+                                                 yoyo: true, repeat: 5,
+                                                 delay: 0, repeatDelay: 0} );
     }
 
     fourthAni() {
@@ -402,6 +468,13 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:0, y:8.5, z:0} ],
                                  1, true, 3, 1, 2);
+        //
+        TweenMax.to( this.spotLightCenters.rotation, 3, { y: -4,
+                                                 yoyo: true, repeat: 3,
+                                                 delay: 1, repeatDelay: 0} );
+        TweenMax.to( this.spotLightCenters.position, 2, { x: "+=1", z: "+=1",
+                                                 yoyo: true, repeat: 3,
+                                                 delay: 1, repeatDelay: 1} );
     }
 
     fifthAni() {
@@ -425,6 +498,8 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:0, y:5, z:0} ],
                                  8, false, 0, 0, 0);
+        //
+        TweenMax.to( this.spotLightCenters.position, 8, { y: -2.5 } );
     }
 
     sixthAni() {
@@ -447,6 +522,10 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:0, y:6, z:0} ],
                                  1, true, 7, 0, 1);
+        //
+        TweenMax.to( this.spotLightCenters.position, 2, { y: 1.4,
+                                                 yoyo: true, repeat: 7,
+                                                 delay: 0, repeatDelay: 0} );
     }
 
     seventhAni() {
@@ -473,6 +552,10 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:0, y:6.5, z:0} ],
                                  1, true, 7, 0, 1);
+        //
+        TweenMax.to( this.spotLightCenters.position, 2, { y: 1.5,
+                                                 yoyo: true, repeat: 6,
+                                                 delay: 0, repeatDelay: 0} );
     }
 
     eighthAni() {
@@ -496,6 +579,10 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:0, y:9.5, z:0} ],
                                  6, false, 0, 2, 0);
+        //
+        TweenMax.to( this.spotLightCenters.rotation, 12, { y: Math.PI*8, delay: 2} );
+        TweenMax.to( this.spotLightCenters.position, 3, { x: "-=1", z: "-=1",
+                                                 yoyo: true, repeat: 5} );
     }
 
     ninethAni() {
@@ -558,6 +645,9 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:0, y:4, z:0} ],
                                  5, false, 0, 2, 0);
+        //
+        TweenMax.to( this.spotLightCenters.position, 2, { y: 1.8 } );
+        TweenMax.to( this.spotLightCenters.position, 5, { y: -1.7, delay: 2} );
     }
 
     createTrickle(position, rotation, velocity, colorCode) {
