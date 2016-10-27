@@ -1,16 +1,26 @@
+import DebugUtil from './util/debug'
+
 const MAX_FLOOD_HEIGHT = 13;
+
 export default class Flood extends THREE.Object3D  {
     constructor() {
         super();
         console.log("Flood constructed!")
 
-        this.waveSource = new THREE.Vector3(0, 10, 0);
-        this.waveFrequencey = 0.5;
+        this.waveSource = new THREE.Vector3(0, -30, 0);
+        this.waveFrequencey = 0.35;
         this.waveHeight = 1.2;
         this.waveLength = 0.7;
     }
     init(scene) {
-        let geometry = new THREE.PlaneGeometry(1000, 1000, 24, 24);
+        //let geometry = new THREE.PlaneGeometry(1000, 1000, 24, 24);
+        let geometry = new THREE.CircleGeometry( 100, 24  );
+        let tessellateModifier = new THREE.TessellateModifier(.01);
+        let tessellationDepth = 5;
+        for(let i = 0; i < tessellationDepth; i++){
+            tessellateModifier.modify(geometry);
+        }
+
         console.log(geometry);
         let material = new THREE.MeshPhongMaterial({
             color: 0x99F9FF,
@@ -18,15 +28,30 @@ export default class Flood extends THREE.Object3D  {
             shininess: 20,
             shading: THREE.FlatShading,
             transparent: true,
-            side: THREE.DoubleSide,
+            //side: THREE.DoubleSide,
             wireframe: false
         });
         this.mesh = new THREE.Mesh(geometry, material);
-        this.mesh.position.y = 10;
+        this.mesh.frustumCulled = false;
+        //
+        // Fountain center
+        this.mesh.position.set(0.42, 10, 0.42)
+
         this.mesh.rotation.x = -Math.PI / 2;
+
+        DebugUtil.positionObject(this.mesh, "Flood");
+
         this.add(this.mesh);
 
         this.time = 0;
+
+
+        events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveLength");
+        events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveFrequencey");
+        events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveHeight");
+        events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "x");
+        events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "y");
+        events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "z");
     }
 
     update(dt) {

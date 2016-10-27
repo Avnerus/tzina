@@ -6,12 +6,14 @@ export default {
     skipIntro: true,
     startTime: 9,
     skipCharacters: false,
-    movementSpeed: 0.2,
-    //movementSpeed: 1,
+    //movementSpeed: 0.2,
+    movementSpeed: 1,
     daySpeed: 0.003,
     noSquare: false,
     fullscreen: false,
-    noAnimations: false,
-    noExtras: false
+    noAnimations: true,
+    noExtras: true,
+    noTrees: true,
+    noCharacters: true
 //    daySpeed: 0.08,
 }

@@ -19,12 +19,14 @@ export default class CharacterController {
     }
     init(loadingManager) {
         console.log("Initializing Character controller");
-        Characters.forEach((characterProps) => {
-            let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager);
-            character.animation = this.animations[characterProps.animation];
-            character.init(loadingManager);
-            this.characters[characterProps.name] = character;
-        });
+        if (!this.config.noCharacters) {
+            Characters.forEach((characterProps) => {
+                let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager);
+                character.animation = this.animations[characterProps.animation];
+                character.init(loadingManager);
+                this.characters[characterProps.name] = character;
+            });
+        }
         events.on("hour_updated", (hour) => {
             
             let clone = this.activeCharacters.slice(0);

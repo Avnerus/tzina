@@ -83,7 +83,6 @@ export default class Square extends THREE.Object3D{
 
         let loaders = [
             this.loadSquare(loadingManager),
-            this.trees.init(loadingManager),
             this.fountain.init(loadingManager),
             this.loadBuildings(loadingManager),
             this.loadSuns(loadingManager),
@@ -95,20 +94,28 @@ export default class Square extends THREE.Object3D{
         if (!this.config.noExtras) {
             loaders.push(this.extras.init(loadingManager));
         }
+        if (!this.config.noTrees) {
+            loaders.push(this.trees.init(loadingManager));
+        }
         Promise.all(loaders)
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
-            this.buildings = results[3];
-            this.suns = results[4];
+            this.buildings = results[2];
+            this.suns = results[3];
             this.suns.rotation.y = Math.PI * -70 / 180;
-
-            this.benches = results[6];
-            this.fountainMesh = results[7];
-            this.textures = results[8];
 
             this.mesh = obj;
             this.mesh.rotation.order = "YXZ";
+
+            this.colliders = results[4];
+            this.mesh.add(this.colliders);
+
+            this.benches = results[5];
+
+            this.fountainMesh = results[6];
+            this.textures = results[7];
+
 
             // Clockwork rotation object
             this.clockwork = new THREE.Object3D();
@@ -127,8 +134,6 @@ export default class Square extends THREE.Object3D{
             this.mesh.add(this.suns);
             this.mesh.add(this.textures);
 
-            this.colliders = results[5];
-            this.mesh.add(this.colliders);
 
             this.clockwork.add(this.benches);
 
@@ -221,11 +226,11 @@ export default class Square extends THREE.Object3D{
     }
 
     turnOffSun(name) {
-        console.log("Turn off sun ", name);
+        //console.log("Turn off sun ", name);
         let sun = this.suns.getObjectByName(name);
         if (sun) {
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
-            console.log("Turn off sun", sun);
+            //console.log("Turn off sun", sun);
             //sun.material.side = THREE.BackSide;
             sunMesh.material.color = new THREE.Color(0x888788);
             //sun.material.specular = new THREE.Color(0x000000);
@@ -259,7 +264,7 @@ export default class Square extends THREE.Object3D{
                     sun.getObjectByName(name + "_L").disorganize();
                 }
 
-                console.log("Turned on sun", sun);
+                //console.log("Turned on sun", sun);
             }
         }
     }
