@@ -46,7 +46,6 @@ export default class Pidgeon extends THREE.Object3D{
     this.walkTowards={
       position:function(newPosition){
         //get new vector to move towards
-
         let Lokat=new THREE.Vector3(newPosition.x||0,thisPidgeon.position.y,newPosition.z||0);
         //We want the object only to rotate around Y, so the coordinatetes of
         //lokat should only contain values on X and Z coords.
@@ -55,12 +54,27 @@ export default class Pidgeon extends THREE.Object3D{
         // for(let b in newPosition){
           // Lokat[b]=newPosition[b];
         // }
+        //object that will be subject to a tween. contains an onupdate function
+        //that transfers it's state to the actual pidgeon position
+        let tweenCurrentPosition={};
+        let tweenTo={onUpdate:function(){
+          //don't use tweenCurrentPosition to iterate because it contains the
+          //onupdate function
+          for(let b in {x:0,y:0,z:0}){//this[b]?
+            thisPidgeon.position[b]=tweenCurrentPosition[b];
+          }
+        },ease: Power0.easeNone}
         thisPidgeon.lookAt(Lokat);
         for(let b in newPosition){
+          tweenCurrentPosition[b]=thisPidgeon.position[b];
+          tweenTo[b]=newPosition[b];
           transformReturnFunctions.prevCoords[b]=thisPidgeon.position[b];
-          thisPidgeon.position[b]=newPosition[b];
-          transformReturnFunctions.newCoords[b]=b[newPosition];
+          transformReturnFunctions.newCoords[b]=newPosition[b];
         }
+
+        // console.log("walkTo",tweenCurrentPosition,tweenTo,transformReturnFunctions,newPosition);
+        //tween time has to be finetuned evey time the server interval is changed.
+        transformReturnFunctions.tween=TweenMax.to(tweenCurrentPosition, .3, tweenTo);
         return transformReturnFunctions;
       }
     }
@@ -72,7 +86,7 @@ export default class Pidgeon extends THREE.Object3D{
         for(let b in newPosition){
           transformReturnFunctions.prevCoords[b]=thisPidgeon.position[b];
           thisPidgeon.position[b]=newPosition[b];
-          transformReturnFunctions.newCoords[b]=b[newPosition];
+          transformReturnFunctions.newCoords[b]=newPosition[b];
         }
         return transformReturnFunctions;
       },
