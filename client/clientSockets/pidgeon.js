@@ -46,12 +46,15 @@ export default class Pidgeon extends THREE.Object3D{
     this.walkTowards={
       position:function(newPosition){
         //get new vector to move towards
-        let Lokat=new THREE.Vector3(0,0,0);
-        for(let b in newPosition){
-          Lokat[b]=newPosition[b];
-          transformReturnFunctions.prevCoords[b]=thisPidgeon.position[b];
-          transformReturnFunctions.newCoords[b]=b[newPosition];
-        }
+
+        let Lokat=new THREE.Vector3(newPosition.x||0,thisPidgeon.position.y,newPosition.z||0);
+        //We want the object only to rotate around Y, so the coordinatetes of
+        //lokat should only contain values on X and Z coords.
+        //uncommenting the following line allows the object to rotate in the
+        //three coordinates to face its new direction.
+        // for(let b in newPosition){
+          // Lokat[b]=newPosition[b];
+        // }
         thisPidgeon.lookAt(Lokat);
         for(let b in newPosition){
           transformReturnFunctions.prevCoords[b]=thisPidgeon.position[b];
