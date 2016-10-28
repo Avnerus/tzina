@@ -10,7 +10,8 @@ let localSprite;
 //holds websocket and flags wether has been initialized
 let wsock=false;
 let insideSquare;
-
+//what is the smallest movement to emit to the server; measured as cube shaped comparison as it is faster.
+let minimumVectorChangeToBroadcast=0.3;
 let emitInterval=0.5;
 //last dt time a position was emitted to server
 let lastEmitTime=0;
@@ -141,10 +142,9 @@ if(verbose)     console.log("Started pidgeon socket");
       //check that the movement is big enough to send
       for(let a in {x:0,y:0,z:0}){
         //console.log(this.camera.position[a]+"!="+this.lastCameraPosition[a]);
-        if(this.camera.position[a]!=this.lastCameraPosition[a]){
+        if(Math.abs(this.camera.position[a]-this.lastCameraPosition[a])>=minimumVectorChangeToBroadcast){
           this.lastCameraPosition[a]=this.camera.position[a];
           different=true;
-        }else{
         }
       }
       // console.log("pidgeon tweets position",this.camera.position);
