@@ -58,7 +58,9 @@ if(verbose)     console.log("Started pidgeon socket");
           //pidgeon positioning than whole values
           //remoteSprite.transform.rotation(remoteSprite.transform.position({x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001}).getMovementDirection()* 180 / Math.PI);
           try{
-            remoteSprite.transform.position({x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001});
+            // remoteSprite.transform.position({x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001});
+            //unlike transform.position, moveTowards.position will tween and rotate to face the movement vector.
+            remoteSprite.walkTowards.position({x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001});
           }catch(e){
             console.error(e,"pidgeon with remotesprite "+message.pointer,remoteSprite);
           }
@@ -69,10 +71,7 @@ if(verbose)     console.log("Started pidgeon socket");
           let newCharacter=new Pidgeon({position:{x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001},unique:message.pointer});
           thisPidgeonController.scene.add(newCharacter);
         }
-        // console.log(message.data);
-        // Pidgeon.each(function(ch){
-        //   ch.transform.rotation(ch.transform.position(message).getMovementDirection()* 180 / Math.PI);
-        // });
+
       }else if(message.header=="remove"){
         if(verbose)console.log("pidgeon remove "+message.pointer);
         //pendant:this should be inside

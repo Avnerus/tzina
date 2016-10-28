@@ -24,10 +24,15 @@ export default class Pidgeon extends THREE.Object3D{
     let transformReturnFunctions = {
       prevCoords: {x:0,y:0,z:0},
       newCoords: {x:0,y:0,z:0},
-      getMovementDirection: function() {
+      getMovementDirection: function(returnInDegrees) {
         //pendant: so far these are 2d and using x/y coords.
         var rel = this.getRelativeMovement();
-        return Math.atan2(rel.y, rel.x)
+        let radDir=Math.atan2(rel.y, rel.x);
+        if(returnInDegrees){
+          return radDir*180 / Math.PI;
+        }else{
+          return radDir;
+        }
       },
       getRelativeMovement: function() {
         //pendant: so far these are 2d and using x/y coords.
@@ -37,6 +42,24 @@ export default class Pidgeon extends THREE.Object3D{
           z: this.prevCoords.z - this.newCoords.z
         });
       },
+    }
+    this.walkTowards={
+      position:function(newPosition){
+        //get new vector to move towards
+        let Lokat=new THREE.Vector3(0,0,0);
+        for(let b in newPosition){
+          Lokat[b]=newPosition[b];
+          transformReturnFunctions.prevCoords[b]=thisPidgeon.position[b];
+          transformReturnFunctions.newCoords[b]=b[newPosition];
+        }
+        thisPidgeon.lookAt(Lokat);
+        for(let b in newPosition){
+          transformReturnFunctions.prevCoords[b]=thisPidgeon.position[b];
+          thisPidgeon.position[b]=newPosition[b];
+          transformReturnFunctions.newCoords[b]=b[newPosition];
+        }
+        return transformReturnFunctions;
+      }
     }
     this.transform = {
       position: function(newPosition) {
