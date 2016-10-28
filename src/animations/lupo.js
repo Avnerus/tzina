@@ -232,8 +232,10 @@ export default class LupoAnimation extends THREE.Object3D {
                 this.cactusOffsetPos2.push(cP);
             }
 
-            let cactusMat = new THREE.MeshLambertMaterial({color: 0x298a59});
-            this.sculptCactusMat = new THREE.MeshLambertMaterial({color: 0x206c5e});
+            let cactusTexLight = p_tex_loader.load( this.BASE_PATH + "/images/cactusTexLight.jpg" );
+            let cactusTex = p_tex_loader.load( this.BASE_PATH + "/images/cactusTex.jpg" );
+            let cactusMat = new THREE.MeshLambertMaterial({map: cactusTexLight}); //0x298a59
+            this.sculptCactusMat = new THREE.MeshLambertMaterial({map: cactusTex}); //0x206c5e
             this.loadCactus1( cactusMat );
             this.loadCactus2( cactusMat )
 
@@ -386,7 +388,7 @@ export default class LupoAnimation extends THREE.Object3D {
 
             let tl = new TimelineMax({delay:i*0.3});
             let timeGap = 0;
-            let theAniSequence = this.cactusAniSequences[i%2];
+            let theAniSequence = this.cactusAniSequences[i%5];
 
             for(let k=0; k<theAniSequence.length; k++){
                 let toTween=[];
