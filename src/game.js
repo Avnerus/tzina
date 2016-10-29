@@ -113,7 +113,7 @@ export default class Game {
             animationPosition: [0, 0, 1],
             animationRotation: [0, 0, 0],
             space: 7,
-            subtitles: null
+            subtitles: "subtitles"
         }, this.collisionManager);
 
         /*
