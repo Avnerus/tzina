@@ -415,6 +415,11 @@ export default class Square extends THREE.Object3D{
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(TEXTURES_PATH,( obj ) => {
                 console.log("Loaded square textures ", obj);
+
+                // Disable depth write for the texture planes
+                for (let i = 0; i < obj.children.length; i++) {
+                    obj.children[i].children[0].material.depthWrite = false;
+                }
                 resolve(obj);
             });
         });

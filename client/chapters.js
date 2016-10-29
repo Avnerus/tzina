@@ -321,6 +321,7 @@ export default
 		"name": "night",
 			"hour": 0,
 			"timeLimitMinutes" : 4,
+            "totalTime": 0,
             "titlePosition": [0, -30, 0],
             "insideTitlePosition": [0, -1, 0],
 			"characters": [

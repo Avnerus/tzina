@@ -34,6 +34,8 @@ export default class TimeController {
         this.currentChapter;
 
         this.chapterProgress = {};
+
+        this.totalExperienceTime = 0;
     }
     init(loadingManager) {
         console.log("Initializing Time Controller", this.element)
@@ -48,11 +50,14 @@ export default class TimeController {
         // Chapter progress
         Chapters.forEach((chapter) => {
             this.chapterProgress[chapter.hour] = {};
+            this.totalExperienceTime += chapter.totalTime;
             chapter.characters.forEach((character) => {
                 this.chapterProgress[chapter.hour][character] = 0;
             });
         });
-        console.log("Chapters progress ", this.chapterProgress);
+
+        this.totalExperienceTime = 212; // DEBUG
+        console.log("Total experience time:", this.totalExperienceTime);
 
 
         events.on("chapter_threshold", (passed) => {
@@ -93,9 +98,9 @@ export default class TimeController {
                 this.chapterProgress[this.currentChapter.hour] &&
                 typeof(this.chapterProgress[this.currentChapter.hour][data.name]) != 'undefined'
             ) {
-
                 this.chapterProgress[this.currentChapter.hour][data.name] = data.time;
                 this.updateSunProgress();
+                this.updateTotalTime();
             }            
         });
 
@@ -152,10 +157,25 @@ export default class TimeController {
     updateSunProgress() {
         let sum = 0;
         _.forEach(this.chapterProgress[this.currentChapter.hour], (value, key) => {
-            sum += value;
+            if (key != "total") {
+                sum += value;
+            }
         });
 
+        this.chapterProgress[this.currentChapter.hour]["total"] = sum;
+
         this.square.updateSunProgress(this.currentChapter.hour.toString(), sum / this.currentChapter.totalTime);
+    }
+
+    updateTotalTime() {
+        let sum = 0;
+        _.forEach(this.chapterProgress, (value, key) => {
+            if (value["total"]) {
+                sum += value["total"];
+            }
+        });
+        //console.log("Total experience progress:", sum + "/" + this.totalExperienceTime);
+        events.emit("experience_progress", sum / this.totalExperienceTime);
     }
 
     update(dt,et) {
