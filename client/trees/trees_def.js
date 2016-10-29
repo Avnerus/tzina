@@ -11,7 +11,7 @@ export default {
          {
             name: "single",
             fileName: "singleTree/cloud.js"
-        },
+         }/*,
            {
             name: "bush1",
             fileName: "sidetwo/cloud.js"
@@ -19,7 +19,7 @@ export default {
              {
             name: "bush2",
             fileName: "sideone/cloud.js"
-        }
+            }*/
     ],
 
     instances: [

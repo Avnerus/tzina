@@ -9,6 +9,9 @@ export default class Trees extends THREE.Object3D {
 
         this.camera = camera;
         this.renderer = renderer;
+
+        const glslify = require('glslify');
+        this.render_vs = glslify('./shaders/potree_wind_vs.glsl');
     }
 
     init(loadingManager) {
