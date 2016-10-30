@@ -202,7 +202,7 @@ export default class Square extends THREE.Object3D{
     }
     update(dt,et) {
         this.fountain.update(dt);
-        this.trees.update(dt);
+        this.trees.update(dt,et);
         this.extras.update(dt);
         for (let i = 0; i < this.suns.children.length; i++) {
             this.suns.children[i].children[2].update(dt,et)
