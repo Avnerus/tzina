@@ -97,7 +97,7 @@ export default class Trees extends THREE.Object3D {
     }
 
     update(dt,et) {
-        this.potreeMaterial.uniforms.time = et;
+        this.potreeMaterial.uniforms.time.value = et;
         for (let i = 0; i < this.children.length; i++) {
             this.children[i].update(this.camera, this.renderer);
         }  

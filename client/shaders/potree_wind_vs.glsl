@@ -287,7 +287,7 @@ void rustle(inout vec3 pos) {
 
 void main() {
     // WIND SHADER
-    vec3 pos = position;
+    vec3 pos = position.xyz;
     bend(pos);
     rustle(pos);
 
