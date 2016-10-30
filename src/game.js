@@ -21,6 +21,7 @@ import HaimAnimation from './animations/haim'
 import ItzikAnimation from './animations/itzik'
 import MeirAnimation from './animations/meir'
 import MarkAnimation from './animations/mark'
+import ShirinAnimation from './animations/shirin'
 
 export default class Game {
     constructor(config) {
@@ -63,14 +64,14 @@ export default class Game {
 
         // LIGHT
         //this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
-        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0 );
+        this.hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.3 );
         this.hemiLight.color.setHSL(1,1,1);
         //this.hemiLight.groundColor.setHSL( 0., 1, 0.75 );
         this.hemiLight.position.set( 0, 500, 0 );
         this.scene.add( this.hemiLight );
 
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
-        this.dirLight.position.set( 0, 120, -200  );
+        this.dirLight.position.set( 1, 1, 1  );
         this.dirLight.color.setHSL(1,1,1);
         //dirLight.target.position.set(0,100,0);
         //
@@ -87,6 +88,23 @@ export default class Game {
         // Square
         this.square = new Square();
 
+        this.shirin = new Character({
+            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
+            basePath : 'assets/characters/shirin',
+            mindepth : 1983.749877930,
+            maxdepth : 3119.456298828,
+            position : [-30, 8, 150],
+            rotation: [0, 0, 0],
+            name: 'Shirin',
+            animation: 'Shirin',
+            uvd: 0.50634765625,
+            scale: 0.005,
+            animationPosition: [0, 0, 1],
+            animationRotation: [0, 0, 0],
+            space: 20,
+            subtitles: "subtitles"
+        }, this.collisionManager);
+
         // Test characters
         /*
         this.testCharacter = new Character({
@@ -99,6 +117,7 @@ export default class Game {
             animation: 'Hannah'
             });*/
 
+        /*
         this.mark = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/mark',
@@ -115,8 +134,7 @@ export default class Game {
             space: 7,
             subtitles: "subtitles"
         }, this.collisionManager);
-
-        /*
+    
         this.meir = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/meir',
@@ -214,7 +232,8 @@ export default class Game {
             // 'Haim': new HaimAnimation( this.scene, this.renderer )
             // 'Itzik': new ItzikAnimation()
             // 'Meir': new MeirAnimation()
-            'Mark': new MarkAnimation()
+            // 'Mark': new MarkAnimation()
+            'Shirin': new ShirinAnimation()
         }
 
 
@@ -254,7 +273,8 @@ export default class Game {
             // this.scene.add(this.haim)
             // this.scene.add(this.itzik)
             // this.scene.add(this.meir);
-            this.scene.add(this.mark);
+            // this.scene.add(this.mark);
+            this.scene.add(this.shirin);
 
 
             // DEBUG
@@ -298,7 +318,8 @@ export default class Game {
         // this.haim.init(this.loadingManager, this.animations)
         //this.itzik.init(this.loadingManager, this.animations)
         // this.meir.init(this.loadingManager, this.animations)
-        this.mark.init(this.loadingManager, this.animations);
+        // this.mark.init(this.loadingManager, this.animations);
+        this.shirin.init(this.loadingManager, this.animations);
         this.square.init(this.collisionManager, this.loadingManager);
 
         // Animations init
@@ -350,7 +371,8 @@ export default class Game {
             // this.haim.play(); 
             //this.itzik.play(); 
             // this.meir.play(); 
-            this.mark.play(); 
+            // this.mark.play(); 
+            this.shirin.play();
         } else {
             // Init the intro
 
@@ -414,7 +436,8 @@ export default class Game {
         // this.haim.update(dt,et);
         //this.itzik.update(dt,et);
         // this.meir.update(dt,et);
-        this.mark.update(dt,et);
+        // this.mark.update(dt,et);
+        this.shirin.update(dt,et);
 
         /*
         this.lupo.rotation.y = this.lupo.rotationY * Math.PI / 180;
