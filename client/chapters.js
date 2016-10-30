@@ -1,7 +1,7 @@
 export default 
 	 [
 		{
-			"name": "7AM:excitement and awakeness",
+			"name": "excitement and awakeness",
 			"hour": 7,
 			"timeLimitMinutes" : 10,
             "totalTime" : 330,
