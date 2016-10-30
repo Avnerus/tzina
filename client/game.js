@@ -412,7 +412,7 @@ export default class Game {
         }
         this.collisionManager.update(dt);
         this.flood.update(dt);
-        this.trees.update();
+        this.trees.update(dt, et);
     }
 
     render() {
