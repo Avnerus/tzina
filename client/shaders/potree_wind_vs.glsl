@@ -5,7 +5,6 @@
 #define UP_AND_DOWN_FREQ1 0.375
 #define UP_AND_DOWN_FREQ2 0.193
 
-varying vec3 vColor;
 
 // uniforms
 // common uniforms
@@ -68,7 +67,6 @@ varying vec3 vWorldPosition;
 varying vec3 vNormal;
 
 
-// WIND SHADER
 uniform float rustleHeightLimit; // the height above which the rustling starts
 uniform bool rustleColorCheck; // use color checking for limiting rustling; currently not usable; see rustle()
 uniform float rustleFactor; // amount of rustling
@@ -215,41 +213,6 @@ float getPointSizeAttenuation(){
 
 
 // WIND-SHADER
-void bend(inout vec3 pos) {
-    if(pos.x > bendHeightLimit) {
-    float bend = (sin(time * speedFactor) + 1.0) * bendFactor;
-    float clampedX = max(pos.x, bendHeightLimit); // coordinate system is rotated -> x is up
-    float bf = (clampedX - bendHeightLimit) * bend;
-        vec3 newPos = pos;
-        newPos.yz += wind.xy * bf; // trees' supposed xz plane is yz b/c rotation; if the wind direction is off, flip the coordinates
-        pos = newPos;
-    }
-}
-
-void rustle(inout vec3 pos) {
-    vec3 hsv = rgb2hsv(color);
-    // values by trial and error, mostly
-    if(pos.x > rustleHeightLimit) {
-        if(!rustleColorCheck || (hsv.x > 0.16 && hsv.x < 0.5 && hsv.y > 0.18 && hsv.z > 0.08)) {
-            // vColor.r = 1.0; // uncomment to debug height limit and HVS comparisons
-            // vColor.g = 0.0;
-            // vColor.b = 0.0;
-            vec3 newPos = pos;
-            float objPhase = length(modelMatrix[3].xyz); // assign unique phase to each object
-            float vtxYPhase = pos.y + objPhase; // vary vertex phases according to location
-            float vtxZPhase = pos.z + objPhase; // on the yz plane (ground plane b/c rotated models)
-            vec2 wavesIn = vec2(vtxYPhase + time, vtxZPhase + time);
-            vec4 waves = (fract(wavesIn.xxyy *
-               vec4(SIDE_TO_SIDE_FREQ1, SIDE_TO_SIDE_FREQ2, UP_AND_DOWN_FREQ1, UP_AND_DOWN_FREQ2)) *
-               2.0 - 1.0 ) * speedFactor * rustleFrequency; // lifted from crytek paper: http://http.developer.nvidia.com/GPUGems3/gpugems3_ch16.html
-            waves = smoothTriangleWave(waves);
-            vec2 wavesSum = waves.xz + waves.yw;
-            newPos.y += wavesSum.y * (pos.x - rustleHeightLimit) * rustleFactor / 100.0;
-            newPos.z += wavesSum.x * (pos.x - rustleHeightLimit) * rustleFactor / 100.0;
-            pos = newPos;
-        }
-    }
-}
 
 // run-of-the-mill rgb-hsv-conversions
 vec3 rgb2hsv(vec3 c) {
@@ -284,6 +247,42 @@ vec4 smoothTriangleWave(vec4 v) {
     float z = smoothTriangleWave(v.z);
     float w = smoothTriangleWave(v.w);
     return vec4(x, y, z, w);
+}
+
+void bend(inout vec3 pos) {
+    if(pos.x > bendHeightLimit) {
+    float bend = (sin(time * speedFactor) + 1.0) * bendFactor;
+    float clampedX = max(pos.x, bendHeightLimit); // coordinate system is rotated -> x is up
+    float bf = (clampedX - bendHeightLimit) * bend;
+        vec3 newPos = pos;
+        newPos.yz += wind.xy * bf; // trees' supposed xz plane is yz b/c rotation; if the wind direction is off, flip the coordinates
+        pos = newPos;
+    }
+}
+
+void rustle(inout vec3 pos) {
+    vec3 hsv = rgb2hsv(color);
+    // values by trial and error, mostly
+    if(pos.x > rustleHeightLimit) {
+        if(!rustleColorCheck || (hsv.x > 0.16 && hsv.x < 0.5 && hsv.y > 0.18 && hsv.z > 0.08)) {
+            // vColor.r = 1.0; // uncomment to debug height limit and HVS comparisons
+            // vColor.g = 0.0;
+            // vColor.b = 0.0;
+            vec3 newPos = pos;
+            float objPhase = length(modelMatrix[3].xyz); // assign unique phase to each object
+            float vtxYPhase = pos.y + objPhase; // vary vertex phases according to location
+            float vtxZPhase = pos.z + objPhase; // on the yz plane (ground plane b/c rotated models)
+            vec2 wavesIn = vec2(vtxYPhase + time, vtxZPhase + time);
+            vec4 waves = (fract(wavesIn.xxyy *
+               vec4(SIDE_TO_SIDE_FREQ1, SIDE_TO_SIDE_FREQ2, UP_AND_DOWN_FREQ1, UP_AND_DOWN_FREQ2)) *
+               2.0 - 1.0 ) * speedFactor * rustleFrequency; // lifted from crytek paper: http://http.developer.nvidia.com/GPUGems3/gpugems3_ch16.html
+            waves = smoothTriangleWave(waves);
+            vec2 wavesSum = waves.xz + waves.yw;
+            newPos.y += wavesSum.y * (pos.x - rustleHeightLimit) * rustleFactor / 100.0;
+            newPos.z += wavesSum.x * (pos.x - rustleHeightLimit) * rustleFactor / 100.0;
+            pos = newPos;
+        }
+    }
 }
 
 void main() {
