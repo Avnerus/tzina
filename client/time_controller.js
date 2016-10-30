@@ -127,7 +127,7 @@ export default class TimeController {
 
         this.insideChapterTitle = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitle.scale.multiplyScalar(0.04);
-        //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+        DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
 
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
@@ -227,7 +227,7 @@ export default class TimeController {
         }
 
         if (this.gazeHour != -1) {
-            this.gazeCounter += dt;
+            //this.gazeCounter += dt;
             if (this.gazeCounter > 1 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
             }
