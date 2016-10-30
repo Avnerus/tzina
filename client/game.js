@@ -31,6 +31,9 @@ import Agam12PMAnimation from './animations/agam12pm'
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
 
+import Trees from './trees'
+
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
@@ -122,6 +125,8 @@ export default class Game {
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
+        this.trees = new Trees(this.camera, this.renderer);
+
         this.flood = new Flood();
         this.flood.init();
         this.scene.add(this.flood); 
@@ -187,6 +192,8 @@ export default class Game {
                 this.scene.add(this.introAni);
             }
 
+            this.scene.add(this.trees);
+
             //DebugUtil.positionEntry(this.square.ENTRY_POINTS[0], this.square.mesh, this.scene);
 
             onLoad();
@@ -212,6 +219,7 @@ export default class Game {
             console.log("Initializing characters");
             this.characterController.init(this.loadingManager);
         }
+        this.trees.init(this.loadingManager);
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
 
@@ -404,6 +412,7 @@ export default class Game {
         }
         this.collisionManager.update(dt);
         this.flood.update(dt);
+        this.trees.update(dt, et);
     }
 
     render() {
