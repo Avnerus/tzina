@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import Credits from './credits';
 
 export default class Intro {
     constructor(camera, square, timeConroller, soundManager, scene) {
@@ -135,5 +136,35 @@ export default class Intro {
                 }
             }
         }
+    }
+
+    playCredits() {
+        this.currentCredit = 0;
+        this.showNextCredit();
+    }
+
+    showNextCredit() {
+        let name = document.getElementById('credit-name');
+        name.innerHTML = Credits.credits[this.currentCredit].Name;
+
+        let title = document.getElementById('credit-title');
+        title.innerHTML = Credits.credits[this.currentCredit].Role;
+
+        let line = document.getElementById('credit-line');
+        line.style.opacity = 1;
+        setTimeout(() => {
+           this.hideCredit();
+        },2500);
+    }
+
+    hideCredit() {
+        let el = document.getElementById('credit-line');
+        el.style.opacity = 0;
+        setTimeout(() => {
+            this.currentCredit++;
+            if (this.currentCredit < Credits.credits.length) {
+                this.showNextCredit();
+            }
+        },1000);
     }
 }

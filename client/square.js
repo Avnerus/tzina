@@ -202,8 +202,12 @@ export default class Square extends THREE.Object3D{
     }
     update(dt,et) {
         this.fountain.update(dt);
-        this.trees.update(dt,et);
-        this.extras.update(dt);
+        if (!this.config.noTrees) {
+            this.trees.update(dt,et);
+        }
+        if (!this.config.noExtras) {
+            this.extras.update(dt);
+        }
         for (let i = 0; i < this.suns.children.length; i++) {
             this.suns.children[i].children[2].update(dt,et)
         }
@@ -354,7 +358,7 @@ export default class Square extends THREE.Object3D{
                         sunLoader.init();
                         sunLoader.name = chapter.hour.toString() + "_L";
                         //DebugUtil.positionObject(sunLoader, sunLoader.name, true);
-                        sunLoader.rotation.y = 110 * Math.PI / 180;
+                        //sunLoader.rotation.y = 110 * Math.PI / 180;
                         parent.add(sunLoader);
 
                         
