@@ -203,6 +203,12 @@ export default {
         //     rotation: [176,156,184],
         //     scale: 0.47
         // }, 
+
+
+
+
+
+
                {
             type: "ThreeTrees",
             position: [-26.1,13.32,9.08],
@@ -223,7 +229,7 @@ export default {
         },
          {
             type: "ThreeTrees",
-            position: [40,216,16],
+            position: [40,16,16],
             rotation: [91,63,50],
             scale: 0.6
         }, 

@@ -5,7 +5,7 @@ import DebugUtil from './util/debug'
 export default class Trees extends THREE.Object3D {
     constructor(camera, renderer) {
         super();
-        this.debug = false;
+        this.debug = true;
 
         this.camera = camera;
         this.renderer = renderer;
