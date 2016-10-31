@@ -354,9 +354,15 @@ export default class Square extends THREE.Object3D{
                         let sunLoader = new SunLoader(this.renderer);
                         sunLoader.init();
                         sunLoader.name = chapter.hour.toString() + "_L";
-                                DebugUtil.positionObject(sunLoader, sunLoader.name, true);
-                       // sunLoader.rotation.y = 110 * Math.PI / 180;
                         parent.add(sunLoader);
+                        sunLoader.scale.set(0.83, 0.83, 0.83);
+                        sunLoader.rotation.set(
+                            chapter.sunLoaderRotation[0] * Math.PI / 180,                             
+                            chapter.sunLoaderRotation[1] * Math.PI / 180,                             
+                            chapter.sunLoaderRotation[2] * Math.PI / 180,
+                            "XYZ"
+                        );
+                        //DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
 
                         
                         // Save the mafillp

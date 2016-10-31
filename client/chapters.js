@@ -7,6 +7,7 @@ export default
             "totalTime" : 330,
             "titlePosition": [-105, 45, 0],
             "insideTitlePosition": [-5, 2, -1],
+            "sunLoaderRotation": [0,136,0],
 			"characters": [
 				"Meir",
 				"Rami",
@@ -61,6 +62,7 @@ export default
             "totalTime" : 540,
             "titlePosition": [-90, 90, 0],
             "insideTitlePosition": [0, -1, 0],
+            "sunLoaderRotation": [80,40,0],
 			"characters": [
 				"Miriam",
                 "Itzik",
@@ -128,6 +130,7 @@ export default
             "totalTime" : 590,
             "titlePosition": [0, 110, 0],
             "insideTitlePosition": [3, -4, -2],
+            "sunLoaderRotation": [67,0,0],
 			"characters": [
 				"Mark",
                 "LupoDogs12PM",                
@@ -194,6 +197,7 @@ export default
             "titlePosition": [85, 100, 0],
             "totalTime" : 500,
             "insideTitlePosition": [0, 5, 0],
+            "sunLoaderRotation": [0,83,0],
 			"timeLimitMinutes" : 12,
 			"characters": [
 				"Hannah",
@@ -257,6 +261,7 @@ export default
             "totalTime" : 610,
             "titlePosition": [120, 65, 0],
             "insideTitlePosition": [0, 2, 0],
+            "sunLoaderRotation": [0,83,0],
 			"characters": [
 				"Haim",
 				"Izchak",
