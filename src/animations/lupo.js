@@ -18,28 +18,35 @@ export default class LupoAnimation extends THREE.Object3D {
 
         // setup animation sequence
         this.sequenceConfig = [
-            { time: 2, anim: ()=>{this.showSculptures()} },    // 16
-            // { time: 4, anim: ()=>{this.growSingleCactusFloor( 0 )} },  // cactus index: 0~19
+            { time: 5, anim: ()=>{this.showSculptures()} },    // 16
+            { time: 6, anim: ()=>{this.connectToDogs()} },
+            { time: 8, anim: ()=>{this.growSingleCactus( 0 )} },
+            // { time: 4, anim: ()=>{this.growSingleCactus( 0 )} },  // cactus index: 0~19
             // { time: 6, anim: ()=>{this.growSingleCactusFloor( 0 )} },  // cactus index: 0~9
-            { time: 5, anim: ()=>{this.growCactus()} },
+            // { time: 5, anim: ()=>{this.growBenchCactus()} },
             { time: 10, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
-            { time: 15, anim: ()=>{this.growCactusFloor()} },
-            // { time: 44, anim: ()=>{this.shiftSculptures()} },           // shift sculptures---> plastic
-            // { time: 67, anim: ()=>{this.shiftSculptures()} },
-            // { time: 112, anim: ()=>{this.shiftSculptures()} },
-            // { time: 143, anim: ()=>{this.shiftSculptures()} },
-            // { time: 180, anim: ()=>{this.shiftSculptures()} },           // shift sculptures---> plastic
-            // { time: 191, anim: ()=>{this.shiftSculptures()} },
-            // { time: 203, anim: ()=>{this.shiftSculptures()} },
-            // { time: 210, anim: ()=>{this.flickerSculptureTextures()} },
-            // { time: 213, anim: ()=>{this.shiftSculptures()} },           // shift sculptures---> plastic
-            // { time: 228, anim: ()=>{this.shiftSculptures()} },
-            // { time: 243, anim: ()=>{this.shiftSculptures()} },
-            // { time: 295, anim: ()=>{this.shiftSculptures()} },
-            // { time: 312, anim: ()=>{this.shiftSculptures()} },           // shift sculptures---> plastic
-            // { time: 314, anim: ()=>{this.shiftSculptures()} },
-            // { time: 340, anim: ()=>{this.shiftSculptures()} },
-            // { time: 358, anim: ()=>{this.shiftSculptures()} }
+            // { time: 15, anim: ()=>{this.growCactusFloor()} },
+            
+            { time: 13, anim: ()=>{this.growSingleCactus( 1 )} },
+            { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
+            { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
+            { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
+            { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
+            { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
+            { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
+            { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
+            { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
+            { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
+            { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
+            { time: 120, anim: ()=>{this.growBenchCactus()} },
+            // { time: 135, anim: ()=>{this.connectToDogs()} },
+            { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
+            { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
+            { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
+            { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
+            { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
+            { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
+            { time: 179, anim: ()=>{this.growCactusFloor()} },
         ];
         this.sequenceConfigOriginal =  this.sequenceConfig.slice(0);
 
@@ -82,25 +89,10 @@ export default class LupoAnimation extends THREE.Object3D {
 
         let sculptureModels=[];
         this.sculptureMaterials=[];
-        // this.sculptureTextures=[];
         this.sculptureTextures={};
-
         this.sculptureMADMaterials=[];
-        // this.sculptureMADTextures=[];
         this.sculptureMADTextures={};
 
-        // v.OLD
-        // this.loadModelSculptures(this.BASE_PATH + "/models/base.js", this.BASE_PATH + "/models/top.js", this.BASE_PATH + "/models/down.js,")
-        // .then((lupoArt) => {
-        //     this.lupoArt = lupoArt;
-        //     this.lupoArt.position.set(.7,-1.2,3);
-        //     this.add(this.lupoArt);
-        //     console.log("Loaded lupo art", this.lupoArt);
-        //     // trigger rotating
-        //     // TweenMax.to(this.lupoArt.rotation, 1, {x:Math.PI, repeat:-1, repeatDelay:2, yoyo:true});
-
-        //     tl.to(this.lupoArt.rotation, 2, {x:Math.PI}).to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
-        // });
 
         this.loadSculptureTextures( sculptureTextureFiles, sculptureTextMADFiles )
         .then( () => {
@@ -112,7 +104,7 @@ export default class LupoAnimation extends THREE.Object3D {
             this.loadSculptureModels( sculptureModelFiles )
             .then((lupoArt) => {
                 this.lupoArt = lupoArt;
-                this.lupoArt.position.set(.7,-1.2,3);
+                this.lupoArt.position.set(.7,-1.2,1);
                 this.add(this.lupoArt);
                 console.log("Loaded lupo art", this.lupoArt);
 
@@ -150,9 +142,6 @@ export default class LupoAnimation extends THREE.Object3D {
                 [ 0,0,0,0, 73.02, 0,0,0,0,0,0 ],
                 [ 0,0,0, -39.005, -107.443, 0,0, 53.294, 0, 130.647, 0 ]
             ];
-            // this.cactusAniSequence3 = [ [0,7,9], [1,3,11], [4,5,6,10], [2,8,12] ];
-            // this.cactusAniSequence4 = [ [0,4], [7,8], [1,3,9], [2,5,6,10] ];
-            // this.cactusAniSequence5 = [ [0,7], [3,4,9], [1,5,10], [2,6,8] ];
             this.cactusAniSequences = [
                 [ [0,7,11], [3,9,12], [1,4,8], [2,5,6,10] ],
                 [ [0,7], [1,3,9], [2,4,5], [6,8,10] ],
@@ -192,8 +181,12 @@ export default class LupoAnimation extends THREE.Object3D {
                 // on bench
                 for(let i=0; i<20; i++){
                     let newIndex = i%5;
-                    console.log(newIndex);
+                    // console.log(newIndex);
                     let new_c = allCactus[ newIndex ].clone(true);
+                    let new_mat = this.cactusMat.clone();
+                    for(let i=0; i<new_c.children.length; i++){
+                        new_c.children[i].material = new_mat;
+                    }
                     new_c.scale.multiplyScalar( 0.4-0.2*this.lookupTable[i] );
                     new_c.position.set( 4-8*Math.random(), 1.2, 4-2*Math.random() );
                     new_c.rotation.y = this.lookupTable[i]*2;
@@ -202,8 +195,9 @@ export default class LupoAnimation extends THREE.Object3D {
                 }
                 for(let i=0; i<10; i++){
                     let newIndex = (i%3)+2;
-                    console.log(newIndex);
+                    // console.log(newIndex);
                     let new_c = allCactus[ newIndex ].clone(true);
+                    new_c.material = this.cactusMat.clone();
                     new_c.scale.multiplyScalar( 1.8-0.5*this.lookupTable[i] );
                     new_c.position.set( 8-16*Math.random(), -1, 10-10*Math.random() );
                     new_c.rotation.y = this.lookupTable[i]*2;
@@ -234,10 +228,45 @@ export default class LupoAnimation extends THREE.Object3D {
 
             let cactusTexLight = p_tex_loader.load( this.BASE_PATH + "/images/cactusTexLight.jpg" );
             let cactusTex = p_tex_loader.load( this.BASE_PATH + "/images/cactusTex.jpg" );
-            let cactusMat = new THREE.MeshLambertMaterial({map: cactusTexLight}); //0x298a59
+            this.cactusMat = new THREE.MeshLambertMaterial({map: cactusTexLight}); //0x298a59
             this.sculptCactusMat = new THREE.MeshLambertMaterial({map: cactusTex}); //0x206c5e
-            this.loadCactus1( cactusMat );
-            this.loadCactus2( cactusMat )
+            this.loadCactus1( this.cactusMat );
+            this.loadCactus2( this.cactusMat )
+
+        // Ropes to dogs!
+            this.ARC_SEGMENTS = 50;
+            let curveData = [ [["-1.669", "1.017", "3.688"], ["-1.664", "0.935", "3.400"], ["-1.717", "0.661", "3.561"], ["-1.705", "0.321", "3.623"], ["-1.636", "0.096", "3.433"], ["-1.657", "0.302", "3.194"], ["-1.662", "0.566", "3.086"], ["-1.609", "0.789", "2.927"], ["-1.522", "0.832", "2.569"], ["-1.495", "0.460", "2.373"], ["-1.418", "0.087", "2.355"], ["-1.325", "-0.021", "2.186"], ["-1.191", "0.034", "1.887"], ["-1.033", "0.204", "1.600"], ["-1.020", "0.644", "1.524"], ["-0.783", "1.022", "1.259"], ["-0.575", "1.518", "1.053"], ["-0.303", "1.742", "0.425"], ["-0.118", "1.769", "0.017"], ["-0.088", "1.773", "-0.048"]],
+                              [["1.645", "1.225", "3.606"], ["1.549", "0.990", "3.168"], ["1.589", "0.643", "3.278"], ["1.550", "0.258", "3.307"], ["1.400", "-0.034", "3.020"], ["1.358", "0.178", "2.727"], ["1.335", "0.475", "2.615"], ["1.254", "0.732", "2.457"], ["0.968", "0.807", "2.129"], ["0.868", "0.437", "2.005"], ["0.920", "0.129", "2.011"], ["0.769", "-0.051", "1.825"], ["0.648", "0.024", "1.598"], ["0.525", "0.223", "1.349"], ["0.415", "0.624", "1.304"], ["0.257", "1.022", "1.088"], ["0.121", "1.415", "0.855"], ["-0.009", "1.690", "0.473"], ["-0.088", "1.769", "0.077"], ["-0.100", "1.773", "0.010"]] ];
+            this.ropes = [];
+            this.ropesVec = [];
+
+            // PARSE DATA
+            for(let i=0; i<curveData.length; i++){
+                let curve_vec = [];
+
+                for(let j=0; j<curveData[i].length; j++){
+                    let newVector = new THREE.Vector3( Number(curveData[i][j][0]),
+                                                       Number(curveData[i][j][1]),
+                                                       Number(curveData[i][j][2]) );
+                    // scale down
+                    newVector.multiplyScalar(1.5);
+                    curve_vec.push(newVector);
+                }
+                this.ropesVec.push( curve_vec );
+            }
+
+            this.ropeMaterial = new THREE.MeshBasicMaterial({color: 0xcc0000, wireframe: true});
+            this.liquidMats = [];
+            for(let i=0; i<2; i++){
+                let liquidTex = p_tex_loader.load(this.BASE_PATH + '/images/liquid_trans.png');
+                liquidTex.repeat.x = 1;
+                liquidTex.repeat.y = 1;
+                liquidTex.offset.x = -1.5;
+                this.liquidMats.push( new THREE.MeshBasicMaterial({map: liquidTex, transparent: true}) );
+
+                this.createRope(i);
+            }            
+            this.liquidOut = false;
 
         this.lookupTable=[];
         for (var i=0; i<50; i++) {
@@ -248,6 +277,19 @@ export default class LupoAnimation extends THREE.Object3D {
         this.completeSequenceSetup();
 
         this.loadingManager.itemEnd("LupoAnim");
+    }
+
+    createRope( _index ) {
+        let cSpline = new THREE.CatmullRomCurve3( this.ropesVec[_index] );
+        cSpline.type = 'chordal';
+        let ropeGeometry = new THREE.TubeGeometry( cSpline, this.ARC_SEGMENTS, 0.1, 6, false );
+        let ropee = new THREE.Mesh(ropeGeometry, this.ropeMaterial);
+        let liquidGeo = new THREE.TubeGeometry( cSpline, this.ARC_SEGMENTS, 0.07, 6, false );
+        let liquid = new THREE.Mesh(liquidGeo, this.liquidMats[_index]);
+        liquid.material.map.offset.x = -1 - _index*0.4;
+        ropee.add(liquid);
+        this.add(ropee);
+        this.ropes.push(ropee);
     }
 
     createSculptCactus( s_c, length, index ) {
@@ -269,19 +311,25 @@ export default class LupoAnimation extends THREE.Object3D {
         }
     }
 
-    growCactus() {
+    growBenchCactus() {
         for(let i=0; i<this.cactusTimelines.length; i++){
-            this.cactusTimelines[i].play();
+            if(this.cactusTimelines[i].totalProgress!=1)
+                this.cactusTimelines[i].play();
         }
-    }
-
-    growSingleCactus(index) {
-        this.cactusTimelines[index].play();
     }
 
     growCactusFloor() {
         for(let i=0; i<this.cactusFloorTimelines.length; i++){
-            this.cactusFloorTimelines[i].play();
+            if(this.cactusFloorTimelines[i].totalProgress!=1)
+                this.cactusFloorTimelines[i].play();
+        }
+    }
+
+    growSingleCactus(index, color) {
+        this.cactusTimelines[index].play();
+
+        if(color != null){
+            this.cactusGroup[index].children[0].material.color.set( color );
         }
     }
 
@@ -343,13 +391,17 @@ export default class LupoAnimation extends THREE.Object3D {
         this.tweenAnimCollectors.push( this.tl );
     }
 
+    connectToDogs() {
+        this.liquidOut = true;
+    }
+
     loadCactus1( mat ) {
         // let promise = new Promise( (resolve, reject) => {
 
             let cactusLoader = new THREE.JSONLoader( this.cactusLoadingManager );
             for(let i=0; i<this.cactusFiles.length; i++){
                 cactusLoader.load( this.cactusFiles[i], (geometry)=> {
-                    console.log(i);
+                    // console.log(i);
                     let cc = new THREE.Mesh( geometry, mat );
                     cc.position.copy( this.cactusOffsetPos[i] );
                     cc.scale.multiplyScalar(0.1);
@@ -369,7 +421,7 @@ export default class LupoAnimation extends THREE.Object3D {
             let cactusLoader = new THREE.JSONLoader( this.cactusLoadingManager );
             for(let i=0; i<this.cactusFiles2.length; i++){
                 cactusLoader.load( this.cactusFiles2[i], (geometry)=> {
-                    console.log(i);
+                    // console.log(i);
                     let cc = new THREE.Mesh( geometry, mat );
                     cc.position.copy( this.cactusOffsetPos2[i] );
                     cc.scale.multiplyScalar(0.1);
@@ -572,6 +624,13 @@ export default class LupoAnimation extends THREE.Object3D {
     }
 
     update(dt,et) {
+        if(this.liquidOut){
+            for(let i=0; i<this.ropes.length; i++){
+                this.ropes[i].children[0].material.map.offset.x+=0.01;
+                if(this.ropes[i].children[0].material.map.offset.x>1)
+                    this.ropes[i].children[0].material.map.offset.x=-1;
+            }
+        }
     }
 }
 

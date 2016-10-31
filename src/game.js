@@ -96,29 +96,29 @@ export default class Game {
             });*/
 
         
-        this.hannah = new Character({
-            basePath : 'assets/characters/hanna',
-            mindepth : 2138.454101562,
-            maxdepth : 3047.334472656,
-            position : [36, 8.1, 50],
-            rotation: [20, 195, 6],
-            name: 'Hannah',
-            animation: 'Hannah',
-            uvd: 0.440277,
-            scale: 0.005,
-            animationPosition: [0,-1.5,-2.2],
-            animationRotation: [20, 0, 0]
-        }, this.collisionManager);
+        // this.hannah = new Character({
+        //     basePath : 'assets/characters/hanna',
+        //     mindepth : 2138.454101562,
+        //     maxdepth : 3047.334472656,
+        //     position : [36, 8.1, 50],
+        //     rotation: [20, 195, 6],
+        //     name: 'Hannah',
+        //     animation: 'Hannah',
+        //     uvd: 0.440277,
+        //     scale: 0.005,
+        //     animationPosition: [0,-1.5,-2.2],
+        //     animationRotation: [20, 0, 0]
+        // }, this.collisionManager);
 
         this.lupo = new Character({
             basePath : 'assets/characters/lupo',
-            mindepth : 1500.681884766,
-            maxdepth : 3376.051757813,
+            mindepth : 2160,
+            maxdepth : 6120.20654296875,
             position : [53, 7.9, 79.3],
             rotation: [6, 195, 6],
             name: 'Lupo',
-            uvd: 0.45,
-            scale: 0.006,
+            uvd: 0.38916015625,
+            scale: 0.003,
             animation: 'Lupo',
             animationPosition: [0, -1.8, -4],
             animationRotation: [5, 0, -3]
@@ -129,7 +129,7 @@ export default class Game {
 
         // animations
         this.animations = {
-            'Hannah': new HannahAnimation(),
+            // 'Hannah': new HannahAnimation(),
             'Lupo': new LupoAnimation()
         }
 
@@ -161,8 +161,8 @@ export default class Game {
             console.log("Done loading everything!");
             this.scene.add(this.square);
             this.sky.applyToMesh(this.square.getSphereMesh());
-            this.scene.add(this.lupo)
-            this.scene.add(this.hannah)
+            this.scene.add(this.lupo);
+            // this.scene.add(this.hannah)
 
 
             /*
@@ -188,7 +188,7 @@ export default class Game {
 
         this.sky.init();
         this.soundManager.init();
-        this.hannah.init(this.loadingManager, this.animations)
+        // this.hannah.init(this.loadingManager, this.animations)
         this.lupo.init(this.loadingManager, this.animations)
         this.square.init(this.collisionManager, this.loadingManager);
 
@@ -248,7 +248,7 @@ export default class Game {
         this.sky.transitionTo(17,1);
 
         this.lupo.play();
-        this.hannah.play();
+        // this.hannah.play();
     }
 
     animate(t) {
@@ -266,7 +266,7 @@ export default class Game {
         if (this.vrControls) {
                this.vrControls.update();
             }
-        this.hannah.update(dt,et);
+        // this.hannah.update(dt,et);
         this.lupo.update(dt,et);
 
         /*
