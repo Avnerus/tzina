@@ -279,6 +279,7 @@ export default class Game {
             }
             setTimeout(() => {
                 events.emit("intro_end");
+                this.intro.playCredits();
                 if (this.vrManager.isVRCompatible) {
                     events.emit("control_threshold", true);
                 }
