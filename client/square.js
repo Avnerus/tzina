@@ -355,7 +355,7 @@ export default class Square extends THREE.Object3D{
                         sunLoader.init();
                         sunLoader.name = chapter.hour.toString() + "_L";
                                 DebugUtil.positionObject(sunLoader, sunLoader.name, true);
-                        sunLoader.rotation.y = 110 * Math.PI / 180;
+                       // sunLoader.rotation.y = 110 * Math.PI / 180;
                         parent.add(sunLoader);
 
                         
