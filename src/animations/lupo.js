@@ -18,35 +18,39 @@ export default class LupoAnimation extends THREE.Object3D {
 
         // setup animation sequence
         this.sequenceConfig = [
+            { time: 1, anim: ()=>{this.growCactusFloor()} },
             { time: 5, anim: ()=>{this.showSculptures()} },    // 16
             { time: 6, anim: ()=>{this.connectToDogs()} },
-            { time: 8, anim: ()=>{this.growSingleCactus( 0 )} },
+            { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },
             // { time: 4, anim: ()=>{this.growSingleCactus( 0 )} },  // cactus index: 0~19
             // { time: 6, anim: ()=>{this.growSingleCactusFloor( 0 )} },  // cactus index: 0~9
-            // { time: 5, anim: ()=>{this.growBenchCactus()} },
             { time: 10, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
-            // { time: 15, anim: ()=>{this.growCactusFloor()} },
             
-            { time: 13, anim: ()=>{this.growSingleCactus( 1 )} },
-            { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
-            { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
+            { time: 11, anim: ()=>{this.growFlower()} },
+            
+            { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
+
+            { time: 20, anim: ()=>{this.closeFlower()} },
+
+            // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
+            // { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
             { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
             { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
             { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
-            { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
-            { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
-            { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
-            { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
-            { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
-            { time: 120, anim: ()=>{this.growBenchCactus()} },
+            // { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
+            // { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
+            // { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
+            // { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
+            // { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
+            // { time: 120, anim: ()=>{this.growBenchCactus()} },
             // { time: 135, anim: ()=>{this.connectToDogs()} },
-            { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
-            { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
-            { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
-            { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
-            { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
-            { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
-            { time: 179, anim: ()=>{this.growCactusFloor()} },
+            // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
+            // { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
+            // { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
+            // { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
+            // { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
+            // { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
+            // { time: 179, anim: ()=>{this.growCactusFloor()} },
         ];
         this.sequenceConfigOriginal =  this.sequenceConfig.slice(0);
 
@@ -126,8 +130,7 @@ export default class LupoAnimation extends THREE.Object3D {
             this.cactusPosOffsetData2 = [ [0,0], [0.157,1.724], [0.645,2.238], [-0.62,1.799], [-0.419,2.056],
                                  [-1.191,2.406], [-0.139,2.723], [0.419,0.008], [0.733,1.068], [0.937,1.113],
                                  [-1.004,2.568] ];
-            // this.cactusAniSequence = [ [0,7,11], [3,9,12], [1,4,8], [2,5,6,10] ];
-            // this.cactusAniSequence2 = [ [0,7], [1,3,9], [2,4,5], [6,8,10] ];
+
             this.cactusAniLabel = ["1", "2", "3", "4"];
             this.sculptureCactusPosData = [
                 [ [0,0], [0.089,-0.09], [-0.996,0.581], [0.532,0.304], [-0.15,-0.763], [2.002,-0.321],
@@ -184,12 +187,12 @@ export default class LupoAnimation extends THREE.Object3D {
                     // console.log(newIndex);
                     let new_c = allCactus[ newIndex ].clone(true);
                     let new_mat = this.cactusMat.clone();
-                    for(let i=0; i<new_c.children.length; i++){
-                        new_c.children[i].material = new_mat;
+                    for(let j=0; j<new_c.children.length; j++){
+                        new_c.children[j].material = new_mat;
                     }
                     new_c.scale.multiplyScalar( 0.4-0.2*this.lookupTable[i] );
                     new_c.position.set( 4-8*Math.random(), 1.2, 4-2*Math.random() );
-                    new_c.rotation.y = this.lookupTable[i]*2;
+                    new_c.rotation.y = Math.PI/2 - this.lookupTable[i]*Math.PI;
                     this.add(new_c);
                     this.cactusGroup.push(new_c);
                 }
@@ -200,11 +203,14 @@ export default class LupoAnimation extends THREE.Object3D {
                     new_c.material = this.cactusMat.clone();
                     new_c.scale.multiplyScalar( 1.8-0.5*this.lookupTable[i] );
                     new_c.position.set( 8-16*Math.random(), -1, 10-10*Math.random() );
-                    new_c.rotation.y = this.lookupTable[i]*2;
+                    new_c.rotation.y = Math.PI/2 - this.lookupTable[i]*Math.PI;
                     this.add(new_c);
                     this.cactusGroupFloor.push(new_c);
                 }
                 this.createCactusAnimation();
+
+                //
+                this.createFlower();
             };
 
 
@@ -232,6 +238,37 @@ export default class LupoAnimation extends THREE.Object3D {
             this.sculptCactusMat = new THREE.MeshLambertMaterial({map: cactusTex}); //0x206c5e
             this.loadCactus1( this.cactusMat );
             this.loadCactus2( this.cactusMat )
+
+        // Cactus flower
+            this.flowerGroup = [];
+            this.flower = new THREE.Object3D();
+            this.petalTexture = p_tex_loader.load(this.BASE_PATH + '/images/white_petal.jpg');
+            this.petalMat = new THREE.MeshPhongMaterial({map: this.petalTexture, specular: 0xff0000});
+            
+            this.flowerTimeline = [];
+            this.flowerAniSetting = [
+                {
+                    // rot.x + scale + duration
+                    seq: [ [ 40, 1, 3, 5 ], [ 55, 1.2, 3 ], [ 130, 0.1, 3 ] ],
+                    label: [ ["open","+=0"], ["close","+=2"], ["close2","+=0"] ]
+                }
+            ];
+            this.flowerColor = [ 0xfb5c87, 0xfce062, 0xfdc7ad ];
+
+            // modelLoader.load( this.BASE_PATH + '/models/petal.json', (geometry)=>{
+            //     this.petalGeo = geometry;
+            //     for(let i=0; i<8; i++){
+            //         let petal = new THREE.Object3D();
+            //         let p = new THREE.Mesh( this.petalGeo, this.petalMat);
+            //         p.rotation.x = -15 * Math.PI / 180;
+            //         petal.add(p);
+            //         petal.rotation.y = Math.PI*2 / 8 * i;
+            //         petal.scale.multiplyScalar(0.3);
+            //         this.flower.add(petal);
+            //     }
+            //     // this.add(this.flower);
+            //     // this.createFlowerAnimation();
+            // } );
 
         // Ropes to dogs!
             this.ARC_SEGMENTS = 50;
@@ -279,6 +316,48 @@ export default class LupoAnimation extends THREE.Object3D {
         this.loadingManager.itemEnd("LupoAnim");
     }
 
+    createFlower() {
+        let modelLoader = new THREE.JSONLoader( this.LoadingManager );
+        modelLoader.load( this.BASE_PATH + '/models/petal.json', (geometry)=>{
+            this.petalGeo = geometry;
+            // Single flower
+                for(let i=0; i<8; i++){
+                    let petal = new THREE.Object3D();
+                    let p = new THREE.Mesh( this.petalGeo, this.petalMat);
+                    p.rotation.x = -15 * Math.PI / 180;
+                    petal.add(p);
+                    petal.rotation.y = Math.PI*2 / 8 * i;
+                    petal.scale.multiplyScalar(0.3);
+                    this.flower.add(petal);
+                }
+            // flowerGroup - flower * 8 - petal - p
+
+            // Group of flower
+            let f_offset = new THREE.Vector3(1.2, 1, 1,2);
+            for(let i=0; i<this.cactusGroupFloor.length; i++){
+                let flowerrr = this.flower.clone();
+
+                let new_mat = this.petalMat.clone();
+                new_mat.color.set( this.flowerColor[i%3] );
+
+                for(let j=0; j<flowerrr.children.length; j++){
+                    flowerrr.children[j].children[0].material = new_mat;
+                    flowerrr.children[j].children[0].scale.multiplyScalar(0.01);
+                }
+
+                let f_pos = this.cactusGroupFloor[i].children[3].position.clone();                
+                flowerrr.position.copy(f_pos);
+                flowerrr.rotation.x = ( 70*Math.PI/180 );
+                flowerrr.scale.multiplyScalar(0.8); // 0.8
+
+                this.cactusGroupFloor[i].add(flowerrr);
+                this.flowerGroup.push( flowerrr );
+            }
+
+            this.createFlowerAnimation();
+        } );
+    }
+
     createRope( _index ) {
         let cSpline = new THREE.CatmullRomCurve3( this.ropesVec[_index] );
         cSpline.type = 'chordal';
@@ -308,6 +387,19 @@ export default class LupoAnimation extends THREE.Object3D {
     completeSequenceSetup() {
         for(let i=0; i<this.sequenceConfig.length; i++){
             this.sequenceConfig[i].performed = false;
+        }
+    }
+
+    growFlower() {
+        for(let i=0; i<this.flowerTimeline.length; i++){
+            this.flowerTimeline[i].play("open");
+        }
+    }
+
+    closeFlower() {
+        for(let i=0; i<this.flowerTimeline.length; i++){
+            // this.flowerTimeline[i].seek(3.5);
+            this.flowerTimeline[i].play();
         }
     }
 
@@ -433,6 +525,40 @@ export default class LupoAnimation extends THREE.Object3D {
         //     resolve( cactus );
         // } );
         // return promise;
+    }
+
+    createFlowerAnimation() {
+        // flowerGroup - flower * 8 - petal - p
+        for(let k=0; k<this.flowerGroup.length; k++){
+            let tl = new TimelineMax();
+
+            for(let j=0; j<this.flowerAniSetting[0].seq.length; j++){
+                // label + time gap
+                tl.add ( this.flowerAniSetting[0].label[j][0], this.flowerAniSetting[0].label[j][1] );
+                
+                let toTween=[];
+                for(let i=0; i<this.flowerGroup[k].children.length; i++){
+                    let tw = this.createPetalAni( this.flowerGroup[k].children[i].children[0],
+                                                  this.flowerAniSetting[0].seq[j] );
+                    toTween.push(tw);
+                }
+                tl.add( toTween, this.flowerAniSetting[0].label[j][0] );
+            }
+            tl.pause();
+            tl.addPause( this.flowerAniSetting[0].label[1][0] );
+            this.flowerTimeline.push(tl);
+        }        
+    }
+
+    createPetalAni( petal, sequence ) {
+        // sequence: rot.x, scale, duration
+        return TweenMax.to( petal.rotation, sequence[2], { x:sequence[0]*Math.PI/180, ease: Power1.easeInOut, onStart:()=>{
+            TweenMax.to( petal.scale, sequence[2], { x:sequence[1], y:sequence[1], z:sequence[1], ease: Power1.easeInOut } );
+            // if(sequence.length == 4){
+            //     petal.visible = true;
+            //     console.log("true!");
+            // }
+        } } );
     }
 
     createCactusAnimation() {
@@ -628,7 +754,7 @@ export default class LupoAnimation extends THREE.Object3D {
             for(let i=0; i<this.ropes.length; i++){
                 this.ropes[i].children[0].material.map.offset.x+=0.01;
                 if(this.ropes[i].children[0].material.map.offset.x>1)
-                    this.ropes[i].children[0].material.map.offset.x=-1;
+                    this.ropes[i].children[0].material.map.offset.x=-0.6;
             }
         }
     }
