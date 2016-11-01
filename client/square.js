@@ -204,8 +204,12 @@ export default class Square extends THREE.Object3D{
     }
     update(dt,et) {
         this.fountain.update(dt);
-        this.trees.update(dt);
-        this.extras.update(dt);
+        if (!this.config.noTrees) {
+            this.trees.update(dt,et);
+        }
+        if (!this.config.noExtras) {
+            this.extras.update(dt);
+        }
         for (let i = 0; i < this.suns.children.length; i++) {
             this.suns.children[i].children[2].update(dt,et)
         }
@@ -371,7 +375,7 @@ export default class Square extends THREE.Object3D{
                         
                         // Save the mafillp
                         this.sunTexture = fill.children[0].material.map;
-                        this.sunTexture.repeat.set(1.0,0.5); //fill texture tiling
+                        this.sunTexture.repeat.set(1.0,0.5);
                         //debug 
 
                     }
