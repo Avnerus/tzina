@@ -31,11 +31,14 @@ import Agam12PMAnimation from './animations/agam12pm'
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
 
+import WaterDrops from './water_drops'
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
         this.config = config;
         this.started = false;
+        this.controlPassed = false;
         this.shownWASD = false;
         this.shownZoom = false;
     }
@@ -174,6 +177,9 @@ export default class Game {
         this.scene.add(this.zoomGuidance);
 
         this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
+
+        this.waterDrops = new WaterDrops();
+        this.camera.add(this.waterDrops);
     }
 
     load(onLoad) {
@@ -214,6 +220,7 @@ export default class Game {
         }
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
+        this.waterDrops.init(this.loadingManager);
 
         // WebVR
         this.vrEffect = new THREE.VREffect(this.renderer);
@@ -225,6 +232,7 @@ export default class Game {
         };
         this.vrManager = new WebVRManager(this.renderer, this.vrEffect, params);
         console.log("VR Manager: ", this.vrManager);
+
     }
 
     showZoomGuidance() {
@@ -331,13 +339,16 @@ export default class Game {
         events.on("chapter_threshold", (passed) => {
         });
 
-        events.on("control_threshold", () => {
-            if (!this.shownWASD) {
-                document.getElementById("wasd-container").style.display = "block";
-                setTimeout(() => {
-                    document.getElementById("wasd-container").style.display = "none";
-                },3000);
-                this.shownWASD = true;
+        events.on("control_threshold", (passed) => {
+            if (passed) {
+                this.controlPassed = true;
+                if (!this.shownWASD) {
+                    document.getElementById("wasd-container").style.display = "block";
+                    setTimeout(() => {
+                        document.getElementById("wasd-container").style.display = "none";
+                    },3000);
+                    this.shownWASD = true;
+                }
             }
         });
 
@@ -391,8 +402,11 @@ export default class Game {
             this.square.update(dt,et);
             this.timeController.update(dt,et);
             this.characterController.update(dt,et);
-            this.intro.update();
-            this.introAni.update(dt,et);
+            this.waterDrops.update(dt);
+            if (!this.controlPassed) {
+                this.intro.update();
+                this.introAni.update(dt,et);
+            }
         }
         if (this.keyboardController) {
             this.keyboardController.update(dt);

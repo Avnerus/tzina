@@ -466,7 +466,13 @@ export default class Square extends THREE.Object3D{
         this.colliders.forEach((collider) => {
             collider.matrixWorld.multiply(this.mesh.matrixWorld);
         })*/
-        this.collisionManager.refreshSquareColliders(this.colliders.children);
+        let aroundFountain  = this.fountainMesh.getObjectByName("f_11_SubMesh 0");
+        aroundFountain.onCollision = (distance) => {
+            events.emit("fountain_collision", distance);
+        }
+        //let aroundFountain  = this.mesh.getObjectByName("fntn");
+        //this.collisionManager.refreshSquareColliders(this.colliders.children);
+        this.collisionManager.refreshSquareColliders([aroundFountain]);
     }
 
     getSphereMesh() {

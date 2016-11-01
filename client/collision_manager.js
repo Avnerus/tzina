@@ -34,7 +34,6 @@ export default class CollisionManager {
     init() {
     }
 
-
     refreshSquareColliders(colliders) {
         console.log("Refresh square colliders ", colliders);
         if (this.debug) {
@@ -45,7 +44,8 @@ export default class CollisionManager {
         }
         this.squareObstacles.splice(0);
         this.squareMeshes.splice(0);
-        for (let i = 1; i < colliders.length; i++) {
+
+        for (let i = 0; i < colliders.length; i++) {
             this.addBoundingBox(colliders[i]);
         }
     }
@@ -67,6 +67,16 @@ export default class CollisionManager {
             }
         });
 
+        // Square
+        boxIntersect(this.playerBox, this.squareObstacles, (i,j) => {
+            let distance = this.player.position.distanceTo(
+                new THREE.Vector3().setFromMatrixPosition(this.squareMeshes[j].matrixWorld)
+            );
+            if (this.squareMeshes[j].onCollision) {
+                this.squareMeshes[j].onCollision(distance);
+            }
+        });
+
     }
     setPlayer(player) {
         this.player = player;
@@ -74,6 +84,8 @@ export default class CollisionManager {
 
     testMovement(source, destination) {
         return new Promise((resolve, reject) => {
+            resolve(true);
+            /*
             // Square
             this.meshColliders.splice(0);
             boxIntersect(this.playerBox, this.squareObstacles, (i,j) => {
@@ -98,9 +110,10 @@ export default class CollisionManager {
                 resolve(true);
             } else {
                 resolve(true);
-            }
+            }*/
         })
     }
+
 
     addCharacter(character) {
         if (character.props.space) {
@@ -141,14 +154,15 @@ export default class CollisionManager {
 
     addBoundingBox(obj) {
         //obj.children[0].material.wireframe = true;
-        obj.children[0].material.visible = false;
-        let bbox = new THREE.BoundingBoxHelper(obj.children[0],0x00ff00);
+        //obj.children[0].material.visible = false;
+        let bbox = new THREE.BoundingBoxHelper(obj,0x00ff00);
         bbox.update();
         if (this.debug) {
+            console.log("Collision bounding box", bbox);
             this.scene.add(bbox);
             this.squareDebug.push(bbox);
         }
-        this.squareMeshes.push(obj.children[0]);
+        this.squareMeshes.push(obj);
         this.squareObstacles.push([
             bbox.box.min.x,
             bbox.box.min.y,
