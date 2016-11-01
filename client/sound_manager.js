@@ -131,7 +131,7 @@ export default class SoundManager {
             let pSampler=new PositionalSoundSampler(this.listener,this.scene);
             pSampler.blurModule.controlVolume(1.8);
             pSampler.position.set(thisSample.position[0],thisSample.position[1],thisSample.position[2]);
-            pSampler.createDebugCube(0xFF0000);
+            //pSampler.createDebugCube(0xFF0000);
             pSampler.init(SOUND_PATH + thisSample.path,loadingManager,function(thisSampler){
               //Put attention that thisSample is not the same as thisSampler.
               //on sample loaded
