@@ -31,13 +31,13 @@ export default class ZoomController {
         )
         this.STARTING_POSITION = new THREE.Vector3(
             0,
-            50,
-            350
+            15,
+            100
         );
         this.MID_ZOOM = new THREE.Vector3(
             0,
-            45,
-            300 
+            10,
+            50 
         );
 
         this.CHAPTER_THRESHOLD = 0.45;
@@ -56,7 +56,7 @@ export default class ZoomController {
         $(document.documentElement).on('mousewheel', (event) => {
                 this.velocityZ = event.deltaY * 10;
                 if (this.velocityZ > 0) {
-                    this.velocityZ = Math.max(this.velocityZ, 100);
+                    this.velocityZ = Math.max(this.velocityZ, 60);
                 } else if (this.velocityZ < 0) {
                     this.velocityZ = Math.min(this.velocityZ,-100);
                 }
@@ -83,8 +83,10 @@ export default class ZoomController {
             return false;
         }, false);
 
+        /*
         events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "z"); 
         events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "y"); 
+        */
 
         events.on("angle_updated", (hour) => {
             if (!this.done) {

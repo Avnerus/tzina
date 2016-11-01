@@ -38,7 +38,7 @@ document.getElementById('start-button').addEventListener('click',function(event)
     }
 
     
-    if (fullscreen.available()) {
+    if (config.fullscreen && fullscreen.available()) {
         var fs = fullscreen(el);
 
         fs.on('attain',function() {
@@ -53,8 +53,13 @@ document.getElementById('start-button').addEventListener('click',function(event)
         });
         fs.request();
     } else {
-        if (!game.started) {
-            start();
+        if (pointer) {
+            pointer.request();
+        }
+        else {
+            if (!game.started) {
+                start();
+            }
         }
     }
 

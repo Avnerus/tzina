@@ -17,10 +17,10 @@ export default {
         events.emit("add_gui", {folder:name}, cube.position, "z"); 
         return cube;
     },
-    positionObject: function(object, name, listen = false, min=-40,max=40, angles) {
-        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.1}, object.position, "x", min, max); 
-        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.1}, object.position, "y", min, max * 2);
-        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.1}, object.position, "z", min, max);
+    positionObject: function(object, name, listen = false, min=-50,max=50, angles) {
+        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "x", min, max); 
+        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "y", min, max * 2);
+        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "z", min, max);
 
         if (angles) {
             object.angleRotation = {x: angles[0], y: angles[1], z: angles[2]};
@@ -41,7 +41,7 @@ export default {
         }, object.angleRotation, "z", 0, 360);
 
         object.global = object.scale.x;
-        events.emit("add_gui", {folder:name + " - Scale", listen: listen, onChange: () => {
+        events.emit("add_gui", {folder:name + " - Scale", listen: listen, step: 0.001, onChange: () => {
            object.scale.set(object.global, object.global, object.global);
         }}, object, "global",0,4); 
     },

@@ -92,14 +92,10 @@ export default class IntroAnimation extends THREE.Object3D {
             console.log(geometry);
 
             let material = new THREE.PointsMaterial( { color: 0xffffff, size: 1 } );
-            let materials = [ new THREE.PointsMaterial( { color: 0xffffff, size: 1 } ),
-                              new THREE.PointsMaterial( { color: 0xff0000, size: 1 } ),
-                              new THREE.PointsMaterial( { color: 0x00ffff, size: 1 } ) ];
+            let materials = [ new THREE.PointsMaterial( { color: 0xffffff, size: 1 } )];
 
             // scale, position, rotation
-            let treeTransformer = [ [new THREE.Vector3(70, 70, 10), new THREE.Vector3(0,1100,300), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)],
-                                    [new THREE.Vector3(50, 50, 50), new THREE.Vector3(500,800,1000), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2*(1-1/2)) ],
-                                    [new THREE.Vector3(65, 40, 50), new THREE.Vector3(-500,900,1000), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2*(1+1/2))] ];
+            let treeTransformer = [ [new THREE.Vector3(70, 70, 10), new THREE.Vector3(0,1100,300), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)]];
             
             this.trees = new THREE.Object3D();
             for(let i=0; i<treeTransformer.length; i++){
@@ -131,15 +127,26 @@ export default class IntroAnimation extends THREE.Object3D {
             // this.initFBOParticle( positions );
         });
 
-        loader.load(this.BASE_PATH + "/models/terrain4.json", (geometry, material) => {
-            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x17212c, shininess:10, shading: THREE.FlatShading}) ); //0x005a78
+        let blueprint = tex_loader.load( this.BASE_PATH + '/images/blueprint_edit.jpg' );
+        let blueprintEmi = tex_loader.load( this.BASE_PATH + '/images/blueprint_emi.png' );
+        blueprint.wrapS = THREE.RepeatWrapping;
+        blueprint.wrapT = THREE.RepeatWrapping;
+        blueprintEmi.wrapS = THREE.RepeatWrapping;
+        blueprintEmi.wrapT = THREE.RepeatWrapping;
+        loader.load(this.BASE_PATH + "/models/terrain5.json", (geometry, material) => {
+            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({ map:blueprint, color: 0x31475e,
+                                                                                   emissiveMap:blueprintEmi, emissive:0xffffff, emissiveIntensity: 0,
+                                                                                   shininess:10, shading: THREE.FlatShading}) ); //0x17212c
+            //TweenMax.to(this.terrain.material, 2, {emissiveIntensity:.4, repeat:-1, yoyo:true, repeatDelay:4, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: .5, points: 20, taper: "none", randomize: true, clamp: false})});
+
             // this.terrain.scale.set(150,50,110);//80,50,50
             this.terrain.scale.multiplyScalar(15);
             // this.terrain.rotation.y = Math.PI;
-            this.terrain.position.set(0,-3000,200);
+            this.terrain.position.set(-1000,-3000,200);
             this.add( this.terrain );
         });
 
+        /*
         let houseTex = tex_loader.load( this.BASE_PATH + '/images/house_lowSat.jpg' );
         let houseEmisTex = tex_loader.load( this.BASE_PATH + '/images/house_EMI.png' );
         loader.load(this.BASE_PATH + "/models/house3.json", (geometry, material) => {
@@ -152,7 +159,7 @@ export default class IntroAnimation extends THREE.Object3D {
             this.house.position.set(0,-3000,200);
             this.add( this.house );
         });
-
+        */
 
         this.completeSequenceSetup();
         //
@@ -177,9 +184,9 @@ export default class IntroAnimation extends THREE.Object3D {
                 frequency: { type: "f", value: 1 },
                 gravity: { type: "f", value: 12.5 }, // 2
                 mouseRotation: { type: "f", value: 0 }, // 2
-                squareRadius: {type: "f", value: this.sRadius*7.5},
+                squareRadius: {type: "f", value: this.sRadius*6.5},
                 squareCenterX: {type: "f", value: this.sCenter.x},
-                squareCenterY: {type: "f", value: this.sCenter.y},
+                squareCenterY: {type: "f", value: this.sCenter.y+10},
                 squareCenterZ: {type: "f", value: this.sCenter.z},
                 bounceFactor: {type: "f", value: 2}
             },
@@ -207,7 +214,7 @@ export default class IntroAnimation extends THREE.Object3D {
         this.fbo = new FBO();
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
         //this.fbo.particles.frustumCulled = false;
-//        DebugUtil.positionObject(this.fbo.particles, "TREE");
+        //DebugUtil.positionObject(this.fbo.particles, "TREE");
         this.add( this.fbo.particles );
         this.timerAnim = null;
         //this.fbo.particles.position.y = 1500;

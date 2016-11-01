@@ -12,9 +12,12 @@ export default class Character extends THREE.Object3D {
             mindepth: props.mindepth,
             maxdepth: props.maxdepth,
             fileName: props.basePath + "_idle.webm",
-            uvdy: props.uvdy,
+            uvdy: props.uvdy_idle ? props.uvdy_idle : props.uvdy,
             uvdx: props.uvdx,
-            scale: props.scale
+            scale: props.scale,
+            width: props.width,
+            height: props.height,
+            fps: 15
         });
 
         if (!props.idleOnly) {
@@ -25,7 +28,10 @@ export default class Character extends THREE.Object3D {
                 uvdy: props.uvdy,
                 uvdx: props.uvdx,
                 scale: props.scale,
-                volume: props.volume
+                volume: props.volume,
+                width: props.width,
+                height: props.height,
+                fps: 25
             });
         }
 
@@ -53,8 +59,6 @@ export default class Character extends THREE.Object3D {
             
             this.idleVideo.video.loop = true;
 
-
-
             if (!this.props.idleOnly) {
                 this.fullVideo.init(loadingManager);
                 this.fullVideo.mesh.visible = false;
@@ -64,8 +68,11 @@ export default class Character extends THREE.Object3D {
                 this.add(this.fullVideo.wire);
 
                 this.fullVideo.video.addEventListener('timeupdate',() => {
-                    if (this.playingFull && this.animation) {
-                        this.animation.updateVideoTime(this.fullVideo.video.currentTime);
+                    if (this.playingFull) {
+                        if (this.animation) {
+                            this.animation.updateVideoTime(this.fullVideo.video.currentTime);
+                        }
+                        events.emit("character_progress", {name: this.props.name, time: this.fullVideo.video.currentTime});
                     }
                 },false);
 
@@ -99,6 +106,12 @@ export default class Character extends THREE.Object3D {
                 this.animation.visible = false;
             } else {
                 this.animation = null;
+            }
+
+            // for event character
+            if (this.props.idleOnly && this.animation) {
+                this.animation.visible = true;
+                this.add(this.animation);
             }
 
             events.on("character_playing", (name) => {
@@ -168,10 +181,9 @@ export default class Character extends THREE.Object3D {
         this.idleVideo.pause();
         this.idleVideo.unload();
 
-        this.idleVideo.mesh.visible = false;
-        this.fullVideo.mesh.visible = false;
-        this.idleVideo.wire.visible = false;
-        this.fullVideo.wire.visible = false;
+        this.remove(this.fullVideo);
+        this.remove(this.idleVideo);
+
         this.playingFull = false;
         if (this.props.subtitles) {
             this.subtitlesVideo.src = "";
@@ -246,6 +258,10 @@ export default class Character extends THREE.Object3D {
                 this.playFull();
             }
         }
+    }
+
+    showAnimation(){
+        //
     }
 
     checkReady() {

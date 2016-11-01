@@ -5,29 +5,40 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link type="text/css" href="css/tzina.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Miriam+Libre|Open+Sans" rel="stylesheet">
+
         <title>Tzina</title>
     </head>
     <body>
+        <script>
+            window.WebVRConfig = {FORCE_ENABLE_VR : false}
+        </script>
         <script src="lib/modernizr-custom.js"></script>
         <script src="lib/TweenMax.min.js"></script>
         <script src="lib/dat.gui.min.js"></script>
         <script src="lib/three.js"></script>
+        <script src="lib/ImageUtils.js"></script>
+        <script src="lib/TessellateModifier.js"></script>
         <script src="lib/SPE.min.js"></script>
         <script src="lib/OrbitControls.js"></script>
         <script src="lib/PointerLockControls.js"></script>
         <script src="lib/PLYLoader.js"></script>
-        <script src="lib/CopyShader.js"></script>
-        <script src="lib/EffectComposer.js"></script>
-        <script src="lib/RenderPass.js"></script>
-        <script src="lib/ShaderPass.js"></script>
-        <script src="lib/MaskPass.js"></script>
-        <script src="lib/VREffect.js"></script>
+        <script src="lib/potree.min.js"></script>
+        <script src="lib/BinaryHeap.js"></script>
         <script src="lib/webvr-polyfill.js"></script>
         <script src="lib/webvr-manager.js"></script>
+        <script src="lib/VREffect.js"></script>
         <script src="lib/aws-sdk-2.5.3.min.js"></script>
         <script src="lib/jquery-2.2.4.min.js"></script>
 
         
+        
+        <!--script src="lib/CopyShader.js"></script>
+        <script src="lib/EffectComposer.js"></script>
+        <script src="lib/RenderPass.js"></script>
+        <script src="lib/ShaderPass.js"></script>
+        <script src="lib/MaskPass.js"></script-->
+
         <script src="secure-access.js"></script>
 
         <video id="subtitles" class="subtitles" src="" style="display:none;"></video>
@@ -61,6 +72,12 @@
                 width: 200px;
             ">
            </div>
+            <div id="credits" class="splash-container">
+                <div id="credit-line" class="credit-line">
+                    <span id="credit-title" class="credit-title">Director & Producer</span>
+                    <span id="credit-name" class="credit-name">Shirin Anlen</span>
+                </div>
+            </div>
         </div>
         <div id="secure-access-container" style="display:none;" class="splash">
             <div id="secure-access">

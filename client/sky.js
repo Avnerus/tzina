@@ -71,11 +71,11 @@ export default class Sky {
 
         this.shader = new THREE.ShaderMaterial( {
             uniforms: {
-                luminance:	 { type: "f", value: 1.1 },
-                turbidity:	 { type: "f", value: 10 },
-                reileigh:	 { type: "f", value: 30.0},
+                luminance:	 { type: "f", value: 1.16 },
+                turbidity:	 { type: "f", value: -84 },
+                reileigh:	 { type: "f", value: 14.0},
                 mieCoefficient:	 { type: "f", value: 0.005 },
-                mieDirectionalG: { type: "f", value: 0.8 },
+                mieDirectionalG: { type: "f", value: 1.0 },
                 sunPosition: 	 { type: "v3", value: new THREE.Vector3() },
                 cloudsMap:   { type: "t"}
             },
@@ -96,14 +96,12 @@ export default class Sky {
         this.updateSunPosition();
 
 
-
-        /*
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.luminance, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.turbidity, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.reileigh, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieCoefficient, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieDirectionalG, "value"); 
-        events.emit("add_gui", {folder:"Sun shader", listen:false}, this, "spinFactor"); */
+        /*events.emit("add_gui", {folder:"Sun shader", step: 0.01, listen:false}, this.shader.uniforms.luminance, "value", 1.0,2.0); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.turbidity, "value",-200,200); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.reileigh, "value",-200.0, 200.0); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false,step:0.001}, this.shader.uniforms.mieCoefficient, "value",0,1); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.mieDirectionalG, "value",0,1); 
+        events.emit("add_gui", {folder:"Sun shader", listen:false}, this, "spinFactor"); 
 
         events.emit("add_gui",{
             onChange: () => {
@@ -116,7 +114,7 @@ export default class Sky {
                 this.updateSunPosition();
             },
             folder: "Sun shader",
-        }, this, "azimuth", 0, 1);
+        }, this, "azimuth", 0, 1); */
 
 
         events.on("gaze_started", () => {

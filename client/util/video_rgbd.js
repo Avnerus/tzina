@@ -7,7 +7,6 @@
 
 import DebugUtil from './debug'
 
-const SEC_PER_RGBD_FRAME = 1 / 25;
 const VERTS_WIDE = 256;
 const VERTS_TALL = 256;
 const precision  = 3;
@@ -28,6 +27,8 @@ export default class VideoRGBD  {
         this.wire_rgbd_fs = glslify('../shaders/rgbd_wire_fs.glsl')
 
         this.timer = 0;
+
+        this.SEC_PER_RGBD_FRAME = 1 / this.properties.fps;
 
         console.log("VideoRGBD constructed: " , this.properties);
     }
@@ -76,21 +77,26 @@ export default class VideoRGBD  {
                 "maxdepth" : { type : "f", value : this.properties.maxdepth },
                 "uvdy" : { type : "f", value : this.properties.uvdy },
                 "uvdx" : { type : "f", value : this.properties.uvdx },
+                "width" : { type : "f", value : this.properties.width },
+                "height" : { type : "f", value : this.properties.height },
                 "opacity" : { type : "f", value : 1.0 }
             },
 
             vertexShader: this.rgbd_vs,
             fragmentShader: this.rgbd_fs,
-            blending: THREE.AdditiveBlending,
+            //blending: THREE.AdditiveBlending,
             transparent: true,
             wireframe:false
         } );
 
         let geometry = this.buildMeshGeometry();
 
+        //events.emit("add_gui", {folder: "UVDX", step: 0.01}, this.meshMaterial.uniforms.uvdx, "value", -1,0);
+        //events.emit("add_gui", {folder: "UVDY", step: 0.01}, this.meshMaterial.uniforms.uvdy, "value", -1,1);
        //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
 
         this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
+//        console.log("Character mesh ", this.mesh);
         this.wire = new THREE.Mesh( geometry, this.linesMaterial );
 
         //DebugUtil.positionObject(this.wire, this.properties.fileName + " - Wire", false);
@@ -166,7 +172,7 @@ export default class VideoRGBD  {
     }
     update(dt) {
         this.timer += dt;
-        if (this.timer >= SEC_PER_RGBD_FRAME) {
+        if (this.timer >= this.SEC_PER_RGBD_FRAME) {
             this.timer = 0;
             if ( this.isPlaying && this.video.readyState === this.video.HAVE_ENOUGH_DATA ) {
 

@@ -25,6 +25,8 @@ import MiriamAnimation from './animations/miriam'
 import HaimAnimation from './animations/haim'
 import ItzikAnimation from './animations/itzik'
 import MeirAnimation from './animations/meir'
+import MarkAnimation from './animations/mark'
+import Agam12PMAnimation from './animations/agam12pm'
 
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
@@ -85,29 +87,25 @@ export default class Game {
         this.hemiLight.position.set( 0, 500, 0 );
         this.scene.add( this.hemiLight );
 
-        /*
         events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
-        events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y"); */
+        events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y"); 
 
-       /*
 
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
         this.dirLight.position.set( 0, 120, -200  );
-        this.dirLight.color.setHSL(1,1,1);*/
+        this.dirLight.color.setHSL(1,1,1);
 
-        this.dirLight = new THREE.PointLight(0xffffff, 1, 200);
+        this.dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
         this.dirLight.color.setHSL(0.1,0.42,0.9);
 
-        //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
-        //events.emit("add_gui", {folder:"Directional light"}, this.dirLight, "intensity");
 
         // --- hide by laura --- start
-        events.emit("add_gui", {folder:"Point light", listen:true}, this.dirLight, "intensity",0,1);
-        events.emit("add_gui", {folder:"Point light", listen:true}, this.dirLight, "distance");
-        events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,1);
+        events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,2);
+        events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
-        DebugUtil.colorPicker("Point light", this.dirLight, "color");
+        DebugUtil.colorPicker("Dir light", this.dirLight, "color");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
+        DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");
         // --- hide by laura --- end
 
         //dirLight.target.position.set(0,100,0);
@@ -122,14 +120,13 @@ export default class Game {
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
         // Square
-        this.square = new Square(this.collisionManager, this.renderer);
+        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config);
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
-        /*
         this.flood = new Flood();
         this.flood.init();
-        this.scene.add(this.flood); */
+        this.scene.add(this.flood); 
 
         /*
         // Post processing
@@ -156,7 +153,9 @@ export default class Game {
                 'Miriam' : new MiriamAnimation(this.renderer),
                 'Haim' : new HaimAnimation(this.renderer),
                 'Itzik' : new ItzikAnimation(),
-                'Meir' : new MeirAnimation()
+                'Meir' : new MeirAnimation(),
+                'Mark' : new MarkAnimation(),
+                'Agam12PM' : new Agam12PMAnimation()
             }
         } else {
             this.animations = {};
@@ -193,7 +192,7 @@ export default class Game {
                 this.scene.add(this.introAni);
             }
 
-            // DebugUtil.positionEntry(this.square.ENTRY_POINTS[5], this.square.mesh, this.scene);
+            //DebugUtil.positionEntry(this.square.ENTRY_POINTS[0], this.square.mesh, this.scene);
 
             onLoad();
         };
@@ -246,24 +245,32 @@ export default class Game {
 
     start() {
         this.started = true;
-        this.vrManager.setMode_(2);
+        if (this.config.fullscreen) {
+            this.vrManager.setMode_(2);
+        }
         let element = this.renderer.domElement;
         this.container.appendChild(element);
         this.soundManager.play();
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
-        if (this.config.controls == "locked") {
-                this.vrControls = new TzinaVRControls(this.emitter, this.camera);
-                this.vrControls.standing = true;
+        if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
-                this.vrControls.basePosition.set(10, 21,12);
+                this.vrControls = new TzinaVRControls(this.emitter, this.camera);
+                this.vrControls.standing = true;
+                this.vrControls.basePosition.set(5.7,8.3,1);
+                // this.vrControls.scale = 1.5;
+
                 // --- hide by laura --- start
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x"); 
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y"); 
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z"); 
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x");
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y");
+                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z");
                 // --- hide by laura --- end
+                events.emit("add_gui", {folder: "Camera"}, this.camera.position, "y");
         } else {
-            this.controls = new THREE.OrbitControls( this.camera, element );
+            console.log("Orbit controls");
+            this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+            this.keyboardController.init();
+            this.controls = new THREE.OrbitControls( this.camera  );
         }
 
         this.resize();
@@ -279,7 +286,12 @@ export default class Game {
             }
             setTimeout(() => {
                 events.emit("intro_end");
+                this.intro.playCredits();
+                if (this.vrManager.isVRCompatible) {
+                    events.emit("control_threshold", true);
+                }
             },3000);
+
 
         } else {
             // Init the intro
@@ -395,9 +407,11 @@ export default class Game {
         this.zoomController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
+        } else {
+            this.controls.update();
         }
         this.collisionManager.update(dt);
-        //this.flood.update(dt);
+        this.flood.update(dt);
     }
 
     render() {
@@ -409,6 +423,7 @@ export default class Game {
     resize() {
         let width = this.container.offsetWidth;
         let height = this.container.offsetHeight;
+        console.log("Tzina set size ", width, height);
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);

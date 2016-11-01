@@ -93,14 +93,14 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.animStart = false;
         this.sequenceConfig = [
             { time: 10, anim: ()=>{this.manAppear(10)} },           //10
-            { time: 40, anim: ()=>{this.manHold(8)} },              //40
-            { time: 65, anim: ()=>{this.manLean(8)} },              //65
-            { time: 105, anim: ()=>{this.manCircle(8)} },           //105
-            { time: 110, anim: ()=>{this.manSwirl(8)} },            //110
-            { time: 115, anim: ()=>{this.manSwirl2(8)} },           //115
-            { time: 120, anim: ()=>{this.manSwirl3(8)} },           //120
-            { time: 125, anim: ()=>{this.manSwirlNonstop()} },      //125
-            { time: 225, anim: ()=>{this.manSwirlSpeedup(50)} }     //220, 20
+            { time: 20, anim: ()=>{this.manHold(8)} },              //40
+            { time: 30, anim: ()=>{this.manLean(8)} },              //65
+            { time: 40, anim: ()=>{this.manCircle(8)} },           //105
+            { time: 50, anim: ()=>{this.manSwirl(8)} },            //110
+            { time: 60, anim: ()=>{this.manSwirl2(8)} },           //115
+            { time: 70, anim: ()=>{this.manSwirl3(8)} },           //120
+            { time: 80, anim: ()=>{this.manSwirlNonstop()} },      //125
+            { time: 120, anim: ()=>{this.manSwirlSpeedup(50)} }     //220, 20
         ];
 
         let GFClockTex = tex_loader.load(this.BASE_PATH + '/images/clockUV4.jpg');
@@ -145,12 +145,12 @@ export default class MiriamAnimation extends THREE.Object3D {
         let curveColors = [];
         this.manGeometries = [];
 
-        let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 120, 0.1, 2, true);
+        let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 100, 0.05, 2, true);
         this.manGeometries.push( manGeometry );
         
         // console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
         for(let i=1; i<men_figures_points.length; i++){
-            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 120, 0.1, 2, true);
+            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 100, 0.05, 2, true);
             let nameee = 't'+(i-1);
             manGeometry.morphTargets[i-1] = {name: nameee, vertices: manGeometry2.vertices};
             this.manGeometries.push(manGeometry2);
@@ -228,15 +228,15 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         this.manFigure.material.opacity = 0.5;
         // TweenMax.to( this.manFigure.scale, _duration, { x:1,y:1,z:1, ease: Power3.easeOut } );
-        TweenMax.fromTo( this.manFigure.scale, _duration, {x:0.01,y:0.01,z:0.01}, { x:1,y:1,z:1, ease: Power3.easeOut } );
+        TweenMax.fromTo( this.manFigure.scale, _duration, {x:0.01,y:0.01,z:0.01}, { x:1,y:1,z:1, ease: Power1.easeOut } );
     }
     manHold (_duration) {
         let tmpEndArray = [1,0,0,0,0,0];
-        TweenMax.to( this.manFigure.morphTargetInfluences, _duration, { endArray: tmpEndArray, ease: Power3.easeInOut } );
+        TweenMax.to( this.manFigure.morphTargetInfluences, _duration, { endArray: tmpEndArray, ease: Power1.easeInOut } );
     }
     manLean (_duration) {
         let tmpEndArray = [0,1,0,0,0,0];
-        TweenMax.to( this.manFigure.morphTargetInfluences, _duration, { endArray: tmpEndArray, ease: Power2.easeInOut } );
+        TweenMax.to( this.manFigure.morphTargetInfluences, _duration, { endArray: tmpEndArray, ease: Power1.easeInOut } );
     }
     manCircle (_duration) {
         let tmpEndArray = [0,0,1,0,0,0];

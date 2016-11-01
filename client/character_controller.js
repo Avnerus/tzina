@@ -15,15 +15,18 @@ export default class CharacterController {
         this.activeCharacters = [];
         this.animations = animations;
         this.addedColliders = false;
+        this.debug = false;
     }
     init(loadingManager) {
         console.log("Initializing Character controller");
-        Characters.forEach((characterProps) => {
-            let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager);
-            character.animation = this.animations[characterProps.animation];
-            character.init(loadingManager);
-            this.characters[characterProps.name] = character;
-        });
+        if (!this.config.noCharacters) {
+            Characters.forEach((characterProps) => {
+                let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager);
+                character.animation = this.animations[characterProps.animation];
+                character.init(loadingManager);
+                this.characters[characterProps.name] = character;
+            });
+        }
         events.on("hour_updated", (hour) => {
             
             let clone = this.activeCharacters.slice(0);
@@ -33,7 +36,7 @@ export default class CharacterController {
                 let character = clone[i];
 
                 if (!character.done) {
-                    this.square.mesh.remove(character);
+                    this.square.clockwork.remove(character);
                     character.unload();
                 } else {
                     console.log("Character " + character.props.name + " is still active");
@@ -76,8 +79,13 @@ export default class CharacterController {
             console.log("Adding character " + characterName);
             let character = this.characters[characterName];
             this.activeCharacters.push(character);
-            this.square.mesh.add(character);
-            //DebugUtil.positionObject(character, character.props.name, false, -40, 40, character.props.rotation);
+            this.square.clockwork.add(character);
+            if (this.debug) {
+                DebugUtil.positionObject(character, character.props.name, false, -40, 40, character.props.rotation);
+                let bbox = new THREE.BoundingBoxHelper( character, 0x00ffff  );
+                bbox.update();
+                this.square.parent.add( bbox );
+            }
             character.load();
             character.play();
         }
