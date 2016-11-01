@@ -38,6 +38,7 @@ export default class Game {
         console.log("Game constructed!")
         this.config = config;
         this.started = false;
+        this.controlPassed = false;
         this.shownWASD = false;
         this.shownZoom = false;
     }
@@ -338,13 +339,16 @@ export default class Game {
         events.on("chapter_threshold", (passed) => {
         });
 
-        events.on("control_threshold", () => {
-            if (!this.shownWASD) {
-                document.getElementById("wasd-container").style.display = "block";
-                setTimeout(() => {
-                    document.getElementById("wasd-container").style.display = "none";
-                },3000);
-                this.shownWASD = true;
+        events.on("control_threshold", (passed) => {
+            if (passed) {
+                this.controlPassed = true;
+                if (!this.shownWASD) {
+                    document.getElementById("wasd-container").style.display = "block";
+                    setTimeout(() => {
+                        document.getElementById("wasd-container").style.display = "none";
+                    },3000);
+                    this.shownWASD = true;
+                }
             }
         });
 
@@ -398,8 +402,11 @@ export default class Game {
             this.square.update(dt,et);
             this.timeController.update(dt,et);
             this.characterController.update(dt,et);
-            this.intro.update();
-            this.introAni.update(dt,et);
+            this.waterDrops.update(dt);
+            if (!this.controlPassed) {
+                this.intro.update();
+                this.introAni.update(dt,et);
+            }
         }
         if (this.keyboardController) {
             this.keyboardController.update(dt);
