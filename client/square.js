@@ -25,6 +25,8 @@ export default class Square extends THREE.Object3D{
         this.config = config;
         this.camera = camera;
 
+        this.debug = true;
+
         this.sunTextureOffsets = {
             19 : 0.5,
             17 : 0.5,
@@ -362,7 +364,9 @@ export default class Square extends THREE.Object3D{
                             chapter.sunLoaderRotation[2] * Math.PI / 180,
                             "XYZ"
                         );
-                        //DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
+                        if (this.debug) {
+                            DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
+                        }
 
                         
                         // Save the mafillp

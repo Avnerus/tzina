@@ -197,7 +197,7 @@ export default
             "titlePosition": [85, 100, 0],
             "totalTime" : 500,
             "insideTitlePosition": [0, 5, 0],
-            "sunLoaderRotation": [0,83,0],
+            "sunLoaderRotation": [230,50,0],
 			"timeLimitMinutes" : 12,
 			"characters": [
 				"Hannah",
