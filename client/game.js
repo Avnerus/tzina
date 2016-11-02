@@ -148,6 +148,7 @@ export default class Game {
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
 
+
         if (!this.config.noAnimations) {
             this.animations = {
                 'Hannah' : new HannahAnimation(),
@@ -218,6 +219,7 @@ export default class Game {
             console.log("Initializing characters");
             this.characterController.init(this.loadingManager);
         }
+        this.intro.init(this.loadingManager);
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
@@ -295,8 +297,8 @@ export default class Game {
 
 
         } else {
-            // Init the intro
-            this.intro.init();
+            // start the intro
+            this.intro.start();
             //this.timeController.setTime(17);//17
         }
 

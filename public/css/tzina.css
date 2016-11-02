@@ -94,27 +94,3 @@ font-family: 'Miriam Libre', sans-serif;
     border: solid 2px;
     height: 20px;
 }
-
-#credits {
-    font-family: 'Open Sans';
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    justify-content: center;
-}
-
-.credit-line {
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-    -moz-transition: opacity 1s ease-in-out;
-    -webkit-transition: opacity 1s ease-in-out;
-}
-
-.credit-title {
-    font-size: 26px;
-}
-
-.credit-name {
-    font-weight: bold;
-}
-

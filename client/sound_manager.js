@@ -270,7 +270,7 @@ class StaticSoundSampler{
     request.open('GET', this.sampleUrl, true);
     request.responseType = 'arraybuffer';
     request.onload = function() {
-      console.log("request",request);
+      //console.log("request",request);
       var audioData = request.response;
 
       audioContext.decodeAudioData(audioData, function(buffer) {

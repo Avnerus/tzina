@@ -109,7 +109,7 @@ export default class Square extends THREE.Object3D{
             this.mesh.rotation.order = "YXZ";
 
             this.colliders = results[4];
-            this.mesh.add(this.colliders);
+            //this.mesh.add(this.colliders);
 
             this.benches = results[5];
 
