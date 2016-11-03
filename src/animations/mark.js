@@ -135,7 +135,7 @@ export default class MeirAnimation extends THREE.Object3D {
             this.add(this.neon2);
         }
 
-        DebugUtil.positionObject(this, "mark");
+        // DebugUtil.positionObject(this, "mark");
         //
         this.loadingManager.itemEnd("MarkAnim");
     }
