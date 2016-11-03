@@ -66,6 +66,18 @@ export default class SoundManager {
             console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
           }
         },
+        setFocusWithLevel:function(on,level){
+          //blurr all except the one in focus
+          this.eachSampler(function(thisSampler,n){
+            thisSampler.controlBlur(level, 0);
+          },on);
+          //focus the one we are focusing, if there is any
+          if(on!==undefined) if(typeof(on.controlBlur)==='function'){
+            on.controlBlur(0,0);
+          }else{
+            console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
+          }
+        },
         //go back to normal without focusing any sound
         unsetFocus:function(time){
           console.log("here 2");
@@ -183,8 +195,7 @@ export default class SoundManager {
       //of course that all the other sound objects must have the play function to call at once from here.
       if(setName=="sunGazedSound"){
       }else if(setName=="flyingSound"){
-      }else if(!setName){
-        console.warn("SoundManager was called to play without providing a setName");
+      }else if(setName == "ambience"){
         for(var a in ambientSamples){
           let thisSample=ambientSamples[a];
           console.log(thisSample);
@@ -236,7 +247,7 @@ export default class SoundManager {
     }
 }
 
-class StaticSoundSampler{
+export class StaticSoundSampler{
   constructor(audioContext){
     this.blurModule=new BlurModule(audioContext);
     this.audioContext=audioContext;
@@ -311,7 +322,7 @@ class StaticSoundSampler{
 }
 
 
-class PositionalSoundSampler extends StaticSoundSampler{
+export class PositionalSoundSampler extends StaticSoundSampler{
   constructor(listener,scene){
     let audioContext=listener.context;
     super(audioContext);

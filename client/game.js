@@ -253,7 +253,7 @@ export default class Game {
         }
         let element = this.renderer.domElement;
         this.container.appendChild(element);
-        this.soundManager.play();
+        this.soundManager.play("ambience");
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
