@@ -96,9 +96,9 @@ font-family: 'Miriam Libre', sans-serif;
 }
 
 #credits {
-    font-family: 'Open Sans';
+    font-family: 'Miriam+Libre';
     position: absolute;
-    bottom: 10px;
+    bottom: 20px;
     width: 100%;
     justify-content: center;
 }
