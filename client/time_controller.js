@@ -127,7 +127,11 @@ export default class TimeController {
 
         this.insideChapterTitle = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitle.scale.multiplyScalar(0.04);
-        //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+
+        this.insideChapterTitleLineTwo = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
+        this.insideChapterTitleLineTwo.scale.multiplyScalar(0.04);
+        DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+        DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
 
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
@@ -149,6 +153,9 @@ export default class TimeController {
         events.on("gaze_stopped", (hour) => {
             if (this.insideChapterTitle.parent) {
                 this.insideChapterTitle.parent.remove(this.insideChapterTitle);
+            }
+            if (this.insideChapterTitleLineTwo.parent) {
+                this.insideChapterTitleLineTwo.parent.remove(this.insideChapterTitleLineTwo);
             }
             this.gazeHour = -1;
         });
@@ -227,7 +234,7 @@ export default class TimeController {
         }
 
         if (this.gazeHour != -1) {
-            this.gazeCounter += dt;
+          //  this.gazeCounter += dt;
             if (this.gazeCounter > 1 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
             }
@@ -410,10 +417,24 @@ export default class TimeController {
         if (!chapter) {
             throw new Error("Invalid chapter hour " + hour);
         }
-        this.insideChapterTitle.text = chapter.hour + ":00 - " + chapter.name;
+        let hourText;
+        if (chapter.hour == 12) {
+            hourText = "12PM"            
+        } else if (chapter.hour > 12) {
+            hourText = (chapter.hour - 12) + "PM"
+        } else {
+            hourText = chapter.hour + "AM";
+        }
+        this.insideChapterTitle.text = hourText;
+
         this.insideChapterTitle.position.fromArray(chapter.insideTitlePosition);
-        //sun.lookAt(this.camera.position);
+
+        this.insideChapterTitleLineTwo.text = chapter.name;
+        this.insideChapterTitleLineTwo.position.fromArray(chapter.insideTitlePositionLineTwo);
+
         sun.add(this.insideChapterTitle);
+        sun.add(this.insideChapterTitleLineTwo);
+
         /*
         this.gazingSun = this.insideChapterTitle;
         events.emit("add_gui", {folder:"Sun rotation"}, sun.rotation, "x");
