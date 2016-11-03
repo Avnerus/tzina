@@ -95,7 +95,7 @@ export default class IntroAnimation extends THREE.Object3D {
             let materials = [ new THREE.PointsMaterial( { color: 0xffffff, size: 1 } )];
 
             // scale, position, rotation
-            let treeTransformer = [ [new THREE.Vector3(70, 70, 10), new THREE.Vector3(0,1100,300), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)]];
+            let treeTransformer = [ [new THREE.Vector3(10, 10, 2), new THREE.Vector3(0,300,-50), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)]];
             
             this.trees = new THREE.Object3D();
             for(let i=0; i<treeTransformer.length; i++){
@@ -106,8 +106,8 @@ export default class IntroAnimation extends THREE.Object3D {
                 //this.add( tree );
                 this.trees.add( tree );
             }
-            this.trees.scale.multiplyScalar(0.2);
-            this.trees.position.y = 140;
+            // this.trees.scale.multiplyScalar(0.2);
+            // this.trees.position.y = 140;
             this.add(this.trees);
 
             // this.tree = new THREE.Points( geometry, material );
@@ -117,8 +117,8 @@ export default class IntroAnimation extends THREE.Object3D {
             // this.add( this.tree );
 
             let refObj = new THREE.Object3D();
-            refObj.scale.set( 15, 15, 10 );    // 110, 90, 80 // 110, 90, 10
-            refObj.position.set(0,250,200);    // 0,900,1100 // 0,1500,300
+            refObj.scale.set( 10, 6, 10 );    // 110, 90, 80 // 110, 90, 10
+            refObj.position.set(0, 150, 160);    // 0,900,1100 // 0,1500,300
             refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
 
             this.positionsForFBO = this.initParticles( refObj, geometry );
@@ -182,11 +182,11 @@ export default class IntroAnimation extends THREE.Object3D {
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                gravity: { type: "f", value: 12.5 }, // 2
+                gravity: { type: "f", value: 7 }, // 12.5
                 mouseRotation: { type: "f", value: 0 }, // 2
-                squareRadius: {type: "f", value: this.sRadius*6.5},
+                squareRadius: {type: "f", value: this.sRadius*2.5},
                 squareCenterX: {type: "f", value: this.sCenter.x},
-                squareCenterY: {type: "f", value: this.sCenter.y+10},
+                squareCenterY: {type: "f", value: this.sCenter.y+3},
                 squareCenterZ: {type: "f", value: this.sCenter.z},
                 bounceFactor: {type: "f", value: 2}
             },
@@ -212,12 +212,12 @@ export default class IntroAnimation extends THREE.Object3D {
         // particleGeometry.vertices.push(new THREE.Vector3(), new THREE.Vector3(-0.1, -0.05, 0), new THREE.Vector3(0.1, -0.05, 0), new THREE.Vector3(0,0.1,0));
 
         this.fbo = new FBO();
-        this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
-        //this.fbo.particles.frustumCulled = false;
+        this.fbo.init( this.width, this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
+        this.fbo.particles.frustumCulled = false;
         //DebugUtil.positionObject(this.fbo.particles, "TREE");
         this.add( this.fbo.particles );
         this.timerAnim = null;
-        //this.fbo.particles.position.y = 1500;
+        // this.fbo.particles.position.y = 1500;
         this.fbo.update();
     }
 
