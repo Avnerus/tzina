@@ -59,6 +59,8 @@ export default class VideoRGBD  {
               "uvdy" : { type : "f", value : this.properties.uvdy },
               "uvdx" : { type : "f", value : this.properties.uvdx },
               "opacity" : { type : "f", value : 0.1 },
+              "width" : { type : "f", value : this.properties.width },
+              "height" : { type : "f", value : this.properties.height },
               "brightness" : { type : "f", value : 0.3 }
           },
 

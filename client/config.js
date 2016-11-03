@@ -14,6 +14,6 @@ export default {
     noAnimations: true,
     noExtras: true,
     noTrees: false,
-    noCharacters: true
+    noCharacters: false
 //    daySpeed: 0.08,
 }

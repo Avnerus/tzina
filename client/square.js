@@ -150,9 +150,9 @@ export default class Square extends THREE.Object3D{
                 */
 
             this.fountain.position.set(0.8,23.6, -0.6);
+            //DebugUtil.positionObject(this.fountain, "Fountain water");
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
-            //DebugUtil.positionObject(this.buildings, "Buildings");
 
             /*
             DebugUtil.positionObject(this.benches.children[0], "Benches1");
