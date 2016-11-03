@@ -11,7 +11,8 @@ const MODEL_PATH = "assets/square/scene.json"
 const BUILDINGS_PATH = "assets/square/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
-const BENCHES_PATH = "assets/square/benches.json"
+const BENCHES_PREFIX = "assets/square/benches"
+const BENCHES_TEXTURES_PREFIX = "assets/square/benchTextures"
 const FOUNTAIN_PATH = "assets/square/fountain.json"
 const TEXTURES_PATH = "assets/square/textures.json"
 
@@ -154,9 +155,9 @@ export default class Square extends THREE.Object3D{
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
 
-            /*
             DebugUtil.positionObject(this.benches.children[0], "Benches1");
             DebugUtil.positionObject(this.benches.children[1], "Benches2");
+            /*
             DebugUtil.positionObject(this.fountainMesh, "Fountain") */
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
@@ -384,6 +385,14 @@ export default class Square extends THREE.Object3D{
             });
         });
     }
+    loadFile(loadingManager, path) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(path ,( obj ) => {
+                resolve(obj);
+            });
+        });
+    }
     loadColliders(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
@@ -398,12 +407,33 @@ export default class Square extends THREE.Object3D{
     }
     loadBenches(loadingManager) {
         return new Promise((resolve, reject) => {
-            let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(BENCHES_PATH,( obj ) => {
-                console.log("Loaded square benches ", obj);
-                resolve(obj);
+            let loaders = [
+                this.loadFile(loadingManager, BENCHES_PREFIX + "1.json"),
+                this.loadFile(loadingManager, BENCHES_TEXTURES_PREFIX + "1.json"),
+                this.loadFile(loadingManager, BENCHES_PREFIX + "2.json"),
+                this.loadFile(loadingManager, BENCHES_TEXTURES_PREFIX + "2.json")
+            ];
+            Promise.all(loaders)
+            .then((results) => {
+                console.log("Benches Load results", results);
+                this.disableDepthWrite(results[1]);
+                this.disableDepthWrite(results[3]);
+                results[0].add(results[1]);
+                results[2].add(results[3]);
+                let allBenches = new THREE.Object3D();
+                allBenches.add(results[0]);
+                allBenches.add(results[2]);
+
+                resolve(allBenches);
             });
         });
+    }
+    disableDepthWrite(objectArray) {
+        for (let i = 0; i < objectArray.children.length; i++) {
+            if (objectArray.children[i].children[0]) {
+                objectArray.children[i].children[0].material.depthWrite = false;
+            }
+        }
     }
     loadFountain(loadingManager) {
         return new Promise((resolve, reject) => {

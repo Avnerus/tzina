@@ -153,9 +153,11 @@ export default class SoundManager {
               //   }
               // },thisSamplerGuiControl,"blur",0,1);
 
+              /*
+
               events.emit("add_gui", {
                 folder: "Sound setFocus",
-              },thisSamplerGuiControl,"focus");
+                },thisSamplerGuiControl,"focus"); */
 
               console.log(thisSampler.name+" sample loaded");
             });
@@ -163,9 +165,11 @@ export default class SoundManager {
           }
         }
         //gui control for back to normal
+        /*
         events.emit("add_gui", {
           folder: "Sound setFocus",
-        },{unset:function(){console.log("here1");thisSoundManager.panorama.unsetFocus(3);}},"unset");
+          },{unset:function(){console.log("here1");thisSoundManager.panorama.unsetFocus(3);}},"unset"); */
+
         // Dynamically loaded sounds
         this.sounds = {}
         this.activateEventListeners();

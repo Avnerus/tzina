@@ -2,7 +2,7 @@ export default {
     controls: "locked",
     basalHeight: 10,
     fps: 60,
-    enableFlying: false,
+    enableFlying: true,
     skipIntro: true,
     startTime: 9,
     skipCharacters: false,
@@ -13,7 +13,7 @@ export default {
     fullscreen: false,
     noAnimations: true,
     noExtras: true,
-    noTrees: false,
-    noCharacters: false
+    noTrees: true,
+    noCharacters: true,
 //    daySpeed: 0.08,
 }
