@@ -7,6 +7,7 @@
 
 import DebugUtil from './debug'
 
+
 const VERTS_WIDE = 256;
 const VERTS_TALL = 256;
 const precision  = 3;
@@ -181,6 +182,8 @@ export default class VideoRGBD  {
                 this.linesMaterial.uniforms.map.value = this.videoTexture;
 
                 this.videoTexture.needsUpdate = true;
+
+                this.linesMaterial.uniforms.brighness.value = 0.1;
             }
         }
     }
