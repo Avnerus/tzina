@@ -18,15 +18,21 @@ export default class ItzhakAnimation extends THREE.Object3D {
     setupAnim() {
 
         // setup animation sequence
+        /*
+        ====> this.growClouds( delay )
+            delay: difference between all the clouds
+        ====> this.dropClouds( amount of falling clouds )
+            the cycle of full falling and rising is around 20 seconds,
+            so the can only do another this.dropClouds(x) after 20 seconds
+        */
         this.animStart = false;
         this.sequenceConfig = [
             { time: 1,  anim: ()=>{this.growClouds(20)} },
             { time: 25,  anim: ()=>{this.dropClouds(4)} },
-            { time: 45,  anim: ()=>{this.dropClouds(7)} },
+            { time: 45,  anim: ()=>{this.dropClouds(7)} },  
             { time: 65,  anim: ()=>{this.dropClouds(10)} },
             { time: 85,  anim: ()=>{this.dropClouds(15)} },
             { time: 105,  anim: ()=>{this.dropClouds(20)} },
-            // { time: 125,  anim: ()=>{this.dropClouds(20)} },
             { time: 130, anim: ()=>{this.characterDisappear()} }
         ];
         this.nextAnim = null;
