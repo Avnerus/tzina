@@ -275,7 +275,7 @@ export default class IntroAnimation extends THREE.Object3D {
         if(this.isStarted){
             // test
             this.simulationShader.uniforms.deltaTime.value = dt;
-            this.simulationShader.uniforms.mouseRotation.value = this.timeController.rotateVelocity;
+            //this.simulationShader.uniforms.mouseRotation.value = this.timeController.rotateVelocity;
             this.fbo.update();
         }
     }

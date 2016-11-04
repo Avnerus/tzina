@@ -146,7 +146,10 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
-        this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
+       
+        this.vrControls = new TzinaVRControls(this.emitter, this.camera);
+
+        this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene, this.vrControls);
         this.zoomController.init();
 
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera);
@@ -200,7 +203,7 @@ export default class Game {
                 this.scene.add(this.introAni);
             }
 
-            //DebugUtil.positionEntry(this.square.ENTRY_POINTS[0], this.square.mesh, this.scene);
+            //DebugUtil.positionEntry(this.square.ENTRY_POINTS[4], this.square.mesh, this.scene);
 
             onLoad();
         };
@@ -264,18 +267,17 @@ export default class Game {
         if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
-                this.vrControls = new TzinaVRControls(this.emitter, this.camera);
                 this.vrControls.standing = true;
-                this.vrControls.basePosition.set(5.7,8.3,1);
                 // this.vrControls.scale = 1.5;
 
                 // --- hide by laura --- start
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x");
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y");
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z");
+                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "x");
+                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "y");
+                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "z");
                 // --- hide by laura --- end
                 events.emit("add_gui", {folder: "Camera"}, this.camera.position, "y");
         } else {
+            this.vrControls = null;
             console.log("Orbit controls");
             this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
             this.keyboardController.init();
@@ -296,9 +298,6 @@ export default class Game {
             setTimeout(() => {
                 events.emit("intro_end");
                 this.intro.playCredits();
-                if (this.vrManager.isVRCompatible) {
-                    events.emit("control_threshold", true);
-                }
             },3000);
 
 
@@ -312,7 +311,9 @@ export default class Game {
         events.on("intro_end", () => {
             console.log("Intro ended");
             if (!this.config.noSquare) {
-                this.introAni.start();
+                setTimeout(() => {
+                    this.introAni.start();
+                },5000);
             }
         });
 

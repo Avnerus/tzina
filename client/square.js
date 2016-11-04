@@ -64,8 +64,8 @@ export default class Square extends THREE.Object3D{
             {
                 hour: 7,
                 worldPosition: [63,12,5],
-                startPosition: [-26, 20.5, -62],
-                endPosition: [-13, 22.1, -12]
+                startPosition: [-26, 24.0, -62],
+                endPosition: [-14, 23.7, -12]
             },
             {
                 hour: 0,
@@ -170,6 +170,9 @@ export default class Square extends THREE.Object3D{
             //DebugUtil.positionObject(this.fountain, "Fountain water");
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
+            
+            this.benches.children[0].position.set(5.15,-5.56, 0);
+            this.benches.children[0].scale.set(1.25, 1.25, 1.25);
 
             DebugUtil.positionObject(this.benches.children[0], "Benches1");
             DebugUtil.positionObject(this.benches.children[1], "Benches2");

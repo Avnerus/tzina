@@ -7,6 +7,7 @@ export default class Character extends THREE.Object3D {
         this.collisionManager = collisionManager;
         this.soundManager = soundManager;
         this.config = config;
+        this.inControl = false;
 
         if (!props.fullOnly) {
             this.idleVideo = new VideoRGBD({
@@ -136,6 +137,10 @@ export default class Character extends THREE.Object3D {
                     }
                 }
             });
+
+            events.on("control_threshold", (passed) => {
+                //this.inControl = passed;
+            });
     }
     play() {
         if (!this.done && !this.props.fullOnly) {
@@ -237,7 +242,7 @@ export default class Character extends THREE.Object3D {
     onCollision() {
         console.log("Collision!! ", this.props.name, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
-        if (!this.playingFull && !this.onHold && !this.done) {
+        if (this.inControl && !this.playingFull && !this.onHold && !this.done) {
             this.playingFull = true;
             console.log(this.props.name + " - Loading full video ");
             if (this.animation) {

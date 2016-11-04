@@ -58,78 +58,92 @@ export default function ( emitter, object, onError ) {
 	// standing=true but the VRDisplay doesn't provide stageParameters.
 	this.userHeight = 22.1;
 
-    this.active = true;
+    this.active = false;
 
     this.basePosition = new THREE.Vector3(0,0,0);
 
     events.on("control_threshold", (passed) => {
         if (passed) {
+            console.log("VR Control threshold: ", object.position);
             this.active = true;
         } else {
             this.active = false;
         }        
     })
 
+    this.getCurrentPosition = function () {
+        if (vrInput) { 
+            let position = new THREE.Vector3().fromArray(vrInput.getPose().position);
+            if (position) {
+                if (this.standing) {
+                    console.log("VR Position", position);
+                    standingMatrix.fromArray(vrInput.stageParameters.sittingToStandingTransform);
+                    position.applyMatrix4(standingMatrix);
+                    return position;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
 	this.update = function () {
 
-        if (this.active) {
-            if ( vrInput ) {
+        if ( vrInput ) {
 
-                if ( vrInput.getPose ) {
+            if ( vrInput.getPose ) {
 
-                    var pose = vrInput.getPose();
+                var pose = vrInput.getPose();
 
-                    if ( pose.orientation !== null ) {
+                if ( pose.orientation !== null ) {
 
-                        object.quaternion.fromArray( pose.orientation );
+                    object.quaternion.fromArray( pose.orientation );
+                }
 
-                    }
 
-                    if ( pose.position !== null ) {
+                if ( this.active && pose.position !== null ) {
 
-                        object.position.fromArray(pose.position).multiplyScalar(this.scale).add(this.basePosition);
-                        
-                        if ( this.standing ) {
+                    object.position.fromArray(pose.position).multiplyScalar(this.scale).add(this.basePosition);
+                    //object.position.copy(this.basePosition);
+                    
+                    if ( this.standing ) {
 
-                            if ( vrInput.stageParameters ) {
-                            	
-                                object.updateMatrix();
+                        if ( vrInput.stageParameters ) {
+                            
+                            object.updateMatrix();
 
-                                standingMatrix.fromArray(vrInput.stageParameters.sittingToStandingTransform);
+                            standingMatrix.fromArray(vrInput.stageParameters.sittingToStandingTransform);
 
-                                object.applyMatrix( standingMatrix );
+                            object.applyMatrix( standingMatrix );
+                        } else {
 
-                            } else {
-
-                                object.position.setY( object.position.y + this.userHeight );
-
-                            }
+                            object.position.setY( object.position.y + this.userHeight );
 
                         }
 
-                        object.position.multiplyScalar( scope.scale );
-
                     }
-
-                } else {
-
-                    // Deprecated API.
-                    var state = vrInput.getState();
-
-                    if ( state.orientation !== null ) {
-
-                        object.quaternion.copy( state.orientation );
-
-                    }
-
-                    if ( state.position !== null ) {
-
-                        object.position.copy( state.position );
-
-                    } 
                 }
 
+            } else {
+
+                // Deprecated API.
+                var state = vrInput.getState();
+
+                if ( state.orientation !== null ) {
+
+                    object.quaternion.copy( state.orientation );
+
+                }
+
+                if ( state.position !== null ) {
+
+                    object.position.copy( state.position );
+
+                } 
             }
+
         }
 	};
 

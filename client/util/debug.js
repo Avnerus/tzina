@@ -44,6 +44,8 @@ export default {
         events.emit("add_gui", {folder:name + " - Scale", listen: listen, step: 0.001, onChange: () => {
            object.scale.set(object.global, object.global, object.global);
         }}, object, "global",0,4); 
+
+        events.emit("add_gui", {folder: name}, object, "visible"); 
     },
 
     fastForward : function(video) {
