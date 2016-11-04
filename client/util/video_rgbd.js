@@ -25,6 +25,7 @@ export default class VideoRGBD  {
 
         //SOME SPECIFIC CONTRAST & BRIGHNESS EFFECTS TO THE WIRE PIXEL SHADER
         this.wire_rgbd_fs = glslify('../shaders/rgbd_wire_fs.glsl')
+        this.wire_rgbd_vs = glslify('../shaders/rgbd_wire_vs.glsl')
 
         this.timer = 0;
 
@@ -64,7 +65,7 @@ export default class VideoRGBD  {
               "brightness" : { type : "f", value : 0.3 }
           },
 
-          vertexShader: this.rgbd_vs,
+          vertexShader: this.wire_rgbd_vs,
           fragmentShader: this.wire_rgbd_fs,
           blending: THREE.AdditiveBlending,
           wireframe:      true,
@@ -107,8 +108,6 @@ export default class VideoRGBD  {
 
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
-
-
 
        /*
 
