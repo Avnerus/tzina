@@ -75,7 +75,7 @@ export default class Trees extends THREE.Object3D {
                         this.add(mesh);
 
                         if (this.debug) {
-                            DebugUtil.positionObject(mesh, instance.type + " " + counter, false, -40,40, instance.rotation);
+                            //DebugUtil.positionObject(mesh, instance.type + " " + counter, false, -40,40, instance.rotation);
                         }
 
                         counter++;
