@@ -10,9 +10,9 @@ export default
             "insideTitlePositionLineTwo": [-5, -2, 2],
             "sunLoaderRotation": [0,136,0],
 			"characters": [
-                //	"Meir",
+                "Meir",
 				"Rami",
-				"Shirin7AM"
+                "Shirin7AM"
 			],
 			"extraAssets": [
 				{
@@ -31,18 +31,18 @@ export default
 					rotation: [0,94,0],
 					scale: 0.18
 				},
-				   {
-       			   name: "dadOnBike",
-        		   position: [-3.88,21.3,7.79],
-         		   rotation:[0,280,0],
-          		   scale: 0.23
-      		    },
+                       {
+                       name: "dadOnBike",
+                       position: [-3.88,21.3,7.79],
+                       rotation:[0,280,0],
+                       scale: 0.23
+               }/*,
 					{
 					name: "tashlih",
 					position: [4.2,23.8,-8.37],
 					rotation: [175,211,0],
 					scale: 0.5
-				}
+                    }*/
 			],
 
 			"effects" : [

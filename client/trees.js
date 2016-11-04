@@ -26,7 +26,6 @@ export default class Trees extends THREE.Object3D {
 
                 // Modify the potree point cloud material with a shader that supports wind
                 this.potreeMaterial = new Potree.PointCloudMaterial();
-                    /*
                 let windUniforms = { 
                     time: { type: "f", value: 0 },
                     speedFactor: { type: "f", value: 1.0 },
@@ -46,7 +45,7 @@ export default class Trees extends THREE.Object3D {
                 this.potreeMaterial.setValues({
                     uniforms: windUniforms,
                     vertexShader: windShader
-                    });*/
+                    });
 
                 //console.log("Material shader ", this.potreeMaterial.vertexShader);
 
@@ -98,7 +97,7 @@ export default class Trees extends THREE.Object3D {
     }
 
     update(dt,et) {
-        //this.potreeMaterial.uniforms.time.value = et;
+        this.potreeMaterial.uniforms.time.value = et;
         for (let i = 0; i < this.children.length; i++) {
             this.children[i].update(this.camera, this.renderer);
         }  

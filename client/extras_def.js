@@ -15,11 +15,12 @@ export default {
             fileName: "dadOnBike/cloud.js",
             pointSize : 0.010
         }, 
+            /*
         {
             name: "tashlih",
             fileName: "tashlih/cloud.js",
             pointSize : 0.010
-        },
+            },*/
          {
             name: "grandpa",
             fileName: "grandpa/cloud.js",

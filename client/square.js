@@ -26,7 +26,7 @@ export default class Square extends THREE.Object3D{
         this.config = config;
         this.camera = camera;
 
-        this.debug = false;
+        this.debug = true;
 
         this.sunTextureOffsets = {
             19 : 0.5,
@@ -93,8 +93,8 @@ export default class Square extends THREE.Object3D{
             this.loadSuns(loadingManager),
             this.loadColliders(loadingManager),
             this.loadBenches(loadingManager),
-            this.loadFountain(loadingManager),
-            this.loadTextures(loadingManager)
+            this.loadFountain(loadingManager)
+            //this.loadTextures(loadingManager)
         ];
         if (!this.config.noExtras) {
             loaders.push(this.extras.init(loadingManager));
@@ -119,14 +119,13 @@ export default class Square extends THREE.Object3D{
             this.benches = results[5];
 
             this.fountainMesh = results[6];
-            this.textures = results[7];
 
 
             // Clockwork rotation object
             this.clockwork = new THREE.Object3D();
             //this.clockwork.rotation.order = "YXZ;"
 
-            //this.clockwork.add(this.benches);
+            this.clockwork.add(this.benches);
             this.clockwork.add(this.fountainMesh)
 
             // Starts as a child of the square which does the actual rotation
@@ -137,7 +136,22 @@ export default class Square extends THREE.Object3D{
             this.mesh.add(this.extras);
             this.mesh.add(this.buildings);
             this.mesh.add(this.suns);
-            this.mesh.add(this.textures);
+                /*
+            this.textures = results[7];
+            this.mesh.add(this.textures);*/
+
+            if (this.debug) {
+                events.emit("add_gui", {folder: "Trees"}, this.trees, "visible"); 
+                events.emit("add_gui", {folder: "Fountain water"}, this.fountain, "visible"); 
+                events.emit("add_gui", {folder: "Extras"}, this.extras, "visible"); 
+                events.emit("add_gui", {folder: "Buildings"}, this.buildings, "visible"); 
+                events.emit("add_gui", {folder: "Suns"}, this.suns, "visible"); 
+                events.emit("add_gui", {folder: "Benches"}, this.benches, "visible"); 
+                events.emit("add_gui", {folder: "Fountain"}, this.fountainMesh, "visible"); 
+                //events.emit("add_gui", {folder: "Floor texture"}, this.textures, "visible"); 
+                //events.emit("add_gui", {folder: "Benches texture 1"}, this.benches.children[0].children[0], "visible"); 
+                //events.emit("add_gui", {folder: "Benches texture 2"}, this.benches.children[1].children[0], "visible"); 
+            }
 
 
 
@@ -374,7 +388,7 @@ export default class Square extends THREE.Object3D{
                             "XYZ"
                         );
                         if (this.debug) {
-                            DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
+                            //DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
                         }
 
                         
@@ -424,20 +438,21 @@ export default class Square extends THREE.Object3D{
         return new Promise((resolve, reject) => {
             let loaders = [
                 this.loadFile(loadingManager, BENCHES_PREFIX + "1.json"),
-                this.loadFile(loadingManager, BENCHES_TEXTURES_PREFIX + "1.json"),
+                //    this.loadFile(loadingManager, BENCHES_TEXTURES_PREFIX + "1.json"),
                 this.loadFile(loadingManager, BENCHES_PREFIX + "2.json"),
-                this.loadFile(loadingManager, BENCHES_TEXTURES_PREFIX + "2.json")
+                //this.loadFile(loadingManager, BENCHES_TEXTURES_PREFIX + "2.json")
             ];
             Promise.all(loaders)
             .then((results) => {
                 console.log("Benches Load results", results);
+                    /*
                 this.disableDepthWrite(results[1]);
-                this.disableDepthWrite(results[3]);
+                this.disableDepthWrite(results[3]); 
                 results[0].add(results[1]);
-                results[2].add(results[3]);
+                results[2].add(results[3]); */
                 let allBenches = new THREE.Object3D();
                 allBenches.add(results[0]);
-                allBenches.add(results[2]);
+                allBenches.add(results[1]); 
 
                 resolve(allBenches);
             });
