@@ -106,14 +106,14 @@ export default class TimeController {
 
         let TEXT_DEFINITION = {
              align: textAlign.center, 
-             font: '22px Miriam Libre',
+             font: '12px Miriam Libre',
              fillStyle: '#FFFFFF',
              antialias: true 
         }
         let INSIDE_TEXT_DEFINITION = {
              align: textAlign.center, 
-             font: '18px Miriam Libre',
-             fillStyle: '#FFFFFF',
+             font: '12px Miriam Libre',
+             fillStyle: '#000000',
              antialias: true 
         }
         

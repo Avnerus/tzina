@@ -240,6 +240,7 @@ export default class Square extends THREE.Object3D{
             //sun.material.side = THREE.BackSide;
             sunMesh.material.color = new THREE.Color(0x888788);
             // sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
+             sunMesh.material.transparent= true;
             sunMesh.material.opacity = .8;
             sunMesh.material.map = null;
             sunMesh.material.needsUpdate = true;
@@ -260,6 +261,7 @@ export default class Square extends THREE.Object3D{
           //      sunMesh.material.specular = new THREE.Color(0x000000);
                 //sunMesh.material.side = THREE.DoubleSide;
                 sunMesh.material.opacity = 1.00;
+                 sunMesh.material.transparent = true;
                 sunMesh.material.map = this.sunTexture;
                 this.sunTexture.offset.y = this.sunTextureOffsets[name];
                 //texture offset by progress in chapter 

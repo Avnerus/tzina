@@ -96,9 +96,9 @@ font-family: 'Miriam Libre', sans-serif;
 }
 
 #credits {
-    font-family: 'Miriam+Libre';
+    font-family: 'Miriam Libre', sans-serif;
     position: absolute;
-    bottom: 20px;
+    bottom: 40px;
     width: 100%;
     justify-content: center;
 }
@@ -111,7 +111,7 @@ font-family: 'Miriam Libre', sans-serif;
 }
 
 .credit-title {
-    font-size: 26px;
+    font-size: 12px;
 }
 
 .credit-name {
