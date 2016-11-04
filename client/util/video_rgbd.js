@@ -62,8 +62,9 @@ export default class VideoRGBD  {
               "opacity" : { type : "f", value : 0.1 },
               "width" : { type : "f", value : this.properties.width },
               "height" : { type : "f", value : this.properties.height },
-              "brightness" : { type : "f", value : 0.01 },
-              "wire_strech": { type : "f", value : 1 }
+              "brightness" : { type : "f", value : 0.03 },
+              "wire_strech": { type : "f", value : 1 },
+              "contrast" : { type : "f", value : 0.3 }
           },
 
           vertexShader: this.wire_rgbd_vs,
