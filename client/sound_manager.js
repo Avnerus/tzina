@@ -17,7 +17,7 @@ let ambientSamples=[
   {name: "highway_2", path:'Kikar_Ambiance_2_Loud.ogg', color:0x0Fff00, position:[25, 15, 0]},
   {name: "innerKikar", path:'Pigeons_Center_Kikar.ogg', color:0x00ff0F, position:[0, 20, 0]},
   {name: "wind", path:'WindinTrees.ogg', color:0x00ffF0, position:[0, 30, 20]},
-  {name: "testsound", path:'testsound.ogg', color:0xFF0000, position:[0, 25, 15], disable:false}
+  {name: "testsound", path:'testsound.ogg', color:0xFF0000, position:[0, 25, 15], disable:true}
 ];
 
 

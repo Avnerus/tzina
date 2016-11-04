@@ -26,16 +26,17 @@ export default class Trees extends THREE.Object3D {
 
                 // Modify the potree point cloud material with a shader that supports wind
                 this.potreeMaterial = new Potree.PointCloudMaterial();
+                    /*
                 let windUniforms = { 
                     time: { type: "f", value: 0 },
                     speedFactor: { type: "f", value: 1.0 },
-                    pointSize: { type: "f", value: 2.0 },
-                    bendFactor: { type: "f", value: 0.05 },
+                    pointSize: { type: "f", value: 0.03 },
+                    bendFactor: { type: "f", value: 0.01 },
                     bendHeightLimit: { type: "f", value: 0.0 },
                     wind: { type: "v2", value: new THREE.Vector2 ( 1.0, 0.5 ) },
                     rustleHeightLimit: { type: "f", value: 5.0 },
                     rustleColorCheck: { type: "b", value: false },
-                    rustleFactor: { type: "f", value: 4.0 },
+                    rustleFactor: { type: "f", value: 1.0 },
                     rustleFrequency: { type: "f", value: 0.2 }
                 };
 
@@ -45,9 +46,9 @@ export default class Trees extends THREE.Object3D {
                 this.potreeMaterial.setValues({
                     uniforms: windUniforms,
                     vertexShader: windShader
-                });
+                    });*/
 
-                console.log("Material shader ", this.potreeMaterial.vertexShader);
+                //console.log("Material shader ", this.potreeMaterial.vertexShader);
 
                 let counter = 0;
                 TreesDef.instances.forEach((instance) => {
@@ -55,7 +56,7 @@ export default class Trees extends THREE.Object3D {
                     if (treeTypes[instance.type]) {
                         let mesh = new Potree.PointCloudOctree(treeTypes[instance.type], this.potreeMaterial);
                         //mesh.material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-                        mesh.material.size = 0.09;
+                        mesh.material.size = 0.03;
                         mesh.material.lights = false;
                         mesh.position.fromArray(instance.position);
                         mesh.position.y -= 1.1;
@@ -97,7 +98,7 @@ export default class Trees extends THREE.Object3D {
     }
 
     update(dt,et) {
-        this.potreeMaterial.uniforms.time.value = et;
+        //this.potreeMaterial.uniforms.time.value = et;
         for (let i = 0; i < this.children.length; i++) {
             this.children[i].update(this.camera, this.renderer);
         }  

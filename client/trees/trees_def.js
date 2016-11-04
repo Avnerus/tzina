@@ -3,11 +3,11 @@ export default {
         {
             name: "ThreeTrees",
             fileName: "3tress_2/cloud.js"
-        },
+        }, /*
          {
             name: "Threeshirin",
             fileName: "3tress_2/cloud.js"
-        },
+            },*/
          {
             name: "palm",
 

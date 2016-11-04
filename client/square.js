@@ -26,7 +26,7 @@ export default class Square extends THREE.Object3D{
         this.config = config;
         this.camera = camera;
 
-        this.debug = true;
+        this.debug = false;
 
         this.sunTextureOffsets = {
             19 : 0.5,
@@ -124,7 +124,7 @@ export default class Square extends THREE.Object3D{
             this.clockwork = new THREE.Object3D();
             //this.clockwork.rotation.order = "YXZ;"
 
-            this.clockwork.add(this.benches);
+            //this.clockwork.add(this.benches);
             this.clockwork.add(this.fountainMesh)
 
             // Starts as a child of the square which does the actual rotation
@@ -137,8 +137,6 @@ export default class Square extends THREE.Object3D{
             this.mesh.add(this.suns);
             this.mesh.add(this.textures);
 
-
-            this.clockwork.add(this.benches);
 
 
             this.addColliders();

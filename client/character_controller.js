@@ -15,7 +15,7 @@ export default class CharacterController {
         this.activeCharacters = [];
         this.animations = animations;
         this.addedColliders = false;
-        this.debug = false;
+        this.debug = true;
     }
     init(loadingManager) {
         console.log("Initializing Character controller");

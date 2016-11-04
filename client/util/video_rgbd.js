@@ -30,7 +30,7 @@ export default class VideoRGBD  {
 
         this.SEC_PER_RGBD_FRAME = 1 / this.properties.fps;
 
-        console.log("VideoRGBD constructed: " , this.properties);
+        //console.log("VideoRGBD constructed: " , this.properties);
     }
 
     init(loadingManager) {
@@ -119,6 +119,7 @@ export default class VideoRGBD  {
         }*/
     }
     load() {
+        console.log("Video rgbd loading ", this.properties.fileName);
         this.video.src = this.properties.fileName;
         this.video.load();
     }

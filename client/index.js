@@ -90,7 +90,11 @@ function start() {
 
 
 function animate(t) {
-    requestAnimationFrame(animate);
+    if(game.vrManager.hmd.isPresenting) {
+        game.vrManager.hmd.requestAnimationFrame(animate) 
+    } else {
+        requestAnimationFrame(animate);
+    }
 
     /*
     elapsed = t - lastTimestamp;

@@ -10,14 +10,9 @@ export default
             "insideTitlePositionLineTwo": [-5, -2, 2],
             "sunLoaderRotation": [0,136,0],
 			"characters": [
-				"Meir",
+                //	"Meir",
 				"Rami",
 				"Shirin7AM"
-			],
-			"introfile": [
-				"Meir",
-				"Rami",
-				"Yedida"
 			],
 			"extraAssets": [
 				{
