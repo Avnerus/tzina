@@ -62,7 +62,8 @@ export default class VideoRGBD  {
               "opacity" : { type : "f", value : 0.1 },
               "width" : { type : "f", value : this.properties.width },
               "height" : { type : "f", value : this.properties.height },
-              "brightness" : { type : "f", value : 0.3 }
+              "brightness" : { type : "f", value : 0.01 },
+              "wire_strech": { type : "f", value : 1 }
           },
 
           vertexShader: this.wire_rgbd_vs,
@@ -104,7 +105,8 @@ export default class VideoRGBD  {
 
         //DebugUtil.positionObject(this.wire, this.properties.fileName + " - Wire", false);
 
-        this.wire.position.z = 0.01;
+        //this.wire.position.z = -0.6;
+        this.wire.position.z += 0.01;
 
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);

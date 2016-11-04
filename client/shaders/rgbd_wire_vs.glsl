@@ -13,6 +13,8 @@ uniform sampler2D map;
 varying float visibility;
 varying vec2 vUv;
 
+uniform float wire_strech;
+
 vec3 rgb2hsl( vec3 color ) {
     float h = 0.0;
     float s = 0.0;
@@ -61,9 +63,13 @@ void main() {
 
     vUv.y = vUv.y * 0.5;// + 0.5;
 
+
     vec3 hsl = rgb2hsl( texture2D( map, vUv ).xyz );
     vec4 pos = vec4( xyz( position.x, position.y, hsl.x ), 1.0 );
     pos.z += 2600.0;
+
+    //Adding some depth to the wire layer
+    pos.z *= wire_strech;
 
     visibility = hsl.z * 2.1;
 
