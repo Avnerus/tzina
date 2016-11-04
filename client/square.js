@@ -256,12 +256,12 @@ export default class Square extends THREE.Object3D{
                     this.turnOffSun(this.currentSun);
                 }
                 let sunMesh = sun.getObjectByName(name + "_F").children[0];
-                sunMesh.material.color = new THREE.Color(0xE8C05A);
+                sunMesh.material.color = new THREE.Color(0xFFFFFF);
                  sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
           //      sunMesh.material.specular = new THREE.Color(0x000000);
                 //sunMesh.material.side = THREE.DoubleSide;
                 sunMesh.material.opacity = 1.00;
-                 sunMesh.material.transparent = true;
+                 sunMesh.material.transparent = false;
                 sunMesh.material.map = this.sunTexture;
                 this.sunTexture.offset.y = this.sunTextureOffsets[name];
                 //texture offset by progress in chapter 
@@ -384,9 +384,9 @@ export default class Square extends THREE.Object3D{
                     }
                 })
 
-                /*
+                
                 events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "x", 0, 1);
-                events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1); */
+                events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1); 
 
                 console.log("Reordered suns", reorderedSuns);
                 
