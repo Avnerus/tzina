@@ -15,6 +15,7 @@ import Intro from './intro'
 import SoundManager from './sound_manager'
 import TimeController from './time_controller'
 import CharacterController from './character_controller'
+import Show from './show'
 
 import DebugUtil from './util/debug'
 
@@ -121,7 +122,7 @@ export default class Game {
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
         // Square
-        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config);
+        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager);
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 

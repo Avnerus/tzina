@@ -17,7 +17,7 @@ const FOUNTAIN_PATH = "assets/square/fountain.json"
 const TEXTURES_PATH = "assets/square/textures.json"
 
 export default class Square extends THREE.Object3D{
-    constructor(collisionManager, renderer, camera, config) {
+    constructor(collisionManager, renderer, camera, config, soundManager) {
         super();
         console.log("Square constructed!")
 
@@ -77,12 +77,14 @@ export default class Square extends THREE.Object3D{
         this.currentSun = null;
         this.activatedSun = null;
         this.controlPassed = false;
+
+        this.soundManager = soundManager;
     }
     init(loadingManager) {
         loadingManager.itemStart("Square");
         this.trees = new Trees(this.camera, this.renderer);
         this.extras = new  Extras(this.camera, this.renderer);
-        this.fountain = new Fountain();
+        this.fountain = new Fountain( this, this.soundManager );
 
         let loaders = [
             this.loadSquare(loadingManager),
@@ -212,6 +214,10 @@ export default class Square extends THREE.Object3D{
         for (let i = 0; i < this.suns.children.length; i++) {
             this.suns.children[i].children[2].update(dt,et)
         }
+    }
+
+    getFountainMesh() {
+        return this.fountainMesh;
     }
 
     updateSunProgress(name, progress) {

@@ -88,26 +88,23 @@ export default class IntroAnimation extends THREE.Object3D {
         }
 
         plyLoader.load(this.BASE_PATH + "/models/onetreecolorless.ply", (geometry) => {
-            // geometry.computeFaceNormals();
-            console.log(geometry);
-
-            let material = new THREE.PointsMaterial( { color: 0xffffff, size: 1 } );
-            let materials = [ new THREE.PointsMaterial( { color: 0xffffff, size: 1 } )];
+            this.treeGeo = geometry;
+            this.treeMaterial = new THREE.PointsMaterial( { color: 0xffffff, size: 1 } );
 
             // scale, position, rotation
-            let treeTransformer = [ [new THREE.Vector3(70, 70, 10), new THREE.Vector3(0,1100,300), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)]];
+            let treeTransformer = [ [new THREE.Vector3(10, 10, 2), new THREE.Vector3(0,300,-50), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)]];
             
             this.trees = new THREE.Object3D();
             for(let i=0; i<treeTransformer.length; i++){
-                let tree = new THREE.Points( geometry.clone(), materials[i] );
+                let tree = new THREE.Points( geometry.clone(), this.treeMaterial );
                 tree.scale.set( treeTransformer[i][0].x, treeTransformer[i][0].y, treeTransformer[i][0].z );
                 tree.position.set( treeTransformer[i][1].x, treeTransformer[i][1].y, treeTransformer[i][1].z );
                 tree.rotation.set( treeTransformer[i][2].x, treeTransformer[i][2].y, treeTransformer[i][2].z );
                 //this.add( tree );
                 this.trees.add( tree );
             }
-            this.trees.scale.multiplyScalar(0.2);
-            this.trees.position.y = 140;
+            // this.trees.scale.multiplyScalar(0.2);
+            // this.trees.position.y = 140;
             this.add(this.trees);
 
             // this.tree = new THREE.Points( geometry, material );
@@ -117,8 +114,8 @@ export default class IntroAnimation extends THREE.Object3D {
             // this.add( this.tree );
 
             let refObj = new THREE.Object3D();
-            refObj.scale.set( 15, 15, 10 );    // 110, 90, 80 // 110, 90, 10
-            refObj.position.set(0,250,200);    // 0,900,1100 // 0,1500,300
+            refObj.scale.set( 10, 6, 10 );    // 110, 90, 80 // 110, 90, 10
+            refObj.position.set(0, 150, 160);    // 0,900,1100 // 0,1500,300
             refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
 
             this.positionsForFBO = this.initParticles( refObj, geometry );
@@ -127,17 +124,12 @@ export default class IntroAnimation extends THREE.Object3D {
             // this.initFBOParticle( positions );
         });
 
-        let blueprint = tex_loader.load( this.BASE_PATH + '/images/blueprint_edit.jpg' );
-        let blueprintEmi = tex_loader.load( this.BASE_PATH + '/images/blueprint_emi.png' );
-        blueprint.wrapS = THREE.RepeatWrapping;
-        blueprint.wrapT = THREE.RepeatWrapping;
-        blueprintEmi.wrapS = THREE.RepeatWrapping;
-        blueprintEmi.wrapT = THREE.RepeatWrapping;
+        this.blueprint = tex_loader.load( this.BASE_PATH + '/images/blueprint_edit.jpg' );
+        this.blueprint.wrapS = THREE.RepeatWrapping;
+        this.blueprint.wrapT = THREE.RepeatWrapping;
+        this.blueprintMat = new THREE.MeshPhongMaterial({ map:this.blueprint, color: 0x31475e, shininess:10, shading: THREE.FlatShading});
         loader.load(this.BASE_PATH + "/models/terrain5.json", (geometry, material) => {
-            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({ map:blueprint, color: 0x31475e,
-                                                                                   emissiveMap:blueprintEmi, emissive:0xffffff, emissiveIntensity: 0,
-                                                                                   shininess:10, shading: THREE.FlatShading}) ); //0x17212c
-            //TweenMax.to(this.terrain.material, 2, {emissiveIntensity:.4, repeat:-1, yoyo:true, repeatDelay:4, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: .5, points: 20, taper: "none", randomize: true, clamp: false})});
+            this.terrain = new THREE.Mesh( geometry, this.blueprintMat ); //0x17212c
 
             // this.terrain.scale.set(150,50,110);//80,50,50
             this.terrain.scale.multiplyScalar(15);
@@ -182,11 +174,11 @@ export default class IntroAnimation extends THREE.Object3D {
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                gravity: { type: "f", value: 12.5 }, // 2
+                gravity: { type: "f", value: 7 }, // 12.5
                 mouseRotation: { type: "f", value: 0 }, // 2
-                squareRadius: {type: "f", value: this.sRadius*6.5},
+                squareRadius: {type: "f", value: this.sRadius*2.5},
                 squareCenterX: {type: "f", value: this.sCenter.x},
-                squareCenterY: {type: "f", value: this.sCenter.y+10},
+                squareCenterY: {type: "f", value: this.sCenter.y+3},
                 squareCenterZ: {type: "f", value: this.sCenter.z},
                 bounceFactor: {type: "f", value: 2}
             },
@@ -212,13 +204,25 @@ export default class IntroAnimation extends THREE.Object3D {
         // particleGeometry.vertices.push(new THREE.Vector3(), new THREE.Vector3(-0.1, -0.05, 0), new THREE.Vector3(0.1, -0.05, 0), new THREE.Vector3(0,0.1,0));
 
         this.fbo = new FBO();
-        this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
-        //this.fbo.particles.frustumCulled = false;
+        this.fbo.init( this.width, this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
+        this.fbo.particles.frustumCulled = false;
         //DebugUtil.positionObject(this.fbo.particles, "TREE");
         this.add( this.fbo.particles );
         this.timerAnim = null;
-        //this.fbo.particles.position.y = 1500;
+        // this.fbo.particles.position.y = 1500;
         this.fbo.update();
+    }
+
+    disposeAni() {
+        this.remove( this.fbo.particles );
+        this.remove(this.trees);
+        this.remove(this.terrain);
+        
+        this.fbo.particles.dispose();
+        this.blueprint.dispose();
+        this.blueprintMat.dispose();
+        this.treeGeo.dispose();
+        this.treeMaterial.dispose();
     }
 
     clamp(num, min, max) {

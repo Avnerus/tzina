@@ -6,7 +6,7 @@ export default {
     skipIntro: true,
     startTime: 7,
     skipCharacters: false,
-    movementSpeed: 0.5,
+    movementSpeed: 0.5, //0.5
     //movementSpeed: 1,
     daySpeed: 0.003,
     noSquare: false,
