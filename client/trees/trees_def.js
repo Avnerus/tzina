@@ -340,9 +340,9 @@ export default {
  
               {
             type: "ThreeTrees",
-            position: [0.06,16.03,-40],
-            rotation: [115,314,144],
-            scale: 0.46
+            position: [32.53,26.85,-40],
+            rotation: [360,360,103],
+            scale: 0.74
         },
 
 
