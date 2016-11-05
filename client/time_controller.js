@@ -432,12 +432,12 @@ export default class TimeController {
         this.insideChapterTitleLineTwo.text = chapter.name;
         this.insideChapterTitleLineTwo.position.fromArray(chapter.insideTitlePositionLineTwo);
   
-        this.insideChapterTitle.rotation.set(
-            chapter.sunLoaderRotation[0] * Math.PI / 180,                             
-            chapter.sunLoaderRotation[1] * Math.PI / 180,                             
-            chapter.sunLoaderRotation[2] * Math.PI / 180,
-            "XYZ"
-        );
+        // this.insideChapterTitle.rotation.set(
+        //     chapter.sunLoaderRotation[0] * Math.PI / 180,                             
+        //     chapter.sunLoaderRotation[1] * Math.PI / 180,                             
+        //     chapter.sunLoaderRotation[2] * Math.PI / 180,
+        //     "XYZ"
+        // );
         sun.add(this.insideChapterTitle);
         sun.add(this.insideChapterTitleLineTwo);
 
