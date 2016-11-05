@@ -21,21 +21,21 @@ export default
 				},
 					{
 					name: "junkie",
-					position: [-4.12,23,12],
-					rotation: [176,89,0],
-					scale: 0.23
+					position: [-11.23,23.8,-3.15],
+					rotation: [174,291,0],
+					scale: 0.32
 				},
 					{
 					name: "pocketCam",
-					position: [-15.55,21,3],
+					position: [-18.5,21.3,4.03],
 					rotation: [0,94,0],
-					scale: 0.18
+					scale: 0.27
 				},
                        {
                        name: "dadOnBike",
-                       position: [-3.88,21.3,7.79],
+                       position: [-0.45,21.3,9.42],
                        rotation:[0,280,0],
-                       scale: 0.23
+                       scale: 0.34
                }/*,
 					{
 					name: "tashlih",
