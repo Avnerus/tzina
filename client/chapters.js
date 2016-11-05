@@ -1,7 +1,7 @@
 export default 
 	 [
 		{
-			"name": "excitement & awakeness",
+			"name": "Excitement/Awakeness",
 			"hour": 7,
 			"timeLimitMinutes" : 10,
             "totalTime" : 330,
@@ -57,7 +57,7 @@ export default
 			]
 		},
 		{
-		"name": "family/home",
+		"name": "Family/Home",
 			"hour": 9,
 			"timeLimitMinutes" : 13,
             "totalTime" : 540,
@@ -126,7 +126,7 @@ export default
 			]
 		}, 
 		{
-		"name": "emptiness/boredom",
+		"name": "Emptiness/Boredom",
 			"hour": 12,
 			"timeLimitMinutes" : 8,
             "totalTime" : 590,
@@ -195,7 +195,7 @@ export default
 			]
 		},
         {
-		"name": "distrust/betrayal",
+		"name": "Distrust/Betrayal",
 			"hour": 17,
             "titlePosition": [85, 100, 0],
             "totalTime" : 500,
@@ -259,7 +259,7 @@ export default
             ]
         },
         {
-		"name": "despair/loneliness",
+		"name": "Despair/Loneliness",
 			"hour": 19,
 			"timeLimitMinutes" : 12,
             "totalTime" : 610,
