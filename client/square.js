@@ -361,7 +361,7 @@ export default class Square extends THREE.Object3D{
                         let stroke = obj.getObjectByName(chapter.hour.toString() + "_S");
                         stroke.children[0].material.side = THREE.BackSide;
                         stroke.children[0].material.color.set(0xcccccc);
-                        stroke.children[0].material.emissive.set(0xcccccc);
+                        //stroke.children[0].material.emissive.set(0xcccccc);
                         stroke.children[0].material.opacity = 0.32;
                         stroke.position.set(0,0,0);
                         stroke.scale.set(1,1,1);
