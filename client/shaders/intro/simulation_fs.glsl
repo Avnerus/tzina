@@ -23,6 +23,7 @@ varying vec2 vUv;
 
 void main() {
     vec3 pos = texture2D( positions, vUv ).rgb;
+    /*
 
     // if hitting square
     squareCenter = vec3(squareCenterX, squareCenterY, squareCenterZ);
@@ -68,7 +69,7 @@ void main() {
 
        //acce *= 0.0;
        velocity *= 0.0;
-    }
+    }*/
 
     gl_FragColor = vec4( pos, 1.0 );
 }

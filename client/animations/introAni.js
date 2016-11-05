@@ -34,18 +34,11 @@ export default class IntroAnimation extends THREE.Object3D {
         console.log("FBO Constructed!")
     }
 
-    initParticles( ref, geo ) {
-        let fboGeo = geo.clone();
-
-        if(ref != null){
-            fboGeo.applyMatrix( new THREE.Matrix4().makeScale(ref.scale.x, ref.scale.y, ref.scale.z) );
-            fboGeo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler(ref.rotation) );
-            fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(ref.position.x, ref.position.y, ref.position.z) );
-        }
-        
+    initParticles(geo ) {
         let data = new Float32Array( this.width * this.height * 3  );
-        // let points = THREE.GeometryUtils.randomPointsInGeometry( fboGeo, this.width * this.height);
-        let points = THREE.GeometryUtils.randomPointsInNoFaceGeometry( fboGeo, this.width * this.height);
+        let fboGeo = new THREE.BoxGeometry( 10, 6, 10 );
+        let points = THREE.GeometryUtils.randomPointsInGeometry( fboGeo, this.width * this.height);
+        //let points = THREE.GeometryUtils.randomPointsInNoFaceGeometry( geo, this.width * this.height);
 
         for ( var i = 0, j = 0, l = data.length; i < l; i += 3, j += 1 ) {
             data[ i ] = points[ j ].x;
@@ -108,12 +101,10 @@ export default class IntroAnimation extends THREE.Object3D {
 
             let refObj = new THREE.Object3D();
             refObj.scale.set( 10, 6, 10 );    // 110, 90, 80 // 110, 90, 10
-            refObj.position.set(0, 100, 160);    // 0,900,1100 // 0,1500,300
-            refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
+            //refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
 
-            this.positionsForFBO = this.initParticles( refObj, geometry );
+            this.positionsForFBO = this.initParticles(geometry);
 
-            this.rttIn = this.positionsForFBO;
             // this.initFBOParticle( positions );
         });
 
@@ -170,8 +161,8 @@ export default class IntroAnimation extends THREE.Object3D {
             },
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,
-            transparent: true,
-            blending:THREE.AdditiveBlending,
+            transparent: false
+            //blending:THREE.AdditiveBlending,
         } );
 
         // Particle geometry? Just once particle
@@ -183,6 +174,10 @@ export default class IntroAnimation extends THREE.Object3D {
         this.fbo = new FBO();
         this.fbo.init( this.width, this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
         this.fbo.particles.frustumCulled = false;
+        this.fbo.particles.scale.set( 10, 6, 10 );    // 110, 90, 80 // 110, 90, 10
+        this.fbo.particles.position.set(-20, 100, -150);    // 0,900,1100 // 0,1500,300
+        //refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
+        DebugUtil.positionObject(this.fbo.particles, "Intro particles", false, -100, 100);
         this.add( this.fbo.particles );
         this.timerAnim = null;
         this.fbo.update();
@@ -233,6 +228,7 @@ export default class IntroAnimation extends THREE.Object3D {
         this.isStarted = true;
         this.currentSequence = this.sequenceConfig.slice(0);
         this.nextAnim = this.currentSequence.shift();
+        this.fbo.update();
     }
 
     updateVideoTime(time) {

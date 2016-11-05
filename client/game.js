@@ -351,7 +351,7 @@ export default class Game {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 this.controlPassed = true;
-                this.introAni.disposeAni();
+                //this.introAni.disposeAni();
                 if (!this.shownWASD) {
                     document.getElementById("wasd-container").style.display = "block";
                     setTimeout(() => {
@@ -415,12 +415,12 @@ export default class Game {
             this.waterDrops.update(dt);
             if (!this.controlPassed) {
                 this.intro.update();
-                this.introAni.update(dt,et);
             }
         }
         if (this.keyboardController) {
             this.keyboardController.update(dt);
         }
+        this.introAni.update(dt,et);
         this.zoomController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
