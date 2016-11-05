@@ -112,8 +112,8 @@ export default class TimeController {
         }
         let INSIDE_TEXT_DEFINITION = {
              align: textAlign.center, 
-             font: '14px Miriam Libre',
-             fillStyle: '#FFFFFF',
+             font: '30px Miriam Libre',
+             fillStyle: '#333333',
              antialias: true 
         }
         
@@ -125,10 +125,10 @@ export default class TimeController {
         this.prevChapterTitle.scale.set(0.3, 0.3, 0.3);
         this.prevChapterTitle.visible = false;
 
-        this.insideChapterTitle = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
+        this.insideChapterTitle = new MeshText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitle.scale.multiplyScalar(0.04);
 
-        this.insideChapterTitleLineTwo = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
+        this.insideChapterTitleLineTwo = new MeshText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitleLineTwo.scale.multiplyScalar(0.04);
         //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
         //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
@@ -431,7 +431,13 @@ export default class TimeController {
 
         this.insideChapterTitleLineTwo.text = chapter.name;
         this.insideChapterTitleLineTwo.position.fromArray(chapter.insideTitlePositionLineTwo);
-
+  
+        this.insideChapterTitle.rotation.set(
+            chapter.sunLoaderRotation[0] * Math.PI / 180,                             
+            chapter.sunLoaderRotation[1] * Math.PI / 180,                             
+            chapter.sunLoaderRotation[2] * Math.PI / 180,
+            "XYZ"
+        );
         sun.add(this.insideChapterTitle);
         sun.add(this.insideChapterTitleLineTwo);
 

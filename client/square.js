@@ -274,9 +274,8 @@ export default class Square extends THREE.Object3D{
                 let sunMesh = sun.getObjectByName(name + "_F").children[0];
                 sunMesh.material.color = new THREE.Color(0xFFFFFF);
                  sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
-          //      sunMesh.material.specular = new THREE.Color(0x000000);
-                //sunMesh.material.side = THREE.DoubleSide;
-                sunMesh.material.opacity = 1.00;
+                sunMesh.material.side = THREE.DoubleSide;
+                    //sunMesh.material.opacity = 1.00;
                  sunMesh.material.transparent = false;
                 sunMesh.material.map = this.sunTexture;
                 this.sunTexture.offset.y = this.sunTextureOffsets[name];
@@ -317,6 +316,7 @@ export default class Square extends THREE.Object3D{
             let sunLoader = sun.getObjectByName(name + "_L");
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
             sunMesh.material.color = new THREE.Color(0x888788);
+              //sunMesh.material.emissive = new THREE.Color(16756224);
             sunMesh.material.map = this.sunTextureDesat;
             sunMesh.material.needsUpdate = true;
             this.sunTexture.offset.y = this.sunTextureOffsets[this.currentSun];
@@ -376,8 +376,8 @@ export default class Square extends THREE.Object3D{
 
                         let stroke = obj.getObjectByName(chapter.hour.toString() + "_S");
                         stroke.children[0].material.side = THREE.BackSide;
-                        stroke.children[0].material.color.set(0xFFFFFF);
-                        stroke.children[0].material.emissive.set(0xFFFF9B);
+                        stroke.children[0].material.color.set(0xcccccc);
+                        //stroke.children[0].material.emissive.set(0xcccccc);
                         stroke.children[0].material.opacity = 0.32;
                         stroke.position.set(0,0,0);
                         stroke.scale.set(1,1,1);
