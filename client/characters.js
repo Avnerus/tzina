@@ -202,7 +202,7 @@ export default [
         animationScale: 0.20,
         animationPosition: [-.4, -.46, -.55],
         animationRotation: [0,-25,0],
-        space: 3.5,
+        space: 0.5,
         subtitles: null
     },
     {
