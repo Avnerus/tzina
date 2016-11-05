@@ -256,10 +256,10 @@ export default class Square extends THREE.Object3D{
                     this.turnOffSun(this.currentSun);
                 }
                 let sunMesh = sun.getObjectByName(name + "_F").children[0];
-                sunMesh.material.color = new THREE.Color(0xFFFFFF);
-                 sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
-                sunMesh.material.side = THREE.DoubleSide;
-                    //sunMesh.material.opacity = 1.00;
+               // sunMesh.material.color = new THREE.Color(0xfff06f);
+                sunMesh.material.emissive= new THREE.Color(11904267);
+                //sunMesh.material.side = THREE.Backside;
+                   // sunMesh.material.opacity = 1.00;
                  sunMesh.material.transparent = false;
                 sunMesh.material.map = this.sunTexture;
                 this.sunTexture.offset.y = this.sunTextureOffsets[name];
@@ -299,7 +299,7 @@ export default class Square extends THREE.Object3D{
         if (sun) {
             let sunLoader = sun.getObjectByName(name + "_L");
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
-            sunMesh.material.color = new THREE.Color(0x888788);
+            sunMesh.material.color = new THREE.Color(0x666633);
               //sunMesh.material.emissive = new THREE.Color(16756224);
             sunMesh.material.map = this.sunTextureDesat;
             sunMesh.material.needsUpdate = true;
@@ -360,7 +360,7 @@ export default class Square extends THREE.Object3D{
 
                         let stroke = obj.getObjectByName(chapter.hour.toString() + "_S");
                         stroke.children[0].material.side = THREE.BackSide;
-                        stroke.children[0].material.color.set(0xcccccc);
+                        stroke.children[0].material.color.set(0x666633);
                         //stroke.children[0].material.emissive.set(0xcccccc);
                         stroke.children[0].material.opacity = 0.32;
                         stroke.position.set(0,0,0);
