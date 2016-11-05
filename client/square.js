@@ -261,9 +261,10 @@ export default class Square extends THREE.Object3D{
             //console.log("Turn off sun", sun);
             //sun.material.side = THREE.BackSide;
             sunMesh.material.color = new THREE.Color(0x888788);
-            //sun.material.specular = new THREE.Color(0x000000);
+            // sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
+             sunMesh.material.transparent= true;
             sunMesh.material.opacity = .8;
-            sunMesh.material.map = null;
+            sunMesh.material.map = this.sunTextureDesat;
             sunMesh.material.needsUpdate = true;
             sun.getObjectByName(name + "_L").visible = false;
         }
@@ -277,10 +278,12 @@ export default class Square extends THREE.Object3D{
                     this.turnOffSun(this.currentSun);
                 }
                 let sunMesh = sun.getObjectByName(name + "_F").children[0];
-                sunMesh.material.color = new THREE.Color(0x424242);
+                sunMesh.material.color = new THREE.Color(0xFFFFFF);
+                 sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
           //      sunMesh.material.specular = new THREE.Color(0x000000);
                 //sunMesh.material.side = THREE.DoubleSide;
                 sunMesh.material.opacity = 1.00;
+                 sunMesh.material.transparent = false;
                 sunMesh.material.map = this.sunTexture;
                 this.sunTexture.offset.y = this.sunTextureOffsets[name];
                 //texture offset by progress in chapter 
@@ -320,7 +323,7 @@ export default class Square extends THREE.Object3D{
             let sunLoader = sun.getObjectByName(name + "_L");
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
             sunMesh.material.color = new THREE.Color(0x888788);
-            // sunMesh.material.map = null;
+            sunMesh.material.map = this.sunTextureDesat;
             sunMesh.material.needsUpdate = true;
             this.sunTexture.offset.y = this.sunTextureOffsets[this.currentSun];
             sunLoader.disorganize();
@@ -348,7 +351,19 @@ export default class Square extends THREE.Object3D{
     loadSuns(loadingManager) {
         console.log("Loading suns")
         return new Promise((resolve, reject) => {
+            let textureLoader = new THREE.TextureLoader(loadingManager);
+
+            this.sunTexture = textureLoader.load("assets/square/sunActive_gradientSun2.png");
+            this.sunTexture.repeat.set(1.0,0.5);
+
+            this.sunTextureDesat = textureLoader.load("assets/square/sunActive_gradientDesat.jpg")
+
+            //debug 
+            console.log("Sun textures ", this.sunTexture, this.sunTextureDesat); 
+
             let loader = new THREE.ObjectLoader(loadingManager);
+
+            events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
             loader.load(SUNS_PATH,( obj ) => {
                 console.log("Loaded suns", obj)
 
@@ -395,17 +410,9 @@ export default class Square extends THREE.Object3D{
                         }
 
                         
-                        // Save the mafillp
-                        this.sunTexture = fill.children[0].material.map;
-                        this.sunTexture.repeat.set(1.0,0.5);
-                        //debug 
-
                     }
                 })
 
-                /*
-                events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "x", 0, 1);
-                events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1); */
 
                 console.log("Reordered suns", reorderedSuns);
                 

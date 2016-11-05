@@ -5,7 +5,7 @@ import DebugUtil from './util/debug'
 export default class Trees extends THREE.Object3D {
     constructor(camera, renderer) {
         super();
-        this.debug = false;
+        this.debug = true;
 
         this.camera = camera;
         this.renderer = renderer;
@@ -75,7 +75,7 @@ export default class Trees extends THREE.Object3D {
                         this.add(mesh);
 
                         if (this.debug) {
-                            DebugUtil.positionObject(mesh, instance.type + " " + counter, false, -40,40, instance.rotation);
+                            //DebugUtil.positionObject(mesh, instance.type + " " + counter, false, -40,40, instance.rotation);
                         }
 
                         counter++;
