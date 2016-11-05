@@ -27,7 +27,7 @@ export default class ItzhakAnimation extends THREE.Object3D {
         */
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 1,  anim: ()=>{this.growClouds(5)} },
+            { time: 1,  anim: ()=>{this.growClouds(3)} },
             { time: 10,  anim: ()=>{this.dropClouds(7)} },
             { time: 30,  anim: ()=>{this.dropClouds(15)} },  
             { time: 50,  anim: ()=>{this.dropClouds(20)} },
@@ -81,6 +81,7 @@ export default class ItzhakAnimation extends THREE.Object3D {
         this.cloudGeos = [];
         this.heartGeos = [];
         this.cloudGroup = [];
+        this.cloudOuterGroup = [];
         this.cloudVirtualGroup = {};
         
         this.loadClouds( cloudFiles, heartFiles );
@@ -179,10 +180,15 @@ export default class ItzhakAnimation extends THREE.Object3D {
         // let cloudMaterial = new THREE.MeshLambertMaterial({color: this.cloudColors[0], morphTargets: true, morphNormals: true});
         let cloudMaterial = new THREE.MeshBasicMaterial({
             color: this.cloudColors[0], map: this.cloudTex, //side: THREE.DoubleSide,
-            transparent: true, opacity: 1, //blending: THREE.AdditiveBlending,
+            transparent: true, opacity: .5, //blending: THREE.AdditiveBlending,
             morphTargets: true, morphNormals: true
         });
         
+        this.outerCloudMaterial = new THREE.MeshBasicMaterial({
+            color: this.cloudColors[0], map: this.cloudTex, //side: THREE.DoubleSide,
+            transparent: true, opacity: 1
+        });
+
         for(let i=0; i<3; i++){
             let cloudRing = new THREE.Object3D();
             cloudRing.position.y = 5 - i*2;
@@ -203,7 +209,21 @@ export default class ItzhakAnimation extends THREE.Object3D {
 
             this.add(cloudRing);
             this.cloudGroup.push(cloudRing);
-        }
+
+            // OUTER RING
+                let cloudOuterRing = new THREE.Object3D();
+                cloudOuterRing.position.y = 8 - i*4;
+
+                let tl_2 = new TimelineMax({repeat: -1});
+                tl_2.to( cloudOuterRing.rotation, 150+i*20, {
+                    y: Math.PI*2,
+                    ease: Power0.easeNone
+                } );
+                cloudOuterRing.tweenline = tl_2;
+
+                this.add(cloudOuterRing);
+                this.cloudOuterGroup.push(cloudOuterRing);
+        }        
 
         for(let i=0; i<this.cloudAmount; i++){
             let cloudObject = {};
@@ -213,15 +233,14 @@ export default class ItzhakAnimation extends THREE.Object3D {
                 this.lookupTable[i],
                 Math.cos(Math.PI*2/this.cloudAmount*i) * this.cloudRadius[i%3]
             );
-            // cloudd.rotation.y = Math.PI*2/this.cloudAmount*i + Math.PI;
+
             cloudd.rotation.set(
                 0,
                 Math.PI*2/this.cloudAmount*i + Math.PI,
                 0,
                 'YXZ'
             );
-            // cloudd.scale.multiplyScalar( 0.1 + 0.2*this.lookupTable[i] );
-            // cloudd.scale.multiplyScalar( 0.001 );
+
             cloudd.scale.multiplyScalar( this.cloudScale[i%3] * (1+this.lookupTable[i]/2) );
             cloudd.material.opacity=0;
 
@@ -230,25 +249,25 @@ export default class ItzhakAnimation extends THREE.Object3D {
             cloudObject.object = cloudd;
             this.cloudVirtualGroup[i] = cloudObject;
 
-            // TweenMax.to( cloudd.morphTargetInfluences, 2, { endArray: [1], yoyo: true, repeat:-1, repeatDelay: 5,
-            //                                                 ease: RoughEase.ease.config({ template:  Power0.easeNone, 
-            //                                                     strength: 1, points: 20, taper: "none",
-            //                                                     randomize:  true, clamp: false}),
-            //                                                 onStart: ()=>{
-            //                                                     TweenMax.to( cloudd.material.color, 2, {
-            //                                                         r: this.cloudColors[1].r,
-            //                                                         g: this.cloudColors[1].g,
-            //                                                         b: this.cloudColors[1].b,
-            //                                                         yoyo: true, repeat:-1, repeatDelay: 5
-            //                                                     });
+            // OUTER RING
+                let cloudd_out = new THREE.Mesh( this.cloudGeos[i%2], this.outerCloudMaterial );
+                cloudd_out.position.set(
+                    Math.sin(Math.PI*2/this.cloudAmount*i) * this.cloudRadius[i%3] * 3,
+                    this.lookupTable[i] * 3,
+                    Math.cos(Math.PI*2/this.cloudAmount*i) * this.cloudRadius[i%3] * 3
+                );
 
-            //                                                     TweenMax.to( cloudd.position, 2+(i%2)/2, {
-            //                                                         y: "+=0.1",
-            //                                                         delay: i%3,
-            //                                                         yoyo: true, repeat:-1
-            //                                                     });
-            //                                                 }
-            //                                             });
+                cloudd_out.rotation.set(
+                    0,
+                    Math.PI*2/this.cloudAmount*i + Math.PI,
+                    0,
+                    'YXZ'
+                );
+
+                cloudd_out.scale.multiplyScalar( this.cloudScale[i%3] * (2+this.lookupTable[i]/2) );
+                cloudd_out.material.opacity=0;
+
+                this.cloudOuterGroup[i%3].add(cloudd_out);
         }
     }
 
@@ -327,10 +346,12 @@ export default class ItzhakAnimation extends THREE.Object3D {
             // });
 
             TweenMax.to(  this.cloudVirtualGroup[i].object.material, 2, {
-                opacity: 1,
+                opacity: .5,
                 delay: this.lookupTable[i]*diff
             });
         }
+
+        TweenMax.to(  this.outerCloudMaterial, 2, { opacity: 1 });
     }
 
     dropCloud( c_index, theCloud, theParent ) {
@@ -340,7 +361,10 @@ export default class ItzhakAnimation extends THREE.Object3D {
             TweenMax.to( theCloud.material.color, 2, {
                 r: this.cloudColors[1].r,
                 g: this.cloudColors[1].g,
-                b: this.cloudColors[1].b
+                b: this.cloudColors[1].b,
+                onStart: ()=>{
+                    TweenMax.to( theCloud.material, 2, {opacity: 1} );
+                }
             });
             TweenMax.to( theCloud.morphTargetInfluences, 2, {
                 endArray: [1],
@@ -374,7 +398,8 @@ export default class ItzhakAnimation extends THREE.Object3D {
                                         g: this.cloudColors[0].g,
                                         b: this.cloudColors[0].b
                                     });
-                                    TweenMax.to(theCloud.rotation, 1, {x:0});
+                                    TweenMax.to( theCloud.rotation, 1, {x:0});
+                                    TweenMax.to( theCloud.material, 2, {opacity: 0.5} );
                                 },
                                 onComplete:()=>{
                                     this.attach(theCloud, this, theParent);
