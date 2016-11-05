@@ -43,9 +43,9 @@ export default class ZoomController {
 
 
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -2.9,
-            7.8,
-            -3.6
+            -3.51,
+            12.67,
+            -5.44
         );
 
         this.CHAPTER_THRESHOLD = 0.45;
@@ -167,7 +167,7 @@ export default class ZoomController {
                     console.log("Current VR Position", currentVRPosition);
                     if (currentVRPosition) {
                         this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
-                        baseVRPosition = new THREE.Vector3.copy(this.BASE_WORLD_POSITION);
+                        baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
                         baseVRPosition.add(currentVRPosition);
                     }
 
