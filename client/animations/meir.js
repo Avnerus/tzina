@@ -261,23 +261,24 @@ export default class MeirAnimation extends THREE.Object3D {
                             // DebugUtil.positionObject(bd, "bird_"+i);
                     }
 
-                    for(let i=3; i<10; i++){
-                        let mathStuff = Math.PI*2/12*i;
-                        for(let j=0; j<15; j++){
+                    for(let i=3; i<6; i++){
+                        let mathStuff = Math.PI*2/9*i;
+
+                        for(let j=0; j<9; j++){
                             let bd = this.bird.clone();
-                            bd.scale.multiplyScalar(0.2);
+                            bd.scale.multiplyScalar(0.4);
 
                             let tempA = new THREE.Vector3();
-                            if(j>9)
-                                tempA.set( Math.sin(mathStuff)*(1-j/18), j/3, Math.cos(mathStuff)*(1-j/18) );
-                            else if(j<3)
-                                tempA.set( Math.sin(mathStuff)*(1+(3-j)/4), j/3, Math.cos(mathStuff)*(1+(3-j)/4) );
+                            if(j>6)
+                                tempA.set( Math.sin(mathStuff)*(1-j/18), j/2, Math.cos(mathStuff)*(1-j/18) );
+                            else if(j<2)
+                                tempA.set( Math.sin(mathStuff)*(1+(3-j)/4), j/2, Math.cos(mathStuff)*(1+(3-j)/4) );
                             else
-                                tempA.set( Math.sin(mathStuff)*1, j/3, Math.cos(mathStuff)*1 );
+                                tempA.set( Math.sin(mathStuff)*1, j/2, Math.cos(mathStuff)*1 );
                             
-                            tempA.set( tempA.x + this.lookupTable[(i*j)%49]*0.3,
-                                       tempA.y + this.lookupTable[(i*j)%50]*0.3,
-                                       tempA.z + this.lookupTable[(i*j)%51]*0.3 );
+                            tempA.set( tempA.x + this.lookupTable[(i*j)%45]*0.3,
+                                       tempA.y + this.lookupTable[(i*j)%46]*0.3,
+                                       tempA.z + this.lookupTable[(i*j)%47]*0.3 );
                             
                             bd.position.copy( tempA );
                             bd.rotation.y = mathStuff - Math.PI*2;

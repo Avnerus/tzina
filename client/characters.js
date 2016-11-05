@@ -112,7 +112,7 @@ export default [
         width: 1024,
         height: 2048,
         scale: 0.002961,
-        animationScale: 0.18,
+        animationScale: 0.25,
         animationPosition: [-0.45,0,-0.4],
         animationRotation: [7,25,-8],
         space: 0.5,
