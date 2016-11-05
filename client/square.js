@@ -159,7 +159,7 @@ export default class Square extends THREE.Object3D{
             this.setSquareMiddle();
 
             // VIVE SCALES
-            this.mesh.scale.set(0.4, 0.4, 0.4);
+            this.mesh.scale.set(0.6, 0.6, 0.6);
                 /*
             this.benches.scale.set(2,2,2);
             this.benches.position.set(7.13,-34,8);
@@ -167,17 +167,17 @@ export default class Square extends THREE.Object3D{
                 */
 
             this.fountain.position.set(0.8,23.6, -0.6);
-            //DebugUtil.positionObject(this.fountain, "Fountain water");
+            DebugUtil.positionObject(this.mesh, "Square");
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
             
-            this.benches.children[0].position.set(5.15,-5.56, 0);
-            this.benches.children[0].scale.set(1.25, 1.25, 1.25);
+            this.benches.children[0].position.set(2.66,-2.16, 2.6);
+            this.benches.children[0].scale.set(1.11, 1.11, 1.11);
+            this.benches.children[0].rotation.y = 342;
 
             DebugUtil.positionObject(this.benches.children[0], "Benches1");
             DebugUtil.positionObject(this.benches.children[1], "Benches2");
-            /*
-            DebugUtil.positionObject(this.fountainMesh, "Fountain") */
+            DebugUtil.positionObject(this.fountainMesh, "Fountain");
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
