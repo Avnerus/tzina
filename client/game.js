@@ -351,6 +351,7 @@ export default class Game {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 this.controlPassed = true;
+                this.introAni.disposeAni();
                 if (!this.shownWASD) {
                     document.getElementById("wasd-container").style.display = "block";
                     setTimeout(() => {
