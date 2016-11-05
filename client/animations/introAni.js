@@ -103,9 +103,10 @@ export default class IntroAnimation extends THREE.Object3D {
                 //this.add( tree );
                 this.trees.add( tree );
             }
-            // this.trees.scale.multiplyScalar(0.2);
-            // this.trees.position.y = 140;
+            this.trees.scale.multiplyScalar(4);
+            this.trees.position.set(0, -130, -320);
             this.add(this.trees);
+            // DebugUtil.positionObject(this.trees, "TREE");
 
             // this.tree = new THREE.Points( geometry, material );
             // this.tree.scale.set( 150, 130, 100 );
@@ -115,7 +116,7 @@ export default class IntroAnimation extends THREE.Object3D {
 
             let refObj = new THREE.Object3D();
             refObj.scale.set( 10, 6, 10 );    // 110, 90, 80 // 110, 90, 10
-            refObj.position.set(0, 150, 160);    // 0,900,1100 // 0,1500,300
+            refObj.position.set(0, 100, 160);    // 0,900,1100 // 0,1500,300
             refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
 
             this.positionsForFBO = this.initParticles( refObj, geometry );
@@ -132,10 +133,11 @@ export default class IntroAnimation extends THREE.Object3D {
             this.terrain = new THREE.Mesh( geometry, this.blueprintMat ); //0x17212c
 
             // this.terrain.scale.set(150,50,110);//80,50,50
-            this.terrain.scale.multiplyScalar(15);
+            this.terrain.scale.multiplyScalar(11);
             // this.terrain.rotation.y = Math.PI;
-            this.terrain.position.set(-1000,-3000,200);
+            this.terrain.position.set(-550,-3000,200);
             this.add( this.terrain );
+            DebugUtil.positionObject(this.terrain, "terrain");
         });
 
         /*
@@ -180,7 +182,7 @@ export default class IntroAnimation extends THREE.Object3D {
                 squareCenterX: {type: "f", value: this.sCenter.x},
                 squareCenterY: {type: "f", value: this.sCenter.y+3},
                 squareCenterZ: {type: "f", value: this.sCenter.z},
-                bounceFactor: {type: "f", value: 2}
+                bounceFactor: {type: "f", value: 2} //2
             },
             vertexShader: this.simulation_vs,
             fragmentShader:  this.simulation_fs,
