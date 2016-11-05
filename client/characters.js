@@ -194,6 +194,7 @@ export default [
         rotation: [356, 83, 0],
         animation: 'Mark',
         uvdy: 0.458984375,
+        uvdy_idle: 0.5419921875,
         uvdx: 0.0,
         width: 512,
         height: 2048,
