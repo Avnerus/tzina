@@ -40,8 +40,6 @@ export default class IntroAnimation extends THREE.Object3D {
         if(ref != null){
             fboGeo.applyMatrix( new THREE.Matrix4().makeScale(ref.scale.x, ref.scale.y, ref.scale.z) );
             fboGeo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler(ref.rotation) );
-            // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(ref.rotation.y) );
-            // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationZ(ref.rotation.z) );
             fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(ref.position.x, ref.position.y, ref.position.z) );
         }
         
@@ -108,12 +106,6 @@ export default class IntroAnimation extends THREE.Object3D {
             this.add(this.trees);
             // DebugUtil.positionObject(this.trees, "TREE");
 
-            // this.tree = new THREE.Points( geometry, material );
-            // this.tree.scale.set( 150, 130, 100 );
-            // this.tree.position.set(0,1800,100);
-            // this.tree.rotation.set(Math.PI,0,Math.PI/2);
-            // this.add( this.tree );
-
             let refObj = new THREE.Object3D();
             refObj.scale.set( 10, 6, 10 );    // 110, 90, 80 // 110, 90, 10
             refObj.position.set(0, 100, 160);    // 0,900,1100 // 0,1500,300
@@ -132,28 +124,11 @@ export default class IntroAnimation extends THREE.Object3D {
         loader.load(this.BASE_PATH + "/models/terrain5.json", (geometry, material) => {
             this.terrain = new THREE.Mesh( geometry, this.blueprintMat ); //0x17212c
 
-            // this.terrain.scale.set(150,50,110);//80,50,50
             this.terrain.scale.multiplyScalar(11);
-            // this.terrain.rotation.y = Math.PI;
             this.terrain.position.set(-550,-3000,200);
             this.add( this.terrain );
-            DebugUtil.positionObject(this.terrain, "terrain");
+            // DebugUtil.positionObject(this.terrain, "terrain");
         });
-
-        /*
-        let houseTex = tex_loader.load( this.BASE_PATH + '/images/house_lowSat.jpg' );
-        let houseEmisTex = tex_loader.load( this.BASE_PATH + '/images/house_EMI.png' );
-        loader.load(this.BASE_PATH + "/models/house3.json", (geometry, material) => {
-            this.house = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({map:houseTex, emissiveMap:houseEmisTex, emissive:0xffff00, emissiveIntensity: 0.3}) );
-
-            TweenMax.to(this.house.material, 2, {emissiveIntensity:1.5, repeat:-1, yoyo:true, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: "none", randomize: true, clamp: false})});
-
-            this.house.scale.multiplyScalar(15);//80,50,50
-            // this.terrain.rotation.y = Math.PI;
-            this.house.position.set(0,-3000,200);
-            this.add( this.house );
-        });
-        */
 
         this.completeSequenceSetup();
         //
@@ -208,10 +183,8 @@ export default class IntroAnimation extends THREE.Object3D {
         this.fbo = new FBO();
         this.fbo.init( this.width, this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
         this.fbo.particles.frustumCulled = false;
-        //DebugUtil.positionObject(this.fbo.particles, "TREE");
         this.add( this.fbo.particles );
         this.timerAnim = null;
-        // this.fbo.particles.position.y = 1500;
         this.fbo.update();
     }
 
