@@ -5,9 +5,9 @@ export default
 			"hour": 7,
 			"timeLimitMinutes" : 10,
             "totalTime" : 330,
-            "titlePosition": [0.07,-0.26,2.33],
+            "titlePosition": [3.65,-1.26,-4.44],
             "insideTitlePosition": [10.22,-1.06,-4.44],
-            "insideTitlePositionLineTwo": [5.71,-5.34,-5.57],
+            "insideTitlePositionLineTwo": [-5.57,-3.65,-2.18],
             "sunLoaderRotation": [0,136,0],
 			"characters": [
 				"Meir",
@@ -62,8 +62,8 @@ export default
 			"timeLimitMinutes" : 13,
             "totalTime" : 540,
             "titlePosition": [-90, 90, 0],
-            "insideTitlePosition": [1.2,6.5,-2.18],
-            "insideTitlePositionLineTwo": [-3.31,-1.96,-1.06],
+            "insideTitlePosition": [2.33,-3.65,0.37],
+            "insideTitlePositionLineTwo": [-4.44,-1.96,0.07],
             "sunLoaderRotation": [58,10,0],
 			"characters": [
 				"Miriam",
@@ -131,8 +131,8 @@ export default
 			"timeLimitMinutes" : 8,
             "totalTime" : 590,
             "titlePosition": [0, 110, 0],
-            "insideTitlePosition": [-3.31, -5.34, -2.18],
-            "insideTitlePositionLineTwo": [1,4.81, 4],
+            "insideTitlePosition": [0.07,-1.96, -1.06],
+            "insideTitlePositionLineTwo": [-8.95,4.81,-6.69],
             "sunLoaderRotation": [67,0,0],
 			"characters": [
 				"Mark",
@@ -199,8 +199,8 @@ export default
 			"hour": 17,
             "titlePosition": [85, 100, 0],
             "totalTime" : 500,
-            "insideTitlePosition": [-2.18,3.12,1.2],
-            "insideTitlePositionLineTwo": [2.33,-1.96,-1.06],
+            "insideTitlePosition": [-8.95,-4,0.07],
+            "insideTitlePositionLineTwo": [6.84,-0.26,0.07],
             "sunLoaderRotation": [230,50,0],
 			"timeLimitMinutes" : 12,
 			"characters": [
@@ -264,7 +264,7 @@ export default
 			"timeLimitMinutes" : 12,
             "totalTime" : 610,
             "titlePosition": [120, 65, 0],
-            "insideTitlePosition": [-2,3.12, 3.45],
+            "insideTitlePosition": [-4.44,-0.26,3.45],
             "insideTitlePositionLineTwo": [-1.06,-3.15, 2],
             "sunLoaderRotation": [0,148,0],
 			"characters": [

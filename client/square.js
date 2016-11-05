@@ -253,7 +253,11 @@ export default class Square extends THREE.Object3D{
             let sun = this.suns.getObjectByName(name)
             if (sun) {
                 if (this.currentSun) {
+                                    let strokeMesh = sun.getObjectByName(name + "_S").children[0];
+                strokeMesh.material.color.set(0x666633);
+                 strokeMesh.material.needsUpdate = true;
                     this.turnOffSun(this.currentSun);
+
                 }
                 let sunMesh = sun.getObjectByName(name + "_F").children[0];
                // sunMesh.material.color = new THREE.Color(0xfff06f);
