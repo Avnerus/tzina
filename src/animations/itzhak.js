@@ -27,13 +27,13 @@ export default class ItzhakAnimation extends THREE.Object3D {
         */
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 1,  anim: ()=>{this.growClouds(20)} },
-            { time: 25,  anim: ()=>{this.dropClouds(4)} },
-            { time: 45,  anim: ()=>{this.dropClouds(7)} },  
-            { time: 65,  anim: ()=>{this.dropClouds(10)} },
-            { time: 85,  anim: ()=>{this.dropClouds(15)} },
-            { time: 105,  anim: ()=>{this.dropClouds(20)} },
-            { time: 130, anim: ()=>{this.characterDisappear()} }
+            { time: 1,  anim: ()=>{this.growClouds(5)} },
+            { time: 10,  anim: ()=>{this.dropClouds(7)} },
+            { time: 30,  anim: ()=>{this.dropClouds(15)} },  
+            { time: 50,  anim: ()=>{this.dropClouds(20)} },
+            // { time: 70,  anim: ()=>{this.dropClouds(15)} },
+            // { time: 90,  anim: ()=>{this.dropClouds(20)} },
+            { time: 80, anim: ()=>{this.characterDisappear()} }
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -53,13 +53,21 @@ export default class ItzhakAnimation extends THREE.Object3D {
         // cloud + heart
         // ============== Changeable Setting ================
             this.cloudAmount = 20;
-            this.cloudRadius = 5;
-            this.cloudColors = [ new THREE.Color(0xafe2f3), new THREE.Color(0xf3afc0) ];
+            this.cloudRadius = [3,4,5];
+            this.cloudScale = [0.15,0.3,0.45];
+            this.cloudColors = [ new THREE.Color(0xe7f6fb), new THREE.Color(0xf3afc0), new THREE.Color(0x4b2a79) ];
+            this.floorHeight = 0;
+            this.treeRadius = 3;
         // ================ Setting End =====================
         this.cloudIndex = [];
         for(let i=0; i<this.cloudAmount; i++){
             this.cloudIndex.push(i);
         }
+        this.cloudTex = tex_loader.load( this.BASE_PATH + "/images/cloud3.png" );
+        this.cloudTex.wrapS = THREE.RepeatWrapping;
+        this.cloudTex.wrapT = THREE.RepeatWrapping;
+        this.cloudTex.repeat.set( 5, 3 );
+
         this.itzhakLoadingManager = new THREE.LoadingManager();
         this.itzhakLoadingManager.onLoad = ()=>{
             for(let j=0; j<this.cloudGeos.length; j++){
@@ -68,7 +76,7 @@ export default class ItzhakAnimation extends THREE.Object3D {
             }
             this.createClouds();
         };
-        let cloudFiles = [ this.BASE_PATH + "/models/cloud1.json", this.BASE_PATH + "/models/cloud2.json" ];
+        let cloudFiles = [ this.BASE_PATH + "/models/cloud1_3.json", this.BASE_PATH + "/models/cloud2_3.json" ];
         let heartFiles = [ this.BASE_PATH + "/models/heart1.json", this.BASE_PATH + "/models/heart2.json" ];
         this.cloudGeos = [];
         this.heartGeos = [];
@@ -76,6 +84,42 @@ export default class ItzhakAnimation extends THREE.Object3D {
         this.cloudVirtualGroup = {};
         
         this.loadClouds( cloudFiles, heartFiles );
+
+        this.treeTex = tex_loader.load( this.BASE_PATH + "/images/house.jpg" );
+        this.treeMat = new THREE.MeshBasicMaterial({map: this.treeTex});
+        this.treeGroup = new THREE.Object3D();
+        loader.load( this.BASE_PATH + "/models/singleTree.json", (geometry)=>{
+            let tree = new THREE.Mesh(geometry, this.treeMat);
+
+            for(let i=0; i<15; i++){
+                let t = tree.clone();
+                t.position.set(
+                    Math.sin(Math.PI*2/40*(i+10)) * (this.treeRadius-.5) + this.lookupTable[i],
+                    0,
+                    Math.cos(Math.PI*2/40*(i+10)) * (this.treeRadius-.5) + this.lookupTable[i]
+                );
+                t.scale.y = 0.9+this.lookupTable[i]/2;
+                t.rotation.y = this.lookupTable[i]*2;
+                this.treeGroup.add(t);
+            }
+
+            for(let i=0; i<20; i++){
+                let t = tree.clone();
+                t.position.set(
+                    Math.sin(Math.PI*2/40*(i+10)) * this.treeRadius + this.lookupTable[i],
+                    0,
+                    Math.cos(Math.PI*2/40*(i+10)) * this.treeRadius + this.lookupTable[i]
+                );
+                t.scale.y = 0.4+this.lookupTable[i]/2;
+                t.rotation.y = this.lookupTable[i]*2;
+                this.treeGroup.add(t);
+            }
+            this.treeGroup.position.z = 1;
+            this.add(this.treeGroup);
+            DebugUtil.positionObject(this.treeGroup, "trees");
+        } );
+
+        this.dummy={timeScaleValue:0};
 
         // DebugUtil.positionObject(this, "itzhak");
         //
@@ -99,19 +143,31 @@ export default class ItzhakAnimation extends THREE.Object3D {
     }
 
     createClouds() {
-        let cloudMaterial = new THREE.MeshLambertMaterial({color: this.cloudColors[0], morphTargets: true, morphNormals: true});
+        // let cloudMaterial = new THREE.MeshLambertMaterial({color: this.cloudColors[0], morphTargets: true, morphNormals: true});
+        let cloudMaterial = new THREE.MeshBasicMaterial({
+            color: this.cloudColors[0], map: this.cloudTex, //side: THREE.DoubleSide,
+            transparent: true, opacity: 1, //blending: THREE.AdditiveBlending,
+            morphTargets: true, morphNormals: true
+        });
         
         for(let i=0; i<3; i++){
             let cloudRing = new THREE.Object3D();
-            cloudRing.position.y = 3 - i;
+            cloudRing.position.y = 5 - i*2;
             
-            let t_m = TweenMax.to( cloudRing.rotation, 150+i*20, {
-                y: Math.PI*2,
-                ease: Power0.easeNone,
-                repeat:-1
-            });
+            // let t_m = TweenMax.to( cloudRing.rotation, 150+i*20, {
+            //     y: Math.PI*2,
+            //     ease: Power0.easeNone,
+            //     repeat:-1
+            // });
+            // cloudRing.tweenmax = t_m;
 
-            cloudRing.tweenmax = t_m;
+            let tl = new TimelineMax({repeat: -1});
+            tl.to( cloudRing.rotation, 150+i*20, {
+                y: Math.PI*2,
+                ease: Power0.easeNone
+            } );
+            cloudRing.tweenline = tl;
+
             this.add(cloudRing);
             this.cloudGroup.push(cloudRing);
         }
@@ -120,9 +176,9 @@ export default class ItzhakAnimation extends THREE.Object3D {
             let cloudObject = {};
             let cloudd = new THREE.Mesh( this.cloudGeos[i%2], cloudMaterial.clone() );
             cloudd.position.set(
-                Math.sin(Math.PI*2/this.cloudAmount*i) * this.cloudRadius,
-                this.lookupTable[i]*2,
-                Math.cos(Math.PI*2/this.cloudAmount*i) * this.cloudRadius
+                Math.sin(Math.PI*2/this.cloudAmount*i) * this.cloudRadius[i%3],
+                this.lookupTable[i],
+                Math.cos(Math.PI*2/this.cloudAmount*i) * this.cloudRadius[i%3]
             );
             // cloudd.rotation.y = Math.PI*2/this.cloudAmount*i + Math.PI;
             cloudd.rotation.set(
@@ -132,7 +188,9 @@ export default class ItzhakAnimation extends THREE.Object3D {
                 'YXZ'
             );
             // cloudd.scale.multiplyScalar( 0.1 + 0.2*this.lookupTable[i] );
-            cloudd.scale.multiplyScalar( 0.001 );
+            // cloudd.scale.multiplyScalar( 0.001 );
+            cloudd.scale.multiplyScalar( this.cloudScale[i%3] * (1+this.lookupTable[i]/2) );
+            cloudd.material.opacity=0;
 
             this.cloudGroup[i%3].add(cloudd);
 
@@ -163,14 +221,30 @@ export default class ItzhakAnimation extends THREE.Object3D {
 
     characterDisappear() {
 
+        TweenMax.to( this.dummy, 8, {
+            timeScaleValue: 50,
+            onUpdate: ()=>{
+                for(let i=0; i<this.cloudGroup.length; i++){
+                    this.cloudGroup[i].tweenline.timeScale(this.dummy.timeScaleValue);
+                }
+            }
+        } );
+
         for(let i=0; i<this.cloudGroup.length; i++){
-            this.cloudGroup[i].tweenmax.kill();
+            
+            
             TweenMax.to( this.cloudGroup[i].scale, 2, {
                 x: 0.01,
                 y: 0.01,
                 z: 0.01,
                 delay: 5,
-                ease: Back.easeInOut
+                ease: Back.easeInOut,
+                onStart: ()=>{
+                    TweenMax.to( this.cloudGroup[i].position, 2, {y:3, ease: Back.easeInOut} );
+                },
+                onComplete: ()=>{
+                    this.cloudGroup[i].visible = false;
+                }
             });
         }
 
@@ -182,20 +256,22 @@ export default class ItzhakAnimation extends THREE.Object3D {
                 b: this.cloudColors[1].b,
                 onStart:()=>{
                     let toY = theCloud.position.y + (-8*this.lookupTable[i]);
-                    TweenMax.to(theCloud.position, 4, {
-                        y: "+=" + toY
+                    TweenMax.to(theCloud.position, 1, {
+                        y: "-=" + 1,
+                        yoyo: true,
+                        repeat: -1
                     });
                 }
             });
             TweenMax.to( theCloud.morphTargetInfluences, 2, {endArray: [1]});
 
             TweenMax.to( theCloud.scale, 3, {
-                x: "+=1.5",
-                y: "+=2",
-                z: "+=1.5",
-                delay: this.lookupTable[i]*3,
-                yoyo: true,
-                repeat: 1
+                x: "+=1.1",
+                y: "+=1.4",
+                z: "+=1.1",
+                delay: this.lookupTable[i]*3
+                // yoyo: true,
+                // repeat: 1
             });
         }
 
@@ -207,10 +283,18 @@ export default class ItzhakAnimation extends THREE.Object3D {
 
     growClouds(diff) {
         for(let i=0; i<this.cloudAmount; i++){
-            TweenMax.to(  this.cloudVirtualGroup[i].object.scale, 2, {
-                x: 0.1 + 0.2*this.lookupTable[i],
-                y: 0.1 + 0.2*this.lookupTable[i],
-                z: 0.1 + 0.2*this.lookupTable[i],
+            // TweenMax.to(  this.cloudVirtualGroup[i].object.scale, 2, {
+            //     // x: 0.1 + this.cloudScale[i%3]*this.lookupTable[i],
+            //     // y: 0.1 + this.cloudScale[i%3]*this.lookupTable[i],
+            //     // z: 0.1 + this.cloudScale[i%3]*this.lookupTable[i],
+            //     x: this.cloudScale[i%3] * (1+this.lookupTable[i]/2),
+            //     y: this.cloudScale[i%3] * (1+this.lookupTable[i]/2),
+            //     z: this.cloudScale[i%3] * (1+this.lookupTable[i]/2),
+            //     delay: this.lookupTable[i]*diff
+            // });
+
+            TweenMax.to(  this.cloudVirtualGroup[i].object.material, 2, {
+                opacity: 1,
                 delay: this.lookupTable[i]*diff
             });
         }
@@ -226,20 +310,24 @@ export default class ItzhakAnimation extends THREE.Object3D {
                 b: this.cloudColors[1].b
             });
             TweenMax.to( theCloud.morphTargetInfluences, 2, {
-                endArray: [1], ease: RoughEase.ease.config({
-                    template:  Power0.easeNone, strength: 1, points: 20, taper: "none", randomize:  true, clamp: false}),
+                endArray: [1],
                 onComplete: ()=>{
                     setTimeout( ()=>{                   
                         this.detach( theCloud, theParent, this);
                         // console.log(theCloud.position);
-                    }, 4500);
+                    }, 3500);
 
-                    TweenMax.to(theCloud.position, 2, {y:0, ease: Bounce.easeOut, delay:5+c_index*0.05,
+                    TweenMax.to(theCloud.position, 2, {y:this.floorHeight, ease: Bounce.easeOut, delay:4+c_index*0.05,
                         onStart: ()=>{
-                            TweenMax.to(theCloud.rotation, 1, {x:Math.PI/2});
+                            TweenMax.to(theCloud.rotation, 1, {x:Math.PI/2, delay:0.5});
                         },
                         onCompleteParams: [theCloud.position.y+theParent.position.y],
                         onComplete: (oriHeight)=>{
+                            TweenMax.to( theCloud.material.color, 0.5, {
+                                r: this.cloudColors[2].r,
+                                g: this.cloudColors[2].g,
+                                b: this.cloudColors[2].b
+                            });
 
                             TweenMax.to(theCloud.position, 4, {y: oriHeight, delay: 5,
                                 onStart:()=>{
@@ -253,10 +341,11 @@ export default class ItzhakAnimation extends THREE.Object3D {
                                         g: this.cloudColors[0].g,
                                         b: this.cloudColors[0].b
                                     });
+                                    TweenMax.to(theCloud.rotation, 1, {x:0});
                                 },
                                 onComplete:()=>{
                                     this.attach(theCloud, this, theParent);
-                                    TweenMax.to(theCloud.rotation, 1, {x:0});
+                                    // TweenMax.to(theCloud.rotation, 1, {x:0});
                                 }
                             });
                         }
