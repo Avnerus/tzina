@@ -465,16 +465,25 @@ export default class HaimAnimation extends THREE.Object3D {
                }} )
                .to( targets, _duration, { endArray: tmpEndArray2, ease: Power0.easeNone })
                .to( targets, _duration, { endArray: tmpEndArray3, ease: Power0.easeNone })
-               .to( targets, _duration/1.5, { endArray: tmpEndArray4, ease: Back.easeInOut.config(2.5), onStart: ()=>{
-                    // this.tubes[0].children[1].material.opacity = 1;
-                    this.tubes[0].children[1].visible = true;
-                    this.tubes[0].children[1].material.map.offset.x=-1.5;
-                    this.liquidDown = true;
-               }, onComplete: ()=>{
-                    for(let i=0; i<this.tubes.length; i++){
-                        TweenMax.to( this.tubes[i].children[2].scale, _duration*(this.clamp(this.tubes[i].children[2].scale.x, 0.5, 1)*20), { x: 0.01, y: 0.01, z: 0.01, ease: Bounce.easeInOut } );
+               .to( targets, _duration/1.5, {
+                    endArray: tmpEndArray4,
+                    ease: Back.easeInOut.config(2.5),
+                    onStart: ()=>{
+                        // this.tubes[0].children[1].material.opacity = 1;
+                        this.tubes[0].children[1].visible = true;
+                        this.tubes[0].children[1].material.map.offset.x=-1.5;
+                        this.liquidDown = true;
+                    },
+                    onComplete: ()=>{
+                        for(let i=0; i<this.tubes.length; i++){
+                            // TweenMax.to( this.tubes[i].children[2].scale, _duration*(this.clamp(this.tubes[i].children[2].scale.x, 0.5, 1)*20), { x: 0.01, y: 0.01, z: 0.01, ease: Bounce.easeInOut } );
+                            TweenMax.to( this.tubes[i].children[2].scale, 1, {
+                                x: "-=0.25", y: "-=0.25", z: "-=0.25", ease: Power1.easeInOut,
+                                yoyo: true, repeat: -1
+                            } );
+                        }
                     }
-               } });
+               });
     }
 
     tubeOut(_duration) {
@@ -495,6 +504,11 @@ export default class HaimAnimation extends THREE.Object3D {
                .to( targets, _duration*2, { endArray: tmpEndArray4, ease: Power0.easeNone, onComplete: ()=>{
                     // this.tubes[0].children[1].material.map.offset.x=-1.5;
                     // this.liquidOut = true;
+
+                    // shrink bags
+                    for(let i=0; i<this.tubes.length; i++){
+                        TweenMax.to( this.tubes[i].children[2].scale, _duration*(this.clamp(this.tubes[i].children[2].scale.x, 0.5, 1)*20), { x: 0.01, y: 0.01, z: 0.01, ease: Bounce.easeInOut } );
+                    }
 
                     // scale up clouds
                     for(let i=0; i<this.outTubes.length; i++){
