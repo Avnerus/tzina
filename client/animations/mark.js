@@ -30,7 +30,9 @@ export default class MeirAnimation extends THREE.Object3D {
             { time: 115, anim: ()=>{ this.neonRotateBack() } },
             { time: 120, anim: ()=>{ this.neonRotate() } },
             { time: 198, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } },
-            { time: 207, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } },  
+            { time: 200, anim: ()=>{ this.neonRotateBack() } },
+            { time: 207, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } },
+            { time: 209, anim: ()=>{ this.neonRotate() } },  
             { time: 219, anim: ()=>{ this.characterDisappear() } }
         ];
         this.nextAnim = null;
