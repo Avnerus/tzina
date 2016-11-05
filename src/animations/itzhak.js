@@ -55,7 +55,7 @@ export default class ItzhakAnimation extends THREE.Object3D {
             this.cloudAmount = 20;
             this.cloudRadius = [3,4,5];
             this.cloudScale = [0.15,0.3,0.45];
-            this.cloudColors = [ new THREE.Color(0xe7f6fb), new THREE.Color(0xf3afc0), new THREE.Color(0x4b2a79) ];
+            this.cloudColors = [ new THREE.Color(0xe7f6fb), new THREE.Color(0xcc0000), new THREE.Color(0x4b2a79) ];
             this.floorHeight = 0;
             this.treeRadius = 3;
         // ================ Setting End =====================
