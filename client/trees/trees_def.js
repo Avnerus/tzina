@@ -278,12 +278,12 @@ export default {
  //            scale: 0.65
  //        },
    
- //    {
- //            type: "ThreeTrees",
- //            position: [-20,10.61,-20],
- //            rotation: [330,0,90],
- //            scale: 1
- //        },
+    {
+            type: "ThreeTrees",
+            position: [-20,10.61,-20],
+            rotation: [330,0,90],
+            scale: 1
+        },
 
         {
             type: "palm",
