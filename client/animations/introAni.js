@@ -189,11 +189,12 @@ export default class IntroAnimation extends THREE.Object3D {
     }
 
     disposeAni() {
+        console.log("Intro animation - disposing");
         this.remove( this.fbo.particles );
         this.remove(this.trees);
         this.remove(this.terrain);
         
-        this.fbo.particles.dispose();
+        this.fbo.particles.geometry.dispose();
         this.blueprint.dispose();
         this.blueprintMat.dispose();
         this.treeGeo.dispose();
