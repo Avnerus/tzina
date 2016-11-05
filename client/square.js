@@ -11,8 +11,7 @@ const MODEL_PATH = "assets/square/scene.json"
 const BUILDINGS_PATH = "assets/square/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
-const BENCHES_PREFIX = "assets/square/benches"
-const BENCHES_TEXTURES_PREFIX = "assets/square/benchTextures"
+const BENCHES_PREFIX = "assets/square/benches/"
 const FOUNTAIN_PATH = "assets/square/fountain.json"
 const TEXTURES_PATH = "assets/square/textures.json"
 
@@ -26,7 +25,7 @@ export default class Square extends THREE.Object3D{
         this.config = config;
         this.camera = camera;
 
-        this.debug = true;
+        this.debug = false;
 
         this.sunTextureOffsets = {
             19 : 0.5,
@@ -171,12 +170,7 @@ export default class Square extends THREE.Object3D{
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
             
-            this.benches.children[0].position.set(2.66,-2.16, 2.6);
-            this.benches.children[0].scale.set(1.11, 1.11, 1.11);
-            this.benches.children[0].rotation.y = 342;
 
-            DebugUtil.positionObject(this.benches.children[0], "Benches1");
-            DebugUtil.positionObject(this.benches.children[1], "Benches2");
             DebugUtil.positionObject(this.fountainMesh, "Fountain");
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
@@ -445,24 +439,50 @@ export default class Square extends THREE.Object3D{
         });
     }
     loadBenches(loadingManager) {
+        let benches = [
+            "bottomleft",
+            "topleft",
+            "group2",
+            "bottomright",
+            "topright",
+            "group1",
+        ]
+
+        let benchPositions = [
+            [1.09, -10.65, -3.47],
+            [4.44, -10.65, -0.09],
+            [-0.52, 2.5, 1.66],
+            [0,0,0],
+            [0,0,0],
+            [0,0,0]
+        ];
+
+        let benchScales = [
+            1.5,
+            1.5,
+            0.9,
+            1.5,
+            1.5,
+            0.9
+        ]
+        let loaders = [];
+        benches.forEach((benchGroup) => {
+            loaders.push(this.loadFile(loadingManager, BENCHES_PREFIX + benchGroup + ".json"));
+        });
         return new Promise((resolve, reject) => {
-            let loaders = [
-                this.loadFile(loadingManager, BENCHES_PREFIX + "1.json"),
-                //    this.loadFile(loadingManager, BENCHES_TEXTURES_PREFIX + "1.json"),
-                this.loadFile(loadingManager, BENCHES_PREFIX + "2.json"),
-                //this.loadFile(loadingManager, BENCHES_TEXTURES_PREFIX + "2.json")
-            ];
             Promise.all(loaders)
             .then((results) => {
                 console.log("Benches Load results", results);
-                    /*
-                this.disableDepthWrite(results[1]);
-                this.disableDepthWrite(results[3]); 
-                results[0].add(results[1]);
-                results[2].add(results[3]); */
                 let allBenches = new THREE.Object3D();
-                allBenches.add(results[0]);
-                allBenches.add(results[1]); 
+                for (let i = 0; i < results.length; i++) {
+                    results[i].position.fromArray(benchPositions[i]);
+                    let benchScale = benchScales[i];
+                    results[i].scale.set(benchScale, benchScale, benchScale);
+                    allBenches.add(results[i]);
+                    if (this.debug) {
+                        DebugUtil.positionObject(results[i], benches[i]);
+                    }
+                }
 
                 resolve(allBenches);
             });

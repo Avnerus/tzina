@@ -43,9 +43,9 @@ export default class ZoomController {
 
 
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -3.51,
+            -4.32,
             12.67,
-            -5.44
+            -5.22
         );
 
         this.CHAPTER_THRESHOLD = 0.45;

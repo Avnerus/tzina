@@ -1,9 +1,9 @@
 import boxIntersect from 'box-intersect'
 
 const PLAYER_SIZE = {
-    x: 2, 
+    x: 1, 
     y: 5,
-    z: 2 
+    z: 1 
 }
 
 const COLLIDERS = {
@@ -29,7 +29,7 @@ export default class CollisionManager {
         this.player = camera;
         this.meshColliders = [];
 
-        this.debug = false;
+        this.debug = true;
     }
     init() {
     }
@@ -124,24 +124,67 @@ export default class CollisionManager {
 
             let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
             bbox.update();
+
+            let offset = new THREE.Vector3();
+            if (character.props.spaceOffset) {
+                offset.fromArray(character.props.spaceOffset);
+            }
+
+            let box = this.enlargeBox(bbox.box, space, offset);
+
            if (this.debug) {
-            this.scene.add(bbox);
+                let bboxMesh = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1 ), new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } ) );
+                box.getSize(bboxMesh.scale);
+                box.getCenter(bboxMesh.position);
+                this.scene.add(bboxMesh);
+                events.emit("add_gui", {folder:character.props.name + " - BBOX Offset", listen: true, step: 0.01, onChange: () => {
+                    box = this.enlargeBox(bbox.box,character.props.space,offset); 
+                    box.getSize(bboxMesh.scale);
+                    box.getCenter(bboxMesh.position);
+                }}, offset, "x", -5,5); 
+                events.emit("add_gui", {folder:character.props.name + " - BBOX Offset", listen: true, step: 0.01, onChange: () => {
+                    box = this.enlargeBox(bbox.box,space,offset); 
+                    box.getSize(bboxMesh.scale);
+                    box.getCenter(bboxMesh.position);
+                }}, offset, "y", -5,5); 
+                events.emit("add_gui", {folder:character.props.name + " - BBOX Offset", listen: true, step: 0.01, onChange: () => {
+                    box = this.enlargeBox(bbox.box,character.props.space,offset); 
+                    box.getSize(bboxMesh.scale);
+                    box.getCenter(bboxMesh.position);
+                }}, offset, "z", -5,5); 
+                events.emit("add_gui", {folder:character.props.name + " - BBOX Space", listen: true, step: 0.01, onChange: () => {
+                    box = this.enlargeBox(bbox.box,character.props.space,offset); 
+                    box.getSize(bboxMesh.scale);
+                    box.getCenter(bboxMesh.position);
+                }}, character.props, "space", 0,2); 
            }
 
-
             this.characterObstacles.push([
-                bbox.box.min.x - space, 
-                bbox.box.min.y - space, 
-                bbox.box.min.z - space, 
-                bbox.box.max.x + space, 
-                bbox.box.max.y + space, 
-                bbox.box.max.z + space
+                bbox.box.min.x,
+                bbox.box.min.y,
+                bbox.box.min.z,
+                bbox.box.max.x,
+                bbox.box.max.y,
+                bbox.box.max.z
             ]);
 
             character.obstacleIndex = this.characterObstacles.length -1;
 
             this.characterObstacleInfo.push(character);
         }
+    }
+
+    enlargeBox(box, space, offset) {
+        let newBox = new THREE.Box3();
+        newBox.copy(box);
+        newBox.min.x = box.min.x - space + offset.x; 
+        newBox.min.y = box.min.y - space + offset.y; 
+        newBox.min.z = box.min.z - space + offset.z; 
+        newBox.max.x = box.max.x +  space + offset.x
+        newBox.max.y = box.max.y + space + offset.y; 
+        newBox.max.z = box.max.z + space + offset.z;
+
+        return newBox;
     }
 
     removeCharacter(character) {
