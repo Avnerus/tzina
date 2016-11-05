@@ -1,6 +1,7 @@
 import ImprovedNoise from '../util/improved_noise'
 import TextureAnimator from '../util/texture_animator'
 import EndArrayPlugin from '../util/EndArrayPlugin'
+import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class HannahAnimation extends THREE.Object3D {
@@ -15,6 +16,8 @@ export default class HannahAnimation extends THREE.Object3D {
     }
 
     setupAnim() {
+        // DebugUtil.positionObject(this, "HannahAni");
+
         this.loadingManager.itemStart("HannahAnim");
         this.domeMorphTargets = [];
         this.perlin = new ImprovedNoise();
