@@ -339,7 +339,7 @@ export default class ItzhakAnimation extends THREE.Object3D {
             });
         }
 
-        TweenMax.to( this.parent.fullVideo.mesh.scale, .5, {
+        TweenMax.to( this.parent.fullVideo.mesh.scale, 1, {
             x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, delay: 5.5, onComplete: ()=>{
             this.parent.fullVideo.setOpacity(0.0);
         } } );
