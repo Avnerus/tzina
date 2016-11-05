@@ -139,7 +139,7 @@ export default class Character extends THREE.Object3D {
             });
 
             events.on("control_threshold", (passed) => {
-                //this.inControl = passed;
+                this.inControl = passed;
             });
     }
     play() {
@@ -240,7 +240,7 @@ export default class Character extends THREE.Object3D {
     }
 
     onCollision() {
-        //console.log("Collision!! ", this.props.name, this.active, this.playingFull, this.done);
+        console.log("Collision!! ", this.props.name, this.inControl, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
         if (this.inControl && !this.playingFull && !this.onHold && !this.done) {
             this.playingFull = true;
