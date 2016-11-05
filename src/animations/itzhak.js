@@ -91,12 +91,12 @@ export default class ItzhakAnimation extends THREE.Object3D {
         loader.load( this.BASE_PATH + "/models/singleTree.json", (geometry)=>{
             let tree = new THREE.Mesh(geometry, this.treeMat);
 
-            for(let i=0; i<15; i++){
+            for(let i=0; i<16; i++){
                 let t = tree.clone();
                 t.position.set(
-                    Math.sin(Math.PI*2/40*(i+10)) * (this.treeRadius-.5) + this.lookupTable[i],
+                    Math.sin(Math.PI*2/32*(i+8)) * (this.treeRadius-.5) + this.lookupTable[i],
                     0,
-                    Math.cos(Math.PI*2/40*(i+10)) * (this.treeRadius-.5) + this.lookupTable[i]
+                    Math.cos(Math.PI*2/32*(i+8)) * (this.treeRadius-.5) + this.lookupTable[i]
                 );
                 t.scale.y = 0.9+this.lookupTable[i]/2;
                 t.rotation.y = this.lookupTable[i]*2;
@@ -116,14 +116,47 @@ export default class ItzhakAnimation extends THREE.Object3D {
             }
             this.treeGroup.position.z = 1;
             this.add(this.treeGroup);
-            DebugUtil.positionObject(this.treeGroup, "trees");
+            // DebugUtil.positionObject(this.treeGroup, "trees");
         } );
 
         this.dummy={timeScaleValue:0};
 
+        this.rockGroup = new THREE.Object3D();
+        DebugUtil.positionObject(this.rockGroup, "rocks");
+        this.add(this.rockGroup);
+        this.rockTex = tex_loader.load( this.BASE_PATH + "/images/rock.jpg" );
+        this.rockMat = new THREE.MeshLambertMaterial({map: this.rockTex});
+        this.loadRock( this.BASE_PATH + "/models/rock1.json", this.BASE_PATH + "/models/rock2.json", loader );
+
         // DebugUtil.positionObject(this, "itzhak");
         //
         this.loadingManager.itemEnd("ItzhakAnim");
+    }
+
+    loadRock(r_f_1, r_f_2, loader) {
+        let rockss = []
+        loader.load( r_f_1, (geometry)=>{
+            let rock1 = new THREE.Mesh(geometry, this.rockMat);
+            rockss.push(rock1);
+            loader.load( r_f_2, (geometry2)=>{
+                let rock2 = new THREE.Mesh(geometry2, this.rockMat);
+                rockss.push(rock2);
+
+                for(let i=0; i<6; i++){
+                    for(let j=0; j<9; j++){
+                        let r = rockss[i*j%2].clone();
+                        r.position.set(
+                            Math.sin(Math.PI*2/12*(i+3)) * 1 + this.lookupTable[i+j],
+                            j*0.3,
+                            Math.cos(Math.PI*2/12*(i+3)) * 1 + this.lookupTable[i+j]
+                        );
+                        r.scale.multiplyScalar( 0.3+this.lookupTable[i+j]/2 );
+                        r.rotation.y = this.lookupTable[i+j];
+                        this.rockGroup.add(r);
+                    }                    
+                }
+            });            
+        } );
     }
 
     loadClouds( cloudFiles, heartFiles ) {
