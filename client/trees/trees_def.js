@@ -209,74 +209,74 @@ export default {
 
 
 
- //               {
- //            type: "ThreeTrees",
- //            position: [-26.1,13.32,9.08],
- //            rotation: [306,30.1,87],
- //            scale: 0.92
- //        },
- //         {
- //            type: "ThreeTrees",
- //            position: [6.37,11.97,40],
- //            rotation: [-10,0,90],
- //            scale: 1.1
- //        },
- //         {
- //            type: "ThreeTrees",
- //            position: [-30.61,13.32,9.8],
- //            rotation: [339,0,71],
- //            scale: 1
- //        },
- //         {
- //            type: "ThreeTrees",
- //            position: [40,16,16],
- //            rotation: [91,63,50],
- //            scale: 0.6
- //        }, 
- //        {
- //            type: "ThreeTrees",
- //            position: [19,16.03,19.9],
- //            rotation: [148,184,265],
- //            scale: 1.146
- //        }, 
- //        {
- //            type: "ThreeTrees",
- //            position: [31.63,9.5,-19.79],
- //            rotation: [83,38,90],
- //            scale: 0.87
- //        },
- //        {
- //            type: "ThreeTrees",
- //            position: [40,16.03,33.43],
- //            rotation: [201,2,103],
- //            scale: 0.74
- //        },
- //       {
- //            type: "ThreeTrees",
- //            position: [6.37,16.03,34.33],
- //            rotation: [314,26,99],
- //            scale: 0.695
- //        },
+               {
+            type: "ThreeTrees",
+            position: [-26.1,13.32,9.08],
+            rotation: [306,30.1,87],
+            scale: 0.92
+        },
+         {
+            type: "ThreeTrees",
+            position: [6.37,11.97,40],
+            rotation: [-10,0,90],
+            scale: 1.1
+        },
+         {
+            type: "ThreeTrees",
+            position: [-30.61,13.32,9.8],
+            rotation: [339,0,71],
+            scale: 1
+        },
+         {
+            type: "ThreeTrees",
+            position: [40,16,16],
+            rotation: [91,63,50],
+            scale: 0.6
+        }, 
+        {
+            type: "ThreeTrees",
+            position: [19,16.03,19.9],
+            rotation: [148,184,265],
+            scale: 1.146
+        }, 
+        {
+            type: "ThreeTrees",
+            position: [31.63,9.5,-19.79],
+            rotation: [83,38,90],
+            scale: 0.87
+        },
+        {
+            type: "ThreeTrees",
+            position: [40,16.03,33.43],
+            rotation: [201,2,103],
+            scale: 0.74
+        },
+       {
+            type: "ThreeTrees",
+            position: [6.37,16.03,34.33],
+            rotation: [314,26,99],
+            scale: 0.695
+        },
 
- // {
- //            type: "ThreeTrees",
- //            position: [40,16,13],
- //            rotation: [14,6,91],
- //            scale: 0.6
- //        },
+ {
+            type: "ThreeTrees",
+            position: [40,16,13],
+            rotation: [14,6,91],
+            scale: 0.6
+        },
 
- // {
- //            type: "ThreeTrees",
- //            position: [-29.71,17.38,-26.1],
- //            rotation: [201,2,103],
- //            scale: 0.65
- //        },
- //    {
- //            type: "ThreeTrees",
- //            position: [40,17.38,0.06],
- //            rotation: [257,46,132],
- //            scale: 0.65
- //        },
+ {
+            type: "ThreeTrees",
+            position: [-29.71,17.38,-26.1],
+            rotation: [201,2,103],
+            scale: 0.65
+        },
+    {
+            type: "ThreeTrees",
+            position: [40,17.38,0.06],
+            rotation: [257,46,132],
+            scale: 0.65
+        },
    
     {
             type: "ThreeTrees",
@@ -317,12 +317,12 @@ export default {
 
 
 
-        {
-            type: "ThreeTrees",
-            position: [-28.81,14.67,-20.69],
-            rotation: [330,18,90],
-            scale: 0.65
-        },
+        // {
+        //     type: "ThreeTrees",
+        //     position: [-28.81,14.67,-20.69],
+        //     rotation: [330,18,90],
+        //     scale: 0.65
+        // },
         //   {
         //     type: "ThreeTrees",
         //     position: [-40,10.61,-40],

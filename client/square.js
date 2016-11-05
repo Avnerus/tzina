@@ -300,7 +300,8 @@ export default class Square extends THREE.Object3D{
         if (sun) {
             let sunLoader = sun.getObjectByName(name + "_L");
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
-            sunMesh.material.color = new THREE.Color(0x888788);
+            sunMesh.material.color = new THREE.Color(16772451);
+              sunMesh.material.emissive = new THREE.Color(16756224);
             sunMesh.material.map = this.sunTextureDesat;
             sunMesh.material.needsUpdate = true;
             this.sunTexture.offset.y = this.sunTextureOffsets[this.currentSun];
