@@ -240,7 +240,7 @@ export default class Character extends THREE.Object3D {
     }
 
     onCollision() {
-        console.log("Collision!! ", this.props.name, this.active, this.playingFull, this.done);
+        //console.log("Collision!! ", this.props.name, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
         if (this.inControl && !this.playingFull && !this.onHold && !this.done) {
             this.playingFull = true;

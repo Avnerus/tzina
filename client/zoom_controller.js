@@ -160,11 +160,16 @@ export default class ZoomController {
             this.calculateEaseQuaternion();*/
         } else {
             if (this.square.mesh) {
+                let baseVRPosition = null;
+
                 if (this.vrControls) {
                     let currentVRPosition = this.vrControls.getCurrentPosition();
                     console.log("Current VR Position", currentVRPosition);
-                    this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
-                    this.BASE_WORLD_POSITION.add(currentVRPosition);
+                    if (currentVRPosition) {
+                        this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
+                        baseVRPosition = new THREE.Vector3.copy(this.BASE_WORLD_POSITION);
+                        baseVRPosition.add(currentVRPosition);
+                    }
 
                 }
                 this.square.mesh.updateMatrixWorld();
@@ -184,9 +189,11 @@ export default class ZoomController {
                     }
                     points.push(...[
                         startPoint,
-                        endPoint,
-                        new THREE.Vector3().copy(this.BASE_WORLD_POSITION)
+                        endPoint
                     ])
+                    if (baseVRPosition) {
+                        points.push(baseVRPosition);
+                    }
                     console.log("Curve points", points);
                     this.zoomCurve = new THREE.CatmullRomCurve3(points);
                 } else {

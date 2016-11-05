@@ -47,7 +47,7 @@ export default class Game {
 
         class TzinaEmitter extends EventEmitter {}
         this.emitter = new TzinaEmitter();
-        this.emitter.setMaxListeners(20);
+        this.emitter.setMaxListeners(30);
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
