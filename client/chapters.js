@@ -6,8 +6,8 @@ export default
 			"timeLimitMinutes" : 10,
             "totalTime" : 330,
             "titlePosition": [0.07,-0.26,2.33],
-            "insideTitlePosition": [13,-1.16,-6.69],
-            "insideTitlePositionLineTwo": [7.96,-6,-5.57],
+            "insideTitlePosition": [10.22,-1.06,-4.44],
+            "insideTitlePositionLineTwo": [5.71,-5.34,-5.57],
             "sunLoaderRotation": [0,136,0],
 			"characters": [
 				"Meir",
@@ -62,8 +62,8 @@ export default
 			"timeLimitMinutes" : 13,
             "totalTime" : 540,
             "titlePosition": [-90, 90, 0],
-            "insideTitlePosition": [1.05,5.5,-1.08],
-            "insideTitlePositionLineTwo": [-3.31,-0.26,-2.18],
+            "insideTitlePosition": [1.2,6.5,-2.18],
+            "insideTitlePositionLineTwo": [-3.31,-1.96,-1.06],
             "sunLoaderRotation": [58,10,0],
 			"characters": [
 				"Miriam",
@@ -199,8 +199,8 @@ export default
 			"hour": 17,
             "titlePosition": [85, 100, 0],
             "totalTime" : 500,
-            "insideTitlePosition": [-5,1,3.45],
-            "insideTitlePositionLineTwo": [3.45,-0.8,-1.08],
+            "insideTitlePosition": [-2.18,3.12,1.2],
+            "insideTitlePositionLineTwo": [2.33,-1.96,-1.06],
             "sunLoaderRotation": [230,50,0],
 			"timeLimitMinutes" : 12,
 			"characters": [
