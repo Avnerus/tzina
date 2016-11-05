@@ -257,11 +257,10 @@ export default class Square extends THREE.Object3D{
                 }
                 let sunMesh = sun.getObjectByName(name + "_F").children[0];
                 sunMesh.material.color = new THREE.Color(0xFFFFFF);
-                 sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
-          //      sunMesh.material.specular = new THREE.Color(0x000000);
-                //sunMesh.material.side = THREE.DoubleSide;
-                sunMesh.material.opacity = 1.00;
-                 sunMesh.material.transparent = false;
+                sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
+                sunMesh.material.side = THREE.DoubleSide;
+                    //sunMesh.material.opacity = 1.00;
+                 //sunMesh.material.transparent = false;
                 sunMesh.material.map = this.sunTexture;
                 this.sunTexture.offset.y = this.sunTextureOffsets[name];
                 //texture offset by progress in chapter 
@@ -285,7 +284,8 @@ export default class Square extends THREE.Object3D{
         if (sun) {
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
             console.log("Turn on sun", sun);
-            sunMesh.material.color = new THREE.Color(0x000D0A);
+           sunMesh.material.color = new THREE.Color(0xFFFFFF);
+        sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
             sunMesh.material.map = this.sunTexture;
             this.sunTexture.offset.y = this.sunTextureOffsets[name];
             sunMesh.material.needsUpdate = true;
