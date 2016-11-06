@@ -90,8 +90,7 @@ export default class Square extends THREE.Object3D{
             this.loadSuns(loadingManager),
             this.loadColliders(loadingManager),
             this.loadBenches(loadingManager),
-            this.loadFountain(loadingManager),
-            this.loadTextures(loadingManager)
+            this.loadFountain(loadingManager)
         ];
         if (!this.config.noExtras) {
             loaders.push(this.extras.init(loadingManager));
@@ -116,7 +115,6 @@ export default class Square extends THREE.Object3D{
             this.benches = results[5];
 
             this.fountainMesh = results[6];
-            this.textures = results[7];
 
 
             // Clockwork rotation object
@@ -134,7 +132,7 @@ export default class Square extends THREE.Object3D{
             this.mesh.add(this.extras);
             this.mesh.add(this.buildings);
             this.mesh.add(this.suns);
-            this.mesh.add(this.textures);
+           
 
 
             this.clockwork.add(this.benches);
