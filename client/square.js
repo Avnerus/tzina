@@ -13,6 +13,7 @@ const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PATH = "assets/square/benches.json"
 const FOUNTAIN_PATH = "assets/square/fountain.json"
+const GROUND_PATH = "assets/square/ground3.json"
 const TEXTURES_PATH = "assets/square/textures.json"
 
 export default class Square extends THREE.Object3D{
@@ -90,6 +91,7 @@ export default class Square extends THREE.Object3D{
             this.loadSuns(loadingManager),
             this.loadColliders(loadingManager),
             this.loadBenches(loadingManager),
+            this.loadGround(loadingManager),
             this.loadFountain(loadingManager)
         ];
         if (!this.config.noExtras) {
@@ -115,6 +117,8 @@ export default class Square extends THREE.Object3D{
             this.benches = results[5];
 
             this.fountainMesh = results[6];
+            
+            this.ground = results[7];
 
 
             // Clockwork rotation object
@@ -122,6 +126,7 @@ export default class Square extends THREE.Object3D{
             //this.clockwork.rotation.order = "YXZ;"
 
             this.clockwork.add(this.benches);
+            this.clockwork.add(this.ground);
             this.clockwork.add(this.fountainMesh)
 
             // Starts as a child of the square which does the actual rotation
@@ -430,6 +435,15 @@ export default class Square extends THREE.Object3D{
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(FOUNTAIN_PATH,( obj ) => {
                 console.log("Loaded square fountain ", obj);
+                resolve(obj);
+            });
+        });
+    }
+    loadGround(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(GROUND_PATH,( obj ) => {
+                console.log("Loaded ground fountain ", obj);
                 resolve(obj);
             });
         });
