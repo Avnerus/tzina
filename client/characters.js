@@ -113,9 +113,9 @@ export default [
         width: 1024,
         height: 2048,
         scale: 0.00242802,
-        animationScale: 0.25,
-        animationPosition: [-0.45,0,-0.4],
-        animationRotation: [7,25,-8],
+        animationScale: 0.228,
+        animationPosition: [-0.3,-0.2,-0.03], // -0.45,0,-0.4
+        animationRotation: [0,14,0], // 7,25,-8
         space: 0.3,
         subtitles: null
     },
