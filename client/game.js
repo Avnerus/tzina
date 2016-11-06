@@ -127,7 +127,7 @@ export default class Game {
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
         // Square
-        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager);
+        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene);
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 

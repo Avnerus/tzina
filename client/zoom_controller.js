@@ -43,9 +43,9 @@ export default class ZoomController {
 
 
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -4.32,
+            1,
             12.67,
-            -5.22
+            -6.56
         );
 
         this.CHAPTER_THRESHOLD = 0.45;
@@ -112,8 +112,11 @@ export default class ZoomController {
         });
         this.camera.position.copy(this.STARTING_POSITION);
         this.camera.rotation.copy(this.STARTING_ROTATION);
-    }
 
+            /*
+        let cube = DebugUtil.adjustableCube(this.BASE_WORLD_POSITION, "VR Cube", 1, 0xff0000);
+        this.scene.add(cube);*/
+    }
     getZoomOutPosition() {
         let vec = new THREE.Vector3();
         vec.copy(new THREE.Vector3(0,0,1)).applyQuaternion(this.camera.quaternion).multiplyScalar(500);
@@ -170,7 +173,10 @@ export default class ZoomController {
                         baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
                         baseVRPosition.add(currentVRPosition);
                     }
-
+                } 
+                if (!baseVRPosition) {
+                    baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
+                    baseVRPosition.y += 15;
                 }
                 this.square.mesh.updateMatrixWorld();
                 this.easeQuaternionSource = null;

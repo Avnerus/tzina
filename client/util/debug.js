@@ -12,9 +12,9 @@ export default {
         let material = new THREE.MeshBasicMaterial( {color: color} );
         let cube = new THREE.Mesh( geometry, material );
         cube.position.copy(position);
-        events.emit("add_gui", {folder:name}, cube.position, "x"); 
-        events.emit("add_gui", {folder:name}, cube.position, "y"); 
-        events.emit("add_gui", {folder:name}, cube.position, "z"); 
+        events.emit("add_gui", {folder:name, step: 0.01}, cube.position, "x"); 
+        events.emit("add_gui", {folder:name, step: 0.01}, cube.position, "y"); 
+        events.emit("add_gui", {folder:name, step: 0.01}, cube.position, "z"); 
         return cube;
     },
     positionObject: function(object, name, listen = false, min=-50,max=50, angles) {
