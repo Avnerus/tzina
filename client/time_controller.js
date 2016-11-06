@@ -125,10 +125,10 @@ export default class TimeController {
         this.prevChapterTitle.scale.set(0.3, 0.3, 0.3);
         this.prevChapterTitle.visible = false;
 
-        this.insideChapterTitle = new MeshText2D("", INSIDE_TEXT_DEFINITION);
+        this.insideChapterTitle = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitle.scale.multiplyScalar(0.04);
 
-        this.insideChapterTitleLineTwo = new MeshText2D("", INSIDE_TEXT_DEFINITION);
+        this.insideChapterTitleLineTwo = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitleLineTwo.scale.multiplyScalar(0.04);
         //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
         //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);

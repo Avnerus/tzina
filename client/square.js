@@ -205,6 +205,8 @@ export default class Square extends THREE.Object3D{
             this.controlPassed = passed;
             if (passed) {
                 this.activeClockwork = this.clockwork;
+                this.clockwork.rotation.y = this.mesh.rotation.y;
+                this.mesh.rotation.y = 0;
 
                 // Show the hidden loader
                 let sun = this.suns.getObjectByName(this.currentSun)
