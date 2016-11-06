@@ -55,7 +55,7 @@ export default [
         animationScale: 0.18,
         animationPosition: [-0.1, -0.05, 0.5],
         animationRotation: [21, 3, 355],
-        space: 0.5,
+        space: 2,
         subtitles: false
     },
     {
