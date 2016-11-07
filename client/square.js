@@ -258,7 +258,7 @@ export default class Square extends THREE.Object3D{
 
                 setTimeout(() => {
                     events.emit("angle_updated");
-                },0);
+                },0)
 
             }
         });

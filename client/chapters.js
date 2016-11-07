@@ -63,7 +63,7 @@ export default
 			"characters": [
 				"Miriam",
                 "Itzik",
-                "Lupo12PM"
+                "Shirin9AM"
 			],
 			"introfile": [
 				"Miryam",

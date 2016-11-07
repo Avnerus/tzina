@@ -24,20 +24,20 @@ export default [
         basePath : 'assets/characters/miriam',
         mindepth : 1983.749877930,
         maxdepth : 3119.456298828,
-        position : [7.7, 24, -15.0],
-        rotation: [341, 20, 12],
+        position : [-1.19, 22.15, 11.55],
+        rotation: [10, 224, 12],
         animation: 'Miriam',
         uvdy_idle: 0.47900390625,
-        uvdy: 0.50634765625,
+        uvdy: 0.48681640625,
         uvdx: -0.025,
         width: 512,
         height: 2048,
-        scale: 0.003,
+        scale: 0.003 * 0.71208
         animationScale: 0.4,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 0.57,
-        spaceOffset: [-14.87,0,7.23],
+        space: 0.01,
+        spaceOffset: [0.11,0,-0.07],
         subtitles: null
     },
     {
@@ -45,18 +45,19 @@ export default [
         basePath : 'assets/characters/itzik',
         mindepth : 2000.0,
         maxdepth : 3494.158935547,
-        position : [11.7, 24, -8],
-        rotation: [337, 24, 15],
+        position : [-7.29, 22.34, 9.34],
+        rotation: [20, 216, 16],
         animation: 'Itzik',
         uvdy: 0.478,
         uvdx: 0.0,
         width: 512,
         height: 2048,
-        scale: 0.0027,
+        scale: 0.0027 * 0.869,
         animationScale: 0.18,
         animationPosition: [-0.1, -0.05, 0.5],
         animationRotation: [21, 3, 355],
-        space: 2,
+        space: 0.13,
+        spaceOffset: [-0.25,0,-0.07],
         subtitles: false
     },
     {
@@ -96,8 +97,8 @@ export default [
         animationScale: 0.25,
         animationPosition: [0.45, -0.3, 0.25],
         animationRotation: [-4, -23, -9],
-        space: 0.1,
-        spaceOffset: [-0.5,0,-0.7],
+        space: 0.49,
+        spaceOffset: [1.27,0,0.25],
         subtitles: false
     },
     {
@@ -117,7 +118,7 @@ export default [
         animationScale: 0.228,
         animationPosition: [-0.3,-0.2,-0.03], // -0.45,0,-0.4
         animationRotation: [0,14,0], // 7,25,-8
-        space: 0.3,
+        space: 0.5,
         subtitles: null
     },
     {
@@ -240,7 +241,28 @@ export default [
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 0.2,
-        spaceOffset: [-0.3,0,0.7],
+        spaceOffset: [-0.8,0,0.53],
+        subtitles: null,
+        fullOnly: true
+    },
+    {
+        name: 'Shirin9AM',
+        basePath : 'assets/characters/shirin9am',
+        mindepth : 633.749877930,
+        maxdepth : 4120.305664062,
+        position : [-4.21, 22.41, 13.51],
+        rotation: [347, 235, 340],
+        animation: null,
+        uvdy: 0.49755859375,
+        uvdx: 0.0,
+        width: 1024,
+        height: 2048,
+        scale: 0.003 * 0.4715,
+        animationScale: 0.25,
+        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
+        animationRotation: [13, 0, 0],      // 20, 0, 0
+        space: 0.2,
+        spaceOffset: [0.39,0,-0.08],
         subtitles: null,
         fullOnly: true
     },
