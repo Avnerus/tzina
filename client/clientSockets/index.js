@@ -130,6 +130,7 @@ if(verbose)     console.log("Started pidgeon socket");
     if(!this.time) this.time=0;
     this.time+=dt;
     // console.log("pidgeon",this.time);
+    Pidgeon.updateEach(dt);
     if(this.time-lastEmitTime>=emitInterval){
       this.socketEmitCameraPosition();
       lastEmitTime=this.time;

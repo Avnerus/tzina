@@ -54,7 +54,6 @@ THREE.BlendCharacter = function (loadedObject) {
 			this.mixer.clipAction( this.geometry.animations[ i ] );
 		}
 
-
 	}
 
 	this.loadJSON = function ( url, onLoad ) {
@@ -95,7 +94,7 @@ THREE.BlendCharacter = function (loadedObject) {
 	};
 
 	this.play = function( animName, weight ) {
-
+		this.currentAnim=animName;
 		//console.log("play('%s', %f)", animName, weight);
 		return this.mixer.clipAction( animName ).
 				setEffectiveWeight( weight ).play();

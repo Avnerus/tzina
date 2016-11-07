@@ -5,10 +5,14 @@ var loaded3dObject;
 var characterList = [];
 //an array of the associations between server id's and client side id's
 var characterAssoc={};
+//contains a timeline that stacks movement twins, it smooths out the stutter that
+//slower server update rate cretes
+var movementTimeline;
 export default class Pidgeon extends THREE.Object3D{
   constructor(props){
     super();
     let thisPidgeon=this;
+    movementTimeline= new TimelineLite();
     let properties = props || {};
     // console.log("c",properties);
     characterList.push(this);
@@ -27,7 +31,7 @@ export default class Pidgeon extends THREE.Object3D{
     // blendMesh.position.z=0.2*a;
     //these json models insist on coming rotated.
     blendMesh.rotation.x=Math.PI/-2;
-    blendMesh.rotation.y=Math.PI;
+    blendMesh.rotation.z=Math.PI;
     // this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
     // this.mesh.position.set(0,0.07,0);
     // this.mesh.scale.set(0.3,0.3,0.3);
@@ -66,6 +70,18 @@ export default class Pidgeon extends THREE.Object3D{
         // for(let b in newPosition){
           // Lokat[b]=newPosition[b];
         // }
+
+        /*
+        animation names:
+        Bird_Eat
+        Bird_Fly
+        Bird_FlyOff
+        Bird_Idle
+        Bird_Land
+        Bird_Pose
+        Bird_Walk
+        */
+
         //object that will be subject to a tween. contains an onupdate function
         //that transfers it's state to the actual pidgeon position
         let tweenCurrentPosition={};
@@ -79,11 +95,11 @@ export default class Pidgeon extends THREE.Object3D{
           },
           onStart:function(){
             //pendant: replace plays with crossfadeTo
-            blendMesh.play("Bird_Walk",1);
+            blendMesh.crossfadeTo("Bird_Walk",0.2);
           },
           onComplete:function(){
             //pendant: replace plays with crossfadeTo
-            blendMesh.play("Bird_Idle",1);
+            blendMesh.crossfadeTo("Bird_Idle",0.2);
           },
           ease: Power0.easeNone
         }
@@ -97,7 +113,9 @@ export default class Pidgeon extends THREE.Object3D{
 
         // console.log("walkTo",tweenCurrentPosition,tweenTo,transformReturnFunctions,newPosition);
         //tween time has to be finetuned evey time the server interval is changed.
-        transformReturnFunctions.tween=TweenMax.to(tweenCurrentPosition, .3, tweenTo);
+        /*transformReturnFunctions.tween=*/movementTimeline.to(tweenCurrentPosition, .23, tweenTo);
+        //http://greensock.com/forums/topic/8109-chaining-instance-of-multiple-tweens/
+
         return transformReturnFunctions;
       }
     }
@@ -125,9 +143,15 @@ export default class Pidgeon extends THREE.Object3D{
   update(delta){
     if ( blendMesh ) { blendMesh.update( delta ); }
   }
+  static updateEach(delta){
+    for (var characterIndex in characterList) {
+      characterList[characterIndex].update(delta);
+    }
+  }
   //load and initialize meshes, textures and animations
   static initMesh(loadingManager){
     console.log("pidgeon load and init mesh");
+
     //initialize graphics, create mesh?
     this.geometry = new THREE.BoxGeometry(0.2,0.2,0.2);
     this.material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true} );
