@@ -125,8 +125,7 @@ export default class Square extends THREE.Object3D{
             this.clockwork = new THREE.Object3D();
             //this.clockwork.rotation.order = "YXZ;"
 
-            this.clockwork.add(this.benches);
-            this.clockwork.add(this.ground);
+            //this.clockwork.add(this.benches);
             this.clockwork.add(this.fountainMesh)
 
             // Starts as a child of the square which does the actual rotation
@@ -137,10 +136,10 @@ export default class Square extends THREE.Object3D{
             this.mesh.add(this.extras);
             this.mesh.add(this.buildings);
             this.mesh.add(this.suns);
+            this.mesh.add(this.ground);
            
 
 
-            this.clockwork.add(this.benches);
 
 
             this.addColliders();
@@ -157,12 +156,10 @@ export default class Square extends THREE.Object3D{
             this.fountain.position.set(0.8,23.6, -0.6);
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
-            //DebugUtil.positionObject(this.buildings, "Buildings");
 
-            /*
-            DebugUtil.positionObject(this.benches.children[0], "Benches1");
-            DebugUtil.positionObject(this.benches.children[1], "Benches2");
-            DebugUtil.positionObject(this.fountainMesh, "Fountain") */
+            DebugUtil.positionObject(this.ground, "ground");
+            //DebugUtil.positionObject(this.buildings, "Buildings");
+            //DebugUtil.positionObject(this.fountainMesh, "Fountain") */
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
             //this.fountain.scale.set(0.25, 0.25, 0.25);
@@ -398,7 +395,7 @@ export default class Square extends THREE.Object3D{
                             "XYZ"
                         );
                         if (this.debug) {
-                            DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
+                            //DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
                         }
 
                         
