@@ -234,7 +234,7 @@ export default class TimeController {
         }
 
         if (this.gazeHour != -1) {
-            this.gazeCounter += dt;
+          //  this.gazeCounter += dt;
             if (this.gazeCounter > 1 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
             }
@@ -252,7 +252,6 @@ export default class TimeController {
                         this.sunGazer.stop();
                         this.sunGazer.active = false;
                         this.square.turnOnSun(this.currentHour.toString());
-
                         this.setCurrentChapter();
                         events.emit("hour_updated", this.currentHour);
                         let targetRotationY = this.currentHour * 15;
@@ -458,24 +457,15 @@ export default class TimeController {
     turnOnChapterSun() {
         if (this.currentHour == 17 || this.currentHour == 9 ) {
             this.square.turnOnSun("9");
-        } else {
-            this.square.turnOffSun("9");
-        }
-
-        if (this.currentHour == 19 || this.currentHour == 7) {
+        } else if (this.currentHour == 19 || this.currentHour == 7) {
             this.square.turnOnSun("7");
-        }  else {
-            this.square.turnOffSun("7");
-        }
-
-        if (this.currentHour == 12) {
+        } else if (this.currentHour == 12) {
             this.square.turnOnSun("12");
-        } else {
-            this.square.turnOffSun("12");
         }
-
-        if (this.square.currentSun) {
-            this.square.turnOffSun(this.square.currentSun);
+        else {
+            if (this.square.currentSun) {
+                this.square.turnOffSun(this.square.currentSun);
+            }
         }
     }
 

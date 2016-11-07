@@ -183,7 +183,7 @@ export default class Square extends THREE.Object3D{
             this.activateSun(name);
         });
         events.on("gaze_stopped", (name) => {
-            //this.deactivateSun(name);
+            this.deactivateSun(name);
         });
 
         events.on("angle_updated", (hour) => {
@@ -290,7 +290,9 @@ export default class Square extends THREE.Object3D{
     }
 
     activateSun(name) {
+
         console.log("Activate sun! ", name);
+
         let sun = this.suns.getObjectByName(name)
         if (sun) {
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
@@ -306,6 +308,7 @@ export default class Square extends THREE.Object3D{
     }
 // material setting when looking at the sun
     deactivateSun(name) {
+        console.log("Deactivated sun! ", name);
         let sun = this.suns.getObjectByName(name)
         if (sun) {
             let sunLoader = sun.getObjectByName(name + "_L");
