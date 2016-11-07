@@ -13,7 +13,7 @@ const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PATH = "assets/square/benches.json"
 const FOUNTAIN_PATH = "assets/square/fountain.json"
-const GROUND_PATH = "assets/square/ground_tile.json"
+const GROUND_PATH = "assets/square/ground_tile_512.json"
 const TEXTURES_PATH = "assets/square/textures.json"
 
 export default class Square extends THREE.Object3D{
@@ -154,6 +154,7 @@ export default class Square extends THREE.Object3D{
                 */
 
             this.fountain.position.set(0.8,23.6, -0.6);
+            this.ground.position.set(1.2,-0.26, -2.18);
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
 
