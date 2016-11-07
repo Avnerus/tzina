@@ -35,5 +35,8 @@ node_modules
 *.swp
 public/assets/characters/*.webm
 public/assets/characters/*.ogg
+assets/characters
 
 public/bundle.js
+
+gitignored

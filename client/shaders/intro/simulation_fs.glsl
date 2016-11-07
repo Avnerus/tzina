@@ -30,7 +30,6 @@ void main() {
     if ( disToSq < squareRadius ) {
         force = normalize(pos - squareCenter);
         force *= bounceFactor;
-        //force.x *= 5.0;
     }
 
     // decreasing the force gradually
@@ -62,10 +61,10 @@ void main() {
     wind = vec3(1.0,0.0,0.0);
 
     // if hitting ground, reset
-    if (pos.y < -1500.0) {
-       pos.y += 3000.0;
-       pos.x = -500.0 + random(pos.xz) * 1000.0;
-       pos.z = -200.0 + random(pos.xz) * 400.0;
+    if (pos.y < -300.0) {  //
+       pos.y += 450.0;     // top: ~150
+       pos.x = -40.0 + random(pos.xz) * 70.0;
+       pos.z = -20.0 + random(pos.xz) * 50.0;
 
        //acce *= 0.0;
        velocity *= 0.0;

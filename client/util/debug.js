@@ -18,6 +18,7 @@ export default {
         return cube;
     },
     positionObject: function(object, name, listen = false, min=-50,max=50, angles) {
+        console.log("Debug - position object ", name);
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "x", min, max); 
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "y", min, max * 2);
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "z", min, max);

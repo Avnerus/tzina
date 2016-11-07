@@ -6,6 +6,8 @@ import DebugUtil from '../util/debug'
 import EndArrayPlugin from '../util/EndArrayPlugin'
 TweenPlugin.activate([EndArrayPlugin]);
 
+import SunLoader from '../sun_loader'
+
 export default class IntroAnimation extends THREE.Object3D {
     constructor( scene, renderer, square, timeController ) {
         super();
@@ -34,8 +36,8 @@ export default class IntroAnimation extends THREE.Object3D {
         console.log("FBO Constructed!")
     }
 
-    initParticles( ref, geo ) {
-        let fboGeo = geo.clone();
+    initParticles(ref,geo) {
+        let fboGeo = geo;
 
         if(ref != null){
             fboGeo.applyMatrix( new THREE.Matrix4().makeScale(ref.scale.x, ref.scale.y, ref.scale.z) );
@@ -88,78 +90,56 @@ export default class IntroAnimation extends THREE.Object3D {
         }
 
         plyLoader.load(this.BASE_PATH + "/models/onetreecolorless.ply", (geometry) => {
-            // geometry.computeFaceNormals();
-            console.log(geometry);
-
-            let material = new THREE.PointsMaterial( { color: 0xffffff, size: 1 } );
-            let materials = [ new THREE.PointsMaterial( { color: 0xffffff, size: 1 } )];
+            this.treeGeo = geometry;
+            this.treeMaterial = new THREE.PointsMaterial( { color: 0xffffff, size: 1 } );
 
             // scale, position, rotation
-            let treeTransformer = [ [new THREE.Vector3(70, 70, 10), new THREE.Vector3(0,1100,300), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)]];
+            let treeTransformer = [ [new THREE.Vector3(10, 10, 2), new THREE.Vector3(0,300,-50), new THREE.Vector3(Math.PI*9/8,0,Math.PI/2)]];
             
             this.trees = new THREE.Object3D();
             for(let i=0; i<treeTransformer.length; i++){
-                let tree = new THREE.Points( geometry.clone(), materials[i] );
+                let tree = new THREE.Points( geometry.clone(), this.treeMaterial );
                 tree.scale.set( treeTransformer[i][0].x, treeTransformer[i][0].y, treeTransformer[i][0].z );
                 tree.position.set( treeTransformer[i][1].x, treeTransformer[i][1].y, treeTransformer[i][1].z );
                 tree.rotation.set( treeTransformer[i][2].x, treeTransformer[i][2].y, treeTransformer[i][2].z );
                 //this.add( tree );
                 this.trees.add( tree );
             }
-            this.trees.scale.multiplyScalar(0.2);
-            this.trees.position.y = 140;
+            this.trees.scale.multiplyScalar(4);
+            this.trees.position.set(0, -130, -320);
             this.add(this.trees);
-
-            // this.tree = new THREE.Points( geometry, material );
-            // this.tree.scale.set( 150, 130, 100 );
-            // this.tree.position.set(0,1800,100);
-            // this.tree.rotation.set(Math.PI,0,Math.PI/2);
-            // this.add( this.tree );
+            // DebugUtil.positionObject(this.trees, "TREE");
 
             let refObj = new THREE.Object3D();
             refObj.scale.set( 15, 15, 10 );    // 110, 90, 80 // 110, 90, 10
-            refObj.position.set(0,250,200);    // 0,900,1100 // 0,1500,300
+            refObj.position.set(0,250,180);    // 0,900,1100 // 0,1500,300
             refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
 
             this.positionsForFBO = this.initParticles( refObj, geometry );
 
-            this.rttIn = this.positionsForFBO;
             // this.initFBOParticle( positions );
+            //
+            //
+            // AVNER TEST
+            this.test = new SunLoader(this.renderer);
+            this.test.init();
+            //this.scene.add(this.test);
+            this.test.position.set(0,60,0);
+            //DebugUtil.positionObject(this.test, "Test particles");
         });
 
-        let blueprint = tex_loader.load( this.BASE_PATH + '/images/blueprint_edit.jpg' );
-        let blueprintEmi = tex_loader.load( this.BASE_PATH + '/images/blueprint_emi.png' );
-        blueprint.wrapS = THREE.RepeatWrapping;
-        blueprint.wrapT = THREE.RepeatWrapping;
-        blueprintEmi.wrapS = THREE.RepeatWrapping;
-        blueprintEmi.wrapT = THREE.RepeatWrapping;
+        this.blueprint = tex_loader.load( this.BASE_PATH + '/images/blueprint_edit.jpg' );
+        this.blueprint.wrapS = THREE.RepeatWrapping;
+        this.blueprint.wrapT = THREE.RepeatWrapping;
+        this.blueprintMat = new THREE.MeshPhongMaterial({ map:this.blueprint, color: 0x31475e, shininess:10, shading: THREE.FlatShading});
         loader.load(this.BASE_PATH + "/models/terrain5.json", (geometry, material) => {
-            this.terrain = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({ map:blueprint, color: 0x31475e,
-                                                                                   emissiveMap:blueprintEmi, emissive:0xffffff, emissiveIntensity: 0,
-                                                                                   shininess:10, shading: THREE.FlatShading}) ); //0x17212c
-            //TweenMax.to(this.terrain.material, 2, {emissiveIntensity:.4, repeat:-1, yoyo:true, repeatDelay:4, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: .5, points: 20, taper: "none", randomize: true, clamp: false})});
+            this.terrain = new THREE.Mesh( geometry, this.blueprintMat ); //0x17212c
 
-            // this.terrain.scale.set(150,50,110);//80,50,50
-            this.terrain.scale.multiplyScalar(15);
-            // this.terrain.rotation.y = Math.PI;
-            this.terrain.position.set(-1000,-3000,200);
+            this.terrain.scale.multiplyScalar(11);
+            this.terrain.position.set(-550,-3000,200);
             this.add( this.terrain );
+            // DebugUtil.positionObject(this.terrain, "terrain");
         });
-
-        /*
-        let houseTex = tex_loader.load( this.BASE_PATH + '/images/house_lowSat.jpg' );
-        let houseEmisTex = tex_loader.load( this.BASE_PATH + '/images/house_EMI.png' );
-        loader.load(this.BASE_PATH + "/models/house3.json", (geometry, material) => {
-            this.house = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({map:houseTex, emissiveMap:houseEmisTex, emissive:0xffff00, emissiveIntensity: 0.3}) );
-
-            TweenMax.to(this.house.material, 2, {emissiveIntensity:1.5, repeat:-1, yoyo:true, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: "none", randomize: true, clamp: false})});
-
-            this.house.scale.multiplyScalar(15);//80,50,50
-            // this.terrain.rotation.y = Math.PI;
-            this.house.position.set(0,-3000,200);
-            this.add( this.house );
-        });
-        */
 
         this.completeSequenceSetup();
         //
@@ -182,13 +162,13 @@ export default class IntroAnimation extends THREE.Object3D {
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                gravity: { type: "f", value: 12.5 }, // 2
+                gravity: { type: "f", value: 7 }, // 12.5
                 mouseRotation: { type: "f", value: 0 }, // 2
-                squareRadius: {type: "f", value: this.sRadius*6.5},
+                squareRadius: {type: "f", value: this.sRadius*4},
                 squareCenterX: {type: "f", value: this.sCenter.x},
-                squareCenterY: {type: "f", value: this.sCenter.y+10},
+                squareCenterY: {type: "f", value: this.sCenter.y+3},
                 squareCenterZ: {type: "f", value: this.sCenter.z},
-                bounceFactor: {type: "f", value: 2}
+                bounceFactor: {type: "f", value: 2} //2
             },
             vertexShader: this.simulation_vs,
             fragmentShader:  this.simulation_fs,
@@ -201,8 +181,8 @@ export default class IntroAnimation extends THREE.Object3D {
             },
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,
-            transparent: true,
-            blending:THREE.AdditiveBlending,
+            transparent: false
+            //blending:THREE.AdditiveBlending,
         } );
 
         // Particle geometry? Just once particle
@@ -212,13 +192,28 @@ export default class IntroAnimation extends THREE.Object3D {
         // particleGeometry.vertices.push(new THREE.Vector3(), new THREE.Vector3(-0.1, -0.05, 0), new THREE.Vector3(0.1, -0.05, 0), new THREE.Vector3(0,0.1,0));
 
         this.fbo = new FBO();
-        this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
-        //this.fbo.particles.frustumCulled = false;
-        //DebugUtil.positionObject(this.fbo.particles, "TREE");
+        this.fbo.init( this.width, this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
+        this.fbo.particles.frustumCulled = false;
+        DebugUtil.positionObject(this.fbo.particles, "Intro particles", false, -100, 100);
         this.add( this.fbo.particles );
         this.timerAnim = null;
-        //this.fbo.particles.position.y = 1500;
-        this.fbo.update();
+    }
+
+    disposeAni() {
+        console.log("Intro animation - disposing");
+        this.remove( this.fbo.particles );
+        this.remove(this.trees);
+        this.remove(this.terrain);
+        
+        this.fbo.particles.geometry.dispose();
+        this.blueprint.dispose();
+        this.blueprintMat.dispose();
+        this.treeGeo.dispose();
+        this.treeMaterial.dispose();
+
+        if (this.test) {
+            this.remove(this.test);
+        }
     }
 
     clamp(num, min, max) {
@@ -253,6 +248,7 @@ export default class IntroAnimation extends THREE.Object3D {
         this.isStarted = true;
         this.currentSequence = this.sequenceConfig.slice(0);
         this.nextAnim = this.currentSequence.shift();
+        //this.fbo.update();
     }
 
     updateVideoTime(time) {
@@ -271,8 +267,9 @@ export default class IntroAnimation extends THREE.Object3D {
         if(this.isStarted){
             // test
             this.simulationShader.uniforms.deltaTime.value = dt;
-            this.simulationShader.uniforms.mouseRotation.value = this.timeController.rotateVelocity;
+            //this.simulationShader.uniforms.mouseRotation.value = this.timeController.rotateVelocity;
             this.fbo.update();
+            this.test.update(dt,et);
         }
     }
 }

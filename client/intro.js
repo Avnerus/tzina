@@ -1,5 +1,7 @@
 import _ from 'lodash'
 import Credits from './credits';
+import {SpriteText2D, textAlign} from './lib/text2d/index'
+import DebugUtil from './util/debug'
 
 export default class Intro {
     constructor(camera, square, timeConroller, soundManager, scene) {
@@ -34,26 +36,57 @@ export default class Intro {
         
         this.INTRO_SOUND = 'assets/sound/INTRO_Shirin.ogg'
 
-        let titlePlaneGeo = new THREE.PlaneGeometry( 512, 128 );
-        let loader = new THREE.TextureLoader();
-        loader.load('assets/intro/title.png', (texture) => {
-            this.titleTexture = texture;
-            let material = new THREE.MeshBasicMaterial( {map: this.titleTexture, side: THREE.DoubleSide, transparent:true}  );
-            this.titlePlane = new THREE.Mesh(titlePlaneGeo, material);
-        });
 
     }
 
-    init() {
+    init(loadingManager) {
         // Put the camera in the starting position
 //        events.emit("intro_start");
         // events.emit("add_gui",{}, this.camera.position, "y"); 
         
+       /*
 
-        this.titlePlane.position.copy(this.square.getCenterPosition());
-        this.titlePlane.position.y = 400;
+        let titlePlaneGeo = new THREE.PlaneGeometry( 512, 128 );
+        let loader = new THREE.TextureLoader(loadingManager);
+        loader.load('assets/intro/title.png', (texture) => {
+            this.titleTexture = texture;
+            let material = new THREE.MeshBasicMaterial( {map: this.titleTexture, side: THREE.DoubleSide, transparent:true}  );
+            this.titlePlane = new THREE.Mesh(titlePlaneGeo, material);
+            this.titlePlane.position.copy(this.square.getCenterPosition());
+            this.titlePlane.position.y = 400;
+        });*/
 
+
+        let CREDIT_TEXT_TITLE = {
+             align: textAlign.center, 
+             font: '20px Miriam Libre',
+             fillStyle: '#FFFFFF',
+             antialias: true 
+        }
+        let CREDIT_TEXT_NAME = {
+             align: textAlign.center, 
+             font: 'bold 26px Miriam Libre',
+             fillStyle: '#FFFFFF',
+             antialias: true 
+        }
+        let CREDIT_TEXT_SCALE = 0.0005;
+
+        this.creditTextTitle = new SpriteText2D("", CREDIT_TEXT_TITLE);
+        this.creditTextTitle.scale.multiplyScalar(CREDIT_TEXT_SCALE);
+        this.creditTextTitle.position.set(-0.02,-0.16,-0.5);
+        this.creditTextTitle.material.opacity = 0;
+        this.camera.add(this.creditTextTitle);
+
+        this.creditTextName = new SpriteText2D("", CREDIT_TEXT_NAME);
+        this.creditTextName.scale.multiplyScalar(CREDIT_TEXT_SCALE);
+        this.creditTextName.position.set(-0.02,-0.18,-0.5);
+        this.creditTextName.material.opacity = 0;
+        this.camera.add(this.creditTextName);
+
+    }
+    start() {
         // Load the sound
+        //
         this.soundManager.loadSound(this.INTRO_SOUND)
         .then((sound) => {
             console.log("Sound ", sound);
@@ -144,27 +177,35 @@ export default class Intro {
     }
 
     showNextCredit() {
-        let name = document.getElementById('credit-name');
-        name.innerHTML = Credits.credits[this.currentCredit].Name;
+        let name = Credits.credits[this.currentCredit].Name;
+        let title = Credits.credits[this.currentCredit].Role;
+        
+        this.creditTextTitle.text = title;
+        this.creditTextName.text = name;
 
-        let title = document.getElementById('credit-title');
-        title.innerHTML = Credits.credits[this.currentCredit].Role;
+        TweenMax.to( this.creditTextName.material, 1, { opacity: 1});
+        TweenMax.to( this.creditTextTitle.material, 1, { opacity: 1, 
+            onComplete: () => {
+                setTimeout(() => {
+                   this.hideCredit();
+                },2500);
+            } 
+        });
 
-        let line = document.getElementById('credit-line');
-        line.style.opacity = 1;
-        setTimeout(() => {
-           this.hideCredit();
-        },2500);
     }
 
     hideCredit() {
-        let el = document.getElementById('credit-line');
-        el.style.opacity = 0;
-        setTimeout(() => {
-            this.currentCredit++;
-            if (this.currentCredit < Credits.credits.length) {
-                this.showNextCredit();
-            }
-        },1000);
+        TweenMax.to( this.creditTextName.material, 1, { opacity: 0});
+        TweenMax.to( this.creditTextTitle.material, 1, { opacity: 0, 
+            onComplete: () => {
+                this.currentCredit++;
+                if (this.currentCredit < Credits.credits.length) {
+                    this.showNextCredit();
+                } else {
+                    this.camera.remove(this.creditTextTitle);
+                    this.camera.remove(this.creditTextName);
+                }
+            } 
+        });
     }
 }

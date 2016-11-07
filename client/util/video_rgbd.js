@@ -25,12 +25,13 @@ export default class VideoRGBD  {
 
         //SOME SPECIFIC CONTRAST & BRIGHNESS EFFECTS TO THE WIRE PIXEL SHADER
         this.wire_rgbd_fs = glslify('../shaders/rgbd_wire_fs.glsl')
+        this.wire_rgbd_vs = glslify('../shaders/rgbd_wire_vs.glsl')
 
         this.timer = 0;
 
         this.SEC_PER_RGBD_FRAME = 1 / this.properties.fps;
 
-        console.log("VideoRGBD constructed: " , this.properties);
+        //console.log("VideoRGBD constructed: " , this.properties);
     }
 
     init(loadingManager) {
@@ -59,10 +60,14 @@ export default class VideoRGBD  {
               "uvdy" : { type : "f", value : this.properties.uvdy },
               "uvdx" : { type : "f", value : this.properties.uvdx },
               "opacity" : { type : "f", value : 0.1 },
-              "brightness" : { type : "f", value : 0.3 }
+              "width" : { type : "f", value : this.properties.width },
+              "height" : { type : "f", value : this.properties.height },
+              "brightness" : { type : "f", value : 0.03 },
+              "wire_strech": { type : "f", value : 1 },
+              "contrast" : { type : "f", value : 0.3 }
           },
 
-          vertexShader: this.rgbd_vs,
+          vertexShader: this.wire_rgbd_vs,
           fragmentShader: this.wire_rgbd_fs,
           blending: THREE.AdditiveBlending,
           wireframe:      true,
@@ -101,12 +106,11 @@ export default class VideoRGBD  {
 
         //DebugUtil.positionObject(this.wire, this.properties.fileName + " - Wire", false);
 
-        this.wire.position.z = 0.01;
+        //this.wire.position.z = -0.6;
+        this.wire.position.z += 0.01;
 
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
-
-
 
        /*
 
@@ -117,6 +121,7 @@ export default class VideoRGBD  {
         }*/
     }
     load() {
+        console.log("Video rgbd loading ", this.properties.fileName);
         this.video.src = this.properties.fileName;
         this.video.load();
     }

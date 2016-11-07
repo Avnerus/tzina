@@ -51,6 +51,7 @@ export default class SunGazer extends THREE.Object3D  {
                         let res = this.getDotProduct(camVector, sun.children[0]);
                         if (res > this.GAZE_THRESHOLD) {
                             this.gazingSun = sun;
+                            thresholdPassed = true;
                             events.emit("gaze_started", this.gazingSun.name);
                         }
                     }

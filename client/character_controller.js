@@ -15,7 +15,7 @@ export default class CharacterController {
         this.activeCharacters = [];
         this.animations = animations;
         this.addedColliders = false;
-        this.debug = false;
+        this.debug = true;
     }
     init(loadingManager) {
         console.log("Initializing Character controller");
@@ -82,9 +82,10 @@ export default class CharacterController {
             this.square.clockwork.add(character);
             if (this.debug) {
                 DebugUtil.positionObject(character, character.props.name, false, -40, 40, character.props.rotation);
+                    /*
                 let bbox = new THREE.BoundingBoxHelper( character, 0x00ffff  );
                 bbox.update();
-                this.square.parent.add( bbox );
+                this.square.parent.add( bbox );*/
             }
             character.load();
             character.play();

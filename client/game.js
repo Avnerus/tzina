@@ -15,6 +15,7 @@ import Intro from './intro'
 import SoundManager from './sound_manager'
 import TimeController from './time_controller'
 import CharacterController from './character_controller'
+import Show from './show'
 
 import DebugUtil from './util/debug'
 
@@ -31,11 +32,16 @@ import Agam12PMAnimation from './animations/agam12pm'
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
 
+import WaterDrops from './water_drops'
+
+import FPSCount from './util/fpscount'
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
         this.config = config;
         this.started = false;
+        this.controlPassed = false;
         this.shownWASD = false;
         this.shownZoom = false;
     }
@@ -43,7 +49,7 @@ export default class Game {
 
         class TzinaEmitter extends EventEmitter {}
         this.emitter = new TzinaEmitter();
-        this.emitter.setMaxListeners(20);
+        this.emitter.setMaxListeners(30);
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
@@ -85,8 +91,10 @@ export default class Game {
         this.hemiLight.position.set( 0, 500, 0 );
         this.scene.add( this.hemiLight );
 
+
+            /*
         events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
-        events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y"); 
+        events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y"); */
 
 
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
@@ -98,12 +106,15 @@ export default class Game {
 
 
         // --- hide by laura --- start
+    
+            /*
         events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
         DebugUtil.colorPicker("Dir light", this.dirLight, "color");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");
+        */
         // --- hide by laura --- end
 
         //dirLight.target.position.set(0,100,0);
@@ -118,7 +129,7 @@ export default class Game {
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
         // Square
-        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config);
+        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene);
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
@@ -137,13 +148,17 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
-        this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene);
+       
+        this.vrControls = new TzinaVRControls(this.emitter, this.camera);
+
+        this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene, this.vrControls);
         this.zoomController.init();
 
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera);
 
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
+
 
         if (!this.config.noAnimations) {
             this.animations = {
@@ -174,6 +189,13 @@ export default class Game {
         this.scene.add(this.zoomGuidance);
 
         this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
+
+        this.waterDrops = new WaterDrops();
+        this.camera.add(this.waterDrops);
+
+            /*
+        this.fpsCount = new FPSCount(this.camera);
+        this.fpsCount.init();*/
     }
 
     load(onLoad) {
@@ -187,7 +209,7 @@ export default class Game {
                 this.scene.add(this.introAni);
             }
 
-            //DebugUtil.positionEntry(this.square.ENTRY_POINTS[0], this.square.mesh, this.scene);
+            //DebugUtil.positionEntry(this.square.ENTRY_POINTS[4], this.square.mesh, this.scene);
 
             onLoad();
         };
@@ -212,8 +234,10 @@ export default class Game {
             console.log("Initializing characters");
             this.characterController.init(this.loadingManager);
         }
+        this.intro.init(this.loadingManager);
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
+        this.waterDrops.init(this.loadingManager);
 
         // WebVR
         this.vrEffect = new THREE.VREffect(this.renderer);
@@ -225,6 +249,12 @@ export default class Game {
         };
         this.vrManager = new WebVRManager(this.renderer, this.vrEffect, params);
         console.log("VR Manager: ", this.vrManager);
+
+        let element = this.renderer.domElement;
+        this.container.appendChild(element);
+
+        this.resize();
+
     }
 
     showZoomGuidance() {
@@ -237,66 +267,13 @@ export default class Game {
     }
 
     start() {
-        this.started = true;
-        if (this.config.fullscreen) {
-            this.vrManager.setMode_(2);
-        }
-        let element = this.renderer.domElement;
-        this.container.appendChild(element);
-        this.soundManager.play();
-        console.log("VR Compatible?", this.vrManager.isVRCompatible);
-        if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
-                this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
-                this.keyboardController.init();
-                this.vrControls = new TzinaVRControls(this.emitter, this.camera);
-                this.vrControls.standing = true;
-                this.vrControls.basePosition.set(5.7,8.3,1);
-                // this.vrControls.scale = 1.5;
-
-                // --- hide by laura --- start
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "x");
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "y");
-                events.emit("add_gui", {folder: "VR Position"}, this.vrControls.basePosition, "z");
-                // --- hide by laura --- end
-                events.emit("add_gui", {folder: "Camera"}, this.camera.position, "y");
-        } else {
-            console.log("Orbit controls");
-            this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
-            this.keyboardController.init();
-            this.controls = new THREE.OrbitControls( this.camera  );
-        }
-
-        this.resize();
-
-
-        if (!this.config.noSquare) {
-            this.square.fountain.startCycle();
-        }
-
-        if (this.config.skipIntro) {
-            if (!this.config.noSquare) {
-                this.timeController.transitionTo(this.config.startTime, 1);
-            }
-            setTimeout(() => {
-                events.emit("intro_end");
-                this.intro.playCredits();
-                if (this.vrManager.isVRCompatible) {
-                    events.emit("control_threshold", true);
-                }
-            },3000);
-
-
-        } else {
-            // Init the intro
-            this.intro.init();
-            //this.timeController.setTime(17);//17
-        }
-
 
         events.on("intro_end", () => {
             console.log("Intro ended");
             if (!this.config.noSquare) {
-                this.introAni.start();
+                setTimeout(() => {
+                    this.introAni.start();
+                },5000);
             }
         });
 
@@ -331,13 +308,17 @@ export default class Game {
         events.on("chapter_threshold", (passed) => {
         });
 
-        events.on("control_threshold", () => {
-            if (!this.shownWASD) {
-                document.getElementById("wasd-container").style.display = "block";
-                setTimeout(() => {
-                    document.getElementById("wasd-container").style.display = "none";
-                },3000);
-                this.shownWASD = true;
+        events.on("control_threshold", (passed) => {
+            if (passed) {
+                this.controlPassed = true;
+                //this.introAni.disposeAni();
+                if (!this.shownWASD) {
+                    document.getElementById("wasd-container").style.display = "block";
+                    setTimeout(() => {
+                        document.getElementById("wasd-container").style.display = "none";
+                    },3000);
+                    this.shownWASD = true;
+                }
             }
         });
 
@@ -378,11 +359,63 @@ export default class Game {
             }
 
         });
+
+        this.started = true;
+            /*
+        if (this.config.fullscreen) {
+            this.vrManager.setMode_(2);
+            }*/
+        //this.soundManager.play("ambience");
+        console.log("VR Compatible?", this.vrManager.isVRCompatible);
+        if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
+                this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+                this.keyboardController.init();
+                this.vrControls.standing = true;
+                // this.vrControls.scale = 1.5;
+
+                // --- hide by laura --- start
+                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "x");
+                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "y");
+                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "z");
+                // --- hide by laura --- end
+        } else {
+            this.vrControls = null;
+            console.log("Orbit controls");
+            this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+            this.keyboardController.init();
+            this.controls = new THREE.OrbitControls( this.camera  );
+        }
+
+
+        this.zoomController.start();
+
+        if (!this.config.noSquare) {
+            this.square.fountain.startCycle();
+        }
+
+        if (this.config.skipIntro) {
+            if (!this.config.noSquare) {
+                this.timeController.transitionTo(this.config.startTime, 1);
+            }
+            setTimeout(() => {
+                events.emit("intro_end");
+                this.intro.playCredits();
+            },3000);
+
+
+        } else {
+            // start the intro
+            this.intro.start();
+            //this.timeController.setTime(17);//17
+        }
+
     }
 
     animate(t) {
+        //        this.fpsCount.begin();
         this.update(this.clock.getDelta(), this.clock.getElapsedTime());
         this.render();
+        //this.fpsCount.end();
     }
 
     update(dt,et) {
@@ -391,12 +424,15 @@ export default class Game {
             this.square.update(dt,et);
             this.timeController.update(dt,et);
             this.characterController.update(dt,et);
-            this.intro.update();
-            this.introAni.update(dt,et);
+            this.waterDrops.update(dt);
+            if (!this.controlPassed) {
+                this.intro.update();
+            }
         }
         if (this.keyboardController) {
             this.keyboardController.update(dt);
         }
+        this.introAni.update(dt,et);
         this.zoomController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();

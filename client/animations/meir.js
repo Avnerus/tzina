@@ -134,7 +134,7 @@ export default class MeirAnimation extends THREE.Object3D {
             [.86, 2.88, 3.3], [0.64, 3.32, 3.3], [.46, 2.83, 3.3], [1.35, 3.52, 3.3], [1.2, 2.57, 3.3],
             [1.02, 3.1, 3.3], [0.4, 3.36, 3.3], [.9, 3.4, 3.3], [.45, 3.03, 3.3], [.68, 2.46, 3.3],
             [.03, 3.71, 3.3], [1.38, 3.47, 3.3], [1.33, 3.23, 3.3], [0.73, 3.16, 3.3], [1.19, 3.67, 3.3],
-            [-.07, 4.07, 4.3], [-.54, 3.82, 4.02], [0.9, 5.01, 4.8], [1.73, 3.73, 4.27]
+            [-.07, 4.07, 4.3], [-.54, 3.82, 4.02], [0.9, 4.8, 4.8], [1.73, 3.73, 4.27]
         ];
 
         this.birdsPos = [];
@@ -144,10 +144,10 @@ export default class MeirAnimation extends THREE.Object3D {
         }
 
         let birdDownPosNum = [
-            [.86, 0, 3.8], [1.8, 0, 2.5], [.3, 0, 3.3], [2, 0, 3.3], [1, 0, 3.3],
-            [-2, 0, 4], [-0.4, 0, 4], [1.5, 0, 3], [.45, 0, 2], [-1.68, 0, 4],
-            [.03, 0, 3], [-1.3, 0, 3], [2, 0, 4], [0.73, 0, 3.5], [1.5, 0, 3],
-            [-.07, 0, 4.3], [-.54, 0, 4.02], [0.9, 0, 4.8], [1.73, 0, 4.27]
+            [.86, 0, 2.8], [2.8, 0, 1.5], [.3, 0, 2.3], [3, 0, 2.3], [2, 0, 2.3],
+            [-3, 0, 2], [-0.4, 0, 2], [2.5, 0, 2], [.45, 0, 1], [-2.68, 0, 2],
+            [.03, 0, 2], [-2.3, 0, 2], [3, 0, 2], [0.73, 0, 2.5], [2.5, 0, 2],
+            [-1.07, 0, 2.3], [-1.54, 0, 2.02], [0.9, 0, 2.8], [2.73, 0, 2.27]
         ];
         this.birdsDownPos = [];
         for(let i=0; i<birdDownPosNum.length; i++){
@@ -261,23 +261,24 @@ export default class MeirAnimation extends THREE.Object3D {
                             // DebugUtil.positionObject(bd, "bird_"+i);
                     }
 
-                    for(let i=3; i<10; i++){
-                        let mathStuff = Math.PI*2/12*i;
-                        for(let j=0; j<15; j++){
+                    for(let i=3; i<6; i++){
+                        let mathStuff = Math.PI*2/9*i;
+
+                        for(let j=0; j<9; j++){
                             let bd = this.bird.clone();
-                            bd.scale.multiplyScalar(0.2);
+                            bd.scale.multiplyScalar(0.4);
 
                             let tempA = new THREE.Vector3();
-                            if(j>9)
-                                tempA.set( Math.sin(mathStuff)*(1-j/18), j/3, Math.cos(mathStuff)*(1-j/18) );
-                            else if(j<3)
-                                tempA.set( Math.sin(mathStuff)*(1+(3-j)/4), j/3, Math.cos(mathStuff)*(1+(3-j)/4) );
+                            if(j>6)
+                                tempA.set( Math.sin(mathStuff)*(1-j/18), j/2, Math.cos(mathStuff)*(1-j/18) );
+                            else if(j<2)
+                                tempA.set( Math.sin(mathStuff)*(1+(3-j)/4), j/2, Math.cos(mathStuff)*(1+(3-j)/4) );
                             else
-                                tempA.set( Math.sin(mathStuff)*1, j/3, Math.cos(mathStuff)*1 );
+                                tempA.set( Math.sin(mathStuff)*1, j/2, Math.cos(mathStuff)*1 );
                             
-                            tempA.set( tempA.x + this.lookupTable[(i*j)%49]*0.3,
-                                       tempA.y + this.lookupTable[(i*j)%50]*0.3,
-                                       tempA.z + this.lookupTable[(i*j)%51]*0.3 );
+                            tempA.set( tempA.x + this.lookupTable[(i*j)%45]*0.3,
+                                       tempA.y + this.lookupTable[(i*j)%46]*0.3,
+                                       tempA.z + this.lookupTable[(i*j)%47]*0.3 );
                             
                             bd.position.copy( tempA );
                             bd.rotation.y = mathStuff - Math.PI*2;
@@ -286,8 +287,8 @@ export default class MeirAnimation extends THREE.Object3D {
                         }
                     }
                     this.add(this.backBirds);
-                    this.backBirds.position.set(1.1, -0.1, 3.3);
-                    this.backBirds.rotation.x = 4.5 * Math.PI/180;
+                    this.backBirds.position.set(0.1, -0.36, 3.33);
+                    this.backBirds.rotation.y = 10 * Math.PI/180;
                     // DebugUtil.positionObject(this.backBirds, "backBirds");
 
                     this.createBirdAnimations( false );
@@ -509,9 +510,9 @@ export default class MeirAnimation extends THREE.Object3D {
         TweenMax.to( _bird.children[0].rotation, 0.15, { x:10*Math.PI/180, y:"+="+rotY, repeat: 7, yoyo: true, delay: (index*0.1)%1.5} );
         TweenMax.to( _bird.children[1].rotation, 0.15, { x:10*Math.PI/180, y:"-="+rotY, repeat: 7, yoyo: true, delay: (index*0.1)%1.5} );
         TweenMax.to( _bird.position, 0.2, { y:"+=0.1", delay: (index*0.1+1)%1.5, onComplete: ()=>{
-            let xPos = this.birdsDownPos[index%14].x + this.lookupTable[index%49]*3 - this.backBirds.position.x;
+            let xPos = this.birdsDownPos[index%14].x + this.lookupTable[index%48]*3 - this.backBirds.position.x;
             let yPos = this.birdsDownPos[index%14].y - this.backBirds.position.y;
-            let zPos = this.birdsDownPos[index%14].z + this.lookupTable[index%51]*2 - this.backBirds.position.z - 2;
+            let zPos = this.birdsDownPos[index%14].z + this.lookupTable[index%49]*2 - this.backBirds.position.z - 2;
             
             TweenMax.to( _bird.position, 2, { x:xPos, y:yPos, z:zPos} );
             TweenMax.to( _bird.rotation, 2, { y:0 } );

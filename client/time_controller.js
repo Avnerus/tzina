@@ -130,8 +130,8 @@ export default class TimeController {
 
         this.insideChapterTitleLineTwo = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitleLineTwo.scale.multiplyScalar(0.04);
-        DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
-        DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
+        //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+        //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
 
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
@@ -234,7 +234,7 @@ export default class TimeController {
         }
 
         if (this.gazeHour != -1) {
-          //  this.gazeCounter += dt;
+            this.gazeCounter += dt;
             if (this.gazeCounter > 1 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
             }
@@ -255,12 +255,9 @@ export default class TimeController {
                         this.setCurrentChapter();
                         events.emit("hour_updated", this.currentHour);
                         let targetRotationY = this.currentHour * 15;
-                        if (targetRotationY > 180) {
-                            targetRotationY -= 360;
-                        }
                         targetRotationY *= Math.PI / 180;
-                        console.log("Time controller - rotating square from ", this.square.getClockwork().rotation.y, " to ", targetRotationY);
-                        TweenMax.to(this.square.getClockwork().rotation, 7 * (Math.abs(targetHour - baseHour) * 0.5), {ease: Power2.easeInOut, delay: 1, y: targetRotationY, onComplete: () => {
+                        console.log("Time controller - rotating square from ", this.square.clockRotation, " to ", targetRotationY);
+                        TweenMax.to(this.square, 7 * (Math.abs(targetHour - baseHour) * 0.5), {ease: Power2.easeInOut, delay: 1, clockRotation: targetRotationY, onComplete: () => {
                             events.emit("angle_updated", this.currentHour);
                             this.updateNextHour();
                             this.sunGazer.active = true;
@@ -280,7 +277,7 @@ export default class TimeController {
     }
 
     updateRotation() {
-        let rotationY = this.square.getClockwork().rotation.y;
+        let rotationY = this.square.clockRotation;
         if (rotationY < 0) {
             rotationY = 2 * Math.PI + rotationY;
         }
@@ -312,10 +309,7 @@ export default class TimeController {
     updateSquare() {
         if (this.square.mesh) {
             let rotationY = this.currentRotation
-            if (rotationY > 180) {
-                rotationY -= 360;
-            }
-            this.square.getClockwork().rotation.y = rotationY * Math.PI / 180;
+            this.square.clockRotation = rotationY * Math.PI / 180;
             this.sky.setTime(this.currentRotation / 15);
         }
     }
