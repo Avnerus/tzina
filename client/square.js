@@ -26,7 +26,7 @@ export default class Square extends THREE.Object3D{
         this.camera = camera;
         this.scene = scene;
 
-        this.debug = true;
+        this.debug = false;
 
         this.sunTextureOffsets = {
             19 : 0.5,

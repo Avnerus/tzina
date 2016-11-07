@@ -77,7 +77,6 @@ export default function ( emitter, object, onError ) {
             if (pose) {
                 let position = new THREE.Vector3().fromArray(pose);
                 if (this.standing) {
-                    console.log("VR Position", position);
                     standingMatrix.fromArray(vrInput.stageParameters.sittingToStandingTransform);
                     position.applyMatrix4(standingMatrix);
                     return position;
