@@ -294,6 +294,7 @@ export default class Square extends THREE.Object3D{
             //console.log("Turn off sun", sun);
             //sun.material.side = THREE.BackSide;
             sunMesh.material.color = new THREE.Color(0x888788);
+            sunMesh.material.emissive= new THREE.Color(0x000000);
             // sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
              sunMesh.material.transparent= true;
             sunMesh.material.opacity = .8;
@@ -308,8 +309,10 @@ export default class Square extends THREE.Object3D{
             let sun = this.suns.getObjectByName(name)
             if (sun) {
                 if (this.currentSun) {
+                    console.log("Turning off current sun ", this.currentSun);
                     this.turnOffSun(this.currentSun);
                 }
+                console.log("Turning on sun ", name);
                 let sunMesh = sun.getObjectByName(name + "_F").children[0];
                 sunMesh.material.color = new THREE.Color(0xFFFFFF);
                  sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
