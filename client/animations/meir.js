@@ -15,7 +15,7 @@ export default class MeirAnimation extends THREE.Object3D {
     init(loadingManager) {
         this.loadingManager = loadingManager;
         this.setupAnim();
-        DebugUtil.positionObject(this, "meir anim");
+        // DebugUtil.positionObject(this, "meir anim");
     }
 
     setupAnim() {
@@ -289,7 +289,7 @@ export default class MeirAnimation extends THREE.Object3D {
                     this.add(this.backBirds);
                     this.backBirds.position.set(0.1, -0.36, 3.33);
                     this.backBirds.rotation.y = 10 * Math.PI/180;
-                    DebugUtil.positionObject(this.backBirds, "backBirds");
+                    // DebugUtil.positionObject(this.backBirds, "backBirds");
 
                     this.createBirdAnimations( false );
 

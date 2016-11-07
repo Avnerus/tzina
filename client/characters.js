@@ -33,10 +33,11 @@ export default [
         width: 512,
         height: 2048,
         scale: 0.003,
-        animationScale: 0.25,
+        animationScale: 0.4,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 0.5,
+        space: 0.57,
+        spaceOffset: [-14.87,0,7.23],
         subtitles: null
     },
     {
