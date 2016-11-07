@@ -275,7 +275,6 @@ export default class Game {
                 events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "y");
                 events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "z");
                 // --- hide by laura --- end
-                events.emit("add_gui", {folder: "Camera"}, this.camera.position, "y");
         } else {
             this.vrControls = null;
             console.log("Orbit controls");

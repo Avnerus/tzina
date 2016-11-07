@@ -91,10 +91,8 @@ export default class ZoomController {
             return false;
         }, false);
 
-        /*
-        events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "z"); 
-        events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "y"); 
-        */
+        //events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "z"); 
+        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "y"); 
 
         events.on("angle_updated", (hour) => {
             if (!this.done) {
@@ -176,7 +174,7 @@ export default class ZoomController {
                 } 
                 if (!baseVRPosition) {
                     baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
-                    baseVRPosition.y += 15;
+                    baseVRPosition.y = 13.5;
                 }
                 this.square.mesh.updateMatrixWorld();
                 this.easeQuaternionSource = null;
