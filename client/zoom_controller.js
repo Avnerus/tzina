@@ -33,7 +33,7 @@ export default class ZoomController {
         this.STARTING_POSITION = new THREE.Vector3(
             0,
             15,
-            100
+            150
         );
         this.MID_ZOOM = new THREE.Vector3(
             0,
@@ -92,7 +92,9 @@ export default class ZoomController {
         }, false);
 
         //events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "z"); 
+        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "x"); 
         events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "y"); 
+        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "z"); 
 
         events.on("angle_updated", (hour) => {
             if (!this.done) {
@@ -108,12 +110,14 @@ export default class ZoomController {
                 }
             }
         });
-        this.camera.position.copy(this.STARTING_POSITION);
-        this.camera.rotation.copy(this.STARTING_ROTATION);
 
             /*
         let cube = DebugUtil.adjustableCube(this.BASE_WORLD_POSITION, "VR Cube", 1, 0xff0000);
         this.scene.add(cube);*/
+    }
+    start() {
+        this.camera.position.copy(this.STARTING_POSITION);
+        this.camera.rotation.copy(this.STARTING_ROTATION);
     }
     getZoomOutPosition() {
         let vec = new THREE.Vector3();
@@ -182,7 +186,7 @@ export default class ZoomController {
                 let startPoint = new THREE.Vector3().fromArray(entryPoint.startPosition).applyMatrix4(this.square.mesh.matrixWorld);
                 let endPoint = new THREE.Vector3().fromArray(entryPoint.endPosition).applyMatrix4(this.square.mesh.matrixWorld);
 
-                if (this.camera.position.equals(this.STARTING_POSITION)) {
+                if (this.camera.position.equals(this.STARTING_POSITION) || this.camera.position.z == 0) {
                     let points = [
                         new THREE.Vector3().copy(this.camera.position),
                     ]

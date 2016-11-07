@@ -5,7 +5,6 @@ uniform sampler2D origin;
 attribute vec2 reference;
 varying vec3 vColor;
 
-uniform float pointSize;
 uniform float radius;
 uniform float tube;
 
@@ -31,6 +30,6 @@ void main() {
 
     gl_Position = projectionMatrix *  modelViewMatrix * vec4( pos, 1.0 );
 
-    gl_PointSize = pointSize;
+    gl_PointSize = 2.0;
 
 }

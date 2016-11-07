@@ -250,6 +250,11 @@ export default class Game {
         this.vrManager = new WebVRManager(this.renderer, this.vrEffect, params);
         console.log("VR Manager: ", this.vrManager);
 
+        let element = this.renderer.domElement;
+        this.container.appendChild(element);
+
+        this.resize();
+
     }
 
     showZoomGuidance() {
@@ -262,56 +267,6 @@ export default class Game {
     }
 
     start() {
-        this.started = true;
-        if (this.config.fullscreen) {
-            this.vrManager.setMode_(2);
-        }
-        let element = this.renderer.domElement;
-        this.container.appendChild(element);
-        //this.soundManager.play("ambience");
-        console.log("VR Compatible?", this.vrManager.isVRCompatible);
-        if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
-                this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
-                this.keyboardController.init();
-                this.vrControls.standing = true;
-                // this.vrControls.scale = 1.5;
-
-                // --- hide by laura --- start
-                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "x");
-                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "y");
-                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "z");
-                // --- hide by laura --- end
-        } else {
-            this.vrControls = null;
-            console.log("Orbit controls");
-            this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
-            this.keyboardController.init();
-            this.controls = new THREE.OrbitControls( this.camera  );
-        }
-
-        this.resize();
-
-
-        if (!this.config.noSquare) {
-            this.square.fountain.startCycle();
-        }
-
-        if (this.config.skipIntro) {
-            if (!this.config.noSquare) {
-                this.timeController.transitionTo(this.config.startTime, 1);
-            }
-            setTimeout(() => {
-                events.emit("intro_end");
-                this.intro.playCredits();
-            },3000);
-
-
-        } else {
-            // start the intro
-            this.intro.start();
-            //this.timeController.setTime(17);//17
-        }
-
 
         events.on("intro_end", () => {
             console.log("Intro ended");
@@ -404,6 +359,56 @@ export default class Game {
             }
 
         });
+
+        this.started = true;
+            /*
+        if (this.config.fullscreen) {
+            this.vrManager.setMode_(2);
+            }*/
+        //this.soundManager.play("ambience");
+        console.log("VR Compatible?", this.vrManager.isVRCompatible);
+        if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
+                this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+                this.keyboardController.init();
+                this.vrControls.standing = true;
+                // this.vrControls.scale = 1.5;
+
+                // --- hide by laura --- start
+                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "x");
+                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "y");
+                events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "z");
+                // --- hide by laura --- end
+        } else {
+            this.vrControls = null;
+            console.log("Orbit controls");
+            this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+            this.keyboardController.init();
+            this.controls = new THREE.OrbitControls( this.camera  );
+        }
+
+
+        this.zoomController.start();
+
+        if (!this.config.noSquare) {
+            this.square.fountain.startCycle();
+        }
+
+        if (this.config.skipIntro) {
+            if (!this.config.noSquare) {
+                this.timeController.transitionTo(this.config.startTime, 1);
+            }
+            setTimeout(() => {
+                events.emit("intro_end");
+                this.intro.playCredits();
+            },3000);
+
+
+        } else {
+            // start the intro
+            this.intro.start();
+            //this.timeController.setTime(17);//17
+        }
+
     }
 
     animate(t) {

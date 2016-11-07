@@ -36,11 +36,20 @@ export default class IntroAnimation extends THREE.Object3D {
         console.log("FBO Constructed!")
     }
 
-    initParticles(geo ) {
+    initParticles(ref,geo) {
+        let fboGeo = geo;
+
+        if(ref != null){
+            fboGeo.applyMatrix( new THREE.Matrix4().makeScale(ref.scale.x, ref.scale.y, ref.scale.z) );
+            fboGeo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler(ref.rotation) );
+            // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(ref.rotation.y) );
+            // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationZ(ref.rotation.z) );
+            fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(ref.position.x, ref.position.y, ref.position.z) );
+        }
+        
         let data = new Float32Array( this.width * this.height * 3  );
-        let fboGeo = new THREE.BoxGeometry( 10, 6, 10 );
-        let points = THREE.GeometryUtils.randomPointsInGeometry( fboGeo, this.width * this.height);
-        //let points = THREE.GeometryUtils.randomPointsInNoFaceGeometry( geo, this.width * this.height);
+        // let points = THREE.GeometryUtils.randomPointsInGeometry( fboGeo, this.width * this.height);
+        let points = THREE.GeometryUtils.randomPointsInNoFaceGeometry( fboGeo, this.width * this.height);
 
         for ( var i = 0, j = 0, l = data.length; i < l; i += 3, j += 1 ) {
             data[ i ] = points[ j ].x;
@@ -102,12 +111,21 @@ export default class IntroAnimation extends THREE.Object3D {
             // DebugUtil.positionObject(this.trees, "TREE");
 
             let refObj = new THREE.Object3D();
-            refObj.scale.set( 10, 6, 10 );    // 110, 90, 80 // 110, 90, 10
-            //refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
+            refObj.scale.set( 15, 15, 10 );    // 110, 90, 80 // 110, 90, 10
+            refObj.position.set(0,250,180);    // 0,900,1100 // 0,1500,300
+            refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
 
-            this.positionsForFBO = this.initParticles(geometry);
+            this.positionsForFBO = this.initParticles( refObj, geometry );
 
             // this.initFBOParticle( positions );
+            //
+            //
+            // AVNER TEST
+            this.test = new SunLoader(this.renderer);
+            this.test.init();
+            //this.scene.add(this.test);
+            this.test.position.set(0,60,0);
+            //DebugUtil.positionObject(this.test, "Test particles");
         });
 
         this.blueprint = tex_loader.load( this.BASE_PATH + '/images/blueprint_edit.jpg' );
@@ -146,7 +164,7 @@ export default class IntroAnimation extends THREE.Object3D {
                 frequency: { type: "f", value: 1 },
                 gravity: { type: "f", value: 7 }, // 12.5
                 mouseRotation: { type: "f", value: 0 }, // 2
-                squareRadius: {type: "f", value: this.sRadius*2.5},
+                squareRadius: {type: "f", value: this.sRadius*4},
                 squareCenterX: {type: "f", value: this.sCenter.x},
                 squareCenterY: {type: "f", value: this.sCenter.y+3},
                 squareCenterZ: {type: "f", value: this.sCenter.z},
@@ -176,13 +194,9 @@ export default class IntroAnimation extends THREE.Object3D {
         this.fbo = new FBO();
         this.fbo.init( this.width, this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
         this.fbo.particles.frustumCulled = false;
-        this.fbo.particles.scale.set( 10, 6, 10 );    // 110, 90, 80 // 110, 90, 10
-        this.fbo.particles.position.set(-20, 100, -150);    // 0,900,1100 // 0,1500,300
-        //refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
         DebugUtil.positionObject(this.fbo.particles, "Intro particles", false, -100, 100);
         this.add( this.fbo.particles );
         this.timerAnim = null;
-        this.fbo.update();
     }
 
     disposeAni() {
@@ -196,6 +210,10 @@ export default class IntroAnimation extends THREE.Object3D {
         this.blueprintMat.dispose();
         this.treeGeo.dispose();
         this.treeMaterial.dispose();
+
+        if (this.test) {
+            this.remove(this.test);
+        }
     }
 
     clamp(num, min, max) {
@@ -230,7 +248,7 @@ export default class IntroAnimation extends THREE.Object3D {
         this.isStarted = true;
         this.currentSequence = this.sequenceConfig.slice(0);
         this.nextAnim = this.currentSequence.shift();
-        this.fbo.update();
+        //this.fbo.update();
     }
 
     updateVideoTime(time) {
@@ -251,6 +269,7 @@ export default class IntroAnimation extends THREE.Object3D {
             this.simulationShader.uniforms.deltaTime.value = dt;
             //this.simulationShader.uniforms.mouseRotation.value = this.timeController.rotateVelocity;
             this.fbo.update();
+            this.test.update(dt,et);
         }
     }
 }
