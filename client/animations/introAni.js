@@ -6,6 +6,8 @@ import DebugUtil from '../util/debug'
 import EndArrayPlugin from '../util/EndArrayPlugin'
 TweenPlugin.activate([EndArrayPlugin]);
 
+import SunLoader from '../sun_loader'
+
 export default class IntroAnimation extends THREE.Object3D {
     constructor( scene, renderer, square, timeController ) {
         super();

@@ -34,6 +34,8 @@ import {MeshText2D, textAlign} from './lib/text2d/index'
 
 import WaterDrops from './water_drops'
 
+import FPSCount from './util/fpscount'
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
@@ -190,6 +192,10 @@ export default class Game {
 
         this.waterDrops = new WaterDrops();
         this.camera.add(this.waterDrops);
+
+            /*
+        this.fpsCount = new FPSCount(this.camera);
+        this.fpsCount.init();*/
     }
 
     load(onLoad) {
@@ -401,8 +407,10 @@ export default class Game {
     }
 
     animate(t) {
+        //        this.fpsCount.begin();
         this.update(this.clock.getDelta(), this.clock.getElapsedTime());
         this.render();
+        //this.fpsCount.end();
     }
 
     update(dt,et) {
