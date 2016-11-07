@@ -1,3 +1,6 @@
+var BlendCharacter=require('../util/BlendCharacter.js');
+var blendMesh;
+var loaded3dObject;
 //an array of the displayable pidgeons for client side reference
 var characterList = [];
 //an array of the associations between server id's and client side id's
@@ -16,10 +19,18 @@ export default class Pidgeon extends THREE.Object3D{
       console.warn("you created a character without providing server unique. This renders the character unreachable");
     }
     console.log("pidgeon",Pidgeon.geometry);
-    this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
-    this.mesh.position.set(0,0.07,0);
-    this.mesh.scale.set(0.3,0.3,0.3);
-    this.add(this.mesh);
+
+
+    blendMesh=new THREE.BlendCharacter(loaded3dObject);
+    scene.add( blendMesh );
+    blendMesh.play("Bird_Fly",1);
+    blendMesh.position.z=0.2*a;
+    //these json models insist on coming rotated.
+    blendMesh.rotation.x=Math.PI/-2;
+    // this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
+    // this.mesh.position.set(0,0.07,0);
+    // this.mesh.scale.set(0.3,0.3,0.3);
+    // this.add(this.mesh);
     /*pendant: these may become handy later, but currently unused:*/
     let transformReturnFunctions = {
       prevCoords: {x:0,y:0,z:0},
@@ -98,40 +109,26 @@ export default class Pidgeon extends THREE.Object3D{
         // myDom.style.transform = 'rotate(' + a + 'deg)';
       }
     }
-
   }
-  update(deltaTime){
-    // console.log("update"+deltaTime);
-    // console.log(camera.position);
-    //poll camera
+  update(delta){
+    if ( blendMesh ) { blendMesh.update( delta ); }
   }
-
+  //load and initialize meshes, textures and animations
   static initMesh(loadingManager){
-    console.log("pidgeon init mesh");
+    console.log("pidgeon load and init mesh");
     //initialize graphics, create mesh?
     this.geometry = new THREE.BoxGeometry(0.2,0.2,0.2);
     this.material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true} );
 
     let loader = new THREE.JSONLoader(loadingManager);
-    // let createMesh = function( geometry )
-    // {
-    //   console.log("pidgeon mesh loaded from file");
-    //   this.geometry=geometry;
-    //   // this.zmesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial() );
-    //   // zmesh.position.set( 0, 0, 0 );
-    //   // zmesh.scale.set( 3, 3, 3 );
-    //   // zmesh.overdraw = true;
-    // };
     try{
-      loader.load( "assets/pidgeons/birrd.json", function(geometry){
-        Pidgeon.geometry=geometry;
-      },function(){
-        console.log("pidgeon profress");
-      },function(e){
-        console.error("pidgeon",e);
-      });
+      //statically load mesh, animations and skin
+      THREE.BlendCharacter.loadObject( 'assets/pidgeon/Bird_30.json', function(lo) {
+  			loaded3dObject=lo;
+  			console.log("pidgeon 3d object loaded");
+  		} );
     }catch(e){
-    console.error("pidgeon",e);
+      console.error("pidgeon",e);
     }
   }
   static each (callback) {
