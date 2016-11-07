@@ -12,7 +12,7 @@ export default class Extras extends THREE.Object3D {
         this.currentExtras = [];
         this.camera = camera;
         this.renderer = renderer;
-        this.debug = false;
+        this.debug = true;
     }
 
     init(loadingManager) {

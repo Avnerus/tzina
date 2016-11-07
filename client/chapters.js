@@ -21,21 +21,21 @@ export default
 				},
 					{
 					name: "junkie",
-					position: [-11.23,23.8,-3.15],
-					rotation: [174,291,0],
-					scale: 0.32
+					position: [3.14,24,9.42],
+					rotation: [182,335,0],
+					scale: 0.37
 				},
 					{
 					name: "pocketCam",
-					position: [-18.5,21.3,4.03],
-					rotation: [0,94,0],
-					scale: 0.27
+					position: [-5.6,21,10.32],
+					rotation: [0,81,0],
+					scale: 0.29
 				},
                        {
                        name: "dadOnBike",
-                       position: [-0.45,21.3,9.42],
-                       rotation:[0,280,0],
-                       scale: 0.34
+                       position: [11.22,21,11.22],
+                       rotation:[0,251,0],
+                       scale: 0.41
                }/*,
 					{
 					name: "tashlih",
@@ -78,39 +78,39 @@ export default
 				},
 				       {
      		       name: "oldmansit",
-       			   position: [-7.63,23,0.44],
-      			   rotation: [174,194,0],
+       			   position: [-11.23,23.2,-2],
+      			   rotation: [178,129,0],
          			 scale: 0.32
     			    },
     		     {
                     name: "sweetLady",
-                    position: [-13.4,21.5,3.14],
-                    rotation: [0,113,0],
-                    scale: 0.3
+                    position: [-10.8,22,9.42],
+                    rotation: [0,134,0],
+                    scale: 0.31
      		   },
 				    {
       			    name: "grandpa",
-        			  position: [2.24,21.3,14.81],
-      	  			  rotation:[360,73,0],
-       				  scale: 0.45
+        			  position: [9.42,21,12.11],
+      	  			  rotation:[360,101,0],
+       				  scale: 0.48
     	    },
          	 {
        			   name: "grandma",
-      			   position: [2.24,21.3,12.11],
-        		   rotation:[0,319,0],
-         		   scale: 0.2
+      			   position: [8.52,21,9.42],
+        		   rotation:[0,360,0],
+         		   scale: 0.21
        		 },
        		 {
           name: "firstcouple",
-          position: [-11.23,21.3,-12.12],
-          rotation: [0,174,0],
-          scale: 0.28
+          position: [-17.51,21,2.24],
+          rotation: [0,263,0],
+          scale: 0.31
         },
         	 {
           name: "AnlenGrandma",
-          position: [-3.15,21.4,18.4],
-          rotation: [0,93,0],
-          scale: 0.19
+          position: [-1.35,21,17],
+          rotation: [0,77,0],
+          scale: 0.2
         }
 			],
 
