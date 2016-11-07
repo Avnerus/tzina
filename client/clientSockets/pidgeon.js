@@ -22,11 +22,12 @@ export default class Pidgeon extends THREE.Object3D{
 
 
     blendMesh=new THREE.BlendCharacter(loaded3dObject);
-    scene.add( blendMesh );
+    this.add( blendMesh );
     blendMesh.play("Bird_Fly",1);
-    blendMesh.position.z=0.2*a;
+    // blendMesh.position.z=0.2*a;
     //these json models insist on coming rotated.
     blendMesh.rotation.x=Math.PI/-2;
+    blendMesh.rotation.y=Math.PI;
     // this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
     // this.mesh.position.set(0,0.07,0);
     // this.mesh.scale.set(0.3,0.3,0.3);
@@ -68,13 +69,24 @@ export default class Pidgeon extends THREE.Object3D{
         //object that will be subject to a tween. contains an onupdate function
         //that transfers it's state to the actual pidgeon position
         let tweenCurrentPosition={};
-        let tweenTo={onUpdate:function(){
-          //don't use tweenCurrentPosition to iterate because it contains the
-          //onupdate function
-          for(let b in {x:0,y:0,z:0}){//this[b]?
-            thisPidgeon.position[b]=tweenCurrentPosition[b];
-          }
-        },ease: Power0.easeNone}
+        let tweenTo={
+          onUpdate:function(){
+            //don't use tweenCurrentPosition to iterate because it contains the
+            //onupdate function
+            for(let b in {x:0,y:0,z:0}){//this[b]?
+              thisPidgeon.position[b]=tweenCurrentPosition[b];
+            }
+          },
+          onStart:function(){
+            //pendant: replace plays with crossfadeTo
+            blendMesh.play("Bird_Walk",1);
+          },
+          onComplete:function(){
+            //pendant: replace plays with crossfadeTo
+            blendMesh.play("Bird_Idle",1);
+          },
+          ease: Power0.easeNone
+        }
         thisPidgeon.lookAt(Lokat);
         for(let b in newPosition){
           tweenCurrentPosition[b]=thisPidgeon.position[b];

@@ -51,7 +51,7 @@ if(verbose)     console.log("Started pidgeon socket");
 
       // console.log("incoming message",message);
       if(message.header=="changeposition"){
-        // message.no
+        // retrieve the pidgeon icon that represents my own.
         let remoteSprite=Pidgeon.remote(message.pointer);
         if(remoteSprite){
           //Positioning reception is multiplied by 0.001, and emission is multiplied

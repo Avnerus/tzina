@@ -14,10 +14,8 @@ export default class ClientWebSocket {
   init (address){
     let parent=this;
     //onHandlers.call(this);
-
     this.ws = new WebSocket(address);
-
-    this.ws.binaryType='arraybuffer';//i actually would like to communicate by using arraybuffer
+    this.ws.binaryType = 'arraybuffer';//i actually would like to communicate by using arraybuffer
 
     //alias only for easier access
     let connection=this.ws;
