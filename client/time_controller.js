@@ -234,7 +234,7 @@ export default class TimeController {
         }
 
         if (this.gazeHour != -1) {
-          //  this.gazeCounter += dt;
+            this.gazeCounter += dt;
             if (this.gazeCounter > 1 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
             }
@@ -252,6 +252,7 @@ export default class TimeController {
                         this.sunGazer.stop();
                         this.sunGazer.active = false;
                         this.square.turnOnSun(this.currentHour.toString());
+
                         this.setCurrentChapter();
                         events.emit("hour_updated", this.currentHour);
                         let targetRotationY = this.currentHour * 15;

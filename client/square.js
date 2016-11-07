@@ -183,7 +183,7 @@ export default class Square extends THREE.Object3D{
             this.activateSun(name);
         });
         events.on("gaze_stopped", (name) => {
-            this.deactivateSun(name);
+            //this.deactivateSun(name);
         });
 
         events.on("angle_updated", (hour) => {
@@ -214,7 +214,11 @@ export default class Square extends THREE.Object3D{
             this.extras.update(dt);
         }
         for (let i = 0; i < this.suns.children.length; i++) {
-            this.suns.children[i].children[2].update(dt,et)
+
+            this.suns.children[i].children[2].update(dt,et);
+
+           // console.log(this.suns.children[i].children[2]);
+
         }
     }
 
