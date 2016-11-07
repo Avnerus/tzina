@@ -457,15 +457,24 @@ export default class TimeController {
     turnOnChapterSun() {
         if (this.currentHour == 17 || this.currentHour == 9 ) {
             this.square.turnOnSun("9");
-        } else if (this.currentHour == 19 || this.currentHour == 7) {
-            this.square.turnOnSun("7");
-        } else if (this.currentHour == 12) {
-            this.square.turnOnSun("12");
+        } else {
+            this.square.turnOffSun("9");
         }
-        else {
-            if (this.square.currentSun) {
-                this.square.turnOffSun(this.square.currentSun);
-            }
+
+        if (this.currentHour == 19 || this.currentHour == 7) {
+            this.square.turnOnSun("7");
+        }  else {
+            this.square.turnOffSun("7");
+        }
+
+        if (this.currentHour == 12) {
+            this.square.turnOnSun("12");
+        } else {
+            this.square.turnOffSun("12");
+        }
+
+        if (this.square.currentSun) {
+            this.square.turnOffSun(this.square.currentSun);
         }
     }
 
