@@ -13,7 +13,7 @@ const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PREFIX = "assets/square/benches/"
 const FOUNTAIN_PATH = "assets/square/fountain.json"
-const TEXTURES_PATH = "assets/square/textures.json"
+const GROUND_PATH = "assets/square/ground_tile_512.json"
 
 export default class Square extends THREE.Object3D{
     constructor(collisionManager, renderer, camera, config, soundManager, scene) {
@@ -94,8 +94,8 @@ export default class Square extends THREE.Object3D{
             this.loadSuns(loadingManager),
             this.loadColliders(loadingManager),
             this.loadBenches(loadingManager),
-            this.loadFountain(loadingManager)
-            //this.loadTextures(loadingManager)
+            this.loadFountain(loadingManager),
+            this.loadGround(loadingManager)
         ];
         if (!this.config.noExtras) {
             loaders.push(this.extras.init(loadingManager));
@@ -121,6 +121,10 @@ export default class Square extends THREE.Object3D{
             this.benches.rotation.order = "YXZ";
 
             this.fountainMesh = results[6];
+
+            let ground = results[7];
+            ground.position.set(1.2,-0.26, -2.18);
+            this.mesh.add(ground)
 
             this.mesh.add(this.fountainMesh);
 
@@ -160,6 +164,7 @@ export default class Square extends THREE.Object3D{
             this.mesh.add(this.fountain);
             this.mesh.add(this.extras);
             this.mesh.add(this.suns);
+
                 /*
             this.textures = results[7];
             this.mesh.add(this.textures);*/
@@ -572,16 +577,11 @@ export default class Square extends THREE.Object3D{
             });
         });
     }
-    loadTextures(loadingManager) {
+    loadGround(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(TEXTURES_PATH,( obj ) => {
-                console.log("Loaded square textures ", obj);
-
-                // Disable depth write for the texture planes
-                for (let i = 0; i < obj.children.length; i++) {
-                    obj.children[i].children[0].material.depthWrite = false;
-                }
+            loader.load(GROUND_PATH,( obj ) => {
+                console.log("Loaded ground ", obj);
                 resolve(obj);
             });
         });
