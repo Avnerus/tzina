@@ -123,8 +123,9 @@ export default class Square extends THREE.Object3D{
             this.fountainMesh = results[6];
 
             let ground = results[7];
-            ground.position.set(1.2,-0.26, -2.18);
+            ground.position.set(1.2, 0, -2.18);
             this.mesh.add(ground)
+            DebugUtil.positionObject(ground, "Ground");
 
             this.mesh.add(this.fountainMesh);
 
@@ -154,7 +155,6 @@ export default class Square extends THREE.Object3D{
             this.clockworkOffset = new THREE.Object3D();
             this.clockworkOffset.rotation.order = "YXZ";
 
-            DebugUtil.positionObject(this.clockworkOffset, "Clockwork offset");
             this.clockworkOffset.add(this.clockwork);
             this.mesh.add(this.clockworkOffset);
 
@@ -255,6 +255,11 @@ export default class Square extends THREE.Object3D{
                 if (sun) {
                     sun.getObjectByName(this.currentSun + "_L").visible = true;
                 }
+
+                setTimeout(() => {
+                    events.emit("angle_updated");
+                },0);
+
             }
         });
     }

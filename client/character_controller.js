@@ -15,7 +15,8 @@ export default class CharacterController {
         this.activeCharacters = [];
         this.animations = animations;
         this.addedColliders = false;
-        this.debug = true;
+        this.inControl = false;
+        this.debug = false;
     }
     init(loadingManager) {
         console.log("Initializing Character controller");
@@ -27,6 +28,10 @@ export default class CharacterController {
                 this.characters[characterProps.name] = character;
             });
         }
+        events.on("control_threshold", (passed) => {
+            this.inControl = passed;
+        });
+
         events.on("hour_updated", (hour) => {
             
             let clone = this.activeCharacters.slice(0);
@@ -64,13 +69,15 @@ export default class CharacterController {
             }
         });
         events.on("angle_updated", (hour) => {
-            this.activeCharacters.forEach((character) => {
-                if (!character.done && !character.addedColliders) {
-                    console.log("Adding colliders: " + character.props.name);
-                    this.collisionManager.addCharacter(character);
-                    character.addedColliders = true;
-                }
-            });
+            if (this.inControl){ {
+                this.activeCharacters.forEach((character) => {
+                    if (!character.done && !character.addedColliders) {
+                        console.log("Adding colliders: " + character.props.name);
+                        this.collisionManager.addCharacter(character);
+                        character.addedColliders = true;
+                    }
+                });
+            }}
         });
     }
 
