@@ -90,15 +90,15 @@ export default
      		   },
 				    {
       			    name: "grandpa",
-        			  position: [9.42,21,12.11],
-      	  			  rotation:[360,101,0],
+        			  position: [9.42,21.2,12.11],
+      	  			  rotation:[360,93,0],
        				  scale: 0.48
     	    },
          	 {
        			   name: "grandma",
-      			   position: [8.52,21,9.42],
+      			   position: [8.52,21.2,9.42],
         		   rotation:[0,360,0],
-         		   scale: 0.21
+         		   scale: 0.19
        		 },
        		 {
           name: "firstcouple",
@@ -108,9 +108,9 @@ export default
         },
         	 {
           name: "AnlenGrandma",
-          position: [-1.35,21,17],
+          position: [-1.35,21.2,17],
           rotation: [0,77,0],
-          scale: 0.2
+          scale: 0.19
         }
 			],
 
