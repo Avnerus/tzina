@@ -29,7 +29,7 @@ export default class CollisionManager {
         this.player = camera;
         this.meshColliders = [];
 
-        this.debug = true;
+        this.debug = false;
     }
     init() {
     }

@@ -52,8 +52,9 @@ export default class Game {
         this.emitter.setMaxListeners(30);
         global.events = this.emitter;
 
+        /*
         this.gui = new GuiManager(this.emitter);
-        this.gui.init();
+        this.gui.init();*/
 
         this.renderer = new THREE.WebGLRenderer({antialias: true,alpha: true});
         this.renderer.setClearColor( 0, 1 );
