@@ -95,7 +95,7 @@ export default [
         animationScale: 0.25,
         animationPosition: [0.45, -0.3, 0.25],
         animationRotation: [-4, -23, -9],
-        space: 4,
+        space: 0.5,
         subtitles: false
     },
     {
@@ -115,7 +115,7 @@ export default [
         animationScale: 0.18,
         animationPosition: [-0.45,0,-0.4],
         animationRotation: [7,25,-8],
-        space: 4,
+        space: 0.5,
         subtitles: null
     },
     {

@@ -11,8 +11,7 @@ export default
             "sunLoaderRotation": [0,136,0],
 			"characters": [
 				"Meir",
-				"Rami",
-				"Shirin7AM"
+				"Rami"
 			],
 			"introfile": [
 				"Meir",

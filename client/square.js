@@ -91,8 +91,8 @@ export default class Square extends THREE.Object3D{
             this.loadSuns(loadingManager),
             this.loadColliders(loadingManager),
             this.loadBenches(loadingManager),
-            this.loadGround(loadingManager),
-            this.loadFountain(loadingManager)
+            this.loadFountain(loadingManager),
+            this.loadGround(loadingManager)
         ];
         if (!this.config.noExtras) {
             loaders.push(this.extras.init(loadingManager));
