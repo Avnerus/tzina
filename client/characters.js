@@ -22,17 +22,17 @@ export default [
     {
         name: 'Miriam',
         basePath : 'assets/characters/miriam',
-        mindepth : 2200.0,
+        mindepth : 2200,
         maxdepth : 3119.456298828,
-        position : [-1.88, 22.17, 11.68],
+        position : [-1.88, 22.2, 11.68],
         rotation: [10, 224, 12],
         animation: 'Miriam',
         uvdy_idle: 0.47900390625,
         uvdy: 0.48681640625,
-        uvdx: -0.025,
-        width: 512,
+        uvdx: 0,
+        width: 768,
         height: 2048,
-        scale: 0.003 * 0.3973,
+        scale: 0.003 * 0.506,
         animationScale: 0.4,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
