@@ -197,6 +197,13 @@ export default [
 
         adjustments : [
             {
+                sec: 0,
+                mindepth : 1499.999877929688,
+                maxdepth : 4564.32861328125,
+                position : [-13.21, 21.95, 3.53],
+                scale: 0.0039
+            },
+            {
                 sec: 92,
                 mindepth: 2689.701416015625,
                 maxdepth: 4381.86181640625
@@ -207,15 +214,15 @@ export default [
                 maxdepth : 4564.32861328125
             }
         ],
-        position : [-14.19, 22.11, 3.24],
-        rotation: [353, 35, 0],
+        position : [-14.19, 22.05, 3.07],
+        rotation: [0, 37, 0],
         animation: 'Mark',
         uvdy: 0.458984375,
         uvdy_idle: 0.541015625,
         uvdx: 0.0,
         width: 512,
         height: 2048,
-        scale: 0.003 * 0.25,
+        scale: 0.003 * 0.4145,
         animationScale: 0.20,
         animationPosition: [-.4, -.46, -.55],
         animationRotation: [0,-25,0],
@@ -316,18 +323,19 @@ export default [
                 sec: 141,
                 mindepth: 2015.678588867188,
                 maxdepth: 3681.246826171875,
-                position: [-11, 22.25, 5.74],
-                scale: 0.003 * 0.35432
+                position: [-11, 22.13, 5.74],
+                scale: 0.003 * 0.38466
             }
         ],
-        position : [-10.77, 22.06, 6.46],
-        rotation: [14, 206, 0],
+        position : [-10.77, 21.99, 6.62],
+        rotation: [2, 216, 0],
         animation: null,
         uvdy: 0.4970703125,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.45469,
+        //scale: 0.003 * 0.45469,
+        scale: 0.003 * 0.6888,
         animationScale: 0.20,
         animationPosition: [-.4, -.46, -.55],
         animationRotation: [0,-25,0],
