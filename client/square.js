@@ -298,12 +298,13 @@ export default class Square extends THREE.Object3D{
         if (sun) {
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
             //console.log("Turn off sun", sun);
-            //sun.material.side = THREE.BackSide;
-            sunMesh.material.color = new THREE.Color(0x888788);
-            sunMesh.material.emissive= new THREE.Color(0x000000);
-            // sunMesh.material.emissive= new THREE.Color(0xBD9F6C);
-             sunMesh.material.transparent= true;
+            sunMesh.material.color = new THREE.Color(0x001D16);
+            sunMesh.material.emissive= new THREE.Color(0x57340C);
+            sunMesh.material.specular= new THREE.Color(0xB3B600);
+            sunMesh.material.transparent= true;
             sunMesh.material.opacity = .8;
+            sunMesh.material.shininess = 0;
+            sunMesh.material.bumpScale = 4;
             sunMesh.material.map = this.sunTextureDesat;
             sunMesh.material.needsUpdate = true;
             sun.getObjectByName(name + "_L").visible = false;
@@ -315,19 +316,22 @@ export default class Square extends THREE.Object3D{
             let sun = this.suns.getObjectByName(name)
             if (sun) {
                 if (this.currentSun) {
-                                    let strokeMesh = sun.getObjectByName(name + "_S").children[0];
-                strokeMesh.material.color.set(0x666633);
+                let strokeMesh = sun.getObjectByName(name + "_S").children[0];
+                strokeMesh.material.color.set(0xFEE428);
                  strokeMesh.material.needsUpdate = true;
                     this.turnOffSun(this.currentSun);
 
                 }
                 console.log("Turning on sun ", name);
                 let sunMesh = sun.getObjectByName(name + "_F").children[0];
-               // sunMesh.material.color = new THREE.Color(0xfff06f);
+                sunMesh.material.color = new THREE.Color(0xFFFF28);
                 sunMesh.material.emissive= new THREE.Color(11904267);
+                sunMesh.material.bumpScale = 4;
+                 sunMesh.material.specular= new THREE.Color(0xFFFF00);
+
                 //sunMesh.material.side = THREE.Backside;
                    // sunMesh.material.opacity = 1.00;
-                 sunMesh.material.transparent = false;
+                sunMesh.material.transparent = false;
                 sunMesh.material.map = this.sunTexture;
                 this.sunTexture.offset.y = this.sunTextureOffsets[name];
                 //texture offset by progress in chapter 
@@ -353,7 +357,9 @@ export default class Square extends THREE.Object3D{
         if (sun) {
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
             console.log("Turn on sun", sun);
-            sunMesh.material.color = new THREE.Color(0x000D0A);
+       sunMesh.material.color = new THREE.Color(0xFFFF28);
+            sunMesh.material.emissive= new THREE.Color(11904267);
+            sunMesh.material.specular= new THREE.Color(11904267);
             sunMesh.material.map = this.sunTexture;
             this.sunTexture.offset.y = this.sunTextureOffsets[name];
             sunMesh.material.needsUpdate = true;
@@ -369,8 +375,9 @@ export default class Square extends THREE.Object3D{
         if (sun) {
             let sunLoader = sun.getObjectByName(name + "_L");
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
-            sunMesh.material.color = new THREE.Color(0x666633);
-              //sunMesh.material.emissive = new THREE.Color(16756224);
+            sunMesh.material.color = new THREE.Color(0x001D16);
+            sunMesh.material.emissive= new THREE.Color(0x57350C);
+            sunMesh.material.specular= new THREE.Color(0x0D0000);
             sunMesh.material.map = this.sunTextureDesat;
             sunMesh.material.needsUpdate = true;
             this.sunTexture.offset.y = this.sunTextureOffsets[this.currentSun];
