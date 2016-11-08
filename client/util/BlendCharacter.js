@@ -187,8 +187,13 @@ THREE.BlendCharacter = function (loadedObject) {
 	if(loadedObject) this.applyLoadedObject(loadedObject);
 };
 
-THREE.BlendCharacter.loadObject=function(url, onLoad){
-	var loader = new THREE.ObjectLoader();
+THREE.BlendCharacter.loadObject=function(url, onLoad, loadingManager){
+	if(loadingManager){
+		var loader = new THREE.ObjectLoader();
+	}else{
+		var loader = new THREE.ObjectLoader(loadingManager);
+	}
+
 	loader.load( url, function( loadedObject ) {
 		if ( onLoad !== undefined ) onLoad(loadedObject);
 	} );

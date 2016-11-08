@@ -223,7 +223,7 @@ export default class Pidgeon extends THREE.Object3D{
       THREE.BlendCharacter.loadObject( 'assets/pidgeon/Bird_30.json', function(lo) {
   			loaded3dObject=lo;
   			console.log("pidgeon 3d object loaded");
-  		} );
+  		},loadingManager );
     }catch(e){
       console.error("pidgeon",e);
     }
