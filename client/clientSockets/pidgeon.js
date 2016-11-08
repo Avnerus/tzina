@@ -7,12 +7,14 @@ var characterList = [];
 var characterAssoc={};
 //contains a timeline that stacks movement twins, it smooths out the stutter that
 //slower server update rate cretes
-var movementTimeline;
+//it has a totalProgress function to avoid undefined function call below
+var myWalkingTween={totalProgress:function(){return 1;}};
+
+var myCurrentAnimState="none";
 export default class Pidgeon extends THREE.Object3D{
   constructor(props){
     super();
     let thisPidgeon=this;
-    movementTimeline= new TimelineLite();
     let properties = props || {};
     // console.log("c",properties);
     characterList.push(this);
@@ -63,6 +65,7 @@ export default class Pidgeon extends THREE.Object3D{
       position:function(newPosition){
         //get new vector to move towards
         let Lokat=new THREE.Vector3(newPosition.x||0,thisPidgeon.position.y,newPosition.z||0);
+        thisPidgeon.lookAt(Lokat);
         //We want the object only to rotate around Y, so the coordinatetes of
         //lokat should only contain values on X and Z coords.
         //uncommenting the following line allows the object to rotate in the
@@ -71,39 +74,12 @@ export default class Pidgeon extends THREE.Object3D{
           // Lokat[b]=newPosition[b];
         // }
 
-        /*
-        animation names:
-        Bird_Eat
-        Bird_Fly
-        Bird_FlyOff
-        Bird_Idle
-        Bird_Land
-        Bird_Pose
-        Bird_Walk
-        */
+
 
         //object that will be subject to a tween. contains an onupdate function
         //that transfers it's state to the actual pidgeon position
         let tweenCurrentPosition={};
-        let tweenTo={
-          onUpdate:function(){
-            //don't use tweenCurrentPosition to iterate because it contains the
-            //onupdate function
-            for(let b in {x:0,y:0,z:0}){//this[b]?
-              thisPidgeon.position[b]=tweenCurrentPosition[b];
-            }
-          },
-          onStart:function(){
-            //pendant: replace plays with crossfadeTo
-            blendMesh.crossfadeTo("Bird_Walk",0.2);
-          },
-          onComplete:function(){
-            //pendant: replace plays with crossfadeTo
-            blendMesh.crossfadeTo("Bird_Idle",0.2);
-          },
-          ease: Power0.easeNone
-        }
-        thisPidgeon.lookAt(Lokat);
+        let tweenTo={}
         for(let b in newPosition){
           tweenCurrentPosition[b]=thisPidgeon.position[b];
           tweenTo[b]=newPosition[b];
@@ -111,9 +87,37 @@ export default class Pidgeon extends THREE.Object3D{
           transformReturnFunctions.newCoords[b]=newPosition[b];
         }
 
+        //depending on wether a tween is currently running (if not running)
+        if(myWalkingTween.totalProgress()==1){
+          //we create a new one
+          tweenTo.onUpdate = function(){
+            //don't use tweenCurrentPosition to iterate because it contains the
+            //onupdate function
+            for(let b in {x:0,y:0,z:0}){//this[b]?
+              thisPidgeon.position[b]=tweenCurrentPosition[b];
+            }
+          },
+          tweenTo.onStart = function(){
+
+            blendMesh.crossfadeTo("Bird_Walk",0.2);
+          },
+          tweenTo.onComplete = function(){
+            //pendant: replace plays with crossfadeTo
+            blendMesh.crossfadeTo("Bird_Idle",0.2);
+
+          },
+          tweenTo.ease = Power0.easeNone
+
+          myWalkingTween=TweenMax.to(tweenCurrentPosition, 1, tweenTo);
+          // myWalkingTween.to(tweenCurrentPosition, 1, tweenTo);
+        }else{
+          //or change tween target, restarting it's timer
+          myWalkingTween.updateTo(tweenTo, true);
+        }
+
         // console.log("walkTo",tweenCurrentPosition,tweenTo,transformReturnFunctions,newPosition);
         //tween time has to be finetuned evey time the server interval is changed.
-        /*transformReturnFunctions.tween=*/movementTimeline.to(tweenCurrentPosition, .23, tweenTo);
+        /*transformReturnFunctions.tween=*/
         //http://greensock.com/forums/topic/8109-chaining-instance-of-multiple-tweens/
 
         return transformReturnFunctions;
@@ -139,6 +143,18 @@ export default class Pidgeon extends THREE.Object3D{
         // myDom.style.transform = 'rotate(' + a + 'deg)';
       }
     }
+  }
+  changeAnimStateTo(){
+    /*
+    animation names:
+    Bird_Eat
+    Bird_Fly
+    Bird_FlyOff
+    Bird_Idle
+    Bird_Land
+    Bird_Pose
+    Bird_Walk
+    */
   }
   update(delta){
     if ( blendMesh ) { blendMesh.update( delta ); }
