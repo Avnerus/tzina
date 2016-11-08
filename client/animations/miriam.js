@@ -144,12 +144,12 @@ export default class MiriamAnimation extends THREE.Object3D {
         let curveColors = [];
         this.manGeometries = [];
 
-        let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 30, 0.05, 2, true);
+        let manGeometry = new THREE.TubeGeometry( men_figures_points[0], 100, 0.05, 2, true);
         this.manGeometries.push( manGeometry );
         
         // console.log("manGeometry.vertices.length: " + manGeometry.vertices.length);
         for(let i=1; i<men_figures_points.length; i++){
-            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 30, 0.05, 2, true);
+            let manGeometry2 = new THREE.TubeGeometry( men_figures_points[i], 100, 0.05, 2, true);
             let nameee = 't'+(i-1);
             manGeometry.morphTargets[i-1] = {name: nameee, vertices: manGeometry2.vertices};
             this.manGeometries.push(manGeometry2);
@@ -275,6 +275,12 @@ export default class MiriamAnimation extends THREE.Object3D {
                // .to( this.fbo.particles.position, 4, { z:"+="+2 }, 'thridSpin' );
     }
     manSwirlSpeedup (_duration) {
+        TweenMax.to( this.manFigure.material, 5, {
+            opacity: 0,
+            onComplete:()=>{
+                this.manFigure.visible = false;
+            }
+        } );
         TweenMax.to( this.dummy, _duration, { timeScaleValue: 40,
                                        ease: Power2.easeIn,
                                        onStart: ()=>{
