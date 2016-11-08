@@ -286,33 +286,33 @@ export default
                 //},
 				{
                     name: "manOnBench",
-                    position: [7.7,21.3,-16.2],
-                    rotation: [0,115,0],
-                    scale: 0.2
+                    position: [13.1,21.3,-6],
+                    rotation: [0,186,0],
+                    scale: 0.3s
 				},
 				{
                     name: "coolPair",
-                    position: [-5.6,21.5,0.85],
+                    position: [14,21.4,5.91],
                     rotation: [0,180,0],
-                    scale: 0.25
+                    scale: 0.33
 				},
                   {
                    name: "blueLady",
-                    position: [-11.4,21.5,1.79],
-                    rotation: [0,265,0],
-                    scale: 0.15
+                    position: [-2.5,21.5,14],
+                    rotation: [0,170,0],
+                    scale: 0.25
     		    },
     		       {
                     name: "Gyno",
-                    position: [0.92,23.2,13],
-                    rotation: [176,309,18],
-                    scale: 0.24
+                    position: [-4.87,23.5,8.61],
+                    rotation: [186,138,18],
+                    scale: 0.3
       			  },
 					{
 					name: "DAN",
-					position: [-0.94,23.1,-9.02],
-					rotation:[184,257,0],
-					scale: 0.23
+					position: [13.1,23.8,9.51],
+					rotation:[174,25,0],
+					scale: 0.33
 				}
 			],
 
