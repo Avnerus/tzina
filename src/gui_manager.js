@@ -7,7 +7,7 @@ export default class GuiManager {
         this.gui.close();
         this.emitter.on('add_gui', (...args) => {
             console.log("ADD GUI",args);
-            this.gui.add.apply(this.gui, args);
+            let control = this.gui.add.apply(this.gui, args);
         })
     }
 }

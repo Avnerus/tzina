@@ -40,22 +40,22 @@ export default class VideoRGBD  {
 
         this.imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
-        /*
+        let height = 2048;
+        let width = 2048;
+
         this.debug = {
-            x1: 1460,
-            //x1: 1260,
-            //x2: 1920,
-            x2: 2800,
-            x3: 1920,
-            //y1: 720,
-            // y2: 1440,
-            y1: 1260,
-            y2: 2040,
-            y3: 1440,
-            uvd: 0.440277,
+            x1: 512.0,
+            x2: 1024,
+            x3: height,
+            y1: 512.0,
+            y2: 1024,
+            y3: width * 2,
+            uvdy: 0.35986,
+            uvdx: -0.01,
             posz: 2600.0,
-            posx: 150.0
-            }*/
+            posx: 0
+            }
+                /*
         this.debug = {
             x1: 610,
             x2: 1150,
@@ -64,10 +64,10 @@ export default class VideoRGBD  {
             y2: 1024,
             y3: 1024,
             uvdy: 0.478,
-            uvdx: 0,
+            uvdx: 0.2,
             posz: 2600.0,
             posx: 0.0
-        }
+            }*/
         events.emit("add_gui", this.debug, "x1"); 
         events.emit("add_gui", this.debug, "x2"); 
         events.emit("add_gui", this.debug, "x3"); 
