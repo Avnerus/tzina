@@ -125,7 +125,6 @@ export default class Square extends THREE.Object3D{
             let ground = results[7];
             ground.position.set(1.2, 0, -2.18);
             this.mesh.add(ground)
-            DebugUtil.positionObject(ground, "Ground");
 
             this.mesh.add(this.fountainMesh);
 
@@ -191,6 +190,7 @@ export default class Square extends THREE.Object3D{
                 events.emit("add_gui", {folder: "Clock rotation", listen: true}, this, "clockRotation", 0, 6.28); 
                 DebugUtil.positionObject(this.cylinder, "Cylinder");
                 DebugUtil.positionObject(this.clockwork, "Clockwork");
+                DebugUtil.positionObject(ground, "Ground");
             }
 
 
@@ -409,7 +409,7 @@ export default class Square extends THREE.Object3D{
 
             let loader = new THREE.ObjectLoader(loadingManager);
 
-            events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
+            //events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
             loader.load(SUNS_PATH,( obj ) => {
                 console.log("Loaded suns", obj)
 

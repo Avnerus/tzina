@@ -132,10 +132,10 @@ export default
 			"characters": [
 				"Mark",
                 "LupoDogs12PM",                
-                "Lupo1",
+                "Lupo12PM",
 				"Sasha",
                 "FatmanSleep",
-				"shirin3"
+				"Shirin12PM"
 			],
             "eventAfter" : 0,
             "eventCharacters" : [
