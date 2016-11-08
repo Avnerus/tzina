@@ -41,7 +41,7 @@ export default class VideoRGBD  {
         this.imageTexture = new THREE.TextureLoader(loadingManager).load(this.properties.basePath + '.png' );
 
         let height = 2048;
-        let width = 1024;
+        let width = 512;
 
         this.debug = {
             x1: 512.0,
