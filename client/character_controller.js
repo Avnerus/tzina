@@ -62,11 +62,12 @@ export default class CharacterController {
             });
 
             // Is there an event character
+            /*
             if (chapter.eventCharacters && chapter.eventAfter == 0) {
                 chapter.eventCharacters.forEach((characterName) => {
                     this.addCharacter(characterName);
                 });
-            }
+                }*/
         });
         events.on("angle_updated", (hour) => {
             if (this.inControl){ {

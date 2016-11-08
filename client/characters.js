@@ -267,20 +267,60 @@ export default [
         fullOnly: true
     },
     {
-        name: 'Lupo12PM',
-        basePath : 'assets/characters/lupo_12',
+        name: 'Lupo9AM',
+        basePath : 'assets/characters/lupo9am',
         mindepth : 2160,
         maxdepth : 6120.20654296875,
         position : [19.47, 21.16, -30.82],
         rotation: [350, 300, 7.3],
         animation: null,
-        uvdy: 0.38916015625,
+        uvdy: 0.4970703125,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
         scale: 0.003 * 0.25,
         subtitles: null,
         idleOnly: true
+    },
+    {
+        name: 'Lupo12PM',
+        basePath : 'assets/characters/lupo12pm',
+        mindepth : (1523.277099609375 + 1770.462036132813 + 2015.678588867188) / 3,
+        maxdepth : (3428.071533203125 + 3428.071533203125 + 3681.246826171875) / 3,
+        position : [14, 22.4, -4.3],
+        rotation: [356, 83, 0],
+        animation: null,
+        uvdy: 0.4970703125,
+        uvdx: 0.0,
+        width: 1024,
+        height: 2048,
+        scale: 0.003 * 0.25,
+        animationScale: 0.20,
+        animationPosition: [-.4, -.46, -.55],
+        animationRotation: [0,-25,0],
+        space: 0.5,
+        subtitles: null
+    },
+    {
+        name: 'Shirin12PM',
+        basePath : 'assets/characters/shirin12pm',
+        mindepth : 843.750000000,
+        maxdepth : 4120.305664062,
+        position : [-4.21, 22.41, 13.51],
+        rotation: [347, 235, 340],
+        animation: null,
+        uvdy: 0.5,
+        uvdx: 0.0,
+        width: 1024,
+        height: 2048,
+        scale: 0.003 * 0.4715,
+        animationScale: 0.25,
+        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
+        animationRotation: [13, 0, 0],      // 20, 0, 0
+        space: 0.2,
+        spaceOffset: [0.39,0,-0.08],
+        subtitles: null,
+        fullOnly: true
     }
 /*,
     {
