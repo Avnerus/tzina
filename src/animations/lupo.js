@@ -16,27 +16,57 @@ export default class LupoAnimation extends THREE.Object3D {
         this.loadingManager.itemStart("LupoAnim");
         this.perlin = new ImprovedNoise();
 
+        this.showDummyDogs = true;
+
         // setup animation sequence
-        this.sequenceConfig = [
-            { time: 1, anim: ()=>{this.growCactusFloor()} },
+        this.sequenceConfig1 = [
             { time: 5, anim: ()=>{this.showSculptures()} },    // 16
-            { time: 6, anim: ()=>{this.connectToDogs()} },
+            // { time: 6, anim: ()=>{this.connectToDogs()} },
+
             { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },
             // { time: 4, anim: ()=>{this.growSingleCactus( 0 )} },  // cactus index: 0~19
             // { time: 6, anim: ()=>{this.growSingleCactusFloor( 0 )} },  // cactus index: 0~9
-            { time: 10, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
-            
-            { time: 11, anim: ()=>{this.growFlower()} },
-            
+            { time: 12, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
+                        
             { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
-
-            { time: 20, anim: ()=>{this.closeFlower()} },
-
-            // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
-            // { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
+            { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
+            { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
             { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
             { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
             { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
+            { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
+            { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
+            { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
+            { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
+            { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
+            { time: 120, anim: ()=>{this.growBenchCactus()} },
+
+            { time: 135, anim: ()=>{this.connectToDogs()} },
+
+            { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
+            { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
+            { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
+            { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
+            { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
+            { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
+            { time: 179, anim: ()=>{this.growCactusFloor()} },
+        ];
+
+        this.sequenceConfig = [
+            { time: 1, anim: ()=>{this.growCactusFloor()} },
+
+            { time: 2, anim: ()=>{this.showSculptures()} },    // 16
+            { time: 9, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
+            { time: 12, anim: ()=>{this.shiftSculptures()} },
+            
+            { time: 17, anim: ()=>{this.growFlower()} },
+            { time: 25, anim: ()=>{this.closeFlower()} }
+
+            // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
+            // { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
+            // { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
+            // { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
+            // { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
             // { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
             // { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
             // { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
@@ -52,6 +82,7 @@ export default class LupoAnimation extends THREE.Object3D {
             // { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
             // { time: 179, anim: ()=>{this.growCactusFloor()} },
         ];
+
         this.sequenceConfigOriginal =  this.sequenceConfig.slice(0);
 
         this.nextAnim = null;
@@ -232,9 +263,9 @@ export default class LupoAnimation extends THREE.Object3D {
                 this.cactusOffsetPos2.push(cP);
             }
 
-            let cactusTexLight = p_tex_loader.load( this.BASE_PATH + "/images/cactusTexLight.jpg" );
+            let cactusTexLight = p_tex_loader.load( this.BASE_PATH + "/images/cactus_white.jpg" );
             let cactusTex = p_tex_loader.load( this.BASE_PATH + "/images/cactusTex.jpg" );
-            this.cactusMat = new THREE.MeshLambertMaterial({map: cactusTexLight}); //0x298a59
+            this.cactusMat = new THREE.MeshLambertMaterial({map: cactusTexLight, color: 0x1fc529}); //0x298a59
             this.sculptCactusMat = new THREE.MeshLambertMaterial({map: cactusTex}); //0x206c5e
             this.loadCactus1( this.cactusMat );
             this.loadCactus2( this.cactusMat )
@@ -304,6 +335,18 @@ export default class LupoAnimation extends THREE.Object3D {
                 this.createRope(i);
             }            
             this.liquidOut = false;
+
+            // dummy dogs!
+            if(this.showDummyDogs){
+                this.dog1 = new THREE.Mesh(new THREE.BoxGeometry(1.5,4,1.5), new THREE.MeshBasicMaterial({color: 0xcc0000, wireframe: true}));
+                this.dog1.position.set( 2, 2, 6 );
+                this.add(this.dog1);
+
+                this.dog2 = new THREE.Mesh(new THREE.BoxGeometry(1.5,4,1.5), new THREE.MeshBasicMaterial({color: 0xcc0000, wireframe: true}));
+                this.dog2.position.set( -2, 2, 6 );
+                this.add(this.dog2);
+            }
+
 
         this.lookupTable=[];
         for (var i=0; i<50; i++) {
