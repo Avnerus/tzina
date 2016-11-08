@@ -10,7 +10,6 @@ var characterAssoc={};
 //it has a totalProgress function to avoid undefined function call below
 var myWalkingTween={totalProgress:function(){return 1;}};
 
-var myCurrentAnimState="none";
 export default class Pidgeon extends THREE.Object3D{
   constructor(props){
     super();
@@ -99,11 +98,11 @@ export default class Pidgeon extends THREE.Object3D{
           },
           tweenTo.onStart = function(){
 
-            blendMesh.crossfadeTo("Bird_Walk",0.2);
+            thisPidgeon.changeAnimStateTo("Bird_Walk",0.2);
           },
           tweenTo.onComplete = function(){
             //pendant: replace plays with crossfadeTo
-            blendMesh.crossfadeTo("Bird_Idle",0.2);
+            thisPidgeon.changeAnimStateTo("Bird_Idle",0.2);
 
           },
           tweenTo.ease = Power0.easeNone
@@ -144,7 +143,9 @@ export default class Pidgeon extends THREE.Object3D{
       }
     }
   }
-  changeAnimStateTo(){
+  changeAnimStateTo(toAnim){
+    //change animation using state machine behaviour
+    var myCurrentAnimState=blendMesh.currentAnim;
     /*
     animation names:
     Bird_Eat
@@ -155,6 +156,50 @@ export default class Pidgeon extends THREE.Object3D{
     Bird_Pose
     Bird_Walk
     */
+    if(toAnim!=myCurrentAnimState){
+      if(myCurrentAnimState=="Bird_Eat"){
+        blendMesh.crossfadeTo(toAnim,0.2);
+      }else if(myCurrentAnimState=="Bird_Fly"){
+        //if i'm flying, I need to go through land animation unless our target state is land.
+        if(toAnim=="Bird_Land"||toAnim=="Bird_Pose"){
+          blendMesh.crossfadeTo(toAnim,0.2);
+        }else{
+          blendMesh.crossfadeToThrough(toAnim,"Bird_Land",0.2);
+        }
+      }else if(myCurrentAnimState=="Bird_FlyOff"){
+        if(toAnim=="Bird_Land"||toAnim=="Bird_Pose"){
+          blendMesh.crossfadeTo(toAnim,0.2);
+        }else{
+          blendMesh.crossfadeToThrough(toAnim,"Bird_Land",0.2);
+        }
+      }else if(myCurrentAnimState=="Bird_Idle"){
+        if(toAnim=="Bird_Fly"){
+          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",0.2);
+        }else{
+          blendMesh.crossfadeTo(toAnim,0.2);
+        }
+      }else if(myCurrentAnimState=="Bird_Land"){
+        if(toAnim=="Bird_Fly"){
+          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",0.2);
+        }else{
+          blendMesh.crossfadeTo(toAnim,0.2);
+        }
+      }else if(myCurrentAnimState=="Bird_Pose"){
+        if(toAnim=="Bird_Fly"){
+          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",0.2);
+        }else{
+          blendMesh.crossfadeTo(toAnim,0.2);
+        }
+      }else if(myCurrentAnimState=="Bird_Walk"){
+        if(toAnim=="Bird_Fly"){
+          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",0.2);
+        }else{
+          blendMesh.crossfadeTo(toAnim,0.2);
+        }
+      }else{
+        blendMesh.crossfadeTo(toAnim,0.2);
+      }
+    }
   }
   update(delta){
     if ( blendMesh ) { blendMesh.update( delta ); }

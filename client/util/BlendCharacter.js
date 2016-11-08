@@ -114,8 +114,17 @@ THREE.BlendCharacter = function (loadedObject) {
 		this.currentAnim=toAnimName;
 
 	};
-
+	//crossfade toAnimName
 	this.crossfadeTo=function(toAnimName, duration){
+		try{
+			console.log(this.currentAnim, toAnimName, duration);
+			this.crossfade(this.currentAnim, toAnimName, duration);
+		}catch(e){
+			console.error("BlendCharacter. crossfadeTo error",e);
+		}
+	}
+	//change to an animation, and when finished, change to the toAnimName
+	this.crossfadeToThrough=function(toAnimName,throughAnimName, duration){
 		try{
 			console.log(this.currentAnim, toAnimName, duration);
 			this.crossfade(this.currentAnim, toAnimName, duration);
