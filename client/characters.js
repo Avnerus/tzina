@@ -32,7 +32,7 @@ export default [
         uvdx: -0.025,
         width: 512,
         height: 2048,
-        scale: 0.003 * 0.71208,
+        scale: 0.003 * 0.3973,
         animationScale: 0.4,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
@@ -45,14 +45,14 @@ export default [
         basePath : 'assets/characters/itzik',
         mindepth : 2000.0,
         maxdepth : 3494.158935547,
-        position : [-7.29, 22.34, 9.34],
+        position : [-7.37, 22.28, 10.17],
         rotation: [20, 216, 16],
         animation: 'Itzik',
         uvdy: 0.478,
         uvdx: 0.0,
         width: 512,
         height: 2048,
-        scale: 0.0027 * 0.869,
+        scale: 0.0027 * 0.4223,
         animationScale: 0.18,
         animationPosition: [-0.1, -0.05, 0.5],
         animationRotation: [21, 3, 355],
@@ -126,8 +126,8 @@ export default [
         basePath : 'assets/characters/sasha',
         mindepth : 2131.298583984375,
         maxdepth : 3802.192626953125,
-        position : [-37.27, 19.74, 12.61],
-        rotation: [8, 261, 80],
+        position : [-37.78, 19.74, 13.54],
+        rotation: [8, 131, 343],
         animation: null,
         uvdy: 0.571527778,
         uvdx: 0.0,
@@ -161,14 +161,14 @@ export default [
         basePath : 'assets/characters/lupo-dogs',
         mindepth : 1500.681884765625,
         maxdepth : 3376.0517578125,
-        position : [-7.8, 22.47, 6.09],
+        position : [-7.5, 21.94, 7.15],
         rotation: [20, 241, 17.7],
         animation: null,
         uvdy: 0.4794921875,
         uvdx: 0.0,
         width: 1024,
         height: 1024,
-        scale: 0.003 * 0.3475,
+        scale: 0.003 * 0.406,
         subtitles: null,
         idleOnly: true
     },
@@ -200,8 +200,8 @@ export default [
                 sec: 0,
                 mindepth : 1499.999877929688,
                 maxdepth : 4564.32861328125,
-                position : [-13.21, 21.95, 3.53],
-                scale: 0.0039
+                position : [-13.53, 21.92, 3.7],
+                scale: 0.003 * 0.320823
             },
             {
                 sec: 92,
@@ -214,7 +214,7 @@ export default [
                 maxdepth : 4564.32861328125
             }
         ],
-        position : [-14.19, 22.05, 3.07],
+        position : [-14.19, 22.09, 3.07],
         rotation: [0, 37, 0],
         animation: 'Mark',
         uvdy: 0.458984375,
@@ -226,7 +226,8 @@ export default [
         animationScale: 0.20,
         animationPosition: [-.4, -.46, -.55],
         animationRotation: [0,-25,0],
-        space: 0.01,
+        space: 0.38,
+        spaceOffset: [-0.11,0,0],
         subtitles: null
     },
     {
@@ -234,14 +235,14 @@ export default [
         basePath : 'assets/characters/fatman-sleep',
         mindepth : 1370.90380859375,
         maxdepth : 3802.21240234375,
-        position : [-7.14, 22.09, 0.37],
-        rotation: [80, 261, 80.02],
+        position : [-6.36, 22.00, 0.37],
+        rotation: [82, 261, 82],
         animation: null,
         uvdy: 0.35986328125,
         uvdx: 0,
         width: 2048,
         height: 2048,
-        scale: 0.003 * 0.64725,
+        scale: 0.003 * 1.003,
         subtitles: null,
         idleOnly: true
     },
@@ -324,7 +325,7 @@ export default [
                 mindepth: 2015.678588867188,
                 maxdepth: 3681.246826171875,
                 position: [-11, 22.13, 5.74],
-                scale: 0.003 * 0.38466
+                scale: 0.003 * 0.52198
             }
         ],
         position : [-10.77, 21.99, 6.62],
@@ -334,20 +335,20 @@ export default [
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        //scale: 0.003 * 0.45469,
         scale: 0.003 * 0.6888,
         animationScale: 0.20,
         animationPosition: [-.4, -.46, -.55],
         animationRotation: [0,-25,0],
-        space: 0.5,
-        subtitles: null
+        subtitles: null,
+        space: 0.33,
+        spaceOffset: [0.36,0,0]
     },
     {
         name: 'Shirin12PM',
         basePath : 'assets/characters/shirin12pm',
         mindepth : 843.750000000,
         maxdepth : 4120.305664062,
-        position : [-10.32, 22.41, 8.4],
+        position : [-11.5, 22.41, 8.4],
         rotation: [347, 235, 340],
         animation: null,
         uvdy: 0.5,
@@ -358,8 +359,8 @@ export default [
         animationScale: 0.25,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 0.2,
-        spaceOffset: [0.39,0,-0.08],
+        space: 0.1,
+        spaceOffset: [1.57,0,-0.31],
         subtitles: null,
         fullOnly: true
     }

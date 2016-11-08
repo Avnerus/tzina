@@ -86,21 +86,7 @@ export default class Character extends THREE.Object3D {
                         }
 
                         if (this.nextAdjustment && this.fullVideo.video.currentTime >= this.nextAdjustment.sec) {
-                            this.fullVideo.setDepth(this.nextAdjustment.mindepth, this.nextAdjustment.maxdepth);
-                            if (this.nextAdjustment.scale) {
-                                this.fullVideo.setScale(this.nextAdjustment.scale);
-                            }
-                            if (this.nextAdjustment.position) {
-                                this.position.fromArray(this.nextAdjustment.position);
-                            }
-
-
-                            this.lastAdjustment = this.nextAdjustment;
-                            if (this.props.adjustments.length > 0) {
-                                this.nextAdjustment = this.props.adjustments.shift();
-                            } else {
-                                this.nextAdjustment = null;
-                            }
+                            this.adjust();
                         }
                         events.emit("character_progress", {name: this.props.name, time: this.fullVideo.video.currentTime});
                     }
@@ -267,7 +253,22 @@ export default class Character extends THREE.Object3D {
             this.position.fromArray(this.props.position);
         }
     }
+    adjust() {
+        this.fullVideo.setDepth(this.nextAdjustment.mindepth, this.nextAdjustment.maxdepth);
+        if (this.nextAdjustment.scale) {
+            this.fullVideo.setScale(this.nextAdjustment.scale);
+        }
+        if (this.nextAdjustment.position) {
+            this.position.fromArray(this.nextAdjustment.position);
+        }
 
+        this.lastAdjustment = this.nextAdjustment;
+        if (this.props.adjustments.length > 0) {
+            this.nextAdjustment = this.props.adjustments.shift();
+        } else {
+            this.nextAdjustment = null;
+        }
+    }
     onCollision() {
         //console.log("Collision!! ", this.props.name, this.inControl, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
@@ -329,6 +330,9 @@ export default class Character extends THREE.Object3D {
         if (this.fullReady && (this.subtitlesReady || !this.props.subtitles)) {
             if (this.animation) {
                 this.animation.start()
+            }
+            if (this.nextAdjustment && this.nextAdjustment.sec == 0) {
+                this.adjust();
             }
             this.playFull();
         }
