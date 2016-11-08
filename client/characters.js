@@ -222,7 +222,7 @@ export default [
         rotation: [80, 261, 80.02],
         animation: null,
         uvdy: 0.35986328125,
-        uvdx: 0.0,
+        uvdx: -0.01,
         width: 2048,
         height: 2048,
         scale: 0.003 * 0.64725,
