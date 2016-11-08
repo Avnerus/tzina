@@ -32,7 +32,7 @@ export default [
         uvdx: -0.025,
         width: 512,
         height: 2048,
-        scale: 0.003 * 0.71208
+        scale: 0.003 * 0.71208,
         animationScale: 0.4,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0

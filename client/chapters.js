@@ -21,21 +21,21 @@ export default
 				},
 					{
 					name: "junkie",
-					position: [3.14,24,9.42],
+					position: [2.24,24,10.32],
 					rotation: [182,335,0],
 					scale: 0.37
 				},
 					{
 					name: "pocketCam",
-					position: [-5.6,21,10.32],
+					position: [-5.4,21.2,10],
 					rotation: [0,81,0],
 					scale: 0.29
 				},
                        {
                        name: "dadOnBike",
-                       position: [11.22,21,11.22],
+                       position: [11.22,21.2,11.22],
                        rotation:[0,251,0],
-                       scale: 0.41
+                       scale: 0.45
                }/*,
 					{
 					name: "tashlih",
@@ -78,13 +78,13 @@ export default
 				},
 				       {
      		       name: "oldmansit",
-       			   position: [-11.23,23.2,-2],
+       			   position: [-11.52,23.2,28.92],
       			   rotation: [178,129,0],
          			 scale: 0.32
     			    },
     		     {
                     name: "sweetLady",
-                    position: [-10.8,22,9.42],
+                    position: [-10.2,21.3,9.42],
                     rotation: [0,134,0],
                     scale: 0.31
      		   },
@@ -102,9 +102,9 @@ export default
        		 },
        		 {
           name: "firstcouple",
-          position: [-17.51,21,2.24],
-          rotation: [0,263,0],
-          scale: 0.31
+          position: [-10.62,21.2,0.16],
+          rotation: [0,201,0],
+          scale: 0.35
         },
         	 {
           name: "AnlenGrandma",
