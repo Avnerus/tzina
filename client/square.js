@@ -14,6 +14,8 @@ const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PREFIX = "assets/square/benches/"
 const FOUNTAIN_PATH = "assets/square/fountain.json"
 const GROUND_PATH = "assets/square/ground_tile_512.json"
+const BENCHTEST_PATH = "assets/square/Bench_02.json"
+
 
 
 export default class Square extends THREE.Object3D{
@@ -96,7 +98,8 @@ export default class Square extends THREE.Object3D{
             this.loadColliders(loadingManager),
             this.loadBenches(loadingManager),
             this.loadFountain(loadingManager),
-            this.loadGround(loadingManager)
+            this.loadGround(loadingManager),
+            this.loadBenchtest(loadingManager)
         ];
         if (!this.config.noExtras) {
             loaders.push(this.extras.init(loadingManager));
@@ -127,7 +130,11 @@ export default class Square extends THREE.Object3D{
 
             let ground = results[7];
             ground.position.set(1.2, 0, -2.18);
+            
+            this.benchtest = results[8];
+           
             this.mesh.add(ground)
+            this.mesh.add(this.benchtest);
 
             this.mesh.add(this.fountainMesh);
 
@@ -149,7 +156,7 @@ export default class Square extends THREE.Object3D{
             THREE.SceneUtils.attach(cylinder, this.scene, this.clockwork);*/
 
 
-            this.clockwork.add(this.benches);
+          //  this.clockwork.add(this.benches);
             this.clockwork.add(this.buildings);
 
             // Starts as a child of the square which does the actual rotation
@@ -205,7 +212,7 @@ export default class Square extends THREE.Object3D{
             //this.benches.rotation.set(0,256,0);
 
             this.fountain.position.set(0.8,23.6, -0.6);
-            this.ground.position.set(1.2,-0.26, -2.18);
+            this.ground.position.set(1.2,0, -2.18);
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
 
@@ -603,6 +610,15 @@ export default class Square extends THREE.Object3D{
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(GROUND_PATH,( obj ) => {
                 console.log("Loaded ground ", obj);
+                resolve(obj);
+            });
+        });
+    }
+     loadBenchtest(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(BENCHTEST_PATH,( obj ) => {
+                console.log("Loaded benchtest ", obj);
                 resolve(obj);
             });
         });
