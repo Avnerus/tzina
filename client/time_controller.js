@@ -382,7 +382,10 @@ export default class TimeController {
         this.currentChapter = _.find(Chapters, {hour: this.currentHour });
     }
 
-    showChapterTitle() {
+   showChapterTitle() {
+        // 0 is hidden for now
+        if (this.currentChapter.hour == 0) { return; }
+
         if (this.chapterTitle.visible) {
             this.prevChapterTitle.visible = true;
             this.prevChapterTitle.text = this.chapterTitle.text;
@@ -391,7 +394,7 @@ export default class TimeController {
             TweenMax.to(this.prevChapterTitle.material, 1, {opacity: 0});
         }
         let targetOpacity = 1.0;
-        this.chapterTitle.text = this.currentChapter.hour + ":00 - " + this.currentChapter.name;
+        this.chapterTitle.text = this.getHourText(this.currentChapter.hour) + " - " + this.currentChapter.name;
         this.chapterTitle.visible = true;
         this.chapterTitle.position.fromArray(this.currentChapter.titlePosition);
         this.chapterTitle.material.opacity = 0;
@@ -400,6 +403,20 @@ export default class TimeController {
 
         //document.getElementById("chapter-title-text").innerHTML = chapter.hour + ":00 - " + chapter.name;
         this.turnOnChapterSun(this.currentHour);
+    }
+
+    getHourText(hour) {
+        let hourText = "";
+        
+        if (hour == 12) {
+            hourText = "12PM"            
+        } else if (hour > 12) {
+            hourText = (hour - 12) + "PM"
+        } else {
+            hourText = hour + "AM";
+        }
+
+        return hourText;
     }
 
     showInsideChapterTitle(hour) {
@@ -411,14 +428,8 @@ export default class TimeController {
         if (!chapter) {
             throw new Error("Invalid chapter hour " + hour);
         }
-        let hourText;
-        if (chapter.hour == 12) {
-            hourText = "12PM"            
-        } else if (chapter.hour > 12) {
-            hourText = (chapter.hour - 12) + "PM"
-        } else {
-            hourText = chapter.hour + "AM";
-        }
+        let hourText = this.getHourText(chapter.hour);
+
         this.insideChapterTitle.text = hourText;
 
         this.insideChapterTitle.position.fromArray(chapter.insideTitlePosition);
