@@ -206,4 +206,13 @@ export default class VideoRGBD  {
         this.meshMaterial.uniforms.opacity.value = opacity;
         this.linesMaterial.uniforms.opacity.value = Math.min(opacity,0.1);
     }
+
+    setDepth(min, max) {
+        console.log("Video " + this.properties.fileName + "Changing depth ", min, max);
+        this.meshMaterial.uniforms.mindepth.value = min;
+        this.meshMaterial.uniforms.maxdepth.value = max;
+
+        this.linesMaterial.uniforms.mindepth.value = min;
+        this.linesMaterial.uniforms.maxdepth.value = max;
+    }
 };

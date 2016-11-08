@@ -54,7 +54,7 @@ vec3 rgb2hsl( vec3 color ) {
 
 vec3 xyz( float x, float y, float depth ) {
     float z = depth * ( maxdepth - mindepth ) + mindepth;
-    return vec3( ( x / height  ) * z * fx, ( y / (width * 2.0)  ) * z * fy, - z );
+    return vec3( ( x / height  ) * z * fx, ( y / width ) * z * fy, - z );
 }
 
 void main() {

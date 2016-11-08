@@ -191,14 +191,23 @@ export default [
     {
         name: 'Mark',
         basePath : 'assets/characters/mark',
-            /*
-        mindepth : 2094.850646973,
-        maxdepth : 4473.095214844, */
 
-        mindepth :2689.70141601562,
-        maxdepth : 4381.86181640625,
+        mindepth : 1499.999877929688,
+        maxdepth : 4564.32861328125,
 
-        position : [-12.48, 22.11, 4],
+        adjustments : [
+            {
+                sec: 92,
+                mindepth: 2689.701416015625,
+                maxdepth: 4381.86181640625
+            },
+            {
+                sec: 117,
+                mindepth : 1499.999877929688,
+                maxdepth : 4564.32861328125
+            }
+        ],
+        position : [-14.48, 22.11, 4],
         rotation: [353, 61, 0],
         animation: 'Mark',
         uvdy: 0.458984375,
@@ -206,7 +215,7 @@ export default [
         uvdx: 0.0,
         width: 512,
         height: 2048,
-        scale: 0.003 * 1.38075,
+        scale: 0.003 * 0.25,
         animationScale: 0.20,
         animationPosition: [-.4, -.46, -.55],
         animationRotation: [0,-25,0],
@@ -222,7 +231,7 @@ export default [
         rotation: [80, 261, 80.02],
         animation: null,
         uvdy: 0.35986328125,
-        uvdx: -0.01,
+        uvdx: 0,
         width: 2048,
         height: 2048,
         scale: 0.003 * 0.64725,
@@ -290,8 +299,25 @@ export default [
     {
         name: 'Lupo12PM',
         basePath : 'assets/characters/lupo12pm',
-        mindepth : (1523.277099609375 + 1770.462036132813 + 2015.678588867188) / 3,
-        maxdepth : (3428.071533203125 + 3428.071533203125 + 3681.246826171875) / 3,
+        mindepth : 1770.462036132813,
+        maxdepth : 3428.071533203125,
+        adjustments : [
+            {
+                sec: 107,
+                mindepth: 1523.277099609375,
+                maxdepth: 3428.071533203125
+            },
+            {
+                sec: 134,
+                mindepth: 1770.462036132813,
+                maxdepth: 3428.071533203125
+            },
+            {
+                sec: 141,
+                mindepth: 2015.678588867188,
+                maxdepth: 3681.246826171875            
+            }
+        ],
         position : [-10.77, 21.97, 6.46],
         rotation: [355, 206, 0],
         animation: null,
@@ -303,7 +329,7 @@ export default [
         animationScale: 0.20,
         animationPosition: [-.4, -.46, -.55],
         animationRotation: [0,-25,0],
-        space: 0.2,
+        space: 0.5,
         subtitles: null
     },
     {
