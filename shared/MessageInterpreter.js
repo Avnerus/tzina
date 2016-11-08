@@ -4,7 +4,7 @@ this script is shared between server and client, and makes the task of compressi
 adn decompressing the data */
 
 //first header in lookup is misspelled to let know the developer that a message was not well spelled or undefined.
-let charLookup=["misspelled","newid","changeposition","newclient","statebatch","remove","ping","pong"];
+let charLookup=["misspelled","newid","changeposition","landed","newclient","statebatch","remove","ping","pong"];
 let verbose=false;
 
 function decode(bufferArray){

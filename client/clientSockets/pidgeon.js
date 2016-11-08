@@ -9,6 +9,7 @@ var characterAssoc={};
 //slower server update rate cretes
 //it has a totalProgress function to avoid undefined function call below
 var myWalkingTween={totalProgress:function(){return 1;}};
+var walkingOnGround=false;
 
 export default class Pidgeon extends THREE.Object3D{
   constructor(props){
@@ -24,8 +25,6 @@ export default class Pidgeon extends THREE.Object3D{
       console.warn("you created a character without providing server unique. This renders the character unreachable");
     }
     console.log("pidgeon",Pidgeon.geometry);
-
-
     blendMesh=new THREE.BlendCharacter(loaded3dObject);
     this.add( blendMesh );
     blendMesh.play("Bird_Fly",1);
@@ -95,13 +94,14 @@ export default class Pidgeon extends THREE.Object3D{
             for(let b in {x:0,y:0,z:0}){//this[b]?
               thisPidgeon.position[b]=tweenCurrentPosition[b];
             }
+            // console.log("tw",[thisPidgeon.position.x,thisPidgeon.position.y,thisPidgeon.position.z]);
           },
           tweenTo.onStart = function(){
-
+            if(walkingOnGround)
             thisPidgeon.changeAnimStateTo("Bird_Walk",0.2);
           },
           tweenTo.onComplete = function(){
-            //pendant: replace plays with crossfadeTo
+            if(walkingOnGround)
             thisPidgeon.changeAnimStateTo("Bird_Idle",0.2);
 
           },
@@ -142,6 +142,42 @@ export default class Pidgeon extends THREE.Object3D{
         // myDom.style.transform = 'rotate(' + a + 'deg)';
       }
     }
+  }
+  land(){
+    this.changeAnimStateTo("Bird_Idle");
+    walkingOnGround=true;
+  }
+  flyAway(onEndFunction){
+    let thisPidgeon=this;
+    let newPosition = {x:100,y:100,z:100}
+    //get new vector to move towards|
+    let Lokat=new THREE.Vector3(newPosition.x||0,newPosition.y||0,newPosition.z||0);
+    thisPidgeon.lookAt(Lokat);
+
+    let tweenCurrentPosition={};
+    let tweenTo={}
+    for(let b in newPosition){
+      tweenCurrentPosition[b]=thisPidgeon.position[b];
+      tweenTo[b]=newPosition[b];
+    }
+
+    tweenTo.onUpdate = function(){
+      //don't use tweenCurrentPosition to iterate because it contains the
+      //onupdate function
+      for(let b in {x:0,y:0,z:0}){//this[b]?
+        thisPidgeon.position[b]=tweenCurrentPosition[b];
+      }
+    },
+    tweenTo.onStart = function(){
+      thisPidgeon.changeAnimStateTo("Bird_Fly");
+    },
+    tweenTo.onComplete = function(){
+      if(onEndFunction) onEndFunction();
+    },
+    tweenTo.ease = Power0.easeNone
+
+    myWalkingTween=TweenMax.to(tweenCurrentPosition, 7, tweenTo);
+
   }
   changeAnimStateTo(toAnim){
     //change animation using state machine behaviour

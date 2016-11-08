@@ -1,7 +1,14 @@
+
 import Wsock from './ClientWebSocket';
 // let characters=require('./Characters');
 import Pidgeon from './pidgeon'
-//pendant:myClientId should be a .this let.
+
+//set here when to do certain things according to global events
+let eventWhenTo={
+  createSocket:"intro_end",
+  startEmittingPosition:"control_threshold"
+}
+
 //my own clientId, bint to server
 let myClientId;
 //pendant: this probably is no longer needed:
@@ -15,7 +22,7 @@ let minimumVectorChangeToBroadcast=0.3;
 let emitInterval=0.5;
 //last dt time a position was emitted to server
 let lastEmitTime=0;
-let verbose=false;
+let verbose=true;
 export default class PidgeonController {
   constructor(scene,camera) {
     this.scene = scene;
@@ -25,17 +32,18 @@ export default class PidgeonController {
   init(loadingManager){
 
     Pidgeon.initMesh(loadingManager);
-    events.on("control_threshold", (passed) => {
-      //when we enter the park square, if the socket has not been initialized already
-      if (passed&&!wsock){
+    events.on(eventWhenTo.createSocket, (passed) => {
+      if (!wsock){
         this.startSocket();
       }
     })
+
+
   }
   startSocket() {
     let host = window.document.location.host.replace(/:.*/, '');
     wsock=new Wsock('ws://' + host + ':9966');
-if(verbose)     console.log("Started pidgeon socket");
+    if(verbose)     console.log("Started pidgeon socket");
 
     let thisPidgeonController=this;
     // let pidgeon = new Pidgeon();
@@ -73,12 +81,31 @@ if(verbose)     console.log("Started pidgeon socket");
           thisPidgeonController.scene.add(newCharacter);
         }
 
+      }else if(message.header=="landed"){
+        // retrieve the pidgeon icon that represents my own.
+        let remoteSprite=Pidgeon.remote(message.pointer);
+        if(remoteSprite){
+          try{
+            remoteSprite.land();
+          }catch(e){
+            console.error(e,"pidgeon with remotesprite "+message.pointer,remoteSprite);
+          }
+          if(verbose)console.log("pidgeon retrieved",remoteSprite);
+        }else{
+          console.warn("couldn't retrieve the corresponding pidgeon. Creating a new one ",message);
+          //if we don't have it, we create it. Comment this if many pidgeon sprites start appearing
+          let newCharacter=new Pidgeon({position:{x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001},unique:message.pointer});
+          thisPidgeonController.scene.add(newCharacter);
+        }
+
       }else if(message.header=="remove"){
         if(verbose)console.log("pidgeon remove "+message.pointer);
         //pendant:this should be inside
         let remoteSprite=Pidgeon.remote(message.pointer);
         if(remoteSprite){
-          thisPidgeonController.scene.remove(remoteSprite);
+          remoteSprite.flyAway(function(){
+            thisPidgeonController.scene.remove(remoteSprite);
+          });
           //remoteSprite.remove();
         }else{
           console.warn("couldn't retrieve the corresponding pidgeon ",message);
@@ -88,6 +115,20 @@ if(verbose)     console.log("Started pidgeon socket");
         if(verbose)console.log("pidgeon client id:"+myClientId);
         //localSprite=new characters.Character({unique:myClientId});
         //console.log("new client Id",message);
+
+        events.on(eventWhenTo.startEmittingPosition, (passed) => {
+          //when we enter the park square, if the socket has not been initialized already
+          if (passed){
+            wsock.emit({header:"landed",pointer:myClientId,data:[0,0,0]},function(err,pl){
+              if(err){
+                console.error("landed not sent",err);
+              }else{
+              }
+            });
+          }
+        });
+
+
       }else if(message.header=="statebatch"){
         let batch=new Array();
         // var numeric_array = new Array();
@@ -102,9 +143,7 @@ if(verbose)     console.log("Started pidgeon socket");
           if(stateObjectUnique!=myClientId){
             //check if we already have a sprite for this remote object
             let dataOwner=Pidgeon.remote(stateObjectUnique);
-
             let dataCoordinates={x:batch[a+1]*0.001,y:batch[a+2]*0.001,z:batch[a+3]*0.001};
-
             if(dataOwner){
               if(verbose)console.log("pidgeon object "+stateObjectUnique+" found apply");
               //if we have it, will apply all the data to it. So far only position
