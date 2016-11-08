@@ -118,8 +118,8 @@ export default class TimeController {
         }
         
         this.chapterTitle = new MeshText2D("SPRITE", TEXT_DEFINITION)
-        this.chapterTitle.scale.set(0.3, 0.3, 0.3);
-        this.chapterTitle.visible = false;
+        this.chapterTitle.scale.set(0.109, 0.109, 0.109);
+        this.chapterTitle.visible = true;
 
         this.prevChapterTitle = new MeshText2D("SPRITE", TEXT_DEFINITION)
         this.prevChapterTitle.scale.set(0.3, 0.3, 0.3);
@@ -132,7 +132,7 @@ export default class TimeController {
         this.insideChapterTitleLineTwo.scale.multiplyScalar(0.04);
         //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
         //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
-
+    DebugUtil.positionObject(this.chapterTitle, "Outside title", true);
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
 
