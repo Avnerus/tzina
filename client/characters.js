@@ -22,9 +22,9 @@ export default [
     {
         name: 'Miriam',
         basePath : 'assets/characters/miriam',
-        mindepth : 1983.749877930,
+        mindepth : 2200.0,
         maxdepth : 3119.456298828,
-        position : [-1.19, 22.15, 11.55],
+        position : [-1.88, 22.17, 11.68],
         rotation: [10, 224, 12],
         animation: 'Miriam',
         uvdy_idle: 0.47900390625,
@@ -43,22 +43,31 @@ export default [
     {
         name: 'Itzik',
         basePath : 'assets/characters/itzik',
-        mindepth : 2000.0,
+        mindepth : 0,
         maxdepth : 3494.158935547,
-        position : [-7.37, 22.28, 10.17],
-        rotation: [20, 216, 16],
+        position : [-6.77, 21.94, 10.4],
+        rotation: [358, 216, 0],
         animation: 'Itzik',
         uvdy: 0.478,
         uvdx: 0.0,
         width: 512,
         height: 2048,
-        scale: 0.0027 * 0.4223,
+        scale: 0.0027 * 0.5308,
         animationScale: 0.18,
         animationPosition: [-0.1, -0.05, 0.5],
         animationRotation: [21, 3, 355],
         space: 0.13,
         spaceOffset: [-0.25,0,-0.07],
-        subtitles: false
+        subtitles: false,
+        adjustments : [
+            {
+                sec: 0,
+                mindepth : 0,
+                maxdepth : 3494.158935547,
+                position : [-6.8, 22.01, 10.47],
+                scale: 0.0027 * 0.4588
+            }
+        ]
     },
     {
         name: 'Haim',
