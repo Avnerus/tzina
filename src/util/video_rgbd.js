@@ -49,7 +49,7 @@ export default class VideoRGBD  {
             x3: height,
             y1: 512.0,
             y2: 1024,
-            y3: width,
+            y3: width * 2,
             uvdy: 0.35986,
             uvdx: -0.01,
             posz: 2600.0,
