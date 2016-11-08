@@ -54,12 +54,12 @@ vec3 rgb2hsl( vec3 color ) {
 
 vec3 xyz( float x, float y, float depth ) {
     float z = depth * ( maxdepth - mindepth ) + mindepth;
-    return vec3( ( x / height  ) * z * fx, ( y / height  ) * z * fy, - z );
+    return vec3( ( x / height  ) * z * fx, ( y / width ) * z * fy, - z );
 }
 
 void main() {
 
-    vUv = vec2( ( position.x + (width / 2.0) ) / width , ( position.y + (512.0)  ) / (height / 2.0) );
+    vUv = vec2( ( position.x + 512.0 ) / 1024.0 , ( position.y + 512.0  ) / 1024.0 );
 
     vUv.y = vUv.y * 0.5;// + 0.5;
 

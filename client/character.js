@@ -55,8 +55,14 @@ export default class Character extends THREE.Object3D {
         this.subtitlesReady = false;
         this.fullReady = false;
 
+        this.nextAdjustment = null;
+
     }
     init(loadingManager) {
+            if (this.props.adjustments) {
+                this.nextAdjustment = this.props.adjustments.shift();
+            }
+
             if (!this.props.fullOnly) {
                 this.idleVideo.init(loadingManager);
                 this.idleVideo.video.loop = true;
@@ -76,6 +82,15 @@ export default class Character extends THREE.Object3D {
                     if (this.playingFull) {
                         if (this.animation) {
                             this.animation.updateVideoTime(this.fullVideo.video.currentTime);
+                        }
+
+                        if (this.nextAdjustment && this.fullVideo.video.currentTime >= this.nextAdjustment.sec) {
+                            this.fullVideo.setDepth(this.nextAdjustment.mindepth, this.nextAdjustment.maxdepth);
+                            if (this.props.adjustments.length > 0) {
+                                this.nextAdjustment = this.props.adjustments.shift();
+                            } else {
+                                this.nextAdjustment = null;
+                            }
                         }
                         events.emit("character_progress", {name: this.props.name, time: this.fullVideo.video.currentTime});
                     }

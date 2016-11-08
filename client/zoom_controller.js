@@ -42,11 +42,18 @@ export default class ZoomController {
         );
 
 
+        /*
         this.BASE_WORLD_POSITION = new THREE.Vector3(
             1,
             12.67,
             -6.56
-        );
+            );
+            */
+        this.BASE_WORLD_POSITION = new THREE.Vector3(
+            -4.18,
+            12.67,
+            -5.62
+            );
 
         this.CHAPTER_THRESHOLD = 0.45;
         this.CONTROL_THRESHOLD = 1;
@@ -97,7 +104,7 @@ export default class ZoomController {
         events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "z"); 
 
         events.on("angle_updated", (hour) => {
-            if (!this.done) {
+            if (!this.done && typeof(hour) != 'undefined') {
                 if (hour == 24) { hour = 0; }
                 console.log("Zoom Controller: Hour angle updated to ", hour);
                 let entryPoint = _.find(this.square.ENTRY_POINTS, {hour: hour});
@@ -111,7 +118,7 @@ export default class ZoomController {
             }
         });
 
-            /*
+        /*
         let cube = DebugUtil.adjustableCube(this.BASE_WORLD_POSITION, "VR Cube", 1, 0xff0000);
         this.scene.add(cube);*/
     }

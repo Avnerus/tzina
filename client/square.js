@@ -14,7 +14,7 @@ const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PREFIX = "assets/square/benches/"
 const FOUNTAIN_PATH = "assets/square/fountain.json"
 const GROUND_PATH = "assets/square/ground_tile_512.json"
-const TEXTURES_PATH = "assets/square/textures.json"
+
 
 export default class Square extends THREE.Object3D{
     constructor(collisionManager, renderer, camera, config, soundManager, scene) {
@@ -27,7 +27,7 @@ export default class Square extends THREE.Object3D{
         this.camera = camera;
         this.scene = scene;
 
-        this.debug = true;
+        this.debug = false;
 
         this.sunTextureOffsets = {
             19 : 0.5,
@@ -125,6 +125,10 @@ export default class Square extends THREE.Object3D{
             
             this.ground = results[7];
 
+            let ground = results[7];
+            ground.position.set(1.2, 0, -2.18);
+            this.mesh.add(ground)
+
             this.mesh.add(this.fountainMesh);
 
 
@@ -153,7 +157,6 @@ export default class Square extends THREE.Object3D{
             this.clockworkOffset = new THREE.Object3D();
             this.clockworkOffset.rotation.order = "YXZ";
 
-            DebugUtil.positionObject(this.clockworkOffset, "Clockwork offset");
             this.clockworkOffset.add(this.clockwork);
             this.mesh.add(this.clockworkOffset);
 
@@ -163,8 +166,6 @@ export default class Square extends THREE.Object3D{
             this.mesh.add(this.fountain);
             this.mesh.add(this.extras);
             this.mesh.add(this.suns);
-            this.mesh.add(this.ground);
-           
 
             if (this.debug) {
                 /*
@@ -185,6 +186,7 @@ export default class Square extends THREE.Object3D{
                 events.emit("add_gui", {folder: "Clock rotation", listen: true}, this, "clockRotation", 0, 6.28); 
                 DebugUtil.positionObject(this.cylinder, "Cylinder");
                 DebugUtil.positionObject(this.clockwork, "Clockwork");
+                DebugUtil.positionObject(ground, "Ground");
             }
 
 
@@ -252,6 +254,11 @@ export default class Square extends THREE.Object3D{
                 if (sun) {
                     sun.getObjectByName(this.currentSun + "_L").visible = true;
                 }
+
+                setTimeout(() => {
+                    events.emit("angle_updated");
+                },0)
+
             }
         });
     }
@@ -418,7 +425,7 @@ export default class Square extends THREE.Object3D{
 
             let loader = new THREE.ObjectLoader(loadingManager);
 
-            events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
+            //events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
             loader.load(SUNS_PATH,( obj ) => {
                 console.log("Loaded suns", obj)
 
@@ -595,21 +602,7 @@ export default class Square extends THREE.Object3D{
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(GROUND_PATH,( obj ) => {
-                console.log("Loaded ground fountain ", obj);
-                resolve(obj);
-            });
-        });
-    }
-    loadTextures(loadingManager) {
-        return new Promise((resolve, reject) => {
-            let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(TEXTURES_PATH,( obj ) => {
-                console.log("Loaded square textures ", obj);
-
-                // Disable depth write for the texture planes
-                for (let i = 0; i < obj.children.length; i++) {
-                    obj.children[i].children[0].material.depthWrite = false;
-                }
+                console.log("Loaded ground ", obj);
                 resolve(obj);
             });
         });

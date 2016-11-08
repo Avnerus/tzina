@@ -1,6 +1,5 @@
 import Clouds from './clouds';
 
-const SUN_DISTANCE = 80;
 
 
 const States = {
@@ -12,6 +11,8 @@ export default class Sky {
     constructor(loadingManager, scene, dirLight, hemiLight) {
         console.log("Sky constructed!")
         const glslify = require('glslify');
+
+        this.SUN_DISTANCE = 51;
 
         // Shaders
         this.sky_fs = glslify('./shaders/sky_fs.glsl')
@@ -95,6 +96,8 @@ export default class Sky {
 
         this.updateSunPosition();
 
+
+        //events.emit("add_gui", {folder:"Sun distance", listen:false}, this, "SUN_DISTANCE",0,200); 
 
         /*events.emit("add_gui", {folder:"Sun shader", step: 0.01, listen:false}, this.shader.uniforms.luminance, "value", 1.0,2.0); 
         events.emit("add_gui", {folder:"Sun shader", listen:false}, this.shader.uniforms.turbidity, "value",-200,200); 
@@ -273,9 +276,9 @@ export default class Sky {
         let phi = 2 * Math.PI * ( this.azimuth - 0.5 );
 
         this.sunPosition.set(
-            SUN_DISTANCE * Math.cos( phi ),
-            SUN_DISTANCE * Math.sin( phi ) * Math.sin( theta ),
-            SUN_DISTANCE * Math.sin( phi ) * Math.cos( theta )
+            this.SUN_DISTANCE * Math.cos( phi ),
+            this.SUN_DISTANCE * Math.sin( phi ) * Math.sin( theta ),
+            this.SUN_DISTANCE * Math.sin( phi ) * Math.cos( theta )
         );
 
         this.shader.uniforms.sunPosition.value.copy(this.sunPosition);

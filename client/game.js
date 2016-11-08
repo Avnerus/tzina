@@ -279,20 +279,6 @@ export default class Game {
 
         this.counter = 0;
 
-        events.on("angle_updated", (hour) => {
-            if (this.timeController.wasUsed && !this.zoomController.wasUsed && (hour == 17 || hour == 19)) {
-                let lastHour = hour;
-                setTimeout(() => {
-                    if (this.timeController.currentHour == lastHour && !this.zoomController.wasUsed) {
-                        this.showZoomGuidance();
-                        setTimeout(() => {
-                            this.hideZoomGuidance();
-                        },3000);
-                    }
-                }, 3000);
-            }
-        });
-
         events.on("zoom_used", () => {
             console.log("Zoom controller used!");
             this.shownZoom = true;
@@ -311,7 +297,7 @@ export default class Game {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 this.controlPassed = true;
-                //this.introAni.disposeAni();
+                this.introAni.disposeAni();
                 if (!this.shownWASD) {
                     document.getElementById("wasd-container").style.display = "block";
                     setTimeout(() => {
