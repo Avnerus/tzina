@@ -207,8 +207,8 @@ export default [
                 maxdepth : 4564.32861328125
             }
         ],
-        position : [-14.48, 22.11, 4],
-        rotation: [353, 61, 0],
+        position : [-14.19, 22.11, 3.24],
+        rotation: [353, 35, 0],
         animation: 'Mark',
         uvdy: 0.458984375,
         uvdy_idle: 0.541015625,
@@ -315,17 +315,19 @@ export default [
             {
                 sec: 141,
                 mindepth: 2015.678588867188,
-                maxdepth: 3681.246826171875            
+                maxdepth: 3681.246826171875,
+                position: [-11, 22.25, 5.74],
+                scale: 0.003 * 0.35432
             }
         ],
-        position : [-10.77, 21.97, 6.46],
-        rotation: [355, 206, 0],
+        position : [-10.77, 22.06, 6.46],
+        rotation: [14, 206, 0],
         animation: null,
         uvdy: 0.4970703125,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.5545,
+        scale: 0.003 * 0.45469,
         animationScale: 0.20,
         animationPosition: [-.4, -.46, -.55],
         animationRotation: [0,-25,0],

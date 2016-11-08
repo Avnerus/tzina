@@ -56,6 +56,7 @@ export default class Character extends THREE.Object3D {
         this.fullReady = false;
 
         this.nextAdjustment = null;
+        this.lastAdjustment = null;
 
     }
     init(loadingManager) {
@@ -86,6 +87,15 @@ export default class Character extends THREE.Object3D {
 
                         if (this.nextAdjustment && this.fullVideo.video.currentTime >= this.nextAdjustment.sec) {
                             this.fullVideo.setDepth(this.nextAdjustment.mindepth, this.nextAdjustment.maxdepth);
+                            if (this.nextAdjustment.scale) {
+                                this.fullVideo.setScale(this.nextAdjustment.scale);
+                            }
+                            if (this.nextAdjustment.position) {
+                                this.position.fromArray(this.nextAdjustment.position);
+                            }
+
+
+                            this.lastAdjustment = this.nextAdjustment;
                             if (this.props.adjustments.length > 0) {
                                 this.nextAdjustment = this.props.adjustments.shift();
                             } else {
@@ -252,6 +262,10 @@ export default class Character extends THREE.Object3D {
         }
         this.isPaused = true;
         events.emit("character_idle", this.props.name)
+
+        if (this.lastAdjustment && this.lastAdjustment.position) {
+            this.position.fromArray(this.props.position);
+        }
     }
 
     onCollision() {
@@ -331,6 +345,10 @@ export default class Character extends THREE.Object3D {
         }
         this.fullVideo.mesh.visible = true;
         this.fullVideo.wire.visible = true;
+
+        if (this.lastAdjustment && this.lastAdjustment.position) {
+            this.position.fromArray(this.lastAdjustment.position);
+        }
 
         if(this.config.skipCharacters) {
             DebugUtil.fastForward(this.fullVideo.video);

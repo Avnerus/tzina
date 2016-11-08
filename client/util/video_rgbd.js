@@ -215,4 +215,9 @@ export default class VideoRGBD  {
         this.linesMaterial.uniforms.mindepth.value = min;
         this.linesMaterial.uniforms.maxdepth.value = max;
     }
+
+    setScale(scale) {
+        this.mesh.scale.set(scale, scale, scale);
+        this.wire.scale.set(scale, scale, scale);
+    }
 };
