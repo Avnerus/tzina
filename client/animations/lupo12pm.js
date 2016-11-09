@@ -245,7 +245,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     new_c.position.set(
                         Math.sin( Math.PI*2/20*(i-6) ) * 9,
                         -1,
-                        Math.cos( Math.PI*2/20*(i-6) ) * 9 + 5,
+                        Math.cos( Math.PI*2/20*(i-6) ) * 9 + 5
                     );
                     new_c.rotation.y = Math.PI/2 - this.lookupTable[i]*Math.PI;
                     this.add(new_c);
@@ -725,7 +725,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     meshh.position.copy( modelTargetPos );
                     lupoArtBottom.add(meshh);
 
-                    DebugUtil.positionObject(meshhh, "art"+this.artNum);
+                    //DebugUtil.positionObject(meshhh, "art"+this.artNum);
                     this.artNum++;
                 });
                 // this.loadModels.bind(undefined, loader, i);

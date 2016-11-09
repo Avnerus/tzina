@@ -88,8 +88,7 @@ export default [
         animationRotation: [-4, -23, -9],
         space: 1.5,
         volume: 0.1,
-        subtitles: false,
-        fullOnly: false
+        subtitles: false
     },
     {
         name: 'Rami',

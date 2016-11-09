@@ -33,30 +33,11 @@ export default class VideoRGBD  {
 
         this.video = document.createElement( 'video' );
 
-        //console.log("VideoRGBD constructed: " , this.properties);
-    }
-
-    init() {
-        if (this.properties.volume) {
-            console.log("Video volume ", this.properties.volume);
-            this.video.volume = this.properties.volume;
-        }
-
-        /*
-        this.video.crossOrigin = "anonymous"
-        console.log("Cross origin video ", this.video.crossOrigin); */
-
         this.isPlaying = false;
 
-       /*
-
-        if (scene) {
-            var bbox = new THREE.BoundingBoxHelper( this.mesh, 0xff0000  );
-            bbox.update();
-            scene.add( bbox );
-        }*/
+        //console.log("VideoRGBD constructed: " , this.properties);
     }
-    load() {
+    init() {
         console.log("Video rgbd loading ", this.properties.fileName);
         this.videoTexture = new THREE.Texture( this.video );
         this.videoTexture.minFilter = THREE.LinearFilter;
@@ -123,9 +104,15 @@ export default class VideoRGBD  {
 
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
+
     }
-    start() {
+    load() {
         this.video.src = this.properties.fileName;
+        if (this.properties.volume) {
+            console.log("Video volume ", this.properties.volume);
+            this.video.volume = this.properties.volume;
+        }
+
         this.video.load();
     }
     unload() {

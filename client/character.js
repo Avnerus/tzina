@@ -62,14 +62,7 @@ export default class Character extends THREE.Object3D {
 
     }
     init(loadingManager) {
-
             this.position.fromArray(this.props.position);
-            if (!this.props.fullOnly) {
-                this.idleVideo.init();
-            }
-            if (!this.props.idleOnly) {
-                this.fullVideo.init();
-            }
 
             this.rotation.set(
                 this.props.rotation[0] * Math. PI / 180,
@@ -137,15 +130,15 @@ export default class Character extends THREE.Object3D {
             }
 
             if (!this.props.fullOnly) {
-                this.idleVideo.load();
-                this.idleVideo.start();
+                this.idleVideo.init();
                 this.idleVideo.video.loop = true;
                 this.add(this.idleVideo.mesh);
                 this.add(this.idleVideo.wire);
+                this.idleVideo.load();
             }
             
             if (!this.props.idleOnly) {
-                this.fullVideo.load();
+                this.fullVideo.init();
                 this.fullVideo.mesh.visible = false;
                 this.fullVideo.wire.visible = false;
 
@@ -303,20 +296,14 @@ export default class Character extends THREE.Object3D {
                     this.subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
                     this.subtitlesVideo.load();
                 }
-                if (this.props.fullOnly) {
-                    this.fullVideo.video.addEventListener('canplay',() => {
-                        if (!this.fullReady) {
-                            console.log(this.props.name + " - Full video ready");
-                            this.fullReady = true;
-                            this.checkReady();
-                        }
-                    },false);
-                    this.fullVideo.start();
-                    this.fullVideo.play();
-                } else {
-                    this.fullReady = true;
-                    this.checkReady();
-                }
+                this.fullVideo.video.addEventListener('canplay',() => {
+                    if (!this.fullReady) {
+                        console.log(this.props.name + " - Full video ready");
+                        this.fullReady = true;
+                        this.checkReady();
+                    }
+                },false);
+                this.fullVideo.load();
 
             } else {
                 console.log("Resume");

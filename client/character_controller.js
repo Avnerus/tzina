@@ -72,7 +72,10 @@ export default class CharacterController {
         events.on("angle_updated", (hour) => {
             if (this.inControl){ {
                 this.activeCharacters.forEach((character) => {
-                    if (!character.done && !character.addedColliders) {
+                    if (character.idleOnly) {
+                        character.addedColliders = true;
+                    }
+                    else if (!character.done && !character.addedColliders) {
                         console.log("Adding colliders: " + character.props.name);
                         this.collisionManager.addCharacter(character);
                         character.addedColliders = true;
