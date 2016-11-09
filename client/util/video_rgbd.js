@@ -31,11 +31,12 @@ export default class VideoRGBD  {
 
         this.SEC_PER_RGBD_FRAME = 1 / this.properties.fps;
 
+        this.video = document.createElement( 'video' );
+
         //console.log("VideoRGBD constructed: " , this.properties);
     }
 
-    init(loadingManager) {
-        this.video = document.createElement( 'video' );
+    init() {
         if (this.properties.volume) {
             console.log("Video volume ", this.properties.volume);
             this.video.volume = this.properties.volume;
@@ -46,6 +47,17 @@ export default class VideoRGBD  {
         console.log("Cross origin video ", this.video.crossOrigin); */
 
         this.isPlaying = false;
+
+       /*
+
+        if (scene) {
+            var bbox = new THREE.BoundingBoxHelper( this.mesh, 0xff0000  );
+            bbox.update();
+            scene.add( bbox );
+        }*/
+    }
+    load() {
+        console.log("Video rgbd loading ", this.properties.fileName);
         this.videoTexture = new THREE.Texture( this.video );
         this.videoTexture.minFilter = THREE.LinearFilter;
         this.videoTexture.magFilter = THREE.LinearFilter;
@@ -111,23 +123,18 @@ export default class VideoRGBD  {
 
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
-
-       /*
-
-        if (scene) {
-            var bbox = new THREE.BoundingBoxHelper( this.mesh, 0xff0000  );
-            bbox.update();
-            scene.add( bbox );
-        }*/
-    }
-    load() {
-        console.log("Video rgbd loading ", this.properties.fileName);
         this.video.src = this.properties.fileName;
         this.video.load();
     }
     unload() {
         this.pause();
         this.video.src = "";
+
+        this.mesh.geometry.dispose();
+        this.wire.geometry.dispose();
+        this.videoTexture.dispose();
+        this.linesMaterial.dispose();
+        this.meshMaterial.dispose();
     }
 
     buildMeshGeometry() {
