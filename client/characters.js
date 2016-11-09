@@ -88,7 +88,8 @@ export default [
         animationRotation: [-4, -23, -9],
         space: 1.5,
         volume: 0.1,
-        subtitles: false
+        subtitles: false,
+        fullOnly: false
     },
     {
         name: 'Rami',
@@ -453,7 +454,7 @@ export default [
     },
     {
         name: 'Shirin7PM',
-        basePath : 'assets/characters/shirin5pm',
+        basePath : 'assets/characters/shirin7pm',
         mindepth : 1214.999755859,
         maxdepth : 3681.950439453,
         position : [-11.55, 21.6, -9.78],

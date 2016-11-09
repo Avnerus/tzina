@@ -123,10 +123,13 @@ export default class VideoRGBD  {
 
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
+    }
+    start() {
         this.video.src = this.properties.fileName;
         this.video.load();
     }
     unload() {
+        console.log("Video unload", this.properties.fileName);
         this.pause();
         this.video.src = "";
 
