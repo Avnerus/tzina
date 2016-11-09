@@ -63,7 +63,7 @@ THREE.BlendCharacter = function (loadedObject) {
 	//used when it was loaded using a json loader because object type is geometry
 	this.applyLoadedGeometry=function(geometry,materials){
 		var originalMaterial = materials[ 0 ];
-		originalMaterial=new THREE.MeshBasicMaterial({color:0xFF0000,wireframe:true});
+
 		originalMaterial.skinning = true;
 		THREE.SkinnedMesh.call( this, geometry, originalMaterial );
 
@@ -77,28 +77,19 @@ THREE.BlendCharacter = function (loadedObject) {
 
 		}
 	}
-
-	this.loadNewDiffuse=function(url,onLoad){
-		var loader = new THREE.TextureLoader();
-		loader.load(url,/*onready*/function ( texture ) {
-				console.log("pidgeon texture loaded");
-				//thisBlendCharacter.material.map=texture;
-				thisBlendCharacter.material = new THREE.MeshBasicMaterial( {
-					map: texture,
-					skinning:true
-				 } );
-				 if ( onLoad !== undefined ) onLoad();
-
-			},/*onprogress*/function ( xhr ) {
-				console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-			},/*onerror*/function ( xhr ) {
-				console.log( 'An error happened' );
-			}
-		);
-		// newTexture = new THREE.ImageUtils.loadTexture(url, {}, function(newTexture){
-		//
-		// });
+	this.wireframe=function(){
+		this.material=new THREE.MeshBasicMaterial({color:0xFF0000,wireframe:true});
 	}
+	this.applyNewDiffuse=function(texture){
+		console.log("pidgeon texture loaded");
+		//thisBlendCharacter.material.map=texture;
+		thisBlendCharacter.material = new THREE.MeshBasicMaterial( {
+			map: texture,
+			skinning:true
+		 } );
+		//  if ( onLoad !== undefined ) onLoad();
+	}
+
 
 	this.update = function( dt ) {
 		if(this.mixer){
@@ -235,6 +226,22 @@ THREE.BlendCharacter.loadGeometry = function ( url, onLoad, loadingManager ) {
 	} );
 };
 
+THREE.BlendCharacter.loadNewDiffuse=function(url,onLoad,loadingManager){
+	if(loadingManager){
+		var loader = new THREE.TextureLoader();
+	}else{
+		var loader = new THREE.TextureLoader(loadingManager);
+	}
+
+	loader.load(url,/*onready*/function ( texture ) {
+			if(onLoad!==undefined) onLoad(texture);
+		},/*onprogress*/function ( xhr ) {
+			console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+		},/*onerror*/function ( xhr ) {
+			console.log( 'An error happened' );
+		}
+	);
+}
 THREE.BlendCharacter.prototype = Object.create( THREE.SkinnedMesh.prototype );
 THREE.BlendCharacter.prototype.constructor = THREE.BlendCharacter;
 

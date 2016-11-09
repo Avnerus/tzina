@@ -1,6 +1,7 @@
 var BlendCharacter=require('../util/BlendCharacter.js');
 var blendMesh;
 var loaded3dObject;
+var loadedSkinTexture;
 //an array of the displayable pidgeons for client side reference
 var characterList = [];
 //an array of the associations between server id's and client side id's
@@ -28,6 +29,7 @@ export default class Pidgeon extends THREE.Object3D{
     }
     // console.log("pidgeon",Pidgeon.geometry);
     blendMesh=new THREE.BlendCharacter(loaded3dObject);
+    blendMesh.applyNewDiffuse(loadedSkinTexture);
     this.add( blendMesh );
     blendMesh.play("Bird_Fly",1);
     // blendMesh.position.z=0.2*a;
@@ -244,7 +246,7 @@ export default class Pidgeon extends THREE.Object3D{
         if(toAnim=="Bird_Fly"){
           blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
         }else{
-          blendMesh.crossfadeTo(toAnim,1);
+          blendMesh.crossfadeTo(toAnim,0.2);
         }
       }else{
         blendMesh.crossfadeTo(toAnim,1);
@@ -269,11 +271,19 @@ export default class Pidgeon extends THREE.Object3D{
     // this.material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true} );
 
     // let loader = new THREE.JSONLoader(loadingManager);
+    //statically load mesh, animations and skin
     try{
-      //statically load mesh, animations and skin
       THREE.BlendCharacter.loadGeometry( 'assets/pidgeon/Bird_27.json', function(geometry,materials) {
   			loaded3dObject={tipology:"Geometry",geometry:geometry,materials:materials};
   			console.log("pidgeon 3d object loaded");
+  		},loadingManager );
+    }catch(e){
+      console.error("pidgeon",e);
+    }
+    try{
+      THREE.BlendCharacter.loadNewDiffuse( 'assets/pidgeon/pigeons_v2.jpg', function(newTexture) {
+  			loadedSkinTexture=newTexture;
+  			console.log("pidgeon skin texture loaded");
   		},loadingManager );
     }catch(e){
       console.error("pidgeon",e);
