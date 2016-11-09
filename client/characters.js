@@ -341,17 +341,17 @@ export default [
         ],
         position : [-10.77, 21.99, 6.62],
         rotation: [2, 216, 0],
-        animation: null,
+        animation: 'Lupo12PM',
         uvdy: 0.4970703125,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
         scale: 0.003 * 0.6888,
-        animationScale: 0.20,
-        animationPosition: [-.4, -.46, -.55],
-        animationRotation: [0,-25,0],
+        animationScale: 0.25,
+        animationPosition: [-0.66, -0.41, -0.96], // -0.53, -0.51, -1.76
+        animationRotation: [0,0,0], // 0,-25,0
         subtitles: null,
-        space: 0.33,
+        space: 2,
         spaceOffset: [0.36,0,0]
     },
     {

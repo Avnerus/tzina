@@ -21,7 +21,7 @@ import DebugUtil from './util/debug'
 
 // Animations
 import HannahAnimation from './animations/hannah'
-import LupoAnimation from './animations/lupo'
+import Lupo12PMAnimation from './animations/lupo12pm'
 import MiriamAnimation from './animations/miriam'
 import HaimAnimation from './animations/haim'
 import ItzikAnimation from './animations/itzik'
@@ -168,7 +168,8 @@ export default class Game {
                 'Itzik' : new ItzikAnimation(),
                 'Meir' : new MeirAnimation(),
                 'Mark' : new MarkAnimation(),
-                'Agam12PM' : new Agam12PMAnimation()
+                'Agam12PM' : new Agam12PMAnimation(),
+                'Lupo12PM' : new Lupo12PMAnimation()
             }
         } else {
             this.animations = {};
