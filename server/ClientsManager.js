@@ -45,13 +45,13 @@ export function ClientsManager(){
       thisClientsManager.forEach(function(thisClient){
         if(thisClient.waitingPong){
           thisClientsManager.removeClient(thisClient);
-if(verbose)           console.log('stopping client '+thisClient.unique+" from ping-pong death");
+          if(verbose)console.log('stopping client '+thisClient.unique+" from ping-pong death");
           thisClient.broadcast({
             header: "remove",
             pointer: thisClient.unique
           });
         }else{
-if(verbose)           console.log("iter"+thisClient.unique);
+          if(verbose)console.log("iter"+thisClient.unique);
           thisClient.send({header:"ping"});
           thisClient.waitingPong=true;
         }
@@ -91,8 +91,8 @@ if(verbose)           console.log("iter"+thisClient.unique);
         //track changes and broadcast the ones that need
         thisClient.trackChange(event.parsedMessage);
         thisClientsManager.enqueuePosition(thisClient);
-        if(event.parsedMessage.header=="changeposition"){
-if(verbose)           console.log("position",event.parsedMessage);
+        if(event.parsedMessage.header=="landed"){
+          if(verbose)console.log("event land",event.parsedMessage);
           // thisClient.broadcast(event.rawMessage);
         }
         event.client=thisClient;

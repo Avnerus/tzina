@@ -10,16 +10,21 @@ THREE.BlendCharacter = function (loadedObject) {
 	this.warpSchedule = [];
 	this.currentAnim="";
 	var thisBlendCharacter=this;
-
-
 	this.load = function ( url, onLoad ) {
-		THREE.BlendCharacter.loadObject(url,function(loadedObject){
-			thisBlendCharacter.applyLoadedObject(loadedObject);
+
+		// THREE.BlendCharacter.loadObject(url,function(loadedObject){
+		// 	thisBlendCharacter.applyLoadedObject(loadedObject);
+		// 	console.log(thisBlendCharacter.mixer);
+		// });
+
+		THREE.BlendCharacter.loadGeometry(url,function(a,b){
+			thisBlendCharacter.applyLoadedGeometry(a,b);
 			console.log(thisBlendCharacter.mixer);
 		});
 
 		// if(onLoad!==undefined) onLoad();
 	};
+	//used when it was loaded using an object loader because object type is object
 	this.applyLoadedObject=function(loadedObject){
 		// The exporter does not currently allow exporting a skinned mesh by itself
 		// so we must fish it out of the hierarchy it is embedded in (scene)
@@ -55,47 +60,57 @@ THREE.BlendCharacter = function (loadedObject) {
 		}
 
 	}
+	//used when it was loaded using a json loader because object type is geometry
+	this.applyLoadedGeometry=function(geometry,materials){
+		var originalMaterial = materials[ 0 ];
+		originalMaterial=new THREE.MeshBasicMaterial({color:0xFF0000,wireframe:true});
+		originalMaterial.skinning = true;
+		THREE.SkinnedMesh.call( this, geometry, originalMaterial );
 
-	this.loadJSON = function ( url, onLoad ) {
+		var mixer = new THREE.AnimationMixer( this );
+		this.mixer = mixer;
 
-		var scope = this;
+		// Create the animations
+		for ( var i = 0; i < geometry.animations.length; ++ i ) {
+			console.log("animation",this.geometry.animations[ i ]);
+			mixer.clipAction( geometry.animations[ i ] );
 
-		var loader = new THREE.JSONLoader();
-		loader.load( url, function( geometry, materials ) {
+		}
+	}
 
-			var originalMaterial = materials[ 0 ];
-			originalMaterial.skinning = true;
+	this.loadNewDiffuse=function(url,onLoad){
+		var loader = new THREE.TextureLoader();
+		loader.load(url,/*onready*/function ( texture ) {
+				console.log("pidgeon texture loaded");
+				//thisBlendCharacter.material.map=texture;
+				thisBlendCharacter.material = new THREE.MeshBasicMaterial( {
+					map: texture,
+					skinning:true
+				 } );
+				 if ( onLoad !== undefined ) onLoad();
 
-
-			THREE.SkinnedMesh.call( scope, geometry, originalMaterial );
-
-			var mixer = new THREE.AnimationMixer( scope );
-			scope.mixer = mixer;
-
-			// Create the animations
-			for ( var i = 0; i < geometry.animations.length; ++ i ) {
-				console.log("animation",scope.geometry.animations[ i ]);
-				mixer.clipAction( geometry.animations[ i ] );
-
+			},/*onprogress*/function ( xhr ) {
+				console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+			},/*onerror*/function ( xhr ) {
+				console.log( 'An error happened' );
 			}
-
-			// Loading is complete, fire the callback
-			if ( onLoad !== undefined ) onLoad();
-
-		} );
-
-	};
-
+		);
+		// newTexture = new THREE.ImageUtils.loadTexture(url, {}, function(newTexture){
+		//
+		// });
+	}
 
 	this.update = function( dt ) {
-
-		this.mixer.update( dt );
-
-	};
+		if(this.mixer){
+			this.mixer.update( dt );
+		}else{ console.warn("trtyin to update but this.mixer is undefined",this);
+		};
+	}
 
 	this.play = function( animName, weight ) {
 		this.currentAnim=animName;
 		//console.log("play('%s', %f)", animName, weight);
+		console.log(this.mixer);
 		return this.mixer.clipAction( animName ).
 				setEffectiveWeight( weight ).play();
 	};
@@ -184,7 +199,16 @@ THREE.BlendCharacter = function (loadedObject) {
 	}
 
 	//this allows us to instance one same loadedObject into multiple BlendCharacters
-	if(loadedObject) this.applyLoadedObject(loadedObject);
+	if(loadedObject){
+		if(loadedObject.tipology=="Object"){
+			this.applyLoadedObject(loadedObject);
+		}else if(loadedObject.tipology=="Geometry"){
+			this.applyLoadedGeometry(loadedObject.geometry,loadedObject.materials);
+		}else{
+			this.applyLoadedObject(loadedObject);
+		}
+	};
+
 };
 
 THREE.BlendCharacter.loadObject=function(url, onLoad, loadingManager){
@@ -196,6 +220,18 @@ THREE.BlendCharacter.loadObject=function(url, onLoad, loadingManager){
 
 	loader.load( url, function( loadedObject ) {
 		if ( onLoad !== undefined ) onLoad(loadedObject);
+	} );
+};
+
+THREE.BlendCharacter.loadGeometry = function ( url, onLoad, loadingManager ) {
+	if(loadingManager){
+		var loader = new THREE.JSONLoader();
+	}else{
+		var loader = new THREE.JSONLoader(loadingManager);
+	}
+
+	loader.load( url, function( geometry, materials ) {
+			if ( onLoad !== undefined ) onLoad(geometry, materials );
 	} );
 };
 

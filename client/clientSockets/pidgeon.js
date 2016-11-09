@@ -9,11 +9,13 @@ var characterAssoc={};
 //slower server update rate cretes
 //it has a totalProgress function to avoid undefined function call below
 var myWalkingTween={totalProgress:function(){return 1;}};
-var walkingOnGround=false;
+
 
 export default class Pidgeon extends THREE.Object3D{
   constructor(props){
     super();
+    this.walkingOnGround=false;
+
     let thisPidgeon=this;
     let properties = props || {};
     // console.log("c",properties);
@@ -24,16 +26,17 @@ export default class Pidgeon extends THREE.Object3D{
     }else{
       console.warn("you created a character without providing server unique. This renders the character unreachable");
     }
-    console.log("pidgeon",Pidgeon.geometry);
+    // console.log("pidgeon",Pidgeon.geometry);
     blendMesh=new THREE.BlendCharacter(loaded3dObject);
     this.add( blendMesh );
     blendMesh.play("Bird_Fly",1);
     // blendMesh.position.z=0.2*a;
     //these json models insist on coming rotated.
-    blendMesh.rotation.x=Math.PI/-2;
-    blendMesh.rotation.z=Math.PI;
+    // blendMesh.rotation.x=Math.PI/-2;
+    // blendMesh.rotation.z=Math.PI;
+    blendMesh.rotation.y=Math.PI;
     // this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
-    // this.mesh.position.set(0,0.07,0);
+    blendMesh.position.set(0,-0.49,0);
     // this.mesh.scale.set(0.3,0.3,0.3);
     // this.add(this.mesh);
     /*pendant: these may become handy later, but currently unused:*/
@@ -61,19 +64,29 @@ export default class Pidgeon extends THREE.Object3D{
     }
     this.walkTowards={
       position:function(newPosition){
-        //get new vector to move towards
+        //get new vector to look at. this is only used for rotation and will ignore the y component avoiding weird rotations
         let Lokat=new THREE.Vector3(newPosition.x||0,thisPidgeon.position.y,newPosition.z||0);
         thisPidgeon.lookAt(Lokat);
-        //We want the object only to rotate around Y, so the coordinatetes of
-        //lokat should only contain values on X and Z coords.
-        //uncommenting the following line allows the object to rotate in the
-        //three coordinates to face its new direction.
-        // for(let b in newPosition){
-          // Lokat[b]=newPosition[b];
-        // }
-
-
-
+        //this flag helps us transition from initial flying state to a walking state on the beginning
+        //perhaps is more correct that the client emits the land event, but that needs a lot more of time
+        if(!thisPidgeon.walkingOnGround){
+          //if inside square circle
+          //sqrt(19.696^2+22.094^2)=29.5986021967 which are landing coordinates
+          console.log("dist x/z"+Lokat.distanceTo(new THREE.Vector3(0,thisPidgeon.position.y,0)) );
+          if(Lokat.distanceTo(new THREE.Vector3(0,thisPidgeon.position.y,0))<29.00 ){
+            console.log("distance from -5: "+-5-newPosition.z,newPosition);
+            //and if at floor level
+            if(-5-newPosition.z<0.1){
+              thisPidgeon.changeAnimStateTo("Bird_Idle");
+              thisPidgeon.walkingOnGround=true;
+            }
+          }
+        }else{
+          if(-5-newPosition.z>2){
+            thisPidgeon.changeAnimStateTo("Bird_Fly");
+            thisPidgeon.walkingOnGround=false;
+          }
+        }
         //object that will be subject to a tween. contains an onupdate function
         //that transfers it's state to the actual pidgeon position
         let tweenCurrentPosition={};
@@ -97,11 +110,11 @@ export default class Pidgeon extends THREE.Object3D{
             // console.log("tw",[thisPidgeon.position.x,thisPidgeon.position.y,thisPidgeon.position.z]);
           },
           tweenTo.onStart = function(){
-            if(walkingOnGround)
+            if(thisPidgeon.walkingOnGround)
             thisPidgeon.changeAnimStateTo("Bird_Walk",0.2);
           },
           tweenTo.onComplete = function(){
-            if(walkingOnGround)
+            if(thisPidgeon.walkingOnGround)
             thisPidgeon.changeAnimStateTo("Bird_Idle",0.2);
 
           },
@@ -145,7 +158,7 @@ export default class Pidgeon extends THREE.Object3D{
   }
   land(){
     this.changeAnimStateTo("Bird_Idle");
-    walkingOnGround=true;
+    this.walkingOnGround=true;
   }
   flyAway(onEndFunction){
     let thisPidgeon=this;
@@ -174,9 +187,10 @@ export default class Pidgeon extends THREE.Object3D{
     tweenTo.onComplete = function(){
       if(onEndFunction) onEndFunction();
     },
-    tweenTo.ease = Power0.easeNone
+    // tweenTo.ease = Power0.easeNone
+    tweenTo.ease = Sine.easeIn;
 
-    myWalkingTween=TweenMax.to(tweenCurrentPosition, 7, tweenTo);
+    myWalkingTween=TweenMax.to(tweenCurrentPosition, 20, tweenTo);
 
   }
   changeAnimStateTo(toAnim){
@@ -198,42 +212,42 @@ export default class Pidgeon extends THREE.Object3D{
       }else if(myCurrentAnimState=="Bird_Fly"){
         //if i'm flying, I need to go through land animation unless our target state is land.
         if(toAnim=="Bird_Land"||toAnim=="Bird_Pose"){
-          blendMesh.crossfadeTo(toAnim,0.2);
+          blendMesh.crossfadeTo(toAnim,1);
         }else{
-          blendMesh.crossfadeToThrough(toAnim,"Bird_Land",0.2);
+          blendMesh.crossfadeToThrough(toAnim,"Bird_Land",1);
         }
       }else if(myCurrentAnimState=="Bird_FlyOff"){
         if(toAnim=="Bird_Land"||toAnim=="Bird_Pose"){
-          blendMesh.crossfadeTo(toAnim,0.2);
+          blendMesh.crossfadeTo(toAnim,1);
         }else{
-          blendMesh.crossfadeToThrough(toAnim,"Bird_Land",0.2);
+          blendMesh.crossfadeToThrough(toAnim,"Bird_Land",1);
         }
       }else if(myCurrentAnimState=="Bird_Idle"){
         if(toAnim=="Bird_Fly"){
-          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",0.2);
+          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
         }else{
-          blendMesh.crossfadeTo(toAnim,0.2);
+          blendMesh.crossfadeTo(toAnim,1);
         }
       }else if(myCurrentAnimState=="Bird_Land"){
         if(toAnim=="Bird_Fly"){
-          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",0.2);
+          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
         }else{
-          blendMesh.crossfadeTo(toAnim,0.2);
+          blendMesh.crossfadeTo(toAnim,1);
         }
       }else if(myCurrentAnimState=="Bird_Pose"){
         if(toAnim=="Bird_Fly"){
-          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",0.2);
+          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
         }else{
-          blendMesh.crossfadeTo(toAnim,0.2);
+          blendMesh.crossfadeTo(toAnim,1);
         }
       }else if(myCurrentAnimState=="Bird_Walk"){
         if(toAnim=="Bird_Fly"){
-          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",0.2);
+          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
         }else{
-          blendMesh.crossfadeTo(toAnim,0.2);
+          blendMesh.crossfadeTo(toAnim,1);
         }
       }else{
-        blendMesh.crossfadeTo(toAnim,0.2);
+        blendMesh.crossfadeTo(toAnim,1);
       }
     }
   }
@@ -250,14 +264,15 @@ export default class Pidgeon extends THREE.Object3D{
     console.log("pidgeon load and init mesh");
 
     //initialize graphics, create mesh?
-    this.geometry = new THREE.BoxGeometry(0.2,0.2,0.2);
-    this.material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true} );
 
-    let loader = new THREE.JSONLoader(loadingManager);
+    // this.geometry = new THREE.BoxGeometry(0.2,0.2,0.2);
+    // this.material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true} );
+
+    // let loader = new THREE.JSONLoader(loadingManager);
     try{
       //statically load mesh, animations and skin
-      THREE.BlendCharacter.loadObject( 'assets/pidgeon/Bird_30.json', function(lo) {
-  			loaded3dObject=lo;
+      THREE.BlendCharacter.loadGeometry( 'assets/pidgeon/Bird_27.json', function(geometry,materials) {
+  			loaded3dObject={tipology:"Geometry",geometry:geometry,materials:materials};
   			console.log("pidgeon 3d object loaded");
   		},loadingManager );
     }catch(e){

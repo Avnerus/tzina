@@ -6,7 +6,7 @@ import Pidgeon from './pidgeon'
 //set here when to do certain things according to global events
 let eventWhenTo={
   createSocket:"intro_end",
-  startEmittingPosition:"control_threshold"
+  // startEmittingPosition:"control_threshold"
 }
 
 //my own clientId, bint to server
@@ -22,7 +22,7 @@ let minimumVectorChangeToBroadcast=0.3;
 let emitInterval=0.5;
 //last dt time a position was emitted to server
 let lastEmitTime=0;
-let verbose=true;
+let verbose=false;
 export default class PidgeonController {
   constructor(scene,camera) {
     this.scene = scene;
@@ -81,7 +81,8 @@ export default class PidgeonController {
           thisPidgeonController.scene.add(newCharacter);
         }
 
-      }else if(message.header=="landed"){
+      }else /*if(message.header=="landed"){
+        console.log("pidgeon receive landed");
         // retrieve the pidgeon icon that represents my own.
         let remoteSprite=Pidgeon.remote(message.pointer);
         if(remoteSprite){
@@ -98,7 +99,7 @@ export default class PidgeonController {
           thisPidgeonController.scene.add(newCharacter);
         }
 
-      }else if(message.header=="remove"){
+      }else*/ if(message.header=="remove"){
         if(verbose)console.log("pidgeon remove "+message.pointer);
         //pendant:this should be inside
         let remoteSprite=Pidgeon.remote(message.pointer);
@@ -116,17 +117,17 @@ export default class PidgeonController {
         //localSprite=new characters.Character({unique:myClientId});
         //console.log("new client Id",message);
 
-        events.on(eventWhenTo.startEmittingPosition, (passed) => {
-          //when we enter the park square, if the socket has not been initialized already
-          if (passed){
-            wsock.emit({header:"landed",pointer:myClientId,data:[0,0,0]},function(err,pl){
-              if(err){
-                console.error("landed not sent",err);
-              }else{
-              }
-            });
-          }
-        });
+        // events.on(eventWhenTo.startEmittingPosition, (passed) => {
+        //   console.log("pidgeon emit landed");
+        //   if (passed){
+        //     wsock.emit({header:"landed",pointer:myClientId,data:[0,0,0]},function(err,pl){
+        //       if(err){
+        //         console.error("landed not sent",err);
+        //       }else{
+        //       }
+        //     });
+        //   }
+        // });
 
 
       }else if(message.header=="statebatch"){
