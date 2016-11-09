@@ -1,10 +1,11 @@
 import ImprovedNoise from '../util/improved_noise'
 import TextureAnimator from '../util/texture_animator'
+import DebugUtil from '../util/debug'
 
-export default class Lupo12pmAnimation extends THREE.Object3D {
+export default class Lupo12PMAnimation extends THREE.Object3D {
     constructor() {
         super();
-        this.BASE_PATH = 'assets/animations/lupo';
+        this.BASE_PATH = 'assets/animations/lupo12pm';
     }
 
     init(loadingManager) {
@@ -13,46 +14,53 @@ export default class Lupo12pmAnimation extends THREE.Object3D {
     }
 
     setupAnim() {
-        this.loadingManager.itemStart("LupoAnim");
+        // DebugUtil.positionObject(this, "Lupo Ani");
+
+        this.loadingManager.itemStart("Lupo12PMAnim");
         this.perlin = new ImprovedNoise();
 
         this.showDummyDogs = true;
 
         // setup animation sequence
-        this.sequenceConfig1 = [
+        this.sequenceConfig = [
             { time: 5, anim: ()=>{this.showSculptures()} },    // 16
             // { time: 6, anim: ()=>{this.connectToDogs()} },
 
-            { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },
+            // { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },
+            { time: 8, anim: ()=>{this.growCactusFloor()} },
             // { time: 4, anim: ()=>{this.growSingleCactus( 0 )} },  // cactus index: 0~19
             // { time: 6, anim: ()=>{this.growSingleCactusFloor( 0 )} },  // cactus index: 0~9
             { time: 12, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
-                        
-            { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
-            { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
-            { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
-            { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
-            { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
-            { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
-            { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
-            { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
-            { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
-            { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
-            { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
-            { time: 120, anim: ()=>{this.growBenchCactus()} },
+            
+            { time: 15, anim: ()=>{this.growBenchCactus()} }
+            // { time: 20, anim: ()=>{this.growCactusFloor()} }
+            
 
-            { time: 135, anim: ()=>{this.connectToDogs()} },
+            // { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
+            // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
+            // { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
+            // { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
+            // { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
+            // { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
+            // { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
+            // { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
+            // { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
+            // { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
+            // { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
+            // { time: 120, anim: ()=>{this.growBenchCactus()} },
 
-            { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
-            { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
-            { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
-            { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
-            { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
-            { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
-            { time: 179, anim: ()=>{this.growCactusFloor()} },
+            // { time: 135, anim: ()=>{this.connectToDogs()} },
+
+            // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
+            // { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
+            // { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
+            // { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
+            // { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
+            // { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
+            // { time: 179, anim: ()=>{this.growCactusFloor()} }
         ];
 
-        this.sequenceConfig = [
+        this.sequenceConfig2 = [
             { time: 1, anim: ()=>{this.growCactusFloor()} },
 
             { time: 2, anim: ()=>{this.showSculptures()} },    // 16
@@ -233,9 +241,17 @@ export default class Lupo12pmAnimation extends THREE.Object3D {
                     let new_c = allCactus[ newIndex ].clone(true);
                     new_c.material = this.cactusMat.clone();
                     new_c.scale.multiplyScalar( 1.8-0.5*this.lookupTable[i] );
-                    new_c.position.set( 8-16*Math.random(), -1, 10-10*Math.random() );
+                    // new_c.position.set( 8-16*Math.random(), -1, 10-10*Math.random() );
+                    new_c.position.set(
+                        Math.sin( Math.PI*2/20*(i-6) ) * 9,
+                        -1,
+                        Math.cos( Math.PI*2/20*(i-6) ) * 9 + 5,
+                    );
                     new_c.rotation.y = Math.PI/2 - this.lookupTable[i]*Math.PI;
                     this.add(new_c);
+
+                    // DebugUtil.positionObject(new_c, "cactus " + i);
+
                     this.cactusGroupFloor.push(new_c);
                 }
                 this.createCactusAnimation();
@@ -265,8 +281,8 @@ export default class Lupo12pmAnimation extends THREE.Object3D {
 
             let cactusTexLight = p_tex_loader.load( this.BASE_PATH + "/images/cactus_white.jpg" );
             let cactusTex = p_tex_loader.load( this.BASE_PATH + "/images/cactusTex.jpg" );
-            this.cactusMat = new THREE.MeshLambertMaterial({map: cactusTexLight, color: 0x1fc529}); //0x298a59
-            this.sculptCactusMat = new THREE.MeshLambertMaterial({map: cactusTex}); //0x206c5e
+            this.cactusMat = new THREE.MeshLambertMaterial({map: cactusTexLight, color: 0x1fc529, side: THREE.DoubleSide}); //0x298a59
+            this.sculptCactusMat = new THREE.MeshLambertMaterial({map: cactusTex, side: THREE.DoubleSide}); //0x206c5e
             this.loadCactus1( this.cactusMat );
             this.loadCactus2( this.cactusMat )
 
@@ -356,7 +372,7 @@ export default class Lupo12pmAnimation extends THREE.Object3D {
 
         this.completeSequenceSetup();
 
-        this.loadingManager.itemEnd("LupoAnim");
+        this.loadingManager.itemEnd("Lupo12PMAnim");
     }
 
     createFlower() {
@@ -751,8 +767,10 @@ export default class Lupo12pmAnimation extends THREE.Object3D {
         return promise;
     }
 
+    // receive name
     start() {
-        this.nextAnim = this.sequenceConfig.shift();
+        this.currentSequence = this.sequenceConfig.slice(0);
+        this.nextAnim = this.currentSequence.shift();
     }
 
     reset() {
@@ -784,8 +802,8 @@ export default class Lupo12pmAnimation extends THREE.Object3D {
         if (this.nextAnim && time >= this.nextAnim.time) {
             console.log("do anim sequence ", this.nextAnim);
             this.nextAnim.anim();
-            if (this.sequenceConfig.length > 0) {
-                this.nextAnim = this.sequenceConfig.shift();
+            if (this.currentSequence.length > 0) {
+                this.nextAnim = this.currentSequence.shift();
             } else {
                 this.nextAnim = null;
             }
