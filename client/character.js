@@ -9,6 +9,8 @@ export default class Character extends THREE.Object3D {
         this.config = config;
         this.inControl = false;
 
+        this.debug = true;
+
         if (!props.fullOnly) {
             this.idleVideo = new VideoRGBD({
                 mindepth: props.mindepth,
@@ -335,8 +337,21 @@ export default class Character extends THREE.Object3D {
                 this.adjust();
             }
             this.playFull();
+
+            if (this.debug) {
+                events.emit("add_gui", {folder: this.props.name}, this , "pauseFull");
+                events.emit("add_gui", {folder: this.props.name}, this , "playFull");
+            }
         }
 
+    }
+
+    pauseFull() {
+       this.fullVideo.pause();
+    }
+
+    playFull() {
+       this.fullVideo.play(); 
     }
 
     playFull() {

@@ -199,10 +199,11 @@ export default
             "sunLoaderRotation": [230,50,0],
 			"timeLimitMinutes" : 12,
 			"characters": [
+                /*
 				"Hannah",
-				"Lupo2",
+				"Lupo5PM",
 				"LupoDogs5PM",
-				"shirin4"
+                "Shirin5PM"*/
 			],
 			"introfile": [
 				"Hanna",
@@ -263,15 +264,11 @@ export default
             "insideTitlePositionLineTwo": [-1.06,-3.15, 2],
             "sunLoaderRotation": [0,148,0],
 			"characters": [
+                /*
 				"Haim",
-				"Izchak",
+				"Itzhak",
 				"Waterman",
-				"Shimi2",
-				"shirin5"
-			],
-			"introfile": [
-				"Haim",
-				"Izchak"
+                "Shirin7PM"*/
 			],
             "eventAfter" : 1,
             "eventCharacters" : [
