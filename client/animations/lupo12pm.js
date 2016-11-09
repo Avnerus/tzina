@@ -105,14 +105,14 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         let modelLoader = new THREE.JSONLoader(this.loadingManager);
 
         // url + targetPosition + startPosition
-        let sculptureModelFiles = [ [this.BASE_PATH + "/models/sculptures/deer.js", new THREE.Vector3(2, .3, 2), new THREE.Vector3(2, .5, 2)],
-                                    [this.BASE_PATH + "/models/sculptures/dog.js", new THREE.Vector3(-2, .3, 1.5), new THREE.Vector3(-2, .5, 1.5)],
+        let sculptureModelFiles = [ [this.BASE_PATH + "/models/sculptures/deer.js", new THREE.Vector3(2.59, -0.36, 4.47), new THREE.Vector3(2, .5, 2)],
+                                    [this.BASE_PATH + "/models/sculptures/dog.js", new THREE.Vector3(-3.62, -.3, 4.83), new THREE.Vector3(-2, .5, 1.5)],
                                     [this.BASE_PATH + "/models/sculptures/macho.js", new THREE.Vector3(-3.8, .7, 0), new THREE.Vector3(-3.8, 2, 1.3)],
-                                    [this.BASE_PATH + "/models/sculptures/painter.js", new THREE.Vector3(5, 1, -1), new THREE.Vector3(5, 2, -1)],
-                                    [this.BASE_PATH + "/models/sculptures/pig.js", new THREE.Vector3(3.5, 0.3, 1), new THREE.Vector3(3.5, .5, 1)],
-                                    [this.BASE_PATH + "/models/sculptures/right_arm.js", new THREE.Vector3(2.7, .9, 0), new THREE.Vector3(2.7, 2.5, -1)],
-                                    [this.BASE_PATH + "/models/sculptures/short_legs.js", new THREE.Vector3(-2.5, .3, 1.8), new THREE.Vector3(-2.5, 2, 1.8)],
-                                    [this.BASE_PATH + "/models/sculptures/two_heads.js", new THREE.Vector3(0, 1.5, -1.4),new THREE.Vector3(0, 2, -1.4)] ];
+                                    [this.BASE_PATH + "/models/sculptures/painter.js", new THREE.Vector3(4.76, 1.36, 2.65), new THREE.Vector3(5, 2, -1)],
+                                    [this.BASE_PATH + "/models/sculptures/pig.js", new THREE.Vector3(4.61, -0.21, 4.66), new THREE.Vector3(3.5, .5, 1)],
+                                    [this.BASE_PATH + "/models/sculptures/right_arm.js", new THREE.Vector3(3.71, 1.39, -0.03), new THREE.Vector3(2.7, 2.5, -1)],
+                                    [this.BASE_PATH + "/models/sculptures/short_legs.js", new THREE.Vector3(1.73, 0.95, -0.18), new THREE.Vector3(-2.5, 2, 1.8)],
+                                    [this.BASE_PATH + "/models/sculptures/two_heads.js", new THREE.Vector3(-1, 2.55, -0.44),new THREE.Vector3(0, 2, -1.4)] ];
         let sculptureTextureFiles = [ this.BASE_PATH + "/images/sculptures/lupo_deer.jpg",
                                       this.BASE_PATH + "/images/sculptures/lupo_dog.jpg",
                                       this.BASE_PATH + "/images/sculptures/lupo_macho.jpg",
@@ -709,6 +709,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 matF.texIndex = 0;
                 let matMADF = this.sculptureMADMaterials[i];
 
+                this.artNum = 0;
+
                 loader.load( modelF, (geometry) => {
                     let meshhh = new THREE.Mesh( geometry, matF );
                     meshhh.scale.y = 0.01;
@@ -722,6 +724,9 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     let meshh = new THREE.Mesh( geometry, matMADF );
                     meshh.position.copy( modelTargetPos );
                     lupoArtBottom.add(meshh);
+
+                    DebugUtil.positionObject(meshhh, "art"+this.artNum);
+                    this.artNum++;
                 });
                 // this.loadModels.bind(undefined, loader, i);
             }
