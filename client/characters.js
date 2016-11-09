@@ -45,8 +45,8 @@ export default [
         basePath : 'assets/characters/itzik',
         mindepth : 0,
         maxdepth : 3494.158935547,
-        position : [-6.77, 21.94, 10.4],
-        rotation: [358, 216, 0],
+        position : [-6.92, 21.92, 10.39],
+        rotation: [10, 216, 5],
         animation: 'Itzik',
         uvdy: 0.478,
         uvdx: 0.0,
@@ -64,8 +64,8 @@ export default [
                 sec: 0,
                 mindepth : 0,
                 maxdepth : 3494.158935547,
-                position : [-6.8, 22.01, 10.47],
-                scale: 0.0027 * 0.4588
+                position : [-6.95,  21.95, 10.41],
+                scale: 0.0027 * 0.4686
             }
         ]
     },
