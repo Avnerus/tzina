@@ -29,7 +29,7 @@ export default class Square extends THREE.Object3D{
         this.camera = camera;
         this.scene = scene;
 
-        this.debug = false;
+        this.debug = true;
 
         this.sunTextureOffsets = {
             19 : 0.5,
@@ -475,7 +475,7 @@ export default class Square extends THREE.Object3D{
                             "XYZ"
                         );
                         if (this.debug) {
-                            //DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
+                           DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
                         }
 
                         
@@ -484,11 +484,6 @@ export default class Square extends THREE.Object3D{
 
 
                 console.log("Reordered suns", reorderedSuns);
-                
-
-
-
-
                 resolve(reorderedSuns);
             });
         });
