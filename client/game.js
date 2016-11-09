@@ -199,6 +199,8 @@ export default class Game {
             /*
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
+
+        this.show = new Show(this.square, this.character_controller); 
     }
 
     load(onLoad) {

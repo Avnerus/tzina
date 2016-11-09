@@ -168,6 +168,7 @@ export default class Square extends THREE.Object3D{
             this.textures = results[7];
             this.mesh.add(this.textures);*/
 
+
             if (this.debug) {
                 /*
                 events.emit("add_gui", {folder: "Trees"}, this.trees, "visible"); 
@@ -208,14 +209,14 @@ export default class Square extends THREE.Object3D{
 
             //this.benches.rotation.set(0,256,0);
 
-            this.fountain.position.set(0.8,23.6, -0.6);
+            this.fountain.position.set(0.69,24.93, -0.73);
+            DebugUtil.positionObject(this.fountain, "Fountain water");
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
             
 
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
-            //this.fountain.scale.set(0.25, 0.25, 0.25);
             console.log("Finished loading square");
             loadingManager.itemEnd("Square");
 

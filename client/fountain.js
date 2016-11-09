@@ -6,9 +6,11 @@ export default class Fountain extends THREE.Object3D  {
         this.BASE_PATH = 'assets/fountain/'
         console.log("Fountain constructed!")
 
-        this.downVelocity = new THREE.Vector3(1.5,6,0);
-        this.upVelocity = new THREE.Vector3(1.5,8,0);
-        this.centerVelocity = new THREE.Vector3(0, 9, 0);
+        this.debug = true;
+
+        this.downVelocity = new THREE.Vector3(1,7.8,0);
+        this.upVelocity = new THREE.Vector3(1.5,11,0);
+        this.centerVelocity = new THREE.Vector3(0, 15, 0);
 
         this.outerUp = true;
 
@@ -27,6 +29,8 @@ export default class Fountain extends THREE.Object3D  {
 
         // EVENT
         this.square = square;
+        this.showTime = false;
+
         this.soundManager = soundManager;
         this.soundEvents = [
             { time: 1, action: () => {
@@ -87,24 +91,32 @@ export default class Fountain extends THREE.Object3D  {
             maxParticleCount: 6000
         });
 
-        // Create fire
-            let position = new THREE.Vector3(0,0.5,0);
-            this.createFire(position, 0xffffff);
-            this.add(this.fireParticleGroup.mesh);
+        let emitter;
 
-            // EmittersGroup
-            this.fireEmitters = [];
-            for(let i=0; i<this.fireParticleGroup.emitters.length; i++){
-                this.fireEmitters.push( this.fireParticleGroup.emitters[i] );
-            }
+        // Create fire
+        let position = new THREE.Vector3(0,0.5,0);
+        emitter = this.createFire(position, 0xffffff);
+        emitter.disable();
+        this.add(this.fireParticleGroup.mesh);
+
+        // EmittersGroup
+        this.fireEmitters = [emitter];
 
         // Create fountains
         let angle = 30;
-        let radius = 2.0;
+        let radius = 3.5;
         let rotation = 0;
 
+        // EmittersGroup
+        this.centerRingEmitters = [];
+        this.firstRingEmitters = [];
+        this.secondRingEmitters = [];
+
+
         // Center Water
-        this.createTrickleCenter(position, this.centerVelocity, 0x00ffff);
+        emitter = this.createTrickleCenter(position, this.centerVelocity, 0x00ffff);
+        emitter.disable();
+        this.centerRingEmitters.push(emitter);
         
         // First circle
         position.y = 0;
@@ -113,34 +125,24 @@ export default class Fountain extends THREE.Object3D  {
             rotation = i * Math.PI / 180;
             position.x = Math.cos(rotation) * radius;
             position.z = Math.sin(rotation) * radius;
-            this.createTrickle(position, rotation, this.downVelocity, 0xB7C5C9);
+            emitter = this.createTrickle(position, rotation, this.downVelocity, 0xB7C5C9);
+            //emitter.disable();
+            this.firstRingEmitters.push(emitter);
         }
         this.add(this.particleGroup.mesh);
 
         // Second
         position.y = -0.5;
-        radius = 3.5;
+        radius = 5.0;
 
         for (let i = 0; i <= 360; i+= angle ) {
             rotation = i * Math.PI / 180;
             position.x = Math.cos(rotation) * radius;
             position.z = Math.sin(rotation) * radius;
             let backFace = (i + 180) * Math.PI / 180;
-            this.createTrickle(position, backFace, this.upVelocity, 0xff0000);
-        }
-
-        // EmittersGroup
-        this.centerRingEmitters = [];
-        this.firstRingEmitters = [];
-        this.secondRingEmitters = [];
-        for(let i=0; i<this.particleGroup.emitters.length; i++){
-            if(i==0) {
-                this.centerRingEmitters.push( this.particleGroup.emitters[i] );
-            } else if (i<=(this.particleGroup.emitters.length-1)/2) {
-                this.firstRingEmitters.push( this.particleGroup.emitters[i] );
-            } else {
-                this.secondRingEmitters.push( this.particleGroup.emitters[i] );
-            }
+            emitter = this.createTrickle(position, backFace, this.upVelocity, 0xffffff);
+            //emitter.disable();
+            this.secondRingEmitters.push(emitter);
         }
 
         // // Sound ===> move to startEvent()
@@ -201,6 +203,14 @@ export default class Fountain extends THREE.Object3D  {
         // DebugUtil.positionObject(this.fountainMeshes[0], "Fountain 0");
         // DebugUtil.positionObject(this.fountainMeshes[1], "Fountain 1");
         // DebugUtil.positionObject(this.fountainMeshes[2], "Fountain 2"); // doesn't move
+        //
+
+        if (this.debug) {
+            events.emit("add_gui", {folder: "Fountain water up``", listen: true, step: 0.01}, this.upVelocity, "x");
+            events.emit("add_gui", {folder: "Fountain water up``", listen: true, step: 0.01}, this.upVelocity, "y");
+            events.emit("add_gui", {folder: "Fountain water down``", listen: true, step: 0.01}, this.downVelocity, "x");
+            events.emit("add_gui", {folder: "Fountain water down``", listen: true, step: 0.01}, this.downVelocity, "y");
+        }
     }
 
     createSpotLight( pos, pos2, _intensity, _angle, _distance, _decay, _penumbra ) {
@@ -225,19 +235,21 @@ export default class Fountain extends THREE.Object3D  {
 
     update(dt) {
        this.particleGroup.tick(dt * 0.4); 
-       this.fireParticleGroup.tick(dt * 0.4);
-       //
-       if (this.sound_12pm && this.sound_12pm.isPlaying && this.currentEvent) {
-            if (this.sound_12pm.getCurrentTime() >= this.currentEvent.time) {
-                 console.log("do anim sequence at ", this.currentEvent.time );
-                this.currentEvent.action();
-                if (this.soundEvents.length > 0) {
-                    this.currentEvent = this.soundEvents.shift();
-                } else {
-                    this.currentEvent = null;
-                }
-            }
-        }
+       if (this.showTime) {
+            this.fireParticleGroup.tick(dt * 0.4);
+            //
+            if (this.sound_12pm && this.sound_12pm.isPlaying && this.currentEvent) {
+                 if (this.sound_12pm.getCurrentTime() >= this.currentEvent.time) {
+                      console.log("do anim sequence at ", this.currentEvent.time );
+                     this.currentEvent.action();
+                     if (this.soundEvents.length > 0) {
+                         this.currentEvent = this.soundEvents.shift();
+                     } else {
+                         this.currentEvent = null;
+                     }
+                 }
+             }
+       }
     }
 
     startShow() {
@@ -270,14 +282,13 @@ export default class Fountain extends THREE.Object3D  {
 
     startCycle() {
         setInterval(() => {
-            //console.log("Fountain cycle!", this.particleGroup.emitters.length + " Emitters");
+            console.log("Fountain cycle!", this.particleGroup.emitters.length + " Emitters");
             this.outerUp = !this.outerUp;
-            for (let i = 0; i < this.particleGroup.emitters.length; i++) {
-                if (i < this.particleGroup.emitters.length / 2) {
-                    this.particleGroup.emitters[i].velocity.value = this.outerUp ? this.downVelocity : this.upVelocity;
-                } else {
-                    this.particleGroup.emitters[i].velocity.value = this.outerUp ? this.upVelocity : this.downVelocity;
-                }
+            for (let i = 0; i < this.firstRingEmitters.length; i++) {
+                this.firstRingEmitters[i].velocity.value = this.outerUp ? this.downVelocity : this.upVelocity;
+            }
+            for (let i = 0; i < this.firstRingEmitters.length; i++) {
+                this.secondRingEmitters[i].velocity.value = this.outerUp ? this.upVelocity : this.downVelocity;
             }
         },10000);
     }
@@ -305,7 +316,7 @@ export default class Fountain extends THREE.Object3D  {
                 value: new THREE.Color(colorCode)
             },
             size: {
-                value: [0.3, 0.4, 0.0] //[0.2, 0.4, 0.0]
+                value: [0.15, 0.3, 0.0] //[0.2, 0.4, 0.0]
             },
             particleCount: 200,
             opacity: {
@@ -319,6 +330,7 @@ export default class Fountain extends THREE.Object3D  {
         });
 
         this.particleGroup.addEmitter(emitter);
+        return emitter;
     }
 
     createTrickleCenter(position, velocity, colorCode) {
@@ -354,6 +366,7 @@ export default class Fountain extends THREE.Object3D  {
             transparent: true
         });
         this.particleGroup.addEmitter(emitter);
+        return emitter;
     }
 
     createFire(position, colorCode) {
@@ -393,6 +406,7 @@ export default class Fountain extends THREE.Object3D  {
             }
         });
         this.fireParticleGroup.addEmitter(emitter);
+        return emitter;
     }
 
     updateEmittersValue( emitters, arrayOfIndex, arrayOfValue, time, _yoyo, _repeatTime, _delay, _repeatDelay ){
