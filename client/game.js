@@ -36,6 +36,8 @@ import WaterDrops from './water_drops'
 
 import FPSCount from './util/fpscount'
 
+import VideoRGBD from './util/video_rgbd'
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
@@ -239,6 +241,8 @@ export default class Game {
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
+        
+        VideoRGBD.initPool();
 
         // WebVR
         this.vrEffect = new THREE.VREffect(this.renderer);

@@ -117,7 +117,11 @@ export default class Character extends THREE.Object3D {
     }
     play() {
         if (!this.done && !this.props.fullOnly) {
-            console.log(this.props.name + " Play idle");
+            console.log(this.props.name + " Play idle video");
+            this.idleVideo.load();
+            this.idleVideo.mesh.visible = true;
+            this.idleVideo.wire.visible = true;
+
             this.idleVideo.play();
         }
     }
@@ -134,7 +138,6 @@ export default class Character extends THREE.Object3D {
                 this.idleVideo.video.loop = true;
                 this.add(this.idleVideo.mesh);
                 this.add(this.idleVideo.wire);
-                this.idleVideo.load();
             }
             
             if (!this.props.idleOnly) {

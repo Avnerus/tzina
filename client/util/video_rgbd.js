@@ -14,18 +14,8 @@ const precision  = 3;
 
 export default class VideoRGBD  {
     constructor(properties) {
-        const glslify = require('glslify');
 
         this.properties = properties;
-
-
-        // Shaders
-        this.rgbd_fs = glslify('../shaders/rgbd_fs.glsl')
-        this.rgbd_vs = glslify('../shaders/rgbd_vs.glsl')
-
-        //SOME SPECIFIC CONTRAST & BRIGHNESS EFFECTS TO THE WIRE PIXEL SHADER
-        this.wire_rgbd_fs = glslify('../shaders/rgbd_wire_fs.glsl')
-        this.wire_rgbd_vs = glslify('../shaders/rgbd_wire_vs.glsl')
 
         this.timer = 0;
 
@@ -35,7 +25,81 @@ export default class VideoRGBD  {
 
         this.isPlaying = false;
 
+
         //console.log("VideoRGBD constructed: " , this.properties);
+    }
+    static initPool() {
+
+        const glslify = require('glslify');
+
+        // Shaders
+        let rgbd_fs = glslify('../shaders/rgbd_fs.glsl')
+        let rgbd_vs = glslify('../shaders/rgbd_vs.glsl')
+
+        //SOME SPECIFIC CONTRAST & BRIGHNESS EFFECTS TO THE WIRE PIXEL SHADER
+        let wire_rgbd_fs = glslify('../shaders/rgbd_wire_fs.glsl')
+        let wire_rgbd_vs = glslify('../shaders/rgbd_wire_vs.glsl')
+
+        console.log("VideoRGBD init pool");
+        this.meshPool = [];
+        this.wirePool = [];
+
+        let baseGeometry = this.buildMeshGeometry();
+        
+        for (let i = 0; i < 10; i++) {
+            let linesMaterial = new THREE.ShaderMaterial( {
+              uniforms: {
+                  "map": { type: "t" },
+                  "mindepth" : { type : "f", value : 0.0 },
+                  "maxdepth" : { type : "f", value : 0.0 },
+                  "uvdy" : { type : "f", value : 0.5 },
+                  "uvdx" : { type : "f", value : 0.0 },
+                  "opacity" : { type : "f", value : 0.1 },
+                  "width" : { type : "f", value : 0.0 },
+                  "height" : { type : "f", value : 0.0 },
+                  "brightness" : { type : "f", value : 0.03 },
+                  "wire_strech": { type : "f", value : 1 },
+                  "contrast" : { type : "f", value : 0.3 }
+              },
+
+              vertexShader: wire_rgbd_vs,
+              fragmentShader: wire_rgbd_fs,
+              blending: THREE.AdditiveBlending,
+              wireframe:      true,
+              transparent:    true
+            } );
+
+            let meshMaterial = new THREE.ShaderMaterial( {
+
+                uniforms: {
+                    "map": { type: "t" },
+                    "mindepth" : { type : "f", value : 0.0 },
+                    "maxdepth" : { type : "f", value : 0.0 },
+                    "uvdy" : { type : "f", value : 0.5 },
+                    "uvdx" : { type : "f", value : 0.0 },
+                    "width" : { type : "f", value : 0.0 },
+                    "height" : { type : "f", value : 0.0 },
+                    "opacity" : { type : "f", value : 1.0 }
+                },
+
+                vertexShader: rgbd_vs,
+                fragmentShader: rgbd_fs,
+                //blending: THREE.AdditiveBlending,
+                transparent: true,
+                wireframe:false
+            } );
+
+            let geometry = baseGeometry.clone();
+
+
+            //events.emit("add_gui", {folder: "UVDX", step: 0.01}, this.meshMaterial.uniforms.uvdx, "value", -1,0);
+            //events.emit("add_gui", {folder: "UVDY", step: 0.01}, this.meshMaterial.uniforms.uvdy, "value", -1,1);
+           //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
+
+            this.meshPool.push(new THREE.Mesh(geometry, meshMaterial ));
+            this.wirePool.push(new THREE.Mesh( geometry, linesMaterial ));
+        }
+
     }
     init() {
         console.log("Video rgbd loading ", this.properties.fileName);
@@ -45,61 +109,22 @@ export default class VideoRGBD  {
         this.videoTexture.format = THREE.RGBFormat;
         this.videoTexture.generateMipmaps = false;
 
-        this.linesMaterial = new THREE.ShaderMaterial( {
-          uniforms: {
-              "map": { type: "t" },
-              "mindepth" : { type : "f", value : this.properties.mindepth },
-              "maxdepth" : { type : "f", value : this.properties.maxdepth },
-              "uvdy" : { type : "f", value : this.properties.uvdy },
-              "uvdx" : { type : "f", value : this.properties.uvdx },
-              "opacity" : { type : "f", value : 0.1 },
-              "width" : { type : "f", value : this.properties.width },
-              "height" : { type : "f", value : this.properties.height },
-              "brightness" : { type : "f", value : 0.03 },
-              "wire_strech": { type : "f", value : 1 },
-              "contrast" : { type : "f", value : 0.3 }
-          },
-
-          vertexShader: this.wire_rgbd_vs,
-          fragmentShader: this.wire_rgbd_fs,
-          blending: THREE.AdditiveBlending,
-          wireframe:      true,
-          transparent:    true
-        } );
-
-        this.meshMaterial = new THREE.ShaderMaterial( {
-
-            uniforms: {
-                "map": { type: "t" },
-                "mindepth" : { type : "f", value : this.properties.mindepth },
-                "maxdepth" : { type : "f", value : this.properties.maxdepth },
-                "uvdy" : { type : "f", value : this.properties.uvdy },
-                "uvdx" : { type : "f", value : this.properties.uvdx },
-                "width" : { type : "f", value : this.properties.width },
-                "height" : { type : "f", value : this.properties.height },
-                "opacity" : { type : "f", value : 1.0 }
-            },
-
-            vertexShader: this.rgbd_vs,
-            fragmentShader: this.rgbd_fs,
-            //blending: THREE.AdditiveBlending,
-            transparent: true,
-            wireframe:false
-        } );
-
-        let geometry = this.buildMeshGeometry();
-
-        //events.emit("add_gui", {folder: "UVDX", step: 0.01}, this.meshMaterial.uniforms.uvdx, "value", -1,0);
-        //events.emit("add_gui", {folder: "UVDY", step: 0.01}, this.meshMaterial.uniforms.uvdy, "value", -1,1);
-       //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
-
-        this.mesh = new THREE.Mesh( geometry, this.meshMaterial );
-//        console.log("Character mesh ", this.mesh);
-        this.wire = new THREE.Mesh( geometry, this.linesMaterial );
 
         //DebugUtil.positionObject(this.wire, this.properties.fileName + " - Wire", false);
 
         //this.wire.position.z = -0.6;
+        this.mesh = VideoRGBD.meshPool.pop();
+        this.wire = VideoRGBD.wirePool.pop();
+
+        console.log("Video mesh from prototype", this.mesh);
+
+        this.mesh.material.uniforms.mindepth.value = this.wire.material.uniforms.mindepth.value = this.properties.mindepth;
+        this.mesh.material.uniforms.maxdepth.value = this.wire.material.uniforms.maxdepth.value = this.properties.maxdepth;
+        this.mesh.material.uniforms.uvdy.value = this.wire.material.uniforms.uvdy.value = this.properties.uvdy;
+        this.mesh.material.uniforms.uvdx.value = this.wire.material.uniforms.uvdx.value = this.properties.uvdx;
+        this.mesh.material.uniforms.width.value = this.wire.material.uniforms.width.value = this.properties.width;
+        this.mesh.material.uniforms.height.value = this.wire.material.uniforms.height.value = this.properties.height;
+
         this.wire.position.z += 0.01;
 
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
@@ -120,14 +145,16 @@ export default class VideoRGBD  {
         this.pause();
         this.video.src = "";
 
-        this.mesh.geometry.dispose();
-        this.wire.geometry.dispose();
         this.videoTexture.dispose();
-        this.linesMaterial.dispose();
-        this.meshMaterial.dispose();
+
+        VideoRGBD.meshPool.push(this.mesh);
+        VideoRGBD.wirePool.push(this.wire);
+        
+        this.mesh = null;
+        this.wire = null;
     }
 
-    buildMeshGeometry() {
+    static buildMeshGeometry() {
         let meshGeometry = new THREE.Geometry();
         for ( let y = 0; y < VERTS_TALL; y++) {
             for ( let x = 0; x < VERTS_WIDE; x++ ) {
@@ -178,9 +205,9 @@ export default class VideoRGBD  {
             this.timer = 0;
             if ( this.isPlaying && this.video.readyState === this.video.HAVE_ENOUGH_DATA ) {
 
-                this.meshMaterial.uniforms.map.value = this.videoTexture;
+                this.mesh.material.uniforms.map.value = this.videoTexture;
 
-                this.linesMaterial.uniforms.map.value = this.videoTexture;
+                this.wire.material.uniforms.map.value = this.videoTexture;
 
                 this.videoTexture.needsUpdate = true;
             }
