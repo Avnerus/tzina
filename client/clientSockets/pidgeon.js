@@ -192,7 +192,7 @@ export default class Pidgeon extends THREE.Object3D{
     // tweenTo.ease = Power0.easeNone
     tweenTo.ease = Sine.easeIn;
 
-    myWalkingTween=TweenMax.to(tweenCurrentPosition, 20, tweenTo);
+    myWalkingTween=TweenMax.to(tweenCurrentPosition, 14, tweenTo);
 
   }
   changeAnimStateTo(toAnim){

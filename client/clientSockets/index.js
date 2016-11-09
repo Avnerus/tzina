@@ -18,7 +18,7 @@ let localSprite;
 let wsock=false;
 let insideSquare;
 //what is the smallest movement to emit to the server; measured as cube shaped comparison as it is faster.
-let minimumVectorChangeToBroadcast=0.3;
+let minimumVectorChangeToBroadcast=0.7;
 let emitInterval=0.5;
 //last dt time a position was emitted to server
 let lastEmitTime=0;
