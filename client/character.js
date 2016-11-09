@@ -62,47 +62,14 @@ export default class Character extends THREE.Object3D {
 
     }
     init(loadingManager) {
-            if (this.props.adjustments) {
-                this.nextAdjustment = this.props.adjustments.shift();
-            }
-
-            if (!this.props.fullOnly) {
-                this.idleVideo.init(loadingManager);
-                this.idleVideo.video.loop = true;
-                this.add(this.idleVideo.mesh);
-                this.add(this.idleVideo.wire);
-            }
-            
-            if (!this.props.idleOnly) {
-                this.fullVideo.init(loadingManager);
-                this.fullVideo.mesh.visible = false;
-                this.fullVideo.wire.visible = false;
-
-                this.add(this.fullVideo.mesh);
-                this.add(this.fullVideo.wire);
-
-                this.fullVideo.video.addEventListener('timeupdate',() => {
-                    if (this.playingFull) {
-                        if (this.animation) {
-                            this.animation.updateVideoTime(this.fullVideo.video.currentTime);
-                        }
-
-                        if (this.nextAdjustment && this.fullVideo.video.currentTime >= this.nextAdjustment.sec) {
-                            this.adjust();
-                        }
-                        events.emit("character_progress", {name: this.props.name, time: this.fullVideo.video.currentTime});
-                    }
-                },false);
-
-                this.fullVideo.video.addEventListener('ended',() => {
-                    console.log("Character video ended");
-                    this.endFull();
-                },false);
-
-                this.fullVideo.video.loop = false;
-            }
 
             this.position.fromArray(this.props.position);
+            if (!this.props.fullOnly) {
+                this.idleVideo.init();
+            }
+            if (!this.props.idleOnly) {
+                this.fullVideo.init();
+            }
 
             this.rotation.set(
                 this.props.rotation[0] * Math. PI / 180,
@@ -165,10 +132,44 @@ export default class Character extends THREE.Object3D {
     load() {
         console.log("Character " + this.props.name + ": Load");
         if (!this.done) {
+            if (this.props.adjustments) {
+                this.nextAdjustment = this.props.adjustments.shift();
+            }
+
             if (!this.props.fullOnly) {
                 this.idleVideo.load();
-            } else {
+                this.idleVideo.video.loop = true;
+                this.add(this.idleVideo.mesh);
+                this.add(this.idleVideo.wire);
+            }
+            
+            if (!this.props.idleOnly) {
                 this.fullVideo.load();
+                this.fullVideo.mesh.visible = false;
+                this.fullVideo.wire.visible = false;
+
+                this.add(this.fullVideo.mesh);
+                this.add(this.fullVideo.wire);
+
+                this.fullVideo.video.addEventListener('timeupdate',() => {
+                    if (this.playingFull) {
+                        if (this.animation) {
+                            this.animation.updateVideoTime(this.fullVideo.video.currentTime);
+                        }
+
+                        if (this.nextAdjustment && this.fullVideo.video.currentTime >= this.nextAdjustment.sec) {
+                            this.adjust();
+                        }
+                        events.emit("character_progress", {name: this.props.name, time: this.fullVideo.video.currentTime});
+                    }
+                },false);
+
+                this.fullVideo.video.addEventListener('ended',() => {
+                    console.log("Character video ended");
+                    this.endFull();
+                },false);
+
+                this.fullVideo.video.loop = false;
             }
         }
         this.active = true;
