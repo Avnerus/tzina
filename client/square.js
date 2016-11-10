@@ -33,11 +33,11 @@ export default class Square extends THREE.Object3D{
         this.debug = false;
 
         this.sunTextureOffsets = {
-            19 : 0.5,
-            17 : 0.5,
-            12 : 0.5,
-            9 : 0.5,
-            7 : 0.5
+            19 : 0,
+            17 : 0,
+            12 : 0,
+            9 : 0,
+            7 : 0
         };
 
 
@@ -253,9 +253,11 @@ export default class Square extends THREE.Object3D{
 
         events.on("gaze_started", (name) => {
             this.turnOnSun(name);
+            this.activateSun(name);
         });
         events.on("gaze_stopped", (name) => {
             this.turnOffSun(name);
+            this.deactivateSun(name);
         });
 
         events.on("angle_updated", (hour) => {
@@ -304,7 +306,7 @@ export default class Square extends THREE.Object3D{
     }
 
     updateSunProgress(name, progress) {
-        this.sunTextureOffsets[name] = 0.5 - (0.5 * progress);
+        this.sunTextureOffsets[name] = (0.5 * progress);
     //    console.log("Update sun progress ", name, progress, this.currentSun, this.sunTextureOffsets[name]);
         if (name == this.currentSun) {
             this.sunTexture.offset.y = this.sunTextureOffsets[name];
@@ -366,7 +368,6 @@ export default class Square extends THREE.Object3D{
                 this.sunTexture.offset.y = this.sunTextureOffsets[name];
                 //texture offset by progress in chapter 
                 sunMesh.material.needsUpdate = true;
-                this.currentSun = name;
 
                 // Show loader
                 if (this.controlPassed) {
@@ -376,6 +377,21 @@ export default class Square extends THREE.Object3D{
 
                 //console.log("Turned on sun", sun);
             }
+        }
+    }
+
+    activateSun(name) {
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            let sunLoader = sun.getObjectByName(name + "_L");
+            sunLoader.organize();
+        }
+    }
+    deactivateSun(name) {
+        let sun = this.suns.getObjectByName(name)
+        if (sun) {
+            let sunLoader = sun.getObjectByName(name + "_L");
+            sunLoader.disorganize();
         }
     }
 
@@ -409,7 +425,7 @@ export default class Square extends THREE.Object3D{
 
             let loader = new THREE.ObjectLoader(loadingManager);
 
-            //events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
+            events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
             loader.load(SUNS_PATH,( obj ) => {
                 console.log("Loaded suns", obj)
 
