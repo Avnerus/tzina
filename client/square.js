@@ -535,7 +535,7 @@ export default class Square extends THREE.Object3D{
             [-0.79, 2.06, 1.9],
             [-14.86,-8.48, 1.79],
             [-33.54,-8.48,-15.01],
-            [-0.84,1.97,1.76]
+            [1,1.97,1.76]
         ];
 
         let benchRotations = [
@@ -544,7 +544,7 @@ export default class Square extends THREE.Object3D{
             [0,0,0],
             [0,0,0],
             [0,297,0],
-            [0,20,0]
+            [0,200,0]
         ];
 
         let benchScales = [
@@ -571,10 +571,13 @@ export default class Square extends THREE.Object3D{
                         benchRotations[i][1] * Math.PI / 180,
                         benchRotations[i][2] * Math.PI / 180,
                         "YXZ"
+
+
                     );
                     let benchScale = benchScales[i];
                     results[i].scale.set(benchScale, benchScale, benchScale);
                     allBenches.add(results[i]);
+
                     if (this.debug) {
                         DebugUtil.positionObject(results[i], benches[i]);
                     }
