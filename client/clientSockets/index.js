@@ -86,8 +86,8 @@ export default class PidgeonController {
         console.log("pidgeon receive landed");
         // retrieve the pidgeon icon that represents my own.
         let remoteSprite=Pidgeon.remote(message.pointer);
-        let landed=message.data[0]>0.5;
-        console.log("pidgeon receive single landed of id"+message.pointer+"="+landed);
+        let stateValue=message.data[0]>0.5;
+        console.log("pidgeon receive single landed of id"+message.pointer+"="+stateValue);
         if(remoteSprite){
           try{
             remoteSprite.flyOrLand(stateValue);
