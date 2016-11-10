@@ -54,11 +54,11 @@ export default [
         width: 512,
         height: 2048,
         scale: 0.0027 * 0.5308,
-        animationScale: 0.18,
-        animationPosition: [-0.1, -0.05, 0.5],
-        animationRotation: [21, 3, 355],
-        space: 0.13,
-        spaceOffset: [-0.25,0,-0.07],
+        animationScale: 0.248, //0.18
+        animationPosition: [-0.668, 0.495, -1.485], //-0.71, 0.49, 1.71
+        animationRotation: [8, 6.1, 1], //21, 3, 355
+        space: 0.13, //0.13 //1.6
+        spaceOffset: [-0.25,0,-0.07],  //-0.25,0,-0.07 //0.88,0.47,-0.07
         subtitles: false,
         adjustments : [
             {

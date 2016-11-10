@@ -17,13 +17,13 @@ export default class ItzikAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 50, anim: ()=>{this.benchOutFirst()} },     //25
-            { time: 60, anim: ()=>{this.benchMove(1)} },        //35
-            { time: 68, anim: ()=>{this.benchMove(2)} },        //43
-            { time: 75, anim: ()=>{this.benchMove(3)} },        //50
-            { time: 80, anim: ()=>{this.benchMove(4)} },        //55
-            { time: 85, anim: ()=>{this.benchMove(5)} },        //60
-            { time: 204, anim: ()=>{this.characterDisappear(0)} }//210
+            { time: 50, anim: ()=>{this.benchOutFirst()} },     //50
+            { time: 60, anim: ()=>{this.benchMove(1)} },        //60
+            { time: 68, anim: ()=>{this.benchMove(2)} },        //68
+            { time: 75, anim: ()=>{this.benchMove(3)} },        //75
+            { time: 80, anim: ()=>{this.benchMove(4)} },        //80
+            { time: 85, anim: ()=>{this.benchMove(5)} },        //85
+            { time: 204, anim: ()=>{this.characterDisappear(0)} }//204
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -44,7 +44,7 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.benchGroup = new THREE.Object3D();
         this.benchCount = 6;   //10
         this.b_offset = 5;
-        this.b_radius = 10.5;
+        this.b_radius = 11.5;
         this.b_open_index = 0;
 
         this.clouds = [];
@@ -128,6 +128,7 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.dummy = {opacity: 1};
 
         // DebugUtil.positionObject(this, "Itzik");
+
         this.loadingManager.itemEnd("ItzikAnim");
     }
 

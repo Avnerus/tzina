@@ -87,7 +87,7 @@ export default class MiriamAnimation extends THREE.Object3D {
         let tex_loader = new THREE.TextureLoader(this.loadingManager);
         let loader = new THREE.JSONLoader(this.loadingManager);
 
-        DebugUtil.positionObject(this, "Miriam")
+        // DebugUtil.positionObject(this, "Miriam")
 
         // setup animation sequence
         // time: when to happen, duration: how long / fast the animation is
