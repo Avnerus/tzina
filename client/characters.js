@@ -34,9 +34,9 @@ export default [
         width: 768,
         height: 2048,
         scale: 0.003 * 0.506,
-        animationScale: 0.4,
-        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
-        animationRotation: [13, 0, 0],      // 20, 0, 0
+        animationScale: 0.4, //.4
+        animationPosition: [0.01, -0.4, 0.06],   // 0,-1.5,-2.2
+        animationRotation: [6, 0, 0],      // 20, 0, 0
         space: 0.01,
         spaceOffset: [0.11,0,-0.07],
         subtitles: null

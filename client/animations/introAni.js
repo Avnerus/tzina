@@ -185,7 +185,7 @@ export default class IntroAnimation extends THREE.Object3D {
 
                     this.add(cloudRing);
                     this.cloudGroup.push(cloudRing);
-                    DebugUtil.positionObject(cloudRing, "cloud Ring "+i);
+                    // DebugUtil.positionObject(cloudRing, "cloud Ring "+i);
                 }        
 
                 for(let i=0; i<this.cloudAmount; i++){
