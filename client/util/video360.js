@@ -42,7 +42,7 @@ export default class Video360 {
     }
     play() {
         if ( this.isPlaying === true ) return;
-        console.log("Video360 - play");
+        console.log("Video360 - play", this.path);
         this.video.play();
         this.isPlaying = true;
     }

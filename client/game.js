@@ -16,6 +16,7 @@ import SoundManager from './sound_manager'
 import TimeController from './time_controller'
 import CharacterController from './character_controller'
 import Show from './show'
+import EndCredits from './end_credits'
 
 import DebugUtil from './util/debug'
 
@@ -202,6 +203,9 @@ export default class Game {
 
         this.show = new Show(this.square, this.characterController); 
         this.show.init();
+
+        this.endCredits = new EndCredits(this.camera);
+        this.endCredits.init();
     }
 
     load(onLoad) {
@@ -280,7 +284,8 @@ export default class Game {
             console.log("Intro ended");
             if (!this.config.noSquare) {
                 setTimeout(() => {
-                    this.introAni.start();
+                    //this.introAni.start();
+                    this.endCredits.play();
                 },5000);
             }
         });
@@ -435,6 +440,7 @@ export default class Game {
         }
         this.collisionManager.update(dt);
         this.flood.update(dt);
+        this.endCredits.update(dt);
     }
 
     render() {
