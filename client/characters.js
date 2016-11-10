@@ -488,6 +488,22 @@ export default [
         scale: 0.003 * 0.6,
         subtitles: null,
         idleOnly: true
+    },
+    {
+        name: 'FatmanShower',
+        basePath : 'assets/characters/fatman-shower',
+        mindepth : 2534.99951171875,
+        maxdepth : 5070.96044921875,
+        position : [-7.14, 22.09, 0.37],
+        rotation: [80, 261, 80.02],
+        animation: null,
+        uvdy: 0.49169921875,
+        uvdx: 0,
+        width: 1024,
+        height: 2048,
+        scale: 0.003 * 0.64725,
+        subtitles: null,
+        idleOnly: true
     }
 /*,
     {
