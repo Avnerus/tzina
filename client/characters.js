@@ -129,6 +129,11 @@ export default [
         animationPosition: [-0.3,-0.2,-0.03], // -0.45,0,-0.4
         animationRotation: [0,14,0], // 7,25,-8
         space: 0.5,
+        scale: 0.003 * 0.25*0.9,
+        animationScale: 0.18,
+        animationPosition: [-0.45,0,-0.4],
+        animationRotation: [7,25,-8],
+        space: 0.5,
         subtitles: null
     },
     {
