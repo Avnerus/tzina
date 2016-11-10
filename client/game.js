@@ -285,8 +285,8 @@ export default class Game {
                 setTimeout(() => {
                     this.introAni.start();
 
-                    this.endCredits.init();
-                    this.endCredits.play();
+                   // this.endCredits.init();
+                    //this.endCredits.play();
                 },5000);
             }
         });

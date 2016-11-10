@@ -34,9 +34,9 @@ export default [
         width: 768,
         height: 2048,
         scale: 0.003 * 0.506,
-        animationScale: 0.4,
-        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
-        animationRotation: [13, 0, 0],      // 20, 0, 0
+        animationScale: 0.4, //.4
+        animationPosition: [0.01, -0.4, 0.06],   // 0,-1.5,-2.2
+        animationRotation: [6, 0, 0],      // 20, 0, 0
         space: 0.01,
         spaceOffset: [0.11,0,-0.07],
         subtitles: null
@@ -54,11 +54,11 @@ export default [
         width: 512,
         height: 2048,
         scale: 0.0027 * 0.5308,
-        animationScale: 0.18,
-        animationPosition: [-0.1, -0.05, 0.5],
-        animationRotation: [21, 3, 355],
-        space: 0.13,
-        spaceOffset: [-0.25,0,-0.07],
+        animationScale: 0.248, //0.18
+        animationPosition: [-0.668, 0.495, -1.485], //-0.71, 0.49, 1.71
+        animationRotation: [8, 6.1, 1], //21, 3, 355
+        space: 0.13, //0.13 //1.6
+        spaceOffset: [-0.25,0,-0.07],  //-0.25,0,-0.07 //0.88,0.47,-0.07
         subtitles: false,
         adjustments : [
             {
@@ -128,7 +128,6 @@ export default [
         animationScale: 0.228,
         animationPosition: [-0.3,-0.2,-0.03], // -0.45,0,-0.4
         animationRotation: [0,14,0], // 7,25,-8
-        space: 0.5,
         subtitles: null
     },
     {
@@ -234,10 +233,10 @@ export default [
         width: 512,
         height: 2048,
         scale: 0.003 * 0.4145,
-        animationScale: 0.20,
-        animationPosition: [-.4, -.46, -.55],
-        animationRotation: [0,-25,0],
-        space: 0.38,
+        animationScale: 0.24,
+        animationPosition: [-0.03, 0.21, -0.86], // -.4, -.46, -.55
+        animationRotation: [0, 214, 0], // 0,-25,0
+        space: 0.38, //0.38
         spaceOffset: [-0.11,0,0],
         subtitles: null
     },
@@ -351,7 +350,7 @@ export default [
         animationPosition: [-0.66, -0.41, -0.96], // -0.53, -0.51, -1.76
         animationRotation: [0,0,0], // 0,-25,0
         subtitles: null,
-        space: 2,
+        space: .2, //2
         spaceOffset: [0.36,0,0]
     },
     {
