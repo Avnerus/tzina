@@ -68,6 +68,9 @@ export default class TimeController {
             if (passed) {
                 this.scene.remove(this.chapterTitle);
                 this.scene.remove(this.prevChapterTitle);
+                if (this.square.currentSun) {
+                    this.square.turnOffSun(this.square.currentSun);
+                }
                 this.square.turnOnSun(this.currentHour.toString());
                 this.updateSunProgress();
             }
@@ -209,6 +212,9 @@ export default class TimeController {
                 let roundHour = this.nextHour;
                 this.setCurrentChapter();
                 events.emit("hour_updated", roundHour);
+                if (this.square.currentSun) {
+                    this.square.turnOffSun(this.square.currentSun);
+                }
                 this.square.turnOnSun(this.currentHour.toString());
                 console.log("Time controller - next chapter");
 
@@ -251,6 +257,9 @@ export default class TimeController {
                     setTimeout(() => {
                         this.sunGazer.stop();
                         this.sunGazer.active = false;
+                        if (this.square.currentSun) {
+                            this.square.turnOffSun(this.square.currentSun);
+                        }
                         this.square.turnOnSun(this.currentHour.toString());
                         this.setCurrentChapter();
                         events.emit("hour_updated", this.currentHour);
@@ -402,6 +411,10 @@ export default class TimeController {
         TweenMax.to(this.chapterTitle.material, 1, {opacity: targetOpacity});
 
         //document.getElementById("chapter-title-text").innerHTML = chapter.hour + ":00 - " + chapter.name;
+
+        if (this.square.currentSun) {
+            this.square.turnOffSun(this.square.currentSun);
+        }
         this.turnOnChapterSun(this.currentHour);
     }
 
