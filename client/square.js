@@ -477,11 +477,10 @@ export default class Square extends THREE.Object3D{
                         if (this.debug) {
                            DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
                         }
+                        DebugUtil.positionObject(parent, "Sun " + chapter.hour.toString(), true, -50, 50);
 
-                        
                     }
                 })
-
 
                 console.log("Reordered suns", reorderedSuns);
                 resolve(reorderedSuns);
