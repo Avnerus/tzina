@@ -89,7 +89,7 @@ export default class Square extends THREE.Object3D{
         loadingManager.itemStart("Square");
         this.trees = new Trees(this.camera, this.renderer);
         this.extras = new  Extras(this.camera, this.renderer);
-        this.fountain = new Fountain( this, this.soundManager );
+        this.fountain = new Fountain( this );
 
         let loaders = [
             this.loadSquare(loadingManager),

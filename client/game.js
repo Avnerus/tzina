@@ -171,7 +171,7 @@ export default class Game {
                 'Itzik' : new ItzikAnimation(),
                 'Meir' : new MeirAnimation(),
                 'Mark' : new MarkAnimation(),
-                'Agam12PM' : new Agam12PMAnimation(),
+                'Agam12PM' : new Agam12PMAnimation(this.square),
                 'Lupo12PM' : new Lupo12PMAnimation()
             }
         } else {
