@@ -142,9 +142,104 @@ export default class IntroAnimation extends THREE.Object3D {
             // DebugUtil.positionObject(this.terrain, "terrain");
         });
 
+        // CLOUDS
+        // ============== Changeable Setting ================
+            this.cloudAmount = 20;
+            this.cloudRadius = [180, 120, 300];
+            this.cloudScale = [9, 8, 15];
+            this.cloudColors = [ new THREE.Color(0xe7f6fb), new THREE.Color(0xcc0000), new THREE.Color(0x4b2a79) ];
+            this.floorHeight = 0;
+            this.treeRadius = 3;
+        // ================ Setting End =====================
+            this.cloudTex = tex_loader.load( this.BASE_PATH + "/images/cloud3.png" );
+            this.cloudTex.wrapS = THREE.RepeatWrapping;
+            this.cloudTex.wrapT = THREE.RepeatWrapping;
+            this.cloudTex.repeat.set( 5, 3 );
+            let cloudFiles = [ this.BASE_PATH + "/models/cloud1_3.json", this.BASE_PATH + "/models/cloud2_3.json" ];
+            this.cloudGeos = [];
+            this.cloudGroup = [];
+            this.cloudMaterial = new THREE.MeshBasicMaterial({
+                color: this.cloudColors[0], map: this.cloudTex, //side: THREE.DoubleSide,
+                transparent: true, opacity: .1
+            });
+
+            this.loadClouds( cloudFiles )
+            .then( ()=>{
+                // create clouds!
+                // let testCloud = new THREE.Mesh( this.cloudGeos[0], this.cloudMaterial );
+                // testCloud.scale.multiplyScalar(40);
+                // this.add( testCloud );
+                // DebugUtil.positionObject(testCloud, "testCloud" + 0);
+                
+                // Ring
+                for(let i=0; i<3; i++){
+                    let cloudRing = new THREE.Object3D();
+                    cloudRing.position.y = (i+1)*(-100);
+                    
+                    let tl = new TimelineMax({repeat: -1});
+                    tl.to( cloudRing.rotation, 250+i*50, {
+                        y: Math.PI*2,
+                        ease: Power0.easeNone
+                    } );
+                    cloudRing.tweenline = tl;
+
+                    this.add(cloudRing);
+                    this.cloudGroup.push(cloudRing);
+                    DebugUtil.positionObject(cloudRing, "cloud Ring "+i);
+                }        
+
+                for(let i=0; i<this.cloudAmount; i++){
+                    let cloudd = new THREE.Mesh( this.cloudGeos[i%2], this.cloudMaterial );
+                    cloudd.position.set(
+                        Math.sin(Math.PI*2/this.cloudAmount*i) * this.cloudRadius[i%3] * (1+this.lookupTable[i]/2),
+                        this.lookupTable[i],
+                        Math.cos(Math.PI*2/this.cloudAmount*i) * this.cloudRadius[i%3] * (1+this.lookupTable[i+1]/2)
+                    );
+
+                    cloudd.rotation.set(
+                        0,
+                        Math.PI*2/this.cloudAmount*i + Math.PI,
+                        0,
+                        'YXZ'
+                    );
+
+                    cloudd.scale.multiplyScalar( this.cloudScale[i%3] * (1+this.lookupTable[i]/2) );
+                    this.cloudGroup[i%3].add(cloudd);
+                }
+                
+            } );
+
+        //
         this.completeSequenceSetup();
         //
         this.loadingManager.itemEnd("IntroAnim");
+    }
+
+    loadClouds( cloudFiles ) {
+        let loaders = [];
+        for(let i=0; i<cloudFiles.length; i++){
+            loaders.push( this.loadFile(this.loadingManager, cloudFiles[i]) );
+        }
+
+        let promise = new Promise( (resolve, reject)=>{
+            Promise.all(loaders)
+            .then((results) => {
+                for(let i=0; i<results.length; i++){
+                    this.cloudGeos.push( results[i] );
+                }
+                resolve();
+            });
+        } );
+        return promise;
+    }
+
+    loadFile(loadingManager, path) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.JSONLoader(loadingManager);
+            loader.load(path ,( geo ) => {
+                resolve(geo);
+            });
+        });
     }
 
     initFBOParticle() {
