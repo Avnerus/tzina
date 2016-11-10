@@ -14,7 +14,7 @@ var beeper = require('beeper');
 
 // add custom browserify options here
 var customOpts = {
-  entries: ['./client/index.js'],
+  entries: ['./client/landing.js'],
   transform: [babelify.configure({presets: ["es2015"]})],
   debug: true
 };
