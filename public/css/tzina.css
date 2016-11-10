@@ -12,6 +12,7 @@ body {
 }
 
 #game {
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -22,7 +23,7 @@ body {
 }
 
 .splash {
-    display: flex;
+    display: none;
     align-items: center;
     height: 100%;
     width: 100%;
@@ -30,7 +31,7 @@ body {
 }
 
 .splash-container {
-    display: flex;
+    display: none;
     align-items: center;
     margin: auto;
     color: white;
@@ -41,19 +42,23 @@ body {
 }
 
 #start-button {
+    display: none;
     color: white;
     margin: auto;
 }
 
 #loading-image {
+    display: none;
     margin: auto;
 }
 
 #title-label {
+    display: none;
     margin: auto;
 }
 
 #title-container {
+    display: none;
     display: flex;
     align-items: center;
     margin: auto;
@@ -63,13 +68,14 @@ body {
     bottom: 30%
 }
 .subtitles {
-font-family: 'Miriam Libre', sans-serif;
+    display: none;
+    font-family: 'Miriam Libre', sans-serif;
   position: absolute;
   width: 100%;
   left: 0; bottom: 0;
   z-index: 4000;
-  //height:0px;
-  //overflow:visible;
+  height:0px;
+  overflow:visible;
   pointer-events:none;
 }
 #zoom-arrow {
@@ -80,6 +86,7 @@ font-family: 'Miriam Libre', sans-serif;
     top: 15%;
 }
 #secure-access {
+    display: none;
     display: inline-flex;
     align-items: center;
     margin: auto;

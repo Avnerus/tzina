@@ -1,3 +1,8 @@
+//Bring in all the stuff we need
+import KeyboardController from './keyboard_controller'
+import TzinaVRControls from './tzina_vr_controls'
+
+
 //Tree Defenetions
 var TreesDef = {
   types: [
@@ -129,7 +134,7 @@ var TreesDef = {
 };
 
 //Call jquery
-var $ = require('jquery');
+// var $ = require('jquery');
 
 var sound_path = './assets/ui_sounds/';
 
@@ -219,6 +224,8 @@ loadingManager.onProgress = function (item, loaded, total) {
 
 
 $(document).ready(function(){
+
+  console.log('jQuery Document Fired');
 
   var videoLogo = $('#logo').get(0);
 
@@ -586,28 +593,30 @@ $(document).ready(function(){
 
 
 
+
 //Threejs Tree Scene
   init = function(){
 
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 0.1, 1000 );
-  renderer = new THREE.WebGLRenderer();
-  renderer.setSize( window.innerWidth, window.innerHeight );
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 0.1, 1000 );
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
 
-  document.getElementById("tree_scene").appendChild(renderer.domElement);
+    document.getElementById("tree_scene").appendChild(renderer.domElement);
 
-  camera.position.set(3,20, 3.2893155474929934);
-  camera.rotation.set(2.897615188414925, -1, 3.0189561019538735);
-  //camera.lookAt( new THREE.Vector3( 15, 40, 15 ) );
-  controls = new THREE.OrbitControls( camera, renderer.domElement );
-  controls.target.set( 15, 30, 15 );
-  // load & add the trees
-  trees = new Trees();
-  trees.init(loadingManager);
-  scene.add( trees );
-  // we need to pass delta time to the shader so we need a clock
-  clock = new THREE.Clock();
-  clock.start();
+    camera.position.set(3,20, 3.2893155474929934);
+    camera.rotation.set(2.897615188414925, -1, 3.0189561019538735);
+    //camera.lookAt( new THREE.Vector3( 15, 40, 15 ) );
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
+    controls.target.set( 15, 30, 15 );
+    // load & add the trees
+    trees = new Trees();
+    trees.init(loadingManager);
+    scene.add( trees );
+    // we need to pass delta time to the shader so we need a clock
+    clock = new THREE.Clock();
+    clock.start();
+
   };
 
   render = function () {
@@ -624,6 +633,3 @@ $(document).ready(function(){
     uniforms.time.value += delta;
 
   };
-
-  //Very bad location for the render function (before the loader finished?)
-  //render();
