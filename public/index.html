@@ -1,6 +1,6 @@
-<!doctype html>
 <html>
-    <head>
+	<head>
+		 <head>
        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -8,8 +8,140 @@
         <link href="https://fonts.googleapis.com/css?family=Miriam+Libre|Suez" rel="stylesheet">
 
         <title>Tzina</title>
-    </head>
-    <body>
+
+    <!-- vertex shader -->
+    <script type="x-shader/x-fragment" id="fragmentShader">
+        varying vec3 vColor;
+
+        void main() {
+            gl_FragColor = vec4(vColor.rgb, 1.0);
+        }
+    </script>
+
+    <!-- fragment shader -->
+    <script type="x-shader/x-vertex" id="vertexShader">
+        // frequencies for rustling animation
+        // can be tweaked to taste
+        #define SIDE_TO_SIDE_FREQ1 1.975
+        #define SIDE_TO_SIDE_FREQ2 0.793
+        #define UP_AND_DOWN_FREQ1 0.375
+        #define UP_AND_DOWN_FREQ2 0.193
+
+        varying vec3 vColor;
+
+        // uniforms
+        // common uniforms
+        uniform float time; // increase by delta time in render loop
+        uniform float speedFactor; // larger value -> faster bending and rustling
+        uniform float pointSize; // rendering point size
+
+        // bending uniforms
+        uniform float bendFactor; // amount of bending
+        uniform float bendHeightLimit; // the height above which the bending starts
+        uniform vec2 wind; // direction & speed of the wind on the xz plane - note: only affects bending
+
+        // rustling uniforms
+        uniform float rustleHeightLimit; // the height above which the rustling starts
+        uniform bool rustleColorCheck; // use color checking for limiting rustling; currently not usable; see rustle()
+        uniform float rustleFactor; // amount of rustling
+        uniform float rustleFrequency; // frequency of rustles
+
+        // functions
+        void bend(inout vec3);
+        void rustle(inout vec3);
+        vec3 rgb2hsv(vec3);
+        vec3 hsv2rgb(vec3);
+        float smoothCurve(float);
+        float triangleWave(float);
+        float smoothTriangleWave(float);
+        vec4 smoothTriangleWave(vec4);
+
+        void main() {
+            vColor = color;
+            float length = length(position.xyz);
+            vec3 pos = position;
+            bend(pos);
+            rustle(pos);
+            gl_PointSize = pointSize;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(normalize(pos.xyz) * length, 1.0);
+        }
+
+        void bend(inout vec3 pos) {
+            if(pos.x > bendHeightLimit) {
+            float bend = (sin(time * speedFactor) + 1.0) * bendFactor;
+            float clampedX = max(pos.x, bendHeightLimit); // coordinate system is rotated -> x is up
+            float bf = (clampedX - bendHeightLimit) * bend;
+                vec3 newPos = pos;
+                newPos.yz += wind.xy * bf; // trees' supposed xz plane is yz b/c rotation; if the wind direction is off, flip the coordinates
+                pos = newPos;
+            }
+        }
+
+        void rustle(inout vec3 pos) {
+            vec3 hsv = rgb2hsv(color);
+            // values by trial and error, mostly
+            if(pos.x > rustleHeightLimit) {
+                if(!rustleColorCheck || (hsv.x > 0.16 && hsv.x < 0.5 && hsv.y > 0.18 && hsv.z > 0.08)) {
+                    // vColor.r = 1.0; // uncomment to debug height limit and HVS comparisons
+                    // vColor.g = 0.0;
+                    // vColor.b = 0.0;
+                    vec3 newPos = pos;
+                    float objPhase = length(modelMatrix[3].xyz); // assign unique phase to each object
+                    float vtxYPhase = pos.y + objPhase; // vary vertex phases according to location
+                    float vtxZPhase = pos.z + objPhase; // on the yz plane (ground plane b/c rotated models)
+                    vec2 wavesIn = vec2(vtxYPhase + time, vtxZPhase + time);
+                    vec4 waves = (fract(wavesIn.xxyy *
+                       vec4(SIDE_TO_SIDE_FREQ1, SIDE_TO_SIDE_FREQ2, UP_AND_DOWN_FREQ1, UP_AND_DOWN_FREQ2)) *
+                       2.0 - 1.0 ) * speedFactor * rustleFrequency; // lifted from crytek paper: http://http.developer.nvidia.com/GPUGems3/gpugems3_ch16.html
+                    waves = smoothTriangleWave(waves);
+                    vec2 wavesSum = waves.xz + waves.yw;
+                    newPos.y += wavesSum.y * (pos.x - rustleHeightLimit) * rustleFactor / 100.0;
+                    newPos.z += wavesSum.x * (pos.x - rustleHeightLimit) * rustleFactor / 100.0;
+                    pos = newPos;
+                }
+            }
+        }
+
+        // run-of-the-mill rgb-hsv-conversions
+        vec3 rgb2hsv(vec3 c) {
+            vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+            vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+            vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+            float d = q.x - min(q.w, q.y);
+            float e = 1.0e-10;
+            return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+        }
+
+        vec3 hsv2rgb(vec3 c) {
+            vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+            vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+            return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+        }
+
+        // general math
+        float smoothCurve(float x) {
+            return x * x * (3.0 - 2.0 * x);
+        }
+        float triangleWave(float x) {
+            return abs(fract(x + 0.5) * 2.0 - 1.0);
+        }
+        float smoothTriangleWave(float x) {
+            return smoothCurve(triangleWave(x));
+        }
+        vec4 smoothTriangleWave(vec4 v) {
+            float x = smoothTriangleWave(v.x);
+            float y = smoothTriangleWave(v.y);
+            float z = smoothTriangleWave(v.z);
+            float w = smoothTriangleWave(v.w);
+            return vec4(x, y, z, w);
+        }
+
+    </script>
+
+	</head>
+	<body>
+
         <script>
             window.WebVRConfig = {FORCE_ENABLE_VR : false}
         </script>
@@ -31,15 +163,9 @@
         <script src="lib/aws-sdk-2.5.3.min.js"></script>
         <script src="lib/jquery-2.2.4.min.js"></script>
 
-        
-        
-        <!--script src="lib/CopyShader.js"></script>
-        <script src="lib/EffectComposer.js"></script>
-        <script src="lib/RenderPass.js"></script>
-        <script src="lib/ShaderPass.js"></script>
-        <script src="lib/MaskPass.js"></script-->
+<!-- Avner's stuff -->
 
-        <script src="secure-access.js"></script>
+       <script src="secure-access.js"></script>
 
         <video id="subtitles" class="subtitles" src="" style="display:none;"></video>
         <div id="game"></div>
@@ -81,5 +207,221 @@
                 </form>
             </div>
         </div>
-    </body>
+
+<!-- End of Avner's stuff -->
+
+
+
+
+
+  <div id="tree_scene"></div>
+
+	<div id="progress"></div>
+    <div id="progress_text" class="miriam"></div>
+
+	<!--About-->
+	<div id="about" class="miriam">+</div>
+    <div id="about_container">
+         <div class="container">
+            <div class="row" id="about_grid">
+
+                <div class="col-xs-6">
+                <div class="absolute_10_spacer"></div>
+                    <h1 class="suez">
+                    מה אני עושה פה?
+                    </h1>
+                    <p class="miriam">
+                        מאוד פשוט, את נכנסת עכשיו למרחב הכיכר, בו את מוזמנת לשוטט, לנוח, להכיר את האנשים הנמצאים שם ולחבר את פיסות הזיכרונות.
+                    </p>
+                    <p class="miriam">
+                        כפי שתיראי החוויה מתחילה על פי השעה האמיתית שלך, כרגע, שנכנסת לחווויה. רוצה לשנות את זה? התמקדי באחת השמשות בתוך הכיכר. 
+                    </p>
+                    <h1 class="suez">
+                    מי יצר את הפרויקט?
+                    </h1>
+                    <iframe width="100%" src="https://www.youtube.com/embed/n0IIKgNnctY?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+                     <p class="miriam">
+                        ״צינה: סימפוניה של געגועים״ פותחה בעזרת טכנולוגית webVR על מנת ליצור חוויה נגישה וחלקה ככל האפשר. על מנת ליצור את ״צינה״ נדרש צוות בעל כישורים מגוונים על מנת לפרש מחדש פיתוח לרשת וטכניקות סריקה תלת ממדיות המתחברות לכדי חוויה אחת קוהרנטית.
+                    </p>
+
+                    <p class="miriam">
+                    נוצר על ידי <a href="http://shirinanlen.xyz/">שירין אנלן</a>
+                    </p>
+
+                    <p class="miriam">
+                    ארט דירקטור  - <a href="http://zivschneider.com">זיו שניידר</a>       
+                    </p>
+
+                    <p class="miriam">
+                    ראש פיתוח -  <a href="http://phenomenalabs.com">אור פליישר</a>
+                    </p>
+
+                    <p class="miriam">
+                    מפתח ראשי - <a href="http://avner.js.org">אבנר פלד</a>          
+                    </p>
+
+                    <p class="miriam">
+                    אנימציות קוד - <a href="http://www.jhclaura.com/">לורה צ׳ן</a>
+                    </p>
+
+                    <p class="miriam">
+                    עורך תסריט - <a href="https://www.researchgate.net/profile/Udi_Ben-Arie/publications">אודי בן-ארי</a>
+                    </p>
+
+                </div>
+
+                <div class="col-xs-6">
+                <div class="absolute_10_spacer"></div>
+                    <h1 class="suez">
+                    על הפרויקט
+                    </h1>
+                    <img src="assets/images/early_days.jpg" />
+                    <p class="miriam">
+                        "ייחודה של עיר מתקיים בכיכרותיה, בכבישיה, ברחובותיה, במבניה ובגניה ובהתארגנותם במרחב. למתגורר בעיר ולמבקר בה הם אלה שיוצרים את תחושת המקום. אלא שהתחושה איננה אחידה: למתגורר בעיר נוצרת התחושה מתוך הזיכרונות, ההיכרות האינטימית והידיעה; המבקר בעיר מסתפק בהנאה. כדי לקרב את המבקר לעיר ולייחודה הוא נדרש ללימוד, להתעמקות, לסיפור ולמחשבה".<br></p>
+                        <p style="direction: ltr;">(J.B.Jackson, 1994)</span>
+                    <p class="miriam">
+                        כיכר צינה דיזינגוף הוקמה לזכר צינה אישתו של ראש העיר הראשון של תל אביב. בעיר בה רק 3% מרחובותיה קרויים על שם נשים אקט של הענקת השם של הכיכר המרכזית של העיר הינה אקט יוצא דופן העומד בניגוד חד להיסטוריה הפוליטית של תל אביב, לא רק זה, הכיכר תוכננה על ידי אדריכלית אישה, גניה אוורבוך. וכל זאת בשנות השלושים של המאה הקודמת.
+                    </p>
+                    <img src="assets/images/invite.jpg" />
+                    <p class="miriam">
+                        אולי יש בכך שאריות מהעצמה של האהבה בין מאיר וצינה שאפשרה זאת.
+                    </p>
+                    <img src="assets/images/she.jpg" />
+                    <p class="miriam">
+                        מאיר כינה את צינה "חברתי בחיים", היש ביטוי לזוגיות יפה מכך?
+                    </p>
+                    <p class="miriam">
+                        כיכר צינה הוענקה לצינה מתוך געגוע וכמיהתו של מאיר להתאחד עם צינה שוב. בתוך רחוב מאיר דיזינגוף הארוך נמצאת האישה העגולה והמרכזית צינה, לנצח ההיסטוריה התל אביבית. תל אביב, שם המכיל בתוכו ניגודיות כמעט בלתי נסבלת. תל מהווה קבר, מוות. אביב המסמל חיים ופריחה. 
+                    </p>
+                    <img src="assets/images/sign.png" />
+                    <p class="miriam">
+                        צינה, סימפוניה של געגועים מכילה בתוכה את אותם קונפליקטים וניגודים כמעט בלתי נסבלים של החיים. בת בבד בלתי נפרדים מהם גם כן. דמויות כיכר קבועות, המתמזגות עימה באופן כמעט סימביוטי, החשות נחמה בשייכות למרחב האורבני הנמצא בתנועה בלתי מפסקת בתוך מחשבות סטטיות, בבדידות המשותפת. כולם כאחד באים אליה, כי בה הם מרגישים בבית. השעון המנגן הניצב במרכז הכיכר בצורת המזרקה משקף בטעם ציני מתקתק כיצד הזמן מתקפל לו במרחב הכיכר, וכשהזמן נע קדימה, אנשי הכיכר נשענים על כמיהות עבר. 
+                    </p>
+                    <p class="miriam">
+                        הגורל הוא פאטלי עבור כיכר צינה. נדמה כי ייעודה מעלה ניחוחות של כמיהה לעבר.אנשי הכיכר אינם מכירים אחד את השניה, וסביב הפסל "מים ואש" הכיכר הפכה למיכל של בדידות, והם עצמם לשותפים לזכרונות עבר. רגעים בחיים המהווים מוות של אפשרות למה שיכול היה להיות. 
+                    </p>
+                    <p class="miriam">
+                        בחורף 2016, כיכר צינה דיזינגוף, עומדת לההרס ולשנות את צורתה בפעם השלישית בהיסטוריה שלה, והינה שוב נוסטלגיית העבר מדלגת לזמן עתיד, והחללים התחתונים האפלים של הכיכר המורמת נפערים ומתגלים.
+                    </p>
+                    <p class="miriam">
+                        צינה היא הזמנה למסע הנע בין אהבה ובדידות דרך שילוב בין דוקומנטרי לפנטזיה. 
+                    </p>
+                    <p class="miriam">
+                        עם התגלגלות הסרט, אותם חללים יחלו לצוף (הכוונה להיות מוצפים)- והכיכר תהפוך למעין רפסודה עצמאית בתוך מרחב אורבני לא אורבני. געגועים יכולים לחנוק. השחרור מעלה מפלס אחר של שקט. לאחר מותה של צינה, מאיר כתב ביומנו "יש רגעים ששוחים ממצולות עבר". מה שוחה אליך מהעבר?
+                    </p>
+                    <div class="absolute_10_spacer"></div>
+                </div>
+            </div>     
+         </div>
+    </div>
+
+    <!-- Language selector-->
+	<div id="language" class="miriam">עברית</div>
+
+
+
+
+    <div id="landing_screen">
+	<!--First Screen-->
+     <!--Headphones-->
+    <div id="headphones_solo"><img src="assets/ui/headphones_solo-11.png" /></div>
+
+     <video id="birds">
+        <source src="./assets/ui/pigeons.webm" type="video/webm" />
+     </video>
+      <div class="container-fluid" id="firstscreen">
+        <div class="absolute_10_spacer"></div>
+        <div class="row">
+          <div class="col-sm-12">
+            <video id="logo" class="grayscale">
+              <source src="./assets/ui/logo.webm" type="video/webm" />
+            </video>
+            <div id="desc_sub" class="subhead suez">
+              A WEBVR DOCUMENTARY BY SHIRIN ANLEN
+            </div>
+            <div class="absolute_30_spacer"></div>
+            <div id="lower_tag" class="miriam">a journey through an emotional flood<br>of love and loneliness</div>
+          </div>
+        </div>
+        <div class="absolute_10_spacer"></div>
+        <div class="row">
+          <div class="col-sm-12">
+						<!-- First enter button-->
+            <div id="enter_button" class="button suez">
+              ENTER
+            </div>
+							<div class="row">
+								<!--Specific Platform buttons-->
+								<div id ="vive_button" class="col-sm-2 col-sm-offset-4 button suez platform_selection">HTC Vive</div>
+								<div id ="desktop_button" class="col-sm-2 button suez platform_selection">Desktop</div>
+							</div>
+          </div>
+        </div>
+				<div class="absolute_10_spacer"></div>
+				<div class="row">
+					<div class="col-xs-12">
+						
+					</div>
+				</div>
+      </div>
+    </div>
+		<!--Instructions-->
+		<div id="instruction_screen">
+			<div class="container-fluid" id="desktop_instruc">
+                <div id="keyboard">
+                <div class="row">
+
+                    <div class="col-xs-4" id="keyboard_tagline">
+                    <img id="keyall" src="assets/ui/WASD-All.png" />
+                    <img id="akey" src="assets/ui/WASD-A.png" />
+                    <img id="dkey" src="assets/ui/WASD-D.png" />
+                    <img id="skey" src="assets/ui/WASD-S.png" />
+                    <img id="wkey" src="assets/ui/WASD-W.png" />
+                    USE ARROW/WASD KEYS<br> TO MOVE AROUND
+                    </div>
+					
+                    <div class="col-xs-4" id="keyboard_tagline">
+                    <img id="mouse" src="assets/ui/360_Rotate-13.png" />
+                    USE MOUSE<br> TO LOOK AROUND
+                    </div>
+
+                    <div class="col-xs-4" id="keyboard_tagline">
+                     <img id="sunsall" src="assets/ui/suns_all.png" />
+                    <img id="sun7" src="assets/ui/sun_7AM.png" />
+                    <img id="sun9" src="assets/ui/sun_9AM.png" />
+                    <img id="sun12" src="assets/ui/sun_12PM.png" />
+                    <img id="sun5" src="assets/ui/sun_5PM.png" />
+                    <img id="sun7p" src="assets/ui/sun_7PM.png" />          
+                    GAZE AT THE SUN<br> TO CHANGE THE TIME
+                    </div>
+
+                </div>
+                </div>
+			</div>
+            <div class="container-fluid" id="vive_instruc">
+                <div id="keyboard">
+                <div class="row">
+                    
+                    <div class="col-xs-6" id="keyboard_tagline">
+                    <img id="vive_image" src="assets/ui/vive.png" />
+                    LOOK AROUND AND WALK<br>WITHIN A 3X3 METER RANGE
+                    </div>
+
+                    <div class="col-xs-6" id="keyboard_tagline">
+                        <img id="sunsall" src="assets/ui/suns_all.png" />
+                        <img id="sun7" src="assets/ui/sun_7AM.png" />
+                        <img id="sun9" src="assets/ui/sun_9AM.png" />
+                        <img id="sun12" src="assets/ui/sun_12PM.png" />
+                        <img id="sun5" src="assets/ui/sun_5PM.png" />
+                        <img id="sun7p" src="assets/ui/sun_7PM.png" />          
+                    GAZE AT THE SUN<br> TO CHANGE THE TIME
+                    </div>
+
+                </div>
+                </div>
+            </div>
+		</div>
+    <!--script src="src/js/treeScene.js"></script-->
+    <!-- <script src="dist/bundle.js"></script> -->
+	</body>
 </html>

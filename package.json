@@ -2,7 +2,7 @@
   "name": "tzina",
   "version": "1.0.0",
   "description": "Tzina Experience",
-  "main": "index.js",
+  "main": "landing.js",
   "scripts": {
     "start": "node ./node_modules/gulp/bin/gulp.js"
   },
