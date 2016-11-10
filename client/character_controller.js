@@ -40,7 +40,7 @@ export default class CharacterController {
             for (let i = 0; i < clone.length; i++) {
                 let character = clone[i];
 
-                if (!character.done) {
+                if (!character.done && !character.props.event) {
                     this.square.clockwork.remove(character);
                     character.unload();
                 } else {
@@ -61,13 +61,6 @@ export default class CharacterController {
                 this.addCharacter(characterName);
             });
 
-            // Is there an event character
-            /*
-            if (chapter.eventCharacters && chapter.eventAfter == 0) {
-                chapter.eventCharacters.forEach((characterName) => {
-                    this.addCharacter(characterName);
-                });
-                }*/
         });
         events.on("angle_updated", (hour) => {
             if (this.inControl){ {

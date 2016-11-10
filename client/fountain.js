@@ -116,7 +116,7 @@ export default class Fountain extends THREE.Object3D  {
         // Center Water
         emitter = this.createTrickleCenter(position, this.centerVelocity, 0x00ffff);
         emitter.disable();
-        this.centerRingEmitters.push(emitter);
+        this.centerRingEmitters = [emitter];
         
         // First circle
         position.y = 0;
@@ -253,16 +253,10 @@ export default class Fountain extends THREE.Object3D  {
     }
 
     startShow() {
-        this.soundManager.loadSound(this.event12pm_file)
-        .then((sound) => {
-            console.log("Sound ", sound);
-            this.sound_12pm = sound;
-
-            setTimeout(() => {
-                this.playSound();
-                console.log("play event12pm sound!");
-            },3000);
-        });
+        console.log("Fountain starting show!");
+        this.showTime = true;
+        this.firstRingEmitters[0].enable();
+        this.centerRingEmitters[0].enable();
     }
 
     resetShow() {

@@ -200,7 +200,8 @@ export default class Game {
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
 
-        this.show = new Show(this.square, this.character_controller); 
+        this.show = new Show(this.square, this.characterController); 
+        this.show.init();
     }
 
     load(onLoad) {
@@ -358,7 +359,7 @@ export default class Game {
         if (this.config.fullscreen) {
             this.vrManager.setMode_(2);
             }*/
-        //this.soundManager.play("ambience");
+        this.soundManager.play("ambience");
         console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)

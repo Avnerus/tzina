@@ -98,6 +98,7 @@ export default class Character extends THREE.Object3D {
                         console.log(name, " is playing." , this.props.name, "is pausing");
                         this.onHold = true;
                         this.idleVideo.pause();
+                        this.idleVideo.setOpacity(0.5);
                     }
                 }
             });
@@ -106,6 +107,7 @@ export default class Character extends THREE.Object3D {
                     this.onHold = false;
                     console.log(name, " is idle." , this.props.name, "is playing");
                     if (!this.props.fullOnly) {
+                        this.idleVideo.setOpacity(1.0);
                         this.idleVideo.play();
                     }
                 }
@@ -123,6 +125,20 @@ export default class Character extends THREE.Object3D {
             this.idleVideo.wire.visible = true;
 
             this.idleVideo.play();
+
+            if (this.props.event) {
+                events.emit("character_playing", this.props.name)
+                this.idleVideo.video.loop = false;
+                this.idleVideo.video.addEventListener('ended',() => {
+                    console.log(this.props.name, "Character video ended");
+                    this.idleVideo.pause();
+                    this.idleVideo.unload();
+                    this.remove(this.idleVideo);
+                    this.done = true;
+                    events.emit("character_idle", this.props.name)
+                    events.emit("character_ended", this.props.name)
+                });
+            }
         }
     }
 

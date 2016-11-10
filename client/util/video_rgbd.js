@@ -227,17 +227,17 @@ export default class VideoRGBD  {
     };
 
     setOpacity(opacity) {
-        this.meshMaterial.uniforms.opacity.value = opacity;
-        this.linesMaterial.uniforms.opacity.value = Math.min(opacity,0.1);
+        this.mesh.material.uniforms.opacity.value = opacity;
+        this.wire.material.uniforms.opacity.value = Math.min(opacity,0.1);
     }
 
     setDepth(min, max) {
         console.log("Video " + this.properties.fileName + "Changing depth ", min, max);
-        this.meshMaterial.uniforms.mindepth.value = min;
-        this.meshMaterial.uniforms.maxdepth.value = max;
+        this.mesh.material.uniforms.mindepth.value = min;
+        this.mesh.material.uniforms.maxdepth.value = max;
 
-        this.linesMaterial.uniforms.mindepth.value = min;
-        this.linesMaterial.uniforms.maxdepth.value = max;
+        this.wire.material.uniforms.mindepth.value = min;
+        this.wire.material.uniforms.maxdepth.value = max;
     }
 
     setScale(scale) {

@@ -164,7 +164,8 @@ export default [
         animationPosition: [-.38, 0, .39],
         animationRotation: [0, 0, -6],
         subtitles: null,
-        idleOnly: true
+        idleOnly: true,
+        event: true
     },
     {
         name: 'LupoDogs12PM',

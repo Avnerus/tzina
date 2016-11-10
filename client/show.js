@@ -1,9 +1,10 @@
 import DebugUtil from './util/debug'
 
 export default class Show {
-    constructor( square ) {
+    constructor(square, characterController) {
         console.log("Show constructed!")
         this.square = square;
+        this.characterController = characterController;
 
         this.in12pmShow = false;
         this.in7pmShow = false;
@@ -14,8 +15,12 @@ export default class Show {
         events.on("hour_updated", (hour) => {
             
             if(hour==12 && !this.in12pmShow){
-                this.square.fountain.startShow();
-                this.in12pmShow = true;
+                // So we do this after the other characters load
+                setTimeout(() => {
+                    this.square.fountain.startShow();
+                    this.characterController.addCharacter("Agam12PM");
+                    this.in12pmShow = true;
+                },3000);
             }
 
             if(hour!=12 && this.in12pmShow){
