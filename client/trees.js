@@ -58,7 +58,7 @@ export default class Trees extends THREE.Object3D {
                         mesh.material.lights = false;
                         mesh.position.fromArray(instance.position);
                         if (instance.scale) {
-                            mesh.scale.multiplyScalar(instance.scale * 0.4 / 0.6);
+                            mesh.scale.multiplyScalar(instance.scale);
                         }
                         mesh.rotation.order ="ZXY";
                         mesh.rotation.set(
