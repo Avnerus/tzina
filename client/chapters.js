@@ -11,7 +11,8 @@ export default
             "sunLoaderRotation": [144,46,0],
 			"characters": [
                 "Meir",
-				"Rami"
+                "Rami",
+                "Shirin7AM"
 			],
 			"extraAssets": [
 				{
