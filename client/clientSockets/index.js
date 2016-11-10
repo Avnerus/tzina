@@ -6,7 +6,7 @@ import Pidgeon from './pidgeon'
 //set here when to do certain things according to global events
 let eventWhenTo={
   createSocket:"intro_end",
-  // startEmittingPosition:"control_threshold"
+  land:"control_threshold"
 }
 
 //my own clientId, bint to server
@@ -81,10 +81,12 @@ export default class PidgeonController {
           thisPidgeonController.scene.add(newCharacter);
         }
 
-      }else /*if(message.header=="landed"){
+      }else if(message.header=="landed"){
         console.log("pidgeon receive landed");
         // retrieve the pidgeon icon that represents my own.
         let remoteSprite=Pidgeon.remote(message.pointer);
+        let landed=message.data[0]>0.5;
+        console.log("pidgeon receive single landed of id"+message.pointer+"="+landed);
         if(remoteSprite){
           try{
             remoteSprite.land();
@@ -99,7 +101,7 @@ export default class PidgeonController {
           thisPidgeonController.scene.add(newCharacter);
         }
 
-      }else*/ if(message.header=="remove"){
+      }else if(message.header=="remove"){
         if(verbose)console.log("pidgeon remove "+message.pointer);
         //pendant:this should be inside
         let remoteSprite=Pidgeon.remote(message.pointer);
@@ -117,20 +119,21 @@ export default class PidgeonController {
         //localSprite=new characters.Character({unique:myClientId});
         //console.log("new client Id",message);
 
-        // events.on(eventWhenTo.startEmittingPosition, (passed) => {
-        //   console.log("pidgeon emit landed");
-        //   if (passed){
-        //     wsock.emit({header:"landed",pointer:myClientId,data:[0,0,0]},function(err,pl){
-        //       if(err){
-        //         console.error("landed not sent",err);
-        //       }else{
-        //       }
-        //     });
-        //   }
-        // });
+        events.on(eventWhenTo.land, (passed) => {
+
+          console.log("pidgeon emit landed");
+          if (passed){
+            wsock.emit({header:"landed",pointer:myClientId,data:[1]},function(err,pl){
+              if(err){
+                console.error("landed not sent",err);
+              }else{
+              }
+            });
+          }
+        });
 
 
-      }else if(message.header=="statebatch"){
+      }else if(message.header=="positionbatch"){
         let batch=new Array();
         // var numeric_array = new Array();
         for (var items in message.data){
@@ -156,6 +159,19 @@ export default class PidgeonController {
               thisPidgeonController.scene.add(newCharacter);
             }
           }
+        }
+      }else  if(message.header=="landedbatch"){
+        let batch=new Array();
+        // var numeric_array = new Array();
+        for (var items in message.data){
+            batch.push( message.data[items] );
+        }
+        //for each state registry
+        for(let a = 0; a<batch.length; a+=2){
+          //the unique index of the object over which the data will be applied
+          let stateObjectUnique=batch[a];
+          let stateValue=[a+1]>0.5;
+          console.log("pidgeon landed batch id:"+stateObjectUnique+"="+stateValue);
         }
       }else if(message.header=="newclient"){
         // console.log("new client",message);

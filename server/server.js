@@ -29,7 +29,8 @@ socketSM.on('connection',function(ws){
     pointer: client.unique
   });
 
-  client.send(clientsMan.getAllStates());
+  client.send(clientsMan.getAllPositions());
+  client.send(clientsMan.getAllLandedStates());
   //inform all the other clients about the new user
   client.broadcast({
     header: "newclient",//newClient

@@ -33,9 +33,9 @@ export default class socketServerManager{
       eemiter.onHandlers.call(this);
       this.ws.on('message', function(msg) {
         // console.log("wsman rcv msg"+msg);
+        //console.log("<.."+msg.length);
         try{
-          //pendant: there is no reason to hardcode the buffer size
-          let arrbuf=new ArrayBuffer(20);
+          let arrbuf=new ArrayBuffer(msg.length);
           let uint32=new Uint32Array(arrbuf);
           for(let a in uint32){
             uint32[a]=msg.readUInt32LE(4*a);
@@ -56,6 +56,7 @@ export default class socketServerManager{
         }catch(e){
           console.warn("socketServerManager had a problem putting the message buffer together:",e);
           console.log("handling message as it came"+msg);
+
           thisWebSocketInstance.handle('message',{rawMessage:msg});
           thisWebSocketManager.handle('socketMessage',{rawMessage:msg,socket:this.ws});
         }

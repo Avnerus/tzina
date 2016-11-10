@@ -158,10 +158,19 @@ export function ClientsManager(){
       }
     }
   }
-
-  this.getAllStates=function(){
-
-    let outGoing={header:"statebatch",pointer:0,data:[]};
+  this.getAllLandedStates=function(){
+    let outGoing={header:"landedbatch",pointer:0,data:[]};
+    this.forEach(function(thisClient){
+      if(thisClient.currentState.landed){
+        outGoing.data.push(thisClient.unique);
+        outGoing.data.push(thisClient.currentState.landed[0]);
+      }
+    });
+    // console.log(outGoing);
+    return outGoing;
+  }
+  this.getAllPositions=function(){
+    let outGoing={header:"positionbatch",pointer:0,data:[]};
     this.forEach(function(thisClient){
       if(thisClient.currentState.changeposition){
         outGoing.data.push(thisClient.unique);
@@ -193,7 +202,7 @@ export function ClientsManager(){
         data:thisClient.currentState.changeposition
       });
     }else if(enqueuedClientPositions.length>=1){
-      let outGoing={header:"statebatch",pointer:0,data:[]};
+      let outGoing={header:"positionbatch",pointer:0,data:[]};
       for(let b in enqueuedClientPositions){
         let thisClient=enqueuedClientPositions[b];
         if(thisClient.currentState.changeposition){

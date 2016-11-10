@@ -4,10 +4,11 @@ this script is shared between server and client, and makes the task of compressi
 adn decompressing the data */
 
 //first header in lookup is misspelled to let know the developer that a message was not well spelled or undefined.
-let charLookup=["misspelled","newid","changeposition","landed","newclient","statebatch","remove","ping","pong"];
+let charLookup=["misspelled","newid","changeposition","landed","newclient","statebatch","positionbatch","landedbatch","remove","ping","pong"];
 let verbose=false;
 
 function decode(bufferArray){
+  //console.log("<-"+bufferArray.length)
   try{
 
     let retArr={};
@@ -17,13 +18,15 @@ function decode(bufferArray){
     let inComing={
       //bytes 0-3 will contain message type name
       header:new Int32Array(bufferArray,0,1),
-      //bytes 4-7, quartets 1 will contain object pointer
+      //bytes 4-7, nibbles 1 will contain object pointer
       pointer:new Int32Array(bufferArray,4,1),
-      //bytes 8-19, quartets 2,3,4 will contain payload
+      //bytes 8-19, nibbles 2,3,4 will contain payload
       data:new Int32Array(bufferArray,8)
     }
 
     retArr.header=charLookup[inComing.header[0]];
+    if(retArr.header=="landed")
+    console.log("pidgeon decoding a landed!");
     retArr.pointer=inComing.pointer[0];
 
     retArr.data={};
@@ -39,18 +42,19 @@ function decode(bufferArray){
 }
 export {decode}
 function encode(data){
+  let datalen=3;
+  if(data.data){
+    datalen=data.data.length;
+  }
+  //console.log("->"+datalen);
   try{
-    let datalen=3;
-    if(data.data){
-      datalen=data.data.length;
-    }
     let bufferArray=new ArrayBuffer(8+datalen*4);
     let outGoing={
       //bytes 0-3 will contain message type name in a representative number
       header:new Int32Array(bufferArray,0,1),
-      //bytes 4-7, quartets 1 will contain object pointer
+      //bytes 4-7, nibbles 1 will contain object pointer
       pointer:new Int32Array(bufferArray,4,1),
-      //bytes 8-19, quartets 2,3,4 will contain payload
+      //bytes 8-19, nibbles 2,3,4 will contain payload
       data:new Int32Array(bufferArray,8)
     }
 

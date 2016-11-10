@@ -15,7 +15,7 @@ var myWalkingTween={totalProgress:function(){return 1;}};
 export default class Pidgeon extends THREE.Object3D{
   constructor(props){
     super();
-    this.walkingOnGround=false;
+    //this.walkingOnGround=false;
 
     let thisPidgeon=this;
     let properties = props || {};
@@ -71,7 +71,7 @@ export default class Pidgeon extends THREE.Object3D{
         thisPidgeon.lookAt(Lokat);
         //this flag helps us transition from initial flying state to a walking state on the beginning
         //perhaps is more correct that the client emits the land event, but that needs a lot more of time
-        if(!thisPidgeon.walkingOnGround){
+        /*if(!thisPidgeon.walkingOnGround){
           //if inside square circle
           //sqrt(19.696^2+22.094^2)=29.5986021967 which are landing coordinates
           console.log("dist x/z"+Lokat.distanceTo(new THREE.Vector3(0,thisPidgeon.position.y,0)) );
@@ -88,7 +88,7 @@ export default class Pidgeon extends THREE.Object3D{
             thisPidgeon.changeAnimStateTo("Bird_Fly");
             thisPidgeon.walkingOnGround=false;
           }
-        }
+        }*/
         //object that will be subject to a tween. contains an onupdate function
         //that transfers it's state to the actual pidgeon position
         let tweenCurrentPosition={};
