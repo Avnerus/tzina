@@ -25,8 +25,8 @@ function decode(bufferArray){
     }
 
     retArr.header=charLookup[inComing.header[0]];
-    if(retArr.header=="landed")
-    console.log("pidgeon decoding a landed!");
+    // if(retArr.header=="landed")
+    // console.log("pidgeon decoding a landed!");
     retArr.pointer=inComing.pointer[0];
 
     retArr.data={};

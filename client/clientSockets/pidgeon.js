@@ -158,6 +158,13 @@ export default class Pidgeon extends THREE.Object3D{
       }
     }
   }
+  flyOrLand(stateValue){
+    if (stateValue) {
+      this.land();
+    }else{
+      this.flyAway();
+    }
+  }
   land(){
     this.changeAnimStateTo("Bird_Idle");
     this.walkingOnGround=true;

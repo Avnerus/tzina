@@ -15,6 +15,9 @@ clientsMan.setKeepaliveTimer(5000);
 
 setInterval(function(){
   if(clientsMan.flushPositions()){};//else{console.log("nothing to send");};
+  if(clientsMan.flushLandedStates()){
+    console.log("->landed");
+  };
 },200);
 
 //when socketServerManager gets a client, we instance a client in clientsMan

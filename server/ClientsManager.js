@@ -86,15 +86,25 @@ export function ClientsManager(){
     //pendant: client is holding a socketServerInstance under the ws variable,
     //this is misleading to programmers and the ws var should be renamed
     this.ws.on('message', function(event) {
+      // console.log("->"+JSON.stringify(event));
       // console.log("client received msg"+msg);
       if(event.parsedMessage){
         //track changes and broadcast the ones that need
         thisClient.trackChange(event.parsedMessage);
-        thisClientsManager.enqueuePosition(thisClient);
-        if(event.parsedMessage.header=="landed"){
-          if(verbose)console.log("event land",event.parsedMessage);
-          // thisClient.broadcast(event.rawMessage);
+        //I think that would be better programming that this happened in an integrated-
+        //to-the-trackChange-method way.
+        if(event.parsedMessage.header){
+          if(event.parsedMessage.header=="changeposition")
+          thisClientsManager.enqueuePosition(thisClient);
+          if(event.parsedMessage.header=="landed")
+          thisClientsManager.enqueueLandedState(thisClient);
+        }else{
+          console.error("[!] ClientsManager.js error: message without header?");
         }
+        // if(event.parsedMessage.header=="landed"){
+        //   if(verbose)console.log("event land",event.parsedMessage);
+        //   // thisClient.broadcast(event.rawMessage);
+        // }
         event.client=thisClient;
         thisClient.handle('message',event);
         thisClientsManager.handle('clientMessage',event);
@@ -188,8 +198,17 @@ export function ClientsManager(){
     if(enqueuedClientPositions.indexOf(ofClient)==-1)
       enqueuedClientPositions.push(ofClient);
   }
+  let enqueuedClientLandedStates=[];
+  //these will be statics when I update to es6 syntax
+  this.enqueueLandedState=function(ofClient){
+    if(enqueuedClientLandedStates.indexOf(ofClient)==-1)
+      enqueuedClientLandedStates.push(ofClient);
+  }
+
+
   this.flushPositions=function(){
     if(enqueuedClientPositions.length==1){
+      //there was only one enqueued message, so it belongs to the first in queue: [0]
       let thisClient=enqueuedClientPositions[0];
       if(verbose)console.log(thisClient.unique+"broadcast single pos",{
         header:"changeposition",
@@ -201,6 +220,7 @@ export function ClientsManager(){
         pointer:thisClient.unique,
         data:thisClient.currentState.changeposition
       });
+
     }else if(enqueuedClientPositions.length>=1){
       let outGoing={header:"positionbatch",pointer:0,data:[]};
       for(let b in enqueuedClientPositions){
@@ -215,13 +235,57 @@ export function ClientsManager(){
       if(verbose)console.log("broadcasting some points to many clients",outGoing);
       //clear the array
       thisClientsManager.broadcast(outGoing);
+
     }else{
       return false;
     }
     enqueuedClientPositions=[];
-    return true;
 
+    return true;
   }
+
+  this.flushLandedStates=function(){
+    if(enqueuedClientLandedStates.length==1){
+      //there was only one enqueued message, so it belongs to the first in queue: [0]
+      let thisClient=enqueuedClientLandedStates[0];
+      if(thisClient.currentState.landed){
+        thisClient.broadcast({
+          header:"landed",
+          pointer:thisClient.unique,
+          data:thisClient.currentState.landed
+        });
+        console.log("thisclient broadcast"+JSON.stringify({
+          header:"landed",
+          pointer:thisClient.unique,
+          data:thisClient.currentState.landed
+        })+">");
+      }else{
+        console.log("thisclient didnt have landed"+JSON.stringify(thisClient.currentState)+"X");
+      }
+
+
+    }else if(enqueuedClientLandedStates.length>=1){
+      let outGoing={header:"landedbatch",pointer:0,data:[]};
+      for(let b in enqueuedClientLandedStates){
+        let thisClient=enqueuedClientLandedStates[b];
+        if(thisClient.currentState.landed){
+          outGoing.data.push(thisClient.unique);
+          for (let a in thisClient.currentState.landed){
+            outGoing.data.push(thisClient.currentState.landed[a]);
+          }
+        }
+      }
+      if(verbose)console.log("broadcasting some points to many clients",outGoing);
+      //clear the array
+      thisClientsManager.broadcast(outGoing);
+
+    }else{
+      return false;
+    }
+    enqueuedClientLandedStates=[];
+    return true;
+  }
+
   this.broadcast=function(data,exceptUnique) {
     if(verbose)console.log("broadcast->");
 

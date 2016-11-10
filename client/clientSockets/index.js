@@ -23,6 +23,7 @@ let emitInterval=0.5;
 //last dt time a position was emitted to server
 let lastEmitTime=0;
 let verbose=false;
+let isLanded=false;
 export default class PidgeonController {
   constructor(scene,camera) {
     this.scene = scene;
@@ -89,7 +90,7 @@ export default class PidgeonController {
         console.log("pidgeon receive single landed of id"+message.pointer+"="+landed);
         if(remoteSprite){
           try{
-            remoteSprite.land();
+            remoteSprite.flyOrLand(stateValue);
           }catch(e){
             console.error(e,"pidgeon with remotesprite "+message.pointer,remoteSprite);
           }
@@ -120,15 +121,17 @@ export default class PidgeonController {
         //console.log("new client Id",message);
 
         events.on(eventWhenTo.land, (passed) => {
-
-          console.log("pidgeon emit landed");
-          if (passed){
-            wsock.emit({header:"landed",pointer:myClientId,data:[1]},function(err,pl){
-              if(err){
-                console.error("landed not sent",err);
-              }else{
-              }
-            });
+          if(!isLanded){
+            console.log("pidgeon emit landed");
+            if (passed){
+              wsock.emit({header:"landed",pointer:myClientId,data:[1]},function(err,pl){
+                if(err){
+                  console.error("landed not sent",err);
+                }else{
+                }
+              });
+            }
+            isLanded=true;
           }
         });
 
@@ -171,7 +174,21 @@ export default class PidgeonController {
           //the unique index of the object over which the data will be applied
           let stateObjectUnique=batch[a];
           let stateValue=[a+1]>0.5;
-          console.log("pidgeon landed batch id:"+stateObjectUnique+"="+stateValue);
+          if(stateObjectUnique!=myClientId){
+            //check if we already have a sprite for this remote object
+            let dataOwner=Pidgeon.remote(stateObjectUnique);
+            let dataCoordinates={x:batch[a+1]*0.001,y:batch[a+2]*0.001,z:batch[a+3]*0.001};
+            if(dataOwner){
+              if(verbose)console.log("pidgeon object "+stateObjectUnique+" found apply");
+              //if we have it, will apply all the data to it. So far only position
+              dataOwner.flyOrLand(stateValue);
+            }else{
+              if(verbose)console.log("pidgeon object "+stateObjectUnique+" notfound create");
+              //if we don't have it, we create it.
+              let newCharacter=new Pidgeon({position:dataCoordinates,unique:stateObjectUnique});
+              thisPidgeonController.scene.add(newCharacter);
+            }
+          }
         }
       }else if(message.header=="newclient"){
         // console.log("new client",message);
