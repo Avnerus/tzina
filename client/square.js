@@ -470,9 +470,14 @@ export default class Square extends THREE.Object3D{
                         if (this.debug) {
                             //DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
                         }
+
+
                     }
                 })
 
+                // SPECIAL ZIV FIX for 19:00 sun
+                let sun19 = reorderedSuns.getObjectByName("19");
+                sun19.position.set(-47.29, 45.4, 38.41);
 
                 console.log("Reordered suns", reorderedSuns);
                 

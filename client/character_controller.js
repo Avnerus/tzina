@@ -76,6 +76,14 @@ export default class CharacterController {
                 });
             }}
         });
+
+        events.on("end_credits", () => {
+            console.log("End credits, removing characters");
+            this.activeCharacters.forEach((character) => {
+                this.square.clockwork.remove(character);
+                character.unload();
+            })            
+        });
     }
 
     addCharacter(characterName) {

@@ -205,7 +205,6 @@ export default class Game {
         this.show.init();
 
         this.endCredits = new EndCredits(this.camera);
-        this.endCredits.init();
     }
 
     load(onLoad) {
@@ -284,7 +283,9 @@ export default class Game {
             console.log("Intro ended");
             if (!this.config.noSquare) {
                 setTimeout(() => {
-                    //this.introAni.start();
+                    this.introAni.start();
+
+                    this.endCredits.init();
                     this.endCredits.play();
                 },5000);
             }

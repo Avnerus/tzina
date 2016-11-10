@@ -5,6 +5,7 @@ export default class EndCredits {
     constructor(camera) {
         console.log("End Credits constructed!")
         this.camera = camera;
+        this.playing = false;
     
     }
     init() {
@@ -19,10 +20,10 @@ export default class EndCredits {
             let material = new THREE.MeshBasicMaterial( {map: this.creditsVideo.texture, side: THREE.DoubleSide, transparent:true}  );
             this.creditsPlane = new THREE.Mesh(titlePlaneGeo, material);
 
-            this.creditsPlane.position.set(-0.02,-0.08,-20);
-            this.creditsPlane.scale.set(0.01, 0.01, 0.01);
+            this.creditsPlane.position.set(-0.02,-0.08,-50);
+            this.creditsPlane.scale.set(0.06, 0.06, 0.06);
 
-            DebugUtil.positionObject(this.creditsPlane, "End credits");
+            DebugUtil.positionObject(this.creditsPlane, "End credits", false, -1000, 0);
 
             this.camera.add(this.creditsPlane);
         }
@@ -33,9 +34,13 @@ export default class EndCredits {
     }
     
     update(dt) {
-        this.creditsVideo.update(dt);
+        if (this.creditsVideo) {
+            this.creditsVideo.update(dt);
+        }
     }
     play() {
+        events.emit("end_credits");
+        this.playing = true;
         this.creditsVideo.play();
     }
 }
