@@ -64,7 +64,8 @@ export default
 				"Miriam",
                 "Itzik",
                 "Shirin9AM",
-                "FatmanShower"
+                "FatmanShower",
+                "Lupo9AM"
 			],
 			"introfile": [
 				"Miryam",
