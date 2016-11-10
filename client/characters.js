@@ -233,10 +233,10 @@ export default [
         width: 512,
         height: 2048,
         scale: 0.003 * 0.4145,
-        animationScale: 0.20,
-        animationPosition: [-.4, -.46, -.55],
-        animationRotation: [0,-25,0],
-        space: 0.38,
+        animationScale: 0.24,
+        animationPosition: [-0.03, 0.21, -0.86], // -.4, -.46, -.55
+        animationRotation: [0, 214, 0], // 0,-25,0
+        space: 0.38, //0.38
         spaceOffset: [-0.11,0,0],
         subtitles: null
     },
@@ -350,7 +350,7 @@ export default [
         animationPosition: [-0.66, -0.41, -0.96], // -0.53, -0.51, -1.76
         animationRotation: [0,0,0], // 0,-25,0
         subtitles: null,
-        space: 2,
+        space: .2, //2
         spaceOffset: [0.36,0,0]
     },
     {
