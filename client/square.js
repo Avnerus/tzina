@@ -129,7 +129,7 @@ export default class Square extends THREE.Object3D{
             this.ground = results[7];
 
             let ground = results[7];
-            ground.position.set(1.2, 0, -2.18);
+            ground.position.set(1.2, 0.03, -2.18);
             
             this.benchtest = results[8];
            
