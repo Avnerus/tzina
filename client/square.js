@@ -3,6 +3,7 @@ import Fountain from "./fountain"
 import SunLoader from './sun_loader'
 import Extras from './extras';
 import Chapters from './chapters'
+import Pool from './pool'
 
 import DebugUtil from "./util/debug"
 import _ from 'lodash';
@@ -168,6 +169,19 @@ export default class Square extends THREE.Object3D{
             this.textures = results[7];
             this.mesh.add(this.textures);*/
 
+           // Lights
+           this.loadLights();
+
+           // POOL Shader
+            this.pool = new Pool(this.renderer);
+            this.pool.init();
+            this.pool.renderOrder = 1;
+            this.pool.position.set(0.66,21.52, -0.95);
+            this.pool.rotation.x = 270 * Math.PI / 180;
+            this.pool.scale.set(0.822, 0.822, 0.822);
+            console.log("Adding square fountain pool", this.pool);
+            this.mesh.add(this.pool);
+            DebugUtil.positionObject(this.pool, "Pool");
 
             if (this.debug) {
                 /*
@@ -266,6 +280,7 @@ export default class Square extends THREE.Object3D{
     }
     update(dt,et) {
         this.fountain.update(dt);
+        this.pool.update(dt,et);
         if (!this.config.noTrees) {
             this.trees.update(dt,et);
         }
@@ -664,6 +679,15 @@ export default class Square extends THREE.Object3D{
     getClockwork() {
         return this.activeClockwork;
 
+    }
+
+    loadLights() {
+      let pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
+      pointLight.position.set(0,0,0);
+      pointLight.intensity = 1;
+      DebugUtil.positionObject(pointLight, "Fountain light");
+      events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, pointLight, "intensity", 0, 2); 
+      this.mesh.add(pointLight);
     }
 
     get clockRotation() {
