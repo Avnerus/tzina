@@ -14,6 +14,7 @@ export default class HaimAnimation extends THREE.Object3D {
     init(loadingManager) {
         this.loadingManager = loadingManager;
         this.setupAnim();
+
         // DebugUtil.positionObject(this, "haim anim");
     }
 
@@ -218,7 +219,7 @@ export default class HaimAnimation extends THREE.Object3D {
                     value: [.5,1,1,1,1,0]
                 },
                 size: {
-                    value: [.1,.5,1,1,.5],
+                    value: [.1,.4,.7,.7,.3],
                     spread: 1
                 },
                 particleCount: 300,
@@ -254,7 +255,7 @@ export default class HaimAnimation extends THREE.Object3D {
             for(let i=0; i<40; i++){
                 let puddle = new THREE.Mesh(puddleGeo, puddleMats[i%4]);
                 puddle.position.set(Math.random()*12-6,
-                                    -1*i/25,
+                                    0,
                                     Math.random()*14-7 +3);
                 puddle.rotation.x = -Math.PI/2;
                 puddle.scale.multiplyScalar( (Math.random()+1)/4 );

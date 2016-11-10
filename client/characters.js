@@ -84,8 +84,8 @@ export default [
         height: 2048,
         scale: 0.003,
         animationScale: 0.25,
-        animationPosition: [0.45, -0.3, 0.25],
-        animationRotation: [-4, -23, -9],
+        animationPosition: [0.81, -0.17, 1.42],
+        animationRotation: [6, -50, -9],
         space: 1.5,
         volume: 0.1,
         subtitles: false
