@@ -123,7 +123,7 @@ export default class TimeController {
         
         this.chapterTitle = new MeshText2D("SPRITE", TEXT_DEFINITION)
         this.chapterTitle.scale.set(0.109, 0.109, 0.109);
-        this.chapterTitle.visible = true;
+        this.chapterTitle.visible = false;
 
         this.prevChapterTitle = new MeshText2D("SPRITE", TEXT_DEFINITION)
         this.prevChapterTitle.scale.set(0.3, 0.3, 0.3);
