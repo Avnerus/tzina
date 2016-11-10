@@ -111,8 +111,8 @@ export default class IntroAnimation extends THREE.Object3D {
             // DebugUtil.positionObject(this.trees, "TREE");
 
             let refObj = new THREE.Object3D();
-            refObj.scale.set( 15, 15, 10 );    // 110, 90, 80 // 110, 90, 10
-            refObj.position.set(0,250,180);    // 0,900,1100 // 0,1500,300
+            refObj.scale.set( 15, 12, 10 );    // 15, 15, 10 // 110, 90, 80 // 110, 90, 10
+            refObj.position.set(0,150,180);    // 0,150,180 // 0,900,1100 // 0,1500,300
             refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
 
             this.positionsForFBO = this.initParticles( refObj, geometry );
@@ -177,7 +177,7 @@ export default class IntroAnimation extends THREE.Object3D {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 1 }
+                pointSize: { type: "f", value: 1.5 }
             },
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,
