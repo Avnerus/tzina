@@ -16,7 +16,6 @@ export default class Trees extends THREE.Object3D {
 
     init(loadingManager) {
         let treeTypes = {};
-        this.treesLoader = new THREE.PLYLoader(loadingManager);
 
         return new Promise((resolve, reject) => {
             console.log("Loading trees", TreesDef)

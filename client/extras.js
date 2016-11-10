@@ -17,7 +17,6 @@ export default class Extras extends THREE.Object3D {
 
     init(loadingManager) {
         this.store = {};
-        this.extrasLoader = new THREE.PLYLoader(loadingManager);
 
         events.on("hour_updated", (hour) => {this.loadHour(hour)});
 
