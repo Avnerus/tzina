@@ -285,7 +285,7 @@ export default class Game {
             if (!this.config.noSquare) {
                 setTimeout(() => {
                     //this.introAni.start();
-                    this.endCredits.play();
+                    //this.endCredits.play();
                 },5000);
             }
         });
