@@ -532,10 +532,10 @@ export default class Square extends THREE.Object3D{
         let benchPositions = [
             [9.68, -8.48, 30.72],
             [-36.44, -8.48, -4.6],
-            [-0.79, 2.06, 1.9],
+            [-0.79, 2.36, 1.9],
             [-14.86,-8.48, 1.79],
             [-33.54,-8.48,-15.01],
-            [1,1.97,1.76]
+            [-0.84,1.97,1.76]
         ];
 
         let benchRotations = [
@@ -544,7 +544,7 @@ export default class Square extends THREE.Object3D{
             [0,0,0],
             [0,0,0],
             [0,297,0],
-            [0,200,0]
+            [0,20,0]
         ];
 
         let benchScales = [

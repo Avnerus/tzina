@@ -45,7 +45,7 @@
         "emissive":0,
         "type":"MeshPhongMaterial",
         "blending":"NormalBlending",
-        "color":14994353,
+        "color":10790052,
         "depthWrite":true,
         "name":"Lines",
         "normalMap":"F7A63FF7-EFF5-4D4F-AE8D-D80695FC9971",
