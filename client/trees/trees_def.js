@@ -30,31 +30,41 @@ export default {
     instances: [
         
 
-
+///0
                {
             type: "ThreeTrees",
             position: [-27.91,14.67,0.96],
             rotation: [360,14,87],
             scale: 0.92
         },
-        //  {
-        //     type: "ThreeTrees",
-        //     position: [6.37,11.97,40],
-        //     rotation: [-10,0,90],
-        //     scale: 1.1
-        // },
-                   // {
-        //     type: "ThreeTrees",
-        //     position: [19,16.03,19.9],
-        //     rotation: [148,184,265],
-        //     scale: 1.146
-        // }, 
-       // {
-       //      type: "ThreeTrees",
-       //      position: [6.37,16.03,34.33],
-       //      rotation: [314,26,99],
-       //      scale: 0.695
-       //  },
+
+
+///1
+        //// uncommented now
+         {
+            type: "ThreeTrees",
+            position: [6.37,11.97,40],
+            rotation: [-10,0,90],
+            scale: 1.1
+        },
+ ////2
+
+                   {
+            type: "ThreeTrees",
+            position: [-39.63,18.73,18.1],
+            rotation: [360,184,274],
+            scale: 0.379
+        }, 
+////3
+       {
+            type: "ThreeTrees",
+            position: [15.39,16.03,19.9],
+            rotation: [50,18,71],
+            scale: 0.469
+        },
+
+
+////4
 
          {
             type: "ThreeTrees",
@@ -62,32 +72,43 @@ export default {
             rotation: [339,0,71],
             scale: 1
         },
+/////5
          {
             type: "ThreeTrees",
-            position: [10.88,20.08,25.31],
+            position: [14.49,20.08,36.14],
             rotation: [119,192,233],
-            scale: 0.44
+            scale: 0.379
         }, 
+/////6
     
         {
             type: "ThreeTrees",
-            position: [31.63,9.5,-19.79],
+            position: [24.41,17.38,-11.76],
             rotation: [83,38,90],
             scale: 0.87
         },
+///7
+         {
+            type: "ThreeTrees",
+            position: [27,12,16.03,-24.03],
+            rotation: [58,22,58],
+            scale: 0.695
+        },
+////8
         {
             type: "ThreeTrees",
-            position: [-1.75,17.38,23.51],
+            position: [-6.26,17.38,30.73],
             rotation: [343,18,99],
             scale: 0.65
         },
-
- {
+////9
+        {
             type: "ThreeTrees",
             position: [40,16,13],
             rotation: [14,6,91],
             scale: 0.6
         },
+/////10
 
  {
             type: "ThreeTrees",
@@ -96,19 +117,25 @@ export default {
             scale: 0.469
         },
 
+/////11
 
  {
             type: "ThreeTrees",
-            position: [-29.71,17.38,-26.1],
+            position: [-33.32,17.38,-3.55],
             rotation: [201,2,103],
-            scale: 0.65
-        },
+            scale: 0.46
+},
+
+////12
+
     {
             type: "ThreeTrees",
-            position: [40,17.38,0.06],
+            position: [37.04,18.73,8.17],
             rotation: [257,46,132],
-            scale: 0.65
+            scale: 0.514
         },
+
+///13
    
     {
             type: "ThreeTrees",
@@ -116,23 +143,26 @@ export default {
             rotation: [330,0,90],
             scale: 1
         },
-
+///14
         {
             type: "palm",
             position: [-18,16,10],
             rotation: [260,0,90],
             scale: 0.75
         },
+///15
 
         {
             type: "palm",
-            position: [26.62,16.03,15],
+            position: [19.9,17.38,9.98],
             rotation: [60,0,90],
             scale: 0.69
         },
+
+///16
          {
             type: "palm",
-            position: [-33.32,18.73,-40],
+            position: [-33.32,18.73,-36.03],
             rotation: [42,0,83],
             scale: 0.65
         },
@@ -148,36 +178,56 @@ export default {
 
 
 
+//////////17
 
-        // {
-        //     type: "ThreeTrees",
-        //     position: [-28.81,14.67,-20.69],
-        //     rotation: [330,18,90],
-        //     scale: 0.65
-        // },
-        //   {
-        //     type: "ThreeTrees",
-        //     position: [-40,10.61,-40],
-        //     rotation: [360,0,90],
-        //     scale: 0.97
-        // },
+        {
+            type: "ThreeTrees",
+            position: [-28.81,14.67,-20.69],
+            rotation: [330,18,90],
+            scale: 0.65
+        },
+
+        /////18
+          {
+            type: "ThreeTrees",
+            position: [-40,10.61,-40],
+            rotation: [360,0,90],
+            scale: 0.97
+        },
+
+
+        /////19
             
               {
             type: "ThreeTrees",
-            position: [11.78,17.38,-35.12],
-            rotation: [152,360,99],
-            scale: 0.424
+            position: [17.2,18.73,-17.98],
+            rotation: [192,360,99],
+            scale: 0.379
+        },
+        ///20
+
+       {
+            type: "ThreeTrees",
+            position: [28.02,17.38,-36.03],
+            rotation: [339,360,83],
+            scale: 0.605
         },
 
+////// 21
  
-        //       {
-        //     type: "ThreeTrees",
-        //     position: [32.53,26.85,-40],
-        //     rotation: [360,360,103],
-        //     scale: 0.74
-        // },
-
-
+           {
+            type: "ThreeTrees",
+            position: [27.12,17.38,-17.98],
+            rotation: [87,360,111],
+            scale: 0.469
+        },
+///22
+       {
+            type: "ThreeTrees",
+            position: [27.12,16.03,19.9],
+            rotation: [50,18,71],
+            scale: 0.469
+        },
 
 
 
