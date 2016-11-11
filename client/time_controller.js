@@ -141,7 +141,7 @@ export default class TimeController {
         this.insideChapterTitle.scale.multiplyScalar(0.01);
 
         this.insideChapterTitleLineTwo = new MeshText2D("", INSIDE_TEXT_DEFINITION);
-        this.insideChapterTitleLineTwo.scale.multiplyScalar(0.015);
+        this.insideChapterTitleLineTwo.scale.multiplyScalar(0.013);
 
         this.insideChapterTitle.visible = false;
         this.insideChapterTitleLineTwo.visible = false;
@@ -506,7 +506,7 @@ export default class TimeController {
             this.insideChapterTitleLineTwo.lookAt(this.camera.position);
             this.insideChapterTitleLineTwo.translateZ(5);
             this.insideChapterTitleLineTwo.quaternion.copy(this.camera.quaternion);
-            this.insideChapterTitleLineTwo.translateY(-2);
+            this.insideChapterTitleLineTwo.translateY(-1.5);
         }
     }
 
