@@ -1,15 +1,11 @@
-import ImprovedNoise from '../util/improved_noise'
-import TextureAnimator from '../util/texture_animator'
-import GeometryUtils from '../util/GeometryUtils'
-import FBO from '../util/fbo'
-import EndArrayPlugin from '../util/EndArrayPlugin'
 import DebugUtil from '../util/debug'
-TweenPlugin.activate([EndArrayPlugin]);
 
 export default class Agam12PMAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( square ) {
         super();
         this.BASE_PATH = 'assets/animations/agam12pm';
+
+        this.square = square;
     }
 
     init(loadingManager) {
@@ -22,7 +18,7 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{this.firstAni()} }
+            { time: 15,  anim: ()=>{this.firstAni()} }
             // { time: 30,  anim: ()=>{this.characterDisappear()} }
         ];
         this.nextAnim = null;
@@ -31,7 +27,6 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         this.loadingManager.itemStart("Agam12PMAnim");
 
         //        
-        this.perlin = new ImprovedNoise();
         let tex_loader = new THREE.TextureLoader(this.loadingManager);
         let loader = new THREE.JSONLoader(this.loadingManager);
 
@@ -136,6 +131,8 @@ export default class Agam12PMAnimation extends THREE.Object3D {
                 this.nextAnim = null;
             }
         }
+        // console.log("agammm");
+        this.square.fountain.updateVideoTime(time);
     }
 
     update(dt,et) {

@@ -1,7 +1,7 @@
 import DebugUtil from "./util/debug"
 
 export default class Fountain extends THREE.Object3D  {
-    constructor( square, soundManager ) {
+    constructor( square ) {
         super();
         this.BASE_PATH = 'assets/fountain/'
         console.log("Fountain constructed!")
@@ -31,7 +31,6 @@ export default class Fountain extends THREE.Object3D  {
         this.square = square;
         this.showTime = false;
 
-        this.soundManager = soundManager;
         this.soundEvents = [
             { time: 1, action: () => {
                             this.zeroAni();
@@ -69,21 +68,18 @@ export default class Fountain extends THREE.Object3D  {
         ];
         this.soundEventsRecords = this.soundEvents.slice();
         
-        this.event12pm_file = 'assets/sound/event12pm.wav';
     }
 
     init(loadingManager) {
         this.particleGroup = new SPE.Group({
             texture: {
                 value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'water_splash.png')
-                //value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'smokeparticle.png')
             },
             maxParticleCount: 10000
         });
 
         this.fireParticleGroup = new SPE.Group({
             texture: {
-                // value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'water_splash.png')
                 value: new THREE.TextureLoader(loadingManager).load(this.BASE_PATH + 'fire.jpg'),
                 frames: new THREE.Vector2(4,1),
                 loop: 4
@@ -144,17 +140,6 @@ export default class Fountain extends THREE.Object3D  {
             //emitter.disable();
             this.secondRingEmitters.push(emitter);
         }
-
-        // // Sound ===> move to startEvent()
-        // this.soundManager.loadSound(this.event12pm_file)
-        // .then((sound) => {
-        //     console.log("Sound ", sound);
-        //     this.sound_12pm = sound;
-
-        //     // setTimeout(() => {
-        //     //     this.startEvent();
-        //     // },10000);
-        // });
 
         // Light
         let geo = new THREE.SphereGeometry( .3 );
@@ -228,35 +213,52 @@ export default class Fountain extends THREE.Object3D  {
         return s_l;
     }
 
-    playSound() {
-        this.sound_12pm.playIn(1);
-        this.currentEvent = this.soundEvents.shift();
-    }
+    // playSound() {
+    //     this.sound_12pm.playIn(1);
+    //     this.currentEvent = this.soundEvents.shift();
+    // }
 
     update(dt) {
        this.particleGroup.tick(dt * 0.4); 
        if (this.showTime) {
             this.fireParticleGroup.tick(dt * 0.4);
-            //
-            if (this.sound_12pm && this.sound_12pm.isPlaying && this.currentEvent) {
-                 if (this.sound_12pm.getCurrentTime() >= this.currentEvent.time) {
-                      console.log("do anim sequence at ", this.currentEvent.time );
-                     this.currentEvent.action();
-                     if (this.soundEvents.length > 0) {
-                         this.currentEvent = this.soundEvents.shift();
-                     } else {
-                         this.currentEvent = null;
-                     }
-                 }
-             }
+
+            // if (this.sound_12pm && this.sound_12pm.isPlaying && this.currentEvent) {
+            //      if (this.sound_12pm.getCurrentTime() >= this.currentEvent.time) {
+            //           console.log("do anim sequence at ", this.currentEvent.time );
+            //          this.currentEvent.action();
+            //          if (this.soundEvents.length > 0) {
+            //              this.currentEvent = this.soundEvents.shift();
+            //          } else {
+            //              this.currentEvent = null;
+            //          }
+            //      }
+            //  }
        }
+    }
+
+    updateVideoTime(time) {
+        if (this.nextAnim && time >= this.nextAnim.time) {
+            console.log("Show Fountain - do anim sequence ", this.nextAnim);
+            this.nextAnim.action();
+            if (this.currentSequence.length > 0) {
+                this.nextAnim = this.currentSequence.shift();
+            } else {
+                this.nextAnim = null;
+            }
+        }
     }
 
     startShow() {
         console.log("Fountain starting show!");
         this.showTime = true;
-        this.firstRingEmitters[0].enable();
+
+        this.fireEmitters[0].enable();
         this.centerRingEmitters[0].enable();
+        // todo - change water color to colorful
+
+        this.currentSequence = this.soundEventsRecords.slice(0);
+        this.nextAnim = this.currentSequence.shift();
     }
 
     resetShow() {
@@ -272,6 +274,10 @@ export default class Fountain extends THREE.Object3D  {
             this.setGroupEmittersValue( this.fireEmitters, i, this.fireOriParameter[i].clone() );
         }        
         this.spotLightCenters.position.y = 0;
+
+        this.fireEmitters[0].disable();
+        this.centerRingEmitters[0].disable();
+        // todo - change water color to white
     }
 
     startCycle() {
