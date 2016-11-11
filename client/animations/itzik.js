@@ -23,7 +23,7 @@ export default class ItzikAnimation extends THREE.Object3D {
             { time: 75, anim: ()=>{this.benchMove(3)} },        //75
             { time: 80, anim: ()=>{this.benchMove(4)} },        //80
             { time: 85, anim: ()=>{this.benchMove(5)} },        //85
-            { time: 204, anim: ()=>{this.characterDisappear(0)} }//204
+            { time: 197, anim: ()=>{this.characterDisappear(0)} }//204
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -168,6 +168,7 @@ export default class ItzikAnimation extends THREE.Object3D {
         TweenMax.to( _this.benchGroup.children[_index].scale, 1.5, { x: 1, y: 1, z: 1, ease: Back.easeInOut } );
     }
 
+    // total took time: 14
     characterDisappear() {
         TweenMax.to( this.smokeMat, 1, {opacity: 1});
         TweenMax.to( this.fog.position, 4, {x:0, delay:0.9, ease: Power1.easeInOut});
