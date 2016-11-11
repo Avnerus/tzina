@@ -157,7 +157,7 @@ export default class Game {
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene, this.vrControls);
         this.zoomController.init();
 
-        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera);
+        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager);
 
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);

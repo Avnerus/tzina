@@ -48,7 +48,7 @@ export default class SoundManager {
         },
         eachSampler:function(what,except){
           for(var a in this.samplers){
-            if(except===undefined || except!=this.samplers[a]){
+            if(!except || except===undefined || except!=this.samplers[a]){
               what(this.samplers[a],a);
             }
           }
@@ -60,7 +60,7 @@ export default class SoundManager {
             thisSampler.controlBlur(1,time);
           },on);
           //focus the one we are focusing, if there is any
-          if(on!==undefined) if(typeof(on.controlBlur)==='function'){
+          if(on && on!==undefined) if(typeof(on.controlBlur)==='function'){
             on.controlBlur(0,time);
           }else{
             console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
@@ -72,7 +72,7 @@ export default class SoundManager {
             thisSampler.controlBlur(level, 0);
           },on);
           //focus the one we are focusing, if there is any
-          if(on!==undefined) if(typeof(on.controlBlur)==='function'){
+          if(on && on!==undefined) if(typeof(on.controlBlur)==='function'){
             on.controlBlur(0,0);
           }else{
             console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
@@ -141,7 +141,7 @@ export default class SoundManager {
           let thisSample=ambientSamples[a];
           if(!thisSample.disable){
             let pSampler=new PositionalSoundSampler(this.listener,this.scene);
-            pSampler.blurModule.controlVolume(1.8);
+            pSampler.blurModule.controlVolume(1);
             pSampler.position.set(thisSample.position[0],thisSample.position[1],thisSample.position[2]);
             //pSampler.createDebugCube(0xFF0000);
             pSampler.init(SOUND_PATH + thisSample.path,loadingManager,function(thisSampler){

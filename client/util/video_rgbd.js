@@ -92,8 +92,6 @@ export default class VideoRGBD  {
             let geometry = baseGeometry.clone();
 
 
-            //events.emit("add_gui", {folder: "UVDX", step: 0.01}, this.meshMaterial.uniforms.uvdx, "value", -1,0);
-            //events.emit("add_gui", {folder: "UVDY", step: 0.01}, this.meshMaterial.uniforms.uvdy, "value", -1,1);
            //let material = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: true} );
 
             this.meshPool.push(new THREE.Mesh(geometry, meshMaterial ));
@@ -129,6 +127,9 @@ export default class VideoRGBD  {
 
         this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
         this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
+
+        events.emit("add_gui", {folder: this.properties.fileName + " UVDX", step: 0.001}, this.mesh.material.uniforms.uvdx, "value", -1,0);
+        events.emit("add_gui", {folder: this.properties.fileName + " UVDY", step: 0.001}, this.mesh.material.uniforms.uvdy, "value", -1,1);
 
     }
     load() {

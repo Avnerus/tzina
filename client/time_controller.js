@@ -6,7 +6,7 @@ import {MeshText2D, SpriteText2D, textAlign} from './lib/text2d/index'
 import SunGazer from './sun_gazer'
 
 export default class TimeController {
-    constructor(config, element, square, sky, scene, camera, renderer) {
+    constructor(config, element, square, sky, scene, camera, soundManager) {
         this.square = square;
         this.config = config;
         this.element = element;
@@ -16,6 +16,8 @@ export default class TimeController {
         this.rotateVelocity = 0;
         this.currentRotation = 0;
         this.camera = camera;
+
+        this.soundManager = soundManager;
 
         this.gazeCounter = 0;
         this.gazeHour = -1;
@@ -156,7 +158,7 @@ export default class TimeController {
         this.scene.add(this.prevChapterTitle)
 
         // Sun gazer
-        this.sunGazer = new SunGazer(this.square);
+        this.sunGazer = new SunGazer(this.square, this.soundManager);
         this.sunGazer.init();
         this.camera.add(this.sunGazer);
 
