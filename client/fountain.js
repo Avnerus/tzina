@@ -195,9 +195,10 @@ export default class Fountain extends THREE.Object3D  {
     assignCylinders(cylinders){
         this.cylinders = cylinders;
         // console.log(this.cylinders);
-        // DebugUtil.positionObject(this.cylinders[0], "Fountain 0");
-        // DebugUtil.positionObject(this.cylinders[1], "Fountain 1");
-        // DebugUtil.positionObject(this.cylinders[2], "Fountain 2"); // doesn't move
+        /*
+        DebugUtil.positionObject(this.cylinders[0], "Fountain 0");
+        DebugUtil.positionObject(this.cylinders[1], "Fountain 1");
+        DebugUtil.positionObject(this.cylinders[2], "Fountain 2"); // doesn't move*/
     }
 
     createSpotLight( pos, pos2, _intensity, _angle, _distance, _decay, _penumbra ) {
@@ -297,11 +298,13 @@ export default class Fountain extends THREE.Object3D  {
         this.fireEmitters[0].disable();
         this.centerRingEmitters[0].disable();
         this.changeWaterColor(false);
+
+        events.emit("show_end");
     }
 
     startCycle() {
         this.cycleIntervalID = setInterval(() => {
-            console.log("Fountain cycle!", this.particleGroup.emitters.length + " Emitters");
+            //console.log("Fountain cycle!", this.particleGroup.emitters.length + " Emitters");
             this.outerUp = !this.outerUp;
             for (let i = 0; i < this.firstRingEmitters.length; i++) {
                 this.firstRingEmitters[i].velocity.value = this.outerUp ? this.downVelocity : this.upVelocity;

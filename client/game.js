@@ -52,7 +52,7 @@ export default class Game {
 
         class TzinaEmitter extends EventEmitter {}
         this.emitter = new TzinaEmitter();
-        this.emitter.setMaxListeners(30);
+        this.emitter.setMaxListeners(40);
         global.events = this.emitter;
 
         this.gui = new GuiManager(this.emitter);
@@ -201,7 +201,7 @@ export default class Game {
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
 
-        this.show = new Show(this.square, this.characterController); 
+        this.show = new Show(this.square, this.characterController, this.timeController); 
         this.show.init();
 
         this.endCredits = new EndCredits(this.camera);
