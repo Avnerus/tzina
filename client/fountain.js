@@ -143,6 +143,8 @@ export default class Fountain extends THREE.Object3D  {
         }
 
         // Light
+        /*
+
         let geo = new THREE.SphereGeometry( .3 );
         let mat = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
         this.center = new THREE.Mesh(geo, mat);
@@ -183,6 +185,7 @@ export default class Fountain extends THREE.Object3D  {
         // DebugUtil.positionObject(this.spotLights[0], "light 0");
         // DebugUtil.positionObject(this.spotLights[1], "light 1");
         // DebugUtil.positionObject(this.spotLights[2], "light 2");
+        */
 
         if (this.debug) {
             events.emit("add_gui", {folder: "Fountain water up``", listen: true, step: 0.01}, this.upVelocity, "x");

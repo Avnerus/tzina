@@ -14,7 +14,7 @@ const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PREFIX = "assets/square/benches/"
 const FOUNTAIN_PATH = "assets/square/fountain.json"
-const GROUND_PATH = "assets/square/squareRamp_13.json"
+const GROUND_PATH = "assets/square/squareRamp_11.json"
 
 export default class Square extends THREE.Object3D{
     constructor(collisionManager, renderer, camera, config, soundManager, scene) {
@@ -27,7 +27,7 @@ export default class Square extends THREE.Object3D{
         this.camera = camera;
         this.scene = scene;
 
-        this.debug = false;
+        this.debug = true;
 
         this.sunTextureOffsets = {
             19 : 0,
@@ -120,7 +120,6 @@ export default class Square extends THREE.Object3D{
 
             this.benches = results[5];
             this.benches.rotation.order = "YXZ";
-            DebugUtil.positionObject(this.benches, "Benches");
 
             this.fountainMesh = results[6];
 
@@ -164,16 +163,10 @@ export default class Square extends THREE.Object3D{
             this.clockworkOffset.add(this.clockwork);
             this.mesh.add(this.clockworkOffset);
 
-
-            events.emit("add_gui", {folder: "Trees"}, this.trees, "visible"); 
-            events.emit("add_gui", {folder: "Fountain water"}, this.fountain, "visible"); 
-
             this.mesh.add(this.trees);
             this.mesh.add(this.fountain);
             this.mesh.add(this.extras);
             this.mesh.add(this.suns);
-
-            DebugUtil.positionObject(ground, "Ground");
 
                 /*
             this.textures = results[7];
@@ -194,14 +187,14 @@ export default class Square extends THREE.Object3D{
             events.emit("add_gui", {folder: "Pool"}, this.pool, "visible"); 
 
             if (this.debug) {
-                /*
                 events.emit("add_gui", {folder: "Trees"}, this.trees, "visible"); 
                 events.emit("add_gui", {folder: "Fountain water"}, this.fountain, "visible"); 
                 events.emit("add_gui", {folder: "Extras"}, this.extras, "visible"); 
                 events.emit("add_gui", {folder: "Buildings"}, this.buildings, "visible"); 
                 events.emit("add_gui", {folder: "Suns"}, this.suns, "visible"); 
                 events.emit("add_gui", {folder: "Benches"}, this.benches, "visible"); 
-                events.emit("add_gui", {folder: "Fountain"}, this.fountainMesh, "visible"); */
+                events.emit("add_gui", {folder: "Fountain"}, this.fountainMesh, "visible"); 
+                events.emit("add_gui", {folder: "Fountain"}, this.pool, "visible"); 
 
                 //events.emit("add_gui", {folder: "Floor texture"}, this.textures, "visible"); 
                 //events.emit("add_gui", {folder: "Benches texture 1"}, this.benches.children[0].children[0], "visible"); 
@@ -240,8 +233,6 @@ export default class Square extends THREE.Object3D{
             
 
             //DebugUtil.positionObject(this.ground, "ground");
-            DebugUtil.positionObject(this.buildings, "Buildings");
-            DebugUtil.positionObject(this.fountainMesh, "Fountain");
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
             console.log("Finished loading square");
@@ -582,7 +573,7 @@ export default class Square extends THREE.Object3D{
                     allBenches.add(results[i]);
 
                     if (this.debug) {
-                        DebugUtil.positionObject(results[i], benches[i]);
+                        //DebugUtil.positionObject(results[i], benches[i]);
                     }
                 }
 

@@ -142,6 +142,8 @@ export default class IntroAnimation extends THREE.Object3D {
             // DebugUtil.positionObject(this.terrain, "terrain");
         });
 
+
+        /*
         // CLOUDS
         // ============== Changeable Setting ================
             this.cloudAmount = 20;
@@ -207,7 +209,7 @@ export default class IntroAnimation extends THREE.Object3D {
                     this.cloudGroup[i%3].add(cloudd);
                 }
                 
-            } );
+                } );*/
 
         //
         this.completeSequenceSetup();

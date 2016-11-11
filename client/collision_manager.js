@@ -29,7 +29,7 @@ export default class CollisionManager {
         this.player = camera;
         this.meshColliders = [];
 
-        this.debug = true;
+        this.debug = false;
     }
     init() {
     }
@@ -63,7 +63,7 @@ export default class CollisionManager {
         // Characters
         boxIntersect(this.playerBox, this.characterObstacles, (i,j) => {
             if (this.characterObstacleInfo[j].onCollision) {
-                this.characterObstacleInfo[j].onCollision();
+                //this.characterObstacleInfo[j].onCollision();
             }
         });
 
