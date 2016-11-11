@@ -194,10 +194,10 @@ export default class Fountain extends THREE.Object3D  {
 
     assignCylinders(cylinders){
         this.cylinders = cylinders;
-        console.log(this.cylinders);
-        DebugUtil.positionObject(this.cylinders[0], "Fountain 0");
-        DebugUtil.positionObject(this.cylinders[1], "Fountain 1");
-        DebugUtil.positionObject(this.cylinders[2], "Fountain 2"); // doesn't move
+        // console.log(this.cylinders);
+        // DebugUtil.positionObject(this.cylinders[0], "Fountain 0");
+        // DebugUtil.positionObject(this.cylinders[1], "Fountain 1");
+        // DebugUtil.positionObject(this.cylinders[2], "Fountain 2"); // doesn't move
     }
 
     createSpotLight( pos, pos2, _intensity, _angle, _distance, _decay, _penumbra ) {
@@ -530,6 +530,23 @@ export default class Fountain extends THREE.Object3D  {
         }
     }
 
+    startCylinderAni() {
+        // bigger one
+        this.cylinders[0].tweenAni = TweenMax.to( this.cylinders[0].rotation, 60, {
+            y: Math.PI*2,
+            ease: Power0.easeNone,
+            yoyo: true,
+            repeat: 1
+        } );
+
+        this.cylinders[1].tweenAni = TweenMax.to( this.cylinders[1].rotation, 60, {
+            y: -Math.PI*4,
+            ease: Power0.easeNone,
+            yoyo: true,
+            repeat: 1
+        } );
+    }
+
     // velocity, velocity.spread, acceleration, acceleration.spread
 
     // emitters, arrayOfIndex, _arrayOfValue,
@@ -545,6 +562,7 @@ export default class Fountain extends THREE.Object3D  {
                                  [ 0 ],
                                  [ {x:1.5, y:6, z:0} ],
                                  0.1, true, 7, 0, 2);
+        this.startCylinderAni();
     }
 
     firstAni() {
