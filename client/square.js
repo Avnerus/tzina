@@ -14,7 +14,7 @@ const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PREFIX = "assets/square/benches/"
 const FOUNTAIN_PATH = "assets/square/fountain.json"
-const GROUND_PATH = "assets/square/squareRamp_11.json"
+const GROUND_PATH = "assets/square/squareRamp_13.json"
 
 export default class Square extends THREE.Object3D{
     constructor(collisionManager, renderer, camera, config, soundManager, scene) {
