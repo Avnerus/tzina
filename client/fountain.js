@@ -90,7 +90,7 @@ export default class Fountain extends THREE.Object3D  {
         let emitter;
 
         // Create fire
-        let position = new THREE.Vector3(0,0.5,0);
+        let position = new THREE.Vector3(0,1,0);
         emitter = this.createFire(position, 0xffffff);
         emitter.disable();
         this.add(this.fireParticleGroup.mesh);
@@ -130,7 +130,8 @@ export default class Fountain extends THREE.Object3D  {
         // Second
         position.y = -0.5;
         radius = 5.0;
-
+        this.colorWhite = new THREE.Color(0xffffff);
+        this.colorRed = new THREE.Color(0xff0000);
         for (let i = 0; i <= 360; i+= angle ) {
             rotation = i * Math.PI / 180;
             position.x = Math.cos(rotation) * radius;
@@ -245,6 +246,13 @@ export default class Fountain extends THREE.Object3D  {
                 this.nextAnim = this.currentSequence.shift();
             } else {
                 this.nextAnim = null;
+                //
+                console.log("count down 10 sec to reset ani");
+                setTimeout(()=>{
+                    this.resetAni();
+                    this.startCycle();
+                }, 10000);
+                
             }
         }
     }
@@ -253,9 +261,11 @@ export default class Fountain extends THREE.Object3D  {
         console.log("Fountain starting show!");
         this.showTime = true;
 
+        clearInterval(this.cycleIntervalID);
+
         this.fireEmitters[0].enable();
         this.centerRingEmitters[0].enable();
-        // todo - change water color to colorful
+        this.changeWaterColor(true);
 
         this.currentSequence = this.soundEventsRecords.slice(0);
         this.nextAnim = this.currentSequence.shift();
@@ -266,6 +276,12 @@ export default class Fountain extends THREE.Object3D  {
         this.resetAni();
     }
 
+    changeWaterColor(showTime) {
+        for(let i=0; i<this.secondRingEmitters.length; i++){
+            this.secondRingEmitters[i].color.value = showTime ? this.colorRed : this.colorWhite;
+        }
+    }
+
     resetAni() {
         for(let i=0; i<this.centerRingOriParameter.length; i++){
             this.setGroupEmittersValue( this.centerRingEmitters, i, this.centerRingOriParameter[i].clone() );
@@ -273,15 +289,17 @@ export default class Fountain extends THREE.Object3D  {
             this.setGroupEmittersValue( this.secondRingEmitters, i, this.secondRingOriParameter[i].clone() );
             this.setGroupEmittersValue( this.fireEmitters, i, this.fireOriParameter[i].clone() );
         }        
-        this.spotLightCenters.position.y = 0;
+        TweenMax.to( this.spotLightCenters.position, 3, { y: 0, onComplete:()=>{
+            this.showTime = false;
+        } } );
 
         this.fireEmitters[0].disable();
         this.centerRingEmitters[0].disable();
-        // todo - change water color to white
+        this.changeWaterColor(false);
     }
 
     startCycle() {
-        setInterval(() => {
+        this.cycleIntervalID = setInterval(() => {
             console.log("Fountain cycle!", this.particleGroup.emitters.length + " Emitters");
             this.outerUp = !this.outerUp;
             for (let i = 0; i < this.firstRingEmitters.length; i++) {

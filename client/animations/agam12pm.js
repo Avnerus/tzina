@@ -131,7 +131,7 @@ export default class Agam12PMAnimation extends THREE.Object3D {
                 this.nextAnim = null;
             }
         }
-        // console.log("agammm");
+
         this.square.fountain.updateVideoTime(time);
     }
 
