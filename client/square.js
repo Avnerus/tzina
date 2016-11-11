@@ -8,7 +8,7 @@ import DebugUtil from "./util/debug"
 import _ from 'lodash';
 
 const MODEL_PATH = "assets/square/scene.json"
-const BUILDINGS_PATH = "assets/square/buildings.json"
+const BUILDINGS_PATH = "assets/square/buildings/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PREFIX = "assets/square/benches/"
