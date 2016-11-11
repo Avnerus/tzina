@@ -15,7 +15,7 @@ export default class HaimAnimation extends THREE.Object3D {
         this.loadingManager = loadingManager;
         this.setupAnim();
 
-        // DebugUtil.positionObject(this, "haim anim");
+        DebugUtil.positionObject(this, "haim anim");
     }
 
     setupAnim() {
@@ -27,9 +27,9 @@ export default class HaimAnimation extends THREE.Object3D {
         // setup animation sequence
         // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
-            { time: 12,  anim: ()=>{this.tubeDown(1)} },
-            { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 30
-            { time: 252, anim: ()=>{this.characterDisappear()} }    //254
+            { time: 5,  anim: ()=>{this.tubeDown(1)} },    // 12
+            { time: 15, anim: ()=>{this.tubeOut(0.5)} },    // 73
+            { time: 252, anim: ()=>{this.characterDisappear()} }    //252
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -73,8 +73,8 @@ export default class HaimAnimation extends THREE.Object3D {
                                                        Number(curveData[k][i][j][1]),
                                                        Number(curveData[k][i][j][2]) );
                     // scale down
-                        newVector.multiplyScalar(0.5);
-                        // newVector.multiply( new THREE.Vector3(1,2,1) );
+                        // newVector.multiplyScalar(0.5);
+                        newVector.multiply( new THREE.Vector3(.4,.8,.4) );
                     curve_vec[i].push( newVector );
                 }
             }
@@ -123,7 +123,8 @@ export default class HaimAnimation extends THREE.Object3D {
                                                        Number(curveOutData[k][i][j][2]) );
                     // scale down
                         // newVector.multiplyScalar(0.7);
-                        newVector.multiply( new THREE.Vector3(0.9,0.6,0.9) );
+                        // newVector.multiply( new THREE.Vector3(0.9,0.6,0.9) );
+                        newVector.multiply( new THREE.Vector3(0.7,0.8,0.7) );
                     curve_vec[i].push( newVector );
                 }
             }
@@ -319,6 +320,7 @@ export default class HaimAnimation extends THREE.Object3D {
             lengthhh = liquidGeo.vertices.length-1;
             theCloud.position.copy( liquidGeo.vertices[lengthhh] );
             // theCloud.position.y += (this.lookupTable[j]*2);
+            TweenMax.to( theCloud.position, 4, { y: "+=" + 0.2, repeat: -1, yoyo: true, delay: j%2, ease: Power0.easeNone } );
             tubeObject.add( theCloud );
 
             tubeObject.position.copy( pos );
@@ -368,6 +370,7 @@ export default class HaimAnimation extends THREE.Object3D {
             let theCloud = this.cloud.clone();
             let lengthhh = liquidGeo.vertices.length-1;
             theCloud.position.copy( liquidGeo.vertices[lengthhh] );
+            TweenMax.to( theCloud.position, 4, { y: "+=" + 0.2, repeat: -1, yoyo: true, delay: j%3, ease: Power0.easeNone } );
             // theBag.scale.multiplyScalar( this.clamp(this.lookupTable[j], 0.3, 1) );
             // theBag.rotation.y = -rot.y;
             tubeObject.add( theCloud );
@@ -528,7 +531,7 @@ export default class HaimAnimation extends THREE.Object3D {
 
         for(let i=0; i<this.particleGroup.emitters.length; i++){
             this.particleGroup.emitters[i].activeMultiplier = 1;
-            this.particleGroup.emitters[i].size.value = [.2,6,8,6,2];
+            // this.particleGroup.emitters[i].size.value = [.2,6,8,6,2];
 
             let emitterPos = this.particleGroup.emitters[i].position.value;
             rainOriginPositions.push( emitterPos );
@@ -569,7 +572,7 @@ export default class HaimAnimation extends THREE.Object3D {
                         this.parent.fullVideo.setOpacity(0.0);
                         for(let i=0; i<this.particleGroup.emitters.length; i++){
                             this.particleGroup.emitters[i].activeMultiplier = 0.1;
-                            this.particleGroup.emitters[i].size.value = [.1,2,3,3,2];
+                            // this.particleGroup.emitters[i].size.value = [.1,2,3,3,2];
                             this.particleGroup.emitters[i].position.value = rainOriginPositions[i];
                         }
                     } } );

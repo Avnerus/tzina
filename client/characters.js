@@ -82,9 +82,9 @@ export default [
         width: 2048,
         height: 2048,
         scale: 0.003 * 1.243,
-        animationScale: 0.25,
-        animationPosition: [0.81, -0.17, 1.42],
-        animationRotation: [6, -50, -9],
+        animationScale: 0.4, // 0.25
+        animationPosition: [1.17, -0.39, 1.7], //0.81, -0.17, 1.42
+        animationRotation: [6, -50, -9], //6, -50, -9
         space: 1.5,
         subtitles: false
     },
