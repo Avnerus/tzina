@@ -93,6 +93,9 @@ export default class Character extends THREE.Object3D {
             }
 
             events.on("character_playing", (name) => {
+                if (this.idleException(name)) {
+                    return;
+                }
                 if (this.active && !this.done && this.props.name != name) {
                     if (!this.props.fullOnly) {
                         console.log(name, " is playing." , this.props.name, "is pausing");
@@ -103,6 +106,9 @@ export default class Character extends THREE.Object3D {
                 }
             });
             events.on("character_idle", (name) => {
+                if (this.idleException(name)) {
+                    return;
+                }
                 if (this.active && !this.done && this.props.name != name) {
                     this.onHold = false;
                     console.log(name, " is idle." , this.props.name, "is playing");
@@ -116,6 +122,17 @@ export default class Character extends THREE.Object3D {
             events.on("control_threshold", (passed) => {
                 this.inControl = passed;
             });
+    }
+    idleException(name) {
+        if (
+            (name == "Lupo5PM" && this.props.name == "LupoDogs5PM" ) ||
+            (name == "Lupo12PM" && this.props.name == "LupoDogs12PM" ) ||
+            (name == "Agam12PM" && this.props.name == "FatmanSleep" )
+        )  {
+            return true;
+        } else {
+            return false;
+        }
     }
     play() {
         if (!this.done && !this.props.fullOnly) {

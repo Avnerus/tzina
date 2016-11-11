@@ -14,10 +14,7 @@ const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PREFIX = "assets/square/benches/"
 const FOUNTAIN_PATH = "assets/square/fountain.json"
-const GROUND_PATH = "assets/square/squareRamp_13.json"
-
-
-
+const GROUND_PATH = "assets/square/squareRamp_11.json"
 
 export default class Square extends THREE.Object3D{
     constructor(collisionManager, renderer, camera, config, soundManager, scene) {
@@ -123,6 +120,7 @@ export default class Square extends THREE.Object3D{
 
             this.benches = results[5];
             this.benches.rotation.order = "YXZ";
+            DebugUtil.positionObject(this.benches, "Benches");
 
             this.fountainMesh = results[6];
 
@@ -167,11 +165,14 @@ export default class Square extends THREE.Object3D{
             this.mesh.add(this.clockworkOffset);
 
 
+            events.emit("add_gui", {folder: "Trees"}, this.trees, "visible"); 
 
             this.mesh.add(this.trees);
             this.mesh.add(this.fountain);
             this.mesh.add(this.extras);
             this.mesh.add(this.suns);
+
+            DebugUtil.positionObject(ground, "Ground");
 
                 /*
             this.textures = results[7];

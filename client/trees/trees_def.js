@@ -251,7 +251,9 @@ export default {
 
         //25
 
+        /* fps drop
      {
+     
             type: "ThreeTrees",
             position: [34.33,17.38,-15],
             rotation: [71,14,91],
@@ -269,7 +271,8 @@ export default {
             position: [10.88,16.03,-36],
             rotation: [42,0,83],
             scale: 0.43
-        }
+            } */
+
 
         // {
         //     type: "single",

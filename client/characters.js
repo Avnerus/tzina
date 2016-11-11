@@ -56,15 +56,15 @@ export default [
         animationScale: 0.248, //0.18
         animationPosition: [-0.668, 0.495, -1.485], //-0.71, 0.49, 1.71
         animationRotation: [8, 6.1, 1], //21, 3, 355
-        space: 0.13, //0.13 //1.6
-        spaceOffset: [-0.25,0,-0.07],  //-0.25,0,-0.07 //0.88,0.47,-0.07
+        space: 0.33, //0.13 //1.6
+        spaceOffset: [-0.25,0,0.15],  //-0.25,0,-0.07 //0.88,0.47,-0.07
         subtitles: false,
         adjustments : [
             {
                 sec: 0,
                 mindepth : 0,
                 maxdepth : 3494.158935547,
-                position : [-6.95,  21.95, 10.41],
+                position : [-6.95,  22.03, 10.41],
                 scale: 0.0027 * 0.4686
             }
         ]
