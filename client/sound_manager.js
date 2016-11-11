@@ -194,7 +194,9 @@ export default class SoundManager {
       //choose which sounds to trigger
       //of course that all the other sound objects must have the play function to call at once from here.
       if(setName=="sunGazedSound"){
+
       }else if(setName=="flyingSound"){
+        
       }else if(setName == "ambience"){
         for(var a in ambientSamples){
           let thisSample=ambientSamples[a];

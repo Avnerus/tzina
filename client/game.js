@@ -193,6 +193,7 @@ export default class Game {
         this.scene.add(this.zoomGuidance);
 
         this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
+        this.SUN_GAZE_SOUND = 'assets/sound/ui/Hour_Replace_1.ogg'
 
         this.waterDrops = new WaterDrops();
         this.camera.add(this.waterDrops);
@@ -306,6 +307,10 @@ export default class Game {
         events.on("base_position", () => {
         });
         events.on("chapter_threshold", (passed) => {
+        });
+
+        events.on("gaze_started", () => {
+
         });
 
         events.on("control_threshold", (passed) => {
