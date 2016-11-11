@@ -166,6 +166,7 @@ export default class Square extends THREE.Object3D{
 
 
             events.emit("add_gui", {folder: "Trees"}, this.trees, "visible"); 
+            events.emit("add_gui", {folder: "Fountain water"}, this.fountain, "visible"); 
 
             this.mesh.add(this.trees);
             this.mesh.add(this.fountain);
