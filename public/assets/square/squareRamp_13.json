@@ -9,7 +9,7 @@
         "emissive":0,
         "type":"MeshLambertMaterial",
         "color":4671303,
-        "side":2,
+        
         "blending":"NormalBlending"
     },{
         "uuid":"47EE28EE-0886-48EF-9B89-6A7F0E22508C",
@@ -22,7 +22,7 @@
         "emissive":0,
         "type":"MeshPhongMaterial",
         "color":4671303,
-        "side":2,
+        
         "blending":"NormalBlending"
     },{
         "uuid":"5B045226-BAF8-4AD2-BA84-DF0E4F8D1102",
@@ -35,7 +35,7 @@
         "emissive":0,
         "type":"MeshPhongMaterial",
         "color":4671303,
-        "side":2,
+        
         "blending":"NormalBlending"
     }],
     "metadata":{

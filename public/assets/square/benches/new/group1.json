@@ -245,13 +245,13 @@
         "shininess":164,
         "specular":8750469,
         "color":"0xFFFFFF",
-        "normalMap":"2AFBFED3-4BBA-4376-833D-58DF28C1C717",
+       
         "emissive":0,
         "blending":"NormalBlending",
         "type":"MeshPhongMaterial",
         "depthWrite":true,
         "name":"Bench_Mat",
-        "normalScale":[-0.7,-0.7],
+      
         "vertexColors":0,
         "depthTest":true,
         "map":"52EEEC38-E2CE-41DC-8AE8-E18AA7CB879E",
@@ -272,7 +272,7 @@
         "shininess":11,
         "specular":921102,
         "color":9868950,
-        "normalMap":"A4863A2F-A9AE-4EDC-9836-DC87DC8097E7",
+      
         "emissive":0,
         "blending":"NormalBlending",
         "type":"MeshPhongMaterial",
@@ -281,7 +281,7 @@
         "vertexColors":0,
         "depthTest":true,
         "map":"75E893BC-FA47-46DE-A2D8-2ED1BE24E830",
-        "normalScale":[0.489051,0.489051],
+      
         "uuid":"2521B5C9-73EA-47C0-975B-1CC64D9406F0"
     }],
     "metadata":{

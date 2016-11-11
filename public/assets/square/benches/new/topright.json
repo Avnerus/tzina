@@ -180,7 +180,7 @@
         "image":"33BC655A-2296-4092-A243-357271A07B24"
     }],
     "materials":[{
-        "normalMap":"01DA1380-0D80-4B5A-9BE2-1437DF32095D",
+        
         "type":"MeshPhongMaterial",
         "depthTest":true,
         "depthWrite":true,
@@ -191,7 +191,7 @@
         "specular":8750469,
         "blending":"NormalBlending",
         "emissive":0,
-        "normalScale":[-0.7,-0.7],
+       
         "name":"Bench_Mat",
         "vertexColors":0
     },{
@@ -210,13 +210,13 @@
         "type":"MeshPhongMaterial",
         "depthTest":true,
         "depthWrite":true,
-        "normalScale":[0.489051,0.489051],
+       
         "uuid":"5D4CC364-F99F-4AA4-B2B9-DE50CED3CDF9",
         "color":9868950,
         "map":"ED36A6CF-6F11-47FC-B499-C957D98AF67C",
         "shininess":11,
         "specular":921102,
-        "normalMap":"A81B97F7-1E5B-4E61-AE3A-927BB2C57B04",
+       
         "blending":"NormalBlending",
         "emissive":0,
         "name":"Shit_Mat",
