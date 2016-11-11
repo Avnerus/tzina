@@ -25,10 +25,6 @@ var TreesDef = {
      {
       name: "single",
       fileName: "singleTree.ply"
-    },
-      {
-      name: "bush",
-      fileName: "bush.ply"
     }
   ],
   instances: [
@@ -184,415 +180,422 @@ class Trees extends THREE.Object3D {
   }
 
 
+try {
+
+    var loadingManager = new THREE.LoadingManager();
+
+     loadingManager.onProgress = function (item, loaded, total) {
+
+      console.log(loaded / total * 100 + '%');
 
 
-loadingManager = new THREE.LoadingManager();
+      $('#progress').css({'width': loaded / total * 100 + '%'})
+        //console.log(loaded * 20);
 
-// loadingManager.onProgress = function (item, loaded, total) {
+      $('#progress_text').html('Loading Tzina...' + loaded / total * 100 + '%');
 
-  console.log(loaded / total * 100 + '%');
+     };
 
-  $('#progress').css({'width': loaded / total * 100 + '%'})
-	//console.log(loaded * 20);
+      var videoLogo = $('#logo').get(0);
 
-  $('#progress_text').html('Loading Tzina...' + loaded / total * 100 + '%');
+      var videoBirds = $('#birds').get(0);
 
-// };
+      //Init the three scene first
+      init();
 
-  var videoLogo = $('#logo').get(0);
+      var currentLanguage = 'en';
 
-  var videoBirds = $('#birds').get(0);
+      //Intro sound
+      var introSound = new Audio(SOUND_PATH + 'Theme_Intro_1.ogg');
 
-  //Init the three scene first
-  init();
+      introSound.loop = true;
 
-  var currentLanguage = 'en';
+      introSound.volume = 0.5;
 
-  //Intro sound
-  var introSound = new Audio(SOUND_PATH + 'Theme_Intro_1.ogg');
+    //Declare all button sounds and play logo video
 
-  introSound.loop = true;
+      //Hover
+      var buttonSound = new Audio(SOUND_PATH + 'Button_C_1_new.ogg');
 
-  introSound.volume = 0.5;
+      var buttonClick = new Audio(SOUND_PATH + 'Button_Click_new.ogg');
 
-//Declare all button sounds and play logo video
+      $('.button').mouseenter(function(){
 
-  //Hover
-  var buttonSound = new Audio(SOUND_PATH + 'Button_C_1_new.ogg');
+        buttonSound.play();
 
-  var buttonClick = new Audio(SOUND_PATH + 'Button_Click_new.ogg');
+      });
 
-  $('.button').mouseenter(function(){
+      //Reset the sound
+      $('.button').mouseleave(function(){
 
-    buttonSound.play();
+        buttonSound.pause();
 
-  });
+        buttonSound.currentTime = 0;
 
-  //Reset the sound
-  $('.button').mouseleave(function(){
+      });
 
-    buttonSound.pause();
+      //Click
+      $('.button').click(function(){
 
-    buttonSound.currentTime = 0;
+        buttonClick.play();
 
-  });
+        setTimeout( function() {
 
-  //Click
-  $('.button').click(function(){
+          buttonClick.pause();
 
-    buttonClick.play();
+          buttonClick.currentTime = 0;
 
-    setTimeout( function() {
+        }, 1000);
 
-      buttonClick.pause();
+      });
 
-      buttonClick.currentTime = 0;
+      //Fade in the first screen from black after tree scene was loaded
+      // loadingManager.onLoad = function(){
 
-    }, 1000);
+          //Start rendering the canvas
+          render();
 
-  });
+          //Change language bind
 
-  //Fade in the first screen from black after tree scene was loaded
-  // loadingManager.onLoad = function(){
-
-      //Start rendering the canvas
-      render();
-
-      //Change language bind
-
-     
+         
 
 
-          $('#landing_screen').delay(50).fadeIn(500, function(){
+              $('#landing_screen').delay(50).fadeIn(500, function(){
 
-              console.log('Landing screen faded in');
+                  console.log('Landing screen faded in');
 
-              //Disable mouse control on tree scene
-              $('#tree_scene').css({
-                "pointer-events": "none"
-              });
-                
-              //After scene loaded get rid of the progress bar
-              $('#progress').hide();
-
-              //Ambient Sound
-              introSound.play();
-
-              $('#progress_text').fadeOut(50);
-
-              $('#headphones_solo').delay(250).fadeIn(250).delay(5000).fadeOut(50, function(){
-
-                  $('#firstscreen').fadeIn(250);
-
-                  //Fade in the canvas
-                  $('#tree_scene').delay(250).fadeIn(500, function(){
-
-                        //Fade in about button
-                        $('#about').fadeIn(250);
-
-                        //Fade in language selector
-                        $('#language').fadeIn(250);
-
-                        $('#birds').fadeIn(250);
-
+                  //Disable mouse control on tree scene
+                  $('#tree_scene').css({
+                    "pointer-events": "none"
                   });
+                    
+                  //After scene loaded get rid of the progress bar
+                  $('#progress').hide();
 
-                  videoBirds.loop = true;
+                  //Ambient Sound
+                  introSound.play();
 
-                  videoBirds.play();
+                  $('#progress_text').fadeOut(50);
 
-               }); 
+                  $('#headphones_solo').delay(250).fadeIn(250).delay(5000).fadeOut(50, function(){
 
-              
+                      $('#firstscreen').fadeIn(250);
+
+                      //Fade in the canvas
+                      $('#tree_scene').delay(250).fadeIn(500, function(){
+
+                            //Fade in about button
+                            $('#about').fadeIn(250);
+
+                            //Fade in language selector
+                            $('#language').fadeIn(250);
+
+                            $('#birds').fadeIn(250);
+
+                      });
+
+                      videoBirds.loop = true;
+
+                      videoBirds.play();
+
+                   }); 
+
+                  
+
+            });
+
+      // }
+
+    //Pagination
+    //About
+      $('#about').click(function(){
+
+        //Click sound
+        buttonClick.play();
+
+        setTimeout( function() {
+
+          buttonClick.pause();
+
+          buttonClick.currentTime = 0;
+
+        }, 1000);
+
+        //Rotate the icon
+        $('#about').toggleClass('open');
+
+        //Toggle the screen container (display on/off)
+        $('#about_container').toggle(250);
+
+      });
+    //Device Chooser Buttons
+      $('#enter_button').mouseenter(function(){
+          $('#logo').removeClass('grayscale');
+          videoLogo.play();
+      });
+
+      $('#enter_button').mouseleave(function(){
+          $('#logo').addClass('grayscale');
+          videoLogo.pause();
+          videoLogo.currentTime = 0;
+      });
+
+      $('#enter_button').click(function(){
+
+        $('#enter_button').fadeOut(250, function(){
+
+          console.log('platform specific buttons');
+
+          $('#vive_button').delay(250).fadeIn(250);
+
+          $('#desktop_button').delay(250).fadeIn(250, function(){
+
+              $('#logo').removeClass('grayscale');
+
+              videoLogo.loop = true;
+
+              videoLogo.play();
+
+          });
 
         });
 
-  // }
-
-//Pagination
-//About
-  $('#about').click(function(){
-
-    //Click sound
-    buttonClick.play();
-
-    setTimeout( function() {
-
-      buttonClick.pause();
-
-      buttonClick.currentTime = 0;
-
-    }, 1000);
-
-    //Rotate the icon
-    $('#about').toggleClass('open');
-
-    //Toggle the screen container (display on/off)
-    $('#about_container').toggle(250);
-
-  });
-//Device Chooser Buttons
-  $('#enter_button').mouseenter(function(){
-      $('#logo').removeClass('grayscale');
-      videoLogo.play();
-  });
-
-  $('#enter_button').mouseleave(function(){
-      $('#logo').addClass('grayscale');
-      videoLogo.pause();
-      videoLogo.currentTime = 0;
-  });
-
-  $('#enter_button').click(function(){
-
-    $('#enter_button').fadeOut(250, function(){
-
-      console.log('platform specific buttons');
-
-      $('#vive_button').delay(250).fadeIn(250);
-
-      $('#desktop_button').delay(250).fadeIn(250, function(){
-
-          $('#logo').removeClass('grayscale');
-
-          videoLogo.loop = true;
-
-          videoLogo.play();
-
       });
+      //Change language functionallity
+      $('#language').click(function(){
 
-    });
+        $('#landing_screen').fadeOut(500, function(){
 
-  });
-  //Change language functionallity
-  $('#language').click(function(){
+          if(currentLanguage == 'en'){
 
-    $('#landing_screen').fadeOut(500, function(){
+            console.log('language changed to Hebrew');
 
-      if(currentLanguage == 'en'){
+            currentLanguage = 'he';
 
-        console.log('language changed to Hebrew');
+            $('#language').html('ENGLISH');
 
-        currentLanguage = 'he';
+            $('#desc_sub').html('מאת שירין אנלן webVR דוקומנטרי');
 
-        $('#language').html('ENGLISH');
+            $('#enter_button').html('כניסה');
 
-        $('#desc_sub').html('מאת שירין אנלן webVR דוקומנטרי');
+            $('#lower_tag').html('מסע דרך שטפון רגשי של בדידות ואהבה');
 
-        $('#enter_button').html('כניסה');
+            $('#landing_screen').fadeIn(250);
 
-        $('#lower_tag').html('מסע דרך שטפון רגשי של בדידות ואהבה');
+          } else if(currentLanguage == 'he') {
 
-        $('#landing_screen').fadeIn(250);
+            console.log('language changed to English');
 
-      } else if(currentLanguage == 'he') {
+            currentLanguage = 'en';
 
-        console.log('language changed to English');
+            $('#language').html('עברית');
 
-        currentLanguage = 'en';
+            $('#desc_sub').html('A WEBVR DOCUMENTARY BY SHIRIN ANLEN');
 
-        $('#language').html('עברית');
+            $('#enter_button').html('ENTER');
 
-        $('#desc_sub').html('A WEBVR DOCUMENTARY BY SHIRIN ANLEN');
+            $('#lower_tag').html('a journey through an emotional flood<br>of love and loneliness');
 
-        $('#enter_button').html('ENTER');
+            $('#landing_screen').fadeIn(250);
 
-        $('#lower_tag').html('a journey through an emotional flood<br>of love and loneliness');
+          }
 
-        $('#landing_screen').fadeIn(250);
-
-      }
-
-    });
-
-  });
-
-
-
-
-
-////////////////////
-//////HTC VIVE//////
-////////////////////
-  $('#vive_button').click(function(){
-
-    //Fade out the overlays
-    $('#landing_screen').fadeOut(250, function(){
-      $('#about').animate({
-        top: '-100px'
-      }, 100);
-
-      $('#language').animate({
-        top: '-100px'
-      }, 100);
-    });
-
-    //Fade in the first set of instructions
-    $('#instruction_screen').delay(500).fadeIn(250, function(){
-
-        $('#vive_instruc').fadeIn(250);
-
-      console.log('instructions faded in');
-
-      //Enable mouse events on instructions
-      $('#tree_scene').css({
-            "pointer-events": "auto"
-      });
-
-
-      //Fade in the first instruction screen and timeout fadeout
-
-
-    });
-
-  });
-
-////////////////////
-//////DESKTOP///////
-////////////////////
-  $('#desktop_button').click(function(){
-
-    //Fade out the overlays
-    $('#landing_screen').fadeOut(250, function(){
-
-      //Get rid of the about button
-      $('#about').animate({
-        top: '-100px'
-      }, 100);
-
-      $('#language').animate({
-        top: '-100px'
-      }, 100);
-
-    });
-
-    //Fade in the first set of instructions
-    $('#instruction_screen').delay(500).fadeIn(250, function(){
-
-        $('#desktop_instruc').fadeIn(250);
-
-      console.log('instructions faded in');
-
-      //Enable mouse events on instructions
-      $('#tree_scene').css({
-            "pointer-events": "auto"
-      });
-
-      $( document ).on( "mousemove", function( mousePosition ) {
-
-      var mouseToRadius = Math.round((mousePosition.pageX * (Math.PI / 360) * 36) + 30);
-
-      console.log(mouseToRadius);
-
-      $('#mouse').css({
-
-        'transform': 'rotate(' + mouseToRadius + 'deg)'
-
-      });
+        });
 
       });
 
 
-      //Fade in the first instruction screen and timeout fadeout
-      $('#sunsall').mouseenter(function(){
-        $('#sun7').fadeIn(250).delay(200).fadeOut(250, function(){
-          $('#sun9').fadeIn(250).delay(200).fadeOut(250, function(){
-            $('#sun12').fadeIn(250).delay(200).fadeOut(250, function(){
-              $('#sun5').fadeIn(250).delay(200).fadeOut(250, function(){
-                $('#sun7p').fadeIn(250).delay(200).fadeOut(250);
+
+
+
+    ////////////////////
+    //////HTC VIVE//////
+    ////////////////////
+      $('#vive_button').click(function(){
+
+        //Fade out the overlays
+        $('#landing_screen').fadeOut(250, function(){
+          $('#about').animate({
+            top: '-100px'
+          }, 100);
+
+          $('#language').animate({
+            top: '-100px'
+          }, 100);
+        });
+
+        //Fade in the first set of instructions
+        $('#instruction_screen').delay(500).fadeIn(250, function(){
+
+            $('#vive_instruc').fadeIn(250);
+
+          console.log('instructions faded in');
+
+          //Enable mouse events on instructions
+          $('#tree_scene').css({
+                "pointer-events": "auto"
+          });
+
+
+          //Fade in the first instruction screen and timeout fadeout
+
+
+        });
+
+      });
+
+    ////////////////////
+    //////DESKTOP///////
+    ////////////////////
+      $('#desktop_button').click(function(){
+
+        //Fade out the overlays
+        $('#landing_screen').fadeOut(250, function(){
+
+          //Get rid of the about button
+          $('#about').animate({
+            top: '-100px'
+          }, 100);
+
+          $('#language').animate({
+            top: '-100px'
+          }, 100);
+
+        });
+
+        //Fade in the first set of instructions
+        $('#instruction_screen').delay(500).fadeIn(250, function(){
+
+            $('#desktop_instruc').fadeIn(250);
+
+          console.log('instructions faded in');
+
+          //Enable mouse events on instructions
+          $('#tree_scene').css({
+                "pointer-events": "auto"
+          });
+
+          $( document ).on( "mousemove", function( mousePosition ) {
+
+          var mouseToRadius = Math.round((mousePosition.pageX * (Math.PI / 360) * 36) + 30);
+
+          console.log(mouseToRadius);
+
+          $('#mouse').css({
+
+            'transform': 'rotate(' + mouseToRadius + 'deg)'
+
+          });
+
+          });
+
+
+          //Fade in the first instruction screen and timeout fadeout
+          $('#sunsall').mouseenter(function(){
+            $('#sun7').fadeIn(250).delay(200).fadeOut(250, function(){
+              $('#sun9').fadeIn(250).delay(200).fadeOut(250, function(){
+                $('#sun12').fadeIn(250).delay(200).fadeOut(250, function(){
+                  $('#sun5').fadeIn(250).delay(200).fadeOut(250, function(){
+                    $('#sun7p').fadeIn(250).delay(200).fadeOut(250);
+                  })
+                })
               })
             })
-          })
-        })
-      });
+          });
 
-      });
+          });
 
-    });
+        });
 
-      //Utility Functions
+          //Utility Functions
 
-        //Keycodes for the keyboard tutorial
-       $(document).on( "keypress", function(key){
-          console.log(key.keyCode);
+            //Keycodes for the keyboard tutorial
+           $(document).on( "keypress", function(key){
+              console.log(key.keyCode);
 
-            if( key.keyCode == 119 ){
-              console.log('W key pressed');
-              $('#wkey').fadeIn(50);
-              //Then remove it
-              setTimeout(function(){
-              $('#wkey').fadeOut(50);
-            }, 350);
+                if( key.keyCode == 119 ){
+                  console.log('W key pressed');
+                  $('#wkey').fadeIn(50);
+                  //Then remove it
+                  setTimeout(function(){
+                  $('#wkey').fadeOut(50);
+                }, 350);
 
-            } else if ( key.keyCode == 115 ) {
-              console.log('S key pressed');
-              //Turn the key white
-              $('#skey').fadeIn(50);
-              //Then remove it
-              setTimeout(function(){
-              $('#skey').fadeOut(50);
-            }, 350);
+                } else if ( key.keyCode == 115 ) {
+                  console.log('S key pressed');
+                  //Turn the key white
+                  $('#skey').fadeIn(50);
+                  //Then remove it
+                  setTimeout(function(){
+                  $('#skey').fadeOut(50);
+                }, 350);
 
-            } else if( key.keyCode == 100 ){
-               console.log('D key pressed');
-              //Turn the key white
-              $('#dkey').fadeIn(50);
-              //Then remove it
-              setTimeout(function(){
-              $('#dkey').fadeOut(50);
-            }, 350);
+                } else if( key.keyCode == 100 ){
+                   console.log('D key pressed');
+                  //Turn the key white
+                  $('#dkey').fadeIn(50);
+                  //Then remove it
+                  setTimeout(function(){
+                  $('#dkey').fadeOut(50);
+                }, 350);
 
-            } else if( key.keyCode == 97 ){
-                console.log('A key pressed');
-              //Turn the key white
-              $('#akey').fadeIn(50);
-              //Then remove it
-              setTimeout(function(){
-              $('#akey').fadeOut(50);
-            }, 350);
-            }
-       });
+                } else if( key.keyCode == 97 ){
+                    console.log('A key pressed');
+                  //Turn the key white
+                  $('#akey').fadeIn(50);
+                  //Then remove it
+                  setTimeout(function(){
+                  $('#akey').fadeOut(50);
+                }, 350);
+                }
+           });
 
 
 
 
 
-//Threejs Tree Scene
-  init = function(){
+    //Threejs Tree Scene
+  function init() {
 
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 0.1, 1000 );
-    renderer = new THREE.WebGLRenderer();
-    renderer.setSize( window.innerWidth, window.innerHeight );
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 0.1, 1000 );
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
 
-    document.getElementById("tree_scene").appendChild(renderer.domElement);
+        document.getElementById("tree_scene").appendChild(renderer.domElement);
 
-    camera.position.set(3,20, 3.2893155474929934);
-    camera.rotation.set(2.897615188414925, -1, 3.0189561019538735);
-    //camera.lookAt( new THREE.Vector3( 15, 40, 15 ) );
-    controls = new THREE.OrbitControls( camera, renderer.domElement );
-    controls.target.set( 15, 30, 15 );
-    // load & add the trees
-    trees = new Trees();
-    trees.init(loadingManager);
-    scene.add( trees );
-    // we need to pass delta time to the shader so we need a clock
-    clock = new THREE.Clock();
-    clock.start();
+        camera.position.set(3,20, 3.2893155474929934);
+        camera.rotation.set(2.897615188414925, -1, 3.0189561019538735);
+        //camera.lookAt( new THREE.Vector3( 15, 40, 15 ) );
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.target.set( 15, 30, 15 );
+        // load & add the trees
+        trees = new Trees();
+        trees.init(loadingManager);
+        scene.add( trees );
+        // we need to pass delta time to the shader so we need a clock
+        clock = new THREE.Clock();
+        clock.start();
 
-  };
+  }
 
-  render = function () {
-    //Without this you will need to move the mouse or keyboard to start the render
-    controls.update();
+  function render() {
+        //Without this you will need to move the mouse or keyboard to start the render
+        controls.update();
 
-    requestAnimationFrame( render );
+        requestAnimationFrame( render );
 
-    renderer.render(scene, camera);
+        renderer.render(scene, camera);
 
-    // update time
-    var delta = clock.getDelta();
+        // update time
+        var delta = clock.getDelta();
 
-    uniforms.time.value += delta;
+        uniforms.time.value += delta;
 
-  };
+  }
+}
+catch(e) {
+    console.error("Exception", e);
+}
+
+
