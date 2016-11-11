@@ -22,13 +22,19 @@ export default class SunGazer extends THREE.Object3D  {
 
         events.on("character_playing", () => {
             this.active = false;
-        })
+        });
         events.on("character_idle", () => {
             this.active = true;
-        })
+        });
         events.on("character_ended", () => {
             this.active = true;
-        })
+        });
+        events.on("gaze_started", () => {
+            this.soundManager.loadSound('./assets/sound/ui/Hour_Replace_1.ogg')
+            .then((sound) => {
+                sound.playIn(0);
+            });
+        });
     }
 
     updateMatrixWorld(force) {
