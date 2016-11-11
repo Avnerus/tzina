@@ -2,143 +2,117 @@
 import KeyboardController from './keyboard_controller'
 import TzinaVRControls from './tzina_vr_controls'
 
+//Paths
+let SOUND_PATH = './assets/ui_sounds/';
+
+let TREES_PATH = "./assets/trees/";
 
 //Tree Defenetions
-var TreesDef = {
-  types: [
-    {
-      name: "Test",
-      fileName: "points.ply",
-    },
-        {
-      name: "ThreeTrees",
-      fileName: "3tress_2.ply"
-    },
-     {
-      name: "palm",
-      fileName: "palm.ply"
-    },
-     {
-      name: "single",
-      fileName: "singleTree.ply"
-    },
-      {
-      name: "bush",
-      fileName: "bush.ply"
-    }
-  ],
-  instances: [
+// var TreesDef = {
+//   types: [
+//     {
+//       name: "Test",
+//       fileName: "points.ply",
+//     },
+//         {
+//       name: "ThreeTrees",
+//       fileName: "3tress_2.ply"
+//     },
+//      {
+//       name: "palm",
+//       fileName: "palm.ply"
+//     },
+//      {
+//       name: "single",
+//       fileName: "singleTree.ply"
+//     },
+//       {
+//       name: "bush",
+//       fileName: "bush.ply"
+//     }
+//   ],
+//   instances: [
 
-     {
-      type: "ThreeTrees",
-      position: [4,22,14],
-      rotateX: -10,
-      scale: 4.3
-    },
-    //  {
-    //     type: "ThreeTrees",
-    //     position: [4,22,14],
-    //     rotateX: -10,
-    //     scale: 4
-    // },
-    //  {
-    //     type: "ThreeTrees",
-    //     position: [42,24,2],
-    //     rotateX: 0,
-    //     scale: 4.4
-    // },
-    {
-      type: "ThreeTrees",
-      position: [43,24,3],
-      rotateX: 0,
-      scale: 4.4
-    },
-    {
-      type: "ThreeTrees",
-      position: [40,24,2],
-      rotateX: 0,
-      scale: 4.4
-    },
-    {
-      type: "ThreeTrees",
-      position: [20,24,-23],
-      rotateX: 80,
-      scale: 4.4
-    },
-    {
-      type: "ThreeTrees",
-      position: [30,24,-20],
-      rotateX: 20,
-      scale: 4.4
-    },
- {
-      type: "ThreeTrees",
-      position: [30,24,-20],
-      rotateX: 60,
-      scale: 4.4
-    },
- {
-      type: "ThreeTrees",
-      position: [30,24,-20],
-      rotateX: 60,
-      scale: 4.4
-    },
-  {
-      type: "ThreeTrees",
-      position: [6,23,-10],
-      rotateX: 180,
-      scale: 4.4
-    },
+//      {
+//       type: "ThreeTrees",
+//       position: [4,22,14],
+//       rotateX: -10,
+//       scale: 4.3
+//     },
+//     {
+//       type: "ThreeTrees",
+//       position: [43,24,3],
+//       rotateX: 0,
+//       scale: 4.4
+//     },
+//     {
+//       type: "ThreeTrees",
+//       position: [40,24,2],
+//       rotateX: 0,
+//       scale: 4.4
+//     },
+//     {
+//       type: "ThreeTrees",
+//       position: [20,24,-23],
+//       rotateX: 80,
+//       scale: 4.4
+//     },
+//     {
+//       type: "ThreeTrees",
+//       position: [30,24,-20],
+//       rotateX: 20,
+//       scale: 4.4
+//     },
+//  {
+//       type: "ThreeTrees",
+//       position: [30,24,-20],
+//       rotateX: 60,
+//       scale: 4.4
+//     },
+//  {
+//       type: "ThreeTrees",
+//       position: [30,24,-20],
+//       rotateX: 60,
+//       scale: 4.4
+//     },
+//   {
+//       type: "ThreeTrees",
+//       position: [6,23,-10],
+//       rotateX: 180,
+//       scale: 4.4
+//     },
 
-  {
-      type: "ThreeTrees",
-      position: [-20,26,-20],
-      rotateX: -30,
-      scale: 4
-    },
+//   {
+//       type: "ThreeTrees",
+//       position: [-20,26,-20],
+//       rotateX: -30,
+//       scale: 4
+//     },
 
 
 
-    {
-      type: "palm",
-      position: [-18,16,10],
-      rotateX: -100,
-      scale: 3
-    },
-    {
-      type: "palm",
-      position: [8,22,6],
-      rotateX: 60,
-      scale: 3
-    },
-     {
-      type: "palm",
-      position: [-38,20,-32],
-      rotateX: 60,
-      scale: 3.8
-    },
-    // {
-    //     type: "single",
-    //     position: [-52,18,2],
-    //     rotateX: 100,
-    //     scale: 3
-    // },
-    // {
-    //     type: "single",
-    //     position: [20,18,8],
-    //     rotateX: 100,
-    //     scale: 3
-    // }
+//     {
+//       type: "palm",
+//       position: [-18,16,10],
+//       rotateX: -100,
+//       scale: 3
+//     },
+//     {
+//       type: "palm",
+//       position: [8,22,6],
+//       rotateX: 60,
+//       scale: 3
+//     },
+//      {
+//       type: "palm",
+//       position: [-38,20,-32],
+//       rotateX: 60,
+//       scale: 3.8
+//     },
+//   ]
+// };
 
-  ]
-};
 
-//Call jquery
-// var $ = require('jquery');
-
-var sound_path = './assets/ui_sounds/';
-
-var TREES_PATH = "./assets/trees/";
 
 //Global Variables
 var camera, renderer, trees, clock, controls, scene;
@@ -156,58 +130,58 @@ var uniforms = {
   rustleFrequency: { type: "f", value: 0.2 }
 };
 
-class Trees extends THREE.Object3D {
-    constructor() {
-      super();
-    }
-    init(loadingManager) {
+// class Trees extends THREE.Object3D {
+//     constructor() {
+//       super();
+//     }
+//     init(loadingManager) {
 
-      console.log("init trees loadingmanager");
+//       console.log("init trees loadingmanager");
 
-      let treeTypes = {};
+//       let treeTypes = {};
 
-      this.treesLoader = new THREE.PLYLoader(loadingManager);
+//       this.treesLoader = new THREE.PLYLoader(loadingManager);
 
-      return new Promise((resolve, reject) => {
+//       return new Promise((resolve, reject) => {
 
-        console.log("Loading trees", TreesDef);
+//         console.log("Loading trees", TreesDef);
 
-        let typePromises = TreesDef.types.map((type) => {return this.loadType(type, treeTypes)});
+//         let typePromises = TreesDef.types.map((type) => {return this.loadType(type, treeTypes)});
 
-        Promise.all(typePromises)
+//         Promise.all(typePromises)
 
-        .then((results) => {
-          // this is the ShaderMaterial we need to use for the trees
-          var material = new THREE.ShaderMaterial( {
-            uniforms: uniforms,
-            vertexColors: THREE.VertexColors,
-            //add GLSLIFY calls for the shaders
-            vertexShader: document.getElementById( 'vertexShader' ).textContent,
-            fragmentShader: document.getElementById( 'fragmentShader' ).textContent
-          });
-          // end of interesting stuff
-          TreesDef.instances.forEach((instance) => {
-            let mesh = new THREE.Points( treeTypes[instance.type], material );
-            mesh.position.fromArray(instance.position);
-            mesh.scale.set(0.25 * instance.scale, 0.25 * instance.scale, 0.25 * instance.scale);
-            mesh.rotateZ(90 * Math.PI / 180);
-            mesh.rotateX(instance.rotateX * Math.PI / 180);
-            this.add(mesh);
-            resolve();
-          })
-        });
-      });
-    }
-    loadType(props,store) {
-      return new Promise((resolve, reject) => {
-        console.log("Loading tree type ", props);
-        this.treesLoader.load(TREES_PATH + "/" + props.fileName ,( geometry ) => {
-          store[props.name] = geometry;
-          resolve();
-        });
-      });
-    }
-  }
+//         .then((results) => {
+//           // this is the ShaderMaterial we need to use for the trees
+//           var material = new THREE.ShaderMaterial( {
+//             uniforms: uniforms,
+//             vertexColors: THREE.VertexColors,
+//             //add GLSLIFY calls for the shaders
+//             vertexShader: document.getElementById( 'vertexShader' ).textContent,
+//             fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+//           });
+//           // end of interesting stuff
+//           TreesDef.instances.forEach((instance) => {
+//             let mesh = new THREE.Points( treeTypes[instance.type], material );
+//             mesh.position.fromArray(instance.position);
+//             mesh.scale.set(0.25 * instance.scale, 0.25 * instance.scale, 0.25 * instance.scale);
+//             mesh.rotateZ(90 * Math.PI / 180);
+//             mesh.rotateX(instance.rotateX * Math.PI / 180);
+//             this.add(mesh);
+//             resolve();
+//           })
+//         });
+//       });
+//     }
+//     loadType(props,store) {
+//       return new Promise((resolve, reject) => {
+//         console.log("Loading tree type ", props);
+//         this.treesLoader.load(TREES_PATH + "/" + props.fileName ,( geometry ) => {
+//           store[props.name] = geometry;
+//           resolve();
+//         });
+//       });
+//     }
+//   }
 
 loadingManager = new THREE.LoadingManager();
 
@@ -222,11 +196,6 @@ loadingManager.onProgress = function (item, loaded, total) {
 
 };
 
-
-$(document).ready(function(){
-
-  console.log('jQuery Document Fired');
-
   var videoLogo = $('#logo').get(0);
 
   var videoBirds = $('#birds').get(0);
@@ -237,7 +206,7 @@ $(document).ready(function(){
   var currentLanguage = 'en';
 
   //Intro sound
-  var introSound = new Audio(sound_path + 'Theme_Intro_1.ogg');
+  var introSound = new Audio(SOUND_PATH + 'Theme_Intro_1.ogg');
 
   introSound.loop = true;
 
@@ -246,9 +215,9 @@ $(document).ready(function(){
 //Declare all button sounds and play logo video
 
   //Hover
-  var buttonSound = new Audio(sound_path + 'Button_C_1_new.ogg');
+  var buttonSound = new Audio(SOUND_PATH + 'Button_C_1_new.ogg');
 
-  var buttonClick = new Audio(sound_path + 'Button_Click_new.ogg');
+  var buttonClick = new Audio(SOUND_PATH + 'Button_Click_new.ogg');
 
   $('.button').mouseenter(function(){
 
@@ -281,7 +250,7 @@ $(document).ready(function(){
   });
 
   //Fade in the first screen from black after tree scene was loaded
-  loadingManager.onLoad = function(){
+  // loadingManager.onLoad = function(){
 
       //Start rendering the canvas
       render();
@@ -335,7 +304,7 @@ $(document).ready(function(){
 
         });
 
-  }
+  // }
 
 //Pagination
 //About
@@ -520,12 +489,6 @@ $(document).ready(function(){
 
       });
 
-  
-
-    // $( document ).on( "mousemove", function( event ) {
-    //   $( "body" ).text( "pageX: " + event.pageX + ", pageY: " + event.pageY );
-    // });
-
 
       //Fade in the first instruction screen and timeout fadeout
       $('#sunsall').mouseenter(function(){
@@ -586,9 +549,6 @@ $(document).ready(function(){
             }, 350);
             }
        });
-
-
-  });
 
 
 
