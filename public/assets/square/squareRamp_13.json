@@ -8,7 +8,7 @@
         "depthTest":true,
         "emissive":0,
         "type":"MeshLambertMaterial",
-        "color":4671303,
+        "color":10790052,
         
         "blending":"NormalBlending"
     },{
@@ -21,7 +21,7 @@
         "depthTest":true,
         "emissive":0,
         "type":"MeshPhongMaterial",
-        "color":4671303,
+        "color":10790052,
         
         "blending":"NormalBlending"
     },{
@@ -34,7 +34,7 @@
         "depthTest":true,
         "emissive":0,
         "type":"MeshPhongMaterial",
-        "color":4671303,
+        "color":14994353,
         
         "blending":"NormalBlending"
     }],
