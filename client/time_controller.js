@@ -148,8 +148,8 @@ export default class TimeController {
 
         this.scene.add(this.insideChapterTitle);
         this.scene.add(this.insideChapterTitleLineTwo);
-        DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
-        DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
+        //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+        //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
 
         //DebugUtil.positionObject(this.chapterTitle, "Outside title", true);
         this.scene.add(this.chapterTitle)
@@ -257,7 +257,7 @@ export default class TimeController {
         }
 
         if (this.gazeHour != -1) {
-            //this.gazeCounter += dt;
+            this.gazeCounter += dt;
             if (this.gazeCounter > 1 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
             }

@@ -242,6 +242,10 @@ export default class Character extends THREE.Object3D {
 
         this.remove(this.fullVideo);
 
+        if (this.props.event) {
+            this.remove(this.animation);
+        }
+
         this.playingFull = false;
         if (this.props.subtitles) {
             this.subtitlesVideo.src = "";
