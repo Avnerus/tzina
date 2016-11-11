@@ -140,7 +140,7 @@ export default class Character extends THREE.Object3D {
                 });
                 this.idleVideo.video.addEventListener('timeupdate',() => {
                     if (this.animation) {
-                        this.animation.updateVideoTime(this.fullVideo.video.currentTime);
+                        this.animation.updateVideoTime(this.idleVideo.video.currentTime);
                     }
                 },false);
             }
