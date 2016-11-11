@@ -15,10 +15,33 @@ export default
                 "Shirin7AM"
 			],
 			"extraAssets": [
-				{
-					"fileName": "pigeonsfood",
-					"position": [0,0,0]
-				},
+				// {
+
+    //         name: "Bagel",
+				// 	position: [2.24,24,10.32],
+				// 	rotation: [182,335,0],
+				// 	scale: 0.37
+    //   		  },
+
+ 			// {
+    //         name: "Bagel",
+    //       			position: [2.24,24,10.32],
+				// 	rotation: [182,335,0],
+				// 	scale: 0.37
+    //  		   },
+ 			// {
+    //         name: "Bun",
+    //         		position: [2.24,24,10.32],
+				// 	rotation: [182,335,0],
+				// 	scale: 0.37
+    //    		 },
+  		// 	{
+    //         name: "whiteBread",
+    //         		position: [2.24,24,10.32],
+				// 	rotation: [182,335,0],
+				// 	scale: 0.37
+    //    			 },
+
 					{
 					name: "junkie",
 					position: [2.24,24,10.32],
