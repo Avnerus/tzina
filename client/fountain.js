@@ -299,6 +299,9 @@ export default class Fountain extends THREE.Object3D  {
         this.centerRingEmitters[0].disable();
         this.changeWaterColor(false);
 
+        // stop cylinder rotating
+        this.stopCylinderAni();
+
         events.emit("show_end");
     }
 
@@ -548,6 +551,13 @@ export default class Fountain extends THREE.Object3D  {
             yoyo: true,
             repeat: 1
         } );
+    }
+
+    stopCylinderAni() {
+        if(this.cylinders[0].tweenAni!=null)
+            this.cylinders[0].tweenAni.kill();
+        if(this.cylinders[1].tweenAni!=null)
+            this.cylinders[1].tweenAni.kill();
     }
 
     // velocity, velocity.spread, acceleration, acceleration.spread
