@@ -6,7 +6,7 @@ export default class Fountain extends THREE.Object3D  {
         this.BASE_PATH = 'assets/fountain/'
         console.log("Fountain constructed!")
 
-        this.debug = true;
+        this.debug = false;
 
         this.downVelocity = new THREE.Vector3(1,7.8,0);
         this.upVelocity = new THREE.Vector3(1.5,11,0);

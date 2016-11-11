@@ -138,6 +138,11 @@ export default class Character extends THREE.Object3D {
                     events.emit("character_idle", this.props.name)
                     events.emit("character_ended", this.props.name)
                 });
+                this.idleVideo.video.addEventListener('timeupdate',() => {
+                    if (this.animation) {
+                        this.animation.updateVideoTime(this.fullVideo.video.currentTime);
+                    }
+                },false);
             }
         }
     }

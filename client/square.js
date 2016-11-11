@@ -185,7 +185,6 @@ export default class Square extends THREE.Object3D{
             this.pool.scale.set(0.822, 0.822, 0.822);
             console.log("Adding square fountain pool", this.pool);
             this.mesh.add(this.pool);
-            DebugUtil.positionObject(this.pool, "Pool");
 
             if (this.debug) {
                 /*
@@ -201,8 +200,9 @@ export default class Square extends THREE.Object3D{
                 //events.emit("add_gui", {folder: "Benches texture 1"}, this.benches.children[0].children[0], "visible"); 
                 //events.emit("add_gui", {folder: "Benches texture 2"}, this.benches.children[1].children[0], "visible"); 
 
-
+                //DebugUtil.positionObject(this.fountain, "Fountain water");
                 //DebugUtil.positionObject(this.fountainMesh, "Fountain");
+            //  DebugUtil.positionObject(this.pool, "Pool");
                 DebugUtil.positionObject(this.mesh, "Square");
                 DebugUtil.positionObject(this.benches, "Benches");
 
@@ -228,7 +228,6 @@ export default class Square extends THREE.Object3D{
             //this.benches.rotation.set(0,256,0);
 
             this.fountain.position.set(0.69,24.93, -0.73);
-            DebugUtil.positionObject(this.fountain, "Fountain water");
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
             
@@ -425,7 +424,7 @@ export default class Square extends THREE.Object3D{
 
             let loader = new THREE.ObjectLoader(loadingManager);
 
-            events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
+            //events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
             loader.load(SUNS_PATH,( obj ) => {
                 console.log("Loaded suns", obj)
 
@@ -683,9 +682,9 @@ export default class Square extends THREE.Object3D{
       let pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
       pointLight.position.set(0,0,0);
       pointLight.intensity = 1;
-      DebugUtil.positionObject(pointLight, "Fountain light");
       events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, pointLight, "intensity", 0, 2); 
       this.mesh.add(pointLight);
+      // DebugUtil.positionObject(pointLight, "Fountain light");
     }
 
     get clockRotation() {

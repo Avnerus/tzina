@@ -129,13 +129,20 @@ export default class TimeController {
         this.prevChapterTitle.scale.set(0.3, 0.3, 0.3);
         this.prevChapterTitle.visible = false;
 
-        this.insideChapterTitle = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
-        this.insideChapterTitle.scale.multiplyScalar(0.04);
+        this.insideChapterTitle = new MeshText2D("", INSIDE_TEXT_DEFINITION);
+        this.insideChapterTitle.scale.multiplyScalar(0.025);
 
-        this.insideChapterTitleLineTwo = new SpriteText2D("", INSIDE_TEXT_DEFINITION);
-        this.insideChapterTitleLineTwo.scale.multiplyScalar(0.04);
-        //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
-        //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
+        this.insideChapterTitleLineTwo = new MeshText2D("", INSIDE_TEXT_DEFINITION);
+        this.insideChapterTitleLineTwo.scale.multiplyScalar(0.03);
+
+        this.insideChapterTitle.visible = false;
+        this.insideChapterTitleLineTwo.visible = false;
+
+        this.scene.add(this.insideChapterTitle);
+        this.scene.add(this.insideChapterTitleLineTwo);
+        DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
+        DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
+
         //DebugUtil.positionObject(this.chapterTitle, "Outside title", true);
         this.scene.add(this.chapterTitle)
         this.scene.add(this.prevChapterTitle)
@@ -149,18 +156,18 @@ export default class TimeController {
             this.gazeHour = parseInt(hour);
             this.gazeCounter = 0;
 
+            this.insideChapterTitle.visible = true;
+            this.insideChapterTitleLineTwo.visible = true;
+
             this.showInsideChapterTitle(hour);
 
             console.log("Time controller - Starting gaze counter for target hour " + this.gazeHour);
         });
 
         events.on("gaze_stopped", (hour) => {
-            if (this.insideChapterTitle.parent) {
-                this.insideChapterTitle.parent.remove(this.insideChapterTitle);
-            }
-            if (this.insideChapterTitleLineTwo.parent) {
-                this.insideChapterTitleLineTwo.parent.remove(this.insideChapterTitleLineTwo);
-            }
+            this.insideChapterTitle.visible = false;
+            this.insideChapterTitleLineTwo.visible = false;
+            this.sunWorld = null;
             this.gazeHour = -1;
         });
     }
@@ -280,6 +287,9 @@ export default class TimeController {
                     this.sky.setTime(this.currentHour);
                 }});
             }
+        }
+        if (this.sunWorld) {
+            this.updateSunTitle();
         }
     }
 
@@ -448,11 +458,7 @@ export default class TimeController {
         let hourText = this.getHourText(chapter.hour);
 
         this.insideChapterTitle.text = hourText;
-
-        this.insideChapterTitle.position.fromArray(chapter.insideTitlePosition);
-
         this.insideChapterTitleLineTwo.text = chapter.name;
-        this.insideChapterTitleLineTwo.position.fromArray(chapter.insideTitlePositionLineTwo);
   
         // this.insideChapterTitle.rotation.set(
         //     chapter.sunLoaderRotation[0] * Math.PI / 180,                             
@@ -460,8 +466,12 @@ export default class TimeController {
         //     chapter.sunLoaderRotation[2] * Math.PI / 180,
         //     "XYZ"
         // );
-        sun.add(this.insideChapterTitle);
-        sun.add(this.insideChapterTitleLineTwo);
+        sun.updateMatrixWorld();
+
+        this.sunWorld = new THREE.Vector3().setFromMatrixPosition(sun.matrixWorld);
+
+
+        console.log("Sun title position ", this.insideChapterTitle.position);
 
         /*
         this.gazingSun = this.insideChapterTitle;
@@ -474,6 +484,22 @@ export default class TimeController {
         let m1 = new THREE.Matrix4();
         m1.lookAt( this.camera.position, sun.position, sun.up );
         sun.quaternion.setFromRotationMatrix( m1 ); */
+    }
+
+    updateSunTitle() {
+        if (this.sunWorld) {
+            this.insideChapterTitle.position.copy(this.sunWorld);
+            this.insideChapterTitle.lookAt(this.camera.position);
+            this.insideChapterTitle.translateZ(5);
+            this.insideChapterTitle.quaternion.copy(this.camera.quaternion);
+            this.insideChapterTitle.translateY(0.5);
+
+            this.insideChapterTitleLineTwo.position.copy(this.sunWorld);
+            this.insideChapterTitleLineTwo.lookAt(this.camera.position);
+            this.insideChapterTitleLineTwo.translateZ(5);
+            this.insideChapterTitleLineTwo.quaternion.copy(this.camera.quaternion);
+            this.insideChapterTitleLineTwo.translateY(-3);
+        }
     }
 
     turnOnChapterSun() {
