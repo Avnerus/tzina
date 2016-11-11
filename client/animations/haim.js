@@ -15,7 +15,7 @@ export default class HaimAnimation extends THREE.Object3D {
         this.loadingManager = loadingManager;
         this.setupAnim();
 
-        DebugUtil.positionObject(this, "haim anim");
+        //DebugUtil.positionObject(this, "haim anim");
     }
 
     setupAnim() {

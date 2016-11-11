@@ -190,6 +190,7 @@ export default class Square extends THREE.Object3D{
             this.pool.scale.set(0.822, 0.822, 0.822);
             console.log("Adding square fountain pool", this.pool);
             this.mesh.add(this.pool);
+            events.emit("add_gui", {folder: "Pool"}, this.pool, "visible"); 
 
             if (this.debug) {
                 /*
@@ -238,8 +239,8 @@ export default class Square extends THREE.Object3D{
             
 
             //DebugUtil.positionObject(this.ground, "ground");
-            //DebugUtil.positionObject(this.buildings, "Buildings");
-            //DebugUtil.positionObject(this.fountainMesh, "Fountain") */
+            DebugUtil.positionObject(this.buildings, "Buildings");
+            DebugUtil.positionObject(this.fountainMesh, "Fountain");
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
             console.log("Finished loading square");
