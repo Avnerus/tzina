@@ -9,110 +9,110 @@ let TREES_PATH = "./assets/trees/";
 
 console.log("Landing.js started");
 
-//Tree Defenetions
-// var TreesDef = {
-//   types: [
-//     {
-//       name: "Test",
-//       fileName: "points.ply",
-//     },
-//         {
-//       name: "ThreeTrees",
-//       fileName: "3tress_2.ply"
-//     },
-//      {
-//       name: "palm",
-//       fileName: "palm.ply"
-//     },
-//      {
-//       name: "single",
-//       fileName: "singleTree.ply"
-//     },
-//       {
-//       name: "bush",
-//       fileName: "bush.ply"
-//     }
-//   ],
-//   instances: [
+// Tree Defenetions
+var TreesDef = {
+  types: [
+    {
+      name: "Test",
+      fileName: "points.ply",
+    },
+        {
+      name: "ThreeTrees",
+      fileName: "3tress_2.ply"
+    },
+     {
+      name: "palm",
+      fileName: "palm.ply"
+    },
+     {
+      name: "single",
+      fileName: "singleTree.ply"
+    },
+      {
+      name: "bush",
+      fileName: "bush.ply"
+    }
+  ],
+  instances: [
 
-//      {
-//       type: "ThreeTrees",
-//       position: [4,22,14],
-//       rotateX: -10,
-//       scale: 4.3
-//     },
-//     {
-//       type: "ThreeTrees",
-//       position: [43,24,3],
-//       rotateX: 0,
-//       scale: 4.4
-//     },
-//     {
-//       type: "ThreeTrees",
-//       position: [40,24,2],
-//       rotateX: 0,
-//       scale: 4.4
-//     },
-//     {
-//       type: "ThreeTrees",
-//       position: [20,24,-23],
-//       rotateX: 80,
-//       scale: 4.4
-//     },
-//     {
-//       type: "ThreeTrees",
-//       position: [30,24,-20],
-//       rotateX: 20,
-//       scale: 4.4
-//     },
-//  {
-//       type: "ThreeTrees",
-//       position: [30,24,-20],
-//       rotateX: 60,
-//       scale: 4.4
-//     },
-//  {
-//       type: "ThreeTrees",
-//       position: [30,24,-20],
-//       rotateX: 60,
-//       scale: 4.4
-//     },
-//   {
-//       type: "ThreeTrees",
-//       position: [6,23,-10],
-//       rotateX: 180,
-//       scale: 4.4
-//     },
+     {
+      type: "ThreeTrees",
+      position: [4,22,14],
+      rotateX: -10,
+      scale: 4.3
+    },
+    {
+      type: "ThreeTrees",
+      position: [43,24,3],
+      rotateX: 0,
+      scale: 4.4
+    },
+    {
+      type: "ThreeTrees",
+      position: [40,24,2],
+      rotateX: 0,
+      scale: 4.4
+    },
+    {
+      type: "ThreeTrees",
+      position: [20,24,-23],
+      rotateX: 80,
+      scale: 4.4
+    },
+    {
+      type: "ThreeTrees",
+      position: [30,24,-20],
+      rotateX: 20,
+      scale: 4.4
+    },
+ {
+      type: "ThreeTrees",
+      position: [30,24,-20],
+      rotateX: 60,
+      scale: 4.4
+    },
+ {
+      type: "ThreeTrees",
+      position: [30,24,-20],
+      rotateX: 60,
+      scale: 4.4
+    },
+  {
+      type: "ThreeTrees",
+      position: [6,23,-10],
+      rotateX: 180,
+      scale: 4.4
+    },
 
-//   {
-//       type: "ThreeTrees",
-//       position: [-20,26,-20],
-//       rotateX: -30,
-//       scale: 4
-//     },
+  {
+      type: "ThreeTrees",
+      position: [-20,26,-20],
+      rotateX: -30,
+      scale: 4
+    },
 
 
 
-//     {
-//       type: "palm",
-//       position: [-18,16,10],
-//       rotateX: -100,
-//       scale: 3
-//     },
-//     {
-//       type: "palm",
-//       position: [8,22,6],
-//       rotateX: 60,
-//       scale: 3
-//     },
-//      {
-//       type: "palm",
-//       position: [-38,20,-32],
-//       rotateX: 60,
-//       scale: 3.8
-//     },
-//   ]
-// };
+    {
+      type: "palm",
+      position: [-18,16,10],
+      rotateX: -100,
+      scale: 3
+    },
+    {
+      type: "palm",
+      position: [8,22,6],
+      rotateX: 60,
+      scale: 3
+    },
+     {
+      type: "palm",
+      position: [-38,20,-32],
+      rotateX: 60,
+      scale: 3.8
+    },
+  ]
+};
 
 
 
@@ -132,61 +132,61 @@ var uniforms = {
   rustleFrequency: { type: "f", value: 0.2 }
 };
 
-// class Trees extends THREE.Object3D {
-//     constructor() {
-//       super();
-//     }
-//     init(loadingManager) {
+class Trees extends THREE.Object3D {
+    constructor() {
+      super();
+    }
+    init(loadingManager) {
 
-//       console.log("init trees loadingmanager");
+      console.log("init trees loadingmanager");
 
-//       let treeTypes = {};
+      let treeTypes = {};
 
-//       this.treesLoader = new THREE.PLYLoader(loadingManager);
+      this.treesLoader = new THREE.PLYLoader(loadingManager);
 
-//       return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
 
-//         console.log("Loading trees", TreesDef);
+        console.log("Loading trees", TreesDef);
 
-//         let typePromises = TreesDef.types.map((type) => {return this.loadType(type, treeTypes)});
+        let typePromises = TreesDef.types.map((type) => {return this.loadType(type, treeTypes)});
 
-//         Promise.all(typePromises)
+        Promise.all(typePromises)
 
-//         .then((results) => {
-//           // this is the ShaderMaterial we need to use for the trees
-//           var material = new THREE.ShaderMaterial( {
-//             uniforms: uniforms,
-//             vertexColors: THREE.VertexColors,
-//             //add GLSLIFY calls for the shaders
-//             vertexShader: document.getElementById( 'vertexShader' ).textContent,
-//             fragmentShader: document.getElementById( 'fragmentShader' ).textContent
-//           });
-//           // end of interesting stuff
-//           TreesDef.instances.forEach((instance) => {
-//             let mesh = new THREE.Points( treeTypes[instance.type], material );
-//             mesh.position.fromArray(instance.position);
-//             mesh.scale.set(0.25 * instance.scale, 0.25 * instance.scale, 0.25 * instance.scale);
-//             mesh.rotateZ(90 * Math.PI / 180);
-//             mesh.rotateX(instance.rotateX * Math.PI / 180);
-//             this.add(mesh);
-//             resolve();
-//           })
-//         });
-//       });
-//     }
-//     loadType(props,store) {
-//       return new Promise((resolve, reject) => {
-//         console.log("Loading tree type ", props);
-//         this.treesLoader.load(TREES_PATH + "/" + props.fileName ,( geometry ) => {
-//           store[props.name] = geometry;
-//           resolve();
-//         });
-//       });
-//     }
-//   }
-//
-//
-//
+        .then((results) => {
+          // this is the ShaderMaterial we need to use for the trees
+          var material = new THREE.ShaderMaterial( {
+            uniforms: uniforms,
+            vertexColors: THREE.VertexColors,
+            //add GLSLIFY calls for the shaders
+            vertexShader: document.getElementById( 'vertexShader' ).textContent,
+            fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+          });
+          // end of interesting stuff
+          TreesDef.instances.forEach((instance) => {
+            let mesh = new THREE.Points( treeTypes[instance.type], material );
+            mesh.position.fromArray(instance.position);
+            mesh.scale.set(0.25 * instance.scale, 0.25 * instance.scale, 0.25 * instance.scale);
+            mesh.rotateZ(90 * Math.PI / 180);
+            mesh.rotateX(instance.rotateX * Math.PI / 180);
+            this.add(mesh);
+            resolve();
+          })
+        });
+      });
+    }
+    loadType(props,store) {
+      return new Promise((resolve, reject) => {
+        console.log("Loading tree type ", props);
+        this.treesLoader.load(TREES_PATH + "/" + props.fileName ,( geometry ) => {
+          store[props.name] = geometry;
+          resolve();
+        });
+      });
+    }
+  }
+
+
+
 
 loadingManager = new THREE.LoadingManager();
 
@@ -255,7 +255,7 @@ loadingManager.onProgress = function (item, loaded, total) {
   });
 
   //Fade in the first screen from black after tree scene was loaded
-  // loadingManager.onLoad = function(){
+  loadingManager.onLoad = function(){
 
       //Start rendering the canvas
       render();
@@ -309,7 +309,7 @@ loadingManager.onProgress = function (item, loaded, total) {
 
         });
 
-  // }
+  }
 
 //Pagination
 //About
