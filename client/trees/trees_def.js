@@ -224,10 +224,28 @@ export default {
 ///22
        {
             type: "ThreeTrees",
-            position: [27.12,16.03,19.9],
-            rotation: [50,18,71],
-            scale: 0.469
+            position: [40,14.67,8.17],
+            rotation: [50,26,71],
+            scale: 0.605
         },
+
+
+//23
+                {
+            type: "ThreeTrees",
+            position: [-40,19,8.17],
+            rotation: [225,360,99],
+            scale: 0.65
+        },
+
+///24
+
+                  {
+            type: "ThreeTrees",
+            position: [-40,19,8.17],
+            rotation: [225,360,99],
+            scale: 0.65
+        }
 
 
 
