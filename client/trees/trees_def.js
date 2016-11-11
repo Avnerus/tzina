@@ -43,17 +43,17 @@ export default {
         //// uncommented now
          {
             type: "ThreeTrees",
-            position: [-14.38,14.67,15.39],
+            position: [-14.38,16.03,16.29],
             rotation: [14,18,87],
-            scale: 0.56
+            scale: 0.37
         },
  ////2
 
                    {
             type: "ThreeTrees",
-            position: [-39.63,18.73,18.1],
+            position: [-40,17.38,18],
             rotation: [360,184,274],
-            scale: 0.379
+            scale: 0.514
         }, 
 ////3
        {
@@ -75,9 +75,9 @@ export default {
 /////5
          {
             type: "ThreeTrees",
-            position: [14.49,20.08,36.14],
-            rotation: [119,192,233],
-            scale: 0.379
+            position: [16.29,218.73,36],
+            rotation: [119,205,253],
+            scale: 0.25
         }, 
 /////6
     
@@ -90,9 +90,9 @@ export default {
 ///7
          {
             type: "ThreeTrees",
-            position: [27,12,16.03,-24.03],
-            rotation: [58,22,58],
-            scale: 0.695
+            position: [31.63,18.73,-0.85],
+            rotation: [58,14,58],
+            scale: 0.31
         },
 ////8
         {
@@ -117,11 +117,13 @@ export default {
             scale: 0.469
         },
 
+
+
 /////11
 
  {
             type: "ThreeTrees",
-            position: [-33.32,17.38,-3.55],
+            position: [-35.12,18.73,1.86],
             rotation: [201,2,103],
             scale: 0.46
 },
@@ -245,9 +247,29 @@ export default {
             position: [-40,19,8.17],
             rotation: [225,360,99],
             scale: 0.65
+        },
+
+        //25
+
+     {
+            type: "ThreeTrees",
+            position: [34.33,17.38,-15],
+            rotation: [71,14,91],
+            scale: 0.469
+        },
+////26
+         {
+            type: "ThreeTrees",
+            position: [-1.97,14.95,-40],
+            rotation: [149,0,102],
+            scale: 0.504
+        },
+           {
+            type: "palm",
+            position: [10.88,16.03,-36],
+            rotation: [42,0,83],
+            scale: 0.43
         }
-
-
 
         // {
         //     type: "single",
