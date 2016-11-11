@@ -138,11 +138,15 @@ export default class Square extends THREE.Object3D{
             this.clockwork = new THREE.Object3D();
 
             // Cylinders
-            this.cylinder = this.fountainMesh.getObjectByName("f_15_SubMesh 0").parent;
-
-            this.cylinder.rotation.order = "YZX";
-            this.cylinder.rotation.z = Math.PI / 2;
-
+            this.cylinders = [];
+            this.cylinders.push(this.fountainMesh.getObjectByName("f_15_SubMesh 0").parent);
+            this.cylinders.push(this.fountainMesh.getObjectByName("f_14_SubMesh 0").parent);
+            this.cylinders.push(this.fountainMesh.getObjectByName("f_13_SubMesh 0").parent);
+            for(let i=0; i<this.cylinders.length; i++){
+                this.cylinders[i].rotation.order = "YZX";
+                this.cylinders[i].rotation.z = Math.PI / 2;
+            }
+            this.fountain.assignCylinders(this.cylinders);
 
             this.activeClockwork = this.mesh;
 
@@ -207,7 +211,7 @@ export default class Square extends THREE.Object3D{
                 DebugUtil.positionObject(this.benches, "Benches");
 
                 events.emit("add_gui", {folder: "Clock rotation", listen: true}, this, "clockRotation", 0, 6.28); 
-                DebugUtil.positionObject(this.cylinder, "Cylinder");
+                DebugUtil.positionObject(this.cylinders[0], "Cylinder");
                 DebugUtil.positionObject(this.clockwork, "Clockwork");
                 DebugUtil.positionObject(ground, "Ground");
             }
@@ -302,6 +306,10 @@ export default class Square extends THREE.Object3D{
 
     getFountainMesh() {
         return this.fountainMesh;
+    }
+
+    getCylinders() {
+        return this.cylinders;
     }
 
     updateSunProgress(name, progress) {
@@ -695,7 +703,7 @@ export default class Square extends THREE.Object3D{
         this.activeClockwork.rotation.y = rotation;
         if (this.activeClockwork == this.clockwork) {
             // Rotate also cylinder
-            this.cylinder.rotation.y = rotation;
+            this.cylinders[0].rotation.y = rotation;
         }
     }
 }

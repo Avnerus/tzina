@@ -184,19 +184,20 @@ export default class Fountain extends THREE.Object3D  {
         // DebugUtil.positionObject(this.spotLights[1], "light 1");
         // DebugUtil.positionObject(this.spotLights[2], "light 2");
 
-        // cylinder: pass in through constructor; add function in square.js to get cylinders; getObjectByName
-        this.fountainMeshes = this.square.getFountainMesh();
-        // DebugUtil.positionObject(this.fountainMeshes[0], "Fountain 0");
-        // DebugUtil.positionObject(this.fountainMeshes[1], "Fountain 1");
-        // DebugUtil.positionObject(this.fountainMeshes[2], "Fountain 2"); // doesn't move
-        //
-
         if (this.debug) {
             events.emit("add_gui", {folder: "Fountain water up``", listen: true, step: 0.01}, this.upVelocity, "x");
             events.emit("add_gui", {folder: "Fountain water up``", listen: true, step: 0.01}, this.upVelocity, "y");
             events.emit("add_gui", {folder: "Fountain water down``", listen: true, step: 0.01}, this.downVelocity, "x");
             events.emit("add_gui", {folder: "Fountain water down``", listen: true, step: 0.01}, this.downVelocity, "y");
         }
+    }
+
+    assignCylinders(cylinders){
+        this.cylinders = cylinders;
+        console.log(this.cylinders);
+        DebugUtil.positionObject(this.cylinders[0], "Fountain 0");
+        DebugUtil.positionObject(this.cylinders[1], "Fountain 1");
+        DebugUtil.positionObject(this.cylinders[2], "Fountain 2"); // doesn't move
     }
 
     createSpotLight( pos, pos2, _intensity, _angle, _distance, _decay, _penumbra ) {
