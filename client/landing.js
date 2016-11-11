@@ -3,11 +3,9 @@ import KeyboardController from './keyboard_controller'
 import TzinaVRControls from './tzina_vr_controls'
 
 //Paths
-let SOUND_PATH = './assets/ui_sounds/';
+const SOUND_PATH = 'assets/ui_sounds/';
 
-let TREES_PATH = "./assets/trees/";
-
-console.log("Landing.js started");
+const TREES_PATH = "assets/trees/";
 
 // Tree Defenetions
 var TreesDef = {
@@ -190,7 +188,7 @@ class Trees extends THREE.Object3D {
 
 loadingManager = new THREE.LoadingManager();
 
-loadingManager.onProgress = function (item, loaded, total) {
+// loadingManager.onProgress = function (item, loaded, total) {
 
   console.log(loaded / total * 100 + '%');
 
@@ -199,7 +197,7 @@ loadingManager.onProgress = function (item, loaded, total) {
 
   $('#progress_text').html('Loading Tzina...' + loaded / total * 100 + '%');
 
-};
+// };
 
   var videoLogo = $('#logo').get(0);
 
@@ -255,7 +253,7 @@ loadingManager.onProgress = function (item, loaded, total) {
   });
 
   //Fade in the first screen from black after tree scene was loaded
-  loadingManager.onLoad = function(){
+  // loadingManager.onLoad = function(){
 
       //Start rendering the canvas
       render();
@@ -309,7 +307,7 @@ loadingManager.onProgress = function (item, loaded, total) {
 
         });
 
-  }
+  // }
 
 //Pagination
 //About
