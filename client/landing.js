@@ -7,6 +7,8 @@ let SOUND_PATH = './assets/ui_sounds/';
 
 let TREES_PATH = "./assets/trees/";
 
+console.log("Landing.js started");
+
 //Tree Defenetions
 // var TreesDef = {
 //   types: [
@@ -182,6 +184,9 @@ var uniforms = {
 //       });
 //     }
 //   }
+//
+//
+//
 
 loadingManager = new THREE.LoadingManager();
 
