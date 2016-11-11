@@ -112,13 +112,21 @@ export default class TimeController {
              align: textAlign.center, 
              font: '22px Miriam Libre',
              fillStyle: '#FFFFFF',
-             antialias: true 
+             antialias: true
         }
         let INSIDE_TEXT_DEFINITION = {
              align: textAlign.center, 
-             font: '30px Miriam Libre',
+             font: '70px Miriam Libre',
              fillStyle: '#cccccc',
              antialias: true 
+        }
+
+        let INSIDE_SUN_TEXT_DEFINITION = {
+             align: textAlign.center, 
+             font: '70px Miriam Libre',
+             fillStyle: '#cccccc',
+             antialias: true,
+             shadow: true
         }
         
         this.chapterTitle = new MeshText2D("SPRITE", TEXT_DEFINITION)
@@ -129,11 +137,11 @@ export default class TimeController {
         this.prevChapterTitle.scale.set(0.3, 0.3, 0.3);
         this.prevChapterTitle.visible = false;
 
-        this.insideChapterTitle = new MeshText2D("", INSIDE_TEXT_DEFINITION);
-        this.insideChapterTitle.scale.multiplyScalar(0.025);
+        this.insideChapterTitle = new MeshText2D("", INSIDE_SUN_TEXT_DEFINITION);
+        this.insideChapterTitle.scale.multiplyScalar(0.01);
 
         this.insideChapterTitleLineTwo = new MeshText2D("", INSIDE_TEXT_DEFINITION);
-        this.insideChapterTitleLineTwo.scale.multiplyScalar(0.03);
+        this.insideChapterTitleLineTwo.scale.multiplyScalar(0.015);
 
         this.insideChapterTitle.visible = false;
         this.insideChapterTitleLineTwo.visible = false;
@@ -498,7 +506,7 @@ export default class TimeController {
             this.insideChapterTitleLineTwo.lookAt(this.camera.position);
             this.insideChapterTitleLineTwo.translateZ(5);
             this.insideChapterTitleLineTwo.quaternion.copy(this.camera.quaternion);
-            this.insideChapterTitleLineTwo.translateY(-3);
+            this.insideChapterTitleLineTwo.translateY(-2);
         }
     }
 

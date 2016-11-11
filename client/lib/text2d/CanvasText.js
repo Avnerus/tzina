@@ -27,6 +27,12 @@ var CanvasText = (function () {
         this.canvas.height = THREE.Math.nextPowerOfTwo(this.textHeight);
         this.ctx.font = ctxOptions.font;
         this.ctx.fillStyle = ctxOptions.fillStyle;
+        if (ctxOptions.shadow) {
+            this.ctx.shadowColor = "black"
+            this.ctx.shadowOffsetX = -5;
+            this.ctx.shadowOffsetY = 5;
+        }
+
         this.ctx.textAlign = 'left';
         this.ctx.textBaseline = 'top';
         this.ctx.fillText(text, 0, 0);
