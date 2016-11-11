@@ -43,9 +43,9 @@ export default {
         //// uncommented now
          {
             type: "ThreeTrees",
-            position: [6.37,11.97,40],
-            rotation: [-10,0,90],
-            scale: 1.1
+            position: [-14.38,14.67,15.39],
+            rotation: [14,18,87],
+            scale: 0.56
         },
  ////2
 
@@ -83,9 +83,9 @@ export default {
     
         {
             type: "ThreeTrees",
-            position: [24.41,17.38,-11.76],
-            rotation: [83,38,90],
-            scale: 0.87
+            position: [34.33,17.38,-14.76],
+            rotation: [148,14,91],
+            scale: 0.424
         },
 ///7
          {
