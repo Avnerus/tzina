@@ -416,6 +416,7 @@ export default class TimeController {
         let localTime = now.getHours() + (now.getMinutes() / 60);
         let availableTimes = this.times.slice(1);
         let closestHour = MathUtil.closestValue(availableTimes, localTime);
+        closestHour = 17;
         console.log("Current local time ", localTime, "Available times", availableTimes, "Closest time", closestHour);
         events.emit("hour_updated", closestHour);
         return closestHour;

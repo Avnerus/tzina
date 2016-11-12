@@ -28,7 +28,7 @@ export default class Intro {
                 }
             },
             {
-                time: 52,
+                time: 50,
                 action: () => {
                     this.playCredits();
                 }
@@ -81,7 +81,7 @@ export default class Intro {
 
         this.creditTextTitle = new SpriteText2D("", CREDIT_TEXT_TITLE);
         this.creditTextTitle.scale.multiplyScalar(CREDIT_TEXT_SCALE);
-        this.creditTextTitle.position.set(0,4.7,-14);
+        this.creditTextTitle.position.set(0,4.4,-17);
         this.creditTextTitle.material.opacity = 0;
         this.scene.add(this.creditTextTitle);
 

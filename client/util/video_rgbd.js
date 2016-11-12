@@ -134,7 +134,7 @@ export default class VideoRGBD  {
     }
     load() {
         this.video.src = this.properties.fileName;
-        if (this.properties.volume) {
+        if (typeof(this.properties.volume) != 'undefined') {
             console.log("Video volume ", this.properties.volume);
             this.video.volume = this.properties.volume;
         }

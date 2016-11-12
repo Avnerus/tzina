@@ -21,6 +21,7 @@ export default class Character extends THREE.Object3D {
                 scale: props.scale,
                 width: props.width,
                 height: props.height,
+                volume: 0,
                 fps: 15
             });
         }
