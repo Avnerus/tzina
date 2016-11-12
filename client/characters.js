@@ -445,8 +445,8 @@ export default [
         animationScale: 0.235,
         animationPosition: [-0.21, -0.01, 0.26],
         animationRotation: [5, 17, 0],
-        space: 1.34, //0.1
-        spaceOffset: [0.88,0,0.58], //0,0,0
+        space: 0.1, //1.34
+        spaceOffset: [0,0,0], //0.88,0,0.58
         subtitles: false
     },
     {
