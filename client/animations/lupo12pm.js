@@ -6,15 +6,19 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     constructor() {
         super();
         this.BASE_PATH = 'assets/animations/lupo12pm';
+        this.initialized = false;
     }
 
     init(loadingManager) {
+        console.log("Init Lupo12PM Animation");
+        this.initialized = true;
+        
         this.loadingManager = loadingManager;
         this.setupAnim();
     }
 
     setupAnim() {
-        // DebugUtil.positionObject(this, "Lupo Ani");
+        DebugUtil.positionObject(this, "Lupo Ani");
 
         this.loadingManager.itemStart("Lupo12PMAnim");
         this.perlin = new ImprovedNoise();

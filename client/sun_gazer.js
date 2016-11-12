@@ -30,9 +30,8 @@ export default class SunGazer extends THREE.Object3D  {
             this.active = true;
         });
         events.on("gaze_started", () => {
-            this.soundManager.loadSound('./assets/sound/ui/Hour_Replace_1.ogg')
-            .then((sound) => {
-                sound.playIn(0);
+            this.soundManager.createStaticSoundSampler("assets/sound/ui/Hour_Replace_1.ogg",(staticSoundSampler)=>{
+              staticSoundSampler.play();
             });
         });
     }
@@ -57,7 +56,7 @@ export default class SunGazer extends THREE.Object3D  {
                     events.emit("gaze_started", this.gazingSun.name);
                     this.setBlur(res);
                 } else if (res > this.BLUR_THRESHOLD) {
-                    this.setBlur(res);                    
+                    this.setBlur(res);
                 } else {
                     this.setBlur(0);
                     this.blurringSun = null;

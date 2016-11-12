@@ -87,6 +87,16 @@ export default class SoundManager {
           });
         },
       };
+      this.createStaticSoundSampler=function(url,onLoad){
+        let sss=new StaticSoundSampler(this.listener.context);
+        sss.init(url,this.loadingManager,onLoad);
+        return sss;
+      }
+      this.createPositionalSoundSampler=function(url,onLoad){
+        let pss=new PositionalSoundSampler(this.listener,this.scene);
+        pss.init(url,this.loadingManager,onLoad);
+        return pss;
+      }
     }
     init(loadingManager) {
       let thisSoundManager=this;
@@ -196,7 +206,7 @@ export default class SoundManager {
       if(setName=="sunGazedSound"){
 
       }else if(setName=="flyingSound"){
-        
+
       }else if(setName == "ambience"){
         for(var a in ambientSamples){
           let thisSample=ambientSamples[a];
@@ -247,6 +257,7 @@ export default class SoundManager {
           console.warn("SoundManager was called to play but the parameter setName didn't match any statement "+setName);
         }
     }
+
 }
 
 export class StaticSoundSampler{
