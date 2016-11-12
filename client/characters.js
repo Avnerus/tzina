@@ -261,15 +261,15 @@ export default [
         maxdepth : 3649.251464844,
         position : [2.85, 21.69, 14.92],
         rotation: [0, 190, 0],
-        animation: null,
+        animation: 'Shirin',
         uvdy: 0.48681640625,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
         scale: 0.003 * 0.4715,
         animationScale: 0.25,
-        animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
-        animationRotation: [13, 0, 0],      // 20, 0, 0
+        animationPosition: [0, 0, 0],   // -0.2, -0.1, 0
+        animationRotation: [0, 0, 0],      // 20, 0, 0
         space: 0.2,
         spaceOffset: [-0.8,0,0.53],
         subtitles: null,
