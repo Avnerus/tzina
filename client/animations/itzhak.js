@@ -129,7 +129,7 @@ export default class ItzhakAnimation extends THREE.Object3D {
         this.rockMat = new THREE.MeshLambertMaterial({map: this.rockTex});
         this.loadRock( this.BASE_PATH + "/models/rock1.json", this.BASE_PATH + "/models/rock2.json", loader );
 
-        DebugUtil.positionObject(this, "Itzhak Anim");
+        // DebugUtil.positionObject(this, "Itzhak Anim");
         //
         this.loadingManager.itemEnd("ItzhakAnim");
     }
