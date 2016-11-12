@@ -85,7 +85,7 @@ export default [
         animationScale: 0.4, // 0.25
         animationPosition: [1.17, -0.39, 1.7], //0.81, -0.17, 1.42
         animationRotation: [6, -50, -9], //6, -50, -9
-        space: 1.5,
+        space: 0.1,
         subtitles: false
     },
     {
@@ -435,18 +435,18 @@ export default [
         mindepth : 1762.584594726563,
         maxdepth : 3120.0,
         position : [-2.63, 21.87, -14.41],
-        rotation: [340, 72, 22],
-        animation: null,
+        rotation: [340, 72, 22], // 
+        animation: 'Itzhak',
         uvdy: 0.48388671875,
         uvdx: 0.0,
         width: 512,
         height: 2048,
         scale: 0.003 * 0.45,
-        animationScale: 0.18,
-        animationPosition: [-0.1, -0.05, 0.5],
-        animationRotation: [21, 3, 355],
-        space: 0.1,
-        spaceOffset: [0,0,0],
+        animationScale: 0.2,
+        animationPosition: [0,0,0], //-0.1, -0.05, 0.5
+        animationRotation: [0,0,0], //21, 3, 355
+        space: 1.34, //0.1
+        spaceOffset: [0.88,0,0.58], //0,0,0
         subtitles: false
     },
     {
@@ -485,7 +485,7 @@ export default [
         scale: 0.003 * 0.96,
         subtitles: null,
         fullOnly: true,
-        space: 10
+        space: 0.3
     },
     {
         name: 'FatmanShower',
