@@ -401,9 +401,9 @@ export default [
         width: 1024,
         height: 2048,
         scale: 0.003 * 0.75,
-        animationScale: 0.25,
-        animationPosition: [-0.66, -0.41, -0.96],
-        animationRotation: [0,0,0],
+        animationScale: 0.3,
+        animationPosition: [1.13, -0.07, -2.27],
+        animationRotation: [15,-25,7],
         subtitles: null,
         space: 1.21,
         spaceOffset: [1.57,0,-0.31]

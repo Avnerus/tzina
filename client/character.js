@@ -319,6 +319,13 @@ export default class Character extends THREE.Object3D {
             this.fullVideo.setScale(this.nextAdjustment.scale);
         }
         if (this.nextAdjustment.position) {
+            // ANIMATION Offset
+            /*
+            let aniPosAdjust = new THREE.Vector3();
+            aniPosAdjust.fromArray(this.nextAdjustment.position);
+            aniPosAdjust.sub(this.position);
+            this.animation.position.sub(aniPosAdjust);*/
+            //
             this.position.fromArray(this.nextAdjustment.position);
         }
 
