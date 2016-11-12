@@ -142,7 +142,6 @@ export default class IntroAnimation extends THREE.Object3D {
             // DebugUtil.positionObject(this.terrain, "terrain");
         });
 
-
         /*
         // CLOUDS
         // ============== Changeable Setting ================
@@ -207,9 +206,8 @@ export default class IntroAnimation extends THREE.Object3D {
 
                     cloudd.scale.multiplyScalar( this.cloudScale[i%3] * (1+this.lookupTable[i]/2) );
                     this.cloudGroup[i%3].add(cloudd);
-                }
-                
-                } );*/
+                }                
+            } );*/
 
         //
         this.completeSequenceSetup();
@@ -308,6 +306,16 @@ export default class IntroAnimation extends THREE.Object3D {
         this.blueprintMat.dispose();
         this.treeGeo.dispose();
         this.treeMaterial.dispose();
+
+        for(var i=0; i<this.cloudGroup.length; i++){
+            this.cloudGroup[i].tweenline.kill();
+            this.remove(this.cloudGroup[i]);
+        }
+        this.cloudTex.dispose();
+        this.cloudMaterial.dispose();
+        for(var i=0; i<this.cloudGeos.length; i++){
+            this.cloudGeos[i].dispose();
+        }
 
         if (this.test) {
             this.remove(this.test);
