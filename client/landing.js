@@ -2,12 +2,13 @@
 import KeyboardController from './keyboard_controller'
 import TzinaVRControls from './tzina_vr_controls'
 
+import Trees from './trees'
+
 //Paths
 const SOUND_PATH = 'assets/ui_sounds/';
 
 const TREES_PATH = "assets/trees/";
 
-// Tree Defenetions
 var TreesDef = {
   types: [
     {
@@ -108,11 +109,6 @@ var TreesDef = {
   ]
 };
 
-
-
-//Global Variables
-var camera, renderer, trees, clock, controls, scene;
-
 var uniforms = {
   time: { type: "f", value: 0 },
   speedFactor: { type: "f", value: 1.0 },
@@ -126,59 +122,8 @@ var uniforms = {
   rustleFrequency: { type: "f", value: 0.2 }
 };
 
-class Trees extends THREE.Object3D {
-    constructor() {
-      super();
-    }
-    init(loadingManager) {
-
-      console.log("init trees loadingmanager");
-
-      let treeTypes = {};
-
-      this.treesLoader = new THREE.PLYLoader(loadingManager);
-
-      return new Promise((resolve, reject) => {
-
-        console.log("Loading trees", TreesDef);
-
-        let typePromises = TreesDef.types.map((type) => {return this.loadType(type, treeTypes)});
-
-        Promise.all(typePromises)
-
-        .then((results) => {
-          // this is the ShaderMaterial we need to use for the trees
-          var material = new THREE.ShaderMaterial( {
-            uniforms: uniforms,
-            vertexColors: THREE.VertexColors,
-            //add GLSLIFY calls for the shaders
-            vertexShader: document.getElementById( 'vertexShader' ).textContent,
-            fragmentShader: document.getElementById( 'fragmentShader' ).textContent
-          });
-          // end of interesting stuff
-          TreesDef.instances.forEach((instance) => {
-            let mesh = new THREE.Points( treeTypes[instance.type], material );
-            mesh.position.fromArray(instance.position);
-            mesh.scale.set(0.25 * instance.scale, 0.25 * instance.scale, 0.25 * instance.scale);
-            mesh.rotateZ(90 * Math.PI / 180);
-            mesh.rotateX(instance.rotateX * Math.PI / 180);
-            this.add(mesh);
-            resolve();
-          })
-        });
-      });
-    }
-    loadType(props,store) {
-      return new Promise((resolve, reject) => {
-        console.log("Loading tree type ", props);
-        this.treesLoader.load(TREES_PATH + "/" + props.fileName ,( geometry ) => {
-          store[props.name] = geometry;
-          resolve();
-        });
-      });
-    }
-  }
-
+//Global Variables
+var camera, renderer, trees, clock, controls, scene, trees;
 
 try {
 
@@ -570,9 +515,9 @@ try {
         controls = new THREE.OrbitControls( camera, renderer.domElement );
         controls.target.set( 15, 30, 15 );
         // load & add the trees
-        trees = new Trees();
+        trees = new Trees(camera, renderer);
         trees.init(loadingManager);
-        scene.add( trees );
+        scene.add(trees);
         // we need to pass delta time to the shader so we need a clock
         clock = new THREE.Clock();
         clock.start();
