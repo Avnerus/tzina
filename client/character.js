@@ -73,6 +73,8 @@ export default class Character extends THREE.Object3D {
             if (this.animation) {
                 this.animation.init(loadingManager);
 
+                // move to load()
+                /*
                 this.animation.scale.multiplyScalar(this.props.animationScale);
                 this.animation.position.fromArray(this.props.animationPosition);
                 this.animation.rotation.set(
@@ -80,6 +82,7 @@ export default class Character extends THREE.Object3D {
                     this.props.animationRotation[1] * Math. PI / 180,
                     this.props.animationRotation[2] * Math. PI / 180
                 );
+                */
                 //this.add(this.animation);
                 this.animation.visible = false;
             } else {
@@ -207,6 +210,16 @@ export default class Character extends THREE.Object3D {
                 },false);
 
                 this.fullVideo.video.loop = false;
+            }
+
+            if (this.animation) {
+                this.animation.scale.multiplyScalar(this.props.animationScale);
+                this.animation.position.fromArray(this.props.animationPosition);
+                this.animation.rotation.set(
+                    this.props.animationRotation[0] * Math. PI / 180,
+                    this.props.animationRotation[1] * Math. PI / 180,
+                    this.props.animationRotation[2] * Math. PI / 180
+                );
             }
         }
         this.active = true;
