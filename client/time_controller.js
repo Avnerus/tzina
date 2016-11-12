@@ -5,6 +5,8 @@ import _ from 'lodash'
 import {MeshText2D, SpriteText2D, textAlign} from './lib/text2d/index'
 import SunGazer from './sun_gazer'
 
+import moment from 'moment';
+
 export default class TimeController {
     constructor(config, element, square, sky, scene, camera, soundManager) {
         this.square = square;
@@ -69,7 +71,6 @@ export default class TimeController {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 this.scene.remove(this.chapterTitle);
-                this.scene.remove(this.prevChapterTitle);
                 if (this.square.currentSun) {
                     this.square.turnOffSun(this.square.currentSun);
                 }
@@ -94,8 +95,6 @@ export default class TimeController {
         });
 
         events.on("intro_end", () => {
-            this.setCurrentChapter();
-            this.showChapterTitle();
             this.active = true;
         });
 
@@ -131,13 +130,13 @@ export default class TimeController {
              shadow: true
         }
         
-        this.chapterTitle = new MeshText2D("SPRITE", TEXT_DEFINITION)
-        this.chapterTitle.scale.set(0.109, 0.109, 0.109);
+        this.chapterTitle = new SpriteText2D("SPRITE", TEXT_DEFINITION)
+        this.chapterTitle.scale.set(0.002, 0.002, 0.002);
         this.chapterTitle.visible = false;
 
-        this.prevChapterTitle = new MeshText2D("SPRITE", TEXT_DEFINITION)
-        this.prevChapterTitle.scale.set(0.3, 0.3, 0.3);
-        this.prevChapterTitle.visible = false;
+        this.chapterTitleLineTwo = new SpriteText2D("SPRITE", TEXT_DEFINITION)
+        this.chapterTitleLineTwo.visible = false;
+
 
         this.insideChapterTitle = new MeshText2D("", INSIDE_SUN_TEXT_DEFINITION);
         this.insideChapterTitle.scale.multiplyScalar(0.01);
@@ -153,9 +152,10 @@ export default class TimeController {
         //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
         //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
 
-        //DebugUtil.positionObject(this.chapterTitle, "Outside title", true);
+        DebugUtil.positionObject(this.chapterTitle, "Outside title", true);
+        this.chapterTitle.add(this.chapterTitleLineTwo);
+        this.chapterTitleLineTwo.position.y = -30;
         this.scene.add(this.chapterTitle)
-        this.scene.add(this.prevChapterTitle)
 
         // Sun gazer
         this.sunGazer = new SunGazer(this.square, this.soundManager);
@@ -396,18 +396,47 @@ export default class TimeController {
         }});
     }
 
+
+    rotate(angle, time) {
+        return new Promise((resolve, reject) => {
+            TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: angle, onComplete: () => {
+            }, onUpdate: () => {
+                this.updateSquare();
+            }, onComplete: () => {resolve()} });
+        });
+    }
+
+        /*
+    transitionToLocalTime(time) {
+        return this.transitionTo(closestHour, time);
+        }*/
+
+    preloadLocalTime() {
+        let now = new Date();
+        let localTime = now.getHours() + (now.getMinutes() / 60);
+        let availableTimes = this.times.slice(1);
+        let closestHour = MathUtil.closestValue(availableTimes, localTime);
+        closestHour = 17;
+        console.log("Current local time ", localTime, "Available times", availableTimes, "Closest time", closestHour);
+        events.emit("hour_updated", closestHour);
+        return closestHour;
+    }
+
     transitionTo(hour, time) {
-        let targetRotationY = hour * 15;
-        TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {
-            this.currentHour = hour;
-            this.updateNextHour();
-            this.setCurrentChapter();
-            this.showChapterTitle();
-            events.emit("hour_updated", this.currentHour);
-            events.emit("angle_updated", this.currentHour);
-        }, onUpdate: () => {
-            this.updateSquare();
-        }});
+        return new Promise((resolve, reject) => {
+            let targetRotationY = hour * 15;
+            TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {
+                this.currentHour = hour;
+                this.updateNextHour();
+                this.setCurrentChapter();
+                this.showChapterTitle();
+                //events.emit("hour_updated", this.currentHour);
+                events.emit("angle_updated", this.currentHour);
+                resolve();
+            }, onUpdate: () => {
+                this.updateSquare();
+            }});
+        });
     }
 
     setCurrentChapter() {
@@ -418,20 +447,22 @@ export default class TimeController {
         // 0 is hidden for now
         if (this.currentChapter.hour == 0) { return; }
 
-        if (this.chapterTitle.visible) {
-            this.prevChapterTitle.visible = true;
-            this.prevChapterTitle.text = this.chapterTitle.text;
-            this.prevChapterTitle.position.copy(this.chapterTitle.position);
-            this.prevChapterTitle.material.opacity = this.chapterTitle.material.opacity;
-            TweenMax.to(this.prevChapterTitle.material, 1, {opacity: 0});
-        }
+        let now = moment();
+
         let targetOpacity = 1.0;
-        this.chapterTitle.text = this.getHourText(this.currentChapter.hour) + " - " + this.currentChapter.name;
+
+        this.chapterTitle.text = "Your Local Time " + now.format("HH:mm");
         this.chapterTitle.visible = true;
         this.chapterTitle.position.fromArray(this.currentChapter.titlePosition);
         this.chapterTitle.material.opacity = 0;
 
+        this.chapterTitleLineTwo.text = this.currentChapter.name;
+        this.chapterTitleLineTwo.visible = true;
+        this.chapterTitleLineTwo.material.opacity = 0;
+
         TweenMax.to(this.chapterTitle.material, 1, {opacity: targetOpacity});
+        TweenMax.to(this.chapterTitleLineTwo.material, 1, {opacity: targetOpacity});
+
 
         //document.getElementById("chapter-title-text").innerHTML = chapter.hour + ":00 - " + chapter.name;
 

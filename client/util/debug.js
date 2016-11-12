@@ -21,7 +21,7 @@ export default {
         console.log("Debug - position object ", name);
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "x", min, max); 
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "y", min, max * 2);
-        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "z", min, max);
+        events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.001}, object.position, "z", min, max);
 
         if (angles) {
             object.angleRotation = {x: angles[0], y: angles[1], z: angles[2]};

@@ -15,7 +15,7 @@ export default class Pool extends THREE.Object3D {
             this.simulation_vs = glslify('./shaders/pool/simulation_vs.glsl');
             this.pool_fs = glslify('./shaders/pool/pool_fs.glsl');
             this.pool_vs = glslify('./shaders/pool/pool_vs.glsl');
-            console.log("Pool vertex shader", this.pool_vs);
+            //console.log("Pool vertex shader", this.pool_vs);
         }
         init(loadingManager) {
             this.size = 10; // waterSurface diameter

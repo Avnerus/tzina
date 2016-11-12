@@ -145,6 +145,8 @@ export default class SoundManager {
         this.listener = new THREE.AudioListener();
         this.camera.add(this.listener);
 
+        this.loader = new THREE.AudioLoader(new THREE.LoadingManager());
+
         //create positional samples
         for(var a in ambientSamples){
 

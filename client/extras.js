@@ -10,15 +10,32 @@ export default class Extras extends THREE.Object3D {
         super();
 
         this.currentExtras = [];
-        this.camera = camera;
+        this.cameras = [camera];
         this.renderer = renderer;
         this.debug = false;
+        this.inControl = false;
     }
 
     init(loadingManager) {
         this.store = {};
 
-        events.on("hour_updated", (hour) => {this.loadHour(hour)});
+        events.on("hour_updated", (hour) => {
+            setTimeout(() => {
+                this.loadHour(hour)
+            },1000);
+        });
+
+        events.on("control_threshold", (passed) => {
+            if (passed) {
+                for (let i = 0; i < this.children.length; i++) {
+                    this.children[i].material.size = this.children[i].material.rightSize;
+                }  
+            }
+        });
+
+        events.on("vr_start", (cameras) => {
+            this.cameras = cameras;
+        });
 
         return new Promise((resolve, reject) => {
             console.log("Loading extras", ExtrasDef)
@@ -59,7 +76,8 @@ export default class Extras extends THREE.Object3D {
                 let type = this.store[asset.name];
                 
                 let mesh = new Potree.PointCloudOctree(type.geometry);
-                mesh.material.size = type.pointSize ? type.pointSize : 0.1;
+                mesh.material.rightSize = type.pointSize ? type.pointSize : 0.1;
+                mesh.material.size = mesh.material.rightSize * 0.01;
                 mesh.material.lights = false;
                 mesh.position.fromArray(asset.position);
                // mesh.position.y -= 1.1;
@@ -84,7 +102,9 @@ export default class Extras extends THREE.Object3D {
     }
     update(dt,et) {
         for (let i = 0; i < this.children.length; i++) {
-            this.children[i].update(this.camera, this.renderer);
+            for (let j = 0; j < this.cameras.length; j++) {
+                this.children[i].update(this.cameras[j], this.renderer);
+            }
         }  
     }
 }

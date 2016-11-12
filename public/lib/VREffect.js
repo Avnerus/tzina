@@ -239,6 +239,10 @@ THREE.VREffect = function ( renderer, onError ) {
 	var cameraR = new THREE.PerspectiveCamera();
 	cameraR.layers.enable( 2 );
 
+    this.getCameras = function() {
+        return [cameraL, cameraR];
+    }
+
 	this.render = function ( scene, camera ) {
 
 		if ( vrHMD && isPresenting ) {

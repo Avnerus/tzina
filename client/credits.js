@@ -2,8 +2,12 @@ export default
 {    
     "credits": [
         {
-            "Role": "Director & Producer",
+            "Role": "Created by",
             "Name": "Shirin Anlen",     
+        },
+        {
+            "Role": "Lead Developer",
+            "Name": "Avner Peled",     
         },
         {
             "Role": "Design Director",
@@ -12,10 +16,6 @@ export default
         {
             "Role": "Technical Director",
             "Name": "Or Fleisher",     
-        },
-        {
-            "Role": "Lead Developer",
-            "Name": "Avner Peled",     
         },
         {
             "Role": "Creative Coder",

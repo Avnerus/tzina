@@ -17,6 +17,7 @@ import TimeController from './time_controller'
 import CharacterController from './character_controller'
 import Show from './show'
 import EndCredits from './end_credits'
+import Extras from './extras'
 
 import DebugUtil from './util/debug'
 
@@ -133,10 +134,19 @@ export default class Game {
         this.loadingManager = new THREE.LoadingManager();
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
+        this.extras = new Extras(this.camera, this.renderer);
+
         // Square
-        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene);
+        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene, this.extras);
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
+2
+        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager);
+
+        this.extras.timeController = this.timeController;
+
+
+
 
         this.flood = new Flood();
         this.flood.init();
@@ -159,9 +169,8 @@ export default class Game {
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene, this.vrControls);
         this.zoomController.init();
 
-        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager);
 
-        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
+        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController);
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
 
 
@@ -183,7 +192,7 @@ export default class Game {
         }
 
 
-        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager);
+        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager, this.timeController);
 
         let TEXT_DEFINITION = {
              align: textAlign.center,
@@ -286,14 +295,7 @@ export default class Game {
 
         events.on("intro_end", () => {
             console.log("Intro ended");
-            if (!this.config.noSquare) {
-                setTimeout(() => {
-                    this.introAni.start();
-
-                   // this.endCredits.init();
-                    //this.endCredits.play();
-                },5000);
-            }
+            this.soundManager.play("ambience");
         });
 
         this.counter = 0;
@@ -374,8 +376,6 @@ export default class Game {
         if (this.config.fullscreen) {
             this.vrManager.setMode_(2);
             }*/
-        this.soundManager.play("ambience");
-        console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
@@ -396,7 +396,6 @@ export default class Game {
         }
 
 
-        this.zoomController.start();
 
         if (!this.config.noSquare) {
             this.square.fountain.startCycle();
@@ -406,6 +405,8 @@ export default class Game {
             if (!this.config.noSquare) {
                 this.timeController.transitionTo(this.config.startTime, 1);
             }
+            this.zoomController.start();
+            this.soundManager.play("ambience");
             setTimeout(() => {
                 events.emit("intro_end");
                 this.intro.playCredits();
@@ -414,7 +415,7 @@ export default class Game {
 
         } else {
             // start the intro
-            this.intro.start();
+            this.intro.position();
             //this.timeController.setTime(17);//17
         }
 
@@ -468,5 +469,19 @@ export default class Game {
         this.renderer.setSize(width, height);
         this.vrEffect.setSize(width, height);
         //this.composer.setSize(width, height);
+    }
+
+    vrChange() {
+        if (this.vrManager.hmd.isPresenting) {
+            if (!this.config.skipIntro && !this.controlPassed) {
+                this.intro.start();
+                this.introAni.start();
+            }
+
+            let newCameras = this.vrEffect.getCameras();
+            events.emit("vr_start", newCameras);
+        } else {
+            events.emit("vr_stop")
+        }
     }
 }
