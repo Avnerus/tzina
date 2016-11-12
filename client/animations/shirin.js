@@ -220,7 +220,7 @@ export default class ShirinAnimation extends THREE.Object3D {
         }
         this.loadcocoon( cocoonFiles, cocoonCrackFiles, caterpillarFiles );
 
-        DebugUtil.positionObject(this, "Shirin Ani");
+        // DebugUtil.positionObject(this, "Shirin Ani");
         //
         this.loadingManager.itemEnd("ShirinAnim");
     }

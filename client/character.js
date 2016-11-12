@@ -71,7 +71,8 @@ export default class Character extends THREE.Object3D {
             );
 
             if (this.animation) {
-                this.animation.init(loadingManager);
+                if(!this.animation.initialized)
+                    this.animation.init(loadingManager);
 
                 // move to load()
                 /*
