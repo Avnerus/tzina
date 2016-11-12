@@ -23,7 +23,7 @@ export default class ItzikAnimation extends THREE.Object3D {
             { time: 75, anim: ()=>{this.benchMove(3)} },        //75
             { time: 80, anim: ()=>{this.benchMove(4)} },        //80
             { time: 85, anim: ()=>{this.benchMove(5)} },        //85
-            { time: 197, anim: ()=>{this.characterDisappear(0)} }//204
+            { time: 197, anim: ()=>{this.characterDisappear(0)} }//197
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -44,7 +44,7 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.benchGroup = new THREE.Object3D();
         this.benchCount = 6;   //10
         this.b_offset = 5;
-        this.b_radius = 11.5;
+        this.b_radius = 11.55;
         this.b_open_index = 0;
 
         this.clouds = [];
@@ -127,7 +127,7 @@ export default class ItzikAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        // DebugUtil.positionObject(this, "Itzik");
+        DebugUtil.positionObject(this, "Itzik Anim");
 
         this.loadingManager.itemEnd("ItzikAnim");
     }
@@ -211,11 +211,12 @@ export default class ItzikAnimation extends THREE.Object3D {
                 if(i==3){
                     geometry.applyMatrix(new THREE.Matrix4().makeTranslation( -2, -1.5, 0 ) );
                     let tmpItem = new THREE.Mesh( geometry, mat );
-                    tmpItem.position.set(2,1.5,0);
+                    tmpItem.position.set(-2.5,1.5,0);
                     this.items[i] = tmpItem;
                 }
                 else if(i==4 || i==6){
                     let tmpItem = new THREE.Mesh( geometry, mat2 );
+                    tmpItem.position.x = -5;
                     this.items[i] = tmpItem;
                 }
                 else if(i==5){
