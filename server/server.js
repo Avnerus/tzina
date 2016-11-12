@@ -5,9 +5,9 @@
 
 var socketServerManager = require("./socketServerManager").default;
 var socketSM=new socketServerManager(9966);
+let geolocator=require('./geolocator');
 
 let clientsMan=new(require('./ClientsManager').ClientsManager)();
-
 let ev = require('events');
 let events = new ev.EventEmitter();
 
@@ -22,6 +22,14 @@ setInterval(function(){
 
 //when socketServerManager gets a client, we instance a client in clientsMan
 socketSM.on('connection',function(ws){
+  //get country name of the websocket connection
+  console.log(geolocator);
+  //get my country and broadcast it.
+  geolocator.getCountryName(ws.ws.upgradeReq.connection.remoteAddress,function(data){
+    console.log("->"+data.country);
+    client.broadcast({header: "tagText",pointer:client.unique,data:data.country+""});
+
+  });
   // console.log("socketSMConn",ws);
   let client = new clientsMan.Client({
     ws: ws
@@ -39,6 +47,7 @@ socketSM.on('connection',function(ws){
     header: "newclient",//newClient
     pointer: client.unique
   });
+
   //pendant: sort this
   client.trackChange({
     header: "newclient",

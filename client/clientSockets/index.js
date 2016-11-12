@@ -3,6 +3,8 @@ import Wsock from './ClientWebSocket';
 // let characters=require('./Characters');
 import Pidgeon from './pidgeon'
 
+
+
 //set here when to do certain things according to global events
 let eventWhenTo={
   createSocket:"intro_end",
@@ -139,8 +141,8 @@ export default class PidgeonController {
       }else if(message.header=="positionbatch"){
         let batch=new Array();
         // var numeric_array = new Array();
-        for (var items in message.data){
-            batch.push( message.data[items] );
+        for (var item in message.data){
+            batch.push( message.data[item] );
         }
         //for each state registry
         for(let a = 0; a<batch.length; a+=4){
@@ -163,7 +165,17 @@ export default class PidgeonController {
             }
           }
         }
+      }else if(message.header=="tagText"){
+        console.log("pidgeon add text "+message.string);
+        let remoteSprite=Pidgeon.remote(message.pointer);
+        if(remoteSprite){
+          remoteSprite.labelText("*"+message.string+"*");
+          //remoteSprite.remove();
+        }else{
+          console.warn("couldn't retrieve the corresponding pidgeon ");
+        }
       }else  if(message.header=="landedbatch"){
+        //these decodings should happen in messageinterpreter
         let batch=new Array();
         // var numeric_array = new Array();
         for (var items in message.data){
@@ -198,6 +210,10 @@ export default class PidgeonController {
         console.warn("pidgeon unexpected message header:",message);
       }
     });
+
+
+
+
   }
   frame(dt){
     if(!this.time) this.time=0;

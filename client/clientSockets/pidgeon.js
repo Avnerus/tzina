@@ -1,3 +1,5 @@
+import {SpriteText2D , textAlign} from '../lib/text2d/index';
+
 var BlendCharacter=require('../util/BlendCharacter.js');
 var blendMesh;
 var loaded3dObject;
@@ -157,7 +159,27 @@ export default class Pidgeon extends THREE.Object3D{
         // myDom.style.transform = 'rotate(' + a + 'deg)';
       }
     }
+    // this.labelTextAdd("testext");
   }
+  labelText(text){
+    if(this.textualLabel){
+      this.labelTextChange(text);
+    }else{
+      this.labelTextAdd(text);
+    }
+  }
+  labelTextAdd(text){
+    this.textualLabel = new SpriteText2D(text, {align: textAlign.center,font: '20px Arial',fillStyle: '#FFFFFF',antialias: true});
+    this.textualLabel.scale.multiplyScalar(0.02);
+    this.add(this.labelText);
+    this.textualLabel.position.x=0;
+    this.textualLabel.position.y=0.7;
+    this.textualLabel.position.z=0;
+  }
+  labelTextChange(text){
+    this.textualLabel.text = text;
+  }
+
   flyOrLand(stateValue){
     if (stateValue) {
       this.land();

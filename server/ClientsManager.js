@@ -8,10 +8,12 @@ to a client class, so we become able to call functions such as clientsManager.br
 and client.send.
 */
 
-
 let eemiter=require('../shared/OnHandlers');
 // let interpreter=require('../shared/MessageInterpreter');
 let verbose=false;
+
+
+
 export function ClientsManager(){
   let clients={};
   //uncomment to have access to the client list.

@@ -23,6 +23,7 @@ export default class socketServerManager{
     wss.binaryType = "arraybuffer";
 
     wss.on('connection', function(ws) {
+      
       ws.binaryType = "arraybuffer";
       parent.handle('connection',new thisWebSocketManager.WebSocketInstance(ws));
     });

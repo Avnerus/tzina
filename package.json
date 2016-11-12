@@ -51,6 +51,7 @@
     "gl-shader": "^4.2.0",
     "glsl-curl-noise": "0.0.4",
     "glsl-random": "0.0.5",
+    "ip2countrify": "^0.2.0",
     "jquery-browserify": "^1.8.1",
     "jquery-mousewheel": "^3.1.13",
     "lodash": "^4.14.0",
