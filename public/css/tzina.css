@@ -88,7 +88,7 @@ body {
 #secure-access {
     display: none;
     display: inline-flex;
-    align-items: center;
+    align-items: c_;
     margin: auto;
     color: white;
     font-size: 36px;
@@ -397,4 +397,21 @@ body {
 }
 #about_grid{
   /*display: none;*/
+}
+#startExperienceScreen{
+
+}
+#start_experience{
+  display: none;
+  position: relative;
+  top:37vh;
+  text-align: center;
+}
+#start_head{
+  display: none;
+  position: relative;
+  top: 35vh;
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
 }

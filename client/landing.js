@@ -300,11 +300,17 @@ try {
 
                     $('#tree_scene').fadeOut(250);
 
-                    landingScreen = false;
-
                     killLanding();
 
-                    $('#enter_experience').fadeIn(250);
+                    $('#start_head').fadeIn(250, function(){
+
+                      $('#start_experience').delay(100).fadeIn(250);
+
+                      buttonClick.play();
+
+                      introSound.pause();
+
+                    });
 
                   });
                   
@@ -344,6 +350,38 @@ try {
 
           console.log('instructions faded in');
 
+
+          console.log("Loading...");
+          document.getElementById('game').appendChild(stats.dom);
+          game.init();
+
+          try {
+              game.load(function() {
+                  console.log('Game Finished Loading');
+                  $('#instruction_screen').fadeOut(250, function(){
+
+                    $('#tree_scene').fadeOut(250);
+
+                    killLanding();
+
+                    $('#start_head').fadeIn(250, function(){
+
+                      $('#start_experience').delay(100).fadeIn(250);
+
+                      buttonClick.play();
+
+                      introSound.pause();
+
+                    });
+
+                  });
+                  
+              });
+          }
+          catch(e) {
+              console.error("Exception during game load ", e);
+          }
+
           //Enable mouse events on instructions
           $('#tree_scene').css({
                 "pointer-events": "auto"
@@ -353,13 +391,13 @@ try {
 
           var mouseToRadius = Math.round((mousePosition.pageX * (Math.PI / 360) * 36) + 30);
 
-          console.log(mouseToRadius);
+          //console.log(mouseToRadius);
 
           $('#mouse').css({
 
             'transform': 'rotate(' + mouseToRadius + 'deg)'
 
-          });
+          }); 
 
           });
 
@@ -380,12 +418,70 @@ try {
           });
 
         });
+///////////////////////////
+////Main start buttons/////
+///////////////////////////
+var el = document.getElementById('game');
+//Vive
+$('#start_experience').click(function(){
+
+  $('#start_head').fadeOut(250,function(){
+
+    $('#start_experience').fadeOut(250);
+    //Show the Element
+    $('#game').show();
+      
+    if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
+        
+        var pointer = lock(document.getElementById('game'));
+
+        pointer.on('attain', function() {
+            console.log("Pointer attained!");
+            if (!game.started) {
+                game.start();
+            }
+            });
+
+            pointer.request(); 
+    }
+
+    
+    if (config.fullscreen && fullscreen.available()) {
+        var fs = fullscreen(el);
+
+        fs.on('attain',function() {
+            console.log("Full screen attained!");
+            if (typeof(pointer) != 'undefined' && !game.started) {
+                pointer.request();
+            } else {
+                if (!game.started) {
+                    game.start();
+                }
+            }
+        });
+        fs.request();
+    } else {
+        if (pointer) {
+            pointer.request();
+        }
+        else {
+            if (!game.started) {
+                game.start();
+            }
+        }
+    }
+
+
+  });
+});
+
+
 
           //Utility Functions
 
             //Keycodes for the keyboard tutorial
            $(document).on( "keypress", function(key){
-              console.log(key.keyCode);
+              //console.log(key.keyCode);
 
                 if( key.keyCode == 119 ){
                   console.log('W key pressed');
@@ -428,8 +524,11 @@ try {
 
  function killLanding(){
 
+    landingScreen = false;
     scene.remove(camera);
     scene.remove(trees);
+    landingKeyControl = null;
+    landingControls = null;
     renderer = null;
     scene = null;
 
