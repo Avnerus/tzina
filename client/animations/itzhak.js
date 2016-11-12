@@ -25,7 +25,12 @@ export default class ItzhakAnimation extends THREE.Object3D {
             { time: 1,  anim: ()=>{this.growClouds(3)} },
             //
             { time: 5,  anim: ()=>{this.dropClouds(5, false)} },
-            { time: 25,  anim: ()=>{this.dropClouds(13, false)} },
+            { time: 25,  anim: ()=>{this.dropClouds(8, false)} },
+            { time: 50,  anim: ()=>{this.dropClouds(3, false)} },
+            { time: 70,  anim: ()=>{this.dropClouds(12, false)} },
+            { time: 95,  anim: ()=>{this.dropClouds(16, false)} },
+            { time: 120,  anim: ()=>{this.dropClouds(19, false)} },
+            { time: 145,  anim: ()=>{this.dropClouds(9, false)} },
             //
             { time: 167,  anim: ()=>{this.dropClouds(20, true)} }, //12 sec before characterDisappear
             { time: 179, anim: ()=>{this.characterDisappear()} } // total time: 186, characterDisappear() takes 6.5
