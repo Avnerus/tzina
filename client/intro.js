@@ -74,7 +74,7 @@ export default class Intro {
         }
         let CREDIT_TEXT_SCALE = 0.0005;
 
-        this.creditTextTitle = new SpriteText2D("ASFASFASFASF", CREDIT_TEXT_TITLE);
+        this.creditTextTitle = new SpriteText2D("", CREDIT_TEXT_TITLE);
         this.creditTextTitle.scale.multiplyScalar(CREDIT_TEXT_SCALE);
         this.creditTextTitle.position.set(-0.02,-0.16,-0.5);
         this.creditTextTitle.material.opacity = 0;
@@ -128,6 +128,7 @@ export default class Intro {
         if (this.vrControls.getCurrentPosition()) {
             this.vrControls.basePosition.copy(this.STARTING_POSITION);
         } else {
+            this.STARTING_POSITION.set(0,0.5,2);
             this.camera.position.copy(this.STARTING_POSITION);
         }
         
@@ -184,7 +185,7 @@ export default class Intro {
                     this.enterSquare();                    
                 });
             },1000)
-        });
+        });*/
     }
 
     enterSquare() {
