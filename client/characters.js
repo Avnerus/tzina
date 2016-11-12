@@ -442,9 +442,9 @@ export default [
         width: 512,
         height: 2048,
         scale: 0.003 * 0.45,
-        animationScale: 0.2,
-        animationPosition: [0,0,0], //-0.1, -0.05, 0.5
-        animationRotation: [0,0,0], //21, 3, 355
+        animationScale: 0.235,
+        animationPosition: [-0.21, -0.01, 0.26],
+        animationRotation: [5, 17, 0],
         space: 1.34, //0.1
         spaceOffset: [0.88,0,0.58], //0,0,0
         subtitles: false
