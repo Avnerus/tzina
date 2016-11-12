@@ -19,8 +19,10 @@ export default class KeyboardController {
         this.playerToCenter = new THREE.Vector3();
         this.walkingDirection = new THREE.Vector3();
 
+        if(config != null){
         this.height = config.basalHeight;
-
+        }
+        
         this.active = false;
 
         this.zAxis = new THREE.Vector3(0,0,1);
@@ -29,6 +31,8 @@ export default class KeyboardController {
     init() {
 
         console.log("Keyboard controller init");
+
+        if(config != null){
         this.pointer = lock(document.getElementById('game'));
 
         events.on("start_zoom" ,() => {
@@ -51,6 +55,7 @@ export default class KeyboardController {
                 this.active = false;
             }
         })
+        }
 
         document.addEventListener('keydown', (event) => {
             switch ( event.keyCode ) {

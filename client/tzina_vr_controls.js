@@ -62,6 +62,8 @@ export default function ( emitter, object, onError ) {
 
     this.basePosition = new THREE.Vector3(0,0,0);
 
+    if(emitter != null){
+
     events.on("control_threshold", (passed) => {
         if (passed) {
             console.log("VR Control threshold: ", object.position);
@@ -70,7 +72,7 @@ export default function ( emitter, object, onError ) {
             this.active = false;
         }        
     })
-
+    }
     this.getCurrentPosition = function () {
         if (vrInput) { 
             let pose = vrInput.getPose().position;

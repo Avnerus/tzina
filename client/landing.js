@@ -9,109 +9,8 @@ const SOUND_PATH = 'assets/ui_sounds/';
 
 const TREES_PATH = "assets/trees/";
 
-var TreesDef = {
-  types: [
-    {
-      name: "Test",
-      fileName: "points.ply",
-    },
-        {
-      name: "ThreeTrees",
-      fileName: "3tress_2.ply"
-    },
-     {
-      name: "palm",
-      fileName: "palm.ply"
-    },
-     {
-      name: "single",
-      fileName: "singleTree.ply"
-    }
-  ],
-  instances: [
-
-     {
-      type: "ThreeTrees",
-      position: [4,22,14],
-      rotateX: -10,
-      scale: 4.3
-    },
-    {
-      type: "ThreeTrees",
-      position: [43,24,3],
-      rotateX: 0,
-      scale: 4.4
-    },
-    {
-      type: "ThreeTrees",
-      position: [40,24,2],
-      rotateX: 0,
-      scale: 4.4
-    },
-    {
-      type: "ThreeTrees",
-      position: [20,24,-23],
-      rotateX: 80,
-      scale: 4.4
-    },
-    {
-      type: "ThreeTrees",
-      position: [30,24,-20],
-      rotateX: 20,
-      scale: 4.4
-    },
- {
-      type: "ThreeTrees",
-      position: [30,24,-20],
-      rotateX: 60,
-      scale: 4.4
-    },
- {
-      type: "ThreeTrees",
-      position: [30,24,-20],
-      rotateX: 60,
-      scale: 4.4
-    },
-  {
-      type: "ThreeTrees",
-      position: [6,23,-10],
-      rotateX: 180,
-      scale: 4.4
-    },
-
-  {
-      type: "ThreeTrees",
-      position: [-20,26,-20],
-      rotateX: -30,
-      scale: 4
-    },
-
-
-
-    {
-      type: "palm",
-      position: [-18,16,10],
-      rotateX: -100,
-      scale: 3
-    },
-    {
-      type: "palm",
-      position: [8,22,6],
-      rotateX: 60,
-      scale: 3
-    },
-     {
-      type: "palm",
-      position: [-38,20,-32],
-      rotateX: 60,
-      scale: 3.8
-    },
-  ]
-};
-
-
 //Global Variables
-var camera, renderer, trees, clock, controls, scene, trees;
+var camera, renderer, trees, clock, landingControls, scene, trees, landingKeyControl;
 
 try {
 
@@ -498,9 +397,14 @@ try {
 
         camera.position.set(3,20, 3.2893155474929934);
         camera.rotation.set(2.897615188414925, -1, 3.0189561019538735);
-        //camera.lookAt( new THREE.Vector3( 15, 40, 15 ) );
-        controls = new THREE.OrbitControls( camera, renderer.domElement );
-        controls.target.set( 15, 30, 15 );
+
+        //Mouse controls
+        landingControls = new TzinaVRControls(null, camera);
+        landingControls.active = false;
+
+        //Keyboard controls
+        landingKeyControl = new KeyboardController(null, camera);
+
         // load & add the trees
         trees = new Trees(camera, renderer);
         trees.init(loadingManager)
@@ -517,8 +421,7 @@ try {
   var et = 0;
 
   function render() {
-        //Without this you will need to move the mouse or keyboard to start the render
-        controls.update();
+
 
         requestAnimationFrame( render );
 
@@ -528,6 +431,10 @@ try {
         var delta = clock.getDelta();
         et += delta;
         trees.update(delta, et);
+
+        //Without this you will need to move the mouse or keyboard to start the render
+        landingControls.update();
+        landingKeyControl.update(delta);
   }
 }
 catch(e) {
