@@ -370,8 +370,6 @@ export default class Game {
         if (this.config.fullscreen) {
             this.vrManager.setMode_(2);
             }*/
-        this.soundManager.play("ambience");
-        console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
                 this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                 this.keyboardController.init();
@@ -392,7 +390,6 @@ export default class Game {
         }
 
 
-        this.zoomController.start();
 
         if (!this.config.noSquare) {
             this.square.fountain.startCycle();
@@ -402,6 +399,8 @@ export default class Game {
             if (!this.config.noSquare) {
                 this.timeController.transitionTo(this.config.startTime, 1);
             }
+            this.zoomController.start();
+            this.soundManager.play("ambience");
             setTimeout(() => {
                 events.emit("intro_end");
                 this.intro.playCredits();

@@ -27,7 +27,7 @@ export default class Square extends THREE.Object3D{
         this.camera = camera;
         this.scene = scene;
 
-        this.debug = true;
+        this.debug = false;
 
         this.sunTextureOffsets = {
             19 : 0,
@@ -184,9 +184,9 @@ export default class Square extends THREE.Object3D{
             this.pool.scale.set(0.822, 0.822, 0.822);
             console.log("Adding square fountain pool", this.pool);
             this.mesh.add(this.pool);
-            events.emit("add_gui", {folder: "Pool"}, this.pool, "visible"); 
 
             if (this.debug) {
+                events.emit("add_gui", {folder: "Pool"}, this.pool, "visible"); 
                 events.emit("add_gui", {folder: "Trees"}, this.trees, "visible"); 
                 events.emit("add_gui", {folder: "Fountain water"}, this.fountain, "visible"); 
                 events.emit("add_gui", {folder: "Extras"}, this.extras, "visible"); 
@@ -426,7 +426,7 @@ export default class Square extends THREE.Object3D{
 
             let loader = new THREE.ObjectLoader(loadingManager);
 
-            events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
+            //events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
             loader.load(SUNS_PATH,( obj ) => {
                 console.log("Loaded suns", obj)
 
@@ -684,7 +684,7 @@ export default class Square extends THREE.Object3D{
       let pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
       pointLight.position.set(0,0,0);
       pointLight.intensity = 1;
-      events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, pointLight, "intensity", 0, 2); 
+     // events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, pointLight, "intensity", 0, 2); 
       this.mesh.add(pointLight);
       // DebugUtil.positionObject(pointLight, "Fountain light");
     }

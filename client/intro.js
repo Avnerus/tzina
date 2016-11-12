@@ -2,6 +2,7 @@ import _ from 'lodash'
 import Credits from './credits';
 import {SpriteText2D, textAlign} from './lib/text2d/index'
 import DebugUtil from './util/debug'
+import StaticSoundSampler from './sound_manager'
 
 export default class Intro {
     constructor(camera, square, timeConroller, soundManager, scene) {
@@ -35,7 +36,13 @@ export default class Intro {
 
         
         this.INTRO_SOUND = 'assets/sound/INTRO_Shirin.ogg'
+        this.LOGO_PATH = 'assets/intro/logo/logo.json';
 
+        this.STARTING_POSITION = new THREE.Vector3(
+            0,
+            2.5,
+            8
+        );
 
     }
 
@@ -83,13 +90,40 @@ export default class Intro {
         this.creditTextName.material.opacity = 0;
         this.camera.add(this.creditTextName);
 
+        let loader = new THREE.ObjectLoader(loadingManager);
+        loader.load(this.LOGO_PATH,( obj ) => {
+            this.logo = obj;
+            this.square.add(this.logo);
+            this.logo.scale.set(0.626, 0.626, 0.626);
+            this.logo.rotation.y = 213 * Math.PI / 180;
+
+            this.logoHebrew  = this.logo.getObjectByName("heb").children[0];
+            this.logoEnglish = this.logo.getObjectByName("logoEng").children[0];
+
+            console.log("Loaded Intro logo ", obj, this.logoHebrew, this.logoEnglish);
+
+            // Turn of neon
+            this.logoHebrew.material.emissiveIntensity = 0;
+            this.logoEnglish.material.emissiveIntensity = 0;
+            this.logoHebrew.material.color = new THREE.Color(0x000000);
+            this.logoEnglish.material.color = new THREE.Color(0x000000);
+
+            DebugUtil.positionObject(this.logo, "Logo");
+        });
     }
     start() {
+        // Get into the starting position
+        this.camera.position.copy(this.STARTING_POSITION);
+        
+        // Scale the square
+        this.square.scale.set(0.05, 0.05, 0.05);
+
+        DebugUtil.positionObject(this.square, "Square",true);
+
         // Load the sound
-        //
         this.soundManager.loadSound(this.INTRO_SOUND)
         .then((sound) => {
-            console.log("Sound ", sound);
+            console.log("Intro Sound ", sound);
             this.sound = sound;
 
             setTimeout(() => {
@@ -99,7 +133,7 @@ export default class Intro {
                 //this.zoomToSquare();
 
             },3000);
-        }); 
+        });
     }
 
     bringUpSun() {
@@ -113,7 +147,10 @@ export default class Intro {
     }
 
     showTitle() {
-        this.scene.add(this.titlePlane);
+        this.logoHebrew.material.color.copy(this.logoHebrew.material.emissive);
+        this.logoEnglish.material.color.copy(this.logoEnglish.material.emissive);
+        this.logoHebrew.material.emissiveIntensity = 1;
+        this.logoEnglish.material.emissiveIntensity = 1;
     }
     hideTitle() {
         this.scene.remove(this.titlePlane);
