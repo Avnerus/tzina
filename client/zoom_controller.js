@@ -125,6 +125,22 @@ export default class ZoomController {
     start() {
         this.camera.position.copy(this.STARTING_POSITION);
         this.camera.rotation.copy(this.STARTING_ROTATION);
+
+        this.baseVRPosition = null;
+
+        if (this.vrControls) {
+            let currentVRPosition = this.vrControls.getCurrentPosition();
+            console.log("Current VR Position", currentVRPosition);
+            if (currentVRPosition) {
+                this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
+                this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
+                this.baseVRPosition.add(currentVRPosition);
+            }
+        } 
+        if (!baseVRPosition) {
+            this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
+            this.baseVRPosition.y = 13.5;
+        }
     }
     getZoomOutPosition() {
         let vec = new THREE.Vector3();
@@ -172,21 +188,6 @@ export default class ZoomController {
             this.calculateEaseQuaternion();*/
         } else {
             if (this.square.mesh) {
-                let baseVRPosition = null;
-
-                if (this.vrControls) {
-                    let currentVRPosition = this.vrControls.getCurrentPosition();
-                    console.log("Current VR Position", currentVRPosition);
-                    if (currentVRPosition) {
-                        this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
-                        baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
-                        baseVRPosition.add(currentVRPosition);
-                    }
-                } 
-                if (!baseVRPosition) {
-                    baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
-                    baseVRPosition.y = 13.5;
-                }
                 this.square.mesh.updateMatrixWorld();
                 this.easeQuaternionSource = null;
                 this.easeQuaternionTarget = null;
@@ -206,8 +207,8 @@ export default class ZoomController {
                         startPoint,
                         endPoint
                     ])
-                    if (baseVRPosition) {
-                        points.push(baseVRPosition);
+                    if (this.baseVRPosition) {
+                        points.push(this.baseVRPosition);
                     }
                     console.log("Curve points", points);
                     this.zoomCurve = new THREE.CatmullRomCurve3(points);

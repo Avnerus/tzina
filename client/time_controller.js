@@ -396,6 +396,23 @@ export default class TimeController {
         }});
     }
 
+
+    rotate(angle, time) {
+        return new Promise((resolve, reject) => {
+            TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: angle, onComplete: () => {
+            }, onUpdate: () => {
+                this.updateSquare();
+            }, onComplete: () => {resolve()} });
+        });
+    }
+
+    transitionToLocalTime(time) {
+        let now = new Date();
+        let localTime = now.getHours() + (now.getMinutes() / 60);
+        let availableTimes = this.times.slice(1);
+        console.log("Current local time ", localTime, "Available times", availableTimes);
+    }
+
     transitionTo(hour, time) {
         let targetRotationY = hour * 15;
         TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {

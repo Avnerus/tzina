@@ -28,6 +28,15 @@ export default class Extras extends THREE.Object3D {
                 console.log("Finished loading extras", this.store);
                 resolve();
             });
+
+            events.on("control_threshold", (passed) => {
+                this.controlPassed = passed;
+                if (passed) {
+                    for (let i = 0; i < this.children.length; i++) {
+                        this.children[i].material.size = this.children[i].material.rightSize;
+                    }  
+                }
+            });
         });      
 
     }
@@ -59,7 +68,8 @@ export default class Extras extends THREE.Object3D {
                 let type = this.store[asset.name];
                 
                 let mesh = new Potree.PointCloudOctree(type.geometry);
-                mesh.material.size = type.pointSize ? type.pointSize : 0.1;
+                mesh.material.rightSize = type.pointSize ? type.pointSize : 0.1;
+                mesh.material.size = mesh.material.rightSize * 0.01;
                 mesh.material.lights = false;
                 mesh.position.fromArray(asset.position);
                // mesh.position.y -= 1.1;

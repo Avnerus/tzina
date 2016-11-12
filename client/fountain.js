@@ -31,6 +31,8 @@ export default class Fountain extends THREE.Object3D  {
         this.square = square;
         this.showTime = false;
 
+        this.trickleSize = [0.15, 0.3, 0.0];
+
         this.soundEvents = [
             { time: 1, action: () => {
                             this.zeroAni();
@@ -193,6 +195,14 @@ export default class Fountain extends THREE.Object3D  {
             events.emit("add_gui", {folder: "Fountain water down``", listen: true, step: 0.01}, this.downVelocity, "x");
             events.emit("add_gui", {folder: "Fountain water down``", listen: true, step: 0.01}, this.downVelocity, "y");
         }
+
+        events.on("control_threshold", (passed) => {
+            if (passed) {
+                for (let i = 0; i < this.particleGroup.emitters.length; i++) {
+                    this.particleGroup.emitter[i].size.value = this.trickleSize;
+                }  
+            }
+        });
     }
 
     assignCylinders(cylinders){
@@ -344,7 +354,7 @@ export default class Fountain extends THREE.Object3D  {
                 value: new THREE.Color(colorCode)
             },
             size: {
-                value: [0.15, 0.3, 0.0] //[0.2, 0.4, 0.0]
+                value: [0.0015, 0.003, 0.0] //[0.2, 0.4, 0.0]
             },
             particleCount: 200,
             opacity: {

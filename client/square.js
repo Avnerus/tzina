@@ -200,7 +200,7 @@ export default class Square extends THREE.Object3D{
                 //events.emit("add_gui", {folder: "Benches texture 1"}, this.benches.children[0].children[0], "visible"); 
                 //events.emit("add_gui", {folder: "Benches texture 2"}, this.benches.children[1].children[0], "visible"); 
 
-                //DebugUtil.positionObject(this.fountain, "Fountain water");
+                DebugUtil.positionObject(this.fountain, "Fountain water");
                 //DebugUtil.positionObject(this.fountainMesh, "Fountain");
             //  DebugUtil.positionObject(this.pool, "Pool");
                 DebugUtil.positionObject(this.mesh, "Square");
@@ -286,7 +286,9 @@ export default class Square extends THREE.Object3D{
     }
     update(dt,et) {
         this.fountain.update(dt);
-        this.pool.update(dt,et);
+        if (this.config.controlPassed) {
+            this.pool.update(dt,et);
+        }
         if (!this.config.noTrees) {
             this.trees.update(dt,et);
         }

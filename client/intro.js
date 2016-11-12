@@ -5,22 +5,23 @@ import DebugUtil from './util/debug'
 import StaticSoundSampler from './sound_manager'
 
 export default class Intro {
-    constructor(camera, square, timeConroller, soundManager, scene) {
+    constructor(camera, square, timeConroller, soundManager, scene, vrControls) {
         this.camera = camera;
         this.square = square;
         this.soundManager = soundManager;
         this.timeConroller = timeConroller;
         this.scene = scene;
+        this.vrControls = vrControls;
 
         this.soundEvents = [
             {
-                time: 10.283,
+                time: 5,
                 action: () => {
                     this.showTitle()
                 }
             },
             {
-                time: 21.3,
+                time: 7,
                 action: () => {
                     this.hideTitle();
                     this.bringUpSun();
@@ -40,8 +41,9 @@ export default class Intro {
 
         this.STARTING_POSITION = new THREE.Vector3(
             0,
-            2.5,
-            8
+            //    -0.52,
+            -1.0,
+            0.1
         );
 
     }
@@ -105,18 +107,38 @@ export default class Intro {
             // Turn of neon
             this.logoHebrew.material.emissiveIntensity = 0;
             this.logoEnglish.material.emissiveIntensity = 0;
-            this.logoHebrew.material.color = new THREE.Color(0x000000);
-            this.logoEnglish.material.color = new THREE.Color(0x000000);
+            this.logoHebrew.material.color = new THREE.Color(0xcccccc);
+            this.logoEnglish.material.color = new THREE.Color(0xcccccc);
 
             DebugUtil.positionObject(this.logo, "Logo");
         });
+
+        let fadePlaneGeo = new THREE.PlaneGeometry( 10, 10 );
+        let fadePlaneMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide, transparent:true, opacity: 1.0} );
+        this.fadePlane = new THREE.Mesh(fadePlaneGeo, fadePlaneMaterial);
+        this.fadePlane.position.set(0, 0, -0.1001);
+            /*
+        DebugUtil.positionObject(this.fadePlane, "Fade plane");
+        events.emit("add_gui", {folder: "Fade plane", step: 0.01, listen: true} ,this.fadePlane.material, "opacity", 0, 1);*/
+
+        events.on("vr_start", () => {
+            console.log("Into VR Start!");
+            this.fadePlane.position.set(0, 0, -0.5001);
+        });
+
     }
     start() {
         // Get into the starting position
-        this.camera.position.copy(this.STARTING_POSITION);
+        if (this.vrControls.getCurrentPosition()) {
+            this.vrControls.basePosition.copy(this.STARTING_POSITION);
+        } else {
+            this.camera.position.copy(this.STARTING_POSITION);
+        }
         
+        this.camera.add(this.fadePlane);
+
         // Scale the square
-        this.square.scale.set(0.05, 0.05, 0.05);
+        this.square.scale.set(0.015, 0.015, 0.015);
 
         DebugUtil.positionObject(this.square, "Square",true);
 
@@ -130,14 +152,28 @@ export default class Intro {
                 
         //        this.turnOnWindows();
                 this.playSound(); 
+                setTimeout(() => {
+                    this.fadeIn();
+                },1000)
                 //this.zoomToSquare();
 
             },3000);
         });
     }
 
+    fadeIn() {
+        TweenMax.to(this.fadePlane.material, 2.0, { opacity:0});
+    }
+    fadeOut() {
+        TweenMax.to(this.fadePlane.material, 2.0, { opacity:1});
+    }
+
     bringUpSun() {
-        this.timeConroller.transitionTo(17, 37);
+        this.timeConroller.rotate(360,5)
+        .then(() => {
+            // transition to local time
+            this.timeConroller.transitionToLocalTime();
+        });
     }
 
     playSound() {
@@ -153,7 +189,6 @@ export default class Intro {
         this.logoEnglish.material.emissiveIntensity = 1;
     }
     hideTitle() {
-        this.scene.remove(this.titlePlane);
     }
 
     turnOnWindows() {

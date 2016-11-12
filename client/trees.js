@@ -54,7 +54,7 @@ export default class Trees extends THREE.Object3D {
                     if (treeTypes[instance.type]) {
                         let mesh = new Potree.PointCloudOctree(treeTypes[instance.type], this.potreeMaterial);
                         //mesh.material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-                        mesh.material.size = 0.03;
+                        mesh.material.size = 0.003;
                         mesh.material.lights = false;
                         mesh.position.fromArray(instance.position);
                         if (instance.scale) {
@@ -79,6 +79,13 @@ export default class Trees extends THREE.Object3D {
                         counter++;
                     }
                 })
+
+                events.on("control_threshold", (passed) => {
+                    this.controlPassed = passed;
+                    if (passed) {
+                        this.potreeMaterial.size = 0.03;
+                    }
+                });
                 resolve();
             });
         });      

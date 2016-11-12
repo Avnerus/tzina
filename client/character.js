@@ -41,6 +41,7 @@ export default class Character extends THREE.Object3D {
         }
 
 
+
         console.log(props.name + " character constructed!");
 
         this.props = props;
@@ -121,6 +122,11 @@ export default class Character extends THREE.Object3D {
 
             events.on("control_threshold", (passed) => {
                 this.inControl = passed;
+                if (this.onHold && this.active && !this.fullOnly) {
+                    this.idleVideo.setOpacity(1.0);
+                    this.idleVideo.play();
+                    this.onHold = false;
+                }
             });
     }
     idleException(name) {
@@ -141,7 +147,17 @@ export default class Character extends THREE.Object3D {
             this.idleVideo.mesh.visible = true;
             this.idleVideo.wire.visible = true;
 
-            this.idleVideo.play();
+            if (this.inControl) {
+                this.idleVideo.play();
+            } else {
+                this.idleVideo.play();
+                setTimeout(() => {
+                    console.log(this.props.name + " Character video idle pausing because in intro");
+                    this.onHold = true;
+                    this.idleVideo.pause();
+                    this.idleVideo.setOpacity(0.5);
+                },1500);
+            }
 
             if (this.props.event) {
                 events.emit("character_playing", this.props.name)

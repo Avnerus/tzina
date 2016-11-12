@@ -83,7 +83,7 @@ function start() {
     document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
-    window.addEventListener('vrdisplaypresentchange', resize, true);
+    window.addEventListener('vrdisplaypresentchange', vrchange, true);
     game.resize();
     stats.begin();
     animate();
@@ -109,5 +109,10 @@ function animate(t) {
 
 function resize() {
     game.resize();
+}
+
+function vrchange() {
+    game.resize();
+    game.vrChange();
 }
 
