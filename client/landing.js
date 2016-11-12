@@ -4,6 +4,24 @@ import TzinaVRControls from './tzina_vr_controls'
 
 import Trees from './trees'
 
+var Game = require('./game').default;
+var config = require('./config').default;
+var Stats = require('stats.js');
+
+var game = new Game(config);
+var stats = new Stats();
+stats.showPanel(0);
+
+var fullscreen = require('fullscreen');
+var lock = require('pointer-lock-chrome-tolerant');
+
+console.log("Touch? ", Modernizr.touchevents);
+
+var FPS  = config.fps;
+var FPS_INTERVAL = 1000 / FPS;
+var elapsed = 0
+var lastTimestamp = 0;
+
 //Paths
 const SOUND_PATH = 'assets/ui_sounds/';
 
@@ -11,6 +29,8 @@ const TREES_PATH = "assets/trees/";
 
 //Global Variables
 var camera, renderer, trees, clock, landingControls, scene, trees, landingKeyControl;
+
+let landingScreen = true;
 
 try {
 
@@ -268,8 +288,31 @@ try {
           });
 
 
-          //Fade in the first instruction screen and timeout fadeout
+        
+          console.log("Loading...");
+          document.getElementById('game').appendChild(stats.dom);
+          game.init();
 
+          try {
+              game.load(function() {
+                  console.log('Game Finished Loading');
+                  $('#instruction_screen').fadeOut(250, function(){
+
+                    $('#tree_scene').fadeOut(250);
+
+                    landingScreen = false;
+
+                    killLanding();
+
+                    $('#enter_experience').fadeIn(250);
+
+                  });
+                  
+              });
+          }
+          catch(e) {
+              console.error("Exception during game load ", e);
+          }
 
         });
 
@@ -383,7 +426,14 @@ try {
 
 
 
+ function killLanding(){
 
+    scene.remove(camera);
+    scene.remove(trees);
+    renderer = null;
+    scene = null;
+
+  }
 
     //Threejs Tree Scene
   function init() {
@@ -414,28 +464,53 @@ try {
             clock = new THREE.Clock();
             clock.start();
             render();
-        })
-
+            console.log(scene);
+        });
   }
 
   var et = 0;
 
   function render() {
+      if(landingScreen){
 
+          requestAnimationFrame( render );
 
-        requestAnimationFrame( render );
+          // update time
+          var delta = clock.getDelta();
+          et += delta;
+          trees.update(delta, et);
 
-        renderer.render(scene, camera);
+          landingControls.update();
+          landingKeyControl.update(delta);
 
-        // update time
-        var delta = clock.getDelta();
-        et += delta;
-        trees.update(delta, et);
+          renderer.render(scene, camera);
 
-        //Without this you will need to move the mouse or keyboard to start the render
-        landingControls.update();
-        landingKeyControl.update(delta);
+        } else {
+          cancelAnimationFrame( render );
+        }
   }
+
+  function animate(t) {
+    if(game.vrManager.hmd.isPresenting) {
+        game.vrManager.hmd.requestAnimationFrame(animate) 
+    } else {
+        requestAnimationFrame(animate);
+    }
+
+    /*
+    elapsed = t - lastTimestamp;
+    if (elapsed >= FPS_INTERVAL) {
+        lastTimestamp = t - (elapsed % FPS_INTERVAL);*/
+        game.animate(t);
+        stats.end();
+        stats.begin();
+   // }
+}
+
+function resize() {
+    game.resize();
+}
+
 }
 catch(e) {
     console.error("Exception", e);
