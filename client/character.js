@@ -369,7 +369,7 @@ export default class Character extends THREE.Object3D {
         console.log(this.props.name, "Checking ready");
         if (this.fullReady && (this.subtitlesReady || !this.props.subtitles)) {
             if (this.animation) {
-                this.animation.start()
+                this.animation.start(this.props.name);
             }
             if (this.nextAdjustment && this.nextAdjustment.sec == 0) {
                 this.adjust();

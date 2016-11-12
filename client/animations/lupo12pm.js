@@ -22,76 +22,77 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.showDummyDogs = true;
 
         // setup animation sequence
-        this.sequenceConfig = [
-            { time: 5, anim: ()=>{this.showSculptures()} },    // 16
-            // { time: 6, anim: ()=>{this.connectToDogs()} },
+        this.sequenceConfig = {
+            'Lupo12PM': [
+                    { time: 5, anim: ()=>{this.showSculptures()} },    // 16
+                    // { time: 6, anim: ()=>{this.connectToDogs()} },
+        
+                    // { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },
+                    { time: 8, anim: ()=>{this.growCactusFloor()} },
+                    // { time: 4, anim: ()=>{this.growSingleCactus( 0 )} },  // cactus index: 0~19
+                    // { time: 6, anim: ()=>{this.growSingleCactusFloor( 0 )} },  // cactus index: 0~9
+                    { time: 12, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
+                    
+                    { time: 15, anim: ()=>{this.growBenchCactus()} }
+                    // { time: 20, anim: ()=>{this.growCactusFloor()} }
+                    
+        
+                    // { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
+                    // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
+                    // { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
+                    // { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
+                    // { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
+                    // { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
+                    // { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
+                    // { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
+                    // { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
+                    // { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
+                    // { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
+                    // { time: 120, anim: ()=>{this.growBenchCactus()} },
+        
+                    // { time: 135, anim: ()=>{this.connectToDogs()} },
+        
+                    // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
+                    // { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
+                    // { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
+                    // { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
+                    // { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
+                    // { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
+                    // { time: 179, anim: ()=>{this.growCactusFloor()} }
+                ],
+            'Lupo5PM': [
+                    { time: 1, anim: ()=>{this.growCactusFloor()} },
 
-            // { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },
-            { time: 8, anim: ()=>{this.growCactusFloor()} },
-            // { time: 4, anim: ()=>{this.growSingleCactus( 0 )} },  // cactus index: 0~19
-            // { time: 6, anim: ()=>{this.growSingleCactusFloor( 0 )} },  // cactus index: 0~9
-            { time: 12, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
-            
-            { time: 15, anim: ()=>{this.growBenchCactus()} }
-            // { time: 20, anim: ()=>{this.growCactusFloor()} }
-            
+                    { time: 2, anim: ()=>{this.showSculptures()} },    // 16
+                    { time: 9, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
+                    { time: 12, anim: ()=>{this.shiftSculptures()} },
+                    
+                    { time: 17, anim: ()=>{this.growFlower()} },
+                    { time: 25, anim: ()=>{this.closeFlower()} }
 
-            // { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
-            // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
-            // { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
-            // { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
-            // { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
-            // { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
-            // { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
-            // { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
-            // { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
-            // { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
-            // { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
-            // { time: 120, anim: ()=>{this.growBenchCactus()} },
+                    // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
+                    // { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
+                    // { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
+                    // { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
+                    // { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
+                    // { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
+                    // { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
+                    // { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
+                    // { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
+                    // { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
+                    // { time: 120, anim: ()=>{this.growBenchCactus()} },
+                    // { time: 135, anim: ()=>{this.connectToDogs()} },
+                    // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
+                    // { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
+                    // { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
+                    // { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
+                    // { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
+                    // { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
+                    // { time: 179, anim: ()=>{this.growCactusFloor()} },
+                ]
+        };
 
-            // { time: 135, anim: ()=>{this.connectToDogs()} },
-
-            // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
-            // { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
-            // { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
-            // { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
-            // { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
-            // { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
-            // { time: 179, anim: ()=>{this.growCactusFloor()} }
-        ];
-
-        this.sequenceConfig2 = [
-            { time: 1, anim: ()=>{this.growCactusFloor()} },
-
-            { time: 2, anim: ()=>{this.showSculptures()} },    // 16
-            { time: 9, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
-            { time: 12, anim: ()=>{this.shiftSculptures()} },
-            
-            { time: 17, anim: ()=>{this.growFlower()} },
-            { time: 25, anim: ()=>{this.closeFlower()} }
-
-            // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
-            // { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
-            // { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
-            // { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
-            // { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
-            // { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
-            // { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
-            // { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
-            // { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
-            // { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
-            // { time: 120, anim: ()=>{this.growBenchCactus()} },
-            // { time: 135, anim: ()=>{this.connectToDogs()} },
-            // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
-            // { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
-            // { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
-            // { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
-            // { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
-            // { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
-            // { time: 179, anim: ()=>{this.growCactusFloor()} },
-        ];
-
-        this.sequenceConfigOriginal =  this.sequenceConfig.slice(0);
+        // this.sequenceConfigOriginal =  this.sequenceConfig.slice(0);
 
         this.nextAnim = null;
         this.tweenAnimCollectors = [];
@@ -370,7 +371,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         }
         this.dummy={roughValue:0};
 
-        this.completeSequenceSetup();
+        // this.completeSequenceSetup();
 
         this.loadingManager.itemEnd("Lupo12PMAnim");
     }
@@ -773,8 +774,9 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     // receive name
-    start() {
-        this.currentSequence = this.sequenceConfig.slice(0);
+    start( time ) {
+        console.log(time);
+        this.currentSequence = this.sequenceConfig[time].slice(0);
         this.nextAnim = this.currentSequence.shift();
     }
 
@@ -796,9 +798,9 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         }
 
         // reset sequence
-        this.sequenceConfig = [];
-        this.sequenceConfig = this.sequenceConfigOriginal.slice(0); // copy the original setting
-        this.completeSequenceSetup();
+        // this.sequenceConfig = [];
+        // this.sequenceConfig = this.sequenceConfigOriginal.slice(0); // copy the original setting
+        // this.completeSequenceSetup();
 
         // this.start();
     }
