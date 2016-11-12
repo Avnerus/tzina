@@ -17,20 +17,20 @@ export default class Intro {
             {
                 time: 5,
                 action: () => {
-                    this.showTitle()
+                    this.bringUpSun()
                 }
             },
             {
                 time: 7,
                 action: () => {
-                    this.hideTitle();
-                    this.bringUpSun();
+                //    this.hideTitle();
+                  //  this.bringUpSun();
                 }
             },
             {
                 time: 55.3,
                 action: () => {
-                    this.endIntro();
+                  //  this.endIntro();
                 }
             }
         ]
@@ -132,6 +132,7 @@ export default class Intro {
         if (this.vrControls.getCurrentPosition()) {
             this.vrControls.basePosition.copy(this.STARTING_POSITION);
         } else {
+            this.STARTING_POSITION.set(0,0.5,2);
             this.camera.position.copy(this.STARTING_POSITION);
         }
         
@@ -169,11 +170,13 @@ export default class Intro {
     }
 
     bringUpSun() {
+        this.timeConroller.transitionTo(17,2);
+        /*0000
         this.timeConroller.rotate(360,5)
         .then(() => {
             // transition to local time
             this.timeConroller.transitionToLocalTime();
-        });
+        });*/
     }
 
     playSound() {
