@@ -34,6 +34,11 @@ let landingScreen = true;
 
 try {
 
+    if (/Mobi/.test(navigator.userAgent)) {
+    $('#mobile_splash').show();
+    console.log('mobile splash');
+    }
+
     var loadingManager = new THREE.LoadingManager();
 
      loadingManager.onProgress = function (item, loaded, total) {
