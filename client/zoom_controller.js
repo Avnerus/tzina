@@ -137,11 +137,17 @@ export default class ZoomController {
                 this.baseVRPosition.add(currentVRPosition);
             }
         } 
-        if (!baseVRPosition) {
+        if (!this.baseVRPosition) {
             this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
             this.baseVRPosition.y = 13.5;
         }
     }
+
+    jumpIn() {
+        this.camera.position.copy(this.baseVRPosition);
+        events.emit("control_threshold", true);
+    }
+
     getZoomOutPosition() {
         let vec = new THREE.Vector3();
         vec.copy(new THREE.Vector3(0,0,1)).applyQuaternion(this.camera.quaternion).multiplyScalar(500);

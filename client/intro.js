@@ -5,32 +5,26 @@ import DebugUtil from './util/debug'
 import StaticSoundSampler from './sound_manager'
 
 export default class Intro {
-    constructor(camera, square, timeConroller, soundManager, scene, vrControls) {
+    constructor(camera, square, timeConroller, soundManager, scene, vrControls, zoomController) {
         this.camera = camera;
         this.square = square;
         this.soundManager = soundManager;
         this.timeConroller = timeConroller;
         this.scene = scene;
         this.vrControls = vrControls;
+        this.zoomController = zoomController;
 
         this.soundEvents = [
             {
-                time: 5,
+                time: 9.33,
                 action: () => {
                     this.showTitle()
                 }
             },
             {
-                time: 7,
+                time: 23,
                 action: () => {
-                    this.hideTitle();
                     this.bringUpSun();
-                }
-            },
-            {
-                time: 55.3,
-                action: () => {
-                    this.endIntro();
                 }
             }
         ]
@@ -80,7 +74,7 @@ export default class Intro {
         }
         let CREDIT_TEXT_SCALE = 0.0005;
 
-        this.creditTextTitle = new SpriteText2D("", CREDIT_TEXT_TITLE);
+        this.creditTextTitle = new SpriteText2D("ASFASFASFASF", CREDIT_TEXT_TITLE);
         this.creditTextTitle.scale.multiplyScalar(CREDIT_TEXT_SCALE);
         this.creditTextTitle.position.set(-0.02,-0.16,-0.5);
         this.creditTextTitle.material.opacity = 0;
@@ -91,6 +85,8 @@ export default class Intro {
         this.creditTextName.position.set(-0.02,-0.18,-0.5);
         this.creditTextName.material.opacity = 0;
         this.camera.add(this.creditTextName);
+
+        //DebugUtil.positionObject(this.creditTextTitle, "Credits title");
 
         let loader = new THREE.ObjectLoader(loadingManager);
         loader.load(this.LOGO_PATH,( obj ) => {
@@ -135,8 +131,6 @@ export default class Intro {
             this.camera.position.copy(this.STARTING_POSITION);
         }
         
-        this.camera.add(this.fadePlane);
-
         // Scale the square
         this.square.scale.set(0.015, 0.015, 0.015);
 
@@ -162,17 +156,45 @@ export default class Intro {
     }
 
     fadeIn() {
-        TweenMax.to(this.fadePlane.material, 2.0, { opacity:0});
+        return new Promise((resolve, reject) => {
+            TweenMax.to(this.fadePlane.material, 2.0, { opacity:0, onComplete: () => {
+                this.camera.remove(this.fadePlane);
+            resolve()}});
+        });
     }
     fadeOut() {
-        TweenMax.to(this.fadePlane.material, 2.0, { opacity:1});
+        return new Promise((resolve, reject) => {
+            this.camera.add(this.fadePlane);
+            TweenMax.to(this.fadePlane.material, 2.0, { opacity:1, onComplete: () => {resolve()}});
+        });
     }
 
     bringUpSun() {
-        this.timeConroller.rotate(360,5)
+        this.playCredits();
+        this.timeConroller.rotate(360,37)
         .then(() => {
             // transition to local time
-            this.timeConroller.transitionToLocalTime();
+            this.timeConroller.transitionTo(0,0);
+            return this.timeConroller.transitionToLocalTime(18);
+        })
+        .then( () => {
+            setTimeout(() => {
+                this.fadeOut()
+                .then(() => {
+                    this.enterSquare();                    
+                });
+            },1000)
+        });
+    }
+
+    enterSquare() {
+        console.log("Intro - enter square");
+        this.square.scale.set(1,1,1);
+        this.zoomController.start();
+        this.zoomController.jumpIn();
+        this.fadeIn()
+        .then(() => {
+            this.endIntro();
         });
     }
 
@@ -224,10 +246,12 @@ export default class Intro {
     }
 
     endIntro() {
-        setTimeout(() => {
-            console.log("END INTRO");
-            events.emit("intro_end");
-        },5000)
+        console.log("END INTRO");
+        this.fadePlane.geometry.dispose();
+        this.fadePlane.material.dispose();
+        this.creditTextTitle.material.dispose();
+        this.creditTextName.material.dispose();
+        events.emit("intro_end");
     }
 
     update() {

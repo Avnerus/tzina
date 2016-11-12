@@ -159,7 +159,7 @@ export default class Game {
 
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager);
 
-        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls);
+        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController);
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
 
 

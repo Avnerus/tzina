@@ -410,21 +410,26 @@ export default class TimeController {
         let now = new Date();
         let localTime = now.getHours() + (now.getMinutes() / 60);
         let availableTimes = this.times.slice(1);
-        console.log("Current local time ", localTime, "Available times", availableTimes);
+        let closestHour = MathUtil.closestValue(availableTimes, localTime);
+        console.log("Current local time ", localTime, "Available times", availableTimes, "Closest time", closestHour);
+        return this.transitionTo(closestHour, time);
     }
 
     transitionTo(hour, time) {
-        let targetRotationY = hour * 15;
-        TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {
-            this.currentHour = hour;
-            this.updateNextHour();
-            this.setCurrentChapter();
-            this.showChapterTitle();
-            events.emit("hour_updated", this.currentHour);
-            events.emit("angle_updated", this.currentHour);
-        }, onUpdate: () => {
-            this.updateSquare();
-        }});
+        return new Promise((resolve, reject) => {
+            let targetRotationY = hour * 15;
+            TweenMax.to(this, time, {ease: Linear.easeNone, currentRotation: targetRotationY, onComplete: () => {
+                this.currentHour = hour;
+                this.updateNextHour();
+                this.setCurrentChapter();
+                this.showChapterTitle();
+                events.emit("hour_updated", this.currentHour);
+                events.emit("angle_updated", this.currentHour);
+                resolve();
+            }, onUpdate: () => {
+                this.updateSquare();
+            }});
+        });
     }
 
     setCurrentChapter() {

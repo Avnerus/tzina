@@ -199,7 +199,7 @@ export default class Fountain extends THREE.Object3D  {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 for (let i = 0; i < this.particleGroup.emitters.length; i++) {
-                    this.particleGroup.emitter[i].size.value = this.trickleSize;
+                    this.particleGroup.emitters[i].size.value = this.trickleSize;
                 }  
             }
         });
