@@ -109,18 +109,6 @@ var TreesDef = {
   ]
 };
 
-var uniforms = {
-  time: { type: "f", value: 0 },
-  speedFactor: { type: "f", value: 1.0 },
-  pointSize: { type: "f", value: 2.0 },
-  bendFactor: { type: "f", value: 0.05 },
-  bendHeightLimit: { type: "f", value: 0.0 },
-  wind: { type: "v2", value: new THREE.Vector2 ( 1.0, 0.5 ) },
-  rustleHeightLimit: { type: "f", value: 5.0 },
-  rustleColorCheck: { type: "b", value: false },
-  rustleFactor: { type: "f", value: 4.0 },
-  rustleFrequency: { type: "f", value: 0.2 }
-};
 
 //Global Variables
 var camera, renderer, trees, clock, controls, scene, trees;
@@ -198,7 +186,6 @@ try {
       // loadingManager.onLoad = function(){
 
           //Start rendering the canvas
-          render();
 
           //Change language bind
 
@@ -516,13 +503,18 @@ try {
         controls.target.set( 15, 30, 15 );
         // load & add the trees
         trees = new Trees(camera, renderer);
-        trees.init(loadingManager);
-        scene.add(trees);
-        // we need to pass delta time to the shader so we need a clock
-        clock = new THREE.Clock();
-        clock.start();
+        trees.init(loadingManager)
+        .then(() => {
+            scene.add(trees);
+            // we need to pass delta time to the shader so we need a clock
+            clock = new THREE.Clock();
+            clock.start();
+            render();
+        })
 
   }
+
+  var et = 0;
 
   function render() {
         //Without this you will need to move the mouse or keyboard to start the render
@@ -534,9 +526,8 @@ try {
 
         // update time
         var delta = clock.getDelta();
-
-        uniforms.time.value += delta;
-
+        et += delta;
+        trees.update(delta, et);
   }
 }
 catch(e) {
