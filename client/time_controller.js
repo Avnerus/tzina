@@ -95,8 +95,6 @@ export default class TimeController {
         });
 
         events.on("intro_end", () => {
-            this.setCurrentChapter();
-            this.showChapterTitle();
             this.active = true;
         });
 
@@ -132,11 +130,11 @@ export default class TimeController {
              shadow: true
         }
         
-        this.chapterTitle = new MeshText2D("SPRITE", TEXT_DEFINITION)
+        this.chapterTitle = new SpriteText2D("SPRITE", TEXT_DEFINITION)
         this.chapterTitle.scale.set(0.002, 0.002, 0.002);
         this.chapterTitle.visible = false;
 
-        this.chapterTitleLineTwo = new MeshText2D("SPRITE", TEXT_DEFINITION)
+        this.chapterTitleLineTwo = new SpriteText2D("SPRITE", TEXT_DEFINITION)
         this.chapterTitleLineTwo.visible = false;
 
 
@@ -408,13 +406,19 @@ export default class TimeController {
         });
     }
 
+        /*
     transitionToLocalTime(time) {
+        return this.transitionTo(closestHour, time);
+        }*/
+
+    preloadLocalTime() {
         let now = new Date();
         let localTime = now.getHours() + (now.getMinutes() / 60);
         let availableTimes = this.times.slice(1);
         let closestHour = MathUtil.closestValue(availableTimes, localTime);
         console.log("Current local time ", localTime, "Available times", availableTimes, "Closest time", closestHour);
-        return this.transitionTo(closestHour, time);
+        events.emit("hour_updated", closestHour);
+        return closestHour;
     }
 
     transitionTo(hour, time) {
@@ -425,7 +429,7 @@ export default class TimeController {
                 this.updateNextHour();
                 this.setCurrentChapter();
                 this.showChapterTitle();
-                events.emit("hour_updated", this.currentHour);
+                //events.emit("hour_updated", this.currentHour);
                 events.emit("angle_updated", this.currentHour);
                 resolve();
             }, onUpdate: () => {
@@ -446,7 +450,7 @@ export default class TimeController {
 
         let targetOpacity = 1.0;
 
-        this.chapterTitle.text = "Tzina Local Time " + now.format("HH:mm");
+        this.chapterTitle.text = "Your Local Time " + now.format("HH:mm");
         this.chapterTitle.visible = true;
         this.chapterTitle.position.fromArray(this.currentChapter.titlePosition);
         this.chapterTitle.material.opacity = 0;

@@ -1,7 +1,6 @@
 import Trees from "./trees"
 import Fountain from "./fountain"
 import SunLoader from './sun_loader'
-import Extras from './extras';
 import Chapters from './chapters'
 import Pool from './pool'
 
@@ -17,7 +16,7 @@ const FOUNTAIN_PATH = "assets/square/fountain.json"
 const GROUND_PATH = "assets/square/squareRamp_11.json"
 
 export default class Square extends THREE.Object3D{
-    constructor(collisionManager, renderer, camera, config, soundManager, scene) {
+    constructor(collisionManager, renderer, camera, config, soundManager, scene, extras) {
         super();
         console.log("Square constructed!")
 
@@ -26,6 +25,7 @@ export default class Square extends THREE.Object3D{
         this.config = config;
         this.camera = camera;
         this.scene = scene;
+        this.extras = extras;
 
         this.debug = false;
 
@@ -85,7 +85,6 @@ export default class Square extends THREE.Object3D{
     init(loadingManager) {
         loadingManager.itemStart("Square");
         this.trees = new Trees(this.camera, this.renderer);
-        this.extras = new  Extras(this.camera, this.renderer);
         this.fountain = new Fountain( this );
 
         let loaders = [
@@ -207,6 +206,7 @@ export default class Square extends THREE.Object3D{
                 DebugUtil.positionObject(this.benches, "Benches");
 
                 events.emit("add_gui", {folder: "Clock rotation", listen: true}, this, "clockRotation", 0, 6.28); 
+
                 DebugUtil.positionObject(this.cylinders[0], "Cylinder");
                 DebugUtil.positionObject(this.clockwork, "Clockwork");
                 DebugUtil.positionObject(ground, "Ground");
@@ -373,10 +373,8 @@ export default class Square extends THREE.Object3D{
                 sunMesh.material.needsUpdate = true;
 
                 // Show loader
-                if (this.controlPassed) {
-                    sun.getObjectByName(name + "_L").visible = true;
-                    sun.getObjectByName(name + "_L").disorganize();
-                }
+                sun.getObjectByName(name + "_L").visible = true;
+                sun.getObjectByName(name + "_L").disorganize();
 
                 //console.log("Turned on sun", sun);
             }

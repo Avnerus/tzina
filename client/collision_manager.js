@@ -63,7 +63,7 @@ export default class CollisionManager {
         // Characters
         boxIntersect(this.playerBox, this.characterObstacles, (i,j) => {
             if (this.characterObstacleInfo[j].onCollision) {
-                //this.characterObstacleInfo[j].onCollision();
+                this.characterObstacleInfo[j].onCollision();
             }
         });
 

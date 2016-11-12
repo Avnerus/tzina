@@ -283,7 +283,7 @@ export default
 			"hour": 19,
 			"timeLimitMinutes" : 12,
             "totalTime" : 610,
-            "titlePosition": [0.75,0.45,0.5],
+            "titlePosition": [0.75,0.37,0.094],
             "insideTitlePosition": [0,5.5, 0],
             "insideTitlePositionLineTwo": [0,-4,0],
             "sunLoaderRotation": [0,148,0],

@@ -6,10 +6,11 @@ import DebugUtil from './util/debug'
 import _ from 'lodash'
 
 export default class CharacterController {
-    constructor(config, animations, square, collisionManager, soundManager)  {
+    constructor(config, animations, square, collisionManager, soundManager, timeConroller)  {
         this.config = config;
         this.collisionManager = collisionManager;
         this.soundManager = soundManager;
+        this.timeConroller = timeConroller;
         this.characters = {};
         this.square = square;
         this.activeCharacters = [];
@@ -33,34 +34,7 @@ export default class CharacterController {
         });
 
         events.on("hour_updated", (hour) => {
-            
-            let clone = this.activeCharacters.slice(0);
-            this.activeCharacters = [];
-
-            for (let i = 0; i < clone.length; i++) {
-                let character = clone[i];
-
-                if (!character.done && !character.props.event) {
-                    this.square.clockwork.remove(character);
-                    character.unload();
-                } else {
-                    console.log("Character " + character.props.name + " is still active");
-                    this.activeCharacters.push(character);
-                }
-                if (character.addedColliders) {
-                    console.log("Removing colliders: " + character.props.name);
-                    this.collisionManager.removeCharacter(character);
-                    character.addedColliders = false;
-                }
-            }
-
-            console.log("Loading characters for ", hour);
-            
-            let chapter = _.find(Chapters, {hour});
-            chapter.characters.forEach((characterName) => {
-                this.addCharacter(characterName);
-            });
-
+            this.loadHour(hour);            
         });
         events.on("angle_updated", (hour) => {
             if (this.inControl){ {
@@ -83,6 +57,35 @@ export default class CharacterController {
                 this.square.clockwork.remove(character);
                 character.unload();
             })            
+        });
+    }
+
+    loadHour(hour) {
+        let clone = this.activeCharacters.slice(0);
+        this.activeCharacters = [];
+
+        for (let i = 0; i < clone.length; i++) {
+            let character = clone[i];
+
+            if (!character.done && !character.props.event) {
+                this.square.clockwork.remove(character);
+                character.unload();
+            } else {
+                console.log("Character " + character.props.name + " is still active");
+                this.activeCharacters.push(character);
+            }
+            if (character.addedColliders) {
+                console.log("Removing colliders: " + character.props.name);
+                this.collisionManager.removeCharacter(character);
+                character.addedColliders = false;
+            }
+        }
+
+        console.log("Loading characters for ", hour);
+        
+        let chapter = _.find(Chapters, {hour});
+        chapter.characters.forEach((characterName) => {
+            this.addCharacter(characterName);
         });
     }
 

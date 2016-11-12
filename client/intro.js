@@ -26,6 +26,12 @@ export default class Intro {
                 action: () => {
                     this.bringUpSun();
                 }
+            },
+            {
+                time: 52,
+                action: () => {
+                    this.playCredits();
+                }
             }
         ]
 
@@ -35,8 +41,7 @@ export default class Intro {
 
         this.STARTING_POSITION = new THREE.Vector3(
             0,
-            //    -0.52,
-            -1.0,
+            -0.7,
             0.1
         );
 
@@ -72,21 +77,20 @@ export default class Intro {
              fillStyle: '#FFFFFF',
              antialias: true 
         }
-        let CREDIT_TEXT_SCALE = 0.0005;
+        let CREDIT_TEXT_SCALE = 0.02;
 
         this.creditTextTitle = new SpriteText2D("", CREDIT_TEXT_TITLE);
         this.creditTextTitle.scale.multiplyScalar(CREDIT_TEXT_SCALE);
-        this.creditTextTitle.position.set(-0.02,-0.16,-0.5);
+        this.creditTextTitle.position.set(0,4.7,-14);
         this.creditTextTitle.material.opacity = 0;
-        this.camera.add(this.creditTextTitle);
+        this.scene.add(this.creditTextTitle);
 
         this.creditTextName = new SpriteText2D("", CREDIT_TEXT_NAME);
-        this.creditTextName.scale.multiplyScalar(CREDIT_TEXT_SCALE);
-        this.creditTextName.position.set(-0.02,-0.18,-0.5);
+        this.creditTextName.position.y = -30;
         this.creditTextName.material.opacity = 0;
-        this.camera.add(this.creditTextName);
+        this.creditTextTitle.add(this.creditTextName);
 
-        //DebugUtil.positionObject(this.creditTextTitle, "Credits title");
+        DebugUtil.positionObject(this.creditTextTitle, "Credits title");
 
         let loader = new THREE.ObjectLoader(loadingManager);
         loader.load(this.LOGO_PATH,( obj ) => {
@@ -107,9 +111,23 @@ export default class Intro {
             this.logoEnglish.material.color = new THREE.Color(0xcccccc);
 
             DebugUtil.positionObject(this.logo, "Logo");
+
+            this.logoEnglish.updateMatrixWorld();
+            this.logoHebrew.updateMatrixWorld();
+            this.lightEng = new THREE.PointLight( this.logoEnglish.material.emissive, 0, 0.03 );
+            this.lightEng.position.copy(new THREE.Vector3().setFromMatrixPosition(this.logoEnglish.matrixWorld));
+            this.scene.add(this.lightEng);
+                /*
+            DebugUtil.positionObject(this.lightEng, "Light english");
+            events.emit("add_gui", {folder: "Light english", step: 0.01, listen: true} ,this.lightEng, "distance", 0, 5);
+            events.emit("add_gui", {folder: "Light english", step: 0.01, listen: true} ,this.lightEng, "intensity", 0, 5);*/
+
+            this.lightHeb = new THREE.PointLight( this.logoHebrew.material.emissive, 0, 0.03 );
+            this.lightHeb.position.copy(new THREE.Vector3().setFromMatrixPosition(this.logoHebrew.matrixWorld));
+            this.scene.add(this.lightHeb);
         });
 
-        let fadePlaneGeo = new THREE.PlaneGeometry( 10, 10 );
+        let fadePlaneGeo = new THREE.PlaneGeometry( 20, 20 );
         let fadePlaneMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide, transparent:true, opacity: 1.0} );
         this.fadePlane = new THREE.Mesh(fadePlaneGeo, fadePlaneMaterial);
         this.fadePlane.position.set(0, 0, -0.1001);
@@ -119,23 +137,27 @@ export default class Intro {
 
         events.on("vr_start", () => {
             console.log("Into VR Start!");
-            this.fadePlane.position.set(0, 0, -0.5001);
+            this.fadePlane.position.set(0, 0, -0.50001);
         });
 
+
+
+
     }
-    start() {
-        // Get into the starting position
+    position() {
+        // Scale the square
+        this.square.scale.set(0.013, 0.013, 0.013);
+
+        DebugUtil.positionObject(this.square, "Square",true);
         if (this.vrControls.getCurrentPosition()) {
             this.vrControls.basePosition.copy(this.STARTING_POSITION);
         } else {
             this.STARTING_POSITION.set(0,0.5,2);
             this.camera.position.copy(this.STARTING_POSITION);
         }
-        
-        // Scale the square
-        this.square.scale.set(0.015, 0.015, 0.015);
-
-        DebugUtil.positionObject(this.square, "Square",true);
+    }
+    start() {
+        this.localHour = this.timeConroller.preloadLocalTime();
 
         // Load the sound
         this.soundManager.loadSound(this.INTRO_SOUND)
@@ -148,7 +170,7 @@ export default class Intro {
         //        this.turnOnWindows();
                 this.playSound(); 
                 setTimeout(() => {
-                    this.fadeIn();
+                    //                    this.fadeIn();
                 },1000)
                 //this.zoomToSquare();
 
@@ -171,21 +193,20 @@ export default class Intro {
     }
 
     bringUpSun() {
-        this.playCredits();
         this.timeConroller.rotate(360,37)
         .then(() => {
             // transition to local time
             this.timeConroller.transitionTo(0,0);
-            return this.timeConroller.transitionToLocalTime(18);
+            return this.timeConroller.transitionTo(this.localHour, 14);
         })
-        .then( () => {
+        .then( () => { 
             setTimeout(() => {
                 this.fadeOut()
                 .then(() => {
                     this.enterSquare();                    
                 });
-            },1000)
-        });*/
+                },10000)
+        });
     }
 
     enterSquare() {
@@ -208,8 +229,11 @@ export default class Intro {
     showTitle() {
         this.logoHebrew.material.color.copy(this.logoHebrew.material.emissive);
         this.logoEnglish.material.color.copy(this.logoEnglish.material.emissive);
+        this.flickerLight(this.logoHebrew.material, this.lightHeb, 0.05, 3);
+        this.flickerLight(this.logoEnglish.material, this.lightEng, 0.05, 3);
+            /*
         this.logoHebrew.material.emissiveIntensity = 1;
-        this.logoEnglish.material.emissiveIntensity = 1;
+        this.logoEnglish.material.emissiveIntensity = 1;*/
     }
     hideTitle() {
     }
@@ -252,6 +276,13 @@ export default class Intro {
         this.fadePlane.material.dispose();
         this.creditTextTitle.material.dispose();
         this.creditTextName.material.dispose();
+        this.square.remove(this.logo);
+        this.logoHebrew.material.dispose();
+        this.logoHebrew.geometry.dispose();
+        this.logoEnglish.material.dispose();
+        this.logoEnglish.geometry.dispose();
+        this.scene.remove(this.lightEng);
+        this.scene.remove(this.lightHeb);
         events.emit("intro_end");
     }
 
@@ -284,11 +315,18 @@ export default class Intro {
         TweenMax.to( this.creditTextTitle.material, 1, { opacity: 1, 
             onComplete: () => {
                 setTimeout(() => {
-                   this.hideCredit();
-                },2500);
+                    this.hideCredit();
+                },2200);
             } 
         });
-
+    }
+    flickerLight(material, light, _speed, _times ){
+        let repeatTimes = 1 + (_times-1)*2;
+        TweenMax.fromTo(material, _speed,
+                { emissiveIntensity: 1 },
+                { emissiveIntensity: 0, ease: Power0.easeNone, repeat: repeatTimes, yoyo: true,
+                 onUpdate:()=>{light.intensity = material.emissiveIntensity; }
+                });
     }
 
     hideCredit() {
