@@ -88,7 +88,7 @@ export default class SoundManager {
         },
       };
       this.createStaticSoundSampler=function(url,onLoad){
-        let sss=new StaticSoundSampler(this.listener.audioContext);
+        let sss=new StaticSoundSampler(this.listener.context);
         sss.init(url,this.loadingManager,onLoad);
         return sss;
       }
