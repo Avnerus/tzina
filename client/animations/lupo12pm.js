@@ -792,7 +792,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
     // receive name
     start( time ) {
-        console.log(time);
+        this.reset();
+        
         this.currentSequence = this.sequenceConfig[time].slice(0);
         this.nextAnim = this.currentSequence.shift();
 
