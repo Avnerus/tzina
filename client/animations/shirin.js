@@ -10,9 +10,11 @@ export default class ShirinAnimation extends THREE.Object3D {
     constructor( scene, renderer ) {
         super();
         this.BASE_PATH = 'assets/animations/shirin';
+        this.initialized = false;
     }
 
     init(loadingManager) {
+        this.initialized = true;
         this.loadingManager = loadingManager;
         this.setupAnim();
     }
@@ -22,10 +24,10 @@ export default class ShirinAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            // { time: 2,  anim: ()=>{this.dropCandy( true )} }, // If first time, set "true"
-            // { time: 4,  anim: ()=>{this.dropCobwebs()} },
-            { time: 5, anim: ()=>{this.crackCocoon(0)} },
-            { time: 8,  anim: ()=>{this.stopFragment(0)} },
+            { time: 0.5, anim: ()=>{this.pauseVideo()} },
+
+            // { time: 5, anim: ()=>{this.crackCocoon(0)} },
+            // { time: 8,  anim: ()=>{this.stopFragment(0)} },
 
             { time: 10, anim: ()=>{this.crackCocoon(1)} },
             { time: 13,  anim: ()=>{this.stopFragment(1)} },
@@ -303,6 +305,23 @@ export default class ShirinAnimation extends THREE.Object3D {
         for(let i=0; i<this.sequenceConfig.length; i++){
             this.sequenceConfig[i].performed = false;
         }
+    }
+
+    pauseVideo() {
+        this.parent.fullVideo.pause();
+        this.parent.fullVideo.mesh.position.y += 2;
+        this.parent.fullVideo.wire.position.y += 2;
+
+        setTimeout( ()=>{
+            this.crackCocoon(0);
+            this.parent.fullVideo.mesh.position.y -= 2;
+            this.parent.fullVideo.wire.position.y -= 2;
+        }, 5000 );
+
+        setTimeout( ()=>{
+            this.stopFragment(0);
+            this.parent.fullVideo.play();
+        }, 8000 );
     }
 
     crackCocoon(index) {
