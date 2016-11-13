@@ -452,7 +452,6 @@ export default class Character extends THREE.Object3D {
     }
 
     playFull() {
-        console.log(this.props.name, "Playing full", this.fullVideo, "Animation visible?", this.animation.visible);
         this.playingFull = true;
         if (this.idleVideo) {
             this.idleVideo.pause();
