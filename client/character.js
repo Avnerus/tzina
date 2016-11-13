@@ -10,6 +10,7 @@ export default class Character extends THREE.Object3D {
         this.inControl = false;
 
         this.debug = true;
+        this.inShow = false;
 
         if (!props.fullOnly) {
             this.idleVideo = new VideoRGBD({
@@ -21,8 +22,8 @@ export default class Character extends THREE.Object3D {
                 scale: props.scale,
                 width: props.width,
                 height: props.height,
-                volume: 0,
-                fps: 15
+                volume: props.event ? 1 : 0,
+                fps: props.event ? 25 : 15,
             });
         }
 
@@ -128,8 +129,8 @@ export default class Character extends THREE.Object3D {
             events.on("control_threshold", (passed) => {
                 this.inControl = passed;
                 setTimeout(() => {
-                    if (this.onHold && this.active) {
-                        if (!this.fullOnly) {
+                    if (this.onHold && this.active && !this.inShow) {
+                        if (!this.props.fullOnly) {
                             this.idleVideo.setOpacity(1.0);
                             this.idleVideo.play();
                         }
@@ -137,6 +138,9 @@ export default class Character extends THREE.Object3D {
                     }
                 },3000);
             });
+
+            events.on("show_start", () => {this.inShow = true});
+            events.on("show_end", () => {this.inShow = false});
     }
     idleException(name) {
         if (
@@ -347,6 +351,13 @@ export default class Character extends THREE.Object3D {
             aniPosAdjust.sub(this.position);
             this.animation.position.sub(aniPosAdjust);*/
             //
+            //
+
+            // LAURA Mesh position offset?
+                /*
+            let possitionOffset = new THREE.Vector3().copy(this.nextAdjustment.position).sub(new THREE.Vector3().fromArray(this.props.position));
+            this.fullVideo.setPosition(possitionOffset);*/
+                
             this.position.fromArray(this.nextAdjustment.position);
         }
 
@@ -358,7 +369,7 @@ export default class Character extends THREE.Object3D {
         }
     }
     onCollision() {
-        //console.log("Collision!! ", this.props.name, this.inControl, this.active, this.playingFull, this.done);
+        //console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
         if (this.inControl && !this.playingFull && !this.onHold && !this.done) {
             this.playingFull = true;

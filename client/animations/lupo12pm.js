@@ -423,7 +423,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         ropee.add(liquid);
         this.add(ropee);
         ropee.position.set(1.4, -0.7, 4.1);
-        DebugUtil.positionObject(ropee, "rope"+_index);
+        //DebugUtil.positionObject(ropee, "rope"+_index);
         this.ropes.push(ropee);
     }
 

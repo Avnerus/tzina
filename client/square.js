@@ -142,6 +142,11 @@ export default class Square extends THREE.Object3D{
                 this.cylinders[i].rotation.order = "YZX";
                 this.cylinders[i].rotation.z = Math.PI / 2;
             }
+
+                /*
+            let cylindersDebug = [new THREE.Object3D(), new THREE.Object3D(), new THREE.Object3D()];
+            this.fountain.assignCylinders(cylindersDebug);*/
+
             this.fountain.assignCylinders(this.cylinders);
 
             this.activeClockwork = this.mesh;
@@ -620,6 +625,7 @@ export default class Square extends THREE.Object3D{
 
                 this.sphereMesh = obj.getObjectByName("SkySphere").children[0];
                 console.log("Sky sphere", this.sphereMesh);
+                //DebugUtil.positionObject(this.sphereMesh, "Sky Sphere");
                 resolve(obj);
             });
 

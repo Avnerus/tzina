@@ -53,7 +53,7 @@ export default class Flood extends THREE.Object3D  {
 
         this.time = 0;
 
-        events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveFrequencey");
+        //events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveFrequencey");
 
         /*
         events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveLength");

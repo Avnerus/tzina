@@ -151,6 +151,7 @@ export default class Fountain extends THREE.Object3D  {
         let mat = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
         this.center = new THREE.Mesh(geo, mat);
 
+            /*
         this.spotLights = [];
         this.spotLights[0] = this.createSpotLight( new THREE.Vector3(4.47, -1.71, 0.96),
                                                    new THREE.Vector3(0.3, 1, -0.3),
@@ -181,6 +182,7 @@ export default class Fountain extends THREE.Object3D  {
         this.spotLightCenters.add(this.spotLights[1].target);
         this.spotLightCenters.add(this.spotLights[2].target);
         this.add( this.spotLightCenters );
+        */
 
         // DebugUtil.positionObject(this.spotLightCenters, "target");
         
@@ -284,6 +286,7 @@ export default class Fountain extends THREE.Object3D  {
 
         this.currentSequence = this.soundEventsRecords.slice(0);
         this.nextAnim = this.currentSequence.shift();
+        events.emit("show_start");
     }
 
     resetShow() {

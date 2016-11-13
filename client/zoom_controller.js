@@ -98,10 +98,10 @@ export default class ZoomController {
             return false;
         }, false);
 
-        //events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "z"); 
+        /*
         events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "x"); 
         events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "y"); 
-        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "z"); 
+        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "z");  */
 
         events.on("angle_updated", (hour) => {
             if (!this.done && typeof(hour) != 'undefined') {

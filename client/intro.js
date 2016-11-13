@@ -111,7 +111,7 @@ export default class Intro {
             this.logoHebrew.material.color = new THREE.Color(0xcccccc);
             this.logoEnglish.material.color = new THREE.Color(0xcccccc);
 
-            DebugUtil.positionObject(this.logo, "Logo");
+            //DebugUtil.positionObject(this.logo, "Logo");
 
             this.logoEnglish.updateMatrixWorld();
             this.logoHebrew.updateMatrixWorld();

@@ -155,6 +155,16 @@ export default class VideoRGBD  {
         this.wire = null;
     }
 
+    setPosition(newPosition) {
+        if (this.mesh) {
+            this.mesh.position.copy(newPosition)
+        }
+        if (this.wire) {
+            this.wire.position.copy(newPosition)
+            this.wire.position.z += 0.01;
+        }
+    }
+
     static buildMeshGeometry() {
         let meshGeometry = new THREE.Geometry();
         for ( let y = 0; y < VERTS_TALL; y++) {
