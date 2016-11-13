@@ -159,7 +159,7 @@ export default class Pidgeon extends THREE.Object3D{
         // myDom.style.transform = 'rotate(' + a + 'deg)';
       }
     }
-    // this.labelTextAdd("testext");
+    this.labelText("testext");
   }
   labelText(text){
     if(this.textualLabel){
@@ -171,7 +171,7 @@ export default class Pidgeon extends THREE.Object3D{
   labelTextAdd(text){
     this.textualLabel = new SpriteText2D(text, {align: textAlign.center,font: '20px Arial',fillStyle: '#FFFFFF',antialias: true});
     this.textualLabel.scale.multiplyScalar(0.02);
-    this.add(this.labelText);
+    this.add(this.textualLabel);
     this.textualLabel.position.x=0;
     this.textualLabel.position.y=0.7;
     this.textualLabel.position.z=0;

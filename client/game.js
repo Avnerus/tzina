@@ -41,6 +41,9 @@ import FPSCount from './util/fpscount'
 
 import VideoRGBD from './util/video_rgbd'
 
+
+import PidgeonController from './clientSockets/index'
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
@@ -111,7 +114,7 @@ export default class Game {
 
 
         // --- hide by laura --- start
-    
+
             /*
         events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,2);
@@ -140,7 +143,7 @@ export default class Game {
 
         this.flood = new Flood();
         this.flood.init();
-        this.scene.add(this.flood); 
+        this.scene.add(this.flood);
 
         /*
         // Post processing
@@ -153,7 +156,7 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
-       
+
         this.vrControls = new TzinaVRControls(this.emitter, this.camera);
 
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene, this.vrControls);
@@ -206,10 +209,13 @@ export default class Game {
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
 
-        this.show = new Show(this.square, this.characterController, this.timeController); 
+        this.show = new Show(this.square, this.characterController, this.timeController);
         this.show.init();
 
         this.endCredits = new EndCredits(this.camera);
+
+        this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
+        this.pidgeonController.init(this.loadingManager);
     }
 
     load(onLoad) {
@@ -252,7 +258,7 @@ export default class Game {
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
-        
+
         VideoRGBD.initPool();
 
         // WebVR
@@ -270,6 +276,7 @@ export default class Game {
         this.container.appendChild(element);
 
         this.resize();
+
 
     }
 
@@ -451,6 +458,15 @@ export default class Game {
         this.collisionManager.update(dt);
         this.flood.update(dt);
         this.endCredits.update(dt);
+        if(!this.pidgeonfailed){
+          // console.log("pidgeon second");
+          try{
+            this.pidgeonController.frame(dt);
+          }catch(e){
+            console.error("pidgeonContoller failed",e);
+            tthis.pidgeonfailed=true;
+          }
+        }
     }
 
     render() {

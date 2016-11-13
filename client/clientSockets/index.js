@@ -33,7 +33,7 @@ export default class PidgeonController {
     this.lastCameraPosition={x:0,y:0,z:0};
   }
   init(loadingManager){
-
+    console.log("pidgeon init");
     Pidgeon.initMesh(loadingManager);
     events.on(eventWhenTo.createSocket, (passed) => {
       if (!wsock){
@@ -169,7 +169,7 @@ export default class PidgeonController {
         console.log("pidgeon add text "+message.string);
         let remoteSprite=Pidgeon.remote(message.pointer);
         if(remoteSprite){
-          remoteSprite.labelText("*"+message.string+"*");
+          remoteSprite.labelText(message.string+"-");
           //remoteSprite.remove();
         }else{
           console.warn("couldn't retrieve the corresponding pidgeon ");
