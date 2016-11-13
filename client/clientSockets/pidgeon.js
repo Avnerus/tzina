@@ -51,7 +51,7 @@ export default class Pidgeon extends THREE.Object3D{
     // this.mesh.scale.set(0.3,0.3,0.3);
     // this.add(this.mesh);
     var box = new THREE.BoxGeometry(0.5,0.5,1);
-    var material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true} );
+    var material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true, visible:false} );
     this.boundingBox = new THREE.Mesh( box, material );
     this.add(this.boundingBox);
     /*pendant: these may become handy later, but currently unused:*/
@@ -193,12 +193,33 @@ export default class Pidgeon extends THREE.Object3D{
       this.labelTextAdd(text);
     }
   }
-  labelTextFadeIn(){
-    this.textualLabel.opacity(1);
+  labelTextGazed(dt){
+    //when in frame updated gaz function gaze is detected twards this pidgeon
+    this.isBeingGazed=2;
+    if(this.textualLabel)
+      if(this.textualLabel.opacity)
+        console.log("op"+this.textualLabel.opacity()+"gaz");
   }
-  labelTextFadeOut(){
-    this.textualLabel.opacity(0.1);
+  labelTextGazeCheck(dt){
+    //each frame update on gaze function
+
+    if(this.isBeingGazed>0){
+      this.isBeingGazed--;
+      if(this.textualLabel)
+        if(this.textualLabel.opacity){
+          if(this.textualLabel.opacity()<1){
+            this.textualLabel.opacity(this.textualLabel.opacity()+1*dt);
+          }
+        }
+    }else{
+      if(this.textualLabel)
+        if(this.textualLabel.opacity)
+        if(this.textualLabel.opacity()>0){
+          this.textualLabel.opacity(Math.floor(this.textualLabel.opacity()/5));
+        }
+    }
   }
+
   labelTextAdd(text){
     this.textualLabel = new SpriteText2D(text, {align: textAlign.center,font: '20px Arial',fillStyle: '#FFFFFF',antialias: true});
     this.textualLabel.scale.multiplyScalar(0.01);
@@ -206,13 +227,19 @@ export default class Pidgeon extends THREE.Object3D{
     this.textualLabel.position.x=0;
     this.textualLabel.position.y=1;
     this.textualLabel.position.z=0;
+    this.isBeingGazed=0;
     this.textualLabel.opacity=function(value){
-      if(value){
-        this.opacity=value;
-        this.textualLabel.fillStyle="rgba(255,255,255,"+this.opacity+")";
+      if(this.opacityValue==undefined){
+        this.opacityValue=1;
       }
-      return this.opacity;
+      if(!isNaN(value)){
+        this.opacityValue=value;
+        this.fillStyle="rgba(255,255,255,"+this.opacityValue+")";
+      }
+
+      return this.opacityValue;
     }
+    this.textualLabel.opacity(0);
   }
   labelTextChange(text){
     this.textualLabel.text = text;

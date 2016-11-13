@@ -232,9 +232,9 @@ export default class PidgeonController {
       this.socketEmitCameraPosition();
       lastEmitTime=this.time;
     }
-    this.gaze();
+    this.gaze(dt);
   }
-  gaze(){
+  gaze(dt){
     //raycast to get objects in center of sight
     let vector = new THREE.Vector3(0, 0, -1);
     vector = this.camera.localToWorld(vector);
@@ -243,8 +243,9 @@ export default class PidgeonController {
     let thelist=[];
 
     Pidgeon.each(function(pidg){
-      thelist.push(pidg.boundingBox);
       pidg.boundingBox.pidgeonOwner=pidg;
+      thelist.push(pidg.boundingBox);
+      pidg.labelTextGazeCheck(dt);
     });
 
     // if(!this.alreadyLoggedTheThing){
@@ -253,12 +254,13 @@ export default class PidgeonController {
     // }
     let collisionResults = raycaster.intersectObjects(thelist);
     for(let a in collisionResults){
-      console.log(collisionResults[a])
+      // console.log(collisionResults[a]);
+      // console.log(collisionResults[a].object.pidgeonOwner);
+      collisionResults[a].object.pidgeonOwner.labelTextGazed(dt);
     }
     collisionResults.forEach((result) => {
-      console.log("pidgeon raycast result",result);
+      // console.log("pidgeon raycast result",result);
       // result.material=new THREE.MeshBasicMaterial({color:0xFF0000,wireframe:true});        result.material=new THREE.MeshBasicMaterial({color:0xFF0000,wireframe:true});
-      result.pidgeonOwner.labelTextFadeOut();
       // console.log(result.mesh.showName());
     });
   }
