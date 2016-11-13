@@ -61,8 +61,8 @@ export default
 				"Miriam",
                 "Itzik",
                 "Shirin9AM",
-                "FatmanShower",
-                "Lupo9AM"
+                "Lupo9AM",
+                "FatmanSleep"
 			],
 			"introfile": [
 				"Miryam",
@@ -133,7 +133,7 @@ export default
                 "LupoDogs12PM",                
                 "Lupo12PM",
 				"Sasha",
-                "FatmanSleep",
+                "FatmanShower",
 				"Shirin12PM"
 			],
             "eventAfter" : 0,

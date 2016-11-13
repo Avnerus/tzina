@@ -319,8 +319,9 @@ export class StaticSoundSampler{
     request.send();
   }
   play(/*loop*/){
+    
     if(this.source){
-      this.source.start();
+        //     this.source.start();
       /*this.source.loop = loop||false;*/
     }else{
       console.warn("thisStaticSoundSampler mistake: you requested to play, but the source has not been loaded yet");
