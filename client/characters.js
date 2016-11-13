@@ -7,7 +7,8 @@ export default [
         position : [-4.85, 22.13, -11.6],
         rotation: [355, 0, 3],
         animation: 'Hannah',
-        uvdy: 0.48974609375,
+        uvdy: 0.5,
+        uvdy_idle: 0.48974609375,
         uvdx: 0,
         width: 1024,
         height: 2048,
@@ -417,8 +418,8 @@ export default [
         animationPosition: [1.13, -0.07, -2.27],
         animationRotation: [15,-25,7],
         subtitles: null,
-        space: 1.21,
-        spaceOffset: [1.57,0,-0.31]
+        space: 0.001,
+        spaceOffset: [1.57,0,0.68]
     },
     {
         name: 'Shirin5PM',
@@ -427,7 +428,7 @@ export default [
         maxdepth : 4120.305664062,
         position : [-11.55, 21.6, -9.78],
         rotation: [347, 70, 0],
-        animation: 'Shirin',
+        animation: null, // 'Shirin',
         uvdy: 0.5068359375,
         uvdx: 0.0,
         width: 1024,

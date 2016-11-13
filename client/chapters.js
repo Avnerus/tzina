@@ -210,39 +210,39 @@ export default
 			"extraAssets": [
 				{
                     name: "bridegroom",
-                    position: [2.9,21.4,8.1],
+                    position: [2.9,21.2,8.1],
                     rotation: [0,278,0],
-                    scale: 0.27
+                    scale: 0.369
 				},
 					{
                     name: "yukalele",
                     position: [15.44,21.3,13.64],
                     rotation: [0,144,0],
-                    scale: 0.28
+                    scale: 0.322
 				},
 					{
 					name: "bikeHottie",
-					position: [-9.72,21.4,17.24],
+					position: [-9.72,21.4,15.72],
 					rotation:[0,19,0],
-					scale: 0.33
+					scale: 0.44
 				},
 					{
 					name: "mom",
-					position: [-5.2,21.4,6.45],
+					position: [-5.2,21.2,6.45],
 					rotation:[0,249,0],
-					scale: 0.34
+					scale: 0.542
 				},
 					{
                     name: "cat",
-                    position: [8.25,22,11.85],
-                    rotation: [0,96,0],
-                    scale: 0.33
+                    position: [8.66,21.92,11.97],
+                    rotation: [353,96,0],
+                    scale: 0.439
 				},
 					{
                     name: "cart",
-                    position: [19.04,23,6.45],
+                    position: [16.73,23.52,6.5],
                     rotation: [188,326,0],
-                    scale: 0.3
+                    scale: 0.411
 				}
 			],
 
