@@ -22,6 +22,7 @@ import ItzikAnimation from './animations/itzik'
 import MeirAnimation from './animations/meir'
 import MarkAnimation from './animations/mark'
 import ItzhakAnimation from './animations/itzhak'
+import RamiAnimation from './animations/rami'
 
 export default class Game {
     constructor(config) {
@@ -100,6 +101,24 @@ export default class Game {
             animation: 'Hannah'
             });*/
 
+        this.rami = new Character({
+            //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
+            basePath : 'assets/characters/rami',
+            mindepth : 1482.958618164,
+            maxdepth : 2514.773681641,
+            position : [-30, 10, 150],
+            rotation: [0, 0, 0],
+            name: 'Rami',
+            animation: 'Rami',
+            uvd: 0.530277,
+            scale: 0.005,
+            animationPosition: [0, -2, 4],
+            animationRotation: [0, 0, 0],
+            space: 7,
+            subtitles: "subtitles"
+        }, this.collisionManager);
+
+        /*
         this.itzhak = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/itzhak',
@@ -117,7 +136,6 @@ export default class Game {
             subtitles: "subtitles"
         }, this.collisionManager);
 
-        /*
         this.mark = new Character({
             //basePath : 'http://d39fgma5mmu2v7.cloudfront.net/assets/characters/hanna',
             basePath : 'assets/characters/mark',
@@ -234,7 +252,8 @@ export default class Game {
             // 'Itzik': new ItzikAnimation()
             // 'Meir': new MeirAnimation()
             // 'Mark': new MarkAnimation()
-            'Itzhak': new ItzhakAnimation()
+            // 'Itzhak': new ItzhakAnimation()
+            'Rami': new RamiAnimation()
         }
 
 
@@ -275,7 +294,8 @@ export default class Game {
             // this.scene.add(this.itzik)
             // this.scene.add(this.meir);
             // this.scene.add(this.mark);
-            this.scene.add(this.itzhak);
+            // this.scene.add(this.itzhak);
+            this.scene.add(this.rami);
 
 
             // DEBUG
@@ -320,7 +340,8 @@ export default class Game {
         //this.itzik.init(this.loadingManager, this.animations)
         // this.meir.init(this.loadingManager, this.animations)
         // this.mark.init(this.loadingManager, this.animations);
-        this.itzhak.init(this.loadingManager, this.animations);
+        // this.itzhak.init(this.loadingManager, this.animations);
+        this.rami.init(this.loadingManager, this.animations);
         this.square.init(this.collisionManager, this.loadingManager);
 
         // Animations init
@@ -373,7 +394,8 @@ export default class Game {
             //this.itzik.play(); 
             // this.meir.play(); 
             // this.mark.play(); 
-            this.itzhak.play(); 
+            // this.itzhak.play(); 
+            this.rami.play(); 
         } else {
             // Init the intro
 
@@ -438,7 +460,8 @@ export default class Game {
         //this.itzik.update(dt,et);
         // this.meir.update(dt,et);
         // this.mark.update(dt,et);
-        this.itzhak.update(dt,et);
+        // this.itzhak.update(dt,et);
+        this.rami.update(dt,et);
 
         /*
         this.lupo.rotation.y = this.lupo.rotationY * Math.PI / 180;
