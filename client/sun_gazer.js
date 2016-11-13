@@ -36,11 +36,14 @@ export default class SunGazer extends THREE.Object3D  {
         events.on("control_threshold", (passed) => {      
 
             this.active = passed;
+    
         });
 
         events.on("character_playing", () => {
 
             this.active = false;
+
+            characterStartSound.blurModule.controlVolume(0.1);
 
             characterStartSound.play();
 
@@ -52,7 +55,9 @@ export default class SunGazer extends THREE.Object3D  {
             this.active = true;
         });
         events.on("gaze_started", () => {
-                
+
+            sunGazeSound.blurModule.controlVolume(0.3); 
+               
             sunGazeSound.play();
 
         });

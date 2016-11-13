@@ -83,7 +83,7 @@ export default
     			    },
     		     {
                     name: "sweetLady",
-                    position: [-10.2,21.3,9.42],
+                    position: [-7.03,21.5,5.2],
                     rotation: [0,134,0],
                     scale: 0.31
      		   },
