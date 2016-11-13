@@ -3,6 +3,8 @@ uniform float opacity;
 
 uniform float brightness;
 
+uniform float contrast;
+
 uniform float uvdy;
 uniform float uvdx;
 
@@ -16,9 +18,10 @@ void main() {
     vec3 bright = vec3(brightness,brightness,brightness);
 
     vec4 color = texture2D( map, vUv + vec2(uvdx, uvdy));
-    color.w = opacity;
 
-    color.rgb += bright;
+    color.rgb = (color.rgb - 0.5) * contrast + 0.5 + brightness;
+
+    color.w = opacity;  
 
     gl_FragColor = color;
 }

@@ -7,7 +7,7 @@ export default class GuiManager {
         this.gui = new dat.GUI();
         //this.gui.close();
         this.emitter.on('add_gui', (opts,...args) => {
-            console.log("ADD GUI",args);
+            //console.log("ADD GUI",args);
             let control;
             let addFunction = "add";
             if (opts.color) {

@@ -40707,7 +40707,7 @@
     		return this.intersectsSphere( sphere );
     	},
     	size: function ( optionalTarget ) {
-    		console.warn( 'THREE.Box3: .size() has been renamed to .getSize().' );
+    		// AVNER console.warn( 'THREE.Box3: .size() has been renamed to .getSize().' );
     		return this.getSize( optionalTarget );
     	}
     } );

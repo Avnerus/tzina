@@ -12,12 +12,13 @@ export default {
         let material = new THREE.MeshBasicMaterial( {color: color} );
         let cube = new THREE.Mesh( geometry, material );
         cube.position.copy(position);
-        events.emit("add_gui", {folder:name}, cube.position, "x"); 
-        events.emit("add_gui", {folder:name}, cube.position, "y"); 
-        events.emit("add_gui", {folder:name}, cube.position, "z"); 
+        events.emit("add_gui", {folder:name, step: 0.01}, cube.position, "x"); 
+        events.emit("add_gui", {folder:name, step: 0.01}, cube.position, "y"); 
+        events.emit("add_gui", {folder:name, step: 0.01}, cube.position, "z"); 
         return cube;
     },
-    positionObject: function(object, name, listen = false, min=-40,max=40, angles) {
+    positionObject: function(object, name, listen = false, min=-50,max=50, angles) {
+        console.log("Debug - position object ", name);
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "x", min, max); 
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "y", min, max * 2);
         events.emit("add_gui", {folder:name + " - Position", listen: listen, step: 0.01}, object.position, "z", min, max);
@@ -41,9 +42,11 @@ export default {
         }, object.angleRotation, "z", 0, 360);
 
         object.global = object.scale.x;
-        events.emit("add_gui", {folder:name + " - Scale", listen: listen, step: 0.01, onChange: () => {
+        events.emit("add_gui", {folder:name + " - Scale", listen: listen, step: 0.001, onChange: () => {
            object.scale.set(object.global, object.global, object.global);
         }}, object, "global",0,4); 
+
+        events.emit("add_gui", {folder: name}, object, "visible"); 
     },
 
     fastForward : function(video) {

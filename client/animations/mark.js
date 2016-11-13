@@ -19,10 +19,21 @@ export default class MeirAnimation extends THREE.Object3D {
             { time: 5,  anim: ()=>{ this.pinkNeonOn() } },
             { time: 10, anim: ()=>{ this.blueNeonOn() } },
             { time: 15, anim: ()=>{ this.neonRotate() } },
-            { time: 20, anim: ()=>{ this.neonFlickering( 0.2, 3 ) } },    // neonFlickering( speed, time ) <-- how fast & how many times of flickering
+            { time: 32, anim: ()=>{ this.neonRotate() } },
+            { time: 40, anim: ()=>{ this.neonFlickering( 0.2, 3 ) } },    // neonFlickering( speed, time ) <-- how fast & how many times of flickering
             { time: 25, anim: ()=>{ this.neonRotateBack() } },
-            { time: 30, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } }, 
-            { time: 45, anim: ()=>{ this.characterDisappear() } }
+            { time: 55, anim: ()=>{ this.neonRotate() } },
+            { time: 94, anim: ()=>{ this.neonRotateBack() } },
+            { time: 99, anim: ()=>{ this.neonRotate() } },
+            { time: 105, anim: ()=>{ this.neonRotateBack() } },
+            { time: 110, anim: ()=>{ this.neonRotate() } },
+            { time: 115, anim: ()=>{ this.neonRotateBack() } },
+            { time: 120, anim: ()=>{ this.neonRotate() } },
+            { time: 198, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } },
+            { time: 200, anim: ()=>{ this.neonRotateBack() } },
+            { time: 207, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } },
+            { time: 209, anim: ()=>{ this.neonRotate() } },  
+            { time: 218, anim: ()=>{ this.characterDisappear() } }
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -102,7 +113,7 @@ export default class MeirAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        // DebugUtil.positionObject(this, "mark");
+        // DebugUtil.positionObject(this, "mark ani");
         //
         this.loadingManager.itemEnd("MarkAnim");
     }
@@ -127,15 +138,15 @@ export default class MeirAnimation extends THREE.Object3D {
 
     neonRotate(){
         TweenMax.to( [this.neon1.rotation, this.neon2.rotation], 2, { y: 0, ease: Back.easeInOut } );
-        TweenMax.to( [this.neon1.position, this.neon2.position], 2, { x: 0, y: 0, z: 0, ease: Back.easeInOut } );
+        TweenMax.to( [this.neon1.position, this.neon2.position], 2, { x: 1.26, y: 0, z: 0, ease: Back.easeInOut } );
     }
 
     neonRotateBack(){
-        TweenMax.to( this.neon1.rotation, 2, { y: 124*Math.PI/180, ease: Back.easeInOut } );
-        TweenMax.to( this.neon1.position, 2, { x: 1.86, y: -0.36, z: -0.42, ease: Back.easeInOut } );
+        TweenMax.to( this.neon1.rotation, 2, { y: 142*Math.PI/180, ease: Back.easeInOut } );
+        TweenMax.to( this.neon1.position, 2, { x: 2, y: -0, z: -0.11, ease: Back.easeInOut } );
 
-        TweenMax.to( this.neon2.rotation, 2, { y: 123*Math.PI/180, ease: Back.easeInOut } );
-        TweenMax.to( this.neon2.position, 2, { x: 1.56, y: -0.3, z: 0.42, ease: Back.easeInOut } );
+        TweenMax.to( this.neon2.rotation, 2, { y: 142*Math.PI/180, ease: Back.easeInOut } );
+        TweenMax.to( this.neon2.position, 2, { x: 1.71, y: -0, z: 0.54, ease: Back.easeInOut } );
     }
 
     neonFlickering( _speed, _times ){
@@ -184,10 +195,8 @@ export default class MeirAnimation extends THREE.Object3D {
     characterDisappear() {
         this.neonFlickering( 0.05, 40 );
 
-        TweenMax.to( this.dummy, 5, { opacity:0, ease: SteppedEase.config(3), onUpdate: ()=>{
+        TweenMax.to( this.dummy, 4, { opacity:0, ease: SteppedEase.config(3), onUpdate: ()=>{
                 this.parent.fullVideo.setOpacity(this.dummy.opacity);
-            }, onStart: ()=>{
-                //...
             }, onComplete: ()=>{
                 this.parent.fullVideo.setOpacity(0.0);
             } } );

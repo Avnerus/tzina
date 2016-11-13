@@ -79,7 +79,7 @@ catch(e) {
 
 function start() {
     document.getElementById('start-container').style.display = "none";
-  //  document.getElementById('game').appendChild(stats.dom);
+    document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
     window.addEventListener('vrdisplaypresentchange', resize, true);
@@ -90,7 +90,11 @@ function start() {
 
 
 function animate(t) {
-    requestAnimationFrame(animate);
+    if(game.vrManager.hmd.isPresenting) {
+        game.vrManager.hmd.requestAnimationFrame(animate) 
+    } else {
+        requestAnimationFrame(animate);
+    }
 
     /*
     elapsed = t - lastTimestamp;

@@ -15,15 +15,23 @@ export default class CharacterController {
         this.activeCharacters = [];
         this.animations = animations;
         this.addedColliders = false;
+        this.inControl = false;
+        this.debug = true;
     }
     init(loadingManager) {
         console.log("Initializing Character controller");
-        Characters.forEach((characterProps) => {
-            let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager);
-            character.animation = this.animations[characterProps.animation];
-            character.init(loadingManager);
-            this.characters[characterProps.name] = character;
+        if (!this.config.noCharacters) {
+            Characters.forEach((characterProps) => {
+                let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager);
+                character.animation = this.animations[characterProps.animation];
+                character.init(loadingManager);
+                this.characters[characterProps.name] = character;
+            });
+        }
+        events.on("control_threshold", (passed) => {
+            this.inControl = passed;
         });
+
         events.on("hour_updated", (hour) => {
             
             let clone = this.activeCharacters.slice(0);
@@ -32,8 +40,8 @@ export default class CharacterController {
             for (let i = 0; i < clone.length; i++) {
                 let character = clone[i];
 
-                if (!character.done) {
-                    this.square.mesh.remove(character);
+                if (!character.done && !character.props.event) {
+                    this.square.clockwork.remove(character);
                     character.unload();
                 } else {
                     console.log("Character " + character.props.name + " is still active");
@@ -53,21 +61,28 @@ export default class CharacterController {
                 this.addCharacter(characterName);
             });
 
-            // Is there an event character
-            if (chapter.eventCharacters && chapter.eventAfter == 0) {
-                chapter.eventCharacters.forEach((characterName) => {
-                    this.addCharacter(characterName);
-                });
-            }
         });
         events.on("angle_updated", (hour) => {
+            if (this.inControl){ {
+                this.activeCharacters.forEach((character) => {
+                    if (character.idleOnly) {
+                        character.addedColliders = true;
+                    }
+                    else if (!character.done && !character.addedColliders) {
+                        console.log("Adding colliders: " + character.props.name);
+                        this.collisionManager.addCharacter(character);
+                        character.addedColliders = true;
+                    }
+                });
+            }}
+        });
+
+        events.on("end_credits", () => {
+            console.log("End credits, removing characters");
             this.activeCharacters.forEach((character) => {
-                if (!character.done && !character.addedColliders) {
-                    console.log("Adding colliders: " + character.props.name);
-                    this.collisionManager.addCharacter(character);
-                    character.addedColliders = true;
-                }
-            });
+                this.square.clockwork.remove(character);
+                character.unload();
+            })            
         });
     }
 
@@ -77,7 +92,13 @@ export default class CharacterController {
             let character = this.characters[characterName];
             this.activeCharacters.push(character);
             this.square.clockwork.add(character);
-            //DebugUtil.positionObject(character, character.props.name, false, -40, 40, character.props.rotation);
+            if (this.debug) {
+                DebugUtil.positionObject(character, character.props.name, false, -40, 40, character.props.rotation);
+                    /*
+                let bbox = new THREE.BoundingBoxHelper( character, 0x00ffff  );
+                bbox.update();
+                this.square.parent.add( bbox );*/
+            }
             character.load();
             character.play();
         }

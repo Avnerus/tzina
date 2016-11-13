@@ -14,7 +14,8 @@ export default class HaimAnimation extends THREE.Object3D {
     init(loadingManager) {
         this.loadingManager = loadingManager;
         this.setupAnim();
-        // DebugUtil.positionObject(this, "haim anim");
+
+        //DebugUtil.positionObject(this, "haim anim");
     }
 
     setupAnim() {
@@ -26,9 +27,9 @@ export default class HaimAnimation extends THREE.Object3D {
         // setup animation sequence
         // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
-            { time: 10,  anim: ()=>{this.tubeDown(1)} },
-            { time: 30, anim: ()=>{this.tubeOut(0.5)} },    // 30
-            { time: 252, anim: ()=>{this.characterDisappear()} }    //254
+            { time: 5,  anim: ()=>{this.tubeDown(1)} },    // 12
+            { time: 15, anim: ()=>{this.tubeOut(0.5)} },    // 73
+            { time: 252, anim: ()=>{this.characterDisappear()} }    //252
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -72,8 +73,8 @@ export default class HaimAnimation extends THREE.Object3D {
                                                        Number(curveData[k][i][j][1]),
                                                        Number(curveData[k][i][j][2]) );
                     // scale down
-                        newVector.multiplyScalar(0.5);
-                        // newVector.multiply( new THREE.Vector3(1,2,1) );
+                        // newVector.multiplyScalar(0.5);
+                        newVector.multiply( new THREE.Vector3(.4,.8,.4) );
                     curve_vec[i].push( newVector );
                 }
             }
@@ -122,7 +123,8 @@ export default class HaimAnimation extends THREE.Object3D {
                                                        Number(curveOutData[k][i][j][2]) );
                     // scale down
                         // newVector.multiplyScalar(0.7);
-                        newVector.multiply( new THREE.Vector3(0.9,0.6,0.9) );
+                        // newVector.multiply( new THREE.Vector3(0.9,0.6,0.9) );
+                        newVector.multiply( new THREE.Vector3(0.7,0.8,0.7) );
                     curve_vec[i].push( newVector );
                 }
             }
@@ -218,7 +220,7 @@ export default class HaimAnimation extends THREE.Object3D {
                     value: [.5,1,1,1,1,0]
                 },
                 size: {
-                    value: [.1,.5,1,1,.5],
+                    value: [.1,.4,.7,.7,.3],
                     spread: 1
                 },
                 particleCount: 300,
@@ -254,7 +256,7 @@ export default class HaimAnimation extends THREE.Object3D {
             for(let i=0; i<40; i++){
                 let puddle = new THREE.Mesh(puddleGeo, puddleMats[i%4]);
                 puddle.position.set(Math.random()*12-6,
-                                    -1*i/25,
+                                    0,
                                     Math.random()*14-7 +3);
                 puddle.rotation.x = -Math.PI/2;
                 puddle.scale.multiplyScalar( (Math.random()+1)/4 );
@@ -318,6 +320,7 @@ export default class HaimAnimation extends THREE.Object3D {
             lengthhh = liquidGeo.vertices.length-1;
             theCloud.position.copy( liquidGeo.vertices[lengthhh] );
             // theCloud.position.y += (this.lookupTable[j]*2);
+            TweenMax.to( theCloud.position, 4, { y: "+=" + 0.2, repeat: -1, yoyo: true, delay: j%2, ease: Power0.easeNone } );
             tubeObject.add( theCloud );
 
             tubeObject.position.copy( pos );
@@ -367,6 +370,7 @@ export default class HaimAnimation extends THREE.Object3D {
             let theCloud = this.cloud.clone();
             let lengthhh = liquidGeo.vertices.length-1;
             theCloud.position.copy( liquidGeo.vertices[lengthhh] );
+            TweenMax.to( theCloud.position, 4, { y: "+=" + 0.2, repeat: -1, yoyo: true, delay: j%3, ease: Power0.easeNone } );
             // theBag.scale.multiplyScalar( this.clamp(this.lookupTable[j], 0.3, 1) );
             // theBag.rotation.y = -rot.y;
             tubeObject.add( theCloud );
@@ -465,16 +469,25 @@ export default class HaimAnimation extends THREE.Object3D {
                }} )
                .to( targets, _duration, { endArray: tmpEndArray2, ease: Power0.easeNone })
                .to( targets, _duration, { endArray: tmpEndArray3, ease: Power0.easeNone })
-               .to( targets, _duration/1.5, { endArray: tmpEndArray4, ease: Back.easeInOut.config(2.5), onStart: ()=>{
-                    // this.tubes[0].children[1].material.opacity = 1;
-                    this.tubes[0].children[1].visible = true;
-                    this.tubes[0].children[1].material.map.offset.x=-1.5;
-                    this.liquidDown = true;
-               }, onComplete: ()=>{
-                    for(let i=0; i<this.tubes.length; i++){
-                        TweenMax.to( this.tubes[i].children[2].scale, _duration*(this.clamp(this.tubes[i].children[2].scale.x, 0.5, 1)*20), { x: 0.01, y: 0.01, z: 0.01, ease: Bounce.easeInOut } );
+               .to( targets, _duration/1.5, {
+                    endArray: tmpEndArray4,
+                    ease: Back.easeInOut.config(2.5),
+                    onStart: ()=>{
+                        // this.tubes[0].children[1].material.opacity = 1;
+                        this.tubes[0].children[1].visible = true;
+                        this.tubes[0].children[1].material.map.offset.x=-1.5;
+                        this.liquidDown = true;
+                    },
+                    onComplete: ()=>{
+                        for(let i=0; i<this.tubes.length; i++){
+                            // TweenMax.to( this.tubes[i].children[2].scale, _duration*(this.clamp(this.tubes[i].children[2].scale.x, 0.5, 1)*20), { x: 0.01, y: 0.01, z: 0.01, ease: Bounce.easeInOut } );
+                            TweenMax.to( this.tubes[i].children[2].scale, 1, {
+                                x: "-=0.25", y: "-=0.25", z: "-=0.25", ease: Power1.easeInOut,
+                                yoyo: true, repeat: -1
+                            } );
+                        }
                     }
-               } });
+               });
     }
 
     tubeOut(_duration) {
@@ -496,6 +509,11 @@ export default class HaimAnimation extends THREE.Object3D {
                     // this.tubes[0].children[1].material.map.offset.x=-1.5;
                     // this.liquidOut = true;
 
+                    // shrink bags
+                    for(let i=0; i<this.tubes.length; i++){
+                        TweenMax.to( this.tubes[i].children[2].scale, _duration*(this.clamp(this.tubes[i].children[2].scale.x, 0.5, 1)*20), { x: 0.01, y: 0.01, z: 0.01, ease: Bounce.easeInOut } );
+                    }
+
                     // scale up clouds
                     for(let i=0; i<this.outTubes.length; i++){
                         TweenMax.to( this.outTubes[i].children[2].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone } );
@@ -513,7 +531,7 @@ export default class HaimAnimation extends THREE.Object3D {
 
         for(let i=0; i<this.particleGroup.emitters.length; i++){
             this.particleGroup.emitters[i].activeMultiplier = 1;
-            this.particleGroup.emitters[i].size.value = [.2,6,8,6,2];
+            // this.particleGroup.emitters[i].size.value = [.2,6,8,6,2];
 
             let emitterPos = this.particleGroup.emitters[i].position.value;
             rainOriginPositions.push( emitterPos );
@@ -554,7 +572,7 @@ export default class HaimAnimation extends THREE.Object3D {
                         this.parent.fullVideo.setOpacity(0.0);
                         for(let i=0; i<this.particleGroup.emitters.length; i++){
                             this.particleGroup.emitters[i].activeMultiplier = 0.1;
-                            this.particleGroup.emitters[i].size.value = [.1,2,3,3,2];
+                            // this.particleGroup.emitters[i].size.value = [.1,2,3,3,2];
                             this.particleGroup.emitters[i].position.value = rainOriginPositions[i];
                         }
                     } } );

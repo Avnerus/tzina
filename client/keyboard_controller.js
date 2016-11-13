@@ -159,14 +159,18 @@ export default class KeyboardController {
                 target.add(zVector.multiplyScalar(this.velocity.z * delta));
                 target.add(xVector.multiplyScalar(this.velocity.x * delta));
 
-                this.collisionManager.testMovement(this.camera.position, target)
-                .then((result) => {
-                    if (result) {
-                        this.camera.position.copy(target);
-                    } else {
-                        console.log("NO GO");
-                    }
-                }); 
+                if (this.collisionManager) {
+                    this.collisionManager.testMovement(this.camera.position, target)
+                    .then((result) => {
+                        if (result) {
+                            this.camera.position.copy(target);
+                        } else {
+                            console.log("NO GO");
+                        }
+                    }); 
+                } else {
+                    this.camera.position.copy(target);
+                }
             }
         }
 

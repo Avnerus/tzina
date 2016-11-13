@@ -21,7 +21,7 @@ export default class SunLoader extends THREE.Object3D  {
 
         this.renderer = renderer;
 
-        this.radius = 0.8;
+        this.radius = 3;
         this.tube = 0.2;
     }
     organize() {
@@ -74,7 +74,7 @@ export default class SunLoader extends THREE.Object3D  {
         this.renderShader = new THREE.ShaderMaterial( {
             uniforms: {
                 positions: { type: "t", value: null },
-                pointSize: { type: "f", value: 0},
+                pointSize: { type: "f", value: 2.0},
                 radius: { type: "f", value: this.radius },
                 tube: { type: "f", value: this.tube },
                 boom: { type: "1", value: 0 }
@@ -94,11 +94,6 @@ export default class SunLoader extends THREE.Object3D  {
         this.add( this.fbo.particles );
         this.fbo.update();
 
-        events.on("control_threshold", (passed) => {
-            if (passed) {
-                this.renderShader.uniforms.pointSize.value = 2.0;
-            }
-        })
 
         /*
         events.emit("add_gui", {folder:"Particles Order", listen:false}, this.simulationShader.uniforms.orderTimer, "value", 0.0, 1.0); 
