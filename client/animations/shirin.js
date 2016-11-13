@@ -36,11 +36,11 @@ export default class ShirinAnimation extends THREE.Object3D {
                 { time: 5, anim: ()=>{this.crackCocoon(3)} },
                 { time: 8,  anim: ()=>{this.stopFragment(3)} }
             ],
-            'Shirin17PM': [
+            'Shirin5PM': [
                 { time: 5, anim: ()=>{this.crackCocoon(1)} },
                 { time: 8,  anim: ()=>{this.stopFragment(1)} }
             ],
-            'Shirin19PM': [
+            'Shirin7PM': [
                 { time: 5, anim: ()=>{this.crackCocoon(2)} },
                 { time: 8,  anim: ()=>{this.stopFragment(2)} }
             ]
@@ -492,6 +492,7 @@ export default class ShirinAnimation extends THREE.Object3D {
     start(time) {
         this.reset();
 
+        console.log("Shirin animation starting with ", time);
         this.currentSequence = this.sequenceConfig[time].slice(0);
         this.nextAnim = this.currentSequence.shift();
     }
