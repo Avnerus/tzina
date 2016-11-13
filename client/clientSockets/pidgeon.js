@@ -1,9 +1,10 @@
 import {SpriteText2D , textAlign} from '../lib/text2d/index';
-
+var FLOORY=13.1;
 var BlendCharacter=require('../util/BlendCharacter.js');
 var blendMesh;
 var loaded3dObject;
 var loadedSkinTexture;
+var loadedSkinTexture2;
 //an array of the displayable pidgeons for client side reference
 var characterList = [];
 //an array of the associations between server id's and client side id's
@@ -31,7 +32,11 @@ export default class Pidgeon extends THREE.Object3D{
     }
     // console.log("pidgeon",Pidgeon.geometry);
     blendMesh=new THREE.BlendCharacter(loaded3dObject);
-    blendMesh.applyNewDiffuse(loadedSkinTexture);
+    if(props.skin){
+      blendMesh.applyNewDiffuse(loadedSkinTexture2);
+    }else{
+      blendMesh.applyNewDiffuse(loadedSkinTexture);
+    }
     this.add( blendMesh );
     blendMesh.play("Bird_Fly",1);
     // blendMesh.position.z=0.2*a;
@@ -40,7 +45,7 @@ export default class Pidgeon extends THREE.Object3D{
     // blendMesh.rotation.z=Math.PI;
     blendMesh.rotation.y=Math.PI;
     // this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
-    blendMesh.position.set(0,-0.49,0);
+    blendMesh.position.set(0,0,0);
     // this.mesh.scale.set(0.3,0.3,0.3);
     // this.add(this.mesh);
     /*pendant: these may become handy later, but currently unused:*/
@@ -68,6 +73,11 @@ export default class Pidgeon extends THREE.Object3D{
     }
     this.walkTowards={
       position:function(newPosition){
+
+        if(thisPidgeon.walkingOnGround){
+          newPosition.y=FLOORY;
+        }
+
         //get new vector to look at. this is only used for rotation and will ignore the y component avoiding weird rotations
         let Lokat=new THREE.Vector3(newPosition.x||0,thisPidgeon.position.y,newPosition.z||0);
         thisPidgeon.lookAt(Lokat);
@@ -140,6 +150,15 @@ export default class Pidgeon extends THREE.Object3D{
       }
     }
     this.transform = {
+      jumpToFloor:function(checkIfWalking){
+        if(!(checkIfWalking&&(!this.walkingOnGround))){
+        /*tf=f
+          ft=t
+          tt=t
+          ff=t*/
+          thisPidgeon.position.y=FLOORY;
+        }
+      },
       position: function(newPosition) {
         //transfer all the position properties to the mesh position
         //we are trusting that a looks like {x:int,y:int,z:int}
@@ -159,7 +178,7 @@ export default class Pidgeon extends THREE.Object3D{
         // myDom.style.transform = 'rotate(' + a + 'deg)';
       }
     }
-    this.labelText("testext");
+    // this.labelText("testext");
   }
   labelText(text){
     if(this.textualLabel){
@@ -173,7 +192,7 @@ export default class Pidgeon extends THREE.Object3D{
     this.textualLabel.scale.multiplyScalar(0.02);
     this.add(this.textualLabel);
     this.textualLabel.position.x=0;
-    this.textualLabel.position.y=0.7;
+    this.textualLabel.position.y=1;
     this.textualLabel.position.z=0;
   }
   labelTextChange(text){
@@ -190,6 +209,7 @@ export default class Pidgeon extends THREE.Object3D{
   land(){
     this.changeAnimStateTo("Bird_Idle");
     this.walkingOnGround=true;
+    newCharacter.transform.jumpToFloor();
   }
   flyAway(onEndFunction){
     let thisPidgeon=this;
@@ -312,6 +332,10 @@ export default class Pidgeon extends THREE.Object3D{
     try{
       THREE.BlendCharacter.loadNewDiffuse( 'assets/pidgeon/pigeons_v2.jpg', function(newTexture) {
   			loadedSkinTexture=newTexture;
+  			console.log("pidgeon skin texture loaded");
+  		},loadingManager );
+      THREE.BlendCharacter.loadNewDiffuse( 'assets/pidgeon/pigeons_v3.jpg', function(newTexture) {
+  			loadedSkinTexture2=newTexture;
   			console.log("pidgeon skin texture loaded");
   		},loadingManager );
     }catch(e){

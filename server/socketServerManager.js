@@ -23,7 +23,7 @@ export default class socketServerManager{
     wss.binaryType = "arraybuffer";
 
     wss.on('connection', function(ws) {
-      
+
       ws.binaryType = "arraybuffer";
       parent.handle('connection',new thisWebSocketManager.WebSocketInstance(ws));
     });
@@ -63,13 +63,15 @@ export default class socketServerManager{
         }
         // console.log(msg);
       });
-      this.send=function(data){
+      this.send=function(data,onFinish){
         let out=data;
         if(!(data instanceof Buffer || data instanceof ArrayBuffer)){
           out=interpreter.encode(data);
         }
-        this.ws.send(out, function(e) {
-          if (e) console.warn(e)
+        this.ws.send(out,function(e) {
+          if (e){ console.warn(e) }else{
+            if(onFinish)onFinish();
+          }
         });
       }
       return this;

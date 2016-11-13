@@ -15,9 +15,10 @@ let eventWhenTo={
 let myClientId;
 //pendant: this probably is no longer needed:
 //my own sprite instance.
-let localSprite;
+let localSprite=false;
 //holds websocket and flags wether has been initialized
 let wsock=false;
+let webSocketFinishedConnecting=false;
 let insideSquare;
 //what is the smallest movement to emit to the server; measured as cube shaped comparison as it is faster.
 let minimumVectorChangeToBroadcast=0.7;
@@ -26,6 +27,7 @@ let emitInterval=0.5;
 let lastEmitTime=0;
 let verbose=false;
 let isLanded=false;
+
 export default class PidgeonController {
   constructor(scene,camera) {
     this.scene = scene;
@@ -40,8 +42,6 @@ export default class PidgeonController {
         this.startSocket();
       }
     })
-
-
   }
   startSocket() {
     let host = window.document.location.host.replace(/:.*/, '');
@@ -54,14 +54,16 @@ export default class PidgeonController {
     // pidgeon.position.y=30;
 
     // console.log("pidgeon",this.scene,pidgeon);
-
-
     wsock.on("message",function(message){
-
+      webSocketFinishedConnecting=true;
       if(verbose)console.log("pidgeon "+message.header+" of "+message.pointer+" is:",message.data);
 
       // console.log("incoming message",message);
-      if(message.header=="changeposition"){
+      if(message.header=="newclient"){
+        // console.log("new client",message);
+        let pidgeon=new Pidgeon({unique:message.pointer});
+        thisPidgeonController.scene.add(pidgeon);
+      }else if(message.header=="changeposition"){
         // retrieve the pidgeon icon that represents my own.
         let remoteSprite=Pidgeon.remote(message.pointer);
         if(remoteSprite){
@@ -121,6 +123,8 @@ export default class PidgeonController {
         if(verbose)console.log("pidgeon client id:"+myClientId);
         //localSprite=new characters.Character({unique:myClientId});
         //console.log("new client Id",message);
+        localSprite=new Pidgeon({unique:message.pointer,skin:"localsprite"});
+        thisPidgeonController.scene.add(localSprite);
 
         events.on(eventWhenTo.land, (passed) => {
           if(!isLanded){
@@ -134,6 +138,9 @@ export default class PidgeonController {
               });
             }
             isLanded=true;
+            localSprite.flyOrLand(1);
+
+
           }
         });
 
@@ -157,23 +164,30 @@ export default class PidgeonController {
               if(verbose)console.log("pidgeon object "+stateObjectUnique+" found apply");
               //if we have it, will apply all the data to it. So far only position
               dataOwner.transform.position(dataCoordinates);
+              //go to floor level if the pidgeon is walking
+              dataOwner.transform.jumpToFloor(true);
             }else{
               if(verbose)console.log("pidgeon object "+stateObjectUnique+" notfound create");
               //if we don't have it, we create it.
               let newCharacter=new Pidgeon({position:dataCoordinates,unique:stateObjectUnique});
               thisPidgeonController.scene.add(newCharacter);
+              //go to floor level if the pidgeon is walking
+              newCharacter.transform.jumpToFloor(true);
             }
           }
         }
       }else if(message.header=="tagText"){
         console.log("pidgeon add text "+message.string);
         let remoteSprite=Pidgeon.remote(message.pointer);
-        if(remoteSprite){
-          remoteSprite.labelText(message.string+"-");
-          //remoteSprite.remove();
+        if(!remoteSprite){
+          console.warn("couldn't retrieve the corresponding pidgeon",message);
+          //if we don't have it, we create it. Comment this if many pidgeon sprites start appearing
+          // remoteSprite=new Pidgeon({position:{x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001},unique:message.pointer});
+          // thisPidgeonController.scene.add(remoteSprite);
         }else{
-          console.warn("couldn't retrieve the corresponding pidgeon ");
+          remoteSprite.labelText(message.string);
         }
+
       }else  if(message.header=="landedbatch"){
         //these decodings should happen in messageinterpreter
         let batch=new Array();
@@ -202,18 +216,10 @@ export default class PidgeonController {
             }
           }
         }
-      }else if(message.header=="newclient"){
-        // console.log("new client",message);
-        let pidgeon=new Pidgeon({unique:message.pointer});
-        thisPidgeonController.scene.add(pidgeon);
-      }else{
+      }else {
         console.warn("pidgeon unexpected message header:",message);
       }
     });
-
-
-
-
   }
   frame(dt){
     if(!this.time) this.time=0;
@@ -226,7 +232,7 @@ export default class PidgeonController {
     }
   }
   socketEmitCameraPosition(){
-    if(wsock){
+    if(webSocketFinishedConnecting){
       let position=this.camera.position;
       let different=false;
       //check that the movement is big enough to send
@@ -247,11 +253,9 @@ export default class PidgeonController {
           }else{
           }
         });
-      }
-      if(localSprite){
-        //pendant: this may no longer be needed. place where the local sprite is moved, but camera is inside it by definition
-        // localSprite.transform.rotation(localSprite.transform.position({x:e.clientX,y:e.clientY}).getMovementDirection()* 180 / Math.PI);
-        // localSprite.transform.position({x:e.clientX,y:e.clientY});
+        if(localSprite){
+            localSprite.walkTowards.position({x:position.x,y:position.y,z:position.z});
+        }
       }
     }
   }
