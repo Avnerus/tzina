@@ -236,7 +236,7 @@ export default class Square extends THREE.Object3D{
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
             
-
+            this.scene.rotation.set(45,55,46);
             //DebugUtil.positionObject(this.ground, "ground");
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
