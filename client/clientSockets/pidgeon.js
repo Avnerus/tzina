@@ -1,7 +1,8 @@
 import {SpriteText2D , textAlign} from '../lib/text2d/index';
 var FLOORY=13.1;
 var BlendCharacter=require('../util/BlendCharacter.js');
-var blendMesh;
+
+
 var loaded3dObject;
 var loadedSkinTexture;
 var loadedSkinTexture2;
@@ -31,21 +32,22 @@ export default class Pidgeon extends THREE.Object3D{
       console.warn("you created a character without providing server unique. This renders the character unreachable");
     }
     // console.log("pidgeon",Pidgeon.geometry);
-    blendMesh=new THREE.BlendCharacter(loaded3dObject);
+    this.blendMesh=new THREE.BlendCharacter(loaded3dObject);
     if(props.skin){
-      blendMesh.applyNewDiffuse(loadedSkinTexture2);
+      this.blendMesh.applyNewDiffuse(loadedSkinTexture2);
     }else{
-      blendMesh.applyNewDiffuse(loadedSkinTexture);
+      this.blendMesh.applyNewDiffuse(loadedSkinTexture);
     }
-    this.add( blendMesh );
-    blendMesh.play("Bird_Fly",1);
-    // blendMesh.position.z=0.2*a;
+    this.add( this.blendMesh );
+
+    this.blendMesh.play("Bird_Fly",1);
+    // this.blendMesh.position.z=0.2*a;
     //these json models insist on coming rotated.
-    // blendMesh.rotation.x=Math.PI/-2;
-    // blendMesh.rotation.z=Math.PI;
-    blendMesh.rotation.y=Math.PI;
+    // this.blendMesh.rotation.x=Math.PI/-2;
+    // this.blendMesh.rotation.z=Math.PI;
+    this.blendMesh.rotation.y=Math.PI;
     // this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
-    blendMesh.position.set(0,0,0);
+    this.blendMesh.position.set(0,0,0);
     // this.mesh.scale.set(0.3,0.3,0.3);
     // this.add(this.mesh);
     /*pendant: these may become handy later, but currently unused:*/
@@ -209,7 +211,7 @@ export default class Pidgeon extends THREE.Object3D{
   land(){
     this.changeAnimStateTo("Bird_Idle");
     this.walkingOnGround=true;
-    newCharacter.transform.jumpToFloor();
+    this.transform.jumpToFloor();
   }
   flyAway(onEndFunction){
     let thisPidgeon=this;
@@ -246,7 +248,7 @@ export default class Pidgeon extends THREE.Object3D{
   }
   changeAnimStateTo(toAnim){
     //change animation using state machine behaviour
-    var myCurrentAnimState=blendMesh.currentAnim;
+    var myCurrentAnimState=this.blendMesh.currentAnim;
     /*
     animation names:
     Bird_Eat
@@ -259,51 +261,51 @@ export default class Pidgeon extends THREE.Object3D{
     */
     if(toAnim!=myCurrentAnimState){
       if(myCurrentAnimState=="Bird_Eat"){
-        blendMesh.crossfadeTo(toAnim,0.2);
+        this.blendMesh.crossfadeTo(toAnim,0.2);
       }else if(myCurrentAnimState=="Bird_Fly"){
         //if i'm flying, I need to go through land animation unless our target state is land.
         if(toAnim=="Bird_Land"||toAnim=="Bird_Pose"){
-          blendMesh.crossfadeTo(toAnim,1);
+          this.blendMesh.crossfadeTo(toAnim,1);
         }else{
-          blendMesh.crossfadeToThrough(toAnim,"Bird_Land",1);
+          this.blendMesh.crossfadeToThrough(toAnim,"Bird_Land",1);
         }
       }else if(myCurrentAnimState=="Bird_FlyOff"){
         if(toAnim=="Bird_Land"||toAnim=="Bird_Pose"){
-          blendMesh.crossfadeTo(toAnim,1);
+          this.blendMesh.crossfadeTo(toAnim,1);
         }else{
-          blendMesh.crossfadeToThrough(toAnim,"Bird_Land",1);
+          this.blendMesh.crossfadeToThrough(toAnim,"Bird_Land",1);
         }
       }else if(myCurrentAnimState=="Bird_Idle"){
         if(toAnim=="Bird_Fly"){
-          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
+          this.blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
         }else{
-          blendMesh.crossfadeTo(toAnim,1);
+          this.blendMesh.crossfadeTo(toAnim,1);
         }
       }else if(myCurrentAnimState=="Bird_Land"){
         if(toAnim=="Bird_Fly"){
-          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
+          this.blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
         }else{
-          blendMesh.crossfadeTo(toAnim,1);
+          this.blendMesh.crossfadeTo(toAnim,1);
         }
       }else if(myCurrentAnimState=="Bird_Pose"){
         if(toAnim=="Bird_Fly"){
-          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
+          this.blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
         }else{
-          blendMesh.crossfadeTo(toAnim,1);
+          this.blendMesh.crossfadeTo(toAnim,1);
         }
       }else if(myCurrentAnimState=="Bird_Walk"){
         if(toAnim=="Bird_Fly"){
-          blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
+          this.blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
         }else{
-          blendMesh.crossfadeTo(toAnim,0.2);
+          this.blendMesh.crossfadeTo(toAnim,0.2);
         }
       }else{
-        blendMesh.crossfadeTo(toAnim,1);
+        this.blendMesh.crossfadeTo(toAnim,1);
       }
     }
   }
   update(delta){
-    if ( blendMesh ) { blendMesh.update( delta ); }
+    if ( this.blendMesh ) { this.blendMesh.update( delta ); }
   }
   static updateEach(delta){
     for (var characterIndex in characterList) {

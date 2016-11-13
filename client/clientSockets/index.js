@@ -96,6 +96,7 @@ export default class PidgeonController {
           try{
             remoteSprite.flyOrLand(stateValue);
           }catch(e){
+
             console.error(e,"pidgeon with remotesprite "+message.pointer,remoteSprite);
           }
           if(verbose)console.log("pidgeon retrieved",remoteSprite);
@@ -123,6 +124,7 @@ export default class PidgeonController {
         if(verbose)console.log("pidgeon client id:"+myClientId);
         //localSprite=new characters.Character({unique:myClientId});
         //console.log("new client Id",message);
+        console.log("created local sprite");
         localSprite=new Pidgeon({unique:message.pointer,skin:"localsprite"});
         thisPidgeonController.scene.add(localSprite);
 
