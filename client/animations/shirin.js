@@ -23,11 +23,35 @@ export default class ShirinAnimation extends THREE.Object3D {
 
         // setup animation sequence
         this.animStart = false;
+        this.sequenceConfig = {
+            'Shirin7AM': [
+                { time: 5, anim: ()=>{this.crackCocoon(0)} },
+                { time: 8,  anim: ()=>{this.stopFragment(0)} }
+            ],
+            'Shirin9AM': [
+                { time: 5, anim: ()=>{this.crackCocoon(4)} },
+                { time: 8,  anim: ()=>{this.stopFragment(4)} }
+            ],
+            'Shirin12PM': [
+                { time: 5, anim: ()=>{this.crackCocoon(3)} },
+                { time: 8,  anim: ()=>{this.stopFragment(3)} }
+            ],
+            'Shirin17PM': [
+                { time: 5, anim: ()=>{this.crackCocoon(1)} },
+                { time: 8,  anim: ()=>{this.stopFragment(1)} }
+            ],
+            'Shirin19PM': [
+                { time: 5, anim: ()=>{this.crackCocoon(2)} },
+                { time: 8,  anim: ()=>{this.stopFragment(2)} }
+            ]
+        };
+        // v.1
+        /*
         this.sequenceConfig = [
-            { time: 0.5, anim: ()=>{this.pauseVideo()} },
+            // { time: 0.5, anim: ()=>{this.pauseVideo()} },
 
-            // { time: 5, anim: ()=>{this.crackCocoon(0)} },
-            // { time: 8,  anim: ()=>{this.stopFragment(0)} },
+            { time: 5, anim: ()=>{this.crackCocoon(0)} },
+            { time: 8,  anim: ()=>{this.stopFragment(0)} },
 
             { time: 10, anim: ()=>{this.crackCocoon(1)} },
             { time: 13,  anim: ()=>{this.stopFragment(1)} },
@@ -40,17 +64,10 @@ export default class ShirinAnimation extends THREE.Object3D {
 
             { time: 25, anim: ()=>{this.crackCocoon(4)} },
             { time: 28,  anim: ()=>{this.stopFragment(4)} }
-            // { time: 5,  anim: ()=>{this.dropFragment()} },
-            // { time: 8,  anim: ()=>{this.stopFragment()} },
-
-            // { time: 10,  anim: ()=>{this.dropCaterpillars()} },
-
-            // { time: 12,  anim: ()=>{this.dropFragment()} },
-            // { time: 15,  anim: ()=>{this.stopFragment()} },
-
-            // { time: 18,  anim: ()=>{this.dropCandy( false )} }
-        ];
+        ];*/
         this.nextAnim = null;
+        this.tweenAnimCollectors = [];
+
         this.completeSequenceSetup();
 
         this.loadingManager.itemStart("ShirinAnim");
@@ -326,13 +343,14 @@ export default class ShirinAnimation extends THREE.Object3D {
 
     crackCocoon(index) {
         this.dropFragment(index);
-        TweenMax.to( this.cocoonGroup.children[index].morphTargetInfluences, 2, {
+        let crackTween = TweenMax.to( this.cocoonGroup.children[index].morphTargetInfluences, 2, {
             delay: 1,
             endArray: [1], // yoyo: true, repeat:-1, repeatDelay: 1,
             ease: RoughEase.ease.config({ template:  Power0.easeNone, 
                                          strength: 1, points: 20, taper: "none",
-                                         randomize:  true, clamp: false}) });
-        
+                                         randomize:  true, clamp: false}) 
+        });
+        this.tweenAnimCollectors.push(crackTween);
 
         switch ( index ) {
             case 0:
@@ -375,11 +393,15 @@ export default class ShirinAnimation extends THREE.Object3D {
 
     dropCaterpillars() {
         for(let i=0; i<this.caterpillarGroup.length; i++){
-            TweenMax.to( this.caterpillarGroup[i].position, 4, {y: "-=50", ease: Bounce.easeOut, delay:this.lookupTable[i]*2, onStart: ()=>{
-                TweenMax.to( this.caterpillarGroup[i].scale, 0.2, {x:.5,y:.5,z:.5} );
+            let c_t_pos = TweenMax.to( this.caterpillarGroup[i].position, 4, {y: "-=50", ease: Bounce.easeOut, delay:this.lookupTable[i]*2, onStart: ()=>{
+                let c_t_scale = TweenMax.to( this.caterpillarGroup[i].scale, 0.2, {x:.5,y:.5,z:.5} );
+                this.tweenAnimCollectors.push(c_t_scale);
             }, onComplete:()=>{
-                TweenMax.to( this.caterpillarGroup[i].morphTargetInfluences, .5, { endArray: [1], yoyo: true, repeat:-1 });
+                let c_t_morph = TweenMax.to( this.caterpillarGroup[i].morphTargetInfluences, .5, { endArray: [1], yoyo: true, repeat:-1 });
+                this.tweenAnimCollectors.push(c_t_morph);
             } });
+
+            this.tweenAnimCollectors.push(c_t_pos);
         }
     }
 
@@ -451,9 +473,17 @@ export default class ShirinAnimation extends THREE.Object3D {
         }
     }
 
-    start() {
-        this.currentSequence = this.sequenceConfig.slice(0);
+    start(time) {
+        this.currentSequence = this.sequenceConfig[time].slice(0);
         this.nextAnim = this.currentSequence.shift();
+    }
+
+    reset() {
+        // stop animation
+
+        // clean the collector
+
+        // back to original status
     }
 
     updateVideoTime(time) {
