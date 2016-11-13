@@ -191,7 +191,7 @@ export default class Pidgeon extends THREE.Object3D{
   }
   labelTextAdd(text){
     this.textualLabel = new SpriteText2D(text, {align: textAlign.center,font: '20px Arial',fillStyle: '#FFFFFF',antialias: true});
-    this.textualLabel.scale.multiplyScalar(0.02);
+    this.textualLabel.scale.multiplyScalar(0.01);
     this.add(this.textualLabel);
     this.textualLabel.position.x=0;
     this.textualLabel.position.y=1;
@@ -248,7 +248,8 @@ export default class Pidgeon extends THREE.Object3D{
   }
   changeAnimStateTo(toAnim){
     //change animation using state machine behaviour
-    var myCurrentAnimState=this.blendMesh.currentAnim;
+    let myCurrentAnimState=this.blendMesh.currentAnim;
+    let thisPidgeon=this;
     /*
     animation names:
     Bird_Eat
@@ -276,6 +277,19 @@ export default class Pidgeon extends THREE.Object3D{
           this.blendMesh.crossfadeToThrough(toAnim,"Bird_Land",1);
         }
       }else if(myCurrentAnimState=="Bird_Idle"){
+        
+        //eventually eat
+        setTimeout(function(){
+          if(thisPidgeon.blendMesh.currentAnim=="Bird_Idle"){
+            thisPidgeon.changeAnimStateTo("Bird_Eat");
+            setTimeout(function(){
+              if(thisPidgeon.blendMesh.currentAnim=="Bird_Eat"){
+                thisPidgeon.changeAnimStateTo("Bird_Idle");
+              }
+            },100+Math.random()*15000);
+          }
+        },2000+Math.random()*30000);
+
         if(toAnim=="Bird_Fly"){
           this.blendMesh.crossfadeToThrough(toAnim,"Bird_FlyOff",1);
         }else{
