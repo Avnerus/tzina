@@ -267,7 +267,12 @@ export default class Square extends THREE.Object3D{
             this.addColliders();
             this.setSquareMiddle(); 
         });
-
+        events.on("show_start", () => {
+            this.fountainLight.position.set(0,25.11,6.836);
+        });
+        events.on("show_end", () => {
+            this.fountainLight.position.set(0,0,0);
+        });
         events.on("control_threshold", (passed) => {
             this.controlPassed = passed;
             if (passed) {
@@ -687,12 +692,12 @@ export default class Square extends THREE.Object3D{
     }
 
     loadLights() {
-      let pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
-      pointLight.position.set(0,0,0);
-      pointLight.intensity = 1;
-     // events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, pointLight, "intensity", 0, 2); 
-      this.mesh.add(pointLight);
-      // DebugUtil.positionObject(pointLight, "Fountain light");
+      this.fountainLight = new THREE.PointLight( 0xffffff, 0.5, 100 );
+      this.fountainLight.position.set(0,0,0);
+      this.fountainLight.intensity = 0.8;
+      //events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, this.fountainLight, "intensity", 0, 2); 
+      this.mesh.add(this.fountainLight);
+      //DebugUtil.positionObject(this.fountainLight, "Fountain light");
     }
 
     get clockRotation() {
