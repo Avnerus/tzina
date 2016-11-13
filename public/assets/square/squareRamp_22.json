@@ -125,17 +125,19 @@
         "type":"MeshLambertMaterial",
         "vertexColors":0,
         "depthWrite":true,
-        "color":15335406
+        "color":10790052
     },{
         "emissive":0,
         "blending":"NormalBlending",
         "uuid":"24571EF6-2312-4FC9-855E-F22C902647E8",
         "name":"Ramp_Mat",
+        "map":"96E60558-F3B9-4825-99A9-DCB48D672C0D",
+        "normalMap":"AC71F584-E154-4EE3-AF60-45AD8DF7F57C",
         "depthTest":true,
-        "type":"MeshLambertMaterial",
+        "type":"MeshPhongMaterial",
         "vertexColors":0,
         "depthWrite":true,
-        "color":16777215
+        "color":10790052
     },{
         "emissive":0,
         "blending":"NormalBlending",
@@ -143,10 +145,11 @@
         "name":"Square_Material",
         "depthTest":true,
         "map":"96E60558-F3B9-4825-99A9-DCB48D672C0D",
-        "type":"MeshLambertMaterial",
+        "normalMap":"AC71F584-E154-4EE3-AF60-45AD8DF7F57C",
+        "type":"MeshPhongMaterial",
         "vertexColors":0,
         "depthWrite":true,
-        "color":16777215
+        "color":14994353
     }],
     "metadata":{
         "type":"Object",
@@ -157,7 +160,7 @@
         "children":[{
             "name":"Circle.001",
             "uuid":"2D1996A4-B0B6-4BEB-8E83-7C7A5B016992",
-            "matrix":[-6.97034,0,0,0,0,0,6.97034,0,0,6.97034,0,0,0,0,-0,1],
+            "matrix":[-6.97034,0,0,0,0,0,6.97034,0,0,6.97034,0,0,0,-0.12,-0,1],
             "visible":true,
             "type":"Mesh",
             "material":"E7DF4581-45FD-46E9-A571-21770B03172D",
@@ -167,7 +170,7 @@
         },{
             "name":"Lines",
             "uuid":"6209EEFF-2AD4-4101-8B71-5677FEDA0B65",
-            "matrix":[-6.97034,0,0,0,0,0,6.97034,0,0,6.97034,0,0,0,0,-0,1],
+            "matrix":[-6.97034,0,0,0,0,0,6.97034,0,0,6.97034,0,0,0,-0.12,-0,1],
             "visible":true,
             "type":"Mesh",
             "material":"AF477FFF-AACA-4E5A-BD1D-E1F52BB2B103",
@@ -177,7 +180,7 @@
         },{
             "name":"ramps.002",
             "uuid":"70F836DB-8C56-4D59-91C8-2040A03F5FC6",
-            "matrix":[-1,0,0,0,0,-0,1,0,0,1,0,0,0,0,-0,1],
+            "matrix":[-1,0,0,0,0,-0,1,0,0,1,0,0,0,-0.12,0,1],
             "visible":true,
             "type":"Mesh",
             "material":"24571EF6-2312-4FC9-855E-F22C902647E8",
@@ -195,7 +198,7 @@
         "uuid":"C885D0A8-EE7F-45AE-A5E4-8192AA323606",
         "magFilter":1006,
         "name":"Texture",
-        "repeat":[1,1],
+        "repeat":[50,50],
         "mapping":300,
         "minFilter":1008,
         "image":"028E3F69-117E-4589-95E3-6F181DBA4335"
@@ -205,7 +208,7 @@
         "uuid":"96E60558-F3B9-4825-99A9-DCB48D672C0D",
         "magFilter":1006,
         "name":"SquareGravel",
-        "repeat":[1,1],
+        "repeat":[90,90],
         "mapping":300,
         "minFilter":1008,
         "image":"E1C36867-17CD-49A7-B71C-E63EF1BFFEDE"
@@ -215,7 +218,7 @@
         "uuid":"AC71F584-E154-4EE3-AF60-45AD8DF7F57C",
         "magFilter":1006,
         "name":"SquareGravel_Normal",
-        "repeat":[1,1],
+        "repeat":[90,90],
         "mapping":300,
         "minFilter":1008,
         "image":"E3636DF8-2035-472F-B824-FE35D23BEBA6"
