@@ -98,7 +98,7 @@ export default class Game {
         this.scene.add( this.hemiLight );
 
 
-            /*
+        /*
         events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
         events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y"); */
 
@@ -109,11 +109,8 @@ export default class Game {
 
         this.dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
         this.dirLight.color.setHSL(0.1,0.42,0.9);
-
-
-        // --- hide by laura --- start
     
-            /*
+         /*
         events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
@@ -121,7 +118,6 @@ export default class Game {
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");
         */
-        // --- hide by laura --- end
 
         //dirLight.target.position.set(0,100,0);
         //
@@ -193,6 +189,11 @@ export default class Game {
 
 
         this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager, this.timeController);
+
+        // laura: i don't know other better way to do this..
+        if (!this.config.noAnimations) {
+            this.animations['Lupo12PM'].assignChController(this.characterController);
+        }
 
         let TEXT_DEFINITION = {
              align: textAlign.center,
