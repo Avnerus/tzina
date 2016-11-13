@@ -24,8 +24,8 @@ export default [
         basePath : 'assets/characters/miriam',
         mindepth : 2200,
         maxdepth : 3119.456298828,
-        position : [-1.88, 21.99, 12.209],
-        rotation: [10, 224, 12],
+        position : [-2.17, 21.99, 11.89],
+        rotation: [10, 215, 12],
         animation: 'Miriam',
         uvdy_idle: 0.47900390625,
         uvdy: 0.496,
@@ -38,7 +38,16 @@ export default [
         animationRotation: [6, 0, 0],      // 20, 0, 0
         space: 0.01,
         spaceOffset: [0.11,0,-0.07],
-        subtitles: null
+        subtitles: null,
+        adjustments : [
+            {
+                sec: 0,
+                mindepth : 2200,
+                maxdepth : 3119.456298828,
+                position : [-1.83,22.05, 12.182],
+                scale: 0.003 * 0.5748 * 1.106
+            }
+        ]
     },
     {
         name: 'Itzik',
@@ -211,7 +220,7 @@ export default [
                 mindepth : 1499.999877929688,
                 maxdepth : 4564.32861328125,
                 position : [-11.72, 21.99, 1.739],
-                scale: 0.003 * 0.458437 * 2.0,
+                scale: 0.003 * 0.458437 * 1.46
             },
             {
                 sec: 92,
@@ -224,16 +233,16 @@ export default [
                 maxdepth : 4564.32861328125
             }
         ],
-        position : [-12.71, 22.1, 1.684],
+        position : [-12.82, 21.86, 1.57],
         //rotation: [0, 37, 0],
-        rotation: [10, 97, 350],
+        rotation: [10, 75, 350],
         animation: 'Mark',
         uvdy: 0.458984375,
-        uvdy_idle: 0.541015625,
+        uvdy_idle: 0.419,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.458437,
+        scale: 0.003 * 0.458437 * 1.66,
         animationScale: 0.24,
         animationPosition: [-0.03, 0.21, -0.86], // -.4, -.46, -.55
         animationRotation: [0, 214, 0], // 0,-25,0
@@ -246,7 +255,7 @@ export default [
         basePath : 'assets/characters/fatman-sleep',
         mindepth : 1370.90380859375,
         maxdepth : 3802.21240234375,
-        position : [-14.8, 22.05, -5.746],
+        position : [-15.55, 22.05, 2.869],
         rotation: [0,40,0],
         animation: null,
         uvdy: 0.35986328125,
