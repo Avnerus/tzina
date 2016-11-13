@@ -50,7 +50,7 @@ export default {
     },
 
     fastForward : function(video) {
-        video.currentTime = video.duration - 5;        
+        video.currentTime = video.duration - 10;        
     },
 
     colorPicker: function(name, object, prop) {

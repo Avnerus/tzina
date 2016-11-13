@@ -109,6 +109,13 @@ export default class TimeController {
             }            
         });
 
+        events.on("show_start", () => {
+            this.clockRunning = false;
+        });
+        events.on("show_end", () => {
+            this.clockRunning = true;
+        });
+
         let TEXT_DEFINITION = {
              align: textAlign.center, 
              font: '22px Miriam Libre',

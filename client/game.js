@@ -98,9 +98,6 @@ export default class Game {
         this.scene.add( this.hemiLight );
 
 
-        /*
-        events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
-        events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y"); */
 
 
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
@@ -109,15 +106,16 @@ export default class Game {
 
         this.dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
         this.dirLight.color.setHSL(0.1,0.42,0.9);
+
+        events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
+        events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y");
     
-         /*
         events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
         DebugUtil.colorPicker("Dir light", this.dirLight, "color");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");
-        */
 
         //dirLight.target.position.set(0,100,0);
         //

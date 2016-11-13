@@ -126,6 +126,12 @@ export default class Sky {
         events.on("gaze_stopped", () => {
             this.clouds.stopTransition();
         });
+
+        events.on("show_start", () => {
+            setTimeout(() => {
+                this.hemiLight.intensity = 0.14;
+            },100);
+        });
     }
 
     loadLensFlare(loadingManager) {
