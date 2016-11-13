@@ -123,7 +123,7 @@ export default class Square extends THREE.Object3D{
             this.fountainMesh = results[6];
 
             let ground = results[7];
-            ground.position.set(1.2,0, -2.18);
+          //  ground.position.set(1.2,0, -2.18);
            
             this.mesh.add(ground)
 
