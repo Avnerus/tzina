@@ -84,19 +84,20 @@ export default [
         basePath : 'assets/characters/haim',
         mindepth : 1029.795776367,
         maxdepth : 1600.0,
-        position : [-3.35, 21.24, -6.76],
-        rotation: [10, 150, 0],
+        position : [-15.45, 19.98, -11.2],
+        rotation: [313, 70, 46],
         animation: 'Haim',
         uvdy: 0.507,
         uvdx: 0.0,
         width: 2048,
         height: 2048,
-        scale: 0.003 * 1.243,
+        scale: 0.003 * 1.243 * 1.455,
         animationScale: 0.4, // 0.25
         animationPosition: [1.17, -0.39, 1.7], //0.81, -0.17, 1.42
         animationRotation: [6, -50, -9], //6, -50, -9
-        space: 0.1,
-        subtitles: false
+        space: 0.07,
+        subtitles: false,
+        spaceOffset: [-1.05,0,0.69], //0.28,0.73,1.73
     },
     {
         name: 'Rami',
@@ -197,7 +198,7 @@ export default [
         basePath : 'assets/characters/lupo-dogs',
         mindepth : 1500.681884765625,
         maxdepth : 3376.0517578125,
-        position : [-10.2, 21.94, -1.44],
+        position : [-10.36, 21.94, -3.78],
         rotation: [12, 150, 352],
         animation: null,
         uvdy: 0.4794921875,
@@ -396,7 +397,7 @@ export default [
                 mindepth: 1770.462036132813,
                 maxdepth: 3428.071533203125,
                 position : [-12.9, 22.01, -3.21],
-                scale: 0.003 * 0.75 * 1.09
+                scale: 0.003 * 0.75 * 1.028 * 1.09
             },
             {
                 sec: 120,
@@ -406,20 +407,20 @@ export default [
                 scale: 0.003 * 0.75 * 1.132
             }
         ],
-        position : [-11.57, 22.23, -3.77],
-        rotation: [12, 160, 350],
+        position : [-12.2, 22.28, -5.91],
+        rotation: [40, 120, 310],
         animation: 'Lupo12PM',
         uvdy: 0.49951171875,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.75,
+        scale: 0.003 * 0.75 * 1.028,
         animationScale: 0.3,
         animationPosition: [1.13, -0.07, -2.27],
         animationRotation: [15,-25,7],
         subtitles: null,
         space: 0.001,
-        spaceOffset: [1.57,0,0.68]
+        spaceOffset: [4.66,0,1.1]
     },
     {
         name: 'Shirin5PM',
@@ -447,7 +448,7 @@ export default [
         basePath : 'assets/characters/itzhak',
         mindepth : 1762.584594726563,
         maxdepth : 3120.0,
-        position : [-2.63, 21.87, -14.41],
+        position : [-2.63, 21.87, -14.8],
         rotation: [340, 72, 22], // 
         animation: 'Itzhak',
         uvdy: 0.48388671875,
@@ -458,8 +459,8 @@ export default [
         animationScale: 0.235,
         animationPosition: [-0.21, -0.01, 0.26],
         animationRotation: [5, 17, 0],
-        space: 0.7, //1.34
-        spaceOffset: [0,0,0], //0.88,0,0.58
+        space: 0.001, //1.34
+        spaceOffset: [1.78,0,-0.80], //0.88,0,0.58
         subtitles: false
     },
     {
@@ -521,12 +522,12 @@ export default [
         basePath : 'assets/characters/agam7pm',
         mindepth : 1656.909729004,
         maxdepth : 2789.562011719,
-        position : [0.06, 22.04, -7.48],
+        position : [0.06, 22.04, -7.4],
         rotation: [0, 180, 2.3],
         animation: 'Agam12PM',
         uvdy: 0.496,
         uvdx: 0.0,
-        scale: 0.003 * 1.365,
+        scale: 0.003 * 0.8,
         width: 1024,
         height: 2048,
         animationScale: 0.5,

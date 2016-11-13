@@ -107,6 +107,7 @@ export default class Game {
         this.dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
         this.dirLight.color.setHSL(0.1,0.42,0.9);
 
+            /*
         events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
         events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y");
     
@@ -115,7 +116,7 @@ export default class Game {
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
         DebugUtil.colorPicker("Dir light", this.dirLight, "color");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
-        DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");
+        DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");*/
 
         //dirLight.target.position.set(0,100,0);
         //
@@ -178,8 +179,8 @@ export default class Game {
                 'Mark' : new MarkAnimation(),
                 'Agam12PM' : new Agam12PMAnimation(this.square),
                 'Lupo12PM' : new Lupo12PMAnimation(),
-                'Itzhak' : new ItzhakAnimation(),
-                'Shirin' : new ShirinAnimation()
+                'Itzhak' : new ItzhakAnimation()
+                //'Shirin' : new ShirinAnimation()
             }
         } else {
             this.animations = {};

@@ -8,7 +8,7 @@ export default {
     startTime: 17,
     skipCharacters: false,
     movementSpeed: 0.5, //0.5
-    daySpeed: 0.003,
+    daySpeed: 0.001,
     noSquare: false,
     fullscreen: false,
     noAnimations: false,

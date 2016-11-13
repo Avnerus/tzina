@@ -299,6 +299,7 @@ export default class Fountain extends THREE.Object3D  {
     }
 
     resetAni() {
+        console.log("SHOW END");
         for(let i=0; i<this.centerRingOriParameter.length; i++){
             this.setGroupEmittersValue( this.centerRingEmitters, i, this.centerRingOriParameter[i].clone() );
             this.setGroupEmittersValue( this.firstRingEmitters, i, this.firstRingOriParameter[i].clone() );

@@ -13,7 +13,7 @@ export default class Flood extends THREE.Object3D  {
         this.waveLength = 0.3;
 
         this.END_SCALE = 0.447;
-        this.START_SCALE = 0.01;
+        this.START_SCALE = 0.005;
         this.END_HEIGHT = 8.3;
         this.START_HEIGHT = 11.65;
 
@@ -47,7 +47,7 @@ export default class Flood extends THREE.Object3D  {
 
         this.mesh.rotation.x = -Math.PI / 2;
 
-        //DebugUtil.positionObject(this.mesh, "Flood", true);
+        DebugUtil.positionObject(this.mesh, "Flood", true);
 
         this.add(this.mesh);
 
@@ -64,7 +64,7 @@ export default class Flood extends THREE.Object3D  {
 
         events.on("experience_progress", (percentage) => {
             // First scale, then rise
-            if (percentage <= 0.5) {
+            if (percentage <= 0.8) {
                 let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.5));
                 this.mesh.scale.set(scale, scale, scale);
             } else {
