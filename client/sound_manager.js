@@ -328,11 +328,12 @@ export class StaticSoundSampler{
   }
   pause(){
     console.warn("sound stop and pause is untested. Test it and remove these lines");
-    this.source.pause();
+    this.source.stop();
   }
   stop(){
     console.warn("sound stop and pause is untested. Test it and remove these lines");
-    this.source.pause();
+    this.source.stop();
+    this.source.currentTime = 0;
   }
 }
 
