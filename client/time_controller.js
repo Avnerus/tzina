@@ -152,7 +152,7 @@ export default class TimeController {
         //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
         //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
 
-        DebugUtil.positionObject(this.chapterTitle, "Outside title", true);
+        //DebugUtil.positionObject(this.chapterTitle, "Outside title", true);
         this.chapterTitle.add(this.chapterTitleLineTwo);
         this.chapterTitleLineTwo.position.y = -30;
         this.scene.add(this.chapterTitle)
@@ -416,10 +416,13 @@ export default class TimeController {
         let localTime = now.getHours() + (now.getMinutes() / 60);
         let availableTimes = this.times.slice(1);
         let closestHour = MathUtil.closestValue(availableTimes, localTime);
-        closestHour = 17;
         console.log("Current local time ", localTime, "Available times", availableTimes, "Closest time", closestHour);
         events.emit("hour_updated", closestHour);
         return closestHour;
+    }
+
+    preloadTime(hour) {
+        events.emit("hour_updated", hour);
     }
 
     transitionTo(hour, time) {

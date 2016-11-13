@@ -24,15 +24,15 @@ export default [
         basePath : 'assets/characters/miriam',
         mindepth : 2200,
         maxdepth : 3119.456298828,
-        position : [-1.88, 22.2, 11.68],
+        position : [-1.88, 21.99, 12.209],
         rotation: [10, 224, 12],
         animation: 'Miriam',
         uvdy_idle: 0.47900390625,
-        uvdy: 0.475,
+        uvdy: 0.496,
         uvdx: -0.002,
         width: 768,
         height: 2048,
-        scale: 0.003 * 0.506,
+        scale: 0.003 * 0.5748,
         animationScale: 0.4, //.4
         animationPosition: [0.01, -0.4, 0.06],   // 0,-1.5,-2.2
         animationRotation: [6, 0, 0],      // 20, 0, 0
@@ -93,15 +93,15 @@ export default [
         basePath : 'assets/characters/rami',
         mindepth : 2225.287353516,
         maxdepth : 3252.206298828,
-        position : [0, 22.11, 13.17],
+        position : [0, 22.12, 13.17],
         rotation: [356, 55, 10],
         animation: null,
-        uvdy: 0.485,
-        uvdy_idle: 0.484863281,
+        uvdy: 0.48,
+        uvdy_idle: 0.477,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.64,
+        scale: 0.003 * 0.661,
         animationScale: 0.25,
         animationPosition: [0.45, -0.3, 0.25],
         animationRotation: [-4, -23, -9],
@@ -126,7 +126,9 @@ export default [
         animationScale: 0.228,
         animationPosition: [-0.3,-0.2,-0.03], // -0.45,0,-0.4
         animationRotation: [0,14,0], // 7,25,-8
-        subtitles: null
+        subtitles: null,
+        space: 0.3,
+        spaceOffset: [0,0,-0.38]
     },
     {
         name: 'Sasha',
@@ -149,12 +151,12 @@ export default [
         basePath : 'assets/characters/agam12pm',
         mindepth : 1656.909729004,
         maxdepth : 2789.562011719,
-        position : [-6.8, 22.25, 3.98],
+        position : [-6.62, 22.1, 3.836],
         rotation: [0, 282, 8],
         animation: 'Agam12PM',
-        uvdy: 0.475,
+        uvdy: 0.496,
         uvdx: 0.0,
-        scale: 0.003 * 0.25,
+        scale: 0.003 * 0.69,
         width: 1024,
         height: 2048,
         animationScale: 0.18,
@@ -222,7 +224,7 @@ export default [
                 maxdepth : 4564.32861328125
             }
         ],
-        position : [-14.19, 22.09, 3.07],
+        position : [-12.71, 22.1, 1.684],
         rotation: [0, 37, 0],
         animation: 'Mark',
         uvdy: 0.458984375,
@@ -230,7 +232,7 @@ export default [
         uvdx: 0.0,
         width: 512,
         height: 2048,
-        scale: 0.003 * 0.4145,
+        scale: 0.003 * 0.458437,
         animationScale: 0.24,
         animationPosition: [-0.03, 0.21, -0.86], // -.4, -.46, -.55
         animationRotation: [0, 214, 0], // 0,-25,0
@@ -243,14 +245,14 @@ export default [
         basePath : 'assets/characters/fatman-sleep',
         mindepth : 1370.90380859375,
         maxdepth : 3802.21240234375,
-        position : [-6.36, 22.00, 0.37],
-        rotation: [82, 261, 82],
+        position : [-14.8, 22.05, -5.746],
+        rotation: [0,40,0],
         animation: null,
         uvdy: 0.35986328125,
         uvdx: 0,
         width: 2048,
         height: 2048,
-        scale: 0.003 * 1.003,
+        scale: 0.003 * 1.0952,
         subtitles: null,
         idleOnly: true
     },
@@ -270,8 +272,8 @@ export default [
         animationScale: 0.1,
         animationPosition: [-0.24, 0.31, 0],
         animationRotation: [0, 6, 0],
-        space: 1.2, //0.2
-        spaceOffset: [-0.8,1.5,0.53], //-0.8,0,0.53
+        space: 0.54, //0.2
+        spaceOffset: [-0.8,1.5,0.25], //-0.8,0,0.53
         subtitles: null,
         fullOnly: true
     },
@@ -282,7 +284,7 @@ export default [
         maxdepth : 4120.305664062,
         position : [-4.21, 22.41, 13.51],
         rotation: [347, 235, 340],
-        animation: null,
+        animation: 'Shirin',
         uvdy: 0.49755859375,
         uvdx: 0.0,
         width: 1024,
@@ -336,14 +338,14 @@ export default [
                 scale: 0.003 * 0.52198
             }
         ],
-        position : [-10.77, 21.99, 6.62],
+        position : [-10.77, 22.02, 6.62],
         rotation: [2, 216, 0],
         animation: 'Lupo12PM',
         uvdy: 0.4970703125,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.6888,
+        scale: 0.003 * 0.7411,
         animationScale: 0.25,
         animationPosition: [-0.66, -0.41, -0.96], // -0.53, -0.51, -1.76
         animationRotation: [0,0,0], // 0,-25,0
@@ -358,7 +360,7 @@ export default [
         maxdepth : 4120.305664062,
         position : [-11.5, 22.41, 8.4],
         rotation: [347, 235, 340],
-        animation: null,
+        animation: 'Shirin',
         uvdy: 0.5,
         uvdx: 0.0,
         width: 1024,
@@ -415,7 +417,7 @@ export default [
         maxdepth : 4120.305664062,
         position : [-11.55, 21.6, -9.78],
         rotation: [347, 70, 0],
-        animation: null,
+        animation: 'Shirin',
         uvdy: 0.5068359375,
         uvdx: 0.0,
         width: 1024,
@@ -456,7 +458,7 @@ export default [
         maxdepth : 3681.950439453,
         position : [4.25, 22.65, -13.17],
         rotation: [0, 0, 0],
-        animation: null,
+        animation: 'Shirin',
         uvdy: 0.47509765625,
         uvdx: 0.0,
         width: 1024,

@@ -284,6 +284,7 @@ export default class Fountain extends THREE.Object3D  {
 
         this.currentSequence = this.soundEventsRecords.slice(0);
         this.nextAnim = this.currentSequence.shift();
+        events.emit("show_start");
     }
 
     resetShow() {
@@ -304,10 +305,11 @@ export default class Fountain extends THREE.Object3D  {
             this.setGroupEmittersValue( this.secondRingEmitters, i, this.secondRingOriParameter[i].clone() );
             this.setGroupEmittersValue( this.fireEmitters, i, this.fireOriParameter[i].clone() );
         }        
-        TweenMax.to( this.spotLightCenters.position, 3, { y: 0, onComplete:()=>{
-            this.showTime = false;
-        } } );
-
+        if (this.spotLightCenters) {
+            TweenMax.to( this.spotLightCenters.position, 3, { y: 0, onComplete:()=>{
+                this.showTime = false;
+            } } );
+        }
         this.fireEmitters[0].disable();
         this.centerRingEmitters[0].disable();
         this.changeWaterColor(false);

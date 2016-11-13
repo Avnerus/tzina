@@ -259,7 +259,7 @@ export default class Sky {
 
 
     update(dt) {
-        this.geo.rotateY(this.spinFactor * Math.PI / 180);
+        this.geo.rotateZ(this.spinFactor * Math.PI / 180);
         this.clouds.update(dt);
     }
 
