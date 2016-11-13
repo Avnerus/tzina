@@ -21,15 +21,21 @@ export default class SunGazer extends THREE.Object3D  {
 
          this.soundManager.createStaticSoundSampler("assets/sound/ui/Hour_Replace_3.ogg",(staticSoundSampler)=>{
 
-              sunGazeSound = staticSoundSampler;
+              // sunGazeSound = staticSoundSampler;
+
+              // sunGazeSound.blurModule.controlVolume(0);
+
+              // sunGazeSound.play();
 
         });
 
         this.soundManager.createStaticSoundSampler("assets/sound/ui/Button_C_3.ogg",(staticSoundSampler)=>{
 
-              characterStartSound = staticSoundSampler;
+              // characterStartSound = staticSoundSampler;
 
+              // characterStartSound.blurModule.controlVolume(0);
 
+              // characterStartSound.play();
               
         });
 
@@ -43,10 +49,6 @@ export default class SunGazer extends THREE.Object3D  {
 
             this.active = false;
 
-            characterStartSound.blurModule.controlVolume(0.1);
-
-            characterStartSound.play();
-
         });
         events.on("character_idle", () => {
             this.active = true;
@@ -55,10 +57,6 @@ export default class SunGazer extends THREE.Object3D  {
             this.active = true;
         });
         events.on("gaze_started", () => {
-
-            sunGazeSound.blurModule.controlVolume(0.3); 
-               
-            sunGazeSound.play();
 
         });
     }
