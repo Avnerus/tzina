@@ -182,6 +182,8 @@ export default class Fountain extends THREE.Object3D  {
         this.spotLightCenters.add(this.spotLights[2].target);
         this.add( this.spotLightCenters );
 
+        this.switchLight(false);
+
         // DebugUtil.positionObject(this.spotLightCenters, "target");
         
         // DebugUtil.positionObject(this.spotLights[0], "light 0");
@@ -219,7 +221,7 @@ export default class Fountain extends THREE.Object3D  {
         let material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
         let cone = new THREE.Mesh( geometry, material );
 
-        let s_l = new THREE.SpotLight( 0xfff291, _intensity, _distance, _angle, _penumbra, _decay );
+        let s_l = new THREE.SpotLight( 0xfff291, _intensity, _distance, _angle, _penumbra, _decay ); //0xfff291
         // s_l.target.add( this.center.clone() );
         s_l.target.position.copy( pos2 );
         s_l.position.copy( pos );
@@ -281,6 +283,7 @@ export default class Fountain extends THREE.Object3D  {
         this.fireEmitters[0].enable();
         this.centerRingEmitters[0].enable();
         this.changeWaterColor(true);
+        this.switchLight(true);
 
         this.currentSequence = this.soundEventsRecords.slice(0);
         this.nextAnim = this.currentSequence.shift();
@@ -295,6 +298,12 @@ export default class Fountain extends THREE.Object3D  {
     changeWaterColor(showTime) {
         for(let i=0; i<this.secondRingEmitters.length; i++){
             this.secondRingEmitters[i].color.value = showTime ? this.colorRed : this.colorWhite;
+        }
+    }
+
+    switchLight(on) {
+        for(let i=0; i<this.spotLights.length; i++){
+            this.spotLights[i].visible = on; 
         }
     }
 
@@ -314,6 +323,7 @@ export default class Fountain extends THREE.Object3D  {
         this.fireEmitters[0].disable();
         this.centerRingEmitters[0].disable();
         this.changeWaterColor(false);
+        this.switchLight(false);
 
         // stop cylinder rotating
         this.stopCylinderAni();
