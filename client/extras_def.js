@@ -2,6 +2,7 @@ export default {
     types: [
 
   {
+<<<<<<< HEAD
             name: "Umbrella",
             fileName: "umbrella/cloud.js",
             pointSize : 0.013
@@ -37,6 +38,37 @@ export default {
             fileName: "dadOnBike/cloud.js",
             pointSize : 0.010
         }, 
+=======
+             name: "Bagel",
+             fileName: "Bagel/cloud.js",
+             pointSize : 0.013
+         },
+  {
+             name: "Bun",
+             fileName: "Bun/cloud.js",
+             pointSize : 0.013
+         },
+   {
+             name: "whiteBread",
+             fileName: "whiteBread/cloud.js",
+             pointSize : 0.013
+         },
+          {
+             name: "junkie",
+             fileName: "junkie/cloud.js",
+             pointSize : 0.013
+        },
+              {
+             name: "pocketCam",
+             fileName: "pocketCam/cloud.js",
+             pointSize : 0.010
+         },   
+            {
+             name: "dadOnBike",
+             fileName: "dadOnBike/cloud.js",
+             pointSize : 0.010
+         }, 
+>>>>>>> 83581c043f590108e9af6c99b8f9ac09bd960786
             /*
         {
             name: "tashlih",

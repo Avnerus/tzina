@@ -15,6 +15,7 @@ export default
                 "Shirin7AM"
 			],
 			"extraAssets": [
+<<<<<<< HEAD
 			{
 
             name: "Bagel",
@@ -34,7 +35,34 @@ export default
 					rotation: [182,335,0],
 					scale: 0.37
        			 },
+=======
+				{
 
+             name: "Bagel",
+				 	position: [2.24,24,10.32],
+				 	rotation: [182,335,0],
+				 	scale: 0.37
+       		  },
+>>>>>>> 83581c043f590108e9af6c99b8f9ac09bd960786
+
+ 			 {
+             name: "Bagel",
+           			position: [2.24,24,10.32],
+				 	rotation: [182,335,0],
+				 	scale: 0.37
+     		   },
+ 			 {
+             name: "Bun",
+             		position: [2.24,24,10.32],
+				 	rotation: [182,335,0],
+				 	scale: 0.37
+        		 },
+  		 	{
+             name: "whiteBread",
+             		position: [2.24,24,10.32],
+				 	rotation: [182,335,0],
+				 	scale: 0.37
+        			 },
 					{
 					name: "junkie",
 					position: [2.24,24,10.32],
