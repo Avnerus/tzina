@@ -136,7 +136,7 @@ export default class Game {
         this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene, this.extras);
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
-2
+
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager);
 
         this.extras.timeController = this.timeController;
