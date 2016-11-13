@@ -269,6 +269,9 @@ export class StaticSoundSampler{
     //in practical terms, where to connect the blurmodule:
     //if static, will be an audiocontext, but if positional, will be positional audionode
     this.staticSoundOutputDestination=audioContext.destination;
+    this.controlVolume=function(a){
+      this.blurModule.controlVolume(a);
+    }
   }
   setToLoop(loopValue){
     if(loopValue!==undefined){
@@ -285,12 +288,11 @@ export class StaticSoundSampler{
     //blurModule loads a impulse response audio file
     this.blurModule.init(loadingManager);
     //so we can more safely check if (thisStaticSoundSampler.source)
-    this.source=false;
-    //pendant: I don't know what to do with the loadingManager
-    let source = audioContext.createBufferSource();
+    this.buffer=false;
+
     //connect my buffer source to the blur module, and then the blur module to the output.
     try{
-      source.connect(this.blurModule.inputNode);
+
       this.blurModule.connect(this.staticSoundOutputDestination);
     }catch(e){
       console.log(this.blurModule,this.blurModule.inputNode,audioContext.destination);
@@ -304,9 +306,9 @@ export class StaticSoundSampler{
       var audioData = request.response;
 
       audioContext.decodeAudioData(audioData, function(buffer) {
-          var myBuffer = buffer;
-          source.buffer = myBuffer;
-          thisStaticSoundSampler.source=source;
+          // var myBuffer = buffer;
+          thisStaticSoundSampler.buffer = buffer;
+
           if(loadReadyCallback){
             loadReadyCallback(thisStaticSoundSampler);
           }
@@ -319,7 +321,10 @@ export class StaticSoundSampler{
     request.send();
   }
   play(/*loop*/){
-    if(this.source){
+    if(this.buffer){
+      this.source = audioContext.createBufferSource();
+      this.source.buffer=this.buffer;
+      source.connect(this.blurModule.inputNode);
       this.source.start();
       /*this.source.loop = loop||false;*/
     }else{
