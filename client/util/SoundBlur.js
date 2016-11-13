@@ -112,7 +112,7 @@ export default class BlurModule{
       this.dryLevel.gain.setTargetAtTime(1-wet,interpolationStart,changeRate);
       this.wetLevel.gain.setTargetAtTime(wet*this.volumeWhenBLurred,interpolationStart,changeRate);
     }else{
-      console.log("set value is "+wet);
+        //console.log("set value is "+wet);
       this.biquadFilter.frequency.value=filterCut;
       this.dryLevel.gain.value=1-wet;
       this.wetLevel.gain.value=wet*this.volumeWhenBLurred;

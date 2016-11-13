@@ -5,7 +5,7 @@ import DebugUtil from './util/debug'
 import _ from 'lodash'
 
 export default class ZoomController {
-    constructor(config, emitter, camera, square, scene) {
+    constructor(config, emitter, camera, square, scene, vrControls) {
         this.camera = camera;
         this.square = square;
         this.recalculateZoom = true;
@@ -18,6 +18,7 @@ export default class ZoomController {
         this.scene = scene;
         this.wasUsed = false;
         this.done = false;
+        this.vrControls = vrControls;
 
         this.distanceOnCurve = 0;
 
@@ -31,14 +32,28 @@ export default class ZoomController {
         )
         this.STARTING_POSITION = new THREE.Vector3(
             0,
-            50,
-            350
+            15,
+            150
         );
         this.MID_ZOOM = new THREE.Vector3(
             0,
-            45,
-            300 
+            10,
+            50 
         );
+
+
+        /*
+        this.BASE_WORLD_POSITION = new THREE.Vector3(
+            1,
+            12.67,
+            -6.56
+            );
+            */
+        this.BASE_WORLD_POSITION = new THREE.Vector3(
+            -4.18,
+            12.67,
+            -5.62
+            );
 
         this.CHAPTER_THRESHOLD = 0.45;
         this.CONTROL_THRESHOLD = 1;
@@ -84,12 +99,12 @@ export default class ZoomController {
         }, false);
 
         /*
-        events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "z"); 
-        events.emit("add_gui",{folder: "Camera", listen: true}, this.camera.position, "y"); 
-        */
+        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "x"); 
+        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "y"); 
+        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "z");  */
 
         events.on("angle_updated", (hour) => {
-            if (!this.done) {
+            if (!this.done && typeof(hour) != 'undefined') {
                 if (hour == 24) { hour = 0; }
                 console.log("Zoom Controller: Hour angle updated to ", hour);
                 let entryPoint = _.find(this.square.ENTRY_POINTS, {hour: hour});
@@ -97,14 +112,40 @@ export default class ZoomController {
                     this.calculateZoomCurve(entryPoint);
                     this.lastEntryPoint = entryPoint;
                 } else {
-                    this.calculateZoomVector();
                     this.velocityZ = null;
                     this.zoomCurve = null;
                 }
             }
         });
+
+        /*
+        let cube = DebugUtil.adjustableCube(this.BASE_WORLD_POSITION, "VR Cube", 1, 0xff0000);
+        this.scene.add(cube);*/
+    }
+    start() {
         this.camera.position.copy(this.STARTING_POSITION);
         this.camera.rotation.copy(this.STARTING_ROTATION);
+
+        this.baseVRPosition = null;
+
+        if (this.vrControls) {
+            let currentVRPosition = this.vrControls.getCurrentPosition();
+            console.log("Current VR Position", currentVRPosition);
+            if (currentVRPosition) {
+                this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
+                this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
+                this.baseVRPosition.add(currentVRPosition);
+            }
+        } 
+        if (!this.baseVRPosition) {
+            this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
+            this.baseVRPosition.y = 13.5;
+        }
+    }
+
+    jumpIn() {
+        this.camera.position.copy(this.baseVRPosition);
+        events.emit("control_threshold", true);
     }
 
     getZoomOutPosition() {
@@ -134,6 +175,8 @@ export default class ZoomController {
     calculateZoomCurve(entryPoint) {
         this.calculateZoomVector();
         if (!entryPoint && this.passedControlThreshold) {
+            this.zoomCurve = null;
+            /*
             // Zooming back out
             console.log("Zoom curve from camera in control position", this.camera.position);
             let movement = new THREE.Vector3();
@@ -148,7 +191,7 @@ export default class ZoomController {
                 new THREE.Vector3().copy(this.camera.position),
             ] );
             this.distanceOnCurve = 1;
-            this.calculateEaseQuaternion();
+            this.calculateEaseQuaternion();*/
         } else {
             if (this.square.mesh) {
                 this.square.mesh.updateMatrixWorld();
@@ -157,7 +200,7 @@ export default class ZoomController {
                 let startPoint = new THREE.Vector3().fromArray(entryPoint.startPosition).applyMatrix4(this.square.mesh.matrixWorld);
                 let endPoint = new THREE.Vector3().fromArray(entryPoint.endPosition).applyMatrix4(this.square.mesh.matrixWorld);
 
-                if (this.camera.position.equals(this.STARTING_POSITION)) {
+                if (this.camera.position.equals(this.STARTING_POSITION) || this.camera.position.z == 0) {
                     let points = [
                         new THREE.Vector3().copy(this.camera.position),
                     ]
@@ -170,9 +213,14 @@ export default class ZoomController {
                         startPoint,
                         endPoint
                     ])
+                    if (this.baseVRPosition) {
+                        points.push(this.baseVRPosition);
+                    }
                     console.log("Curve points", points);
                     this.zoomCurve = new THREE.CatmullRomCurve3(points);
                 } else {
+                    this.zoomCurve = null;
+                        /*
                     let points = [
                         new THREE.Vector3().copy(this.STARTING_POSITION),
                     ]
@@ -189,7 +237,7 @@ export default class ZoomController {
                         endPoint
                     ])
                     console.log("Curve points", points);
-                    this.zoomCurve = new THREE.CatmullRomCurve3(points);
+                    this.zoomCurve = new THREE.CatmullRomCurve3(points);*/
                 }
             }
         }
@@ -198,7 +246,7 @@ export default class ZoomController {
     }
 
     update(dt) {
-        if (this.velocityZ != 0 && this.zoomCurve) {
+        if (this.velocityZ != 0 && this.zoomCurve && !this.passedControlThreshold) {
             /*
             if (!this.camera.quaternion.equals(this.lastCameraOrientation)) {
                 this.lastCameraOrientation.copy(this.camera.quaternion);

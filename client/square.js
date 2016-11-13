@@ -1,58 +1,73 @@
 import Trees from "./trees"
 import Fountain from "./fountain"
 import SunLoader from './sun_loader'
-import Extras from './extras';
 import Chapters from './chapters'
+import Pool from './pool'
 
 import DebugUtil from "./util/debug"
 import _ from 'lodash';
 
 const MODEL_PATH = "assets/square/scene.json"
-const BUILDINGS_PATH = "assets/square/buildings.json"
+const BUILDINGS_PATH = "assets/square/buildings/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
-const BENCHES_PATH = "assets/square/benches.json"
+const BENCHES_PREFIX = "assets/square/benches/"
+const FOUNTAIN_PATH = "assets/square/fountain.json"
+const GROUND_PATH = "assets/square/squareRamp_13.json"
 
 export default class Square extends THREE.Object3D{
-    constructor(collisionManager, renderer, config) {
+    constructor(collisionManager, renderer, camera, config, soundManager, scene, extras) {
         super();
         console.log("Square constructed!")
 
         this.collisionManager = collisionManager;
         this.renderer = renderer;
         this.config = config;
+        this.camera = camera;
+        this.scene = scene;
+        this.extras = extras;
 
+        this.debug = false;
+
+        this.sunTextureOffsets = {
+            19 : 0,
+            17 : 0,
+            12 : 0,
+            9 : 0,
+            7 : 0
+        };
 
 
         this.ENTRY_POINTS = [
             {
                 hour: 19,
-                worldPosition: [-140,40,180],
+                worldPosition: [-12,13,40],
                 startPosition: [-25, 20, -8],
                 endPosition: [-18, 22.1, -7]
             },
             {
                 hour: 17,
-                worldPosition: [130,40,80],
+                worldPosition: [50,13,26],
                 startPosition: [-3, 20, 43],
                 endPosition: [-3.5, 22.1, 18]
             },
             {
                 hour: 12,
-                worldPosition: [-100,40,270],
+                worldPosition: [-14,12,41],
                 startPosition: [22, 20.5, 38.5],
-                endPosition: [17, 22.1, 15.5]
+                endPosition: [14, 22.1, 8.5]
             },
             {
                 hour: 9,
-                startPosition: [41, 20.5, 8],
-                endPosition: [21, 22.1, 5]
+                worldPosition: [-7.5 ,12,51],
+                startPosition: [40, 20.5, 17.6],
+                endPosition: [15, 22.1, -1]
             },
             {
                 hour: 7,
-                worldPosition: [130,40,80],
-                startPosition: [-19, 20.5, -62],
-                endPosition: [-10, 22.1, -17.5]
+                worldPosition: [63,12,5],
+                startPosition: [-26, 24.0, -62],
+                endPosition: [-14, 23.7, -12]
             },
             {
                 hour: 0,
@@ -64,72 +79,167 @@ export default class Square extends THREE.Object3D{
         this.currentSun = null;
         this.activatedSun = null;
         this.controlPassed = false;
+
+        this.soundManager = soundManager;
     }
     init(loadingManager) {
         loadingManager.itemStart("Square");
-        let trees = new Trees();
-        this.extras = new  Extras();
-        this.fountain = new Fountain();
+        this.trees = new Trees(this.camera, this.renderer);
+        this.fountain = new Fountain( this );
 
         let loaders = [
             this.loadSquare(loadingManager),
-            trees.init(loadingManager),
             this.fountain.init(loadingManager),
             this.loadBuildings(loadingManager),
             this.loadSuns(loadingManager),
             this.loadColliders(loadingManager),
-            this.loadBenches(loadingManager)
+            this.loadBenches(loadingManager),
+            this.loadFountain(loadingManager),
+            this.loadGround(loadingManager)
         ];
         if (!this.config.noExtras) {
             loaders.push(this.extras.init(loadingManager));
+        }
+        if (!this.config.noTrees) {
+            loaders.push(this.trees.init(loadingManager));
         }
         Promise.all(loaders)
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
-            this.buildings = results[3];
-            this.suns = results[4];
+            this.buildings = results[2];
+            this.suns = results[3];
             this.suns.rotation.y = Math.PI * -70 / 180;
 
             this.mesh = obj;
             this.mesh.rotation.order = "YXZ";
 
+            this.colliders = results[4];
+            //this.mesh.add(this.colliders);
+
+            this.benches = results[5];
+            this.benches.rotation.order = "YXZ";
+
+            this.fountainMesh = results[6];
+
+            let ground = results[7];
+            ground.position.set(1.2,0, -2.18);
+           
+            this.mesh.add(ground)
+
+            this.mesh.add(this.fountainMesh);
+
+
             // Clockwork rotation object
             this.clockwork = new THREE.Object3D();
-            this.clockwork.rotation.order = "YXZ;"
 
-            // Starts as a child of the square which does the actual rotation
-            this.mesh.add(this.clockwork);
+            // Cylinders
+            this.cylinders = [];
+            this.cylinders.push(this.fountainMesh.getObjectByName("f_15_SubMesh 0").parent);
+            this.cylinders.push(this.fountainMesh.getObjectByName("f_14_SubMesh 0").parent);
+            this.cylinders.push(this.fountainMesh.getObjectByName("f_13_SubMesh 0").parent);
+            for(let i=0; i<this.cylinders.length; i++){
+                this.cylinders[i].rotation.order = "YZX";
+                this.cylinders[i].rotation.z = Math.PI / 2;
+            }
+
+                /*
+            let cylindersDebug = [new THREE.Object3D(), new THREE.Object3D(), new THREE.Object3D()];
+            this.fountain.assignCylinders(cylindersDebug);*/
+
+            this.fountain.assignCylinders(this.cylinders);
+
             this.activeClockwork = this.mesh;
 
-            this.mesh.add(trees);
+                /*
+            THREE.SceneUtils.detach(cylinder, cylinder.parent, this.scene);
+            THREE.SceneUtils.attach(cylinder, this.scene, this.clockwork);*/
+
+
+            this.clockwork.add(this.benches);
+            this.clockwork.add(this.buildings);
+
+            // Starts as a child of the square which does the actual rotation
+            this.clockwork.rotation.order = "YXZ";
+            this.clockworkOffset = new THREE.Object3D();
+            this.clockworkOffset.rotation.order = "YXZ";
+
+            this.clockworkOffset.add(this.clockwork);
+            this.mesh.add(this.clockworkOffset);
+
+            this.mesh.add(this.trees);
             this.mesh.add(this.fountain);
             this.mesh.add(this.extras);
-            this.mesh.add(this.buildings);
             this.mesh.add(this.suns);
 
-            this.colliders = results[5];
-            this.mesh.add(this.colliders);
+                /*
+            this.textures = results[7];
+            this.mesh.add(this.textures);*/
 
-            this.benches = results[6];
-            this.clockwork.add(this.benches);
+           // Lights
+           this.loadLights();
+
+           // POOL Shader
+            this.pool = new Pool(this.renderer);
+            this.pool.init();
+            this.pool.renderOrder = 1;
+            this.pool.position.set(0.66,21.52, -0.95);
+            this.pool.rotation.x = 270 * Math.PI / 180;
+            this.pool.scale.set(0.822, 0.822, 0.822);
+            console.log("Adding square fountain pool", this.pool);
+            this.mesh.add(this.pool);
+
+            if (this.debug) {
+                events.emit("add_gui", {folder: "Pool"}, this.pool, "visible"); 
+                events.emit("add_gui", {folder: "Trees"}, this.trees, "visible"); 
+                events.emit("add_gui", {folder: "Fountain water"}, this.fountain, "visible"); 
+                events.emit("add_gui", {folder: "Extras"}, this.extras, "visible"); 
+                events.emit("add_gui", {folder: "Buildings"}, this.buildings, "visible"); 
+                events.emit("add_gui", {folder: "Suns"}, this.suns, "visible"); 
+                events.emit("add_gui", {folder: "Benches"}, this.benches, "visible"); 
+                events.emit("add_gui", {folder: "Fountain"}, this.fountainMesh, "visible"); 
+                events.emit("add_gui", {folder: "Fountain"}, this.pool, "visible"); 
+
+                //events.emit("add_gui", {folder: "Floor texture"}, this.textures, "visible"); 
+                //events.emit("add_gui", {folder: "Benches texture 1"}, this.benches.children[0].children[0], "visible"); 
+                //events.emit("add_gui", {folder: "Benches texture 2"}, this.benches.children[1].children[0], "visible"); 
+
+                DebugUtil.positionObject(this.fountain, "Fountain water");
+                //DebugUtil.positionObject(this.fountainMesh, "Fountain");
+            //  DebugUtil.positionObject(this.pool, "Pool");
+                DebugUtil.positionObject(this.mesh, "Square");
+                DebugUtil.positionObject(this.benches, "Benches");
+
+                events.emit("add_gui", {folder: "Clock rotation", listen: true}, this, "clockRotation", 0, 6.28); 
+
+                DebugUtil.positionObject(this.cylinders[0], "Cylinder");
+                DebugUtil.positionObject(this.clockwork, "Clockwork");
+                DebugUtil.positionObject(ground, "Ground");
+            }
+
 
 
             this.addColliders();
             this.setSquareMiddle();
 
             // VIVE SCALES
-            /*
-            this.mesh.scale.set(0.4, 0.4, 0.4);
+            this.mesh.scale.set(0.6, 0.6, 0.6);
+                /*
             this.benches.scale.set(2,2,2);
             this.benches.position.set(7.13,-34,8);
             this.buildings.scale.set(3,3,3); 
                 */
 
-            this.fountain.position.set(0.8,23.6, -0.6);
-            DebugUtil.positionObject(this.benches, "Benches");
+            //this.benches.rotation.set(0,256,0);
 
-            //this.fountain.scale.set(0.25, 0.25, 0.25);
+            this.fountain.position.set(0.69,24.93, -0.73);
+
+            this.buildings.rotation.y = 4 * Math.PI / 180;
+            
+
+            //DebugUtil.positionObject(this.ground, "ground");
+            //            DebugUtil.positionObject(this.clockwork, "Clockwork");
+
             console.log("Finished loading square");
             loadingManager.itemEnd("Square");
 
@@ -144,9 +254,11 @@ export default class Square extends THREE.Object3D{
         });
 
         events.on("gaze_started", (name) => {
+            this.turnOnSun(name);
             this.activateSun(name);
         });
         events.on("gaze_stopped", (name) => {
+            this.turnOffSun(name);
             this.deactivateSun(name);
         });
 
@@ -159,23 +271,53 @@ export default class Square extends THREE.Object3D{
         events.on("control_threshold", (passed) => {
             this.controlPassed = passed;
             if (passed) {
-                this.mesh.remove(this.clockwork);
-                this.add(this.clockwork);
-                this.clockwork.rotation.copy(this.mesh.rotation);
                 this.activeClockwork = this.clockwork;
+                this.clockwork.rotation.y = this.mesh.rotation.y;
+                this.clockworkOffset.rotation.y = -105 * Math.PI / 180;
+                this.mesh.rotation.y = 0;
 
                 // Show the hidden loader
                 let sun = this.suns.getObjectByName(this.currentSun)
                 if (sun) {
                     sun.getObjectByName(this.currentSun + "_L").visible = true;
                 }
+
+                setTimeout(() => {
+                    events.emit("angle_updated");
+                },0)
+
             }
         });
     }
     update(dt,et) {
         this.fountain.update(dt);
+        if (this.controlPassed) {
+            this.pool.update(dt,et);
+        }
+        if (!this.config.noTrees) {
+            this.trees.update(dt,et);
+        }
+        if (!this.config.noExtras) {
+            this.extras.update(dt);
+        }
         for (let i = 0; i < this.suns.children.length; i++) {
             this.suns.children[i].children[2].update(dt,et)
+        }
+    }
+
+    getFountainMesh() {
+        return this.fountainMesh;
+    }
+
+    getCylinders() {
+        return this.cylinders;
+    }
+
+    updateSunProgress(name, progress) {
+        this.sunTextureOffsets[name] = (0.5 * progress);
+    //    console.log("Update sun progress ", name, progress, this.currentSun, this.sunTextureOffsets[name]);
+        if (name == this.currentSun) {
+            this.sunTexture.offset.y = this.sunTextureOffsets[name];
         }
     }
     
@@ -186,70 +328,76 @@ export default class Square extends THREE.Object3D{
             }
         })
     }
-
+//change material of non active sun
     turnOffSun(name) {
-        console.log("Turn off sun ", name);
+        //console.log("Turn off sun ", name);
         let sun = this.suns.getObjectByName(name);
         if (sun) {
+            let strokeMesh = sun.getObjectByName(name + "_S").children[0];
+            strokeMesh.material.color.set(0x001D16);
+            strokeMesh.material.needsUpdate = true;
+
             let sunMesh = sun.getObjectByName(name + "_F").children[0];
-            console.log("Turn off sun", sun);
-            //sun.material.side = THREE.BackSide;
-            sunMesh.material.color = new THREE.Color(0x888788);
-            //sun.material.specular = new THREE.Color(0x000000);
+            //console.log("Turn off sun", sun);
+            sunMesh.material.color = new THREE.Color(0x001D16);
+            sunMesh.material.emissive= new THREE.Color(0x57340C);
+            sunMesh.material.specular= new THREE.Color(0xB3B600);
+            sunMesh.material.transparent= true;
             sunMesh.material.opacity = .8;
+            sunMesh.material.shininess = 0.2;
+            sunMesh.material.bumpScale = 4;
             sunMesh.material.map = null;
+            sunMesh.material.needsUpdate = true;
             sun.getObjectByName(name + "_L").visible = false;
         }
     }
-
+// material color under the texture
     turnOnSun(name) {
         if (this.suns) {
             let sun = this.suns.getObjectByName(name)
             if (sun) {
-                if (this.currentSun) {
-                    this.turnOffSun(this.currentSun);
-                }
+                console.log("Turning on sun ", name);
+
+                let strokeMesh = sun.getObjectByName(name + "_S").children[0];
+                strokeMesh.material.color.set(0xFEE428);
+                strokeMesh.material.needsUpdate = true;
+
                 let sunMesh = sun.getObjectByName(name + "_F").children[0];
-                sunMesh.material.color = new THREE.Color(0xF4F5DC);
-          //      sunMesh.material.specular = new THREE.Color(0x000000);
-                //sunMesh.material.side = THREE.DoubleSide;
-                sunMesh.material.opacity = .8;
+                sunMesh.material.color = new THREE.Color(0xFFFF28);
+                //sunMesh.material.emissive= new THREE.Color(11904267);
+                sunMesh.material.bumpScale = 4;
+                sunMesh.material.specular= new THREE.Color(0xFFFF00);
+                sunMesh.material.shininess = 0.2;
+
+                //sunMesh.material.side = THREE.Backside;
+                   // sunMesh.material.opacity = 1.00;
+                sunMesh.material.transparent = false;
                 sunMesh.material.map = this.sunTexture;
+                this.sunTexture.offset.y = this.sunTextureOffsets[name];
+                //texture offset by progress in chapter 
                 sunMesh.material.needsUpdate = true;
-                this.currentSun = name;
 
                 // Show loader
-                if (this.controlPassed) {
-                    sun.getObjectByName(name + "_L").visible = true;
-                    sun.getObjectByName(name + "_L").disorganize();
-                }
+                sun.getObjectByName(name + "_L").visible = true;
+                sun.getObjectByName(name + "_L").disorganize();
 
-                console.log("Turned on sun", sun);
+                //console.log("Turned on sun", sun);
             }
         }
     }
 
     activateSun(name) {
-        console.log("Activate sun! ", name);
         let sun = this.suns.getObjectByName(name)
         if (sun) {
-            let sunMesh = sun.getObjectByName(name + "_F").children[0];
-            console.log("Turn on sun", sun);
-            sunMesh.material.color = new THREE.Color(0xF4F5DC);
             let sunLoader = sun.getObjectByName(name + "_L");
-            sunLoader.visible = true;
             sunLoader.organize();
         }
     }
-
     deactivateSun(name) {
         let sun = this.suns.getObjectByName(name)
         if (sun) {
             let sunLoader = sun.getObjectByName(name + "_L");
-            let sunMesh = sun.getObjectByName(name + "_F").children[0];
-            sunMesh.material.color = new THREE.Color(0x888788);
             sunLoader.disorganize();
-            sunLoader.visible = false;
         }
     }
 
@@ -273,7 +421,17 @@ export default class Square extends THREE.Object3D{
     loadSuns(loadingManager) {
         console.log("Loading suns")
         return new Promise((resolve, reject) => {
+            let textureLoader = new THREE.TextureLoader(loadingManager);
+
+            this.sunTexture = textureLoader.load("assets/square/sunActive_gradientSun2.png");
+            this.sunTexture.repeat.set(1.0,0.5);
+
+            //debug 
+            console.log("Sun textures ", this.sunTexture); 
+
             let loader = new THREE.ObjectLoader(loadingManager);
+
+            //events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
             loader.load(SUNS_PATH,( obj ) => {
                 console.log("Loaded suns", obj)
 
@@ -286,19 +444,18 @@ export default class Square extends THREE.Object3D{
 
                         // Replace the geometry with my own
                         fill.children[0].geometry.dispose();
-                        fill.children[0].geometry = new THREE.SphereBufferGeometry( 2.0 , 32, 32  );
+                        fill.children[0].geometry = new THREE.SphereBufferGeometry( 2.0 , 32, 32  ); //size of fill
                         fill.scale.set(1,1,1);
                         parent.add(fill);
 
                         let stroke = obj.getObjectByName(chapter.hour.toString() + "_S");
                         stroke.children[0].material.side = THREE.BackSide;
-                        stroke.children[0].material.color.set(0x929292);
-                        stroke.children[0].material.emissive.set(0xBCBB9E);
+                        stroke.children[0].material.color.set(0x666633);
                         stroke.children[0].material.opacity = 0.32;
                         stroke.position.set(0,0,0);
                         stroke.scale.set(1,1,1);
                         stroke.children[0].geometry.dispose();
-                        stroke.children[0].geometry = new THREE.SphereBufferGeometry( 2.1, 32, 32  );
+                        stroke.children[0].geometry = new THREE.SphereBufferGeometry( 2.1, 32, 32  );   //size of stroke
                         parent.add(stroke);
 
                         reorderedSuns.add(parent);
@@ -307,29 +464,36 @@ export default class Square extends THREE.Object3D{
                         let sunLoader = new SunLoader(this.renderer);
                         sunLoader.init();
                         sunLoader.name = chapter.hour.toString() + "_L";
-                        //DebugUtil.positionObject(sunLoader, sunLoader.name, true);
-                        sunLoader.rotation.y = 110 * Math.PI / 180;
                         parent.add(sunLoader);
+                        sunLoader.scale.set(0.83, 0.83, 0.83);
+                        sunLoader.rotation.set(
+                            chapter.sunLoaderRotation[0] * Math.PI / 180,                             
+                            chapter.sunLoaderRotation[1] * Math.PI / 180,                             
+                            chapter.sunLoaderRotation[2] * Math.PI / 180,
+                            "XYZ"
+                        );
+                        if (this.debug) {
+                            //DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
+                        }
 
-                        
-                        // Save the mafillp
-                        this.sunTexture = fill.children[0].material.map;
-                        this.sunTexture.repeat.set(1.0,0.5);
-                        //debug 
 
                     }
                 })
 
-                events.emit("add_gui", {folder: "Sun texture", step: 0.01} ,this.sunTexture.offset, "x", 0, 1);
-                events.emit("add_gui", {folder: "Sun texture", step: 0.01} ,this.sunTexture.offset, "y", 0, 1);
+                // SPECIAL ZIV FIX for 19:00 sun
+                let sun19 = reorderedSuns.getObjectByName("19");
+                sun19.position.set(-47.29, 45.4, 38.41);
 
                 console.log("Reordered suns", reorderedSuns);
-                
-
-
-
-
                 resolve(reorderedSuns);
+            });
+        });
+    }
+    loadFile(loadingManager, path) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(path ,( obj ) => {
+                resolve(obj);
             });
         });
     }
@@ -346,10 +510,103 @@ export default class Square extends THREE.Object3D{
         });
     }
     loadBenches(loadingManager) {
+        let benches = [
+            "bottomleft",
+            "topleft",
+            "group2",
+            "bottomright",
+            "topright",
+            "group1",
+        ]
+
+            /*
+        let benchPositions = [
+            [1.09, -10.65, -3.47],
+            [4.44, -10.65, -0.09],
+            [-0.52, 2.5, 1.66],
+            [0,-10.65,0],
+            [0,-10.65,0],
+            [0,2.5,0]
+            ];*/
+
+
+        let benchPositions = [
+            [9.68, -8.48, 30.72],
+            [-36.44, -8.48, -4.6],
+            [-0.79, 2.36, 1.9],
+            [-14.86,-8.48, 1.79],
+            [-33.54,-8.48,-15.01],
+            [-0.84,1.97,1.76]
+        ];
+
+        let benchRotations = [
+            [0,243,0],
+            [0,172,0],
+            [0,0,0],
+            [0,0,0],
+            [0,297,0],
+            [0,20,0]
+        ];
+
+        let benchScales = [
+            1.4,
+            1.4,
+            0.9,
+            1.4,
+            1.4,
+            0.9
+        ]
+        let loaders = [];
+        benches.forEach((benchGroup) => {
+            loaders.push(this.loadFile(loadingManager, BENCHES_PREFIX + benchGroup + ".json"));
+        });
+        return new Promise((resolve, reject) => {
+            Promise.all(loaders)
+            .then((results) => {
+                console.log("Benches Load results", results);
+                let allBenches = new THREE.Object3D();
+                for (let i = 0; i < results.length; i++) {
+                    results[i].position.fromArray(benchPositions[i]);
+                    results[i].rotation.set(
+                        benchRotations[i][0] * Math.PI / 180,
+                        benchRotations[i][1] * Math.PI / 180,
+                        benchRotations[i][2] * Math.PI / 180,
+                        "YXZ"
+                    );
+                    let benchScale = benchScales[i];
+                    results[i].scale.set(benchScale, benchScale, benchScale);
+                    allBenches.add(results[i]);
+
+                    if (this.debug) {
+                        //DebugUtil.positionObject(results[i], benches[i]);
+                    }
+                }
+
+                resolve(allBenches);
+            });
+        });
+    }
+    disableDepthWrite(objectArray) {
+        for (let i = 0; i < objectArray.children.length; i++) {
+            if (objectArray.children[i].children[0]) {
+                objectArray.children[i].children[0].material.depthWrite = false;
+            }
+        }
+    }
+    loadFountain(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(BENCHES_PATH,( obj ) => {
-                console.log("Loaded square benches ", obj);
+            loader.load(FOUNTAIN_PATH,( obj ) => {
+                console.log("Loaded square fountain ", obj);
+                resolve(obj);
+            });
+        });
+    }
+    loadGround(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(GROUND_PATH,( obj ) => {
+                console.log("Loaded ground ", obj);
                 resolve(obj);
             });
         });
@@ -368,6 +625,7 @@ export default class Square extends THREE.Object3D{
 
                 this.sphereMesh = obj.getObjectByName("SkySphere").children[0];
                 console.log("Sky sphere", this.sphereMesh);
+                //DebugUtil.positionObject(this.sphereMesh, "Sky Sphere");
                 resolve(obj);
             });
 
@@ -392,7 +650,13 @@ export default class Square extends THREE.Object3D{
         this.colliders.forEach((collider) => {
             collider.matrixWorld.multiply(this.mesh.matrixWorld);
         })*/
-        this.collisionManager.refreshSquareColliders(this.colliders.children);
+        let aroundFountain  = this.fountainMesh.getObjectByName("f_11_SubMesh 0");
+        aroundFountain.onCollision = (distance) => {
+            events.emit("fountain_collision", distance);
+        }
+        //let aroundFountain  = this.mesh.getObjectByName("fntn");
+        //this.collisionManager.refreshSquareColliders(this.colliders.children);
+        this.collisionManager.refreshSquareColliders([aroundFountain]);
     }
 
     getSphereMesh() {
@@ -420,5 +684,26 @@ export default class Square extends THREE.Object3D{
     getClockwork() {
         return this.activeClockwork;
 
+    }
+
+    loadLights() {
+      let pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
+      pointLight.position.set(0,0,0);
+      pointLight.intensity = 1;
+     // events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, pointLight, "intensity", 0, 2); 
+      this.mesh.add(pointLight);
+      // DebugUtil.positionObject(pointLight, "Fountain light");
+    }
+
+    get clockRotation() {
+        return this.activeClockwork.rotation.y;
+    }
+
+    set clockRotation(rotation) {
+        this.activeClockwork.rotation.y = rotation;
+        if (this.activeClockwork == this.clockwork) {
+            // Rotate also cylinder
+            this.cylinders[0].rotation.y = rotation;
+        }
     }
 }

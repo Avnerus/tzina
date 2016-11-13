@@ -68,6 +68,7 @@ document.getElementById('start-button').addEventListener('click',function(event)
 
 try {
     game.load(function() {
+        console.log("GAME LOADED");
         document.getElementById('start-container').style.display = "flex";
         document.getElementById('loading-container').style.display = "none";
     });
@@ -82,7 +83,7 @@ function start() {
     document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
-    window.addEventListener('vrdisplaypresentchange', resize, true);
+    window.addEventListener('vrdisplaypresentchange', vrchange, true);
     game.resize();
     stats.begin();
     animate();
@@ -90,7 +91,11 @@ function start() {
 
 
 function animate(t) {
-    requestAnimationFrame(animate);
+    if(game.vrManager.hmd.isPresenting) {
+        game.vrManager.hmd.requestAnimationFrame(animate) 
+    } else {
+        requestAnimationFrame(animate);
+    }
 
     /*
     elapsed = t - lastTimestamp;
@@ -104,5 +109,10 @@ function animate(t) {
 
 function resize() {
     game.resize();
+}
+
+function vrchange() {
+    game.resize();
+    game.vrChange();
 }
 

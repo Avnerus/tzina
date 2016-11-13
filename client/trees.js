@@ -3,47 +3,99 @@ const TREES_PATH = "assets/trees"
 import DebugUtil from './util/debug'
 
 export default class Trees extends THREE.Object3D {
-    constructor() {
+    constructor(camera, renderer) {
         super();
         this.debug = false;
+
+        this.cameras = [camera];
+        this.renderer = renderer;
+
+        const glslify = require('glslify');
+        this.windVertexShader = glslify('./shaders/potree_wind_vs.glsl');
     }
 
     init(loadingManager) {
         let treeTypes = {};
-        this.treesLoader = new THREE.PLYLoader(loadingManager);
 
         return new Promise((resolve, reject) => {
             console.log("Loading trees", TreesDef)
             let typePromises = TreesDef.types.map((type) => {return this.loadType(type, treeTypes)});
             Promise.all(typePromises)
             .then((results) => {
-                let material = new THREE.PointsMaterial( { size: 0.13, vertexColors: true } );
+
+                // Modify the potree point cloud material with a shader that supports wind
+                this.potreeWindMaterial = new Potree.PointCloudMaterial();
+                this.potreeMaterial = new Potree.PointCloudMaterial();
+
+                let windUniforms = { 
+                    time: { type: "f", value: 0 },
+                    speedFactor: { type: "f", value: 1.0 },
+                    pointSize: { type: "f", value: 0.03 },
+                    bendFactor: { type: "f", value: 0.01 },
+                    bendHeightLimit: { type: "f", value: 0.0 },
+                    wind: { type: "v2", value: new THREE.Vector2 ( 1.0, 0.5 ) },
+                    rustleHeightLimit: { type: "f", value: 5.0 },
+                    rustleColorCheck: { type: "b", value: false },
+                    rustleFactor: { type: "f", value: 1.0 },
+                    rustleFrequency: { type: "f", value: 0.2 }
+                };
+
+                Object.assign(windUniforms, this.potreeWindMaterial.uniforms);
+                let windShader = this.potreeWindMaterial.getDefines() + this.windVertexShader;
+
+                this.potreeWindMaterial.setValues({
+                    uniforms: windUniforms,
+                    vertexShader: windShader
+                    });
+
+
                 let counter = 0;
                 TreesDef.instances.forEach((instance) => {
-                    let mesh = new THREE.Points( treeTypes[instance.type], material );
-                    mesh.position.fromArray(instance.position);
-                    if (instance.scale) {
-                        mesh.scale.multiplyScalar(instance.scale);
+        //            let mesh = new THREE.Points( treeTypes[instance.type], material );
+                    if (treeTypes[instance.type]) {
+                        let mesh;
+                        if (instance.scale > 0.5) {
+                            mesh = new Potree.PointCloudOctree(treeTypes[instance.type], this.potreeWindMaterial);
+                        } else {
+                            mesh = new Potree.PointCloudOctree(treeTypes[instance.type], this.potreeMaterial);
+                        }
+                        //mesh.material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+                        mesh.material.size = 0.003;
+                        mesh.material.lights = false;
+                        mesh.position.fromArray(instance.position);
+                        if (instance.scale) {
+                            mesh.scale.multiplyScalar(instance.scale);
+                        }
+                        mesh.rotation.order ="ZXY";
+                        mesh.rotation.set(
+                            instance.rotation[0] * Math.PI / 180,
+                            instance.rotation[1] * Math.PI / 180,
+                            instance.rotation[2]* Math.PI / 180
+                        )
+                            /*
+                        mesh.rotateZ(90 * Math.PI / 180);
+                        mesh.rotateX(instance.rotateX * Math.PI / 180);*/
+
+                        this.add(mesh);
+
+                        if (this.debug) {
+                            DebugUtil.positionObject(mesh, instance.type + " " + counter, false, -40,40, instance.rotation);
+                        }
+
+                        counter++;
                     }
-                    mesh.rotation.order ="ZXY";
-                    mesh.rotation.set(
-                        instance.rotation[0] * Math.PI / 180,
-                        instance.rotation[1] * Math.PI / 180,
-                        instance.rotation[2]* Math.PI / 180
-                    )
-                        /*
-                    mesh.rotateZ(90 * Math.PI / 180);
-                    mesh.rotateX(instance.rotateX * Math.PI / 180);*/
-
-                    this.add(mesh);
-
-                    if (this.debug) {
-                        DebugUtil.positionObject(mesh, instance.type + " " + counter, false, -40,40, instance.rotation);
-                    }
-
-                    counter++;
-                    resolve();
                 })
+
+                events.on("control_threshold", (passed) => {
+                    this.controlPassed = passed;
+                    if (passed) {
+                        this.potreeWindMaterial.size = 0.03;
+                    }
+                });
+                events.on("vr_start", (cameras) => {
+                    this.cameras = cameras;
+                });
+                resolve();
             });
         });      
     }
@@ -51,10 +103,19 @@ export default class Trees extends THREE.Object3D {
     loadType(props,store) {
         return new Promise((resolve, reject) => {
             console.log("Loading tree type ", props);
-            this.treesLoader.load(TREES_PATH + "/" + props.fileName ,( geometry ) => {
+            Potree.POCLoader.load(TREES_PATH + "/" + props.fileName,( geometry ) => {
                 store[props.name] = geometry;
                 resolve();
             });
         });
+    }
+
+    update(dt,et) {
+        this.potreeWindMaterial.uniforms.time.value = et;
+        for (let i = 0; i < this.children.length; i++) {
+            for (let j = 0; j < this.cameras.length; j++) {
+                this.children[i].update(this.cameras[j], this.renderer);
+            }
+        }  
     }
 }

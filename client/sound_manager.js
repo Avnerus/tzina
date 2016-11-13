@@ -17,7 +17,7 @@ let ambientSamples=[
   {name: "highway_2", path:'Kikar_Ambiance_2_Loud.ogg', color:0x0Fff00, position:[25, 15, 0]},
   {name: "innerKikar", path:'Pigeons_Center_Kikar.ogg', color:0x00ff0F, position:[0, 20, 0]},
   {name: "wind", path:'WindinTrees.ogg', color:0x00ffF0, position:[0, 30, 20]},
-  {name: "testsound", path:'testsound.ogg', color:0xFF0000, position:[0, 25, 15], disable:false}
+  {name: "testsound", path:'testsound.ogg', color:0xFF0000, position:[0, 25, 15], disable:true}
 ];
 
 
@@ -48,7 +48,7 @@ export default class SoundManager {
         },
         eachSampler:function(what,except){
           for(var a in this.samplers){
-            if(except===undefined || except!=this.samplers[a]){
+            if(!except || except===undefined || except!=this.samplers[a]){
               what(this.samplers[a],a);
             }
           }
@@ -60,8 +60,20 @@ export default class SoundManager {
             thisSampler.controlBlur(1,time);
           },on);
           //focus the one we are focusing, if there is any
-          if(on!==undefined) if(typeof(on.controlBlur)==='function'){
+          if(on && on!==undefined) if(typeof(on.controlBlur)==='function'){
             on.controlBlur(0,time);
+          }else{
+            console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
+          }
+        },
+        setFocusWithLevel:function(on,level){
+          //blurr all except the one in focus
+          this.eachSampler(function(thisSampler,n){
+            thisSampler.controlBlur(level, 0);
+          },on);
+          //focus the one we are focusing, if there is any
+          if(on && on!==undefined) if(typeof(on.controlBlur)==='function'){
+            on.controlBlur(0,0);
           }else{
             console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
           }
@@ -75,6 +87,16 @@ export default class SoundManager {
           });
         },
       };
+      this.createStaticSoundSampler=function(url,onLoad){
+        let sss=new StaticSoundSampler(this.listener.context);
+        sss.init(url,this.loadingManager,onLoad);
+        return sss;
+      }
+      this.createPositionalSoundSampler=function(url,onLoad){
+        let pss=new PositionalSoundSampler(this.listener,this.scene);
+        pss.init(url,this.loadingManager,onLoad);
+        return pss;
+      }
     }
     init(loadingManager) {
       let thisSoundManager=this;
@@ -123,15 +145,17 @@ export default class SoundManager {
         this.listener = new THREE.AudioListener();
         this.camera.add(this.listener);
 
+        this.loader = new THREE.AudioLoader(new THREE.LoadingManager());
+
         //create positional samples
         for(var a in ambientSamples){
 
           let thisSample=ambientSamples[a];
           if(!thisSample.disable){
             let pSampler=new PositionalSoundSampler(this.listener,this.scene);
-            pSampler.blurModule.controlVolume(1.8);
+            pSampler.blurModule.controlVolume(1);
             pSampler.position.set(thisSample.position[0],thisSample.position[1],thisSample.position[2]);
-            pSampler.createDebugCube(0xFF0000);
+            //pSampler.createDebugCube(0xFF0000);
             pSampler.init(SOUND_PATH + thisSample.path,loadingManager,function(thisSampler){
               //Put attention that thisSample is not the same as thisSampler.
               //on sample loaded
@@ -153,9 +177,11 @@ export default class SoundManager {
               //   }
               // },thisSamplerGuiControl,"blur",0,1);
 
+              /*
+
               events.emit("add_gui", {
                 folder: "Sound setFocus",
-              },thisSamplerGuiControl,"focus");
+                },thisSamplerGuiControl,"focus"); */
 
               console.log(thisSampler.name+" sample loaded");
             });
@@ -163,9 +189,11 @@ export default class SoundManager {
           }
         }
         //gui control for back to normal
+        /*
         events.emit("add_gui", {
           folder: "Sound setFocus",
-        },{unset:function(){console.log("here1");thisSoundManager.panorama.unsetFocus(3);}},"unset");
+          },{unset:function(){console.log("here1");thisSoundManager.panorama.unsetFocus(3);}},"unset"); */
+
         // Dynamically loaded sounds
         this.sounds = {}
         this.activateEventListeners();
@@ -178,9 +206,10 @@ export default class SoundManager {
       //choose which sounds to trigger
       //of course that all the other sound objects must have the play function to call at once from here.
       if(setName=="sunGazedSound"){
+
       }else if(setName=="flyingSound"){
-      }else if(!setName){
-        console.warn("SoundManager was called to play without providing a setName");
+
+      }else if(setName == "ambience"){
         for(var a in ambientSamples){
           let thisSample=ambientSamples[a];
           console.log(thisSample);
@@ -230,9 +259,10 @@ export default class SoundManager {
           console.warn("SoundManager was called to play but the parameter setName didn't match any statement "+setName);
         }
     }
+
 }
 
-class StaticSoundSampler{
+export class StaticSoundSampler{
   constructor(audioContext){
     this.blurModule=new BlurModule(audioContext);
     this.audioContext=audioContext;
@@ -270,7 +300,7 @@ class StaticSoundSampler{
     request.open('GET', this.sampleUrl, true);
     request.responseType = 'arraybuffer';
     request.onload = function() {
-      console.log("request",request);
+      //console.log("request",request);
       var audioData = request.response;
 
       audioContext.decodeAudioData(audioData, function(buffer) {
@@ -307,7 +337,7 @@ class StaticSoundSampler{
 }
 
 
-class PositionalSoundSampler extends StaticSoundSampler{
+export class PositionalSoundSampler extends StaticSoundSampler{
   constructor(listener,scene){
     let audioContext=listener.context;
     super(audioContext);

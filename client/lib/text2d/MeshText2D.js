@@ -20,7 +20,8 @@ var MeshText2D = (function (_super) {
         this.cleanUp(); // cleanup previous texture
         this.canvas.drawText(this._text, {
             font: this._font,
-            fillStyle: this._fillStyle
+            fillStyle: this._fillStyle,
+            shadow: this._shadow
         });
         this.texture = new THREE.Texture(this.canvas.canvas);
         this.texture.needsUpdate = true;

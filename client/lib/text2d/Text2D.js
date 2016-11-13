@@ -21,6 +21,7 @@ var Text2D = (function (_super) {
         // this.anchor = Label.fontAlignAnchor[ this._textAlign ]
         this.antialias = (typeof options.antialias === "undefined") ? true : options.antialias;
         this.text = text;
+        this._shadow = options.shadow || false;
     }
     Object.defineProperty(Text2D.prototype, "width", {
         get: function () { return this.canvas.textWidth; },

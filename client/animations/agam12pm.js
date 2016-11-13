@@ -1,28 +1,29 @@
-import ImprovedNoise from '../util/improved_noise'
-import TextureAnimator from '../util/texture_animator'
-import GeometryUtils from '../util/GeometryUtils'
-import FBO from '../util/fbo'
-import EndArrayPlugin from '../util/EndArrayPlugin'
 import DebugUtil from '../util/debug'
-TweenPlugin.activate([EndArrayPlugin]);
 
 export default class Agam12PMAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( square ) {
         super();
         this.BASE_PATH = 'assets/animations/agam12pm';
+
+        this.square = square;
+        this.didInit = false;
     }
 
     init(loadingManager) {
-        this.loadingManager = loadingManager;
-        this.setupAnim();
+        if (!this.didInit) {
+            this.loadingManager = loadingManager;
+            this.setupAnim();
+            this.didInit = true;
+        }
     }
 
     setupAnim() {
 
         // setup animation sequence
+        console.log("AGAM12PM setupanim");
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{this.firstAni()} }
+            { time: 15,  anim: ()=>{this.firstAni()} }
             // { time: 30,  anim: ()=>{this.characterDisappear()} }
         ];
         this.nextAnim = null;
@@ -31,7 +32,6 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         this.loadingManager.itemStart("Agam12PMAnim");
 
         //        
-        this.perlin = new ImprovedNoise();
         let tex_loader = new THREE.TextureLoader(this.loadingManager);
         let loader = new THREE.JSONLoader(this.loadingManager);
 
@@ -68,9 +68,10 @@ export default class Agam12PMAnimation extends THREE.Object3D {
             // DebugUtil.positionObject(this.agamSmall_2, "agamSmall_2");
         });
 
-        // let testCube = new THREE.Mesh( new THREE.BoxGeometry(4,1,1), new THREE.MeshLambertMaterial({color: 0xff0000}) );
-        // this.add(testCube);
-        // DebugUtil.positionObject(testCube, "testCube");
+        /*
+        let testCube = new THREE.Mesh( new THREE.BoxGeometry(4,1,1), new THREE.MeshLambertMaterial({color: 0xff0000}) );
+        this.add(testCube);
+        DebugUtil.positionObject(testCube, "testCube");*/
 
         this.dummy = {opacity: 1};
 
@@ -136,6 +137,8 @@ export default class Agam12PMAnimation extends THREE.Object3D {
                 this.nextAnim = null;
             }
         }
+
+        this.square.fountain.updateVideoTime(time);
     }
 
     update(dt,et) {
