@@ -464,7 +464,7 @@ export default class Game {
             this.pidgeonController.frame(dt);
           }catch(e){
             console.error("pidgeonContoller failed",e);
-            tthis.pidgeonfailed=true;
+            this.pidgeonfailed=true;
           }
         }
     }

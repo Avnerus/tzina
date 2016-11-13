@@ -50,6 +50,10 @@ export default class Pidgeon extends THREE.Object3D{
     this.blendMesh.position.set(0,0,0);
     // this.mesh.scale.set(0.3,0.3,0.3);
     // this.add(this.mesh);
+    var box = new THREE.BoxGeometry(0.5,0.5,1);
+    var material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true} );
+    this.boundingBox = new THREE.Mesh( box, material );
+    this.add(this.boundingBox);
     /*pendant: these may become handy later, but currently unused:*/
     let transformReturnFunctions = {
       prevCoords: {x:0,y:0,z:0},
@@ -189,6 +193,12 @@ export default class Pidgeon extends THREE.Object3D{
       this.labelTextAdd(text);
     }
   }
+  labelTextFadeIn(){
+    this.textualLabel.opacity(1);
+  }
+  labelTextFadeOut(){
+    this.textualLabel.opacity(0.1);
+  }
   labelTextAdd(text){
     this.textualLabel = new SpriteText2D(text, {align: textAlign.center,font: '20px Arial',fillStyle: '#FFFFFF',antialias: true});
     this.textualLabel.scale.multiplyScalar(0.01);
@@ -196,6 +206,13 @@ export default class Pidgeon extends THREE.Object3D{
     this.textualLabel.position.x=0;
     this.textualLabel.position.y=1;
     this.textualLabel.position.z=0;
+    this.textualLabel.opacity=function(value){
+      if(value){
+        this.opacity=value;
+        this.textualLabel.fillStyle="rgba(255,255,255,"+this.opacity+")";
+      }
+      return this.opacity;
+    }
   }
   labelTextChange(text){
     this.textualLabel.text = text;
@@ -277,7 +294,7 @@ export default class Pidgeon extends THREE.Object3D{
           this.blendMesh.crossfadeToThrough(toAnim,"Bird_Land",1);
         }
       }else if(myCurrentAnimState=="Bird_Idle"){
-        
+
         //eventually eat
         setTimeout(function(){
           if(thisPidgeon.blendMesh.currentAnim=="Bird_Idle"){
@@ -346,11 +363,11 @@ export default class Pidgeon extends THREE.Object3D{
       console.error("pidgeon",e);
     }
     try{
-      THREE.BlendCharacter.loadNewDiffuse( 'assets/pidgeon/pigeons_v2.jpg', function(newTexture) {
+      THREE.BlendCharacter.loadNewDiffuse( 'assets/pidgeon/pigeons_v4.png', function(newTexture) {
   			loadedSkinTexture=newTexture;
   			console.log("pidgeon skin texture loaded");
   		},loadingManager );
-      THREE.BlendCharacter.loadNewDiffuse( 'assets/pidgeon/pigeons_v3.jpg', function(newTexture) {
+      THREE.BlendCharacter.loadNewDiffuse( 'assets/pidgeon/pigeons_v2.png', function(newTexture) {
   			loadedSkinTexture2=newTexture;
   			console.log("pidgeon skin texture loaded");
   		},loadingManager );
@@ -368,6 +385,7 @@ export default class Pidgeon extends THREE.Object3D{
   static remote(unique){
     return characterAssoc[unique+""];
   }
+
   // static remove(unique){
   //
   // }

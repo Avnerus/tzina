@@ -49,7 +49,7 @@ THREE.BlendCharacter = function (loadedObject) {
 		}
 
 		this.material.skinning = true;
-
+		this.material.transparent=true;
 		this.mixer = new THREE.AnimationMixer( this );
 		this.mixer = this.mixer;
 
@@ -76,6 +76,8 @@ THREE.BlendCharacter = function (loadedObject) {
 			mixer.clipAction( geometry.animations[ i ] );
 
 		}
+		// this.skeleton.bones[0].position.y=2;
+		// console.log("pidgeon skeleton",this.skeleton);
 	}
 	this.wireframe=function(){
 		this.material=new THREE.MeshBasicMaterial({color:0xFF0000,wireframe:true});
@@ -85,7 +87,9 @@ THREE.BlendCharacter = function (loadedObject) {
 		//thisBlendCharacter.material.map=texture;
 		thisBlendCharacter.material = new THREE.MeshBasicMaterial( {
 			map: texture,
-			skinning:true
+			skinning:true,
+			transparent:true,
+
 		 } );
 		//  if ( onLoad !== undefined ) onLoad();
 	}

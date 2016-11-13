@@ -16,7 +16,7 @@ exports.getCountryName=function(ip,onReady){
         'countryName: ' + results.countryName
         // 'countryEmoji: ' + results.countryEmoji
       );
-      if(ip=="::1") results.countryName="With you";
+      if(ip=="::1") results.countryName="Localhost";
       if(onReady) onReady({country:results.countryName});
     }
   );

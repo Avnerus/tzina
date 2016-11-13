@@ -182,10 +182,10 @@ export default class PidgeonController {
         console.log("pidgeon add text "+message.string);
         let remoteSprite=Pidgeon.remote(message.pointer);
         if(!remoteSprite){
-          console.warn("couldn't retrieve the corresponding pidgeon",message);
+          console.warn("couldn't retrieve the corresponding pidgeon, creating it ",message);
           //if we don't have it, we create it. Comment this if many pidgeon sprites start appearing
-          // remoteSprite=new Pidgeon({position:{x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001},unique:message.pointer});
-          // thisPidgeonController.scene.add(remoteSprite);
+          remoteSprite=new Pidgeon({unique:message.pointer});
+          thisPidgeonController.scene.add(remoteSprite);
         }else{
           remoteSprite.labelText(message.string);
         }
@@ -232,6 +232,35 @@ export default class PidgeonController {
       this.socketEmitCameraPosition();
       lastEmitTime=this.time;
     }
+    this.gaze();
+  }
+  gaze(){
+    //raycast to get objects in center of sight
+    let vector = new THREE.Vector3(0, 0, -1);
+    vector = this.camera.localToWorld(vector);
+    vector.sub(this.camera.position); // Now vector is a unit vector with the same direction as the camera
+    let raycaster = new THREE.Raycaster( this.camera.position, vector);
+    let thelist=[];
+
+    Pidgeon.each(function(pidg){
+      thelist.push(pidg.boundingBox);
+      pidg.boundingBox.pidgeonOwner=pidg;
+    });
+
+    // if(!this.alreadyLoggedTheThing){
+    //   console.log("the list",thelist);
+    //   this.alreadyLoggedTheThing=true;
+    // }
+    let collisionResults = raycaster.intersectObjects(thelist);
+    for(let a in collisionResults){
+      console.log(collisionResults[a])
+    }
+    collisionResults.forEach((result) => {
+      console.log("pidgeon raycast result",result);
+      // result.material=new THREE.MeshBasicMaterial({color:0xFF0000,wireframe:true});        result.material=new THREE.MeshBasicMaterial({color:0xFF0000,wireframe:true});
+      result.pidgeonOwner.labelTextFadeOut();
+      // console.log(result.mesh.showName());
+    });
   }
   socketEmitCameraPosition(){
     if(webSocketFinishedConnecting){
