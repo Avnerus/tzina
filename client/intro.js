@@ -5,7 +5,7 @@ import DebugUtil from './util/debug'
 import StaticSoundSampler from './sound_manager'
 
 export default class Intro {
-    constructor(camera, square, timeConroller, soundManager, scene, vrControls, zoomController) {
+    constructor(camera, square, timeConroller, soundManager, scene, vrControls, zoomController, config) {
         this.camera = camera;
         this.square = square;
         this.soundManager = soundManager;
@@ -13,6 +13,7 @@ export default class Intro {
         this.scene = scene;
         this.vrControls = vrControls;
         this.zoomController = zoomController;
+        this.config = config;
 
         this.soundEvents = [
             {
@@ -90,7 +91,7 @@ export default class Intro {
         this.creditTextName.material.opacity = 0;
         this.creditTextTitle.add(this.creditTextName);
 
-        DebugUtil.positionObject(this.creditTextTitle, "Credits title");
+        //DebugUtil.positionObject(this.creditTextTitle, "Credits title");
 
         let loader = new THREE.ObjectLoader(loadingManager);
         loader.load(this.LOGO_PATH,( obj ) => {
@@ -157,7 +158,12 @@ export default class Intro {
         }
     }
     start() {
-        this.localHour = this.timeConroller.preloadLocalTime();
+        if (this.config.speedIntro) {
+            this.localHour = this.config.startTime;
+            this.timeConroller.preloadTime(this.localHour);
+        } else {
+            this.localHour = this.timeConroller.preloadLocalTime();
+        }
 
         // Load the sound
         this.soundManager.loadSound(this.INTRO_SOUND)
@@ -168,11 +174,11 @@ export default class Intro {
             setTimeout(() => {
                 
         //        this.turnOnWindows();
-                this.playSound(); 
-                setTimeout(() => {
-                    //                    this.fadeIn();
-                },1000)
-                //this.zoomToSquare();
+                if (!this.config.speedIntro) {
+                    this.playSound();
+                } else {
+                    this.bringUpSun();
+                }
 
             },3000);
         });
@@ -193,11 +199,19 @@ export default class Intro {
     }
 
     bringUpSun() {
-        this.timeConroller.rotate(360,37)
+        let speed1 = this.config.speedIntro ? 3 : 37;
+        let speed2 = this.config.speedIntro ? 3 : 14;
+        let speed3 = this.config.speedIntro ? 1000 : 10000;
+
+        this.timeConroller.rotate(360,speed1)
         .then(() => {
             // transition to local time
             this.timeConroller.transitionTo(0,0);
-            return this.timeConroller.transitionTo(this.localHour, 14);
+            if (!this.config.speedIntro) {
+                return this.timeConroller.transitionTo(this.localHour, speed2);
+            } else {
+                return this.timeConroller.transitionTo(this.config.startTime, speed2);
+            }
         })
         .then( () => { 
             setTimeout(() => {
@@ -205,7 +219,7 @@ export default class Intro {
                 .then(() => {
                     this.enterSquare();                    
                 });
-                },10000)
+                },speed3)
         });
     }
 

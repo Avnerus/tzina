@@ -286,7 +286,7 @@ export default class Square extends THREE.Object3D{
     }
     update(dt,et) {
         this.fountain.update(dt);
-        if (this.config.controlPassed) {
+        if (this.controlPassed) {
             this.pool.update(dt,et);
         }
         if (!this.config.noTrees) {

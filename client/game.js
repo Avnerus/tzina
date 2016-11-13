@@ -170,7 +170,7 @@ export default class Game {
         this.zoomController.init();
 
 
-        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController);
+        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config);
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
 
 
@@ -412,13 +412,15 @@ export default class Game {
                 this.intro.playCredits();
             },3000);
 
-
         } else {
             // start the intro
             this.intro.position();
-            //this.timeController.setTime(17);//17
-        }
 
+            if (!this.vrManager.isVRCompatible) {
+                this.intro.start();
+                this.introAni.start();
+            }
+        }
     }
 
     animate(t) {
@@ -477,7 +479,6 @@ export default class Game {
                 this.intro.start();
                 this.introAni.start();
             }
-
             let newCameras = this.vrEffect.getCameras();
             events.emit("vr_start", newCameras);
         } else {

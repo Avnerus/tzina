@@ -103,9 +103,9 @@ export default class Character extends THREE.Object3D {
                     return;
                 }
                 if (this.active && !this.done && this.props.name != name) {
+                    this.onHold = true;
+                    console.log(name, " is playing." , this.props.name, "is pausing");
                     if (!this.props.fullOnly) {
-                        console.log(name, " is playing." , this.props.name, "is pausing");
-                        this.onHold = true;
                         this.idleVideo.pause();
                         this.idleVideo.setOpacity(0.5);
                     }
@@ -127,11 +127,15 @@ export default class Character extends THREE.Object3D {
 
             events.on("control_threshold", (passed) => {
                 this.inControl = passed;
-                if (this.onHold && this.active && !this.fullOnly) {
-                    this.idleVideo.setOpacity(1.0);
-                    this.idleVideo.play();
-                    this.onHold = false;
-                }
+                setTimeout(() => {
+                    if (this.onHold && this.active) {
+                        if (!this.fullOnly) {
+                            this.idleVideo.setOpacity(1.0);
+                            this.idleVideo.play();
+                        }
+                        this.onHold = false;
+                    }
+                },3000);
             });
     }
     idleException(name) {

@@ -32,7 +32,8 @@ export default
                        position: [11.22,21.2,11.22],
                        rotation:[0,251,0],
                        scale: 0.45
-               }/*,
+                       },
+            /*
 					{
 					name: "tashlih",
 					position: [4.2,23.8,-8.37],
@@ -78,7 +79,7 @@ export default
      		       name: "oldmansit",
        			   position: [-12.93,23.2,3.79],
       			   rotation: [178,129,0],
-         			 scale: 0.33
+         			 scale: 0.371
     			    },
     		     {
                     name: "sweetLady",
@@ -90,15 +91,15 @@ export default
       			    name: "grandpa",
         			  position: [9.42,21.2,12.11],
       	  			  rotation:[360,93,0],
-       				  scale: 0.48
+       				  scale: 0.54
     	    },
          	 {
        			   name: "grandma",
       			   position: [8.52,21.2,9.42],
         		   rotation:[0,360,0],
-         		   scale: 0.19
+         		   scale: 0.233
        		 },
-       		 {
+         {
           name: "firstcouple",
           position: [-10.62,21.2,0.16],
           rotation: [0,201,0],
