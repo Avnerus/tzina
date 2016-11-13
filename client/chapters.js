@@ -61,7 +61,7 @@ export default
 				"Miriam",
                 "Itzik",
                 "Shirin9AM",
-                //"FatmanShower",
+                "FatmanShower",
                 "Lupo9AM"
 			],
 			"introfile": [
@@ -155,31 +155,31 @@ export default
 					name: "100_",
 					position: [20.83,21.2,1.06],
 					rotation:[0,294,0],
-					scale: 0.19
+					scale: 0.233
 				},
 				{
 					name: "dude",
-					position: [-17.81,21.3,2.86],
-					rotation:[0,63,0],
-					scale: 0.27
+					position: [-15.56,21.3,2.86],
+					rotation:[0,102,0],
+					scale: 0.323
 				},
 				{
                     name: "twoNiceJewishMen",
-                    position: [13.64,23.1,11.85],
+                    position: [13.64,23.65,11.85],
                     rotation: [184,47,342],
-                    scale: 0.33
+                    scale: 0.43
 				},
 					{
 					name: "kadafi",
-					position: [-7.93,23.8,6.45],
+					position: [-7.93,24.25,6.45],
 					rotation:[177,144,0],
-					scale: 0.32
+					scale: 0.372
 				},
 					{
 					name: "BlackGuy",
-					position: [11.5,21.6,3.5],
+					position: [12.03,21.37,3.806],
 					rotation:[0,225,0],
-					scale: 0.27
+					scale: 0.43
 				}
 			],
 			"effects" : [

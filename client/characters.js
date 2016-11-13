@@ -156,7 +156,7 @@ export default [
         animation: 'Agam12PM',
         uvdy: 0.496,
         uvdx: 0.0,
-        scale: 0.003 * 0.608,
+        scale: 0.003 * 0.69,
         width: 1024,
         height: 2048,
         animationScale: 0.18,
@@ -224,7 +224,7 @@ export default [
                 maxdepth : 4564.32861328125
             }
         ],
-        position : [-14.19, 22.09, 3.07],
+        position : [-12.71, 22.1, 1.684],
         rotation: [0, 37, 0],
         animation: 'Mark',
         uvdy: 0.458984375,
@@ -232,7 +232,7 @@ export default [
         uvdx: 0.0,
         width: 512,
         height: 2048,
-        scale: 0.003 * 0.4145,
+        scale: 0.003 * 0.458437,
         animationScale: 0.24,
         animationPosition: [-0.03, 0.21, -0.86], // -.4, -.46, -.55
         animationRotation: [0, 214, 0], // 0,-25,0
@@ -245,14 +245,14 @@ export default [
         basePath : 'assets/characters/fatman-sleep',
         mindepth : 1370.90380859375,
         maxdepth : 3802.21240234375,
-        position : [-6.36, 22.00, 0.37],
-        rotation: [82, 261, 82],
+        position : [-14.8, 22.05, -5.746],
+        rotation: [0,40,0],
         animation: null,
         uvdy: 0.35986328125,
         uvdx: 0,
         width: 2048,
         height: 2048,
-        scale: 0.003 * 1.003,
+        scale: 0.003 * 1.0952,
         subtitles: null,
         idleOnly: true
     },
@@ -338,14 +338,14 @@ export default [
                 scale: 0.003 * 0.52198
             }
         ],
-        position : [-10.77, 21.99, 6.62],
+        position : [-10.77, 22.02, 6.62],
         rotation: [2, 216, 0],
         animation: 'Lupo12PM',
         uvdy: 0.4970703125,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.6888,
+        scale: 0.003 * 0.7411,
         animationScale: 0.25,
         animationPosition: [-0.66, -0.41, -0.96], // -0.53, -0.51, -1.76
         animationRotation: [0,0,0], // 0,-25,0

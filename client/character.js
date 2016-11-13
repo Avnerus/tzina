@@ -93,11 +93,6 @@ export default class Character extends THREE.Object3D {
                 this.animation = null;
             }
 
-            // for event character
-            if (this.props.idleOnly && this.animation) {
-                this.animation.visible = true;
-                this.add(this.animation);
-            }
 
             events.on("character_playing", (name) => {
                 if (this.idleException(name)) {
@@ -173,6 +168,11 @@ export default class Character extends THREE.Object3D {
             }
 
             if (this.props.event) {
+                // for event character
+                if (this.animation) {
+                    this.animation.visible = true;
+                    this.add(this.animation);
+                }
                 events.emit("character_playing", this.props.name)
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {

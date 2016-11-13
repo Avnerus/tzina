@@ -6,16 +6,21 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         this.BASE_PATH = 'assets/animations/agam12pm';
 
         this.square = square;
+        this.didInit = false;
     }
 
     init(loadingManager) {
-        this.loadingManager = loadingManager;
-        this.setupAnim();
+        if (!this.didInit) {
+            this.loadingManager = loadingManager;
+            this.setupAnim();
+            this.didInit = true;
+        }
     }
 
     setupAnim() {
 
         // setup animation sequence
+        console.log("AGAM12PM setupanim");
         this.animStart = false;
         this.sequenceConfig = [
             { time: 15,  anim: ()=>{this.firstAni()} }
@@ -63,9 +68,10 @@ export default class Agam12PMAnimation extends THREE.Object3D {
             // DebugUtil.positionObject(this.agamSmall_2, "agamSmall_2");
         });
 
-        // let testCube = new THREE.Mesh( new THREE.BoxGeometry(4,1,1), new THREE.MeshLambertMaterial({color: 0xff0000}) );
-        // this.add(testCube);
-        // DebugUtil.positionObject(testCube, "testCube");
+        /*
+        let testCube = new THREE.Mesh( new THREE.BoxGeometry(4,1,1), new THREE.MeshLambertMaterial({color: 0xff0000}) );
+        this.add(testCube);
+        DebugUtil.positionObject(testCube, "testCube");*/
 
         this.dummy = {opacity: 1};
 
