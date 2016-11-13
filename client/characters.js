@@ -219,8 +219,8 @@ export default [
                 sec: 0,
                 mindepth : 1499.999877929688,
                 maxdepth : 4564.32861328125,
-                position : [-11.72, 21.99, 1.739],
-                scale: 0.003 * 0.458437 * 1.46
+                position : [-11.35, 21.9, 1.95],
+                scale: 0.003 * 0.458437 * 1.34174
             },
             {
                 sec: 92,
@@ -233,16 +233,16 @@ export default [
                 maxdepth : 4564.32861328125
             }
         ],
-        position : [-12.82, 21.86, 1.57],
+        position : [-12.9, 21.86, 1.56],
         //rotation: [0, 37, 0],
-        rotation: [10, 75, 350],
+        rotation: [10, 76, 350],
         animation: 'Mark',
         uvdy: 0.458984375,
         uvdy_idle: 0.419,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.458437 * 1.66,
+        scale: 0.003 * 0.458437 * 1.8,
         animationScale: 0.24,
         animationPosition: [-0.03, 0.21, -0.86], // -.4, -.46, -.55
         animationRotation: [0, 214, 0], // 0,-25,0
@@ -504,14 +504,14 @@ export default [
         basePath : 'assets/characters/fatman-shower',
         mindepth : 2534.99951171875,
         maxdepth : 5070.96044921875,
-        position : [-7.14, 22.09, 0.37],
-        rotation: [80, 261, 80.02],
+        position : [-5.74, 22.7, 2.85],
+        rotation: [192, 231, 197],
         animation: null,
         uvdy: 0.49169921875,
         uvdx: 0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.64725,
+        scale: 0.003 * 0.64725 * 1.308,
         subtitles: null,
         idleOnly: true
     },
