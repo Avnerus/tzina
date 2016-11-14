@@ -32,6 +32,7 @@ import MarkAnimation from './animations/mark'
 import Agam12PMAnimation from './animations/agam12pm'
 import ItzhakAnimation from './animations/itzhak'
 import ShirinAnimation from './animations/shirin'
+import RamiAnimation from './animations/rami'
 
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
@@ -179,7 +180,8 @@ export default class Game {
                 'Mark' : new MarkAnimation(),
                 'Agam12PM' : new Agam12PMAnimation(this.square),
                 'Lupo12PM' : new Lupo12PMAnimation(),
-                'Itzhak' : new ItzhakAnimation()
+                'Itzhak' : new ItzhakAnimation(),
+                'Rami' : new RamiAnimation()
                 //'Shirin' : new ShirinAnimation()
             }
         } else {
