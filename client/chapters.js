@@ -15,54 +15,29 @@ export default
                 "Shirin7AM"
 			],
 			"extraAssets": [
-<<<<<<< HEAD
+
 			{
 
             name: "Bagel",
-          			position: [-1.75,22.79,10],
+          			position: [-18.89,51.21,28.02],
 					rotation: [160,360,0],
 					scale: 0.37
      		   },
- 			{
-            name: "Bun",
-            		position: [2.24,24,10.32],
-					rotation: [182,335,0],
-					scale: 0.37
-       		 },
+     	
+ 			
   			{
             name: "whiteBread",
             		position: [2.24,24,10.32],
 					rotation: [182,335,0],
 					scale: 0.37
        			 },
-=======
-				{
-
-             name: "Bagel",
-				 	position: [2.24,24,10.32],
-				 	rotation: [182,335,0],
-				 	scale: 0.37
-       		  },
->>>>>>> 83581c043f590108e9af6c99b8f9ac09bd960786
-
- 			 {
-             name: "Bagel",
-           			position: [2.24,24,10.32],
-				 	rotation: [182,335,0],
-				 	scale: 0.37
-     		   },
  			 {
              name: "Bun",
              		position: [2.24,24,10.32],
 				 	rotation: [182,335,0],
 				 	scale: 0.37
         		 },
-  		 	{
-             name: "whiteBread",
-             		position: [2.24,24,10.32],
-				 	rotation: [182,335,0],
-				 	scale: 0.37
-        			 },
+  		 
 					{
 					name: "junkie",
 					position: [2.24,24,10.32],
@@ -122,6 +97,7 @@ export default
 					"fileName": "Jacobcloths",
 					"position": [0,0,0]
 				},
+				
 				       {
      		       name: "oldmansit",
        			   position: [-12.93,23.2,3.79],
@@ -146,6 +122,12 @@ export default
         		   rotation:[0,360,0],
          		   scale: 0.19
        		 },
+       		   {	
+            name: "Umbrella",
+          			position: [-17.08,18.73,29.82],
+					rotation: [0,205,0],
+					scale: 0.514
+     		   },
        		 {
           name: "firstcouple",
           position: [-10.62,21.2,0.16],
@@ -204,6 +186,12 @@ export default
 					rotation:[0,294,0],
 					scale: 0.19
 				},
+			   {	
+            name: "Umbrella",
+          			position: [-17.08,18.73,29.82],
+					rotation: [0,205,0],
+					scale: 0.514
+     		   },
 				{
 					name: "dude",
 					position: [-17.81,21.3,2.86],
@@ -267,6 +255,12 @@ export default
                     rotation: [0,144,0],
                     scale: 0.28
 				},
+			   {	
+            name: "Umbrella",
+          			position: [-17.08,18.73,29.82],
+					rotation: [0,205,0],
+					scale: 0.514
+     		   },
 					{
 					name: "bikeHottie",
 					position: [-9.72,21.4,17.24],
