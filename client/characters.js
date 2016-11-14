@@ -281,9 +281,9 @@ export default [
         width: 1024,
         height: 2048,
         scale: 0.003 * 0.4715,
-        animationScale: 0.1,
-        animationPosition: [-0.24, 0.31, 0],
-        animationRotation: [0, 6, 0],
+        animationScale: 0.08,
+        animationPosition: [1.88, 0.35, 0],
+        animationRotation: [0, 0, 0],
         space: 0.54, //0.2
         spaceOffset: [-0.8,1.5,0.25], //-0.8,0,0.53
         subtitles: null,
@@ -302,7 +302,7 @@ export default [
         width: 1024,
         height: 2048,
         scale: 0.003 * 0.4715,
-        animationScale: 0.25,
+        animationScale: 0.08,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 0.2,
@@ -378,7 +378,7 @@ export default [
         width: 1024,
         height: 2048,
         scale: 0.003 * 0.4715,
-        animationScale: 0.25,
+        animationScale: 0.08,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 0.1,
@@ -435,7 +435,7 @@ export default [
         width: 1024,
         height: 2048,
         scale: 0.003 * 0.5327,
-        animationScale: 0.25,
+        animationScale: 0.08,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 0.4,
@@ -476,7 +476,7 @@ export default [
         width: 1024,
         height: 2048,
         scale: 0.003 * 0.5327,
-        animationScale: 0.25,
+        animationScale: 0.08,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
         space: 0.2,
