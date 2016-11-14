@@ -187,6 +187,7 @@
         "color":3881787,
         "uuid":"00BBCF8C-3E93-4EEA-A1B9-57B166CA7EAD",
         "vertexColors":0,
+        "side":2,
         "depthWrite":true
     },{
         "name":"Rflectors",
