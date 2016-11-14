@@ -19,7 +19,7 @@ void main() {
 
     vec4 color = texture2D( map, vUv + vec2(uvdx, uvdy));
 
-    color.rgb = (color.rgb - 0.5) * contrast + 0.5 + brightness;
+    color.rgb = color.rgb - brightness;
 
     color.w = opacity;  
 
