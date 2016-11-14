@@ -63,7 +63,7 @@ export default class Flood extends THREE.Object3D  {
         events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "z");*/
 
         events.on("experience_progress", (percentage) => {
-            console.log("FLOOD progress", percentage);
+            //console.log("FLOOD progress", percentage);
             // First scale, then rise
             if (percentage <= 0.9) {
                 let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.9));

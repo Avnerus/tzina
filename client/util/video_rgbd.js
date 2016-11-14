@@ -240,7 +240,7 @@ export default class VideoRGBD  {
     };
 
     setOpacity(opacity) {
-        if (this.mesn && this.wire) {
+        if (this.mesh && this.wire) {
             this.mesh.material.uniforms.opacity.value = opacity;
             this.wire.material.uniforms.opacity.value = Math.min(opacity,0.1);
         }

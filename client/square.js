@@ -236,7 +236,7 @@ export default class Square extends THREE.Object3D{
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
             
-            this.scene.rotation.set(45,55,46);
+            //this.scene.rotation.set(45,55,46);
             //DebugUtil.positionObject(this.ground, "ground");
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
@@ -320,8 +320,8 @@ export default class Square extends THREE.Object3D{
 
     updateSunProgress(name, progress) {
         this.sunTextureOffsets[name] = (0.5 * progress);
-    //    console.log("Update sun progress ", name, progress, this.currentSun, this.sunTextureOffsets[name]);
         if (name == this.currentSun) {
+            //    console.log("Update sun progress ", name, progress, this.currentSun, this.sunTextureOffsets[name]);
             this.sunTexture.offset.y = this.sunTextureOffsets[name];
         }
     }
@@ -354,6 +354,9 @@ export default class Square extends THREE.Object3D{
             sunMesh.material.map = null;
             sunMesh.material.needsUpdate = true;
             sun.getObjectByName(name + "_L").visible = false;
+        }
+        if (this.currentSun) {
+            this.sunTexture.offset.y = this.sunTextureOffsets[this.currentSun];
         }
     }
 // material color under the texture

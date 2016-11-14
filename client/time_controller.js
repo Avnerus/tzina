@@ -209,7 +209,7 @@ export default class TimeController {
             }
         });
         this.experienceProgress = (sum / this.totalExperienceTime);
-        console.log("Total experience progress: (Flood)", sum + "/" + this.totalExperienceTime, this.experienceProgress);
+        //        console.log("Total experience progress: (Flood)", sum + "/" + this.totalExperienceTime, this.experienceProgress);
         events.emit("experience_progress", this.experienceProgress);
     }
 
