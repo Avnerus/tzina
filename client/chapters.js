@@ -11,8 +11,8 @@ export default
             "sunLoaderRotation": [144,46,0],
 			"characters": [
                 "Meir",
-                "Rami",
-                "Shirin7AM"
+                "Rami"
+                //"Shirin7AM"
 			],
 			"extraAssets": [
 					{
@@ -60,9 +60,9 @@ export default
 			"characters": [
 				"Miriam",
                 "Itzik",
-                "Shirin9AM",
-                "FatmanShower",
-                "Lupo9AM"
+                //"Shirin9AM"
+                "Lupo9AM",
+                "FatmanSleep"
 			],
 			"introfile": [
 				"Miryam",
@@ -133,8 +133,8 @@ export default
                 "LupoDogs12PM",                
                 "Lupo12PM",
 				"Sasha",
-                "FatmanSleep",
-				"Shirin12PM"
+                "FatmanShower"
+                //"Shirin12PM"
 			],
             "eventAfter" : 0,
             "eventCharacters" : [
@@ -199,9 +199,8 @@ export default
 			"timeLimitMinutes" : 12,
 			"characters": [
 				"Hannah",
-				"Lupo5PM",
-				"LupoDogs5PM",
-                "Shirin5PM"
+                "Haim"
+                //"Shirin5PM"
 			],
 			"introfile": [
 				"Hanna",
@@ -210,40 +209,46 @@ export default
 			"extraAssets": [
 				{
                     name: "bridegroom",
-                    position: [2.9,21.4,8.1],
+                    position: [1.22,21.2,8.1],
                     rotation: [0,278,0],
-                    scale: 0.27
+                    scale: 0.369
 				},
 					{
                     name: "yukalele",
                     position: [15.44,21.3,13.64],
                     rotation: [0,144,0],
-                    scale: 0.28
+                    scale: 0.322
 				},
 					{
 					name: "bikeHottie",
-					position: [-9.72,21.4,17.24],
+					position: [-9.72,21.4,15.72],
 					rotation:[0,19,0],
-					scale: 0.33
+					scale: 0.44
 				},
 					{
 					name: "mom",
-					position: [-5.2,21.4,6.45],
-					rotation:[0,249,0],
-					scale: 0.34
+					position: [6.17,21.2,7.81],
+					rotation:[0,80,0],
+					scale: 0.542
 				},
 					{
                     name: "cat",
-                    position: [8.25,22,11.85],
-                    rotation: [0,96,0],
-                    scale: 0.33
+                    position: [8.66,21.92,11.97],
+                    rotation: [353,96,0],
+                    scale: 0.439
 				},
 					{
                     name: "cart",
-                    position: [19.04,23,6.45],
-                    rotation: [188,326,0],
-                    scale: 0.3
-				}
+                    position: [16.19,23.14,19.36],
+                    rotation: [188,0,0],
+                    scale: 0.411
+				},
+                {
+                    name: "coolPair",
+                    position: [-11.94,21.4,5.42],
+                    rotation: [0,0,0],
+                    scale: 0.404
+                }
 			],
 
 			"effects" : [
@@ -262,10 +267,11 @@ export default
             "insideTitlePositionLineTwo": [0,-4,0],
             "sunLoaderRotation": [0,148,0],
 			"characters": [
-				"Haim",
+                "Lupo5PM",
+                "LupoDogs5PM",
 				"Itzhak",
-				"Waterman",
-                "Shirin7PM"
+				"Waterman"
+                //    "Shirin7PM"
 			],
             "eventAfter" : 1,
             "eventCharacters" : [
@@ -284,23 +290,17 @@ export default
                     rotation: [0,186,0],
                     scale: 0.3,
 				},
-				{
-                    name: "coolPair",
-                    position: [14,21.4,5.91],
-                    rotation: [0,180,0],
-                    scale: 0.33
-				},
                   {
                    name: "blueLady",
-                    position: [-2.5,21.5,14],
+                    position: [-5.73,21.5,12.29],
                     rotation: [0,170,0],
-                    scale: 0.25
+                    scale: 0.304
     		    },
     		       {
                     name: "Gyno",
-                    position: [-4.87,23.5,8.61],
+                    position: [-8.88,24.07,5.42],
                     rotation: [186,138,18],
-                    scale: 0.3
+                    scale: 0.374
       			  },
 					{
 					name: "DAN",

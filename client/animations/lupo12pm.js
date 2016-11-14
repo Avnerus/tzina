@@ -29,23 +29,24 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         // setup animation sequence
         this.sequenceConfig = {
             'Lupo12PM': [        
-                    { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },                                        
-                    { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
-                    { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
+                    // { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },                                        
+                    // { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
+                    // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
 
                     { time: 16, anim: ()=>{this.showSculptures()} },
                     { time: 24, anim: ()=>{this.flickerSculptureTextures()} },
 
-                    { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
-                    { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
-                    { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
-                    { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
-                    { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
-                    { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
-                    { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
-                    { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
-                    { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
-                    { time: 120, anim: ()=>{this.growBenchCactus()} },
+                    { time: 26, anim: ()=>{this.growSingleCactus( 0 )} },
+                    { time: 32, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
+                    { time: 42, anim: ()=>{this.growSingleCactus( 2, 0xff0000 )} },
+                    { time: 47, anim: ()=>{this.growSingleCactus( 3, 0xff0000 )} },
+                    { time: 74, anim: ()=>{this.growSingleCactus( 4 )} },
+                    { time: 85, anim: ()=>{this.growSingleCactus( 5 )} },
+                    { time: 88, anim: ()=>{this.growSingleCactus( 6 )} },
+                    { time: 109, anim: ()=>{this.growSingleCactus( 7 )} },
+                    { time: 114, anim: ()=>{this.growSingleCactus( 8 )} },
+                    { time: 120, anim: ()=>{this.growSingleCactus( 9 )} },
+                    // { time: 120, anim: ()=>{this.growBenchCactus()} },
         
                     { time: 135, anim: ()=>{this.connectToDogs()} },
         
@@ -214,7 +215,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                                   this.sculptCactus_1, this.sculptCactus_2, this.sculptCactus_3 ];
 
                 // on bench
-                for(let i=0; i<20; i++){
+                for(let i=0; i<10; i++){
                     let newIndex = i%5;
                     let new_c = allCactus[ newIndex ].clone(true);
                     let new_mat = this.cactusMat.clone();
@@ -792,7 +793,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
     // receive name
     start( time ) {
-        console.log(time);
+        this.reset();
+        
         this.currentSequence = this.sequenceConfig[time].slice(0);
         this.nextAnim = this.currentSequence.shift();
 

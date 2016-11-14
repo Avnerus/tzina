@@ -36,11 +36,11 @@ export default class ShirinAnimation extends THREE.Object3D {
                 { time: 5, anim: ()=>{this.crackCocoon(3)} },
                 { time: 8,  anim: ()=>{this.stopFragment(3)} }
             ],
-            'Shirin17PM': [
+            'Shirin5PM': [
                 { time: 5, anim: ()=>{this.crackCocoon(1)} },
                 { time: 8,  anim: ()=>{this.stopFragment(1)} }
             ],
-            'Shirin19PM': [
+            'Shirin7PM': [
                 { time: 5, anim: ()=>{this.crackCocoon(2)} },
                 { time: 8,  anim: ()=>{this.stopFragment(2)} }
             ]
@@ -407,24 +407,40 @@ export default class ShirinAnimation extends THREE.Object3D {
 
     dropCobwebs() {
         for(let i=0; i<this.cobwebGroup.children.length; i++){
-            TweenMax.to( this.cobwebGroup.children[i].position, 3, {x: this.cobwebPos[i].x,
-                                                                    y: this.cobwebPos[i].y,
-                                                                    z: this.cobwebPos[i].z,
-                                                                    ease: Power1.easeInOut, 
-                                                                    delay:this.lookupTable[i]*2, onStart: ()=>{
-                TweenMax.to( this.cobwebGroup.children[i].scale, 0.2, {x: this.cobwebsScale[i%5].x,
-                                                                       y: this.cobwebsScale[i%5].y,
-                                                                       z: this.cobwebsScale[i%5].z } );
-            }, onComplete:()=>{
-                if(i%2==0)
-                    TweenMax.to( this.cobwebGroup.children[i].rotation, 4, { x:"+=0.3", y:"+=1",
-                                                                            ease: Power1.easeInOut,
-                                                                            yoyo: true, repeat:-1 });
-                else
-                    TweenMax.to( this.cobwebGroup.children[i].rotation, 4, { z:"-=0.3", y:"-=1",
-                                                                            ease: Power1.easeInOut,
-                                                                            yoyo: true, repeat:-1 });
+            let cw_posTween = TweenMax.to( this.cobwebGroup.children[i].position, 3, {
+                x: this.cobwebPos[i].x,
+                y: this.cobwebPos[i].y,
+                z: this.cobwebPos[i].z,
+                ease: Power1.easeInOut, 
+                delay:this.lookupTable[i]*2,
+                onStart: ()=>{
+                    let cw_scaleTween = TweenMax.to( this.cobwebGroup.children[i].scale, 0.2, {
+                        x: this.cobwebsScale[i%5].x,
+                        y: this.cobwebsScale[i%5].y,
+                        z: this.cobwebsScale[i%5].z
+                    });
+                    this.tweenAnimCollectors.push(cw_scaleTween);
+                },
+                onComplete:()=>{
+                    let cw_rotTween;
+                    if(i%2==0){
+                        cw_rotTween = TweenMax.to( this.cobwebGroup.children[i].rotation, 4, {
+                            x:"+=0.3", y:"+=1",
+                            ease: Power1.easeInOut,
+                            yoyo: true, repeat:-1
+                        });                        
+                    }
+                    else{
+                        cw_rotTween = TweenMax.to( this.cobwebGroup.children[i].rotation, 4, {
+                            z:"-=0.3", y:"-=1",
+                            ease: Power1.easeInOut,
+                            yoyo: true, repeat:-1
+                        });
+                    }
+                    this.tweenAnimCollectors.push(cw_rotTween);
             } });
+
+            this.tweenAnimCollectors.push(cw_posTween);
         }
     }
 
@@ -474,16 +490,25 @@ export default class ShirinAnimation extends THREE.Object3D {
     }
 
     start(time) {
+        this.reset();
+
+        console.log("Shirin animation starting with ", time);
         this.currentSequence = this.sequenceConfig[time].slice(0);
         this.nextAnim = this.currentSequence.shift();
     }
 
     reset() {
         // stop animation
-
+        for(let i=0; i<this.tweenAnimCollectors.length; i++){
+            this.tweenAnimCollectors[i].kill();
+        }
         // clean the collector
+        this.tweenAnimCollectors = [];
 
-        // back to original status
+        // back to original status: closed
+        for(let i=0; i<this.cocoonGroup.children.length; i++){
+            this.cocoonGroup.children[i].morphTargetInfluences[0] = 0;
+        }
     }
 
     updateVideoTime(time) {
