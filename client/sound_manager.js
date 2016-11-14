@@ -272,12 +272,13 @@ export class StaticSoundSampler{
     this.controlVolume=function(a){
       this.blurModule.controlVolume(a);
     }
+    this.loop=false;
   }
   setToLoop(loopValue){
     if(loopValue!==undefined){
-      this.source.loop=loopValue;
+      this.loop=loopValue;
     }else{
-      this.source.loop=true;
+      this.loop=true;
     }
   }
 
@@ -322,9 +323,10 @@ export class StaticSoundSampler{
   }
   play(/*loop*/){
     if(this.buffer){
-      this.source = audioContext.createBufferSource();
+      this.source = this.audioContext.createBufferSource();
       this.source.buffer=this.buffer;
-      source.connect(this.blurModule.inputNode);
+      this.source.connect(this.blurModule.inputNode);
+      if(this.loop==true) this.source.loop=true;
       this.source.start();
       /*this.source.loop = loop||false;*/
     }else{
