@@ -125,6 +125,7 @@
         "type":"MeshLambertMaterial",
         "vertexColors":0,
         "depthWrite":true,
+        "side":2,
         "color":10790052
     },{
         "emissive":0,
@@ -137,6 +138,7 @@
         "type":"MeshPhongMaterial",
         "vertexColors":0,
         "depthWrite":true,
+        "side":2,
         "color":10790052
     },{
         "emissive":0,
@@ -149,6 +151,7 @@
         "type":"MeshPhongMaterial",
         "vertexColors":0,
         "depthWrite":true,
+        "side":2,
         "color":14994353
     }],
     "metadata":{

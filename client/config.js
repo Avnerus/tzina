@@ -5,7 +5,7 @@ export default {
     enableFlying: true,
     skipIntro: false,
     speedIntro: true,
-    startTime: 9,
+    startTime: 19,
     skipCharacters: false,
     movementSpeed: 0.5, //0.5
     daySpeed: 0.003,
