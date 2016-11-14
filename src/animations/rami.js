@@ -20,9 +20,10 @@ export default class RamiAnimation extends THREE.Object3D {
         this.animStart = false;
         this.sequenceConfig = [
             { time: 1, anim: ()=>{this.doFirstAni()} },
-            { time: 5, anim: ()=>{this.peacockAround(5)} },
-            { time: 10, anim: ()=>{this.peacockOpen(5)} },
-            { time: 15, anim: ()=>{this.peacockBack(5)} }
+            { time: 5, anim: ()=>{this.peacockBack(5)} },
+            { time: 15, anim: ()=>{this.peacockOpen(5)} },
+            { time: 25, anim: ()=>{this.peacockBun(5)} },
+            { time: 35, anim: ()=>{this.peacockSwallow(5)} },
         ];
         this.nextAnim = null;
 
@@ -38,44 +39,52 @@ export default class RamiAnimation extends THREE.Object3D {
           this.lookupTable.push(Math.random());
         }
 
-        let peacockTex = tex_loader.load( this.BASE_PATH + "/images/peacockS.jpg" );
+        let peacockTex = tex_loader.load( this.BASE_PATH + "/images/peacockB.jpg" );
+        this.peacockTexAni = new TextureAnimator( peacockTex, 3, 1, 15, 60, [0,1,2,0,0,0,0,0,0,0,0,0,0,0,0] );
+
         let feathersTex = tex_loader.load( this.BASE_PATH + "/images/pea.jpg" );
         feathersTex.wrapS = THREE.RepeatWrapping;
         feathersTex.wrapT = THREE.RepeatWrapping;
         feathersTex.repeat.set( 5, 5 );
 
-        let grassTex = tex_loader.load( this.BASE_PATH + "/images/grasslight-thin.jpg" );
+        let grassTex = tex_loader.load( this.BASE_PATH + "/images/redlight-thin.jpg" );
         this.peacockMaterial = new THREE.MeshPhongMaterial({ map: peacockTex,
                                                             blending: THREE.AdditiveBlending,
-                                                            specular: 0x04340d,
+                                                            specular: 0x630824,
                                                             shininess: 77,
                                                             specularMap: grassTex,
                                                             side: THREE.DoubleSide,                                                            
                                                             morphTargets: true,
                                                             morphNormals: true });
 
-        let peacockFiles = [
-            this.BASE_PATH + "/models/pea_0.json", this.BASE_PATH + "/models/pea_1.json",
-            this.BASE_PATH + "/models/pea_2.json", this.BASE_PATH + "/models/pea_3.json"
-        ];
+        let peacockFiles = [];
+        for(let i=0; i<5; i++){
+            let file = this.BASE_PATH + "/models/peafowl/p_" + i + ".json";
+            peacockFiles.push(file);
+        }
         this.peacockGeos = {};
+
+        this.tweenTransition = null;
 
         this.ramiLoadingManager = new THREE.LoadingManager();
         this.ramiLoadingManager.onLoad = ()=>{
             // create peacock
             let peacockGeo = this.peacockGeos[0];
 
-            for(let i=1; i<4; i++){
-                peacockGeo.morphTargets.push({name: 'p1', vertices: this.peacockGeos[i].vertices});
+            for(let i=1; i<5; i++){
+                peacockGeo.morphTargets.push({name: 'p'+i, vertices: this.peacockGeos[i].vertices});
             }
             peacockGeo.computeMorphNormals();
             this.peacock = new THREE.Mesh( peacockGeo, this.peacockMaterial );
-            this.peacock.position.set(3,-1,-1);
-            this.peacock.scale.multiplyScalar(2);
+            this.peacock.position.set(0.9, -5, -5);
+            this.peacock.scale.multiplyScalar(3 );
             this.add(this.peacock);
+            // console.log(this.peacock);
             DebugUtil.positionObject(this.peacock, "peacock");
         };
         this.loadPeacocks( peacockFiles );
+
+        this.initParticles();
 
         // DebugUtil.positionObject(this, "Rami Ani");
         //
@@ -91,30 +100,103 @@ export default class RamiAnimation extends THREE.Object3D {
         }
     }
 
+    initParticles() {
+        let p_tex_loader = new THREE.TextureLoader(this.loadingManager);
+        let particleTex = p_tex_loader.load(this.BASE_PATH + '/images/feather_particle.jpg');
+
+        this.particleGroup = new SPE.Group({
+            texture: {
+                value: particleTex
+            },
+            maxParticleCount: 1000
+        });
+
+        // reduce emitter amount to be 1/5 of domeMorphTargets.length
+        // for(let i = 0; i < this.domeMorphTargets.length-10; i+=10){
+            let emitter = new SPE.Emitter({
+                type: SPE.distributions.SPHERE,
+                // duration: 10,
+                maxAge: {
+                    value: 10,
+                    spread: 2
+                },
+                position: {
+                    value: new THREE.Vector3(),
+                    radius: 2
+                },
+                acceleration: {
+                    value: new THREE.Vector3(0,-0.5,0)
+                },
+                velocity: {
+                    value: new THREE.Vector3(0.3,-0.3,0.3)
+                },
+                rotation: {
+                    angle: 0.5
+                },
+                angle: {
+                    value: [0,0.5,-0.5],
+                    spread: [0,-0.5,0.5]
+                },
+                opacity: {
+                    value: [0,1,1,1,0]
+                },
+                size: {
+                    value: [.2,1,1,1,.3]
+                },
+                particleCount: 15,
+                drag: 0.6,
+                activeMultiplier: 1
+            });
+            this.particleGroup.addEmitter( emitter );
+        // }
+        this.add( this.particleGroup.mesh );
+    }
+
     doFirstAni(){
         console.log("do first animation.");
     }
 
-    peacockAround (_duration) {
-        let tmpEndArray = [1,0,0];
-        TweenMax.to( this.peacock.morphTargetInfluences, _duration, { endArray: tmpEndArray, ease: Power3.easeInOut } );
+    peacockBack (_duration) {
+        // console.log( this.peacock.morphTargetInfluences );
+        this.createMorph( _duration, [1, 0, 0, 0] );
+        this.createTransition(_duration, [0.8, 0, 0, 0] );
     }
 
     peacockOpen (_duration) {
-        let tmpEndArray = [0,1,0];
-        TweenMax.to( this.peacock.morphTargetInfluences, _duration, { endArray: tmpEndArray, ease: Power3.easeInOut } );
+        this.createMorph( _duration, [0, 1, 0, 0] );
+        this.createTransition(_duration, [0.5, 0.8, 0, 0] );
     }
 
-    peacockBack (_duration) {
-        let tmpEndArray = [0,0,1];
-        TweenMax.to( this.peacock.morphTargetInfluences, _duration, { endArray: tmpEndArray, ease: Power3.easeInOut } );
+    peacockBun (_duration) {
+        this.createMorph( _duration, [0, 0, 1, 0] );
+        this.createTransition(_duration, [0, 0.5, 0.8, 0] );
+    }
 
-        tmpEndArray = [0,0.5,0.8];
-        TweenMax.to( this.peacock.morphTargetInfluences, _duration, {
-            endArray: tmpEndArray,
-            ease: Power3.easeInOut,
+    peacockSwallow (_duration) {
+        this.createMorph( _duration, [0, 0, 0, 1] );
+        this.createTransition(_duration, [0, 0, 0.5, 0.8] );
+
+        // let tmpEndArray = [0,0.5,0.8];
+        // TweenMax.to( this.peacock.morphTargetInfluences, _duration, {
+        //     endArray: tmpEndArray,
+        //     ease: Power3.easeInOut,
+        //     delay: _duration,
+        //     repeat: -1,
+        //     yoyo: true
+        // } );
+    }
+
+    createMorph( _duration, _array ) {
+        // console.log( this.peacock.morphTargetInfluences );
+        TweenMax.to( this.peacock.morphTargetInfluences, _duration, { endArray: _array, ease: Power1.easeInOut } );
+    }
+
+    createTransition( _duration, toArray ) {
+        TweenMax.to( this.peacock.morphTargetInfluences, _duration/4, {
+            endArray: toArray,
+            ease: Power0.easeNone,
             delay: _duration,
-            repeat: -1,
+            repeat: 3,
             yoyo: true
         } );
     }
@@ -148,6 +230,9 @@ export default class RamiAnimation extends THREE.Object3D {
     }
 
     update(dt,et) {
-        // 
+        this.peacockTexAni.updateWithOrder( 300*dt );
+        if(this.particleGroup) {
+            this.particleGroup.tick( dt );
+        }
     }
 }
