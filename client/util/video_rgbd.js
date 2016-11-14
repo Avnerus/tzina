@@ -146,7 +146,9 @@ export default class VideoRGBD  {
         this.pause();
         this.video.src = "";
 
-        this.videoTexture.dispose();
+        if (this.videoTexture) {
+            this.videoTexture.dispose();
+        }
 
         VideoRGBD.meshPool.push(this.mesh);
         VideoRGBD.wirePool.push(this.wire);
@@ -238,8 +240,10 @@ export default class VideoRGBD  {
     };
 
     setOpacity(opacity) {
-        this.mesh.material.uniforms.opacity.value = opacity;
-        this.wire.material.uniforms.opacity.value = Math.min(opacity,0.1);
+        if (this.mesn && this.wire) {
+            this.mesh.material.uniforms.opacity.value = opacity;
+            this.wire.material.uniforms.opacity.value = Math.min(opacity,0.1);
+        }
     }
 
     setDepth(min, max) {

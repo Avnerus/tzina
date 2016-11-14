@@ -60,7 +60,6 @@ export default class TimeController {
             });
         });
 
-        this.totalExperienceTime = 212; // DEBUG
         console.log("Total experience time:", this.totalExperienceTime);
 
 
@@ -209,8 +208,9 @@ export default class TimeController {
                 sum += value["total"];
             }
         });
-        //console.log("Total experience progress:", sum + "/" + this.totalExperienceTime);
-        events.emit("experience_progress", sum / this.totalExperienceTime);
+        this.experienceProgress = (sum / this.totalExperienceTime);
+        console.log("Total experience progress: (Flood)", sum + "/" + this.totalExperienceTime, this.experienceProgress);
+        events.emit("experience_progress", this.experienceProgress);
     }
 
     update(dt,et) {

@@ -47,7 +47,7 @@ export default class Flood extends THREE.Object3D  {
 
         this.mesh.rotation.x = -Math.PI / 2;
 
-        DebugUtil.positionObject(this.mesh, "Flood", true);
+        //DebugUtil.positionObject(this.mesh, "Flood", true);
 
         this.add(this.mesh);
 
@@ -63,12 +63,13 @@ export default class Flood extends THREE.Object3D  {
         events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "z");*/
 
         events.on("experience_progress", (percentage) => {
+            console.log("FLOOD progress", percentage);
             // First scale, then rise
-            if (percentage <= 0.8) {
-                let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.5));
+            if (percentage <= 0.9) {
+                let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.9));
                 this.mesh.scale.set(scale, scale, scale);
             } else {
-                let height = (this.START_HEIGHT + (this.END_HEIGHT - this.START_HEIGHT) * ((percentage - 0.5) / 0.5));
+                let height = (this.START_HEIGHT + (this.END_HEIGHT - this.START_HEIGHT) * ((percentage - 0.1) / 0.1));
                 this.mesh.position.y = height;
             }
         });

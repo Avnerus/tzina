@@ -61,7 +61,6 @@ export default
 				"Miriam",
                 "Itzik",
                 //"Shirin9AM"
-                "Lupo9AM",
                 "FatmanSleep"
 			],
 			"introfile": [

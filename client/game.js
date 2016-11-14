@@ -333,42 +333,21 @@ export default class Game {
             }
         });
 
-        this.charactersEnded = [];
         events.on("character_ended", (name) => {
-            this.charactersEnded.push(name);
-            if (this.charactersEnded.length == 4) {
-                this.timeController.setDaySpeed(0.1);
-                this.timeController.done = true;
-                this.zoomController.done = true;
-                this.timeController.chapterTitle.visible = false;
-                setTimeout(() => {
-                    this.vrControls.active = false;
-                    this.zoomController.velocityZ = -15.0;
-                    this.zoomController.friction = 0;
-                    document.getElementById("coming-soon").style.display = "block";
-                    events.on("base_position", () => {
-                            document.getElementById("coming-img").style.opacity = 1;
-                    });
-                    this.soundManager.loadSound(this.ZOOM_OUT_SOUND)
-                    .then((sound) => {
-                        sound.playIn(3);
-                    });
-                },40000);
-            }
-            else if (this.charactersEnded.indexOf("Itzik") != -1 &&
-                this.charactersEnded.indexOf("Hannah") != -1 &&
-                this.timeController.currentHour >= 17 &&
-                this.timeController.currentHour < 19
-               ) {
-                   this.timeController.setDaySpeed(0.06);
-            }
-            else if (this.charactersEnded.indexOf("Miriam") != -1 &&
-                this.charactersEnded.indexOf("Haim") != -1 &&
-                this.timeController.currentHour >= 19
-               ) {
-                 this.timeController.jumpToTime(17);
-            }
+            if (this.timeController.experienceProgress > 0.4) {
+                console.log("Progress threshold BYE BYE");
+                this.endCredits.init();
+                this.endCredits.play();
 
+                events.emit("experience_end");
+                // Tween out
+                let endPosition = new THREE.Vector3(0,60,240);
+                let endTarget = this.camera.position;
+                if (this.vrManager.hmd && this.vrManager.hmd.isPresenting) {
+                    endTarget = this.vrControls.basePosition; 
+                }
+                TweenMax.to(endTarget, 90, {x: endPosition.x, y: endPosition.y, z: endPosition.z, ease: Linear.easeNone});
+            }
         });
 
         this.started = true;

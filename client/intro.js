@@ -149,7 +149,7 @@ export default class Intro {
         // Scale the square
         this.square.scale.set(0.013, 0.013, 0.013);
 
-        DebugUtil.positionObject(this.square, "Square",true);
+        //DebugUtil.positionObject(this.square, "Square",true);
         if (this.vrControls.getCurrentPosition()) {
             this.vrControls.basePosition.copy(this.STARTING_POSITION);
         } else {

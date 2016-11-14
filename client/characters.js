@@ -396,19 +396,19 @@ export default [
                 sec: 100,
                 mindepth: 1770.462036132813,
                 maxdepth: 3428.071533203125,
-                position : [-12.9, 22.01, -3.21],
+                position : [-12.97, 22.12, -5.77],
                 scale: 0.003 * 0.75 * 1.028 * 1.09
             },
             {
                 sec: 120,
                 mindepth: 1523.277099609375,
                 maxdepth: 3428.071533203125,
-                position : [-12.9, 21.86, -3.21],
-                scale: 0.003 * 0.75 * 1.132
+                position : [-12.97, 22.0, -5.77],
+                scale: 0.003 * 0.75 * 1.028 * 1.132
             }
         ],
-        position : [-12.2, 22.28, -5.91],
-        rotation: [40, 120, 310],
+        position : [-12.2, 22.1, -5.91],
+        rotation: [40, 100, 310], //120
         animation: 'Lupo12PM',
         uvdy: 0.49951171875,
         uvdx: 0.0,
@@ -522,8 +522,8 @@ export default [
         basePath : 'assets/characters/agam7pm',
         mindepth : 1656.909729004,
         maxdepth : 2789.562011719,
-        position : [0.06, 22.04, -7.4],
-        rotation: [0, 180, 2.3],
+        position : [-1.75, 22.049, -7.4],
+        rotation: [0, 190, 2.3],
         animation: 'Agam12PM',
         uvdy: 0.496,
         uvdx: 0.0,

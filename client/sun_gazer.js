@@ -40,15 +40,11 @@ export default class SunGazer extends THREE.Object3D  {
         });
 
         events.on("control_threshold", (passed) => {      
-
             this.active = passed;
-    
         });
 
         events.on("character_playing", () => {
-
             this.active = false;
-
         });
         events.on("character_idle", () => {
             this.active = true;
@@ -56,8 +52,9 @@ export default class SunGazer extends THREE.Object3D  {
         events.on("character_ended", () => {
             this.active = true;
         });
-        events.on("gaze_started", () => {
 
+        events.on("experience_end", () => {
+            this.active = false;
         });
     }
 
