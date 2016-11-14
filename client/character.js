@@ -251,7 +251,8 @@ export default class Character extends THREE.Object3D {
 
             if (this.animation) {
                 this.add(this.animation);
-                this.animation.scale.multiplyScalar(this.props.animationScale);
+
+                this.animation.scale.set(this.props.animationScale,this.props.animationScale,this.props.animationScale);
                 this.animation.position.fromArray(this.props.animationPosition);
                 this.animation.rotation.set(
                     this.props.animationRotation[0] * Math. PI / 180,
