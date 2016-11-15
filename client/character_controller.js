@@ -50,14 +50,6 @@ export default class CharacterController {
                 });
             }}
         });
-
-        events.on("end_credits", () => {
-            console.log("End credits, removing characters");
-            this.activeCharacters.forEach((character) => {
-                this.square.clockwork.remove(character);
-                character.unload();
-            })            
-        });
     }
 
     loadHour(hour) {
@@ -68,7 +60,7 @@ export default class CharacterController {
             let character = clone[i];
 
             if (!character.done && !character.props.event) {
-                console.log("Removing character ", character.props.name, " when loading hour ", hour);
+                //console.log("Removing character ", character.props.name, " when loading hour ", hour);
                 this.square.clockwork.remove(character);
                 character.unload();
             } else {

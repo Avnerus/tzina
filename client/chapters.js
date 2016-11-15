@@ -10,7 +10,7 @@ export default
             "insideTitlePositionLineTwo": [-5.57,-3.65,-2.18],
             "sunLoaderRotation": [144,46,0],
 			"characters": [
-                //"Meir",
+                "Meir",
                 "Rami"
                 //"Shirin7AM"
 			],
@@ -317,19 +317,10 @@ export default
 			"characters": [
                 "Shirin7PM"
 			],
-			"introfile": [
-				"Haim",
-				"Izchak"
-			],
 			"extraAssets": [
 				{
 					"fileName": "lightstreets",
 					"position": [0,0,0]
-				}
-			],
-			"effects" : [
-				{
-					"name": "buildinglights"
 				}
 			]
 		}
