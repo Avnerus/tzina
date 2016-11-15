@@ -27,12 +27,18 @@ export default
 					rotation: [0,81,0],
 					scale: 0.29
 				},
+						{
+                    name: "cart",
+                    position: [-6.2,22.7,28.02],
+                    rotation: [193,31,0],
+                    scale: 0.411
+				},
                        {
                        name: "dadOnBike",
                        position: [11.22,21.2,11.22],
                        rotation:[0,251,0],
                        scale: 0.45
-                       },
+                       }
             /*
 					{
 					name: "tashlih",
@@ -230,18 +236,6 @@ export default
 					rotation:[0,80,0],
 					scale: 0.542
 				},
-					{
-                    name: "cat",
-                    position: [8.66,21.92,11.97],
-                    rotation: [353,96,0],
-                    scale: 0.439
-				},
-					{
-                    name: "cart",
-                    position: [16.19,23.14,19.36],
-                    rotation: [188,0,0],
-                    scale: 0.411
-				},
                 {
                     name: "coolPair",
                     position: [-11.94,21.4,5.42],
@@ -301,6 +295,12 @@ export default
                     rotation: [186,138,18],
                     scale: 0.374
       			  },
+      			  	{
+                    name: "cat",
+                    position: [8,21.1,5],
+                    rotation: [353,152,0],
+                    scale: 0.439
+				},
 					{
 					name: "DAN",
 					position: [13.1,23.8,9.51],
