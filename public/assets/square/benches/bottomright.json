@@ -107,7 +107,7 @@
         "normalScale":[-0.5,-0.5],
         "normalMap":"92135064-ACFC-4F1A-8F22-ADCC55599A2C",
         "depthWrite":true,
-        "shininess":50,
+        "shininess":150,
         "emissive":0,
         "specular":4868682,
         "name":"Bench_Mat",
