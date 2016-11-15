@@ -97,10 +97,8 @@ export default class Trees extends THREE.Object3D {
                             let hide2 = this.children[13];
                             console.log("Hiding 2 trees", hide1, hide2);
 
-                            this.remvoe(hide1);
+                            this.remove(hide1);
                             this.remove(hide2);
-                            hide1.geometry.dispose();
-                            hide2.geometry.dispose();
                         }
                     }
                 });
