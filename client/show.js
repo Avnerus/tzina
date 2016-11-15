@@ -28,13 +28,14 @@ export default class Show {
         });
             
         events.on("character_ended", (name) => {
-            if (this.timeController.currentChapter.hour == 19 && !this.ended7pmShow && name != "Waterman" && !this.in7pmShow) {
-                this.square.fountain.startShow();
+            let hour = this.timeController.currentChapter.hour;
+            if (hour == 19 && !this.ended7pmShow && name != "Waterman" && !this.in7pmShow) {
+                this.square.fountain.startShow(hour);
                 this.characterController.addCharacter("Agam7PM");
                 this.in7pmShow = true;
             }                                     
-            else if (this.timeController.currentChapter.hour == 9 && !this.ended9amShow && !this.in9amshow) {
-                this.square.fountain.startShow();
+            else if (hour == 9 && !this.ended9amShow && !this.in9amshow) {
+                this.square.fountain.startShow(hour);
                 this.characterController.addCharacter("Agam12PM");
                 this.in9amshow = true;
             }                                     
@@ -65,9 +66,18 @@ export default class Show {
         if(hour==19 && !this.in7pmShow && !this.ended7pmShow){
             // So we do this after the other characters load
             setTimeout(() => {
-                this.square.fountain.startShow();
+                this.square.fountain.startShow(hour);
                 this.characterController.addCharacter("Agam7PM");
                 this.in7pmShow = true;
+            },3000);
+        }
+
+        if(hour==9 && !this.in9amshow && !this.ended9amShow){
+            // So we do this after the other characters load
+            setTimeout(() => {
+                this.square.fountain.startShow(hour);
+                this.characterController.addCharacter("Agam12PM");
+                this.in9amshow = true;
             },3000);
         }
 

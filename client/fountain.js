@@ -33,42 +33,76 @@ export default class Fountain extends THREE.Object3D  {
 
         this.trickleSize = [0.15, 0.3, 0.0];
 
-        this.soundEvents = [
-            { time: 1, action: () => {
-                            this.zeroAni();
-                        } }, 
-            { time: 6, action: () => {
-                            this.firstAni();
-                        } },
-            { time: 14.5, action: () => {
-                            this.secAni();
-                        } },
-            { time: 27, action: () => {
-                            this.thirdAni();
-                        } },
-            { time: 37, action: () => {
-                            this.fourthAni();
-                        } },
-            { time: 54, action: () => {
-                            this.fifthAni();
-                        } },
-            { time: 62, action: () => {
-                            this.sixthAni();
-                        } },
-            { time: 78, action: () => {
-                            this.seventhAni();
-                        } },
-            { time: 97, action: () => {
-                            this.eighthAni();
-                        } },
-            { time: 107, action: () => {
-                            this.ninethAni();
-                        } },
-            { time: 117, action: () => {
-                            this.tenthAni();
-                        } }
-        ];
-        this.soundEventsRecords = this.soundEvents.slice();
+        this.soundEvents = {
+            9: [
+                { time: 1, action: () => {
+                                this.zeroAni();
+                            } }, 
+                { time: 6, action: () => {
+                                this.firstAni();
+                            } },
+                { time: 14.5, action: () => {
+                                this.secAni();
+                            } },
+                { time: 27, action: () => {
+                                this.thirdAni();
+                            } },
+                { time: 37, action: () => {
+                                this.fourthAni();
+                            } },
+                { time: 54, action: () => {
+                                this.fifthAni();
+                            } },
+                { time: 62, action: () => {
+                                this.sixthAni();
+                            } },
+                { time: 78, action: () => {
+                                this.seventhAni();
+                            } },
+                { time: 97, action: () => {
+                                this.eighthAni();
+                            } },
+                { time: 107, action: () => {
+                                this.ninethAni();
+                            } },
+                { time: 117, action: () => {
+                                this.tenthAni();
+                            } }
+            ],
+            19: [
+                { time: 1, action: () => {
+                                this.zeroAni();
+                            } }, 
+                { time: 6, action: () => {
+                                this.firstAni();
+                            } },
+                { time: 14.5, action: () => {
+                                this.secAni();
+                            } },
+                { time: 27, action: () => {
+                                this.thirdAni();
+                            } },
+                { time: 37, action: () => {
+                                this.fourthAni();
+                            } },
+                { time: 54, action: () => {
+                                this.fifthAni();
+                            } },
+                { time: 62, action: () => {
+                                this.sixthAni();
+                            } },
+                { time: 78, action: () => {
+                                this.seventhAni();
+                            } },
+                { time: 97, action: () => {
+                                this.eighthAni();
+                            } },
+                { time: 107, action: () => {
+                                this.tenthAni();
+                            } }
+            ]
+        };
+        // this.soundEventsRecords = this.soundEvents.slice();
         
     }
 
@@ -152,7 +186,7 @@ export default class Fountain extends THREE.Object3D  {
         this.center = new THREE.Mesh(geo, mat);
 
         this.spotLights = [];
-        this.spotLights[0] = this.createSpotLight( new THREE.Vector3(4.47, -1.71, 0.96),
+        this.spotLights[0] = this.createSpotLight( new THREE.Vector3(6.8, -3.2, 0.96),
                                                    new THREE.Vector3(0.3, 1, -0.3),
                                                    1,   // intensity
                                                    0.6, // angle
@@ -160,7 +194,7 @@ export default class Fountain extends THREE.Object3D  {
                                                    1.5, // decay
                                                    0.3  // penumbra
                                                 );
-        this.spotLights[1] = this.createSpotLight( new THREE.Vector3(-3.61, -1.71, 2.82),
+        this.spotLights[1] = this.createSpotLight( new THREE.Vector3(-7.8, -3.2, 1.2),
                                                    new THREE.Vector3(-0.3, 1, 0.3),
                                                    1,   // intensity
                                                    0.6, // angle
@@ -168,7 +202,7 @@ export default class Fountain extends THREE.Object3D  {
                                                    1.5, // decay
                                                    0.3  // penumbra
                                                 );
-        this.spotLights[2] = this.createSpotLight( new THREE.Vector3(-0.93, -1.65, -4.9),
+        this.spotLights[2] = this.createSpotLight( new THREE.Vector3(-0.78, -3.2, -7.9),
                                                    new THREE.Vector3(-0.3, 1, -0.3),
                                                    1,   // intensity
                                                    0.7, // angle
@@ -185,7 +219,6 @@ export default class Fountain extends THREE.Object3D  {
         this.switchLight(false);
 
         // DebugUtil.positionObject(this.spotLightCenters, "target");
-        
         // DebugUtil.positionObject(this.spotLights[0], "light 0");
         // DebugUtil.positionObject(this.spotLights[1], "light 1");
         // DebugUtil.positionObject(this.spotLights[2], "light 2");
@@ -274,7 +307,7 @@ export default class Fountain extends THREE.Object3D  {
         }
     }
 
-    startShow() {
+    startShow(hour) {
         console.log("Fountain starting show!");
         this.showTime = true;
 
@@ -285,13 +318,13 @@ export default class Fountain extends THREE.Object3D  {
         this.changeWaterColor(true);
         this.switchLight(true);
 
-        this.currentSequence = this.soundEventsRecords.slice(0);
+        this.currentSequence = this.soundEvents[hour].slice(0);
         this.nextAnim = this.currentSequence.shift();
         events.emit("show_start");
     }
 
     resetShow() {
-        this.soundEvents = this.soundEventsRecords.slice();
+        // this.soundEvents = this.soundEventsRecords.slice();
         this.resetAni();
     }
 
@@ -303,7 +336,7 @@ export default class Fountain extends THREE.Object3D  {
 
     switchLight(on) {
         for(let i=0; i<this.spotLights.length; i++){
-            this.spotLights[i].visible = on; 
+            this.spotLights[i].intensity = on; 
         }
     }
 
