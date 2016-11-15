@@ -253,7 +253,7 @@ export default class Fountain extends THREE.Object3D  {
         let geometry = new THREE.ConeGeometry( .1, .2, 8 );
         let material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
         let cone = new THREE.Mesh( geometry, material );
-
+        cone.visible = false;
         let s_l = new THREE.SpotLight( 0xfff291, _intensity, _distance, _angle, _penumbra, _decay ); //0xfff291
         // s_l.target.add( this.center.clone() );
         s_l.target.position.copy( pos2 );
