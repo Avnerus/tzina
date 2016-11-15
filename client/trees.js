@@ -90,6 +90,18 @@ export default class Trees extends THREE.Object3D {
                     this.controlPassed = passed;
                     if (passed) {
                         this.potreeWindMaterial.size = 0.03;
+                        //
+                        // In VR Hide some trees that won't be visible
+                        if (inVR) {
+                            let hide1 = this.children[8];
+                            let hide2 = this.children[13];
+                            console.log("Hiding 2 trees", hide1, hide2);
+
+                            this.remvoe(hide1);
+                            this.remove(hide2);
+                            hide1.geometry.dispose();
+                            hide2.geometry.dispose();
+                        }
                     }
                 });
                 events.on("vr_start", (cameras) => {

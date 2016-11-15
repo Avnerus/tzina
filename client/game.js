@@ -62,6 +62,7 @@ export default class Game {
         this.emitter = new TzinaEmitter();
         this.emitter.setMaxListeners(40);
         global.events = this.emitter;
+        global.inVR = false;
 
         this.gui = new GuiManager(this.emitter);
         this.gui.init();
@@ -462,8 +463,10 @@ export default class Game {
             }
             let newCameras = this.vrEffect.getCameras();
             events.emit("vr_start", newCameras);
+            inVR = true;
         } else {
             events.emit("vr_stop")
+            inVR = false;
         }
     }
 }
