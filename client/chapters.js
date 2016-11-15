@@ -135,10 +135,6 @@ export default
                 "FatmanShower"
                 //"Shirin12PM"
 			],
-            "eventAfter" : 0,
-            "eventCharacters" : [
-                "Agam12PM"
-            ],
 			"introfile": [
 				"Mark",
 				"Lupo1"
@@ -272,10 +268,6 @@ export default
 				"Waterman"
                 //    "Shirin7PM"
 			],
-            "eventAfter" : 1,
-            "eventCharacters" : [
-                "Agam7PM"
-            ],
 			"extraAssets": [
                 //{
                   //  name: "singleTree",

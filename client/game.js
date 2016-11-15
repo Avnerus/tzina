@@ -422,7 +422,7 @@ export default class Game {
             this.keyboardController.update(dt);
         }
         this.introAni.update(dt,et);
-        this.zoomController.update(dt);
+        //this.zoomController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
         } else {
@@ -430,6 +430,10 @@ export default class Game {
         }
         this.collisionManager.update(dt);
         this.flood.update(dt);
+
+        if (this.ended) {
+            this.ending.update(dt);
+        }
     }
 
     render() {

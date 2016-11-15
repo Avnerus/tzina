@@ -18,6 +18,10 @@ export default class Ending {
     start() {
         console.log("Ending is starting!");
         events.emit("experience_end");
+        this.endCredits.init();
+        this.endCredits.scale.set(0.01, 0.01, 0.01);
+        this.endCredits.position.set(-30.37, 16.65, -15.72);
+        this.endCredits.rotation.y = 80 * Math.PI /180;
 
         // Move to midnight
         this.timeController.clockworkTransitionTo(0, 6, false);
@@ -33,6 +37,13 @@ export default class Ending {
         spotLight.decay = 1;
         spotLight.penumbra = 0.5;
 
+        events.on("character_playing", (name) => {
+            this.scene.add(this.endCredits);
+            this.endCredits.play();
+        });
+
+        DebugUtil.positionObject(this.endCredits, "End credits");
+
         /*
         let i = 0;
         events.emit("add_gui", {folder:"Spotlight " + i, listen: true}, spotLight, "castShadow");
@@ -47,6 +58,9 @@ export default class Ending {
         DebugUtil.colorPicker("Spotlight " + i, spotLight, "color");
         */
         this.scene.add(spotLight);
+    }
+    update(dt) {
+        this.endCredits.update(dt);
     }
 }
 
