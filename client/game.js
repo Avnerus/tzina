@@ -236,7 +236,8 @@ export default class Game {
             if (!this.config.noSquare) {
                 this.scene.add(this.square);
                 this.sky.applyToMesh(this.square.getSphereMesh());
-                this.introAni.initFBOParticle();
+                // this.introAni.initFBOParticle();
+                this.introAni.createSnowParticle();
                 this.scene.add(this.introAni);
             }
 
