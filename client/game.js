@@ -54,6 +54,7 @@ export default class Game {
         this.controlPassed = false;
         this.shownWASD = false;
         this.shownZoom = false;
+        this.ended = false;
     }
     init() {
 
@@ -223,7 +224,7 @@ export default class Game {
         this.show = new Show(this.square, this.characterController, this.timeController); 
         this.show.init();
 
-        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController);
+        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene);
         this.ending.init();
 
     }
@@ -341,10 +342,9 @@ export default class Game {
         });
 
         events.on("character_ended", (name) => {
-            if (this.timeController.experienceProgress > 0) {
-                console.log("Progress threshold BYE BYE");
+            if (this.timeController.experienceProgress > 0 && !this.ended) {
+                this.ended = true;
                 this.ending.start();
-
             }
         });
 

@@ -471,9 +471,9 @@ export default [
         basePath : 'assets/characters/shirin7pm',
         mindepth : 1214.999755859,
         maxdepth : 3681.950439453,
-        position : [4.25, 22.65, -13.17],
+        position : [9.22, 22.37, -10.53],
         rotation: [0, 0, 0],
-        animation: 'Shirin',
+        animation: null,
         uvdy: 0.47509765625,
         uvdx: 0.0,
         width: 1024,
@@ -502,7 +502,7 @@ export default [
         scale: 0.003 * 0.96,
         subtitles: null,
         fullOnly: true,
-        space: 0.3
+        space: 20
     },
     {
         name: 'FatmanShower',
