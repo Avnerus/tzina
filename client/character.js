@@ -2,7 +2,7 @@ import VideoRGBD from './util/video_rgbd'
 import DebugUtil from './util/debug'
 
 export default class Character extends THREE.Object3D {
-    constructor(config, props, collisionManager, soundManager) {
+    constructor(config, props, collisionManager, soundManager, scene) {
         super();
         this.collisionManager = collisionManager;
         this.soundManager = soundManager;
@@ -11,6 +11,7 @@ export default class Character extends THREE.Object3D {
 
         this.debug = true;
         this.inShow = false;
+        this.scene = scene;
 
         if (!props.fullOnly) {
             this.idleVideo = new VideoRGBD({
@@ -369,8 +370,9 @@ export default class Character extends THREE.Object3D {
                 /*
             let possitionOffset = new THREE.Vector3().copy(this.nextAdjustment.position).sub(new THREE.Vector3().fromArray(this.props.position));
             this.fullVideo.setPosition(possitionOffset);*/
-                
+            this.detach( this.animation, this, this.scene );
             this.position.fromArray(this.nextAdjustment.position);
+            this.attach( this.animation, this.scene, this );
         }
 
         this.lastAdjustment = this.nextAdjustment;
@@ -379,6 +381,20 @@ export default class Character extends THREE.Object3D {
         } else {
             this.nextAdjustment = null;
         }
+    }
+    detach ( child, parent, scene ) {
+        child.applyMatrix( parent.matrix );
+        parent.remove( child );
+        scene.add( child );
+    }
+
+    attach ( child, scene, parent ) {
+        var matrixWorldInverse = new THREE.Matrix4();
+        matrixWorldInverse.getInverse( parent.matrix );
+        child.applyMatrix( matrixWorldInverse );
+
+        scene.remove( child );
+        parent.add( child );
     }
     onCollision() {
         //console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);

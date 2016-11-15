@@ -194,7 +194,7 @@ export default class Game {
         }
 
 
-        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager, this.timeController);
+        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager, this.timeController, this.scene);
 
         // laura: i don't know other better way to do this..
         if (!this.config.noAnimations) {

@@ -364,8 +364,7 @@ export default class Fountain extends THREE.Object3D  {
         this.centerRingEmitters[0].disable();
         this.changeWaterColor(false);
 
-        if(hour!=9)
-            this.switchLight(false);
+        this.switchLight(false);
 
         // stop cylinder rotating
         this.stopCylinderAni();
