@@ -341,9 +341,8 @@ export default class Game {
                 }
             }
         });
-
         events.on("character_ended", (name) => {
-            if (this.timeController.experienceProgress > 0 && !this.ended) {
+            if (this.timeController.experienceProgress > 0.4 && !this.ended) {
                 this.ended = true;
                 this.ending.start();
             }
