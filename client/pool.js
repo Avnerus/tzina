@@ -220,7 +220,7 @@ export default class Pool extends THREE.Object3D {
               this.particleParents[i].position.x = center.x;
               this.particleParents[i].position.y = center.y;
               this.uniforms.circularWaveCenterPoints.value[i] = center;
-              this.particleSimulationShaders[i].uniforms.splashTimer.value = 10.0;
+               this.particleSimulationShaders[i].uniforms.splashTimer.value = 10.0;
               this.uniforms.circularWaveStrengths.value[i] = Math.random()/2 + 0.5;
             }
           }
