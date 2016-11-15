@@ -64,16 +64,20 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
                     { time: 2, anim: ()=>{this.showSculptures()} },    // 16
 
-                    // Scale dogs, total 2 times
-                    { time: 5, anim: ()=>{this.scaleDogs(1)} },     // first time
+                    
 
                     { time: 9, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
                     { time: 12, anim: ()=>{this.shiftSculptures()} },
                     
-                    { time: 15, anim: ()=>{this.scaleDogs(2)} },     // second time
-
+                    
                     { time: 17, anim: ()=>{this.growFlower()} },
                     { time: 25, anim: ()=>{this.closeFlower()} },
+
+                    // Scale dogs, total 2 times
+                    { time: 76, anim: ()=>{this.scaleDogs(1)} },     // first time
+
+                    { time: 15, anim: ()=>{this.scaleDogs(2)} },     // second time
+
 
                     // 203 ends
                     { time: 198, anim: ()=>{this.characterDisappear()} }
