@@ -50,11 +50,11 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         
                     { time: 135, anim: ()=>{this.connectToDogs()} },
         
-                    { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
-                    { time: 155, anim: ()=>{this.growSingleCactusFloor( 1 )} },
-                    { time: 165, anim: ()=>{this.growSingleCactusFloor( 2 )} },
-                    { time: 179, anim: ()=>{this.growSingleCactusFloor( 3 )} },
-                    { time: 195, anim: ()=>{this.growSingleCactusFloor( 4 )} },
+                    // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
+                    // { time: 155, anim: ()=>{this.growSingleCactusFloor( 1 )} },
+                    // { time: 165, anim: ()=>{this.growSingleCactusFloor( 2 )} },
+                    // { time: 179, anim: ()=>{this.growSingleCactusFloor( 3 )} },
+                    // { time: 195, anim: ()=>{this.growSingleCactusFloor( 4 )} },
 
                     // 215 ends
                     { time: 210, anim: ()=>{this.characterDisappear()} }
