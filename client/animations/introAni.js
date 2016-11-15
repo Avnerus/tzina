@@ -160,7 +160,7 @@ export default class IntroAnimation extends THREE.Object3D {
             this.cloudGroup = [];
             this.cloudMaterial = new THREE.MeshBasicMaterial({
                 color: this.cloudColors[0], map: this.cloudTex, //side: THREE.DoubleSide,
-                transparent: true, opacity: .3
+                transparent: true, opacity: .2
             });
 
             this.loadClouds( cloudFiles )

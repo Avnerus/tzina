@@ -207,6 +207,7 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         this.fbo = new FBO();
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
+        this.fbo.particles.frustumCulled = false;
         this.add( this.fbo.particles );
         this.fbo.particles.position.set(1,0,-2);
 
