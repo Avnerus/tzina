@@ -29,6 +29,7 @@ export default class Show {
             
         events.on("character_ended", (name) => {
             let hour = this.timeController.currentChapter.hour;
+            console.log("SHOW character ended", name);
             if (hour == 19 && !this.ended7pmShow && name != "Waterman" && !this.in7pmShow) {
                 this.square.fountain.startShow(hour);
                 this.characterController.addCharacter("Agam7PM");
@@ -72,14 +73,6 @@ export default class Show {
             },3000);
         }
 
-        if(hour==9 && !this.in9amshow && !this.ended9amShow){
-            // So we do this after the other characters load
-            setTimeout(() => {
-                this.square.fountain.startShow(hour);
-                this.characterController.addCharacter("Agam12PM");
-                this.in9amshow = true;
-            },3000);
-        }
 
             /*
         if(hour!=12 && this.in12pmShow){
