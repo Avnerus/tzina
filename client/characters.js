@@ -34,9 +34,9 @@ export default [
         width: 768,
         height: 2048,
         scale: 0.003 * 0.5748,
-        animationScale: 0.4, //.4
-        animationPosition: [0.01, -0.4, 0.06],   // 0,-1.5,-2.2
-        animationRotation: [6, 0, 0],      // 20, 0, 0
+        animationScale: 0.478, //.4
+        animationPosition: [-0.34, -0.62, 0.06],   // 0,-1.5,-2.2
+        animationRotation: [6, 0, -6],      // 20, 0, 0
         space: 0.01,
         spaceOffset: [0.11,0,-0.07],
         subtitles: null,
@@ -135,7 +135,7 @@ export default [
         height: 2048,
         scale: 0.00242802,
         animationScale: 0.228,
-        animationPosition: [-0.3,-0.2,-0.03], // -0.45,0,-0.4
+        animationPosition: [-0.3,-0.1,-0.03], // -0.45,0,-0.4
         animationRotation: [0,14,0], // 7,25,-8
         subtitles: null,
         space: 0.3,
