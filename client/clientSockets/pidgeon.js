@@ -382,7 +382,7 @@ export default class Pidgeon extends THREE.Object3D{
     // let loader = new THREE.JSONLoader(loadingManager);
     //statically load mesh, animations and skin
     try{
-      THREE.BlendCharacter.loadGeometry( 'assets/pidgeon/Bird_27.json', function(geometry,materials) {
+      THREE.BlendCharacter.loadGeometry( 'assets/pidgeon/Bird_33.json', function(geometry,materials) {
   			loaded3dObject={tipology:"Geometry",geometry:geometry,materials:materials};
   			console.log("pidgeon 3d object loaded");
   		},loadingManager );
