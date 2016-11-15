@@ -187,7 +187,7 @@ export default class Square extends THREE.Object3D{
             this.pool.rotation.x = 270 * Math.PI / 180;
             this.pool.scale.set(0.822, 0.822, 0.822);
             console.log("Adding square fountain pool", this.pool);
-            this.mesh.add(this.pool);
+            //this.mesh.add(this.pool);
 
             if (this.debug) {
                 events.emit("add_gui", {folder: "Pool"}, this.pool, "visible"); 

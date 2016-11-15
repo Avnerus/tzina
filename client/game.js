@@ -16,7 +16,6 @@ import SoundManager from './sound_manager'
 import TimeController from './time_controller'
 import CharacterController from './character_controller'
 import Show from './show'
-import EndCredits from './end_credits'
 import Extras from './extras'
 
 import DebugUtil from './util/debug'
@@ -42,6 +41,10 @@ import WaterDrops from './water_drops'
 import FPSCount from './util/fpscount'
 
 import VideoRGBD from './util/video_rgbd'
+
+import Ending from './ending'
+
+
 
 export default class Game {
     constructor(config) {
@@ -220,7 +223,9 @@ export default class Game {
         this.show = new Show(this.square, this.characterController, this.timeController); 
         this.show.init();
 
-        this.endCredits = new EndCredits(this.camera);
+        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController);
+        this.ending.init();
+
     }
 
     load(onLoad) {
@@ -336,19 +341,10 @@ export default class Game {
         });
 
         events.on("character_ended", (name) => {
-            if (this.timeController.experienceProgress > 0.4) {
+            if (this.timeController.experienceProgress > 0) {
                 console.log("Progress threshold BYE BYE");
-                this.endCredits.init();
-                this.endCredits.play();
+                this.ending.start();
 
-                events.emit("experience_end");
-                // Tween out
-                let endPosition = new THREE.Vector3(0,60,240);
-                let endTarget = this.camera.position;
-                if (this.vrManager.hmd && this.vrManager.hmd.isPresenting) {
-                    endTarget = this.vrControls.basePosition; 
-                }
-                TweenMax.to(endTarget, 90, {x: endPosition.x, y: endPosition.y, z: endPosition.z, ease: Linear.easeNone});
             }
         });
 
@@ -434,7 +430,6 @@ export default class Game {
         }
         this.collisionManager.update(dt);
         this.flood.update(dt);
-        this.endCredits.update(dt);
     }
 
     render() {

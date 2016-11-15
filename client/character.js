@@ -143,10 +143,6 @@ export default class Character extends THREE.Object3D {
             events.on("show_start", () => {this.inShow = true});
             events.on("show_end", () => {this.inShow = false});
 
-            events.on("experience_end", () => {
-                this.unload();
-            });
-
     }
     idleException(name) {
         if (

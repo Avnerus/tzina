@@ -203,14 +203,13 @@ export default class Intro {
         let speed2 = this.config.speedIntro ? 3 : 14;
         let speed3 = this.config.speedIntro ? 1000 : 10000;
 
-        this.timeConroller.rotate(360,speed1)
+        this.timeConroller.transitionTo(0,speed1, false)
         .then(() => {
             // transition to local time
-            this.timeConroller.transitionTo(0,0);
             if (!this.config.speedIntro) {
-                return this.timeConroller.transitionTo(this.localHour, speed2);
+                return this.timeConroller.transitionTo(this.localHour, speed2, true);
             } else {
-                return this.timeConroller.transitionTo(this.config.startTime, speed2);
+                return this.timeConroller.transitionTo(this.config.startTime, speed2, true);
             }
         })
         .then( () => { 

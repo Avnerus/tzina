@@ -10,7 +10,7 @@ export default
             "insideTitlePositionLineTwo": [-5.57,-3.65,-2.18],
             "sunLoaderRotation": [144,46,0],
 			"characters": [
-                "Meir",
+                //"Meir",
                 "Rami"
                 //"Shirin7AM"
 			],
@@ -323,11 +323,7 @@ export default
             "titlePosition": [0, -30, 0],
             "insideTitlePosition": [0, -1, 0],
 			"characters": [
-				//"Haim",
-				"Izchak",
-				"Waterman",
-				"Shimi2",
-				"shirin5"
+                "Shirin7PM"
 			],
 			"introfile": [
 				"Haim",
