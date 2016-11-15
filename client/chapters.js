@@ -24,7 +24,10 @@ export default
 					scale: 0.37
      		   },
      	
- 			
+ 		
+
+
+
   			{
             name: "whiteBread",
             		position: [2.24,24,10.32],
@@ -50,6 +53,8 @@ export default
 					rotation: [0,81,0],
 					scale: 0.29
 				},
+
+ 		
                        {
                        name: "dadOnBike",
                        position: [11.22,21.2,11.22],
@@ -97,7 +102,7 @@ export default
 					"fileName": "Jacobcloths",
 					"position": [0,0,0]
 				},
-				
+
 				       {
      		       name: "oldmansit",
        			   position: [-12.93,23.2,3.79],
@@ -122,9 +127,21 @@ export default
         		   rotation:[0,360,0],
          		   scale: 0.19
        		 },
-       		   {	
+       		  {	
             name: "Umbrella",
           			position: [-17.08,18.73,29.82],
+					rotation: [0,205,0],
+					scale: 0.514
+     		   },
+ 		{	
+            name: "Umbrella",
+          			position: [-40,19,4.57],
+					rotation: [0,205,0],
+					scale: 0.514
+     		   },
+     		   {	
+            name: "Umbrella",
+          			position: [-32.42,19,30],
 					rotation: [0,205,0],
 					scale: 0.514
      		   },
@@ -186,9 +203,21 @@ export default
 					rotation:[0,294,0],
 					scale: 0.19
 				},
-			   {	
+			{	
             name: "Umbrella",
           			position: [-17.08,18.73,29.82],
+					rotation: [0,205,0],
+					scale: 0.514
+     		   },
+ 		{	
+            name: "Umbrella",
+          			position: [-40,19,4.57],
+					rotation: [0,205,0],
+					scale: 0.514
+     		   },
+     		   {	
+            name: "Umbrella",
+          			position: [-32.42,19,30],
 					rotation: [0,205,0],
 					scale: 0.514
      		   },
@@ -255,13 +284,24 @@ export default
                     rotation: [0,144,0],
                     scale: 0.28
 				},
-			   {	
+				{	
             name: "Umbrella",
           			position: [-17.08,18.73,29.82],
 					rotation: [0,205,0],
 					scale: 0.514
      		   },
-					{
+ 		{	
+            name: "Umbrella",
+          			position: [-40,19,4.57],
+					rotation: [0,205,0],
+					scale: 0.514
+     		   },
+     		   {	
+            name: "Umbrella",
+          			position: [-32.42,19,30],
+					rotation: [0,205,0],
+					scale: 0.514
+     		   },	{
 					name: "bikeHottie",
 					position: [-9.72,21.4,17.24],
 					rotation:[0,19,0],
