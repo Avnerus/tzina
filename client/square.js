@@ -12,7 +12,7 @@ const BUILDINGS_PATH = "assets/square/buildings/buildings.json"
 const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PREFIX = "assets/square/benches/"
-const FOUNTAIN_PATH = "assets/square/fountain.json"
+const FOUNTAIN_PATH = "assets/square/fountain/fountain.json"
 const GROUND_PATH = "assets/square/squareRamp_22.json"
 
 export default class Square extends THREE.Object3D{
@@ -139,7 +139,7 @@ export default class Square extends THREE.Object3D{
             this.cylinders.push(this.fountainMesh.getObjectByName("f_14_SubMesh 0").parent);
             this.cylinders.push(this.fountainMesh.getObjectByName("f_13_SubMesh 0").parent);
             for(let i=0; i<this.cylinders.length; i++){
-                this.cylinders[i].rotation.order = "YZX";
+                this.cylinders[i].rotation.order = "YXZ";
                 this.cylinders[i].rotation.z = Math.PI / 2;
             }
 
@@ -236,7 +236,7 @@ export default class Square extends THREE.Object3D{
 
             this.buildings.rotation.y = 4 * Math.PI / 180;
             
-            //this.scene.rotation.set(45,55,46);
+            
             //DebugUtil.positionObject(this.ground, "ground");
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
 
