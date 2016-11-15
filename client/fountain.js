@@ -339,9 +339,12 @@ export default class Fountain extends THREE.Object3D  {
     }
 
     switchLight(on) {
-        for(let i=0; i<this.spotLights.length; i++){
-            this.spotLights[i].intensity = on; 
+        if (this.spotLights) {
+            for(let i=0; i<this.spotLights.length; i++){
+                this.spotLights[i].intensity = on; 
+            }
         }
+
     }
 
     resetAni() {

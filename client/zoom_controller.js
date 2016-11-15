@@ -49,10 +49,18 @@ export default class ZoomController {
             -6.56
             );
             */
+            /* MEDIA LAB
         this.BASE_WORLD_POSITION = new THREE.Vector3(
             -4.18,
             12.67,
             -5.62
+            );*/
+
+        // IDFA:w
+        this.BASE_WORLD_POSITION = new THREE.Vector3(
+            -6.38,
+            12.67,
+            -2.51
             );
 
         this.CHAPTER_THRESHOLD = 0.45;

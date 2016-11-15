@@ -15,7 +15,7 @@ export default class HaimAnimation extends THREE.Object3D {
         this.loadingManager = loadingManager;
         this.setupAnim();
 
-        //DebugUtil.positionObject(this, "haim anim");
+        // DebugUtil.positionObject(this, "haim anim");
     }
 
     setupAnim() {
@@ -27,8 +27,8 @@ export default class HaimAnimation extends THREE.Object3D {
         // setup animation sequence
         // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{this.tubeDown(1)} },    // 12
-            { time: 15, anim: ()=>{this.tubeOut(0.5)} },    // 73
+            { time: 12,  anim: ()=>{this.tubeDown(1)} },    // 12
+            { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
             { time: 252, anim: ()=>{this.characterDisappear()} }    //252
         ];
         this.nextAnim = null;
@@ -319,7 +319,7 @@ export default class HaimAnimation extends THREE.Object3D {
             let theCloud = this.cloud.clone();
             lengthhh = liquidGeo.vertices.length-1;
             theCloud.position.copy( liquidGeo.vertices[lengthhh] );
-            // theCloud.position.y += (this.lookupTable[j]*2);
+            theCloud.position.y += (this.lookupTable[j]);
             TweenMax.to( theCloud.position, 4, { y: "+=" + 0.2, repeat: -1, yoyo: true, delay: j%2, ease: Power0.easeNone } );
             tubeObject.add( theCloud );
 
@@ -370,6 +370,7 @@ export default class HaimAnimation extends THREE.Object3D {
             let theCloud = this.cloud.clone();
             let lengthhh = liquidGeo.vertices.length-1;
             theCloud.position.copy( liquidGeo.vertices[lengthhh] );
+            theCloud.position.y += this.lookupTable[j];
             TweenMax.to( theCloud.position, 4, { y: "+=" + 0.2, repeat: -1, yoyo: true, delay: j%3, ease: Power0.easeNone } );
             // theBag.scale.multiplyScalar( this.clamp(this.lookupTable[j], 0.3, 1) );
             // theBag.rotation.y = -rot.y;

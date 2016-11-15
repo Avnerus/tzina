@@ -214,9 +214,9 @@ export default class RamiAnimation extends THREE.Object3D {
         // this.fbo.particles.position.set(0.8, -3.84, -4.44);
         // this.fbo.particles.multiplyScalar(2.58);
 
-        DebugUtil.positionObject(this.fbo.particles, "Rami FBO");
+        //DebugUtil.positionObject(this.fbo.particles, "Rami FBO");
         console.log(this.simulationShader.uniforms.timer);
-        events.emit("add_gui", {folder:"fbo timer", listen: true, step: 0.01}, this.simulationShader.uniforms.timer, "value", 0, 1);
+        //events.emit("add_gui", {folder:"fbo timer", listen: true, step: 0.01}, this.simulationShader.uniforms.timer, "value", 0, 1);
 
         this.timerAnim = null;
 
