@@ -1,7 +1,7 @@
 export default 
 	 [
 		{
-			"name": "Excitement/Awakeness",
+			"name": "awakeness",
 			"hour": 7,
 			"timeLimitMinutes" : 10,
             "totalTime" : 330,
@@ -49,7 +49,7 @@ export default
 			]
 		},
 		{
-		"name": "Family/Home",
+		"name": "home",
 			"hour": 9,
 			"timeLimitMinutes" : 13,
             "totalTime" : 540,
@@ -119,7 +119,7 @@ export default
 			]
 		}, 
 		{
-		"name": "Emptiness/Boredom",
+		"name": "emptiness",
 			"hour": 12,
 			"timeLimitMinutes" : 8,
             "totalTime" : 590,
@@ -188,7 +188,7 @@ export default
 			]
 		},
         {
-		"name": "Distrust/Betrayal",
+		"name": "disappointments",
 			"hour": 17,
             "titlePosition": [0.67,0.57,0.109],
             "totalTime" : 500,
@@ -214,13 +214,13 @@ export default
 				},
 					{
                     name: "yukalele",
-                    position: [15.44,21.3,13.64],
+                    position: [15.44,21.2,13.64],
                     rotation: [0,144,0],
                     scale: 0.322
 				},
 					{
 					name: "bikeHottie",
-					position: [-9.72,21.4,15.72],
+					position: [-9.72,21.2,15.72],
 					rotation:[0,19,0],
 					scale: 0.44
 				},
@@ -257,7 +257,7 @@ export default
             ]
         },
         {
-		"name": "Despair/Loneliness",
+		"name": "loneliness",
 			"hour": 19,
 			"timeLimitMinutes" : 12,
             "totalTime" : 610,
