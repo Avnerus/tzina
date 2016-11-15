@@ -107,7 +107,7 @@ export default class IntroAnimation extends THREE.Object3D {
             this.trees.scale.multiplyScalar(4);
             this.trees.position.set(-50, -130, 345);
             this.add(this.trees);
-            DebugUtil.positionObject(this.trees, "Intro TREE");
+            // DebugUtil.positionObject(this.trees, "Intro TREE");
 
             let refObj = new THREE.Object3D();
             refObj.scale.set( 15, 15, 5 );    // 15, 15, 10 // 110, 90, 80 // 110, 90, 10
@@ -160,7 +160,7 @@ export default class IntroAnimation extends THREE.Object3D {
             this.cloudGroup = [];
             this.cloudMaterial = new THREE.MeshBasicMaterial({
                 color: this.cloudColors[0], map: this.cloudTex, //side: THREE.DoubleSide,
-                transparent: true, opacity: .1
+                transparent: true, opacity: .3
             });
 
             this.loadClouds( cloudFiles )
