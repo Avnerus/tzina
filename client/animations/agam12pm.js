@@ -75,7 +75,7 @@ export default class Agam12PMAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        //DebugUtil.positionObject(this, "Agam Ani");
+        DebugUtil.positionObject(this, "Agam Ani");
         //
         this.loadingManager.itemEnd("Agam12PMAnim");
     }
