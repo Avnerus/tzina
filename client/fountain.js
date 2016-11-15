@@ -185,6 +185,7 @@ export default class Fountain extends THREE.Object3D  {
         let mat = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
         this.center = new THREE.Mesh(geo, mat);
 
+        
         this.spotLights = [];
         this.spotLights[0] = this.createSpotLight( new THREE.Vector3(6.8, -3.2, 0.96),
                                                    new THREE.Vector3(0.3, 1, -0.3),
@@ -217,6 +218,7 @@ export default class Fountain extends THREE.Object3D  {
         this.add( this.spotLightCenters );
 
         this.switchLight(false);
+        this.lightsAreOn = false;
 
         // DebugUtil.positionObject(this.spotLightCenters, "target");
         // DebugUtil.positionObject(this.spotLights[0], "light 0");
@@ -253,7 +255,7 @@ export default class Fountain extends THREE.Object3D  {
         let geometry = new THREE.ConeGeometry( .1, .2, 8 );
         let material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
         let cone = new THREE.Mesh( geometry, material );
-
+        cone.visible = false;
         let s_l = new THREE.SpotLight( 0xfff291, _intensity, _distance, _angle, _penumbra, _decay ); //0xfff291
         // s_l.target.add( this.center.clone() );
         s_l.target.position.copy( pos2 );
@@ -316,7 +318,9 @@ export default class Fountain extends THREE.Object3D  {
         this.fireEmitters[0].enable();
         this.centerRingEmitters[0].enable();
         this.changeWaterColor(true);
-        this.switchLight(true);
+    
+        if(hour!=9)
+            this.switchLight(true);
 
         this.currentSequence = this.soundEvents[hour].slice(0);
         this.nextAnim = this.currentSequence.shift();
@@ -356,7 +360,9 @@ export default class Fountain extends THREE.Object3D  {
         this.fireEmitters[0].disable();
         this.centerRingEmitters[0].disable();
         this.changeWaterColor(false);
-        this.switchLight(false);
+
+        if(hour!=9)
+            this.switchLight(false);
 
         // stop cylinder rotating
         this.stopCylinderAni();

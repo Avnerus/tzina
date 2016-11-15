@@ -14,6 +14,8 @@ export default class SunGazer extends THREE.Object3D  {
 
         this.gazingSun = null;
         this.lastBlur = 0;
+        this.ended = false;
+
     }
     init() {
 
@@ -47,14 +49,19 @@ export default class SunGazer extends THREE.Object3D  {
             this.active = false;
         });
         events.on("character_idle", () => {
-            this.active = true;
+            if (!this.ended) {
+                this.active = true;
+            }
         });
         events.on("character_ended", () => {
-            this.active = true;
+            if (!this.ended) {
+                this.active = true;
+            }
         });
 
         events.on("experience_end", () => {
             this.active = false;
+            this.ended = true;
         });
     }
 

@@ -33,7 +33,7 @@ export default class IntroAnimation extends THREE.Object3D {
         this.square = square;
         this.timeController = timeController;
 
-        console.log("FBO Constructed!")
+        // console.log("FBO Constructed!")
     }
 
     initParticles(ref,geo) {
@@ -42,8 +42,6 @@ export default class IntroAnimation extends THREE.Object3D {
         if(ref != null){
             fboGeo.applyMatrix( new THREE.Matrix4().makeScale(ref.scale.x, ref.scale.y, ref.scale.z) );
             fboGeo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler(ref.rotation) );
-            // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationY(ref.rotation.y) );
-            // fboGeo.applyMatrix( new THREE.Matrix4().makeRotationZ(ref.rotation.z) );
             fboGeo.applyMatrix( new THREE.Matrix4().makeTranslation(ref.position.x, ref.position.y, ref.position.z) );
         }
         
@@ -102,30 +100,22 @@ export default class IntroAnimation extends THREE.Object3D {
                 tree.scale.set( treeTransformer[i][0].x, treeTransformer[i][0].y, treeTransformer[i][0].z );
                 tree.position.set( treeTransformer[i][1].x, treeTransformer[i][1].y, treeTransformer[i][1].z );
                 tree.rotation.set( treeTransformer[i][2].x, treeTransformer[i][2].y, treeTransformer[i][2].z );
-                //this.add( tree );
                 this.trees.add( tree );
             }
             this.trees.scale.multiplyScalar(4);
-            this.trees.position.set(0, -130, -320);
+            this.trees.position.set(-50, -130, 345);
             this.add(this.trees);
-            // DebugUtil.positionObject(this.trees, "TREE");
+            // DebugUtil.positionObject(this.trees, "Intro TREE");
 
-            let refObj = new THREE.Object3D();
-            refObj.scale.set( 15, 15, 5 );    // 15, 15, 10 // 110, 90, 80 // 110, 90, 10
-            refObj.position.set(0,250,80);    // 0,150,180 // 0,900,1100 // 0,1500,300
-            refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
+            // FBO Particles
+                this.snowGeo = geometry.clone();
 
-            this.positionsForFBO = this.initParticles( refObj, geometry );
+                this.refObj = new THREE.Object3D();
+                this.refObj.scale.set( 15, 15, 5 );    // 15, 15, 10 // 110, 90, 80 // 110, 90, 10
+                this.refObj.position.set(0,250,80);    // 0,150,180 // 0,900,1100 // 0,1500,300
+                this.refObj.rotation.set(Math.PI*9/8,0,Math.PI/2);
 
-            // this.initFBOParticle( positions );
-            //
-            //
-            // AVNER TEST
-            this.test = new SunLoader(this.renderer);
-            this.test.init();
-            //this.scene.add(this.test);
-            this.test.position.set(0,60,0);
-            //DebugUtil.positionObject(this.test, "Test particles");
+                // this.createSnowParticle();
         });
 
         this.blueprint = tex_loader.load( this.BASE_PATH + '/images/blueprint_edit.jpg' );
@@ -161,7 +151,7 @@ export default class IntroAnimation extends THREE.Object3D {
             this.cloudGroup = [];
             this.cloudMaterial = new THREE.MeshBasicMaterial({
                 color: this.cloudColors[0], map: this.cloudTex, //side: THREE.DoubleSide,
-                transparent: true, opacity: .1
+                transparent: true, opacity: .2
             });
 
             this.loadClouds( cloudFiles )
@@ -258,12 +248,12 @@ export default class IntroAnimation extends THREE.Object3D {
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                gravity: { type: "f", value: 7 }, // 12.5
+                gravity: { type: "f", value: 7 }, // 7
                 mouseRotation: { type: "f", value: 0 }, // 2
-                squareRadius: {type: "f", value: this.sRadius*4},
+                squareRadius: {type: "f", value: this.sRadius*0.04},
                 squareCenterX: {type: "f", value: this.sCenter.x},
-                squareCenterY: {type: "f", value: this.sCenter.y+3},
-                squareCenterZ: {type: "f", value: this.sCenter.z},
+                squareCenterY: {type: "f", value: this.sCenter.y},
+                squareCenterZ: {type: "f", value: this.sCenter.z-70},
                 bounceFactor: {type: "f", value: 2} //2
             },
             vertexShader: this.simulation_vs,
@@ -297,11 +287,9 @@ export default class IntroAnimation extends THREE.Object3D {
 
     disposeAni() {
         console.log("Intro animation - disposing");
-        this.remove( this.fbo.particles );
         this.remove(this.trees);
         this.remove(this.terrain);
         
-        this.fbo.particles.geometry.dispose();
         this.blueprint.dispose();
         this.blueprintMat.dispose();
         this.treeGeo.dispose();
@@ -316,6 +304,27 @@ export default class IntroAnimation extends THREE.Object3D {
         for(var i=0; i<this.cloudGeos.length; i++){
             this.cloudGeos[i].dispose();
         }
+
+        this.disposeSnowParticle();
+    }
+
+    createSnowParticle() {
+        this.positionsForFBO = this.initParticles( this.refObj, this.snowGeo );
+
+        //
+        // AVNER TEST
+        this.test = new SunLoader(this.renderer);
+        this.test.init();
+        //this.scene.add(this.test);
+        this.test.position.set(0,60,0);
+        //DebugUtil.positionObject(this.test, "Test particles");
+
+        this.initFBOParticle();
+    }
+
+    disposeSnowParticle() {
+        this.remove( this.fbo.particles );
+        this.fbo.particles.geometry.dispose();
 
         if (this.test) {
             this.remove(this.test);

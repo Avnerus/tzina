@@ -141,10 +141,6 @@ export default
                 "FatmanShower"
                 //"Shirin12PM"
 			],
-            "eventAfter" : 0,
-            "eventCharacters" : [
-                "Agam12PM"
-            ],
 			"introfile": [
 				"Mark",
 				"Lupo1"
@@ -266,10 +262,6 @@ export default
 				"Waterman"
                 //    "Shirin7PM"
 			],
-            "eventAfter" : 1,
-            "eventCharacters" : [
-                "Agam7PM"
-            ],
 			"extraAssets": [
                 //{
                   //  name: "singleTree",
@@ -323,25 +315,12 @@ export default
             "titlePosition": [0, -30, 0],
             "insideTitlePosition": [0, -1, 0],
 			"characters": [
-				//"Haim",
-				"Izchak",
-				"Waterman",
-				"Shimi2",
-				"shirin5"
-			],
-			"introfile": [
-				"Haim",
-				"Izchak"
+                "Shirin7PM"
 			],
 			"extraAssets": [
 				{
 					"fileName": "lightstreets",
 					"position": [0,0,0]
-				}
-			],
-			"effects" : [
-				{
-					"name": "buildinglights"
 				}
 			]
 		}

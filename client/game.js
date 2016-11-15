@@ -16,7 +16,6 @@ import SoundManager from './sound_manager'
 import TimeController from './time_controller'
 import CharacterController from './character_controller'
 import Show from './show'
-import EndCredits from './end_credits'
 import Extras from './extras'
 
 import DebugUtil from './util/debug'
@@ -43,6 +42,10 @@ import FPSCount from './util/fpscount'
 
 import VideoRGBD from './util/video_rgbd'
 
+import Ending from './ending'
+
+
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
@@ -51,6 +54,7 @@ export default class Game {
         this.controlPassed = false;
         this.shownWASD = false;
         this.shownZoom = false;
+        this.ended = false;
     }
     init() {
 
@@ -181,7 +185,7 @@ export default class Game {
                 'Agam12PM' : new Agam12PMAnimation(this.square),
                 'Lupo12PM' : new Lupo12PMAnimation(),
                 'Itzhak' : new ItzhakAnimation(),
-                'Rami' : new RamiAnimation()
+                'Rami' : new RamiAnimation(this.renderer)
                 //'Shirin' : new ShirinAnimation()
             }
         } else {
@@ -220,7 +224,9 @@ export default class Game {
         this.show = new Show(this.square, this.characterController, this.timeController); 
         this.show.init();
 
-        this.endCredits = new EndCredits(this.camera);
+        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene);
+        this.ending.init();
+
     }
 
     load(onLoad) {
@@ -230,7 +236,8 @@ export default class Game {
             if (!this.config.noSquare) {
                 this.scene.add(this.square);
                 this.sky.applyToMesh(this.square.getSphereMesh());
-                this.introAni.initFBOParticle();
+                // this.introAni.initFBOParticle();
+                this.introAni.createSnowParticle();
                 this.scene.add(this.introAni);
             }
 
@@ -336,19 +343,9 @@ export default class Game {
         });
 
         events.on("character_ended", (name) => {
-            if (this.timeController.experienceProgress > 0.4) {
-                console.log("Progress threshold BYE BYE");
-                this.endCredits.init();
-                this.endCredits.play();
-
-                events.emit("experience_end");
-                // Tween out
-                let endPosition = new THREE.Vector3(0,60,240);
-                let endTarget = this.camera.position;
-                if (this.vrManager.hmd && this.vrManager.hmd.isPresenting) {
-                    endTarget = this.vrControls.basePosition; 
-                }
-                TweenMax.to(endTarget, 90, {x: endPosition.x, y: endPosition.y, z: endPosition.z, ease: Linear.easeNone});
+            if (this.timeController.experienceProgress > 0 && !this.ended) {
+                this.ended = true;
+                this.ending.start();
             }
         });
 
@@ -426,7 +423,7 @@ export default class Game {
             this.keyboardController.update(dt);
         }
         this.introAni.update(dt,et);
-        this.zoomController.update(dt);
+        //this.zoomController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
         } else {
@@ -434,7 +431,10 @@ export default class Game {
         }
         this.collisionManager.update(dt);
         this.flood.update(dt);
-        this.endCredits.update(dt);
+
+        if (this.ended) {
+            this.ending.update(dt);
+        }
     }
 
     render() {

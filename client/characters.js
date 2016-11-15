@@ -34,9 +34,9 @@ export default [
         width: 768,
         height: 2048,
         scale: 0.003 * 0.5748,
-        animationScale: 0.4, //.4
-        animationPosition: [0.01, -0.4, 0.06],   // 0,-1.5,-2.2
-        animationRotation: [6, 0, 0],      // 20, 0, 0
+        animationScale: 0.478, //.4
+        animationPosition: [-0.34, -0.62, 0.06],   // 0,-1.5,-2.2
+        animationRotation: [6, 0, -6],      // 20, 0, 0
         space: 0.01,
         spaceOffset: [0.11,0,-0.07],
         subtitles: null,
@@ -135,7 +135,7 @@ export default [
         height: 2048,
         scale: 0.00242802,
         animationScale: 0.228,
-        animationPosition: [-0.3,-0.2,-0.03], // -0.45,0,-0.4
+        animationPosition: [-0.3,-0.1,-0.03], // -0.45,0,-0.4
         animationRotation: [0,14,0], // 7,25,-8
         subtitles: null,
         space: 0.3,
@@ -268,6 +268,7 @@ export default [
         subtitles: null,
         idleOnly: true
     },
+    /*
     {
         name: 'Shirin7AM',
         basePath : 'assets/characters/shirin7am',
@@ -309,7 +310,7 @@ export default [
         spaceOffset: [0.39,0,-0.08],
         subtitles: null,
         fullOnly: true
-    },
+        }*/,
     {
         name: 'Lupo9AM',
         basePath : 'assets/characters/lupo9am',
@@ -365,6 +366,7 @@ export default [
         space: .2, //2
         spaceOffset: [0.36,0,0]
     },
+    /*
     {
         name: 'Shirin12PM',
         basePath : 'assets/characters/shirin12pm',
@@ -385,7 +387,7 @@ export default [
         spaceOffset: [1.57,0,-0.31],
         subtitles: null,
         fullOnly: true
-    },
+        },*/
     {
         name: 'Lupo5PM',
         basePath : 'assets/characters/lupo5pm',
@@ -422,6 +424,7 @@ export default [
         space: 0.001,
         spaceOffset: [4.66,0,1.1]
     },
+    /*
     {
         name: 'Shirin5PM',
         basePath : 'assets/characters/shirin5pm',
@@ -462,15 +465,15 @@ export default [
         space: 0.001, //1.34
         spaceOffset: [1.78,0,-0.80], //0.88,0,0.58
         subtitles: false
-    },
+        },*/
     {
         name: 'Shirin7PM',
         basePath : 'assets/characters/shirin7pm',
         mindepth : 1214.999755859,
         maxdepth : 3681.950439453,
-        position : [4.25, 22.65, -13.17],
+        position : [9.22, 22.37, -10.53],
         rotation: [0, 0, 0],
-        animation: 'Shirin',
+        animation: null,
         uvdy: 0.47509765625,
         uvdx: 0.0,
         width: 1024,
@@ -479,7 +482,7 @@ export default [
         animationScale: 0.08,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 0.2,
+        space: 50,
         spaceOffset: [0,0,0],
         subtitles: null,
         fullOnly: true
@@ -499,7 +502,7 @@ export default [
         scale: 0.003 * 0.96,
         subtitles: null,
         fullOnly: true,
-        space: 0.3
+        space: 20
     },
     {
         name: 'FatmanShower',

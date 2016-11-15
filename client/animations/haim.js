@@ -84,7 +84,7 @@ export default class HaimAnimation extends THREE.Object3D {
         // CLOUND
         let cloudTex = tex_loader.load( this.BASE_PATH + '/images/clouds.png' );
         // cloudTex.repeat.y = 2;
-        this.cloudMat = new THREE.MeshBasicMaterial( {color: 0x00ffff, map: cloudTex, blending: "AdditiveBlending", transparent: true, side: THREE.DoubleSide, opacity: 0.4} );
+        this.cloudMat = new THREE.MeshBasicMaterial( {color: 0x00ffff, map: cloudTex, blending: "AdditiveBlending", transparent: true, side: THREE.DoubleSide, opacity: 1} );
 
         // TUBE_BAG
         this.bag;

@@ -114,22 +114,26 @@ export default class VideoRGBD  {
         this.mesh = VideoRGBD.meshPool.pop();
         this.wire = VideoRGBD.wirePool.pop();
 
-        console.log("Video mesh from prototype", this.mesh);
+        if (this.mesh) {
 
-        this.mesh.material.uniforms.mindepth.value = this.wire.material.uniforms.mindepth.value = this.properties.mindepth;
-        this.mesh.material.uniforms.maxdepth.value = this.wire.material.uniforms.maxdepth.value = this.properties.maxdepth;
-        this.mesh.material.uniforms.uvdy.value = this.wire.material.uniforms.uvdy.value = this.properties.uvdy;
-        this.mesh.material.uniforms.uvdx.value = this.wire.material.uniforms.uvdx.value = this.properties.uvdx;
-        this.mesh.material.uniforms.width.value = this.wire.material.uniforms.width.value = this.properties.width;
-        this.mesh.material.uniforms.height.value = this.wire.material.uniforms.height.value = this.properties.height;
+            this.mesh.material.uniforms.mindepth.value = this.wire.material.uniforms.mindepth.value = this.properties.mindepth;
+            this.mesh.material.uniforms.maxdepth.value = this.wire.material.uniforms.maxdepth.value = this.properties.maxdepth;
+            this.mesh.material.uniforms.uvdy.value = this.wire.material.uniforms.uvdy.value = this.properties.uvdy;
+            this.mesh.material.uniforms.uvdx.value = this.wire.material.uniforms.uvdx.value = this.properties.uvdx;
+            this.mesh.material.uniforms.width.value = this.wire.material.uniforms.width.value = this.properties.width;
+            this.mesh.material.uniforms.height.value = this.wire.material.uniforms.height.value = this.properties.height;
 
-        this.wire.position.z += 0.01;
+            this.wire.position.z += 0.01;
 
-        this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
-        this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
+            this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
+            this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
 
-        events.emit("add_gui", {folder: this.properties.fileName + " UVDX", step: 0.001}, this.mesh.material.uniforms.uvdx, "value", -1,0);
-        events.emit("add_gui", {folder: this.properties.fileName + " UVDY", step: 0.001}, this.mesh.material.uniforms.uvdy, "value", -1,1);
+            events.emit("add_gui", {folder: this.properties.fileName + " UVDX", step: 0.001}, this.mesh.material.uniforms.uvdx, "value", -1,0);
+            events.emit("add_gui", {folder: this.properties.fileName + " UVDY", step: 0.001}, this.mesh.material.uniforms.uvdy, "value", -1,1);
+        } else {
+            console.error("Video RGBD Failed to load mesh from pool", this.properties.fileName);
+        }
+
 
     }
     load() {
@@ -149,9 +153,11 @@ export default class VideoRGBD  {
         if (this.videoTexture) {
             this.videoTexture.dispose();
         }
+        if (this.mesh) {
+            VideoRGBD.meshPool.push(this.mesh);
+            VideoRGBD.wirePool.push(this.wire);
+        }
 
-        VideoRGBD.meshPool.push(this.mesh);
-        VideoRGBD.wirePool.push(this.wire);
         
         this.mesh = null;
         this.wire = null;
