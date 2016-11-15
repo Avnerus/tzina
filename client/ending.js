@@ -10,9 +10,21 @@ export default class Ending {
         this.scene = scene;
 
         this.endCredits = new EndCredits(this.camera);
+        this.faded = false;
     }
 
     init(loadingManager) {
+        let fadePlaneGeo = new THREE.PlaneGeometry( 20, 20 );
+        let fadePlaneMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide, transparent:true, opacity: 0.0} );
+        this.fadePlane = new THREE.Mesh(fadePlaneGeo, fadePlaneMaterial);
+        this.fadePlane.position.set(0, 0, -0.1001);
+        //DebugUtil.positionObject(this.fadePlane, "Ending Fade plane");
+        //events.emit("add_gui", {folder: "Ending Fade plane", step: 0.01, listen: true} ,this.fadePlane.material, "opacity", 0, 1);
+
+        events.on("vr_start", () => {
+            console.log("Into VR Start!");
+            this.fadePlane.position.set(0, 0, -0.050001);
+        });
     }
 
     start() {
@@ -40,9 +52,28 @@ export default class Ending {
         events.on("character_playing", (name) => {
             this.scene.add(this.endCredits);
             this.endCredits.play();
+            this.endCredits.creditsVideo.video.addEventListener('timeupdate',() => {
+                if(!this.faded && this.endCredits.creditsVideo.video.currentTime > 10) {
+                    console.log("Ending fade");
+                    this.faded = true;                    
+                    this.fadeOut()
+                    .then(() => {
+                        this.endCredits.position.set(-0.02,-0.08,-50);
+                        this.endCredits.scale.set(0.06, 0.06, 0.06);
+                        this.endCredits.rotation.y = 0;
+                        this.camera.add(this.endCredits);
+                        this.camera.position.set(0, 15, 150);
+                        this.fadeIn()
+                        .then(() => {
+
+                        })
+                    });
+                }
+            },false);
+
         });
 
-        DebugUtil.positionObject(this.endCredits, "End credits");
+        //DebugUtil.positionObject(this.endCredits, "End credits");
 
         /*
         let i = 0;
@@ -58,6 +89,19 @@ export default class Ending {
         DebugUtil.colorPicker("Spotlight " + i, spotLight, "color");
         */
         this.scene.add(spotLight);
+    }
+    fadeIn() {
+        return new Promise((resolve, reject) => {
+            TweenMax.to(this.fadePlane.material, 2.0, { opacity:0, onComplete: () => {
+                this.camera.remove(this.fadePlane);
+            resolve()}});
+        });
+    }
+    fadeOut() {
+        return new Promise((resolve, reject) => {
+            this.camera.add(this.fadePlane);
+            TweenMax.to(this.fadePlane.material, 2.0, { opacity:1, onComplete: () => {resolve()}});
+        });
     }
     update(dt) {
         this.endCredits.update(dt);

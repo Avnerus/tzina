@@ -138,7 +138,7 @@ export default class Intro {
 
         events.on("vr_start", () => {
             console.log("Into VR Start!");
-            this.fadePlane.position.set(0, 0, -0.50001);
+            this.fadePlane.position.set(0, 0, -0.050001);
         });
 
 
