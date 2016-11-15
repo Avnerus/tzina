@@ -258,8 +258,7 @@ export default
 			"characters": [
                 "Lupo5PM",
                 "LupoDogs5PM",
-				"Itzhak",
-				"Waterman"
+				"Itzhak"
                 //    "Shirin7PM"
 			],
 			"extraAssets": [

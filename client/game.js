@@ -303,10 +303,6 @@ export default class Game {
 
     start() {
 
-        events.on("intro_end", () => {
-            console.log("Intro ended");
-            this.soundManager.play("ambience");
-        });
 
         this.counter = 0;
 
@@ -332,6 +328,7 @@ export default class Game {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 this.controlPassed = true;
+                this.soundManager.play("ambience");
                 this.introAni.disposeAni();
                 if (!this.shownWASD) {
                     document.getElementById("wasd-container").style.display = "block";

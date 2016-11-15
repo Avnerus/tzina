@@ -187,6 +187,9 @@ export default class Character extends THREE.Object3D {
                     this.idleVideo.pause();
                     this.idleVideo.unload();
                     this.remove(this.idleVideo);
+                    if (this.animation) {
+                        this.remove(this.animation);
+                    }
                     this.done = true;
                     events.emit("character_idle", this.props.name)
                     events.emit("character_ended", this.props.name)
