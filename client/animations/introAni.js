@@ -102,13 +102,12 @@ export default class IntroAnimation extends THREE.Object3D {
                 tree.scale.set( treeTransformer[i][0].x, treeTransformer[i][0].y, treeTransformer[i][0].z );
                 tree.position.set( treeTransformer[i][1].x, treeTransformer[i][1].y, treeTransformer[i][1].z );
                 tree.rotation.set( treeTransformer[i][2].x, treeTransformer[i][2].y, treeTransformer[i][2].z );
-                //this.add( tree );
                 this.trees.add( tree );
             }
             this.trees.scale.multiplyScalar(4);
-            this.trees.position.set(0, -130, -320);
+            this.trees.position.set(-50, -130, 345);
             this.add(this.trees);
-            // DebugUtil.positionObject(this.trees, "TREE");
+            DebugUtil.positionObject(this.trees, "Intro TREE");
 
             let refObj = new THREE.Object3D();
             refObj.scale.set( 15, 15, 5 );    // 15, 15, 10 // 110, 90, 80 // 110, 90, 10
@@ -258,12 +257,12 @@ export default class IntroAnimation extends THREE.Object3D {
                 maxDistance: { type: "f", value: 50 },
                 amplitude: { type: "f", value: 0 }, // 0.2
                 frequency: { type: "f", value: 1 },
-                gravity: { type: "f", value: 7 }, // 12.5
+                gravity: { type: "f", value: 7 }, // 7
                 mouseRotation: { type: "f", value: 0 }, // 2
-                squareRadius: {type: "f", value: this.sRadius*4},
+                squareRadius: {type: "f", value: this.sRadius*0.04},
                 squareCenterX: {type: "f", value: this.sCenter.x},
-                squareCenterY: {type: "f", value: this.sCenter.y+3},
-                squareCenterZ: {type: "f", value: this.sCenter.z},
+                squareCenterY: {type: "f", value: this.sCenter.y},
+                squareCenterZ: {type: "f", value: this.sCenter.z-70},
                 bounceFactor: {type: "f", value: 2} //2
             },
             vertexShader: this.simulation_vs,
