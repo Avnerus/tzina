@@ -225,7 +225,7 @@ export default class Game {
         this.show = new Show(this.square, this.characterController, this.timeController); 
         this.show.init();
 
-        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene);
+        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls);
         this.ending.init();
 
     }
@@ -340,9 +340,11 @@ export default class Game {
             }
         });
         events.on("character_ended", (name) => {
-            if (this.timeController.experienceProgress > 0 && !this.ended) {
-                this.ended = true;
-                this.ending.start();
+            if (this.timeController.experienceProgress > 0.4 && !this.ended) {
+                setTimeout(() => {
+                    this.ended = true;
+                    this.ending.start();
+                },3000);
             }
         });
 

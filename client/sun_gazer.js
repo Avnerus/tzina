@@ -45,7 +45,6 @@ export default class SunGazer extends THREE.Object3D  {
             this.active = passed;
         });
 
-            /*
         events.on("character_playing", () => {
             this.active = false;
         });
@@ -58,7 +57,7 @@ export default class SunGazer extends THREE.Object3D  {
             if (!this.ended) {
                 this.active = true;
             }
-        });*/
+        });
 
         events.on("experience_end", () => {
             this.active = false;

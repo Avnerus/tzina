@@ -245,6 +245,7 @@ export default class Square extends THREE.Object3D{
 
 
             // You can sit here
+            /*
             let SIT_HERE_TEXT_DEFINITION = {
                  align: textAlign.center, 
                  font: '70px Miriam Libre',
@@ -260,8 +261,9 @@ export default class Square extends THREE.Object3D{
                 1 * Math.PI / 180
             )
             this.add(this.sitHere);
-
+            
             DebugUtil.positionObject(this.sitHere, "Sit here");
+            */
 
             console.log("Finished loading square");
             loadingManager.itemEnd("Square");

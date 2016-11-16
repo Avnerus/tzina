@@ -2,12 +2,13 @@ import EndCredits from './end_credits'
 import DebugUtil from './util/debug'
 
 export default class Ending {
-    constructor(config, camera, timeController, characterController, scene) {
+    constructor(config, camera, timeController, characterController, scene, vrControls) {
         this.config = config;
         this.timeController = timeController;
         this.characterController;
         this.camera = camera;
         this.scene = scene;
+        this.vrControls = vrControls;
 
         this.endCredits = new EndCredits(this.camera);
         this.faded = false;
@@ -31,8 +32,8 @@ export default class Ending {
         console.log("Ending is starting!");
         events.emit("experience_end");
         this.endCredits.init();
-        this.endCredits.scale.set(0.01, 0.01, 0.01);
-        this.endCredits.position.set(-30.37, 16.65, -15.72);
+        this.endCredits.scale.set(0.019, 0.019, 0.019);
+        this.endCredits.position.set(-33.62, 21.88, -11.75);
         this.endCredits.rotation.y = 80 * Math.PI /180;
 
         // Move to midnight
@@ -51,6 +52,7 @@ export default class Ending {
 
         events.on("character_playing", (name) => {
             setTimeout(() => {
+                console.log("Ending video");
                 this.scene.add(this.endCredits);
                 this.endCredits.play();
                 this.endCredits.creditsVideo.video.addEventListener('timeupdate',() => {
@@ -59,11 +61,16 @@ export default class Ending {
                         this.faded = true;                    
                         this.fadeOut()
                         .then(() => {
-                            this.endCredits.position.set(-0.02,-0.08,-50);
-                            this.endCredits.scale.set(0.06, 0.06, 0.06);
+                            this.endCredits.scale.set(0.077, 0.077, 0.077);
                             this.endCredits.rotation.y = 0;
                             this.camera.add(this.endCredits);
-                            this.camera.position.set(0, 15, 150);
+                            if (inVR) {
+                                this.endCredits.position.set(-0.02,-0.08,-60);
+                                this.vrControls.basePosition.set(0,15,150);
+                            } else {
+                                this.endCredits.position.set(-0.02,-0.08,-50);
+                                this.camera.position.set(0, 15, 150);
+                            }
                             this.fadeIn()
                             .then(() => {
 
@@ -74,7 +81,7 @@ export default class Ending {
             },23000);
         });
 
-        //DebugUtil.positionObject(this.endCredits, "End credits");
+        DebugUtil.positionObject(this.endCredits, "End credits");
 
         /*
         let i = 0;

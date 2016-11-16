@@ -39,6 +39,7 @@ export default class CharacterController {
         });
         events.on("angle_updated", (hour) => {
             if (this.inControl){ {
+                console.log("Angle updated", hour, this.activeCharacters);
                 this.activeCharacters.forEach((character) => {
                     if (character.idleOnly) {
                         character.addedColliders = true;
@@ -54,14 +55,15 @@ export default class CharacterController {
     }
 
     loadHour(hour) {
+        console.log("Character controller loading hour ", hour);
         let clone = this.activeCharacters.slice(0);
         this.activeCharacters = [];
 
         for (let i = 0; i < clone.length; i++) {
             let character = clone[i];
 
-            if (!character.done && !character.props.event) {
-                //console.log("Removing character ", character.props.name, " when loading hour ", hour);
+            if (!character.done && !(character.props.event && hour == 9) && !(character.props.event && hour == 19)) {
+                console.log("Removing character ", character.props.name, " when loading hour ", hour);
                 this.square.clockwork.remove(character);
                 character.unload();
             } else {

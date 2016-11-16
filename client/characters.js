@@ -104,7 +104,7 @@ export default [
         basePath : 'assets/characters/rami',
         mindepth : 2225.287353516,
         maxdepth : 3252.206298828,
-        position : [0, 22.12, 13.17],
+        position : [0.16, 22.14, 13.5],
         rotation: [356, 55, 10],
         animation: 'Rami',
         uvdy: 0.48,
@@ -112,7 +112,7 @@ export default [
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.661,
+        scale: 0.003 * 0.661 * 1.088,
         animationScale: 0.25,
         animationPosition: [-0.43, 0.25, 0.14],
         animationRotation: [-4, -23, -9],
@@ -248,8 +248,8 @@ export default [
         animationScale: 0.24,
         animationPosition: [-0.5, 0.08, -1.42], // -0.03, 0.21, -0.86
         animationRotation: [0, 274, 0], // 0, 214, 0
-        space: 0.38, //0.38
-        spaceOffset: [-0.11,0,0],
+        space: 0.29, 
+        spaceOffset: [0.06,0,-0.58],
         subtitles: null
     },
     {
@@ -354,8 +354,8 @@ export default [
         position : [-10.77, 22.02, 6.62],
         rotation: [2, 216, 0],
         animation: 'Lupo12PM',
-        uvdy: 0.4970703125,
-        uvdx: 0.0,
+        uvdy: 0.505,
+        uvdx: 0.005,
         width: 1024,
         height: 2048,
         scale: 0.003 * 0.7411,
@@ -471,18 +471,18 @@ export default [
         basePath : 'assets/characters/shirin7pm',
         mindepth : 1214.999755859,
         maxdepth : 3681.950439453,
-        position : [9.22, 22.37, -10.53],
+        position : [9.22, 22.37, -10.86],
         rotation: [0, 0, 0],
         animation: null,
         uvdy: 0.47509765625,
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.5327,
+        scale: 0.003 * 0.5327 * 1.244,
         animationScale: 0.08,
         animationPosition: [-0.2, -0.1, 0],   // 0,-1.5,-2.2
         animationRotation: [13, 0, 0],      // 20, 0, 0
-        space: 50,
+        space: 100,
         spaceOffset: [0,0,0],
         subtitles: null,
         fullOnly: true

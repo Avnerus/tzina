@@ -186,6 +186,10 @@ export default class TimeController {
             this.sunWorld = null;
             this.gazeHour = -1;
         });
+
+        events.on("experience_end", () => {
+            this.clockRunning = false;
+        })
     }
 
     updateSunProgress() {
@@ -236,7 +240,11 @@ export default class TimeController {
                 this.currentHour = this.nextHour;
                 let roundHour = this.nextHour;
                 this.setCurrentChapter();
-                events.emit("hour_updated", roundHour);
+                if (roundHour != 0) {
+                    events.emit("hour_updated", roundHour);
+                } else {
+                    console.log("Updating next hour due to clock");
+                }
                 if (this.square.currentSun) {
                     this.square.turnOffSun(this.square.currentSun);
                 }
@@ -317,10 +325,11 @@ export default class TimeController {
                     TweenMax.to(this.square, 7 * (Math.abs(targetHour - baseHour) * 0.5), {ease: Power2.easeInOut, delay: 1, clockRotation: targetRotationY, onComplete: () => {
                         events.emit("angle_updated", this.currentHour);
                         this.updateNextHour();
-                        this.sunGazer.active = true;
-                        this.clockRunning = true;
                         if (this.currentHour == 0) {
                             this.square.clockRotation = 0;
+                        } else {
+                            this.sunGazer.active = true;
+                            this.clockRunning = true;
                         }
                     }});
                 },1000);

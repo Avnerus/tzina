@@ -44,6 +44,7 @@ export default class Show {
 
         events.on("control_threshold", (passed) => {
             if (passed) {
+                this.inControl = true;
                 this.checkShow(this.timeController.currentChapter.hour);
             }
         });
@@ -64,6 +65,7 @@ export default class Show {
 
     // OK SO 12 pm show is moved to 9
     checkShow(hour) {
+        console.log("Check show ", hour, this.in9amshow);
         if(hour==19 && !this.in7pmShow && !this.ended7pmShow){
             // So we do this after the other characters load
             setTimeout(() => {
