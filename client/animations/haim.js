@@ -27,9 +27,9 @@ export default class HaimAnimation extends THREE.Object3D {
         // setup animation sequence
         // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
-            { time: 3,  anim: ()=>{this.tubeDown(1)} },    // 12
-            { time: 10, anim: ()=>{this.tubeOut(0.5)} },    // 73
-            { time: 30, anim: ()=>{this.characterDisappear()} }    //252
+            { time: 12,  anim: ()=>{this.tubeDown(1)} },    // 12
+            { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
+            { time: 252, anim: ()=>{this.characterDisappear()} }    //252
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -536,7 +536,7 @@ export default class HaimAnimation extends THREE.Object3D {
         let rainOriginPositions = [];
 
         for(let i=0; i<this.particleGroup.emitters.length; i++){
-            this.particleGroup.emitters[i].activeMultiplier = 2;
+            this.particleGroup.emitters[i].activeMultiplier = 1.5;
             // this.particleGroup.emitters[i].size.value = [.2,6,8,6,2];
 
             let emitterPos = this.particleGroup.emitters[i].position.value;
@@ -577,7 +577,7 @@ export default class HaimAnimation extends THREE.Object3D {
                     }, onComplete: ()=>{
                         this.parent.fullVideo.setOpacity(0.0);
                         for(let i=0; i<this.particleGroup.emitters.length; i++){
-                            this.particleGroup.emitters[i].activeMultiplier = 0.2;
+                            this.particleGroup.emitters[i].activeMultiplier = 0.1;
                             // this.particleGroup.emitters[i].size.value = [.1,2,3,3,2];
                             this.particleGroup.emitters[i].position.value = rainOriginPositions[i];
                         }
