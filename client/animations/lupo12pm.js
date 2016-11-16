@@ -19,7 +19,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     setupAnim() {
-        //DebugUtil.positionObject(this, "Lupo Ani");
+        DebugUtil.positionObject(this, "Lupo Ani");
 
         this.loadingManager.itemStart("Lupo12PMAnim");
         this.perlin = new ImprovedNoise();
@@ -838,7 +838,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:0, delay: 1 });
         }
 
-        this.lupoArt.position.set(0,0,0);
+        this.lupoArt.position.set(.7,-1.2,1);
         this.lupoArt.scale.set(1,1,1);
         this.lupoArt.rotation.z = 0;
 
