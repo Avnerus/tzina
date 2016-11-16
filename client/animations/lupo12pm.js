@@ -761,7 +761,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     meshh.position.copy( modelTargetPos );
                     lupoArtBottom.add(meshh);
 
-                    DebugUtil.positionObject(meshh, "art"+this.artNum);
+                    // DebugUtil.positionObject(meshh, "art"+this.artNum);
                     this.artNum++;
                 });
                 // this.loadModels.bind(undefined, loader, i);
