@@ -54,11 +54,11 @@ export default class VideoRGBD  {
                   "maxdepth" : { type : "f", value : 0.0 },
                   "uvdy" : { type : "f", value : 0.5 },
                   "uvdx" : { type : "f", value : 0.0 },
-                  "opacity" : { type : "f", value : 0.1 },
+                  "opacity" : { type : "f", value : 0.01 },
                   "width" : { type : "f", value : 0.0 },
                   "height" : { type : "f", value : 0.0 },
-                  "brightness" : { type : "f", value : 0.1 },
-                  "wire_strech": { type : "f", value : 1 },
+                  "brightness" : { type : "f", value : 0.3 },
+                  "wire_strech": { type : "f", value : 1.0 },
                   "contrast" : { type : "f", value : 0.001 }
               },
 

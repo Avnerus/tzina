@@ -19,7 +19,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     setupAnim() {
-        //DebugUtil.positionObject(this, "Lupo Ani");
+        DebugUtil.positionObject(this, "Lupo Ani");
 
         this.loadingManager.itemStart("Lupo12PMAnim");
         this.perlin = new ImprovedNoise();
@@ -60,25 +60,23 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     { time: 210, anim: ()=>{this.characterDisappear()} }
                 ],
             'Lupo5PM': [
-                    { time: 1, anim: ()=>{this.growCactusFloor()} },
-
-                    { time: 2, anim: ()=>{this.showSculptures()} },    // 16
-
+                    { time: 0, anim: ()=>{this.setupForNight()} },
                     
-
-                    { time: 9, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
-                    { time: 12, anim: ()=>{this.shiftSculptures()} },
+                    { time: 16, anim: ()=>{this.showSculptures()} },    // 16
+                    { time: 24, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
+                    { time: 28, anim: ()=>{this.shiftSculptures()} },
                     
+                    { time: 35, anim: ()=>{this.growCactusFloor()} },
                     
-                    { time: 17, anim: ()=>{this.growFlower()} },
-                    { time: 25, anim: ()=>{this.closeFlower()} },
+                    { time: 45, anim: ()=>{this.growFlower()} },
+                    
 
                     // Scale dogs, total 2 times
                     { time: 76, anim: ()=>{this.scaleDogs(1)} },     // first time
 
-                    { time: 15, anim: ()=>{this.scaleDogs(2)} },     // second time
+                    { time: 100, anim: ()=>{this.scaleDogs(2)} },     // second time
 
-
+                    { time: 150, anim: ()=>{this.closeFlower()} },
                     // 203 ends
                     { time: 198, anim: ()=>{this.characterDisappear()} }
                 ]
@@ -137,9 +135,6 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
         this.loadSculptureTextures( sculptureTextureFiles, sculptureTextMADFiles )
         .then( () => {
-
-            // this.sculptureTextures = lupoArtText;
-            // this.sculptureMaterials = lupoArtMat;
             console.log("Loaded lupo art materials");
 
             this.loadSculptureModels( sculptureModelFiles )
@@ -147,7 +142,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 this.lupoArt = lupoArt;
                 this.lupoArt.position.set(.7,-1.2,1);
                 this.add(this.lupoArt);
-                console.log("Loaded lupo art", this.lupoArt);
+                // console.log("Loaded lupo art", this.lupoArt);
+                // DebugUtil.positionObject(this.lupoArt, "Lupo Art");
 
                 // trigger rotating
                 // tl.to(this.lupoArt.rotation, 2, {x:Math.PI}).to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
@@ -202,8 +198,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             this.cactusPotList2 = {};
             this.cactusOffsetPos = [];
             this.cactusOffsetPos2 = [];
-            this.cactusGroup = [];
-            this.cactusGroupFloor = [];
+            this.cactusGroup = new THREE.Object3D();
+            this.cactusGroupFloor = new THREE.Object3D();
             this.cactusTimelines = [];
             this.cactusFloorTimelines = [];
 
@@ -229,9 +225,9 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     new_c.scale.multiplyScalar( 0.4-0.1*this.lookupTable[i] );
                     new_c.position.set( 1-6*Math.random(), 1.2, 5-2*Math.random() ); // x: -5~1
                     new_c.rotation.y = Math.PI/2 - this.lookupTable[i]*Math.PI;
-                    this.add(new_c);
-                    this.cactusGroup.push(new_c);
+                    this.cactusGroup.add(new_c);
                 }
+                this.add(this.cactusGroup);
                 // on floor
                 for(let i=0; i<5; i++){
                     let newIndex = (i%3)+2;
@@ -239,14 +235,17 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     new_c.material = this.cactusMat.clone();
                     new_c.scale.multiplyScalar( 1.8-0.5*this.lookupTable[i] );
                     new_c.position.set(
-                        Math.sin( Math.PI*2/20*(i-1) ) * 9 + this.lookupTable[i],
-                        -1,
-                        Math.cos( Math.PI*2/20*(i-1) ) * 9 + 5 + this.lookupTable[i+1]
+                        Math.sin( Math.PI*2/20*(i-1) ) * 10 + this.lookupTable[i],
+                        0,
+                        Math.cos( Math.PI*2/20*(i-1) ) * 10 + this.lookupTable[i+1]
                     );
                     new_c.rotation.y = Math.PI/2 - this.lookupTable[i]*Math.PI;
-                    this.add(new_c);
-                    this.cactusGroupFloor.push(new_c);
+                    this.cactusGroupFloor.add(new_c);
                 }
+                this.cactusGroupFloor.position.set(4.05, 0, -7.82);
+                this.add(this.cactusGroupFloor);
+                // DebugUtil.positionObject(this.cactusGroupFloor, "cactusGroupFloor");
+
                 this.createCactusAnimation();
 
                 //
@@ -335,6 +334,11 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
             this.ropeMaterial = new THREE.MeshBasicMaterial({color: 0xb30000, wireframe: true});
             this.liquidMats = [];
+            this.nightRopeTransformation = [
+                [ [-2.18, -0.57, 5.71], [0,100*Math.PI/180,0] ],
+                [ [-1.92, -0.25, 7.15], [0,88*Math.PI/180,0] ]
+            ];
+            this.dayRopeTransformation = [1.4, -0.7, 4.1];
             for(let i=0; i<2; i++){
                 let liquidTex = p_tex_loader.load(this.BASE_PATH + '/images/liquid_trans.png');
                 liquidTex.repeat.x = 1;
@@ -369,6 +373,15 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.loadingManager.itemEnd("Lupo12PMAnim");
     }
 
+    setupForNight() {
+        this.lupoArt.position.set(26.52, -2, -11.21);
+        this.lupoArt.scale.multiplyScalar(1.2);
+        for(let i=0; i<this.ropes.length; i++){
+            this.ropes[i].position.fromArray( this.nightRopeTransformation[i][0] );
+            this.ropes[i].rotation.fromArray( this.nightRopeTransformation[i][1] );
+        }
+    }
+
     assignChController(controller) {
         this.characterController = controller;
         // this.theDogs = this.characterController.characters['LupoDogs5PM'];
@@ -393,7 +406,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
             // Group of flower
             let f_offset = new THREE.Vector3(1.2, 1, 1,2);
-            for(let i=0; i<this.cactusGroupFloor.length; i++){
+            for(let i=0; i<this.cactusGroupFloor.children.length; i++){
                 let flowerrr = this.flower.clone();
 
                 let new_mat = this.petalMat.clone();
@@ -404,12 +417,12 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     flowerrr.children[j].children[0].scale.multiplyScalar(0.01);
                 }
 
-                let f_pos = this.cactusGroupFloor[i].children[3].position.clone();                
+                let f_pos = this.cactusGroupFloor.children[i].children[3].position.clone();                
                 flowerrr.position.copy(f_pos);
                 flowerrr.rotation.x = ( 70*Math.PI/180 );
                 flowerrr.scale.multiplyScalar(0.8); // 0.8
 
-                this.cactusGroupFloor[i].add(flowerrr);
+                this.cactusGroupFloor.children[i].add(flowerrr);
                 this.flowerGroup.push( flowerrr );
             }
 
@@ -428,7 +441,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         ropee.add(liquid);
         this.add(ropee);
         ropee.position.set(1.4, -0.7, 4.1);
-        //DebugUtil.positionObject(ropee, "rope"+_index);
+        // DebugUtil.positionObject(ropee, "rope"+_index);
         this.ropes.push(ropee);
     }
 
@@ -482,7 +495,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.cactusTimelines[index].play();
 
         if(color != null){
-            this.cactusGroup[index].children[0].material.color.set( color );
+            this.cactusGroup.children[index].children[0].material.color.set( color );
         }
     }
 
@@ -560,11 +573,11 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     characterDisappear() {
         this.flickerSculptureTextures();
         TweenMax.to(this.lupoArt.rotation, 3, { x:"+="+Math.PI, delay: 1, ease: Back.easeInOut.config(1.4) });
-        TweenMax.to(this.parent.fullVideo.mesh.rotation, 2, {
+        TweenMax.to(this.fullVideo.mesh.rotation, 2, {
             x:"+="+Math.PI,
             delay: 2,
             onComplete: ()=>{
-                this.parent.fullVideo.setOpacity(0.0);
+                this.fullVideo.setOpacity(0.0);
             }
         });
     }
@@ -644,7 +657,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     createCactusAnimation() {
-        for(let i=0; i<this.cactusGroup.length; i++){
+        for(let i=0; i<this.cactusGroup.children.length; i++){
 
             let tl = new TimelineMax({delay:i*0.3});
             let timeGap = 0;
@@ -653,7 +666,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             for(let k=0; k<theAniSequence.length; k++){
                 let toTween=[];
                 for(let j=0; j<theAniSequence[k].length; j++){
-                    let tw = this.createCactusAni( this.cactusGroup[i], theAniSequence[k][j] );
+                    let tw = this.createCactusAni( this.cactusGroup.children[i], theAniSequence[k][j] );
                     toTween.push(tw);
                 }
                 tl.add( toTween, timeGap );
@@ -663,7 +676,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             this.cactusTimelines.push(tl);
         }
 
-        for(let i=0; i<this.cactusGroupFloor.length; i++){
+        for(let i=0; i<this.cactusGroupFloor.children.length; i++){
 
             let tl = new TimelineMax({delay:i*0.5});
             let timeGap = 0;
@@ -672,7 +685,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             for(let k=0; k<theAniSequence.length; k++){
                 let toTween=[];
                 for(let j=0; j<theAniSequence[k].length; j++){
-                    let tw = this.createCactusAni( this.cactusGroupFloor[i], theAniSequence[k][j] );
+                    let tw = this.createCactusAni( this.cactusGroupFloor.children[i], theAniSequence[k][j] );
                     toTween.push(tw);
                 }
                 tl.add( toTween, timeGap );
@@ -700,7 +713,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 _tex.name="sculptureTex_" + i;
                 this.sculptureTextures[i] = _tex;
 
-                let _mat = new THREE.MeshPhongMaterial({map: _tex, transparent: true, shininess: 100});
+                let _mat = new THREE.MeshPhongMaterial({map: _tex, shininess: 100});
                 this.sculptureMaterials.push( _mat );
             }
             for(let i=0; i<textureMADFiles.length; i++){
@@ -709,7 +722,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 _tex.name="sculptureMadTex_" + i;
                 this.sculptureMADTextures[i] = _tex;
 
-                let _mat = new THREE.MeshPhongMaterial({map: _tex, transparent: true, shininess: 100});
+                let _mat = new THREE.MeshPhongMaterial({map: _tex, shininess: 100});
                 this.sculptureMADMaterials.push( _mat );
             }
             resolve();
@@ -748,7 +761,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     meshh.position.copy( modelTargetPos );
                     lupoArtBottom.add(meshh);
 
-                    //DebugUtil.positionObject(meshhh, "art"+this.artNum);
+                    // DebugUtil.positionObject(meshh, "art"+this.artNum);
                     this.artNum++;
                 });
                 // this.loadModels.bind(undefined, loader, i);
@@ -825,12 +838,16 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:0, delay: 1 });
         }
 
-        // reset sequence
-        // this.sequenceConfig = [];
-        // this.sequenceConfig = this.sequenceConfigOriginal.slice(0); // copy the original setting
-        // this.completeSequenceSetup();
+        this.lupoArt.position.set(0,0,0);
+        this.lupoArt.scale.set(1,1,1);
+        this.lupoArt.rotation.z = 0;
 
-        // this.start();
+        this.fullVideo = this.parent.fullVideo;
+
+        for(let i=0; i<this.ropes.length; i++){
+            this.ropes[i].position.fromArray( this.dayRopeTransformation );
+            this.ropes[i].rotation.set( 0,0,0 );
+        }
     }
 
     updateVideoTime(time) {

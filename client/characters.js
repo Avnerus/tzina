@@ -418,8 +418,8 @@ export default [
         height: 2048,
         scale: 0.003 * 0.75 * 1.028,
         animationScale: 0.3,
-        animationPosition: [1.13, -0.07, -2.27],
-        animationRotation: [15,-25,7],
+        animationPosition: [1.13, -0.53, -2.27],
+        animationRotation: [6,-25,9],
         subtitles: null,
         space: 0.001,
         spaceOffset: [4.66,0,1.1]
