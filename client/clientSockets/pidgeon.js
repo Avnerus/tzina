@@ -233,7 +233,7 @@ export default class Pidgeon extends THREE.Object3D{
     this.textualLabel.scale.multiplyScalar(0.0022);
     this.add(this.textualLabel);
     this.textualLabel.position.x=0;
-    this.textualLabel.position.y=-0.5;
+    this.textualLabel.position.y=-0.53;
     this.textualLabel.position.z=0;
     this.isBeingGazed=0;
     this.textualLabel.opacity=function(value){
