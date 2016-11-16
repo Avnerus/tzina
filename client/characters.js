@@ -35,7 +35,7 @@ export default [
         height: 2048,
         scale: 0.003 * 0.5748,
         animationScale: 0.478, //.4
-        animationPosition: [-0.34, -0.62, 0.06],   // 0,-1.5,-2.2
+        animationPosition: [-0.25, -0.48, 0.12],   // 0,-1.5,-2.2
         animationRotation: [6, 0, -6],      // 20, 0, 0
         space: 0.01,
         spaceOffset: [0.11,0,-0.07],
@@ -64,7 +64,7 @@ export default [
         height: 2048,
         scale: 0.0027 * 0.5308,
         animationScale: 0.248,
-        animationPosition: [-0.74, 0.53, -1.5],
+        animationPosition: [-0.76, 0.42, -1.52],
         animationRotation: [7.9, 7.7, 1],
         space: 0.33, //anim:1.46
         spaceOffset: [-0.25,0,0.15], //0.28,0.73,1.73
@@ -221,8 +221,8 @@ export default [
                 sec: 0,
                 mindepth : 1499.999877929688,
                 maxdepth : 4564.32861328125,
-                position : [-11.35, 21.9, 1.95],
-                scale: 0.003 * 0.458437 * 1.34174  * 0.865
+                position : [-11.35, 21.94, 1.95],
+                scale: 0.003 * 0.458437 * 1.34174  * 0.865 * 1.246
             },
             {
                 sec: 92,
@@ -363,8 +363,8 @@ export default [
         animationPosition: [-0.66, -0.41, -0.96], // -0.53, -0.51, -1.76
         animationRotation: [0,0,0], // 0,-25,0
         subtitles: null,
-        space: .2, //2
-        spaceOffset: [0.36,0,0]
+        space: 0.2, //2
+        spaceOffset: [0.06,0,-0.58]
     },
     /*
     {
@@ -466,7 +466,6 @@ export default [
         spaceOffset: [1.78,0,-0.80], //0.88,0,0.58
         subtitles: false
         },
-    /*
     {
         name: 'Shirin7PM',
         basePath : 'assets/characters/shirin7pm',
@@ -487,7 +486,7 @@ export default [
         spaceOffset: [0,0,0],
         subtitles: null,
         fullOnly: true
-    },*/
+    },
     {
         name: 'Waterman',
         basePath : 'assets/characters/waterman',
