@@ -1,5 +1,5 @@
 import {SpriteText2D , textAlign} from '../lib/text2d/index';
-var FLOORY=13.1;
+var FLOORY=14.1;
 var BlendCharacter=require('../util/BlendCharacter.js');
 
 
@@ -39,7 +39,7 @@ export default class Pidgeon extends THREE.Object3D{
       this.blendMesh.applyNewDiffuse(loadedSkinTexture);
     }
     this.add( this.blendMesh );
-
+    // this.blendMesh.position.y=-1;
     this.blendMesh.play("Bird_Fly",1);
     // this.blendMesh.position.z=0.2*a;
     //these json models insist on coming rotated.
@@ -47,12 +47,13 @@ export default class Pidgeon extends THREE.Object3D{
     // this.blendMesh.rotation.z=Math.PI;
     this.blendMesh.rotation.y=Math.PI;
     // this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
-    this.blendMesh.position.set(0,0,0);
+    this.blendMesh.position.set(0,-1,0);
     // this.mesh.scale.set(0.3,0.3,0.3);
     // this.add(this.mesh);
-    var box = new THREE.BoxGeometry(0.5,0.5,1);
+    var box = new THREE.BoxGeometry(0.5,2,1);
     var material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true, visible:false} );
     this.boundingBox = new THREE.Mesh( box, material );
+    this.boundingBox.position.set(0,-1,0);
     this.add(this.boundingBox);
     /*pendant: these may become handy later, but currently unused:*/
     let transformReturnFunctions = {
@@ -228,12 +229,12 @@ export default class Pidgeon extends THREE.Object3D{
 
     this.textualLabel = makeTextSprite( text,
 		{ fontsize: 50, color:"#FFF", fontface:"Miriam Libre", backgroundColor: {r:0, g:0, b:0, a:0.8} } );
-  	this.textualLabel.position.set(0,0.5,0);
+  	// this.textualLabel.position.set(0,0.2,0);
   	// this.add( spritey );
-    this.textualLabel.scale.multiplyScalar(0.003);
+    this.textualLabel.scale.multiplyScalar(0.0022);
     this.add(this.textualLabel);
     this.textualLabel.position.x=0;
-    this.textualLabel.position.y=1;
+    this.textualLabel.position.y=-0.5;
     this.textualLabel.position.z=0;
     this.isBeingGazed=0;
     this.textualLabel.opacity=function(value){
@@ -244,7 +245,7 @@ export default class Pidgeon extends THREE.Object3D{
         this.opacityValue=value;
         // this.fillStyle="rgba(255,255,255,"+this.opacityValue+")";
         this.material.opacity=this.opacityValue;
-        console.log(this);
+        //console.log(this);
       }
 
       return this.opacityValue;
@@ -372,12 +373,24 @@ export default class Pidgeon extends THREE.Object3D{
       }
     }
   }
-  update(delta){
-    if ( this.blendMesh ) { this.blendMesh.update( delta ); }
+  //provide camera to fade out when camera gets inside pidgeon
+  update(delta/*,camera*/){
+    if ( this.blendMesh ) {
+      /*if(camera){
+        let pidgeonDistanceToCamera=this.position.distanceTo( camera.position )
+        if(pidgeonDistanceToCamera<1.2){
+          // console.log(this.blendMesh)
+          console.log("distance",pidgeonDistanceToCamera);
+          if(this.blendMesh.material)
+          this.blendMesh.material.opacity=Math.min(0,pidgeonDistanceToCamera-0.2);
+        }
+      }*/
+      this.blendMesh.update( delta );
+    }
   }
-  static updateEach(delta){
+  static updateEach(delta/*,camera*/){
     for (var characterIndex in characterList) {
-      characterList[characterIndex].update(delta);
+      characterList[characterIndex].update(delta/*,camera*/);
     }
   }
   //load and initialize meshes, textures and animations
@@ -470,8 +483,8 @@ function makeTextSprite( message, parameters )
 	context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
 								  + backgroundColor.b + "," + backgroundColor.a + ")";
 	// border color
-	context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
-								  + borderColor.b + "," + borderColor.a + ")";
+/*	context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
+								  + borderColor.b + "," + borderColor.a + ")";/**/
 
   //debug canvas draw border
 /*  context.strokeStyle="#FF0000";
@@ -480,15 +493,15 @@ function makeTextSprite( message, parameters )
 
   // 1.4 is extra height factor for text below baseline: g,j,p,q.
 /*  context.strokeStyle="#FFFF00";/**/
-  context.lineWidth = borderThickness;
-  roundRect(context,borderThickness + (context.canvas.width/2)-(metrics.width/2), borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+  /**context.lineWidth = borderThickness;/**/
+  roundRect(context,(context.canvas.width/2)-(metrics.width/2)-borderThickness, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + 2*borderThickness, 6);
 
   // text color
 	context.fillStyle = fontcolor;
 
   context.textBaseline = 'middle';
   context.textAlign = "center";
-	context.fillText( message,  400, fontsize + borderThickness);
+	context.fillText( message,  context.canvas.width/2, context.canvas.height/2);
 
 	// canvas contents will be used for a texture
 	var texture = new THREE.Texture(canvas)
