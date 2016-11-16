@@ -19,7 +19,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     setupAnim() {
-        //DebugUtil.positionObject(this, "Lupo Ani");
+        DebugUtil.positionObject(this, "Lupo Ani");
 
         this.loadingManager.itemStart("Lupo12PMAnim");
         this.perlin = new ImprovedNoise();

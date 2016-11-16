@@ -50,27 +50,28 @@ export default class Ending {
         spotLight.penumbra = 0.5;
 
         events.on("character_playing", (name) => {
-            this.scene.add(this.endCredits);
-            this.endCredits.play();
-            this.endCredits.creditsVideo.video.addEventListener('timeupdate',() => {
-                if(!this.faded && this.endCredits.creditsVideo.video.currentTime > 10) {
-                    console.log("Ending fade");
-                    this.faded = true;                    
-                    this.fadeOut()
-                    .then(() => {
-                        this.endCredits.position.set(-0.02,-0.08,-50);
-                        this.endCredits.scale.set(0.06, 0.06, 0.06);
-                        this.endCredits.rotation.y = 0;
-                        this.camera.add(this.endCredits);
-                        this.camera.position.set(0, 15, 150);
-                        this.fadeIn()
+            setTimeout(() => {
+                this.scene.add(this.endCredits);
+                this.endCredits.play();
+                this.endCredits.creditsVideo.video.addEventListener('timeupdate',() => {
+                    if(!this.faded && this.endCredits.creditsVideo.video.currentTime > 60) {
+                        console.log("Ending fade");
+                        this.faded = true;                    
+                        this.fadeOut()
                         .then(() => {
+                            this.endCredits.position.set(-0.02,-0.08,-50);
+                            this.endCredits.scale.set(0.06, 0.06, 0.06);
+                            this.endCredits.rotation.y = 0;
+                            this.camera.add(this.endCredits);
+                            this.camera.position.set(0, 15, 150);
+                            this.fadeIn()
+                            .then(() => {
 
-                        })
-                    });
-                }
-            },false);
-
+                            })
+                        });
+                    }
+                },false);
+            },23000);
         });
 
         //DebugUtil.positionObject(this.endCredits, "End credits");
