@@ -142,7 +142,7 @@ export default class Character extends THREE.Object3D {
                         }
                         this.onHold = false;
                     }
-                },3000);
+                },500);
             });
 
             events.on("show_start", () => {this.inShow = true});
@@ -378,9 +378,13 @@ export default class Character extends THREE.Object3D {
             // possitionOffset.add(this.fullVideo.mesh.position);
             // this.fullVideo.setPosition(possitionOffset);
             
-            console.log("Adjustment!!", this.nextAdjustment);
+            console.log("Adjustment!!", this.nextAdjustment.sec);
 
-            this.detach( this.animation, this, this.scene );
+            if(this.nextAdjustment.sec!=0){
+                this.detach( this.animation, this, this.scene );
+                console.log("detach animation!");
+            }
+    
             this.position.fromArray(this.nextAdjustment.position);
             // this.attach( this.animation, this.scene, this );
         }
@@ -518,11 +522,13 @@ export default class Character extends THREE.Object3D {
                 this.subtitlesVideo.play();
             }
             if (this.animation) {
-                this.animation.visible = true;
+                setTimeout(() => {
+                    this.animation.visible = true;
+                },1000)
             }
             events.emit("character_playing", this.props.name)
         } else {
-            console.warning("Cannot play video!", this.props.name);
+            console.error("Cannot play video!", this.props.name);
         }
     }
 }
