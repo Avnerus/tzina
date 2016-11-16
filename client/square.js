@@ -518,6 +518,10 @@ export default class Square extends THREE.Object3D{
                 let sun19 = reorderedSuns.getObjectByName("19");
                 sun19.position.set(-47.29, 45.4, 38.41);
 
+                let sun7 = reorderedSuns.getObjectByName("7");
+                //DebugUtil.positionObject(sun7,"Sun 7AM");
+                sun7.position.y = 45.57;
+
                 console.log("Reordered suns", reorderedSuns);
                 resolve(reorderedSuns);
             });

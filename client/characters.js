@@ -249,7 +249,7 @@ export default [
         animationPosition: [-0.5, 0.08, -1.42], // -0.03, 0.21, -0.86
         animationRotation: [0, 274, 0], // 0, 214, 0
         space: 0.29, 
-        spaceOffset: [0.06,0,-0.58],
+        spaceOffset: [0.06,0,0.14],
         subtitles: null
     },
     {
