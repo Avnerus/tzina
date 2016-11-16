@@ -53,7 +53,7 @@ vec3 rgb2hsl( vec3 color ) {
 vec3 xyz( float x, float y, float depth ) {
 
      // if (position.y < 250.0) {
-        float z = depth * ( maxdepth - mindepth ) + mindepth*0.5;
+        float z = depth * ( maxdepth - mindepth ) + mindepth;
     // } else {
     //     float z = depth * ( maxdepth - mindepth ) + mindepth;
     // }
@@ -70,7 +70,6 @@ void main() {
     vUv.y = vUv.y * 0.5;// + 0.5;
 
     vec3 hsl = rgb2hsl( texture2D( map, vUv ).xyz );
-
 
     vec4 pos = vec4( xyz( position.x, position.y, hsl.x ), 1.0 );
 
