@@ -245,8 +245,8 @@ export default class Fountain extends THREE.Object3D  {
     assignCylinders(cylinders){
         this.cylinders = cylinders;
         // console.log(this.cylinders);
-        DebugUtil.positionObject(this.cylinders[0], "Fountain 0");
-        DebugUtil.positionObject(this.cylinders[1], "Fountain 1");
+        //DebugUtil.positionObject(this.cylinders[0], "Fountain 0");
+        //DebugUtil.positionObject(this.cylinders[1], "Fountain 1");
         //DebugUtil.positionObject(this.cylinders[2], "Fountain 2"); // doesn't move*/
     }
 

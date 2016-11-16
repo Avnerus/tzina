@@ -20,6 +20,9 @@ void main() {
     vec3 bright = vec3(brightness,brightness,brightness);
 
     vec4 color = texture2D( map, vUv + vec2(uvdx, uvdy));
+    color.rgb = color.rgb - brightness;
+
+    /*
 
     if( faceY < 230.0 ){
 
@@ -34,6 +37,7 @@ void main() {
 	    color.w = opacity + 0.05; 
 
     }
+    */
 
     color.w = opacity;  
 

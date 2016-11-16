@@ -174,22 +174,25 @@ export default class ItzikAnimation extends THREE.Object3D {
         TweenMax.to( this.smokeMat, 1, {opacity: 1});
         TweenMax.to( this.fog.position, 4, {x:0, delay:0.9, ease: Power1.easeInOut});
 
-        TweenMax.to( this.dummy, 3, { opacity:0, delay: 10, onUpdate: ()=>{
-                this.parent.fullVideo.setOpacity(this.dummy.opacity);
-            }, onStart: ()=>{
-                TweenMax.to( this.smokeMat, 4, {opacity: 0});
-            }, onComplete: ()=>{
-                this.parent.fullVideo.setOpacity(0.0);
+        if (this.parent.fullVideo) {
+            TweenMax.to( this.dummy, 3, { opacity:0, delay: 10, onUpdate: ()=>{
+                    this.parent.fullVideo.setOpacity(this.dummy.opacity);
+                }, onStart: ()=>{
+                    TweenMax.to( this.smokeMat, 4, {opacity: 0});
+                }, onComplete: ()=>{
+                    this.parent.fullVideo.setOpacity(0.0);
 
-                // rotate bench group infinitely
-                let mathStuff = Math.PI * 2 / this.benchCount;
-                this.benchGroupRotateOn(this, mathStuff);
+                    // rotate bench group infinitely
+                    let mathStuff = Math.PI * 2 / this.benchCount;
+                    this.benchGroupRotateOn(this, mathStuff);
 
-                // loose the clouds and suns
-                for(let i=0; i<this.benchGroup.children.length; i++){
-                    this.benchGroup.children[i].children[0].visible = false;
-                }
-            } } );
+                    // loose the clouds and suns
+                    for(let i=0; i<this.benchGroup.children.length; i++){
+                        this.benchGroup.children[i].children[0].visible = false;
+                    }
+                } } );
+        }
+
     }
 
     benchGroupRotateOn(_this, angle){

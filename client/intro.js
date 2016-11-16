@@ -78,11 +78,11 @@ export default class Intro {
              fillStyle: '#FFFFFF',
              antialias: true 
         }
-        let CREDIT_TEXT_SCALE = 0.02;
+        let CREDIT_TEXT_SCALE = 0.039;
 
         this.creditTextTitle = new SpriteText2D("", CREDIT_TEXT_TITLE);
         this.creditTextTitle.scale.multiplyScalar(CREDIT_TEXT_SCALE);
-        this.creditTextTitle.position.set(0,4.4,-17);
+        this.creditTextTitle.position.set(0.4,7.27,-17);
         this.creditTextTitle.material.opacity = 0;
         this.scene.add(this.creditTextTitle);
 
@@ -194,7 +194,7 @@ export default class Intro {
     fadeOut() {
         return new Promise((resolve, reject) => {
             this.camera.add(this.fadePlane);
-            TweenMax.to(this.fadePlane.material, 2.0, { opacity:1, onComplete: () => {resolve()}});
+            TweenMax.to(this.fadePlane.material, 3.0, { opacity:1, onComplete: () => {resolve()}});
         });
     }
 
@@ -207,9 +207,9 @@ export default class Intro {
         .then(() => {
             // transition to local time
             if (!this.config.speedIntro) {
-                return this.timeConroller.transitionTo(this.localHour, speed2, true);
+                return this.timeConroller.transitionTo(this.localHour, speed2, false);
             } else {
-                return this.timeConroller.transitionTo(this.config.startTime, speed2, true);
+                return this.timeConroller.transitionTo(this.config.startTime, speed2, false);
             }
         })
         .then( () => { 

@@ -209,7 +209,7 @@ export default class TimeController {
             }
         });
         this.experienceProgress = (sum / this.totalExperienceTime);
-        console.log("Total experience progress: ", sum + "/" + this.totalExperienceTime, this.experienceProgress);
+        //console.log("Total experience progress: ", sum + "/" + this.totalExperienceTime, this.experienceProgress);
         events.emit("experience_progress", this.experienceProgress);
     }
 
@@ -325,7 +325,7 @@ export default class TimeController {
                     }});
                 },1000);
             }, onUpdate: () => {
-                console.log("CURRENT HOUR", this.currentHour);
+                //console.log("CURRENT HOUR", this.currentHour);
                 this.sky.setTime(this.currentHour);
             }});
         })       
@@ -461,9 +461,9 @@ export default class TimeController {
                     this.updateSquare();
                 }
                 this.updateNextHour();
+                this.setCurrentChapter();
+                this.showChapterTitle();
                 if (setChapter) {
-                    this.setCurrentChapter();
-                    this.showChapterTitle();
                     events.emit("hour_updated", this.currentHour);
                 }
                 events.emit("angle_updated", this.currentHour);
@@ -554,20 +554,6 @@ export default class TimeController {
 
         this.sunWorld = new THREE.Vector3().setFromMatrixPosition(sun.matrixWorld);
 
-
-        console.log("Sun title position ", this.insideChapterTitle.position);
-
-        /*
-        this.gazingSun = this.insideChapterTitle;
-        events.emit("add_gui", {folder:"Sun rotation"}, sun.rotation, "x");
-        events.emit("add_gui", {folder:"Sun rotation"}, sun.rotation, "y");
-        events.emit("add_gui", {folder:"Sun rotation"}, sun.rotation, "z");*/
-        //sun.quaternion.copy(this.camera.quaternion);
-
-       /*
-        let m1 = new THREE.Matrix4();
-        m1.lookAt( this.camera.position, sun.position, sun.up );
-        sun.quaternion.setFromRotationMatrix( m1 ); */
     }
 
     updateSunTitle() {

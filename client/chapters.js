@@ -17,9 +17,9 @@ export default
 			"extraAssets": [
 					{
 					name: "junkie",
-					position: [2.24,24,10.32],
+					position: [2.24,23.9,10.32],
 					rotation: [182,335,0],
-					scale: 0.37
+					scale: 0.365
 				},
 					{
 					name: "pocketCam",
@@ -210,9 +210,9 @@ export default
 			"extraAssets": [
 				{
                     name: "bridegroom",
-                    position: [1.22,21.2,8.1],
+                    position: [1.22,21.15,8.1],
                     rotation: [0,278,0],
-                    scale: 0.369
+                    scale: 0.348
 				},
 					{
                     name: "yukalele",

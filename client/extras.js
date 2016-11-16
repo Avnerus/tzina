@@ -65,7 +65,7 @@ export default class Extras extends THREE.Object3D {
         this.currentExtras.forEach((extra) => {
             this.remove(extra.mesh); 
             if (this.debug) {
-                DebugUtil.donePositioning(extra.name);
+                //DebugUtil.donePositioning(extra.name);
             }
         });
         this.currentExtras.splice(0);

@@ -56,11 +56,11 @@ export default class ZoomController {
             -5.62
             );*/
 
-        // IDFA:w
+        // IDFA:
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            5.83,
+            -2.57,
             12.67,
-            3.82
+            -6.39
             );
 
         this.CHAPTER_THRESHOLD = 0.45;
@@ -142,7 +142,7 @@ export default class ZoomController {
             if (currentVRPosition) {
                 this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
                 this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
-                this.baseVRPosition.add(currentVRPosition);
+                //this.baseVRPosition.add(currentVRPosition);
             }
         } 
         if (!this.baseVRPosition) {

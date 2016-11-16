@@ -54,7 +54,7 @@ export default class VideoRGBD  {
                   "maxdepth" : { type : "f", value : 0.0 },
                   "uvdy" : { type : "f", value : 0.5 },
                   "uvdx" : { type : "f", value : 0.0 },
-                  "opacity" : { type : "f", value : 0.01 },
+                  "opacity" : { type : "f", value : 0.1 },
                   "width" : { type : "f", value : 0.0 },
                   "height" : { type : "f", value : 0.0 },
                   "brightness" : { type : "f", value : 0.3 },
@@ -128,7 +128,7 @@ export default class VideoRGBD  {
             this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
             this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
 
-            events.emit("add_gui", {folder: this.properties.fileName + " UVDX", step: 0.001}, this.mesh.material.uniforms.uvdx, "value", -1,0);
+            events.emit("add_gui", {folder: this.properties.fileName + " UVDX", step: 0.001}, this.mesh.material.uniforms.uvdx, "value", -1,1);
             events.emit("add_gui", {folder: this.properties.fileName + " UVDY", step: 0.001}, this.mesh.material.uniforms.uvdy, "value", -1,1);
         } else {
             console.error("Video RGBD Failed to load mesh from pool", this.properties.fileName);

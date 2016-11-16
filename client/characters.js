@@ -4,15 +4,15 @@ export default [
         basePath : 'assets/characters/hanna',
         mindepth : 2138.454101562,
         maxdepth : 3047.334472656,
-        position : [-4.85, 22.13, -11.6],
+        position : [-4.85, 22.04, -11.6],
         rotation: [355, 0, 3],
         animation: 'Hannah',
         uvdy: 0.5,
         uvdy_idle: 0.48974609375,
-        uvdx: 0,
+        uvdx: 0.016,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.753,
+        scale: 0.003 * 0.753 * 0.937,
         animationScale: 0.4,
         animationPosition: [0,-0.3,-0.85], //z: 0.55
         animationRotation: [15, 0, 2],
@@ -84,20 +84,20 @@ export default [
         basePath : 'assets/characters/haim',
         mindepth : 1029.795776367,
         maxdepth : 1600.0,
-        position : [-15.45, 19.98, -11.2],
+        position : [-15.45, 19.85, -11.2],
         rotation: [313, 70, 46],
         animation: 'Haim',
         uvdy: 0.507,
         uvdx: 0.0,
         width: 2048,
         height: 2048,
-        scale: 0.003 * 1.243 * 1.455,
+        scale: 0.003 * 1.243 * 1.455 * 1.048,
         animationScale: 0.4, // 0.25
         animationPosition: [1.05, -0.53, 6.48],
         animationRotation: [6, -50, -9], //6, -50, -9
         space: -1.64,
         subtitles: false,
-        spaceOffset: [-0.11,0,0.32], //0.28,0.73,1.73
+        spaceOffset: [-0.11,0,0.43], //0.28,0.73,1.73
     },
     {
         name: 'Rami',
@@ -116,8 +116,8 @@ export default [
         animationScale: 0.25,
         animationPosition: [-0.43, 0.25, 0.14],
         animationRotation: [-4, -23, -9],
-        space: 0.49,
-        spaceOffset: [1.27,0,0.25],
+        space: -0.06,
+        spaceOffset: [-0.08,0,0.38],
         subtitles: false
     },
     {
@@ -139,7 +139,7 @@ export default [
         animationRotation: [0,14,0], // 7,25,-8
         subtitles: null,
         space: 0.3,
-        spaceOffset: [0,0,-0.38]
+        spaceOffset: [-0.31,0,-0.28]
     },
     {
         name: 'Sasha',
@@ -222,7 +222,7 @@ export default [
                 mindepth : 1499.999877929688,
                 maxdepth : 4564.32861328125,
                 position : [-11.35, 21.9, 1.95],
-                scale: 0.003 * 0.458437 * 1.34174
+                scale: 0.003 * 0.458437 * 1.34174  * 0.865
             },
             {
                 sec: 92,
@@ -421,8 +421,8 @@ export default [
         animationPosition: [1.13, -0.53, -2.27],
         animationRotation: [6,-25,9],
         subtitles: null,
-        space: 0.001,
-        spaceOffset: [4.66,0,1.1]
+        space: -0.33,
+        spaceOffset: [2.21,0,1.13]
     },
     /*
     {
@@ -462,7 +462,7 @@ export default [
         animationScale: 0.235,
         animationPosition: [-0.21, -0.01, 0.26],
         animationRotation: [5, 17, 0],
-        space: 0.001, //1.34
+        space: -0.6,
         spaceOffset: [1.78,0,-0.80], //0.88,0,0.58
         subtitles: false
         },

@@ -25,7 +25,7 @@ export default class WaterDrops extends THREE.Object3D  {
         });
 
         events.on("fountain_collision", (distance) => {
-            console.log("Fountain collision!", distance);
+            //console.log("Fountain collision!", distance);
             if (distance < 15) {
                 this.timeSinceCollision = 0;
                 if (this.inControl && !this.active) {
