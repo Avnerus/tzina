@@ -158,11 +158,10 @@ export default class Pidgeon extends THREE.Object3D{
     }
     this.transform = {
       jumpToFloor:function(checkIfWalking){
-        if(!(checkIfWalking&&(!this.walkingOnGround))){
-        /*tf=f
-          ft=t
-          tt=t
-          ff=t*/
+        if(checkIfWalking){
+          if(this.walkingOnGround)
+            thisPidgeon.position.y=FLOORY;
+        }else{
           thisPidgeon.position.y=FLOORY;
         }
       },
