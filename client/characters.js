@@ -451,7 +451,7 @@ export default [
         basePath : 'assets/characters/itzhak',
         mindepth : 1762.584594726563,
         maxdepth : 3120.0,
-        position : [-2.63, 21.87, -14.8],
+        position : [-2.58, 21.87, -14.8],
         rotation: [340, 72, 22], // 
         animation: 'Itzhak',
         uvdy: 0.48388671875,
