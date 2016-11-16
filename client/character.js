@@ -223,7 +223,6 @@ export default class Character extends THREE.Object3D {
                 this.fullVideo.mesh.visible = false;
                 this.fullVideo.wire.visible = false;
 
-    
                 console.log(this.props.name, "Adding video mesh ", this.fullVideo.video)
                 this.add(this.fullVideo.mesh);
                 this.add(this.fullVideo.wire);
@@ -278,6 +277,11 @@ export default class Character extends THREE.Object3D {
         }
         //this.remove(this.animation);
         this.active = false;
+
+        // attach animation back
+        if (this.props.adjustments) {
+            this.attach( this.animation, this.scene, this );
+        }
     }
 
     update(dt,et) {
@@ -358,21 +362,19 @@ export default class Character extends THREE.Object3D {
         }
         if (this.nextAdjustment.position) {
             // ANIMATION Offset
-            /*
-            let aniPosAdjust = new THREE.Vector3();
-            aniPosAdjust.fromArray(this.nextAdjustment.position);
-            aniPosAdjust.sub(this.position);
-            this.animation.position.sub(aniPosAdjust);*/
-            //
-            //
+            // let aniPosAdjust = new THREE.Vector3().fromArray(this.nextAdjustment.position);
+            // aniPosAdjust.sub(new THREE.Vector3().fromArray(this.props.position));
+            // aniPosAdjust.multiplyScalar(this.props.scale);
+            // this.animation.position.add(aniPosAdjust);
 
             // LAURA Mesh position offset?
-                /*
-            let possitionOffset = new THREE.Vector3().copy(this.nextAdjustment.position).sub(new THREE.Vector3().fromArray(this.props.position));
-            this.fullVideo.setPosition(possitionOffset);*/
+            // let possitionOffset = new THREE.Vector3().fromArray(this.nextAdjustment.position).sub(new THREE.Vector3().fromArray(this.props.position));
+            // possitionOffset.add(this.fullVideo.mesh.position);
+            // this.fullVideo.setPosition(possitionOffset);
+            
             this.detach( this.animation, this, this.scene );
             this.position.fromArray(this.nextAdjustment.position);
-            this.attach( this.animation, this.scene, this );
+            // this.attach( this.animation, this.scene, this );
         }
 
         this.lastAdjustment = this.nextAdjustment;
@@ -383,14 +385,14 @@ export default class Character extends THREE.Object3D {
         }
     }
     detach ( child, parent, scene ) {
-        child.applyMatrix( parent.matrix );
+        child.applyMatrix( parent.matrixWorld );
         parent.remove( child );
         scene.add( child );
     }
 
     attach ( child, scene, parent ) {
         var matrixWorldInverse = new THREE.Matrix4();
-        matrixWorldInverse.getInverse( parent.matrix );
+        matrixWorldInverse.getInverse( parent.matrixWorld );
         child.applyMatrix( matrixWorldInverse );
 
         scene.remove( child );
