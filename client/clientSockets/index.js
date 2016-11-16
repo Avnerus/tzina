@@ -187,7 +187,9 @@ export default class PidgeonController {
           remoteSprite=new Pidgeon({unique:message.pointer});
           thisPidgeonController.scene.add(remoteSprite);
         }else{
-          remoteSprite.labelText(message.string);
+          //the whole string would more orderly be sent from server, but that costs some data.
+          //while we don't want to show anything more htan the country, we may sum this part on clientside
+          remoteSprite.labelText("A friend from "+message.string);
         }
 
       }else  if(message.header=="landedbatch"){

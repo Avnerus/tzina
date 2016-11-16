@@ -16,7 +16,7 @@ exports.getCountryName=function(ip,onReady){
         'countryName: ' + results.countryName
         // 'countryEmoji: ' + results.countryEmoji
       );
-      if(ip=="::1") results.countryName="Localhost";
+      if(ip=="::1"||ip=="192.168.0.0"||results.countryName=="") results.countryName="Amsterdam";
       if(onReady) onReady({country:results.countryName});
     }
   );

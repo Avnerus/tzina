@@ -196,9 +196,9 @@ export default class Pidgeon extends THREE.Object3D{
   labelTextGazed(dt){
     //when in frame updated gaz function gaze is detected twards this pidgeon
     this.isBeingGazed=2;
-    if(this.textualLabel)
-      if(this.textualLabel.opacity)
-        console.log("op"+this.textualLabel.opacity()+"gaz");
+    // if(this.textualLabel)
+    //   if(this.textualLabel.opacity)
+    //     console.log("op"+this.textualLabel.opacity()+"gaz");
   }
   labelTextGazeCheck(dt){
     //each frame update on gaze function
@@ -221,8 +221,16 @@ export default class Pidgeon extends THREE.Object3D{
   }
 
   labelTextAdd(text){
-    this.textualLabel = new SpriteText2D(text, {align: textAlign.center,font: '20px Arial',fillStyle: '#FFFFFF',antialias: true});
-    this.textualLabel.scale.multiplyScalar(0.01);
+    // this.textualLabel = new SpriteText2D(text, {align: textAlign.center,
+    //  font: '100px Miriam Libre',
+    //  fillStyle: '#FFFFFF',
+    //  antialias: true });
+
+    this.textualLabel = makeTextSprite( text,
+		{ fontsize: 50, color:"#FFF", fontface:"Miriam Libre", backgroundColor: {r:0, g:0, b:0, a:0.8} } );
+  	this.textualLabel.position.set(0,0.5,0);
+  	// this.add( spritey );
+    this.textualLabel.scale.multiplyScalar(0.003);
     this.add(this.textualLabel);
     this.textualLabel.position.x=0;
     this.textualLabel.position.y=1;
@@ -234,7 +242,9 @@ export default class Pidgeon extends THREE.Object3D{
       }
       if(!isNaN(value)){
         this.opacityValue=value;
-        this.fillStyle="rgba(255,255,255,"+this.opacityValue+")";
+        // this.fillStyle="rgba(255,255,255,"+this.opacityValue+")";
+        this.material.opacity=this.opacityValue;
+        console.log(this);
       }
 
       return this.opacityValue;
@@ -416,4 +426,97 @@ export default class Pidgeon extends THREE.Object3D{
   // static remove(unique){
   //
   // }
+
 }
+
+//these functions come from
+//http://stemkoski.github.io/Three.js/Sprite-Text-Labels.html
+function makeTextSprite( message, parameters )
+{
+	if ( parameters === undefined ) parameters = {};
+
+	var fontface = parameters.hasOwnProperty("fontface") ?
+		parameters["fontface"] : "Arial";
+
+	var fontsize = parameters.hasOwnProperty("fontsize") ?
+		parameters["fontsize"] : 18;
+
+	var borderThickness = parameters.hasOwnProperty("borderThickness") ?
+		parameters["borderThickness"] : 4;
+
+	var borderColor = parameters.hasOwnProperty("borderColor") ?
+		parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
+
+	var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
+		parameters["backgroundColor"] : { r:255, g:255, b:255, a:1.0 };
+
+  var fontcolor = parameters.hasOwnProperty("color") ?
+  	parameters["color"] : "rgba(0, 0, 0, 1.0)";
+
+	/*var spriteAlignment = THREE.SpriteAlignment.topLeft;*/
+
+	var canvas = document.createElement('canvas');
+	var context = canvas.getContext('2d');
+
+
+  context.canvas.width  = 800;
+  context.canvas.height  = 85;
+	context.font = "Bold " + fontsize + "px " + fontface;
+	// get size data (height depends only on font size)
+	var metrics = context.measureText( message );
+	var textWidth = metrics.width;
+
+	// background color
+	context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
+								  + backgroundColor.b + "," + backgroundColor.a + ")";
+	// border color
+	context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
+								  + borderColor.b + "," + borderColor.a + ")";
+
+  //debug canvas draw border
+/*  context.strokeStyle="#FF0000";
+  roundRect(context, 0, 0, canvas.width,canvas.height, 6);
+/**/
+
+  // 1.4 is extra height factor for text below baseline: g,j,p,q.
+/*  context.strokeStyle="#FFFF00";/**/
+  context.lineWidth = borderThickness;
+  roundRect(context,borderThickness + (context.canvas.width/2)-(metrics.width/2), borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+
+  // text color
+	context.fillStyle = fontcolor;
+
+  context.textBaseline = 'middle';
+  context.textAlign = "center";
+	context.fillText( message,  400, fontsize + borderThickness);
+
+	// canvas contents will be used for a texture
+	var texture = new THREE.Texture(canvas)
+	texture.needsUpdate = true;
+
+	var spriteMaterial = new THREE.SpriteMaterial(
+		{ map: texture, useScreenCoordinates: false/*, alignment: spriteAlignment*/ } );
+	var sprite = new THREE.Sprite( spriteMaterial );
+	sprite.scale.set(800,90,1.0);
+	return sprite;
+}
+
+// function for drawing rounded rectangles
+function roundRect(ctx, x, y, w, h, r)
+{
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.lineTo(x+w-r, y);
+    ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+    ctx.lineTo(x+w, y+h-r);
+    ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    ctx.lineTo(x+r, y+h);
+    ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+    ctx.lineTo(x, y+r);
+    ctx.quadraticCurveTo(x, y, x+r, y);
+    ctx.closePath();
+    ctx.fill();
+	ctx.stroke();
+}
+
+

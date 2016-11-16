@@ -10,7 +10,7 @@ export default {
     skipCharacters: true,
     //movementSpeed: 1,
     daySpeed: 0.003,
-    noSquare: false,
+    noSquare: true,
     fullscreen: false,
     noAnimations: true,
     noExtras: true,
