@@ -87,7 +87,7 @@ export default class MeirAnimation extends THREE.Object3D {
             }
             this.neon1.position.set( 2, 0, -0.11 );
             this.neon1.rotation.set( 0, 142*Math.PI/180, 0 );
-            DebugUtil.positionObject(this.neon1, "neon1");
+            // DebugUtil.positionObject(this.neon1, "neon1");
 
 
             for(let i=0; i<neonFiles2.length; i++){
@@ -109,7 +109,7 @@ export default class MeirAnimation extends THREE.Object3D {
             }
             this.neon2.position.set( 1.71, 0, 0.54 );
             this.neon2.rotation.set( 0, 142*Math.PI/180, 0 );
-            DebugUtil.positionObject(this.neon2, "neon2");
+            // DebugUtil.positionObject(this.neon2, "neon2");
 
         this.dummy = {opacity: 1};
 
