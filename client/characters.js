@@ -95,9 +95,9 @@ export default [
         animationScale: 0.4, // 0.25
         animationPosition: [1.05, -0.53, 6.48],
         animationRotation: [6, -50, -9], //6, -50, -9
-        space: 0.07,
+        space: -1.64,
         subtitles: false,
-        spaceOffset: [-1.05,0,0.69], //0.28,0.73,1.73
+        spaceOffset: [-0.11,0,0.32], //0.28,0.73,1.73
     },
     {
         name: 'Rami',
@@ -445,7 +445,7 @@ export default [
         spaceOffset: [1.57,0,0.3],
         subtitles: null,
         fullOnly: true
-    },
+    }, */
     {
         name: 'Itzhak',
         basePath : 'assets/characters/itzhak',
@@ -465,7 +465,8 @@ export default [
         space: 0.001, //1.34
         spaceOffset: [1.78,0,-0.80], //0.88,0,0.58
         subtitles: false
-        },*/
+        },
+    /*
     {
         name: 'Shirin7PM',
         basePath : 'assets/characters/shirin7pm',
@@ -486,7 +487,7 @@ export default [
         spaceOffset: [0,0,0],
         subtitles: null,
         fullOnly: true
-    },
+    },*/
     {
         name: 'Waterman',
         basePath : 'assets/characters/waterman',

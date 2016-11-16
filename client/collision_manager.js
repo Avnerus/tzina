@@ -156,7 +156,7 @@ export default class CollisionManager {
                     newBox = this.enlargeBox(bbox.box,character.props.space,offset); 
                     newBox.getSize(bboxMesh.scale);
                     newBox.getCenter(bboxMesh.position);
-                }}, character.props, "space", 0,2); 
+                }}, character.props, "space", -3,3); 
            }
 
             console.log("Adding collision box ", newBox);
