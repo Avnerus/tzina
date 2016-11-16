@@ -288,7 +288,7 @@ export default
       			  },
       			  	{
                     name: "cat",
-                    position: [8,21.1,5],
+                    position: [8,22.15,5],
                     rotation: [353,152,0],
                     scale: 0.439
 				},

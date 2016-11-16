@@ -84,14 +84,14 @@ export default [
         basePath : 'assets/characters/haim',
         mindepth : 1029.795776367,
         maxdepth : 1600.0,
-        position : [-15.45, 19.85, -11.2],
+        position : [-15.45, 19.8, -11.2],
         rotation: [313, 70, 46],
         animation: 'Haim',
         uvdy: 0.507,
         uvdx: 0.0,
         width: 2048,
         height: 2048,
-        scale: 0.003 * 1.243 * 1.455 * 1.048,
+        scale: 0.003 * 1.243 * 1.455 * 1.048 * 1.024,
         animationScale: 0.4, // 0.25
         animationPosition: [1.05, -0.53, 6.48],
         animationRotation: [6, -50, -9], //6, -50, -9
@@ -163,11 +163,11 @@ export default [
         mindepth : 1656.909729004,
         maxdepth : 2789.562011719,
         position : [-2.11, 22.08, 7.338],
-        rotation: [0, 320, 5.8],
+        rotation: [0, 325, 5.8],
         animation: 'Agam12PM',
         uvdy: 0.496,
         uvdx: 0.0,
-        scale: 0.003 * 0.69,
+        scale: 0.003 * 0.69 * 1.07,
         width: 1024,
         height: 2048,
         animationScale: 0.245,
@@ -421,8 +421,8 @@ export default [
         animationPosition: [1.13, -0.53, -2.27],
         animationRotation: [6,-25,9],
         subtitles: null,
-        space: -0.33,
-        spaceOffset: [2.21,0,1.13]
+        space: 0.51,
+        spaceOffset: [4.86,0,1.13]
     },
     /*
     {
@@ -454,16 +454,18 @@ export default [
         position : [-2.58, 21.87, -14.8],
         rotation: [340, 72, 22], // 
         animation: 'Itzhak',
-        uvdy: 0.48388671875,
-        uvdx: 0.0,
+        uvdy_idle: 0.498,
+        uvdy: 0.484,
+        uvdx: -0.044,
+        uvdx_idle: 0.049,
         width: 512,
         height: 2048,
-        scale: 0.003 * 0.45,
+        scale: 0.003 * 0.45 * 1.014,
         animationScale: 0.235,
         animationPosition: [-0.21, -0.01, 0.26],
         animationRotation: [5, 17, 0],
         space: -0.6,
-        spaceOffset: [1.78,0,-0.80], //0.88,0,0.58
+        spaceOffset: [1.58,0,-0.18], //0.88,0,0.58
         subtitles: false
         },
     {

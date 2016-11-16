@@ -19,7 +19,7 @@ export default class Character extends THREE.Object3D {
                 maxdepth: props.maxdepth,
                 fileName: props.basePath + "_idle.webm",
                 uvdy: props.uvdy_idle ? props.uvdy_idle : props.uvdy,
-                uvdx: props.uvdx,
+                uvdx: props.uvdx_idle ? props.uvdx_idle : props.uvdx,
                 scale: props.scale,
                 width: props.width,
                 height: props.height,

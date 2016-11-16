@@ -360,7 +360,7 @@ export default class Square extends THREE.Object3D{
     }
 //change material of non active sun
     turnOffSun(name) {
-        //console.log("Turn off sun ", name);
+        console.log("Turn off sun ", name);
         let sun = this.suns.getObjectByName(name);
         if (sun) {
             let strokeMesh = sun.getObjectByName(name + "_S").children[0];
@@ -415,6 +415,7 @@ export default class Square extends THREE.Object3D{
                 sun.getObjectByName(name + "_L").disorganize();
 
                 //console.log("Turned on sun", sun);
+                this.currentSun = name;
             }
         }
     }

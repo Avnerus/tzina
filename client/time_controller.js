@@ -70,6 +70,7 @@ export default class TimeController {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 this.scene.remove(this.chapterTitle);
+                console.log("Time contol thresholdPassed. Turn off ", this.square.currentSun, " Turn on ", this.currentHour.toString());
                 if (this.square.currentSun) {
                     this.square.turnOffSun(this.square.currentSun);
                 }
