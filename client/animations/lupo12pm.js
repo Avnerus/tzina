@@ -61,6 +61,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 ],
             'Lupo5PM': [
                     { time: 0, anim: ()=>{this.setupForNight()} },
+                    { time: 1, anim: ()=>{this.connectToDogs()} },
                     
                     { time: 16, anim: ()=>{this.showSculptures()} },    // 16
                     { time: 24, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
@@ -144,6 +145,18 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 this.add(this.lupoArt);
                 // console.log("Loaded lupo art", this.lupoArt);
                 // DebugUtil.positionObject(this.lupoArt, "Lupo Art");
+
+                // HIDE_SCULPTURES
+                // this.lupoArt.children[0].visible = false;
+                // this.lupoArt.children[1].visible = false;
+                for(let i=0; i<this.lupoArt.children[0].children.length; i++){
+                    this.lupoArt.children[0].children[i].visible = false;
+                }
+                for(let i=0; i<this.lupoArt.children[1].children.length; i++){
+                    this.lupoArt.children[1].children[i].visible = false;
+                }
+
+
 
                 // trigger rotating
                 // tl.to(this.lupoArt.rotation, 2, {x:Math.PI}).to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
@@ -504,22 +517,30 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     showSculptures() {
+        // this.lupoArt.children[0].visible = true;
+
         for(let i=0; i<this.lupoArt.children[0].children.length; i++){
             let targetPos = this.lupoArt.children[0].children[i].targetPosition;
             let delayT = i*this.lookupTable[i];
             let t_scale = TweenMax.to(this.lupoArt.children[0].children[i].scale, 3, { y:1, delay: delayT, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 0.2, points: 100, taper: "out", randomize: true, clamp: false}) });  // ease: Back.easeInOut.config(0.5)
-            let t_pos = TweenMax.to(this.lupoArt.children[0].children[i].position, 3, { x:targetPos.x, y:targetPos.y, z:targetPos.z, delay: delayT });
-            let t_mat = TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:1, delay: delayT });
+            let t_pos = TweenMax.to(this.lupoArt.children[0].children[i].position, 3, {
+                x:targetPos.x, y:targetPos.y, z:targetPos.z, delay: delayT,
+                onStart:()=>{
+                    this.lupoArt.children[0].children[i].visible = true;
+                    this.lupoArt.children[1].children[i].visible = true;
+                }
+            });
+            // let t_mat = TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:1, delay: delayT });
             //
             this.tweenAnimCollectors.push(t_scale);
             this.tweenAnimCollectors.push(t_pos);
-            this.tweenAnimCollectors.push(t_mat);
+            // this.tweenAnimCollectors.push(t_mat);
         }
     }
 
     flickerSculptureTextures() {
         let t_flicker = TweenMax.fromTo(this.dummy, 2, { roughValue:0 }, { roughValue:5, 
-                                     ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 5, points: 100, taper: "both", randomize: true, clamp: false}),
+                                     ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 5, points: 50, taper: "both", randomize: true, clamp: false}),
                                      onUpdate: ()=>{this.shiftTextures()},
                                      onComplete: ()=>{this.doneShiftTextures()} });  // ease: Back.easeInOut.config(0.5)
         this.tweenAnimCollectors.push(t_flicker);
@@ -750,7 +771,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 loader.load( modelF, (geometry) => {
                     let meshhh = new THREE.Mesh( geometry, matF );
                     meshhh.scale.y = 0.01;
-                    meshhh.material.opacity = 0;
+                    // meshhh.material.opacity = 0;
                     meshhh.position.copy( modelPos );
                     // save for later use
                     meshhh.targetPosition = modelTargetPos;
@@ -830,12 +851,17 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.tweenAnimCollectors = [];
 
         // back to original status
-        TweenMax.to(this.lupoArt.rotation, 1, { x:0 });
+        this.lupoArt.rotation.x = 0;
+        // this.lupoArt.children[0].visible = false;
+        // this.lupoArt.children[1].visible = false;
         for(let i=0; i<this.lupoArt.children[0].children.length; i++){
             let origPos = this.lupoArt.children[0].children[i].originalPosition;
-            TweenMax.to(this.lupoArt.children[0].children[i].scale, 1.5, { y:0.01, delay: 1 });
-            TweenMax.to(this.lupoArt.children[0].children[i].position, 1.5, { x:origPos.x, y:origPos.y, z:origPos.z, delay: 1 });
-            TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:0, delay: 1 });
+            this.lupoArt.children[0].children[i].scale.y = 0.01;
+            this.lupoArt.children[0].children[i].position.copy(origPos);
+            this.lupoArt.children[0].children[i].visible = false;
+        }
+        for(let i=0; i<this.lupoArt.children[1].children.length; i++){
+            this.lupoArt.children[1].children[i].visible = false;
         }
 
         this.lupoArt.position.set(.7,-1.2,1);
