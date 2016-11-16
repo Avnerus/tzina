@@ -60,23 +60,21 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     { time: 210, anim: ()=>{this.characterDisappear()} }
                 ],
             'Lupo5PM': [
-                    { time: 1, anim: ()=>{this.growCactusFloor()} },
-
-                    { time: 2, anim: ()=>{this.showSculptures()} },    // 16
-
+                    { time: 0, anim: ()=>{this.setupForNight()} },
                     
-
-                    { time: 9, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
-                    { time: 12, anim: ()=>{this.shiftSculptures()} },
+                    { time: 16, anim: ()=>{this.showSculptures()} },    // 16
+                    { time: 24, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
+                    { time: 28, anim: ()=>{this.shiftSculptures()} },
                     
+                    { time: 35, anim: ()=>{this.growCactusFloor()} },
                     
-                    { time: 17, anim: ()=>{this.growFlower()} },
-                    { time: 25, anim: ()=>{this.closeFlower()} },
+                    { time: 45, anim: ()=>{this.growFlower()} },
+                    { time: 65, anim: ()=>{this.closeFlower()} },
 
                     // Scale dogs, total 2 times
                     { time: 76, anim: ()=>{this.scaleDogs(1)} },     // first time
 
-                    { time: 15, anim: ()=>{this.scaleDogs(2)} },     // second time
+                    { time: 100, anim: ()=>{this.scaleDogs(2)} },     // second time
 
 
                     // 203 ends
@@ -137,9 +135,6 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
         this.loadSculptureTextures( sculptureTextureFiles, sculptureTextMADFiles )
         .then( () => {
-
-            // this.sculptureTextures = lupoArtText;
-            // this.sculptureMaterials = lupoArtMat;
             console.log("Loaded lupo art materials");
 
             this.loadSculptureModels( sculptureModelFiles )
@@ -147,7 +142,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 this.lupoArt = lupoArt;
                 this.lupoArt.position.set(.7,-1.2,1);
                 this.add(this.lupoArt);
-                console.log("Loaded lupo art", this.lupoArt);
+                // console.log("Loaded lupo art", this.lupoArt);
+                // DebugUtil.positionObject(this.lupoArt, "Lupo Art");
 
                 // trigger rotating
                 // tl.to(this.lupoArt.rotation, 2, {x:Math.PI}).to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
@@ -335,6 +331,11 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
             this.ropeMaterial = new THREE.MeshBasicMaterial({color: 0xb30000, wireframe: true});
             this.liquidMats = [];
+            this.nightRopeTransformation = [
+                [ [-2.18, -0.57, 5.71], [0,100,0] ],
+                [ -1.92, -0.25, 7.15 ], [0,88,0]
+            ];
+            this.dayRopeTransformation = [1.4, -0.7, 4.1];
             for(let i=0; i<2; i++){
                 let liquidTex = p_tex_loader.load(this.BASE_PATH + '/images/liquid_trans.png');
                 liquidTex.repeat.x = 1;
@@ -367,6 +368,15 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         // this.completeSequenceSetup();
 
         this.loadingManager.itemEnd("Lupo12PMAnim");
+    }
+
+    setupForNight() {
+        this.lupoArt.position.set(26.52, -2, -11.21);
+        this.lupoArt.scale.multiplyScalar(1.2);
+        for(let i=0; i<this.ropes.length; i++){
+            this.ropes[i].position.fromArray( this.nightRopeTransformation[i][0] );
+            this.ropes[i].rotation.fromArray( this.nightRopeTransformation[i][1] );
+        }
     }
 
     assignChController(controller) {
@@ -428,7 +438,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         ropee.add(liquid);
         this.add(ropee);
         ropee.position.set(1.4, -0.7, 4.1);
-        //DebugUtil.positionObject(ropee, "rope"+_index);
+        DebugUtil.positionObject(ropee, "rope"+_index);
         this.ropes.push(ropee);
     }
 
@@ -560,11 +570,11 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     characterDisappear() {
         this.flickerSculptureTextures();
         TweenMax.to(this.lupoArt.rotation, 3, { x:"+="+Math.PI, delay: 1, ease: Back.easeInOut.config(1.4) });
-        TweenMax.to(this.parent.fullVideo.mesh.rotation, 2, {
+        TweenMax.to(this.fullVideo.mesh.rotation, 2, {
             x:"+="+Math.PI,
             delay: 2,
             onComplete: ()=>{
-                this.parent.fullVideo.setOpacity(0.0);
+                this.fullVideo.setOpacity(0.0);
             }
         });
     }
@@ -825,12 +835,16 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:0, delay: 1 });
         }
 
-        // reset sequence
-        // this.sequenceConfig = [];
-        // this.sequenceConfig = this.sequenceConfigOriginal.slice(0); // copy the original setting
-        // this.completeSequenceSetup();
+        this.lupoArt.position.set(0,0,0);
+        this.lupoArt.scale.set(1,1,1);
+        this.lupoArt.rotation.z = 0;
 
-        // this.start();
+        this.fullVideo = this.parent.fullVideo;
+
+        for(let i=0; i<this.ropes.length; i++){
+            this.ropes[i].position.fromArray( this.dayRopeTransformation );
+            this.ropes[i].rotation.set( 0,0,0 );
+        }
     }
 
     updateVideoTime(time) {
