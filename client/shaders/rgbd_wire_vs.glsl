@@ -10,8 +10,6 @@ const float fy = 0.832305;
 
 uniform sampler2D map;
 
-varying float faceY;
-
 varying float visibility;
 varying vec2 vUv;
 
@@ -54,10 +52,10 @@ vec3 rgb2hsl( vec3 color ) {
 
 vec3 xyz( float x, float y, float depth ) {
 
-    //  if (y < 100.0) {
-    //     float z = depth * ( maxdepth - mindepth ) + mindepth;
+     // if (position.y < 250.0) {
+        float z = depth * ( maxdepth - mindepth ) + mindepth*0.5;
     // } else {
-        float z = depth * ( maxdepth - mindepth ) + mindepth;
+    //     float z = depth * ( maxdepth - mindepth ) + mindepth;
     // }
     return vec3( ( x / height  ) * z * fx, ( y / (width * 2.0)  ) * z * fy, - z );
 
@@ -71,14 +69,17 @@ void main() {
 
     vUv.y = vUv.y * 0.5;// + 0.5;
 
-
     vec3 hsl = rgb2hsl( texture2D( map, vUv ).xyz );
+
+
     vec4 pos = vec4( xyz( position.x, position.y, hsl.x ), 1.0 );
+
+
     pos.z += 2600.0;
 
     visibility = hsl.z * 2.1;
 
-    faceY = position.y;
+    // faceY = position.y;
 
     gl_Position = projectionMatrix * modelViewMatrix * pos;
 }
