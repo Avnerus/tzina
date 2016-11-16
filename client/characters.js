@@ -217,13 +217,13 @@ export default [
         maxdepth : 4564.32861328125,
 
         adjustments : [
-            {
-                sec: 0,
-                mindepth : 1499.999877929688,
-                maxdepth : 4564.32861328125,
-                position : [-11.35, 21.9, 1.95],
-                scale: 0.003 * 0.458437 * 1.34174  * 0.865
-            },
+            // {
+            //     sec: 20, //0
+            //     mindepth : 1499.999877929688,
+            //     maxdepth : 4564.32861328125,
+            //     position : [-11.35, 21.9, 1.95],
+            //     scale: 0.003 * 0.458437 * 1.34174  * 0.865
+            // },
             {
                 sec: 92,
                 mindepth: 2689.701416015625,
@@ -235,7 +235,7 @@ export default [
                 maxdepth : 4564.32861328125
             }
         ],
-        position : [-12.9, 21.86, 1.56],
+        position : [-11.35, 21.9, 1.95], //-12.9, 21.86, 1.56
         //rotation: [0, 37, 0],
         rotation: [10, 76, 350],
         animation: 'Mark',
@@ -244,10 +244,10 @@ export default [
         uvdx: 0.0,
         width: 1024,
         height: 2048,
-        scale: 0.003 * 0.458437 * 1.8,
+        scale: 0.003 * 0.458437 * 1.34174  * 0.865, //0.003 * 0.458437 * 1.8
         animationScale: 0.24,
-        animationPosition: [-0.03, 0.21, -0.86], // -.4, -.46, -.55
-        animationRotation: [0, 214, 0], // 0,-25,0
+        animationPosition: [-0.5, 0.08, -1.42], // -0.03, 0.21, -0.86
+        animationRotation: [0, 274, 0], // 0, 214, 0
         space: 0.38, //0.38
         spaceOffset: [-0.11,0,0],
         subtitles: null
