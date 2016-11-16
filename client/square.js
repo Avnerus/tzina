@@ -3,6 +3,7 @@ import Fountain from "./fountain"
 import SunLoader from './sun_loader'
 import Chapters from './chapters'
 import Pool from './pool'
+import {MeshText2D, textAlign} from './lib/text2d/index'
 
 import DebugUtil from "./util/debug"
 import _ from 'lodash';
@@ -239,6 +240,28 @@ export default class Square extends THREE.Object3D{
             
             //DebugUtil.positionObject(this.ground, "ground");
             //            DebugUtil.positionObject(this.clockwork, "Clockwork");
+            //
+            //
+
+
+            // You can sit here
+            let SIT_HERE_TEXT_DEFINITION = {
+                 align: textAlign.center, 
+                 font: '70px Miriam Libre',
+                 fillStyle: '#cccccc',
+                 antialias: true
+            }
+            this.sitHere = new MeshText2D("You can sit here", SIT_HERE_TEXT_DEFINITION);
+            this.sitHere.scale.multiplyScalar(0.001);
+            this.sitHere.position.set(0.67,13.38,4.85);
+            this.sitHere.rotation.set(
+                287 * Math.PI / 180,
+                0,
+                1 * Math.PI / 180
+            )
+            this.add(this.sitHere);
+
+            DebugUtil.positionObject(this.sitHere, "Sit here");
 
             console.log("Finished loading square");
             loadingManager.itemEnd("Square");

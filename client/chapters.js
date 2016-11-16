@@ -1,7 +1,7 @@
 export default 
 	 [
 		{
-			"name": "awakeness",
+			"name": "Ep.1: awakeness",
 			"hour": 7,
 			"timeLimitMinutes" : 10,
             "totalTime" : 330,
@@ -55,7 +55,7 @@ export default
 			]
 		},
 		{
-		"name": "home",
+		"name": "Ep.2: home",
 			"hour": 9,
 			"timeLimitMinutes" : 13,
             "totalTime" : 540,
@@ -125,7 +125,7 @@ export default
 			]
 		}, 
 		{
-		"name": "emptiness",
+		"name": "Ep. 3 : Emptiness",
 			"hour": 12,
 			"timeLimitMinutes" : 8,
             "totalTime" : 590,
@@ -190,7 +190,7 @@ export default
 			]
 		},
         {
-		"name": "disappointments",
+		"name": "Ep.4: disappointments",
 			"hour": 17,
             "titlePosition": [0.67,0.57,0.109],
             "totalTime" : 500,
@@ -247,7 +247,7 @@ export default
             ]
         },
         {
-		"name": "loneliness",
+		"name": "Ep.5: loneliness",
 			"hour": 19,
 			"timeLimitMinutes" : 12,
             "totalTime" : 610,
@@ -307,7 +307,7 @@ export default
 		    ]
         },
         {
-		"name": "night",
+		"name": "Ep.6: night",
 			"hour": 0,
 			"timeLimitMinutes" : 4,
             "totalTime": 0,

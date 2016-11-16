@@ -378,9 +378,13 @@ export default class Character extends THREE.Object3D {
             // possitionOffset.add(this.fullVideo.mesh.position);
             // this.fullVideo.setPosition(possitionOffset);
             
-            console.log("Adjustment!!", this.nextAdjustment);
+            console.log("Adjustment!!", this.nextAdjustment.sec);
 
-            this.detach( this.animation, this, this.scene );
+            if(this.nextAdjustment.sec!=0){
+                this.detach( this.animation, this, this.scene );
+                console.log("detach animation!");
+            }
+    
             this.position.fromArray(this.nextAdjustment.position);
             // this.attach( this.animation, this.scene, this );
         }
