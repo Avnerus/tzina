@@ -109,7 +109,8 @@ export default class Character extends THREE.Object3D {
                 if (this.idleException(name)) {
                     return;
                 }
-                if (this.active && !this.done && this.props.name != name && this.props.name != "FatmanShower")  {
+                if (this.active && !this.done && this.props.name != name &&
+                    this.props.name != "FatmanShower" && this.props.name != "FatmanSleep")  {
                     this.onHold = true;
                     console.log(name, " is playing." , this.props.name, "is pausing");
                     if (!this.props.fullOnly) {

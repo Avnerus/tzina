@@ -68,11 +68,11 @@ export default class Show {
         console.log("Check show ", hour, this.in9amshow);
         if(hour==19 && !this.in7pmShow && !this.ended7pmShow){
             // So we do this after the other characters load
-            setTimeout(() => {
-                this.square.fountain.startShow(hour);
+            this.square.fountain.startShow(hour);
+            this.in7pmShow = true;
+             setTimeout(() => {
                 this.characterController.addCharacter("Agam7PM");
-                this.in7pmShow = true;
-            },3000);
+            },500);
         }
 
 
