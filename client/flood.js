@@ -29,7 +29,7 @@ export default class Flood extends THREE.Object3D  {
         console.log(geometry);
         let texture = new THREE.TextureLoader().load( "assets/flood/emotions.jpg" );
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set( 100,100 );
+        texture.repeat.set(50,50);
 
         let material = new THREE.MeshLambertMaterial({
            // color: 0x99F9FF,
