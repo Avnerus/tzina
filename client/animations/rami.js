@@ -85,13 +85,16 @@ export default class RamiAnimation extends THREE.Object3D {
 
         this.animStart = false;
         this.sequenceConfig = [
+            { time: 2, anim: ()=>{this.peacockUp(6)} },
             { time: 8, anim: ()=>{this.peacockTail(5)} },
-            { time: 23, anim: ()=>{this.peacockBack(5)} },
-            { time: 75, anim: ()=>{this.peacockOpen(5)} },
-            { time: 96, anim: ()=>{this.peacockBun(5)} },
-            { time: 137, anim: ()=>{this.peacockOpen(5)} },
-            { time: 160, anim: ()=>{this.peacockBun(5)} },
-            { time: 180, anim: ()=>{this.peacockSwallow(5)} },
+            { time: 23, anim: ()=>{this.peacockBack(5)} },  //23
+            { time: 75, anim: ()=>{this.peacockOpen(5)} },  //75
+            { time: 96, anim: ()=>{this.peacockBun(5)} },   //96
+
+            { time: 137, anim: ()=>{this.peacockOpen(5)} }, //137
+            { time: 160, anim: ()=>{this.peacockBun(5)} },  //160
+
+            { time: 180, anim: ()=>{this.peacockSwallow(5)} },  //180
         ];
         this.nextAnim = null;
 
@@ -119,11 +122,7 @@ export default class RamiAnimation extends THREE.Object3D {
         feathersTex.repeat.set( 5, 5 );
 
         let grassTex = tex_loader.load( this.BASE_PATH + "/images/redlight-thin.jpg" );
-        this.peacockMaterial = new THREE.MeshPhongMaterial({ map: peacockTex,
-                                                            // blending: THREE.AdditiveBlending,
-                                                            specular: 0x630824,
-                                                            shininess: 77,
-                                                            specularMap: grassTex,
+        this.peacockMaterial = new THREE.MeshBasicMaterial({ map: peacockTex,
                                                             side: THREE.DoubleSide,
                                                             wireframe: true,
                                                             wireframeWidth: 2,                                                            
@@ -150,7 +149,7 @@ export default class RamiAnimation extends THREE.Object3D {
             peacockGeo.computeMorphNormals();
             this.peacock = new THREE.Mesh( peacockGeo, this.peacockMaterial );
             this.peacock.position.set(0.9, -5, -5);
-            this.peacock.scale.multiplyScalar(3);
+            this.peacock.scale.multiplyScalar(0.01);
             this.add(this.peacock);
             // DebugUtil.positionObject(this.peacock, "peacock");
             this.peacock.morphTargetInfluences[0] = 1;
@@ -165,10 +164,9 @@ export default class RamiAnimation extends THREE.Object3D {
 
         this.initSPEParticles();
 
-        var light = new THREE.PointLight( 0xffffff, .5, 100 );
-        light.position.set( 0, 1.5, 3.5 );
-        // DebugUtil.positionObject(light, "Rami Light");
-        this.add( light );            
+        // var light = new THREE.PointLight( 0xffffff, .5, 100 );
+        // light.position.set( 0, 1.5, 3.5 );
+        // this.add( light );            
 
         // DebugUtil.positionObject(this, "Rami Ani");
         //
@@ -213,10 +211,13 @@ export default class RamiAnimation extends THREE.Object3D {
         this.fbo.particles.frustumCulled = false;
         this.add( this.fbo.particles );
 
+        // HIDE
+        this.fbo.particles.visible = false;
+
         // this.fbo.particles.position.set(0.8, -3.84, -4.44);
         // this.fbo.particles.multiplyScalar(2.58);
-
         //DebugUtil.positionObject(this.fbo.particles, "Rami FBO");
+
         console.log(this.simulationShader.uniforms.timer);
         //events.emit("add_gui", {folder:"fbo timer", listen: true, step: 0.01}, this.simulationShader.uniforms.timer, "value", 0, 1);
 
@@ -290,19 +291,24 @@ export default class RamiAnimation extends THREE.Object3D {
         console.log("do first animation.");
     }
 
+    peacockUp(_duration) {
+        TweenMax.to( this.peacock.scale, _duration, { x:3, y:3, z:3, ease: Power1.easeInOut } );
+    }
+
     peacockTail (_duration) {
         this.createTransition(_duration, [0.8, 0, 0, 0] );
 
+        this.fbo.particles.visible = true;
         this.updateMorphForFBO(this.peacockGeos[0], _duration);
-        this.updateMorphTransitionForFBO(this.peacockGeos[0], _duration);
+        // this.updateMorphTransitionForFBO(this.peacockGeos[0], _duration);
     }
 
     peacockBack (_duration) {
         this.createMorph( _duration, [0, 1, 0, 0] );
-        this.createTransition(_duration, [0.3, 0.8, 0, 0] );
+        this.createTransition(_duration, [0.3, 0.8, 0, 0], 2 );
 
         this.updateMorphForFBO(this.peacockGeos[1], _duration);
-        this.updateMorphTransitionForFBO(this.peacockGeos[0], _duration);
+        // this.updateMorphTransitionForFBO(this.peacockGeos[0], _duration);
     }
 
     peacockOpen (_duration) {
@@ -310,7 +316,7 @@ export default class RamiAnimation extends THREE.Object3D {
         this.createTransition(_duration, [0, 0.2, 0.8, 0] );
 
         this.updateMorphForFBO(this.peacockGeos[2], _duration);
-        this.updateMorphTransitionForFBO(this.peacockGeos[2], _duration);
+        // this.updateMorphTransitionForFBO(this.peacockGeos[2], _duration);
     }
 
     peacockBun (_duration) {
@@ -318,7 +324,7 @@ export default class RamiAnimation extends THREE.Object3D {
         this.createTransition(_duration, [0, 0, 0.2, 0.8] );
 
         this.updateMorphForFBO(this.peacockGeos[3], _duration);
-        this.updateMorphTransitionForFBO(this.peacockGeos[3], _duration);
+        // this.updateMorphTransitionForFBO(this.peacockGeos[3], _duration);
     }
 
     peacockSwallow (_duration) {
@@ -326,31 +332,32 @@ export default class RamiAnimation extends THREE.Object3D {
         this.createTransition(_duration, [0, 0, 0, 0.2] );
 
         this.updateMorphForFBO(this.peacockGeos[4], _duration);
-        this.updateMorphTransitionForFBO(this.peacockGeos[4], _duration);
-
-        // let tmpEndArray = [0,0.5,0.8];
-        // TweenMax.to( this.peacock.morphTargetInfluences, _duration, {
-        //     endArray: tmpEndArray,
-        //     ease: Power3.easeInOut,
-        //     delay: _duration,
-        //     repeat: -1,
-        //     yoyo: true
-        // } );
+        // this.updateMorphTransitionForFBO(this.peacockGeos[4], _duration);
     }
 
     createMorph( _duration, _array ) {
         // console.log( this.peacock.morphTargetInfluences );
-        TweenMax.to( this.peacock.morphTargetInfluences, _duration, { endArray: _array, ease: Power1.easeInOut } );
+        TweenMax.to( this.peacock.morphTargetInfluences, _duration, { endArray: _array, ease: Power2.easeInOut } );
     }
 
-    createTransition( _duration, toArray ) {
-        TweenMax.to( this.peacock.morphTargetInfluences, _duration/2, {
-            endArray: toArray,
-            ease: Power0.easeNone,
-            delay: _duration,
-            repeat: 3,
-            yoyo: true
-        } );
+    createTransition( _duration, toArray, extraTime ) {
+        if(extraTime){
+            TweenMax.to( this.peacock.morphTargetInfluences, _duration/2, {
+                endArray: toArray,
+                ease: Power1.easeNone,
+                delay: _duration,
+                repeat: 3+2*extraTime,
+                yoyo: true
+            } );
+        } else {
+            TweenMax.to( this.peacock.morphTargetInfluences, _duration/2, {
+                endArray: toArray,
+                ease: Power1.easeNone,
+                delay: _duration,
+                repeat: 3,
+                yoyo: true
+            } );
+        }
     }
 
     characterDisappear() {
@@ -405,7 +412,8 @@ export default class RamiAnimation extends THREE.Object3D {
     }
 
     update(dt,et) {
-        this.peacockTexAni.updateWithOrder( 300*dt );
+        // this.peacockTexAni.updateWithOrder( 300*dt );
+
         if(this.particleGroup) {
             this.particleGroup.tick( dt );
         }

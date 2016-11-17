@@ -26,15 +26,19 @@ export default class Flood extends THREE.Object3D  {
         for(let i = 0; i < tessellationDepth; i++){
             tessellateModifier.modify(geometry);
         }
-
         console.log(geometry);
-        let material = new THREE.MeshPhongMaterial({
-            color: 0x99F9FF,
-            opacity: 0.75,
-            shininess: 20,
+        let texture = new THREE.TextureLoader().load( "assets/flood/emotions.jpg" );
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set( 100,100 );
+
+        let material = new THREE.MeshLambertMaterial({
+           // color: 0x99F9FF,
+            opacity: 0.80,
+            map:texture,
+          //  shininess: 164,
             shading: THREE.FlatShading,
             transparent: true,
-            //side: THREE.DoubleSide,
+            side: THREE.DoubleSide,
             wireframe: false,
         });
         this.mesh = new THREE.Mesh(geometry, material);
@@ -47,7 +51,7 @@ export default class Flood extends THREE.Object3D  {
 
         this.mesh.rotation.x = -Math.PI / 2;
 
-        //DebugUtil.positionObject(this.mesh, "Flood", true);
+        DebugUtil.positionObject(this.mesh, "Flood", true);
 
         this.add(this.mesh);
 
@@ -65,11 +69,11 @@ export default class Flood extends THREE.Object3D  {
         events.on("experience_progress", (percentage) => {
             //console.log("FLOOD progress", percentage);
             // First scale, then rise
-            if (percentage <= 0.9) {
-                let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.9));
+            if (percentage <= 0.7) {
+                let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.7));
                 this.mesh.scale.set(scale, scale, scale);
             } else {
-                let height = (this.START_HEIGHT + (this.END_HEIGHT - this.START_HEIGHT) * ((percentage - 0.1) / 0.1));
+                let height = (this.START_HEIGHT + (this.END_HEIGHT - this.START_HEIGHT) * ((percentage - 0.7) / 0.3));
                 this.mesh.position.y = height;
             }
         });

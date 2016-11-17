@@ -219,7 +219,7 @@ export default class MeirAnimation extends THREE.Object3D {
         // TweenMax.to( this.smokeMat, 1, {opacity: 1});
         // TweenMax.to( this.fog.position, 4, {x:0, delay:0.9, ease: Power1.easeInOut});
 
-        TweenMax.to( this.dummy, 3, { opacity:0, delay: 1, onUpdate: ()=>{
+        TweenMax.to( this.dummy, 2.5, { opacity:0, delay: 1, onUpdate: ()=>{
                 this.parent.fullVideo.setOpacity(this.dummy.opacity);
             }, onStart: ()=>{
                 // TweenMax.to( this.smokeMat, 4, {opacity: 0});

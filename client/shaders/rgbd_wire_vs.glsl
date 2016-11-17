@@ -52,11 +52,8 @@ vec3 rgb2hsl( vec3 color ) {
 
 vec3 xyz( float x, float y, float depth ) {
 
-     // if (position.y < 250.0) {
-        float z = depth * ( maxdepth - mindepth ) + mindepth;
-    // } else {
-    //     float z = depth * ( maxdepth - mindepth ) + mindepth;
-    // }
+    float z = depth * ( maxdepth - mindepth ) + mindepth;
+
     return vec3( ( x / height  ) * z * fx, ( y / (width * 2.0)  ) * z * fy, - z );
 
     // float z = depth * ( maxdepth - mindepth ) + mindepth;

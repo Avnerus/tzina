@@ -9,6 +9,10 @@ stats.showPanel(0);
 var fullscreen = require('fullscreen');
 var lock = require('pointer-lock-chrome-tolerant');
 
+if (config.production) {
+    window['console']['log'] = function() {};
+}
+
 console.log("Touch? ", Modernizr.touchevents)
 
 var FPS  = config.fps;
