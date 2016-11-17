@@ -46,18 +46,11 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     { time: 109, anim: ()=>{this.growSingleCactus( 7 )} },
                     { time: 114, anim: ()=>{this.growSingleCactus( 8 )} },
                     { time: 120, anim: ()=>{this.growSingleCactus( 9 )} },
-                    // { time: 120, anim: ()=>{this.growBenchCactus()} },
         
                     { time: 135, anim: ()=>{this.connectToDogs()} },
-        
-                    // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
-                    // { time: 155, anim: ()=>{this.growSingleCactusFloor( 1 )} },
-                    // { time: 165, anim: ()=>{this.growSingleCactusFloor( 2 )} },
-                    // { time: 179, anim: ()=>{this.growSingleCactusFloor( 3 )} },
-                    // { time: 195, anim: ()=>{this.growSingleCactusFloor( 4 )} },
 
-                    // 215 ends
-                    { time: 210, anim: ()=>{this.characterDisappear()} }
+                    // 215 video ends, ani 210
+                    { time: 210, anim: ()=>{this.characterDisappearDay()} }
                 ],
             'Lupo5PM': [
                     { time: 0, anim: ()=>{this.setupForNight()} },
@@ -79,7 +72,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
                     { time: 150, anim: ()=>{this.closeFlower()} },
                     // 203 ends
-                    { time: 198, anim: ()=>{this.characterDisappear()} }
+                    { time: 198, anim: ()=>{this.characterDisappearNight()} }
                 ]
         };
 
@@ -307,21 +300,6 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             ];
             this.flowerColor = [ 0xfb5c87, 0xfce062, 0xfdc7ad ];
 
-            // modelLoader.load( this.BASE_PATH + '/models/petal.json', (geometry)=>{
-            //     this.petalGeo = geometry;
-            //     for(let i=0; i<8; i++){
-            //         let petal = new THREE.Object3D();
-            //         let p = new THREE.Mesh( this.petalGeo, this.petalMat);
-            //         p.rotation.x = -15 * Math.PI / 180;
-            //         petal.add(p);
-            //         petal.rotation.y = Math.PI*2 / 8 * i;
-            //         petal.scale.multiplyScalar(0.3);
-            //         this.flower.add(petal);
-            //     }
-            //     // this.add(this.flower);
-            //     // this.createFlowerAnimation();
-            // } );
-
         // Ropes to dogs!
             this.ARC_SEGMENTS = 50;
             let curveData = [ [["-5.155", "0.704", "-8.407"], ["-4.902", "0.714", "-7.581"], ["-4.962", "0.585", "-6.448"], ["-5.020", "0.153", "-5.518"], ["-5.273", "-0.079", "-3.953"], ["-4.806", "0.097", "-3.037"], ["-4.842", "0.423", "-3.965"], ["-4.777", "1.017", "-2.540"], ["-4.411", "0.935", "-1.508"], ["-4.508", "0.535", "-0.987"], ["-4.298", "-0.010", "0.014"], ["-3.798", "0.031", "0.836"], ["-3.261", "0.247", "1.269"], ["-2.612", "-0.004", "1.630"], ["-1.904", "0.034", "1.864"], ["-1.152", "1.099", "1.447"], ["-0.815", "1.518", "1.188"], ["-0.378", "1.742", "0.515"], ["-0.107", "1.769", "0.054"], ["-0.099", "1.773", "-0.017"]],
@@ -446,9 +424,9 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     createRope( _index ) {
         let cSpline = new THREE.CatmullRomCurve3( this.ropesVec[_index] );
         cSpline.type = 'chordal';
-        let ropeGeometry = new THREE.TubeGeometry( cSpline, this.ARC_SEGMENTS, 0.1, 6, false );
+        let ropeGeometry = new THREE.TubeGeometry( cSpline, this.ARC_SEGMENTS, 0.1, 5, false );
         let ropee = new THREE.Mesh(ropeGeometry, this.ropeMaterial);
-        let liquidGeo = new THREE.TubeGeometry( cSpline, this.ARC_SEGMENTS, 0.07, 6, false );
+        let liquidGeo = new THREE.TubeGeometry( cSpline, this.ARC_SEGMENTS, 0.07, 5, false );
         let liquid = new THREE.Mesh(liquidGeo, this.liquidMats[_index]);
         liquid.material.map.offset.x = -1 - _index*0.4;
         ropee.add(liquid);
@@ -591,7 +569,23 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         TweenMax.to(this.theDogs.scale, 6, { x:dogSize, y:dogSize, z:dogSize });
     }
 
-    characterDisappear() {
+    characterDisappearDay() {
+        this.flickerSculptureTextures();
+        TweenMax.to(this.lupoArt.rotation, 3, { x:"+="+Math.PI, delay: 1, ease: Back.easeInOut.config(1.4) });
+        TweenMax.to(this.fullVideo.mesh.rotation, 2, {
+            x:"+="+Math.PI,
+            delay: 2,
+            onStart:()=>{
+                TweenMax.to(this.ropes[0].position, 3, { y:"-="+2 });
+                TweenMax.to(this.ropes[1].position, 3, { y:"-="+2 });
+            },
+            onComplete: ()=>{
+                this.fullVideo.setOpacity(0.0);
+            }
+        });
+    }
+
+    characterDisappearNight() {
         this.flickerSculptureTextures();
         TweenMax.to(this.lupoArt.rotation, 3, { x:"+="+Math.PI, delay: 1, ease: Back.easeInOut.config(1.4) });
         TweenMax.to(this.fullVideo.mesh.rotation, 2, {
@@ -852,8 +846,6 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
         // back to original status
         this.lupoArt.rotation.x = 0;
-        // this.lupoArt.children[0].visible = false;
-        // this.lupoArt.children[1].visible = false;
         for(let i=0; i<this.lupoArt.children[0].children.length; i++){
             let origPos = this.lupoArt.children[0].children[i].originalPosition;
             this.lupoArt.children[0].children[i].scale.y = 0.01;
