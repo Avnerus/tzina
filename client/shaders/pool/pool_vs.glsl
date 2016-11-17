@@ -172,14 +172,15 @@ void main(void) {
 
     vec3 posNew = position;
     vWorldPos = position;
+    /*
     if(amplitudeDisplacementFactor != 0.0) {
       posNew.z += waveHeight(position.x, position.y);
-    }
+    }*/
     if(circularAmplitudeDisplacementFactor != 0.0) {
       posNew.z += circularWaveHeight(position.x, position.y);
     }
-    vec3 wn = waveNormal(position.x, position.y);
+    //vec3 wn = waveNormal(position.x, position.y); 
     vec3 cwn = circularWaveNormal(position.x, position.y);
-    worldNormal = normalize(wn+cwn);
+    worldNormal = normalize(cwn);
     gl_Position = projectionMatrix * modelViewMatrix * vec4( posNew, 1.0 );
 }

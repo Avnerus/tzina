@@ -23,7 +23,7 @@ export default class KeyboardController {
         this.height = config.basalHeight;
         }
         
-        this.active = false;
+        this.active = true;
 
         this.zAxis = new THREE.Vector3(0,0,1);
         this.xAxis = new THREE.Vector3(1,0,0);
@@ -47,15 +47,6 @@ export default class KeyboardController {
         events.on("intro_end" ,() => {
             this.active = true;
         });
-
-        events.on("control_threshold", (passed) => {
-            if (passed) {
-                this.active = true;
-            } else {
-                this.active = false;
-            }
-        })
-        }
 
         document.addEventListener('keydown', (event) => {
             switch ( event.keyCode ) {
@@ -164,14 +155,18 @@ export default class KeyboardController {
                 target.add(zVector.multiplyScalar(this.velocity.z * delta));
                 target.add(xVector.multiplyScalar(this.velocity.x * delta));
 
-                this.collisionManager.testMovement(this.camera.position, target)
-                .then((result) => {
-                    if (result) {
-                        this.camera.position.copy(target);
-                    } else {
-                        console.log("NO GO");
-                    }
-                }); 
+                if (this.collisionManager) {
+                    this.collisionManager.testMovement(this.camera.position, target)
+                    .then((result) => {
+                        if (result) {
+                            this.camera.position.copy(target);
+                        } else {
+                            console.log("NO GO");
+                        }
+                    }); 
+                } else {
+                    this.camera.position.copy(target);
+                }
             }
         }
 

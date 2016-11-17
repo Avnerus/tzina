@@ -48,7 +48,7 @@ export default class SoundManager {
         },
         eachSampler:function(what,except){
           for(var a in this.samplers){
-            if(except===undefined || except!=this.samplers[a]){
+            if(!except || except===undefined || except!=this.samplers[a]){
               what(this.samplers[a],a);
             }
           }
@@ -60,7 +60,7 @@ export default class SoundManager {
             thisSampler.controlBlur(1,time);
           },on);
           //focus the one we are focusing, if there is any
-          if(on!==undefined) if(typeof(on.controlBlur)==='function'){
+          if(on && on!==undefined) if(typeof(on.controlBlur)==='function'){
             on.controlBlur(0,time);
           }else{
             console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
@@ -72,7 +72,7 @@ export default class SoundManager {
             thisSampler.controlBlur(level, 0);
           },on);
           //focus the one we are focusing, if there is any
-          if(on!==undefined) if(typeof(on.controlBlur)==='function'){
+          if(on && on!==undefined) if(typeof(on.controlBlur)==='function'){
             on.controlBlur(0,0);
           }else{
             console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
@@ -87,6 +87,16 @@ export default class SoundManager {
           });
         },
       };
+      this.createStaticSoundSampler=function(url,onLoad){
+        let sss=new StaticSoundSampler(this.listener.context);
+        sss.init(url,this.loadingManager,onLoad);
+        return sss;
+      }
+      this.createPositionalSoundSampler=function(url,onLoad){
+        let pss=new PositionalSoundSampler(this.listener,this.scene);
+        pss.init(url,this.loadingManager,onLoad);
+        return pss;
+      }
     }
     init(loadingManager) {
       let thisSoundManager=this;
@@ -135,13 +145,15 @@ export default class SoundManager {
         this.listener = new THREE.AudioListener();
         this.camera.add(this.listener);
 
+        this.loader = new THREE.AudioLoader(new THREE.LoadingManager());
+
         //create positional samples
         for(var a in ambientSamples){
 
           let thisSample=ambientSamples[a];
           if(!thisSample.disable){
             let pSampler=new PositionalSoundSampler(this.listener,this.scene);
-            pSampler.blurModule.controlVolume(1.8);
+            pSampler.blurModule.controlVolume(0.5);
             pSampler.position.set(thisSample.position[0],thisSample.position[1],thisSample.position[2]);
             //pSampler.createDebugCube(0xFF0000);
             pSampler.init(SOUND_PATH + thisSample.path,loadingManager,function(thisSampler){
@@ -194,7 +206,9 @@ export default class SoundManager {
       //choose which sounds to trigger
       //of course that all the other sound objects must have the play function to call at once from here.
       if(setName=="sunGazedSound"){
+
       }else if(setName=="flyingSound"){
+
       }else if(setName == "ambience"){
         for(var a in ambientSamples){
           let thisSample=ambientSamples[a];
@@ -245,6 +259,7 @@ export default class SoundManager {
           console.warn("SoundManager was called to play but the parameter setName didn't match any statement "+setName);
         }
     }
+
 }
 
 export class StaticSoundSampler{
@@ -304,8 +319,9 @@ export class StaticSoundSampler{
     request.send();
   }
   play(/*loop*/){
+    
     if(this.source){
-      this.source.start();
+       this.source.start();
       /*this.source.loop = loop||false;*/
     }else{
       console.warn("thisStaticSoundSampler mistake: you requested to play, but the source has not been loaded yet");
@@ -313,11 +329,12 @@ export class StaticSoundSampler{
   }
   pause(){
     console.warn("sound stop and pause is untested. Test it and remove these lines");
-    this.source.pause();
+    this.source.stop();
   }
   stop(){
     console.warn("sound stop and pause is untested. Test it and remove these lines");
-    this.source.pause();
+    this.source.stop();
+    this.source.currentTime = 0;
   }
 }
 

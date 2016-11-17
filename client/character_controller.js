@@ -6,10 +6,11 @@ import DebugUtil from './util/debug'
 import _ from 'lodash'
 
 export default class CharacterController {
-    constructor(config, animations, square, collisionManager, soundManager)  {
+    constructor(config, animations, square, collisionManager, soundManager, timeConroller, scene)  {
         this.config = config;
         this.collisionManager = collisionManager;
         this.soundManager = soundManager;
+        this.timeConroller = timeConroller;
         this.characters = {};
         this.square = square;
         this.activeCharacters = [];
@@ -17,12 +18,13 @@ export default class CharacterController {
         this.addedColliders = false;
         this.inControl = false;
         this.debug = true;
+        this.scene = scene;
     }
     init(loadingManager) {
         console.log("Initializing Character controller");
         if (!this.config.noCharacters) {
             Characters.forEach((characterProps) => {
-                let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager);
+                let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager, this.scene);
                 character.animation = this.animations[characterProps.animation];
                 character.init(loadingManager);
                 this.characters[characterProps.name] = character;
@@ -33,37 +35,11 @@ export default class CharacterController {
         });
 
         events.on("hour_updated", (hour) => {
-            
-            let clone = this.activeCharacters.slice(0);
-            this.activeCharacters = [];
-
-            for (let i = 0; i < clone.length; i++) {
-                let character = clone[i];
-
-                if (!character.done && !character.props.event) {
-                    this.square.clockwork.remove(character);
-                    character.unload();
-                } else {
-                    console.log("Character " + character.props.name + " is still active");
-                    this.activeCharacters.push(character);
-                }
-                if (character.addedColliders) {
-                    console.log("Removing colliders: " + character.props.name);
-                    this.collisionManager.removeCharacter(character);
-                    character.addedColliders = false;
-                }
-            }
-
-            console.log("Loading characters for ", hour);
-            
-            let chapter = _.find(Chapters, {hour});
-            chapter.characters.forEach((characterName) => {
-                this.addCharacter(characterName);
-            });
-
+            this.loadHour(hour);            
         });
         events.on("angle_updated", (hour) => {
             if (this.inControl){ {
+                console.log("Angle updated", hour, this.activeCharacters);
                 this.activeCharacters.forEach((character) => {
                     if (character.idleOnly) {
                         character.addedColliders = true;
@@ -75,6 +51,37 @@ export default class CharacterController {
                     }
                 });
             }}
+        });
+    }
+
+    loadHour(hour) {
+        console.log("Character controller loading hour ", hour);
+        let clone = this.activeCharacters.slice(0);
+        this.activeCharacters = [];
+
+        for (let i = 0; i < clone.length; i++) {
+            let character = clone[i];
+
+            if (!character.done && !(character.props.event && hour == 9) && !(character.props.event && hour == 19)) {
+                console.log("Removing character ", character.props.name, " when loading hour ", hour);
+                this.square.clockwork.remove(character);
+                character.unload();
+            } else {
+                console.log("Character " + character.props.name + " is still active");
+                this.activeCharacters.push(character);
+            }
+            if (character.addedColliders) {
+                console.log("Removing colliders: " + character.props.name);
+                this.collisionManager.removeCharacter(character);
+                character.addedColliders = false;
+            }
+        }
+
+        console.log("Loading characters for ", hour);
+        
+        let chapter = _.find(Chapters, {hour});
+        chapter.characters.forEach((characterName) => {
+            this.addCharacter(characterName);
         });
     }
 

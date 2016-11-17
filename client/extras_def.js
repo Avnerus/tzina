@@ -1,20 +1,36 @@
 export default {
     types: [
-         {
-            name: "junkie",
-            fileName: "junkie/cloud.js",
-            pointSize : 0.013
-        },
-             {
-            name: "pocketCam",
-            fileName: "pocketCam/cloud.js",
-            pointSize : 0.010
-        },   
-           {
-            name: "dadOnBike",
-            fileName: "dadOnBike/cloud.js",
-            pointSize : 0.010
-        }, 
+
+ // {
+ //            name: "Bagel",
+ //            fileName: "Bagel/cloud.js",
+ //            pointSize : 0.013
+ //        },
+ // {
+ //            name: "Bun",
+ //            fileName: "Bun/cloud.js",
+ //            pointSize : 0.013
+ //        },
+ //  {
+ //            name: "whiteBread",
+ //            fileName: "whiteBread/cloud.js",
+ //            pointSize : 0.013
+ //        },
+          {
+             name: "junkie",
+             fileName: "junkie/cloud.js",
+             pointSize : 0.013
+         },
+              {
+             name: "pocketCam",
+             fileName: "pocketCam/cloud.js",
+             pointSize : 0.010
+         },   
+            {
+             name: "dadOnBike",
+             fileName: "dadOnBike/cloud.js",
+             pointSize : 0.010
+         }, 
             /*
         {
             name: "tashlih",

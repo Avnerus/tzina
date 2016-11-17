@@ -1,6 +1,6 @@
 import Video360 from './util/video360'
 
-const CLOUDS_SEQUENCE_PATH = "assets/clouds/sequence_r.webm";
+const CLOUDS_SEQUENCE_PATH = "assets/clouds/sequence.webm";
 const CLOUDS_STATIC_PATH = "assets/clouds/static.png";
 
 const States = {

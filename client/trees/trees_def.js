@@ -12,11 +12,7 @@ export default {
             name: "palm",
 
             fileName: "palm/cloud.js"
-        },
-         {
-            name: "single",
-            fileName: "singleTree/cloud.js"
-        },
+        }
         //    {
         //     name: "bush1",
         //     fileName: "sidetwo/cloud.js"
@@ -198,6 +194,3 @@ export default {
    
     ]
 }
-
-
-

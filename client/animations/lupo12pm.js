@@ -6,92 +6,84 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     constructor() {
         super();
         this.BASE_PATH = 'assets/animations/lupo12pm';
+        this.initialized = false;
+        this.theDogs = null;
     }
 
     init(loadingManager) {
+        console.log("Init Lupo12PM Animation");
+        this.initialized = true;
+
         this.loadingManager = loadingManager;
         this.setupAnim();
     }
 
     setupAnim() {
-        // DebugUtil.positionObject(this, "Lupo Ani");
+        DebugUtil.positionObject(this, "Lupo Ani");
 
         this.loadingManager.itemStart("Lupo12PMAnim");
         this.perlin = new ImprovedNoise();
 
-        this.showDummyDogs = true;
+        this.showDummyDogs = false;
 
         // setup animation sequence
-        this.sequenceConfig = [
-            { time: 5, anim: ()=>{this.showSculptures()} },    // 16
-            // { time: 6, anim: ()=>{this.connectToDogs()} },
+        this.sequenceConfig = {
+            'Lupo12PM': [        
+                    // { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },                                        
+                    // { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
+                    // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
 
-            // { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },
-            { time: 8, anim: ()=>{this.growCactusFloor()} },
-            // { time: 4, anim: ()=>{this.growSingleCactus( 0 )} },  // cactus index: 0~19
-            // { time: 6, anim: ()=>{this.growSingleCactusFloor( 0 )} },  // cactus index: 0~9
-            { time: 12, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
-            
-            { time: 15, anim: ()=>{this.growBenchCactus()} }
-            // { time: 20, anim: ()=>{this.growCactusFloor()} }
-            
+                    { time: 16, anim: ()=>{this.showSculptures()} },
+                    { time: 24, anim: ()=>{this.flickerSculptureTextures()} },
 
-            // { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
-            // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
-            // { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
-            // { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
-            // { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
-            // { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
-            // { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
-            // { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
-            // { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
-            // { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
-            // { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
-            // { time: 120, anim: ()=>{this.growBenchCactus()} },
+                    { time: 26, anim: ()=>{this.growSingleCactus( 0 )} },
+                    { time: 32, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
+                    { time: 42, anim: ()=>{this.growSingleCactus( 2, 0xff0000 )} },
+                    { time: 47, anim: ()=>{this.growSingleCactus( 3, 0xff0000 )} },
+                    { time: 74, anim: ()=>{this.growSingleCactus( 4 )} },
+                    { time: 85, anim: ()=>{this.growSingleCactus( 5 )} },
+                    { time: 88, anim: ()=>{this.growSingleCactus( 6 )} },
+                    { time: 109, anim: ()=>{this.growSingleCactus( 7 )} },
+                    { time: 114, anim: ()=>{this.growSingleCactus( 8 )} },
+                    { time: 120, anim: ()=>{this.growSingleCactus( 9 )} },
+                    // { time: 120, anim: ()=>{this.growBenchCactus()} },
+        
+                    { time: 135, anim: ()=>{this.connectToDogs()} },
+        
+                    // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
+                    // { time: 155, anim: ()=>{this.growSingleCactusFloor( 1 )} },
+                    // { time: 165, anim: ()=>{this.growSingleCactusFloor( 2 )} },
+                    // { time: 179, anim: ()=>{this.growSingleCactusFloor( 3 )} },
+                    // { time: 195, anim: ()=>{this.growSingleCactusFloor( 4 )} },
 
-            // { time: 135, anim: ()=>{this.connectToDogs()} },
+                    // 215 ends
+                    { time: 210, anim: ()=>{this.characterDisappear()} }
+                ],
+            'Lupo5PM': [
+                    { time: 0, anim: ()=>{this.setupForNight()} },
+                    { time: 1, anim: ()=>{this.connectToDogs()} },
+                    
+                    { time: 16, anim: ()=>{this.showSculptures()} },    // 16
+                    { time: 24, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
+                    { time: 28, anim: ()=>{this.shiftSculptures()} },
+                    
+                    { time: 35, anim: ()=>{this.growCactusFloor()} },
+                    
+                    { time: 45, anim: ()=>{this.growFlower()} },
+                    
 
-            // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
-            // { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
-            // { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
-            // { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
-            // { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
-            // { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
-            // { time: 179, anim: ()=>{this.growCactusFloor()} }
-        ];
+                    // Scale dogs, total 2 times
+                    { time: 76, anim: ()=>{this.scaleDogs(1)} },     // first time
 
-        this.sequenceConfig2 = [
-            { time: 1, anim: ()=>{this.growCactusFloor()} },
+                    { time: 100, anim: ()=>{this.scaleDogs(2)} },     // second time
 
-            { time: 2, anim: ()=>{this.showSculptures()} },    // 16
-            { time: 9, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
-            { time: 12, anim: ()=>{this.shiftSculptures()} },
-            
-            { time: 17, anim: ()=>{this.growFlower()} },
-            { time: 25, anim: ()=>{this.closeFlower()} }
+                    { time: 150, anim: ()=>{this.closeFlower()} },
+                    // 203 ends
+                    { time: 198, anim: ()=>{this.characterDisappear()} }
+                ]
+        };
 
-            // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
-            // { time: 26, anim: ()=>{this.growSingleCactus( 3 )} },
-            // { time: 32, anim: ()=>{this.growSingleCactus( 4, 0xff0000 )} },
-            // { time: 42, anim: ()=>{this.growSingleCactus( 5, 0xff0000 )} },
-            // { time: 47, anim: ()=>{this.growSingleCactus( 6, 0xff0000 )} },
-            // { time: 74, anim: ()=>{this.growSingleCactus( 7 )} },
-            // { time: 85, anim: ()=>{this.growSingleCactus( 8 )} },
-            // { time: 88, anim: ()=>{this.growSingleCactus( 9 )} },
-            // { time: 109, anim: ()=>{this.growSingleCactus( 10 )} },
-            // { time: 114, anim: ()=>{this.growSingleCactus( 11 )} },
-            // { time: 120, anim: ()=>{this.growBenchCactus()} },
-            // { time: 135, anim: ()=>{this.connectToDogs()} },
-            // { time: 146, anim: ()=>{this.growSingleCactusFloor( 0 )} },
-            // { time: 149, anim: ()=>{this.growSingleCactusFloor( 1 )} },
-            // { time: 153, anim: ()=>{this.growSingleCactusFloor( 2 )} },
-            // { time: 155, anim: ()=>{this.growSingleCactusFloor( 3 )} },
-            // { time: 161, anim: ()=>{this.growSingleCactusFloor( 4 )} },
-            // { time: 165, anim: ()=>{this.growSingleCactusFloor( 5 )} },
-            // { time: 179, anim: ()=>{this.growCactusFloor()} },
-        ];
-
-        this.sequenceConfigOriginal =  this.sequenceConfig.slice(0);
+        // this.sequenceConfigOriginal =  this.sequenceConfig.slice(0);
 
         this.nextAnim = null;
         this.tweenAnimCollectors = [];
@@ -103,6 +95,11 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.topMat = new THREE.MeshLambertMaterial( { color: 0xfa9f43} );
 
         let modelLoader = new THREE.JSONLoader(this.loadingManager);
+
+        this.dogsTobePosition = {
+            1: [-10.2, 22.54, -1.33],
+            2: [-10.69, 23.21, -1.68]
+        };
 
         // url + targetPosition + startPosition
         let sculptureModelFiles = [ [this.BASE_PATH + "/models/sculptures/deer.js", new THREE.Vector3(2.59, -0.36, 4.47), new THREE.Vector3(2, .5, 2)],
@@ -139,9 +136,6 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
         this.loadSculptureTextures( sculptureTextureFiles, sculptureTextMADFiles )
         .then( () => {
-
-            // this.sculptureTextures = lupoArtText;
-            // this.sculptureMaterials = lupoArtMat;
             console.log("Loaded lupo art materials");
 
             this.loadSculptureModels( sculptureModelFiles )
@@ -149,7 +143,20 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 this.lupoArt = lupoArt;
                 this.lupoArt.position.set(.7,-1.2,1);
                 this.add(this.lupoArt);
-                console.log("Loaded lupo art", this.lupoArt);
+                // console.log("Loaded lupo art", this.lupoArt);
+                // DebugUtil.positionObject(this.lupoArt, "Lupo Art");
+
+                // HIDE_SCULPTURES
+                // this.lupoArt.children[0].visible = false;
+                // this.lupoArt.children[1].visible = false;
+                for(let i=0; i<this.lupoArt.children[0].children.length; i++){
+                    this.lupoArt.children[0].children[i].visible = false;
+                }
+                for(let i=0; i<this.lupoArt.children[1].children.length; i++){
+                    this.lupoArt.children[1].children[i].visible = false;
+                }
+
+
 
                 // trigger rotating
                 // tl.to(this.lupoArt.rotation, 2, {x:Math.PI}).to(this.lupoArt.rotation, 2, {x:Math.PI*2}, "+=2");
@@ -204,8 +211,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             this.cactusPotList2 = {};
             this.cactusOffsetPos = [];
             this.cactusOffsetPos2 = [];
-            this.cactusGroup = [];
-            this.cactusGroupFloor = [];
+            this.cactusGroup = new THREE.Object3D();
+            this.cactusGroupFloor = new THREE.Object3D();
             this.cactusTimelines = [];
             this.cactusFloorTimelines = [];
 
@@ -221,39 +228,37 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                                   this.sculptCactus_1, this.sculptCactus_2, this.sculptCactus_3 ];
 
                 // on bench
-                for(let i=0; i<20; i++){
+                for(let i=0; i<10; i++){
                     let newIndex = i%5;
-                    // console.log(newIndex);
                     let new_c = allCactus[ newIndex ].clone(true);
                     let new_mat = this.cactusMat.clone();
                     for(let j=0; j<new_c.children.length; j++){
                         new_c.children[j].material = new_mat;
                     }
-                    new_c.scale.multiplyScalar( 0.4-0.2*this.lookupTable[i] );
-                    new_c.position.set( 4-8*Math.random(), 1.2, 4-2*Math.random() );
+                    new_c.scale.multiplyScalar( 0.4-0.1*this.lookupTable[i] );
+                    new_c.position.set( 1-6*Math.random(), 1.2, 5-2*Math.random() ); // x: -5~1
                     new_c.rotation.y = Math.PI/2 - this.lookupTable[i]*Math.PI;
-                    this.add(new_c);
-                    this.cactusGroup.push(new_c);
+                    this.cactusGroup.add(new_c);
                 }
-                for(let i=0; i<10; i++){
+                this.add(this.cactusGroup);
+                // on floor
+                for(let i=0; i<5; i++){
                     let newIndex = (i%3)+2;
-                    // console.log(newIndex);
                     let new_c = allCactus[ newIndex ].clone(true);
                     new_c.material = this.cactusMat.clone();
                     new_c.scale.multiplyScalar( 1.8-0.5*this.lookupTable[i] );
-                    // new_c.position.set( 8-16*Math.random(), -1, 10-10*Math.random() );
                     new_c.position.set(
-                        Math.sin( Math.PI*2/20*(i-6) ) * 9,
-                        -1,
-                        Math.cos( Math.PI*2/20*(i-6) ) * 9 + 5
+                        Math.sin( Math.PI*2/20*(i-1) ) * 10 + this.lookupTable[i],
+                        0,
+                        Math.cos( Math.PI*2/20*(i-1) ) * 10 + this.lookupTable[i+1]
                     );
                     new_c.rotation.y = Math.PI/2 - this.lookupTable[i]*Math.PI;
-                    this.add(new_c);
-
-                    // DebugUtil.positionObject(new_c, "cactus " + i);
-
-                    this.cactusGroupFloor.push(new_c);
+                    this.cactusGroupFloor.add(new_c);
                 }
+                this.cactusGroupFloor.position.set(4.05, 0, -7.82);
+                this.add(this.cactusGroupFloor);
+                // DebugUtil.positionObject(this.cactusGroupFloor, "cactusGroupFloor");
+
                 this.createCactusAnimation();
 
                 //
@@ -282,7 +287,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             let cactusTexLight = p_tex_loader.load( this.BASE_PATH + "/images/cactus_white.jpg" );
             let cactusTex = p_tex_loader.load( this.BASE_PATH + "/images/cactusTex.jpg" );
             this.cactusMat = new THREE.MeshLambertMaterial({map: cactusTexLight, color: 0x1fc529, side: THREE.DoubleSide}); //0x298a59
-            this.sculptCactusMat = new THREE.MeshLambertMaterial({map: cactusTex, side: THREE.DoubleSide}); //0x206c5e
+            this.sculptCactusMat = new THREE.MeshLambertMaterial({map: cactusTex, color: 0xcccccc, side: THREE.DoubleSide}); //0x206c5e
             this.loadCactus1( this.cactusMat );
             this.loadCactus2( this.cactusMat )
 
@@ -319,8 +324,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
         // Ropes to dogs!
             this.ARC_SEGMENTS = 50;
-            let curveData = [ [["-1.669", "1.017", "3.688"], ["-1.664", "0.935", "3.400"], ["-1.717", "0.661", "3.561"], ["-1.705", "0.321", "3.623"], ["-1.636", "0.096", "3.433"], ["-1.657", "0.302", "3.194"], ["-1.662", "0.566", "3.086"], ["-1.609", "0.789", "2.927"], ["-1.522", "0.832", "2.569"], ["-1.495", "0.460", "2.373"], ["-1.418", "0.087", "2.355"], ["-1.325", "-0.021", "2.186"], ["-1.191", "0.034", "1.887"], ["-1.033", "0.204", "1.600"], ["-1.020", "0.644", "1.524"], ["-0.783", "1.022", "1.259"], ["-0.575", "1.518", "1.053"], ["-0.303", "1.742", "0.425"], ["-0.118", "1.769", "0.017"], ["-0.088", "1.773", "-0.048"]],
-                              [["1.645", "1.225", "3.606"], ["1.549", "0.990", "3.168"], ["1.589", "0.643", "3.278"], ["1.550", "0.258", "3.307"], ["1.400", "-0.034", "3.020"], ["1.358", "0.178", "2.727"], ["1.335", "0.475", "2.615"], ["1.254", "0.732", "2.457"], ["0.968", "0.807", "2.129"], ["0.868", "0.437", "2.005"], ["0.920", "0.129", "2.011"], ["0.769", "-0.051", "1.825"], ["0.648", "0.024", "1.598"], ["0.525", "0.223", "1.349"], ["0.415", "0.624", "1.304"], ["0.257", "1.022", "1.088"], ["0.121", "1.415", "0.855"], ["-0.009", "1.690", "0.473"], ["-0.088", "1.769", "0.077"], ["-0.100", "1.773", "0.010"]] ];
+            let curveData = [ [["-5.155", "0.704", "-8.407"], ["-4.902", "0.714", "-7.581"], ["-4.962", "0.585", "-6.448"], ["-5.020", "0.153", "-5.518"], ["-5.273", "-0.079", "-3.953"], ["-4.806", "0.097", "-3.037"], ["-4.842", "0.423", "-3.965"], ["-4.777", "1.017", "-2.540"], ["-4.411", "0.935", "-1.508"], ["-4.508", "0.535", "-0.987"], ["-4.298", "-0.010", "0.014"], ["-3.798", "0.031", "0.836"], ["-3.261", "0.247", "1.269"], ["-2.612", "-0.004", "1.630"], ["-1.904", "0.034", "1.864"], ["-1.152", "1.099", "1.447"], ["-0.815", "1.518", "1.188"], ["-0.378", "1.742", "0.515"], ["-0.107", "1.769", "0.054"], ["-0.099", "1.773", "-0.017"]],
+                              [["-6.769", "0.435", "-8.334"], ["-6.828", "0.093", "-7.397"], ["-6.512", "-0.097", "-6.163"], ["-6.441", "0.410", "-5.244"], ["-6.809", "0.884", "-4.415"], ["-6.190", "1.047", "-2.984"], ["-6.245", "-0.094", "-2.333"], ["-5.856", "0.236", "-1.390"], ["-5.762", "0.822", "-1.046"], ["-5.413", "0.685", "-0.192"], ["-5.423", "0.010", "0.524"], ["-4.732", "0.035", "1.074"], ["-3.765", "0.275", "1.519"], ["-2.483", "0.655", "1.585"], ["-1.492", "1.020", "1.334"], ["-0.801", "1.435", "0.879"], ["-0.127", "1.935", "0.047"], ["-0.128", "1.939", "-0.027"]] ];
             this.ropes = [];
             this.ropesVec = [];
 
@@ -332,15 +337,21 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     let newVector = new THREE.Vector3( Number(curveData[i][j][0]),
                                                        Number(curveData[i][j][1]),
                                                        Number(curveData[i][j][2]) );
-                    // scale down
-                    newVector.multiplyScalar(1.5);
+                    // scale
+                    newVector.multiplyScalar(1.7);
+                    // newVector.multiply( new THREE.Vector3(1.5, 1.5, 2) );
                     curve_vec.push(newVector);
                 }
                 this.ropesVec.push( curve_vec );
             }
 
-            this.ropeMaterial = new THREE.MeshBasicMaterial({color: 0xcc0000, wireframe: true});
+            this.ropeMaterial = new THREE.MeshBasicMaterial({color: 0xb30000, wireframe: true});
             this.liquidMats = [];
+            this.nightRopeTransformation = [
+                [ [-2.18, -0.57, 5.71], [0,100*Math.PI/180,0] ],
+                [ [-1.92, -0.25, 7.15], [0,88*Math.PI/180,0] ]
+            ];
+            this.dayRopeTransformation = [1.4, -0.7, 4.1];
             for(let i=0; i<2; i++){
                 let liquidTex = p_tex_loader.load(this.BASE_PATH + '/images/liquid_trans.png');
                 liquidTex.repeat.x = 1;
@@ -370,9 +381,24 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         }
         this.dummy={roughValue:0};
 
-        this.completeSequenceSetup();
+        // this.completeSequenceSetup();
 
         this.loadingManager.itemEnd("Lupo12PMAnim");
+    }
+
+    setupForNight() {
+        this.lupoArt.position.set(26.52, -2, -11.21);
+        this.lupoArt.scale.multiplyScalar(1.2);
+        for(let i=0; i<this.ropes.length; i++){
+            this.ropes[i].position.fromArray( this.nightRopeTransformation[i][0] );
+            this.ropes[i].rotation.fromArray( this.nightRopeTransformation[i][1] );
+        }
+    }
+
+    assignChController(controller) {
+        this.characterController = controller;
+        // this.theDogs = this.characterController.characters['LupoDogs5PM'];
+        // console.log(this.characterController.characters);
     }
 
     createFlower() {
@@ -393,7 +419,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
             // Group of flower
             let f_offset = new THREE.Vector3(1.2, 1, 1,2);
-            for(let i=0; i<this.cactusGroupFloor.length; i++){
+            for(let i=0; i<this.cactusGroupFloor.children.length; i++){
                 let flowerrr = this.flower.clone();
 
                 let new_mat = this.petalMat.clone();
@@ -404,12 +430,12 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     flowerrr.children[j].children[0].scale.multiplyScalar(0.01);
                 }
 
-                let f_pos = this.cactusGroupFloor[i].children[3].position.clone();                
+                let f_pos = this.cactusGroupFloor.children[i].children[3].position.clone();                
                 flowerrr.position.copy(f_pos);
                 flowerrr.rotation.x = ( 70*Math.PI/180 );
                 flowerrr.scale.multiplyScalar(0.8); // 0.8
 
-                this.cactusGroupFloor[i].add(flowerrr);
+                this.cactusGroupFloor.children[i].add(flowerrr);
                 this.flowerGroup.push( flowerrr );
             }
 
@@ -427,6 +453,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         liquid.material.map.offset.x = -1 - _index*0.4;
         ropee.add(liquid);
         this.add(ropee);
+        ropee.position.set(1.4, -0.7, 4.1);
+        // DebugUtil.positionObject(ropee, "rope"+_index);
         this.ropes.push(ropee);
     }
 
@@ -480,7 +508,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.cactusTimelines[index].play();
 
         if(color != null){
-            this.cactusGroup[index].children[0].material.color.set( color );
+            this.cactusGroup.children[index].children[0].material.color.set( color );
         }
     }
 
@@ -489,22 +517,30 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     showSculptures() {
+        // this.lupoArt.children[0].visible = true;
+
         for(let i=0; i<this.lupoArt.children[0].children.length; i++){
             let targetPos = this.lupoArt.children[0].children[i].targetPosition;
             let delayT = i*this.lookupTable[i];
             let t_scale = TweenMax.to(this.lupoArt.children[0].children[i].scale, 3, { y:1, delay: delayT, ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 0.2, points: 100, taper: "out", randomize: true, clamp: false}) });  // ease: Back.easeInOut.config(0.5)
-            let t_pos = TweenMax.to(this.lupoArt.children[0].children[i].position, 3, { x:targetPos.x, y:targetPos.y, z:targetPos.z, delay: delayT });
-            let t_mat = TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:1, delay: delayT });
+            let t_pos = TweenMax.to(this.lupoArt.children[0].children[i].position, 3, {
+                x:targetPos.x, y:targetPos.y, z:targetPos.z, delay: delayT,
+                onStart:()=>{
+                    this.lupoArt.children[0].children[i].visible = true;
+                    this.lupoArt.children[1].children[i].visible = true;
+                }
+            });
+            // let t_mat = TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:1, delay: delayT });
             //
             this.tweenAnimCollectors.push(t_scale);
             this.tweenAnimCollectors.push(t_pos);
-            this.tweenAnimCollectors.push(t_mat);
+            // this.tweenAnimCollectors.push(t_mat);
         }
     }
 
     flickerSculptureTextures() {
-        let t_flicker = TweenMax.to(this.dummy, 2, { roughValue:5, 
-                                     ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 5, points: 100, taper: "both", randomize: true, clamp: false}),
+        let t_flicker = TweenMax.fromTo(this.dummy, 2, { roughValue:0 }, { roughValue:5, 
+                                     ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 5, points: 50, taper: "both", randomize: true, clamp: false}),
                                      onUpdate: ()=>{this.shiftTextures()},
                                      onComplete: ()=>{this.doneShiftTextures()} });  // ease: Back.easeInOut.config(0.5)
         this.tweenAnimCollectors.push(t_flicker);
@@ -537,13 +573,34 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     shiftSculptures() {
-        TweenMax.to(this.lupoArt.rotation, 2, { x:"+="+Math.PI });
+        let tw = TweenMax.to(this.lupoArt.rotation, 2, { x:"+="+Math.PI });
         //
-        this.tweenAnimCollectors.push( this.tl );
+        this.tweenAnimCollectors.push( tw );
     }
 
     connectToDogs() {
         this.liquidOut = true;
+    }
+
+    scaleDogs( times ) {
+        let dogPos = new THREE.Vector3();
+        dogPos.fromArray( this.dogsTobePosition[times] );
+        let dogSize = times + 1;
+        // this.theDogs.scale.multiplyScalar( size );
+        TweenMax.to(this.theDogs.position, 6, { x:dogPos.x, y:dogPos.y, z:dogPos.z });
+        TweenMax.to(this.theDogs.scale, 6, { x:dogSize, y:dogSize, z:dogSize });
+    }
+
+    characterDisappear() {
+        this.flickerSculptureTextures();
+        TweenMax.to(this.lupoArt.rotation, 3, { x:"+="+Math.PI, delay: 1, ease: Back.easeInOut.config(1.4) });
+        TweenMax.to(this.fullVideo.mesh.rotation, 2, {
+            x:"+="+Math.PI,
+            delay: 2,
+            onComplete: ()=>{
+                this.fullVideo.setOpacity(0.0);
+            }
+        });
     }
 
     loadCactus1( mat ) {
@@ -621,7 +678,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     createCactusAnimation() {
-        for(let i=0; i<this.cactusGroup.length; i++){
+        for(let i=0; i<this.cactusGroup.children.length; i++){
 
             let tl = new TimelineMax({delay:i*0.3});
             let timeGap = 0;
@@ -630,7 +687,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             for(let k=0; k<theAniSequence.length; k++){
                 let toTween=[];
                 for(let j=0; j<theAniSequence[k].length; j++){
-                    let tw = this.createCactusAni( this.cactusGroup[i], theAniSequence[k][j] );
+                    let tw = this.createCactusAni( this.cactusGroup.children[i], theAniSequence[k][j] );
                     toTween.push(tw);
                 }
                 tl.add( toTween, timeGap );
@@ -640,7 +697,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             this.cactusTimelines.push(tl);
         }
 
-        for(let i=0; i<this.cactusGroupFloor.length; i++){
+        for(let i=0; i<this.cactusGroupFloor.children.length; i++){
 
             let tl = new TimelineMax({delay:i*0.5});
             let timeGap = 0;
@@ -649,7 +706,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             for(let k=0; k<theAniSequence.length; k++){
                 let toTween=[];
                 for(let j=0; j<theAniSequence[k].length; j++){
-                    let tw = this.createCactusAni( this.cactusGroupFloor[i], theAniSequence[k][j] );
+                    let tw = this.createCactusAni( this.cactusGroupFloor.children[i], theAniSequence[k][j] );
                     toTween.push(tw);
                 }
                 tl.add( toTween, timeGap );
@@ -677,7 +734,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 _tex.name="sculptureTex_" + i;
                 this.sculptureTextures[i] = _tex;
 
-                let _mat = new THREE.MeshPhongMaterial({map: _tex, transparent: true, shininess: 100});
+                let _mat = new THREE.MeshPhongMaterial({map: _tex, shininess: 100});
                 this.sculptureMaterials.push( _mat );
             }
             for(let i=0; i<textureMADFiles.length; i++){
@@ -686,7 +743,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 _tex.name="sculptureMadTex_" + i;
                 this.sculptureMADTextures[i] = _tex;
 
-                let _mat = new THREE.MeshPhongMaterial({map: _tex, transparent: true, shininess: 100});
+                let _mat = new THREE.MeshPhongMaterial({map: _tex, shininess: 100});
                 this.sculptureMADMaterials.push( _mat );
             }
             resolve();
@@ -714,7 +771,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 loader.load( modelF, (geometry) => {
                     let meshhh = new THREE.Mesh( geometry, matF );
                     meshhh.scale.y = 0.01;
-                    meshhh.material.opacity = 0;
+                    // meshhh.material.opacity = 0;
                     meshhh.position.copy( modelPos );
                     // save for later use
                     meshhh.targetPosition = modelTargetPos;
@@ -725,7 +782,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     meshh.position.copy( modelTargetPos );
                     lupoArtBottom.add(meshh);
 
-                    //DebugUtil.positionObject(meshhh, "art"+this.artNum);
+                    // DebugUtil.positionObject(meshh, "art"+this.artNum);
                     this.artNum++;
                 });
                 // this.loadModels.bind(undefined, loader, i);
@@ -773,9 +830,16 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     // receive name
-    start() {
-        this.currentSequence = this.sequenceConfig.slice(0);
+    start( time ) {
+        this.reset();
+        
+        this.currentSequence = this.sequenceConfig[time].slice(0);
         this.nextAnim = this.currentSequence.shift();
+
+        if(this.theDogs==null){
+            this.theDogs = this.characterController.characters['LupoDogs5PM'];
+            DebugUtil.positionObject(this.theDogs, "Dogs");
+        }
     }
 
     reset() {
@@ -787,20 +851,29 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.tweenAnimCollectors = [];
 
         // back to original status
-        TweenMax.to(this.lupoArt.rotation, 1, { x:0 });
+        this.lupoArt.rotation.x = 0;
+        // this.lupoArt.children[0].visible = false;
+        // this.lupoArt.children[1].visible = false;
         for(let i=0; i<this.lupoArt.children[0].children.length; i++){
             let origPos = this.lupoArt.children[0].children[i].originalPosition;
-            TweenMax.to(this.lupoArt.children[0].children[i].scale, 1.5, { y:0.01, delay: 1 });
-            TweenMax.to(this.lupoArt.children[0].children[i].position, 1.5, { x:origPos.x, y:origPos.y, z:origPos.z, delay: 1 });
-            TweenMax.to(this.lupoArt.children[0].children[i].material, 0.2, { opacity:0, delay: 1 });
+            this.lupoArt.children[0].children[i].scale.y = 0.01;
+            this.lupoArt.children[0].children[i].position.copy(origPos);
+            this.lupoArt.children[0].children[i].visible = false;
+        }
+        for(let i=0; i<this.lupoArt.children[1].children.length; i++){
+            this.lupoArt.children[1].children[i].visible = false;
         }
 
-        // reset sequence
-        this.sequenceConfig = [];
-        this.sequenceConfig = this.sequenceConfigOriginal.slice(0); // copy the original setting
-        this.completeSequenceSetup();
+        this.lupoArt.position.set(.7,-1.2,1);
+        this.lupoArt.scale.set(1,1,1);
+        this.lupoArt.rotation.z = 0;
 
-        // this.start();
+        this.fullVideo = this.parent.fullVideo;
+
+        for(let i=0; i<this.ropes.length; i++){
+            this.ropes[i].position.fromArray( this.dayRopeTransformation );
+            this.ropes[i].rotation.set( 0,0,0 );
+        }
     }
 
     updateVideoTime(time) {
@@ -818,7 +891,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     update(dt,et) {
         if(this.liquidOut){
             for(let i=0; i<this.ropes.length; i++){
-                this.ropes[i].children[0].material.map.offset.x+=0.01;
+                this.ropes[i].children[0].material.map.offset.x+=0.001;
                 if(this.ropes[i].children[0].material.map.offset.x>1)
                     this.ropes[i].children[0].material.map.offset.x=-0.6;
             }

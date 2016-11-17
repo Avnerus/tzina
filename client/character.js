@@ -2,7 +2,7 @@ import VideoRGBD from './util/video_rgbd'
 import DebugUtil from './util/debug'
 
 export default class Character extends THREE.Object3D {
-    constructor(config, props, collisionManager, soundManager) {
+    constructor(config, props, collisionManager, soundManager, scene) {
         super();
         this.collisionManager = collisionManager;
         this.soundManager = soundManager;
@@ -10,6 +10,8 @@ export default class Character extends THREE.Object3D {
         this.inControl = false;
 
         this.debug = true;
+        this.inShow = false;
+        this.scene = scene;
 
         if (!props.fullOnly) {
             this.idleVideo = new VideoRGBD({
@@ -17,11 +19,12 @@ export default class Character extends THREE.Object3D {
                 maxdepth: props.maxdepth,
                 fileName: props.basePath + "_idle.webm",
                 uvdy: props.uvdy_idle ? props.uvdy_idle : props.uvdy,
-                uvdx: props.uvdx,
+                uvdx: props.uvdx_idle ? props.uvdx_idle : props.uvdx,
                 scale: props.scale,
                 width: props.width,
                 height: props.height,
-                fps: 15
+                volume: props.event ? 1 : 0,
+                fps: props.event ? 25 : 15,
             });
         }
 
@@ -39,6 +42,7 @@ export default class Character extends THREE.Object3D {
                 fps: 25
             });
         }
+
 
 
         console.log(props.name + " character constructed!");
@@ -60,6 +64,10 @@ export default class Character extends THREE.Object3D {
         this.nextAdjustment = null;
         this.lastAdjustment = null;
 
+        this.adjustments = null;
+
+        this.colliding = false;
+
     }
     init(loadingManager) {
             this.position.fromArray(this.props.position);
@@ -71,8 +79,13 @@ export default class Character extends THREE.Object3D {
             );
 
             if (this.animation) {
-                this.animation.init(loadingManager);
+                if(!this.animation.initialized) {
+                    this.animation.init(loadingManager);
+                    this.animation.initialized = true;
+                }
 
+                // move to load()
+                /*
                 this.animation.scale.multiplyScalar(this.props.animationScale);
                 this.animation.position.fromArray(this.props.animationPosition);
                 this.animation.rotation.set(
@@ -80,30 +93,37 @@ export default class Character extends THREE.Object3D {
                     this.props.animationRotation[1] * Math. PI / 180,
                     this.props.animationRotation[2] * Math. PI / 180
                 );
-                //this.add(this.animation);
-                this.animation.visible = false;
+                */
+                if (!this.props.fullOnly) {
+                    this.animation.visible = false;
+                }  else {
+                    console.log(this.props.name, "Showing animation");
+                    this.animation.visible = true;
+                }
             } else {
                 this.animation = null;
             }
 
-            // for event character
-            if (this.props.idleOnly && this.animation) {
-                this.animation.visible = true;
-                this.add(this.animation);
-            }
 
             events.on("character_playing", (name) => {
-                if (this.active && !this.done && this.props.name != name) {
+                if (this.idleException(name)) {
+                    return;
+                }
+                if (this.active && !this.done && this.props.name != name &&
+                    this.props.name != "FatmanShower" && this.props.name != "FatmanSleep")  {
+                    this.onHold = true;
+                    console.log(name, " is playing." , this.props.name, "is pausing");
                     if (!this.props.fullOnly) {
-                        console.log(name, " is playing." , this.props.name, "is pausing");
-                        this.onHold = true;
                         this.idleVideo.pause();
                         this.idleVideo.setOpacity(0.5);
                     }
                 }
             });
             events.on("character_idle", (name) => {
-                if (this.active && !this.done && this.props.name != name) {
+                if (this.idleException(name)) {
+                    return;
+                }
+                if (this.active && this.onHold && !this.done && this.props.name != name) {
                     this.onHold = false;
                     console.log(name, " is idle." , this.props.name, "is playing");
                     if (!this.props.fullOnly) {
@@ -115,7 +135,32 @@ export default class Character extends THREE.Object3D {
 
             events.on("control_threshold", (passed) => {
                 this.inControl = passed;
+                setTimeout(() => {
+                    if (this.onHold && this.active && !this.inShow) {
+                        if (!this.props.fullOnly) {
+                            this.idleVideo.setOpacity(1.0);
+                            this.idleVideo.play();
+                        }
+                        this.onHold = false;
+                    }
+                },500);
             });
+
+            events.on("show_start", () => {this.inShow = true});
+            events.on("show_end", () => {this.inShow = false});
+
+        //events.on("experience_end", () => {this.unload()});
+    }
+    idleException(name) {
+        if (
+            (name == "Lupo5PM" && this.props.name == "LupoDogs5PM" ) ||
+            (name == "Lupo12PM" && this.props.name == "LupoDogs12PM" ) ||
+            (name == "Agam12PM" && this.props.name == "FatmanSleep" )
+        )  {
+            return true;
+        } else {
+            return false;
+        }
     }
     play() {
         if (!this.done && !this.props.fullOnly) {
@@ -124,9 +169,24 @@ export default class Character extends THREE.Object3D {
             this.idleVideo.mesh.visible = true;
             this.idleVideo.wire.visible = true;
 
-            this.idleVideo.play();
+            if (this.inControl) {
+                this.idleVideo.play();
+            } else {
+                this.idleVideo.play();
+                setTimeout(() => {
+                    console.log(this.props.name + " Character video idle pausing because in intro");
+                    this.onHold = true;
+                    this.idleVideo.pause();
+                    this.idleVideo.setOpacity(0.5);
+                },5000);
+            }
+
 
             if (this.props.event) {
+                // for event character
+                if (this.animation) {
+                    this.animation.visible = true;
+                }
                 events.emit("character_playing", this.props.name)
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {
@@ -134,10 +194,18 @@ export default class Character extends THREE.Object3D {
                     this.idleVideo.pause();
                     this.idleVideo.unload();
                     this.remove(this.idleVideo);
+                    if (this.animation) {
+                        this.remove(this.animation);
+                    }
                     this.done = true;
                     events.emit("character_idle", this.props.name)
                     events.emit("character_ended", this.props.name)
                 });
+                this.idleVideo.video.addEventListener('timeupdate',() => {
+                    if (this.animation) {
+                        this.animation.updateVideoTime(this.idleVideo.video.currentTime);
+                    }
+                },false);
             }
         }
     }
@@ -146,7 +214,8 @@ export default class Character extends THREE.Object3D {
         console.log("Character " + this.props.name + ": Load");
         if (!this.done) {
             if (this.props.adjustments) {
-                this.nextAdjustment = this.props.adjustments.shift();
+                this.adjustments = this.props.adjustments.slice(0);
+                this.nextAdjustment = this.adjustments.shift();
             }
 
             if (!this.props.fullOnly) {
@@ -161,7 +230,6 @@ export default class Character extends THREE.Object3D {
                 this.fullVideo.mesh.visible = false;
                 this.fullVideo.wire.visible = false;
 
-    
                 console.log(this.props.name, "Adding video mesh ", this.fullVideo.video)
                 this.add(this.fullVideo.mesh);
                 this.add(this.fullVideo.wire);
@@ -186,11 +254,24 @@ export default class Character extends THREE.Object3D {
 
                 this.fullVideo.video.loop = false;
             }
+
+            if (this.animation) {
+                this.add(this.animation);
+
+                this.animation.scale.set(this.props.animationScale,this.props.animationScale,this.props.animationScale);
+                this.animation.position.fromArray(this.props.animationPosition);
+                this.animation.rotation.set(
+                    this.props.animationRotation[0] * Math. PI / 180,
+                    this.props.animationRotation[1] * Math. PI / 180,
+                    this.props.animationRotation[2] * Math. PI / 180
+                );
+            }
         }
         this.active = true;
     }
 
     unload() {
+        console.log("Character " + this.props.name + " Unload");
         if (!this.done) {
             if (this.fullVideo) {
                 this.fullVideo.unload();
@@ -204,6 +285,11 @@ export default class Character extends THREE.Object3D {
         }
         //this.remove(this.animation);
         this.active = false;
+
+        // attach animation back
+        if (this.props.adjustments) {
+            this.attach( this.animation, this.scene, this );
+        }
     }
 
     update(dt,et) {
@@ -237,6 +323,10 @@ export default class Character extends THREE.Object3D {
 
         this.remove(this.fullVideo);
 
+        if (this.props.event) {
+            this.remove(this.animation);
+        }
+
         this.playingFull = false;
         if (this.props.subtitles) {
             this.subtitlesVideo.src = "";
@@ -250,10 +340,10 @@ export default class Character extends THREE.Object3D {
 
     pauseFull() {
         console.log(this.props.name, "Video pause full");
-        if (this.animation) {
-            this.animation.visible = false;
-        }
         if (!this.props.fullOnly) {
+            if (this.animation) {
+                this.animation.visible = false;
+            }
             this.idleVideo.mesh.visible = true;
             this.idleVideo.wire.visible = true;
             this.idleVideo.play();
@@ -279,60 +369,100 @@ export default class Character extends THREE.Object3D {
             this.fullVideo.setScale(this.nextAdjustment.scale);
         }
         if (this.nextAdjustment.position) {
+            // ANIMATION Offset
+            // let aniPosAdjust = new THREE.Vector3().fromArray(this.nextAdjustment.position);
+            // aniPosAdjust.sub(new THREE.Vector3().fromArray(this.props.position));
+            // aniPosAdjust.multiplyScalar(this.props.scale);
+            // this.animation.position.add(aniPosAdjust);
+
+            // LAURA Mesh position offset?
+            // let possitionOffset = new THREE.Vector3().fromArray(this.nextAdjustment.position).sub(new THREE.Vector3().fromArray(this.props.position));
+            // possitionOffset.add(this.fullVideo.mesh.position);
+            // this.fullVideo.setPosition(possitionOffset);
+            
+            console.log("Adjustment!!", this.nextAdjustment.sec);
+
+            if(this.nextAdjustment.sec!=0){
+                this.detach( this.animation, this, this.scene );
+                console.log("detach animation!");
+            }
+    
             this.position.fromArray(this.nextAdjustment.position);
+            // this.attach( this.animation, this.scene, this );
         }
 
         this.lastAdjustment = this.nextAdjustment;
-        if (this.props.adjustments.length > 0) {
-            this.nextAdjustment = this.props.adjustments.shift();
+        if (this.adjustments.length > 0) {
+            this.nextAdjustment = this.adjustments.shift();
         } else {
             this.nextAdjustment = null;
         }
     }
+    detach ( child, parent, scene ) {
+        child.applyMatrix( parent.matrixWorld );
+        parent.remove( child );
+        scene.add( child );
+    }
+
+    attach ( child, scene, parent ) {
+        var matrixWorldInverse = new THREE.Matrix4();
+        matrixWorldInverse.getInverse( parent.matrixWorld );
+        child.applyMatrix( matrixWorldInverse );
+
+        scene.remove( child );
+        parent.add( child );
+    }
     onCollision() {
-        //console.log("Collision!! ", this.props.name, this.inControl, this.active, this.playingFull, this.done);
+        //console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
-        if (this.inControl && !this.playingFull && !this.onHold && !this.done) {
-            this.playingFull = true;
-            console.log(this.props.name + " - Loading full video ");
-            if (this.animation) {
-                this.animation.visible = false;
-                this.add(this.animation);
-            }
-
-            // load subtitles video
-            if (!this.isPaused) {
-
-                if(this.props.subtitles) {
-                    this.subtitlesVideo = document.getElementById("subtitles");
-                    this.subtitlesVideo.addEventListener('canplay',() => {
-                        if (!this.subtitlesReady) {
-                            console.log(this.props.name + " - Subtitles Ready");
-                            this.subtitlesReady = true;
-                            this.checkReady();
-                        }
-                    },false);
-                    this.subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
-                    this.subtitlesVideo.load();
-                }
-                this.fullVideo.video.addEventListener('canplay',() => {
-                    if (!this.fullReady) {
-                        console.log(this.props.name + " - Full video ready");
-                        this.fullReady = true;
-                        this.checkReady();
+        if (!this.colliding) {
+            this.colliding = true;
+            // Avoiding 2 collisions at the same time
+            setTimeout(() => {
+                this.colliding = false;
+                if (this.inControl && !this.playingFull && !this.onHold && !this.done) {
+                    this.playingFull = true;
+                    console.log(this.props.name + " - Loading full video ");
+                    if (this.animation && !this.props.fullOnly) {
+                        this.animation.visible = false;
                     }
-                },false);
-                this.fullVideo.load();
 
-            } else {
-                console.log("Resume");
-                if (this.props.subtitles) {
-                    this.subtitlesVideo.style.display = "block";
-                    this.subtitlesVideo.play();
+                    // load subtitles video
+                    if (!this.isPaused) {
+
+                        if(this.props.subtitles) {
+                            this.subtitlesVideo = document.getElementById("subtitles");
+                            this.subtitlesVideo.addEventListener('canplay',() => {
+                                if (!this.subtitlesReady) {
+                                    console.log(this.props.name + " - Subtitles Ready");
+                                    this.subtitlesReady = true;
+                                    this.checkReady();
+                                }
+                            },false);
+                            this.subtitlesVideo.src = this.props.basePath + "_subtitles.webm";
+                            this.subtitlesVideo.load();
+                        }
+                        this.fullVideo.video.addEventListener('canplay',() => {
+                            if (!this.fullReady) {
+                                console.log(this.props.name + " - Full video ready");
+                                this.fullReady = true;
+                                this.checkReady();
+                            }
+                        },false);
+                        this.fullVideo.load();
+
+                    } else {
+                        console.log("Resume");
+                        if (this.props.subtitles) {
+                            this.subtitlesVideo.style.display = "block";
+                            this.subtitlesVideo.play();
+                        }
+                        this.playFull();
+                    }
                 }
-                this.playFull();
-            }
+            }, Math.floor(Math.random() * 100) )
         }
+
     }
 
     showAnimation(){
@@ -343,8 +473,9 @@ export default class Character extends THREE.Object3D {
         console.log(this.props.name, "Checking ready");
         if (this.fullReady && (this.subtitlesReady || !this.props.subtitles)) {
             if (this.animation) {
-                this.animation.start()
+                this.animation.start(this.props.name);
             }
+            console.log("Check ready adjustment", this.nextAdjustment);
             if (this.nextAdjustment && this.nextAdjustment.sec == 0) {
                 this.adjust();
             }
@@ -367,32 +498,39 @@ export default class Character extends THREE.Object3D {
     }
 
     playFull() {
-        console.log(this.props.name, "Playing full", this.fullVideo);
-        this.playingFull = true;
-        if (this.idleVideo) {
-            this.idleVideo.pause();
-            this.idleVideo.mesh.visible = false;
-            this.idleVideo.wire.visible = false;
-        }
-        this.fullVideo.mesh.visible = true;
-        this.fullVideo.wire.visible = true;
+        if (this.fullVideo.mesh) {
+            this.playingFull = true;
+            if (this.idleVideo) {
+                this.idleVideo.pause();
+                if (this.idleVideo.mesh) {
+                    this.idleVideo.mesh.visible = false;
+                    this.idleVideo.wire.visible = false;
+                }
+            }
+            this.fullVideo.mesh.visible = true;
+            this.fullVideo.wire.visible = true;
 
-        if (this.lastAdjustment && this.lastAdjustment.position) {
-            this.position.fromArray(this.lastAdjustment.position);
-        }
+            if (this.lastAdjustment && this.lastAdjustment.position) {
+                this.position.fromArray(this.lastAdjustment.position);
+            }
 
-        if(this.config.skipCharacters) {
-            DebugUtil.fastForward(this.fullVideo.video);
-        }
+            if(this.config.skipCharacters) {
+                DebugUtil.fastForward(this.fullVideo.video);
+            }
 
-        this.fullVideo.play();
-        if (this.subtitlesReady) {
-            this.subtitlesVideo.style.display = "block";
-            this.subtitlesVideo.play();
+            this.fullVideo.play();
+            if (this.subtitlesReady) {
+                this.subtitlesVideo.style.display = "block";
+                this.subtitlesVideo.play();
+            }
+            if (this.animation) {
+                setTimeout(() => {
+                    this.animation.visible = true;
+                },1000)
+            }
+            events.emit("character_playing", this.props.name)
+        } else {
+            console.error("Cannot play video!", this.props.name);
         }
-        if (this.animation) {
-            this.animation.visible = true;
-        }
-        events.emit("character_playing", this.props.name)
     }
 }

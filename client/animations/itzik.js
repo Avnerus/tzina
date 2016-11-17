@@ -17,13 +17,14 @@ export default class ItzikAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 50, anim: ()=>{this.benchOutFirst()} },     //25
-            { time: 60, anim: ()=>{this.benchMove(1)} },        //35
-            { time: 68, anim: ()=>{this.benchMove(2)} },        //43
-            { time: 75, anim: ()=>{this.benchMove(3)} },        //50
-            { time: 80, anim: ()=>{this.benchMove(4)} },        //55
-            { time: 85, anim: ()=>{this.benchMove(5)} },        //60
-            { time: 204, anim: ()=>{this.characterDisappear(0)} }//210
+            { time: 50, anim: ()=>{this.benchOutFirst()} },     //50
+            { time: 60, anim: ()=>{this.benchMove(1)} },        //60
+            { time: 68, anim: ()=>{this.benchMove(2)} },        //68
+            { time: 75, anim: ()=>{this.benchMove(3)} },        //75
+            { time: 80, anim: ()=>{this.benchMove(4)} },        //80
+            { time: 85, anim: ()=>{this.benchMove(5)} },        //85
+            // end: 211, ani takes 13
+            { time: 197, anim: ()=>{this.characterDisappear()} }//197
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -44,7 +45,7 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.benchGroup = new THREE.Object3D();
         this.benchCount = 6;   //10
         this.b_offset = 5;
-        this.b_radius = 10.5;
+        this.b_radius = 11.55;
         this.b_open_index = 0;
 
         this.clouds = [];
@@ -127,7 +128,8 @@ export default class ItzikAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        // DebugUtil.positionObject(this, "Itzik");
+        // DebugUtil.positionObject(this, "Itzik Anim");
+
         this.loadingManager.itemEnd("ItzikAnim");
     }
 
@@ -167,26 +169,30 @@ export default class ItzikAnimation extends THREE.Object3D {
         TweenMax.to( _this.benchGroup.children[_index].scale, 1.5, { x: 1, y: 1, z: 1, ease: Back.easeInOut } );
     }
 
+    // total took time: 14
     characterDisappear() {
         TweenMax.to( this.smokeMat, 1, {opacity: 1});
         TweenMax.to( this.fog.position, 4, {x:0, delay:0.9, ease: Power1.easeInOut});
 
-        TweenMax.to( this.dummy, 3, { opacity:0, delay: 10, onUpdate: ()=>{
-                this.parent.fullVideo.setOpacity(this.dummy.opacity);
-            }, onStart: ()=>{
-                TweenMax.to( this.smokeMat, 4, {opacity: 0});
-            }, onComplete: ()=>{
-                this.parent.fullVideo.setOpacity(0.0);
+        if (this.parent.fullVideo) {
+            TweenMax.to( this.dummy, 3, { opacity:0, delay: 10, onUpdate: ()=>{
+                    this.parent.fullVideo.setOpacity(this.dummy.opacity);
+                }, onStart: ()=>{
+                    TweenMax.to( this.smokeMat, 4, {opacity: 0});
+                }, onComplete: ()=>{
+                    this.parent.fullVideo.setOpacity(0.0);
 
-                // rotate bench group infinitely
-                let mathStuff = Math.PI * 2 / this.benchCount;
-                this.benchGroupRotateOn(this, mathStuff);
+                    // rotate bench group infinitely
+                    let mathStuff = Math.PI * 2 / this.benchCount;
+                    this.benchGroupRotateOn(this, mathStuff);
 
-                // loose the clouds and suns
-                for(let i=0; i<this.benchGroup.children.length; i++){
-                    this.benchGroup.children[i].children[0].visible = false;
-                }
-            } } );
+                    // loose the clouds and suns
+                    for(let i=0; i<this.benchGroup.children.length; i++){
+                        this.benchGroup.children[i].children[0].visible = false;
+                    }
+                } } );
+        }
+
     }
 
     benchGroupRotateOn(_this, angle){
@@ -209,11 +215,12 @@ export default class ItzikAnimation extends THREE.Object3D {
                 if(i==3){
                     geometry.applyMatrix(new THREE.Matrix4().makeTranslation( -2, -1.5, 0 ) );
                     let tmpItem = new THREE.Mesh( geometry, mat );
-                    tmpItem.position.set(2,1.5,0);
+                    tmpItem.position.set(-2.5,1.5,0);
                     this.items[i] = tmpItem;
                 }
                 else if(i==4 || i==6){
                     let tmpItem = new THREE.Mesh( geometry, mat2 );
+                    tmpItem.position.x = -5;
                     this.items[i] = tmpItem;
                 }
                 else if(i==5){

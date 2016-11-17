@@ -3,17 +3,16 @@ export default {
     basalHeight: 10,
     fps: 60,
     enableFlying: true,
-    skipIntro: true,
-    startTime: 9,
+    skipIntro: false,
     skipCharacters: false,
+    speedIntro: false,
+    startTime: 12,
     movementSpeed: 0.5, //0.5
-    //movementSpeed: 1,
-    daySpeed: 0.003,
+    daySpeed: 0.001,
     noSquare: false,
     fullscreen: false,
     noAnimations: false,
     noExtras: false,
     noTrees: false,
-    noCharacters: false,
-//    daySpeed: 0.08,
+    noCharacters: false
 }

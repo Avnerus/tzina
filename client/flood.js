@@ -8,19 +8,19 @@ export default class Flood extends THREE.Object3D  {
         console.log("Flood constructed!")
 
         this.waveSource = new THREE.Vector3(0, -30, 0);
-        this.waveFrequencey = 0.22;
+        this.waveFrequencey = 0.07;
         this.waveHeight = 0.5;
         this.waveLength = 0.3;
 
-        this.END_SCALE = 0.275;
-        this.START_SCALE = 0.07;
+        this.END_SCALE = 0.447;
+        this.START_SCALE = 0.005;
         this.END_HEIGHT = 8.3;
-
+        this.START_HEIGHT = 11.65;
 
     }
     init(scene) {
         //let geometry = new THREE.PlaneGeometry(1000, 1000, 24, 24);
-        let geometry = new THREE.CircleGeometry( 100, 8  );
+        let geometry = new THREE.CircleGeometry( 100, 16  );
         let tessellateModifier = new THREE.TessellateModifier(.1);
         let tessellationDepth = 7;
         for(let i = 0; i < tessellationDepth; i++){
@@ -53,22 +53,23 @@ export default class Flood extends THREE.Object3D  {
 
         this.time = 0;
 
+        //events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveFrequencey");
 
         /*
         events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveLength");
-        events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveFrequencey");
         events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveHeight");
         events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "x");
         events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "y");
         events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "z");*/
 
         events.on("experience_progress", (percentage) => {
+            //console.log("FLOOD progress", percentage);
             // First scale, then rise
-            if (percentage <= 0.5) {
-                let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.5));
+            if (percentage <= 0.9) {
+                let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.9));
                 this.mesh.scale.set(scale, scale, scale);
             } else {
-                let height = (this.START_HEIGHT + (this.END_HEIGHT - this.START_HEIGHT) * ((percentage - 0.5) / 0.5));
+                let height = (this.START_HEIGHT + (this.END_HEIGHT - this.START_HEIGHT) * ((percentage - 0.1) / 0.1));
                 this.mesh.position.y = height;
             }
         });

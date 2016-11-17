@@ -81,25 +81,27 @@ export default class MiriamAnimation extends THREE.Object3D {
         this.setupAnim();
     }
 
-    setupAnim() {
+    setupAnim() {        
         this.loadingManager.itemStart("MiriamAnim");
         this.perlin = new ImprovedNoise();
         let tex_loader = new THREE.TextureLoader(this.loadingManager);
         let loader = new THREE.JSONLoader(this.loadingManager);
 
+        // DebugUtil.positionObject(this, "Miriam")
+
         // setup animation sequence
         // time: when to happen, duration: how long / fast the animation is
         this.animStart = true;
         this.sequenceConfig = [
-            { time: 4, anim: ()=>{this.manAppear(10)} },           //10
-            { time: 15, anim: ()=>{this.manHold(8)} },              //40
-            { time: 25, anim: ()=>{this.manLean(8)} },              //65
-            { time: 35, anim: ()=>{this.manCircle(8)} },           //105
-            { time: 45, anim: ()=>{this.manSwirl(8)} },            //110
-            { time: 55, anim: ()=>{this.manSwirl2(8)} },           //115
-            { time: 65, anim: ()=>{this.manSwirl3(8)} },           //120
-            { time: 75, anim: ()=>{this.manSwirlNonstop()} },      //125
-            { time: 90, anim: ()=>{this.manSwirlSpeedup(46)} }     //220, 20
+            { time: 10, anim: ()=>{this.manAppear(10)} },           //10     //4
+            { time: 40, anim: ()=>{this.manHold(8)} },              //40    //15
+            { time: 65, anim: ()=>{this.manLean(8)} },              //65    //25
+            { time: 105, anim: ()=>{this.manCircle(8)} },           //105    //35
+            { time: 115, anim: ()=>{this.manSwirl(8)} },            //110    //45
+            { time: 125, anim: ()=>{this.manSwirl2(8)} },           //115    //55
+            { time: 135, anim: ()=>{this.manSwirl3(8)} },           //120    //65
+            { time: 145, anim: ()=>{this.manSwirlNonstop()} },      //125    //75
+            { time: 220, anim: ()=>{this.manSwirlSpeedup(46)} }     //220, 20    //90
         ];
 
         let GFClockTex = tex_loader.load(this.BASE_PATH + '/images/clockUV4.jpg');
@@ -205,6 +207,7 @@ export default class MiriamAnimation extends THREE.Object3D {
 
         this.fbo = new FBO();
         this.fbo.init( this.width,this.height, this.renderer, this.simulationShader, this.renderShader, particleGeometry );
+        this.fbo.particles.frustumCulled = false;
         this.add( this.fbo.particles );
         this.fbo.particles.position.set(1,0,-2);
 

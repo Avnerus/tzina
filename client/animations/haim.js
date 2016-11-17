@@ -14,7 +14,8 @@ export default class HaimAnimation extends THREE.Object3D {
     init(loadingManager) {
         this.loadingManager = loadingManager;
         this.setupAnim();
-        // DebugUtil.positionObject(this, "haim anim");
+
+        DebugUtil.positionObject(this, "Haim Ani");
     }
 
     setupAnim() {
@@ -26,9 +27,9 @@ export default class HaimAnimation extends THREE.Object3D {
         // setup animation sequence
         // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
-            { time: 12,  anim: ()=>{this.tubeDown(1)} },
-            { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 30
-            { time: 252, anim: ()=>{this.characterDisappear()} }    //254
+            { time: 12,  anim: ()=>{this.tubeDown(1)} },    // 12
+            { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
+            { time: 252, anim: ()=>{this.characterDisappear()} }    //252
         ];
         this.nextAnim = null;
         this.completeSequenceSetup();
@@ -72,8 +73,8 @@ export default class HaimAnimation extends THREE.Object3D {
                                                        Number(curveData[k][i][j][1]),
                                                        Number(curveData[k][i][j][2]) );
                     // scale down
-                        newVector.multiplyScalar(0.5);
-                        // newVector.multiply( new THREE.Vector3(1,2,1) );
+                        // newVector.multiplyScalar(0.5);
+                        newVector.multiply( new THREE.Vector3(.4,.8,.4) );
                     curve_vec[i].push( newVector );
                 }
             }
@@ -83,7 +84,8 @@ export default class HaimAnimation extends THREE.Object3D {
         // CLOUND
         let cloudTex = tex_loader.load( this.BASE_PATH + '/images/clouds.png' );
         // cloudTex.repeat.y = 2;
-        this.cloudMat = new THREE.MeshBasicMaterial( {color: 0x00ffff, map: cloudTex, blending: "AdditiveBlending", transparent: true, side: THREE.DoubleSide, opacity: 0.4} );
+        this.cloudMat = new THREE.MeshBasicMaterial( {color: 0x00ffff, map: cloudTex, blending: "AdditiveBlending", side: THREE.DoubleSide, opacity: 1} );
+        this.cloudGroup = {'in': [], 'out': []};
 
         // TUBE_BAG
         this.bag;
@@ -122,7 +124,8 @@ export default class HaimAnimation extends THREE.Object3D {
                                                        Number(curveOutData[k][i][j][2]) );
                     // scale down
                         // newVector.multiplyScalar(0.7);
-                        newVector.multiply( new THREE.Vector3(0.9,0.6,0.9) );
+                        // newVector.multiply( new THREE.Vector3(0.9,0.6,0.9) );
+                        newVector.multiply( new THREE.Vector3(0.7,0.8,0.7) );
                     curve_vec[i].push( newVector );
                 }
             }
@@ -149,8 +152,8 @@ export default class HaimAnimation extends THREE.Object3D {
                 this.cvOutMaterial = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true, morphTargets: true, transparent: true, opacity: 0.1});
                 this.liquidOutMaterial = new THREE.MeshBasicMaterial({map: liquidOutTex, transparent: true, opacity: 0.9});
                 this.liquidOut = false;
-                this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,0.3,0) );
-                this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,-0.2,0) );
+                this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,0.3,0), 0 );
+                this.createOutCurve( new THREE.Vector3(), new THREE.Vector3(0,-0.2,0), 1 );
 
                 this.initSPEParicle( tex_loader );
                 this.createGroundPuddle( tex_loader );
@@ -186,8 +189,7 @@ export default class HaimAnimation extends THREE.Object3D {
             maxParticleCount: 3000
         });
 
-        // reduce emitter amount to be 1/5 of domeMorphTargets.length
-        for(let i = 0; i < this.outTubes.length; i++){
+        for(let i = 0; i < this.cloudGroup.out.length; i++){
             let emitter = new SPE.Emitter({
                 // type: SPE.distributions.SPHERE,
                 // duration: 10,
@@ -196,7 +198,7 @@ export default class HaimAnimation extends THREE.Object3D {
                     spread: 4
                 },
                 position: {
-                    value: this.outTubes[i].children[2].position,
+                    value: this.cloudGroup.out[i].position,
                     spread: new THREE.Vector3(5,0,5)
                     // radius: 0.5
                 },
@@ -207,26 +209,17 @@ export default class HaimAnimation extends THREE.Object3D {
                 velocity: {
                     value: new THREE.Vector3(0.1,-1,0.1)  //0.1,-0.5,0.1
                 },
-                // rotation: {
-                //     angle: 0.5
-                // },
-                // angle: {
-                //     value: [0,0.5,-0.5],
-                //     spread: [0,-0.5,0.5]
-                // },
                 opacity: {
                     value: [.5,1,1,1,1,0]
                 },
                 size: {
-                    value: [.1,.5,1,1,.5],
+                    value: [.1,.4,.7,.7,.3],
                     spread: 1
                 },
                 particleCount: 300,
-                // drag: 0.1,
-                activeMultiplier: 0.05
+                activeMultiplier: 0.1
             });
             this.particleGroup.addEmitter( emitter );
-            // console.log( this.particleGroup.emitters[0] );
         }
         this.add( this.particleGroup.mesh );
 
@@ -254,7 +247,7 @@ export default class HaimAnimation extends THREE.Object3D {
             for(let i=0; i<40; i++){
                 let puddle = new THREE.Mesh(puddleGeo, puddleMats[i%4]);
                 puddle.position.set(Math.random()*12-6,
-                                    -1*i/25,
+                                    0,
                                     Math.random()*14-7 +3);
                 puddle.rotation.x = -Math.PI/2;
                 puddle.scale.multiplyScalar( (Math.random()+1)/4 );
@@ -314,12 +307,16 @@ export default class HaimAnimation extends THREE.Object3D {
             tubeObject.add( theBag );
 
             // children_3 -> COULDS
-            let theCloud = this.cloud.clone();
-            lengthhh = liquidGeo.vertices.length-1;
-            theCloud.position.copy( liquidGeo.vertices[lengthhh] );
-            // theCloud.position.y += (this.lookupTable[j]*2);
-            tubeObject.add( theCloud );
-
+            if((j+index)%2==0){
+                let theCloud = this.cloud.clone();
+                lengthhh = liquidGeo.vertices.length-1;
+                theCloud.position.copy( liquidGeo.vertices[lengthhh] );
+                theCloud.position.y += (this.lookupTable[j]);
+                TweenMax.to( theCloud.position, 4, { y: "+=" + 0.2, repeat: -1, yoyo: true, delay: j%2, ease: Power0.easeNone } );
+                tubeObject.add( theCloud );
+                this.cloudGroup.in.push(theCloud);
+            }
+            
             tubeObject.position.copy( pos );
             tubeObject.rotation.set( rot.x, rot.y, rot.z );
             this.tubes.push( tubeObject );
@@ -332,7 +329,7 @@ export default class HaimAnimation extends THREE.Object3D {
         }
     }
 
-    createOutCurve( pos, rot ){
+    createOutCurve( pos, rot, index ){
         for(let j=0; j<this.outTubesVec.length; j++){
             let tubeObject = new THREE.Object3D();
 
@@ -364,12 +361,15 @@ export default class HaimAnimation extends THREE.Object3D {
             tubeObject.add( tubeLiquid );
 
             // children_2 -> COULDS
-            let theCloud = this.cloud.clone();
-            let lengthhh = liquidGeo.vertices.length-1;
-            theCloud.position.copy( liquidGeo.vertices[lengthhh] );
-            // theBag.scale.multiplyScalar( this.clamp(this.lookupTable[j], 0.3, 1) );
-            // theBag.rotation.y = -rot.y;
-            tubeObject.add( theCloud );
+            if((j+index)%2==0){
+                let theCloud = this.cloud.clone();
+                let lengthhh = liquidGeo.vertices.length-1;
+                theCloud.position.copy( liquidGeo.vertices[lengthhh] );
+                theCloud.position.y += this.lookupTable[j];
+                TweenMax.to( theCloud.position, 4, { y: "+=" + 0.2, repeat: -1, yoyo: true, delay: j%3, ease: Power0.easeNone } );
+                tubeObject.add( theCloud );
+                this.cloudGroup.out.push(theCloud);
+            }
 
             tubeObject.position.copy( pos );
             tubeObject.rotation.set( rot.x, rot.y, rot.z );
@@ -511,9 +511,19 @@ export default class HaimAnimation extends THREE.Object3D {
                     }
 
                     // scale up clouds
+                    /*
                     for(let i=0; i<this.outTubes.length; i++){
                         TweenMax.to( this.outTubes[i].children[2].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone } );
                         TweenMax.to( this.tubes[i].children[3].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone, onComplete: ()=>{
+                            this.liquidOut = true;
+                            // this.outTubes[0].children[1].material.opacity = 1;
+                            this.outTubes[0].children[1].visible = true;
+                        } } );
+                    }*/
+
+                    for(let i=0; i<this.cloudGroup.out.length; i++){
+                        TweenMax.to( this.cloudGroup.out[i].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone } );
+                        TweenMax.to( this.cloudGroup.in[i].scale, _duration*20, { x: 1.5, y: 1, z: 1.5, ease: Power0.easeNone, onComplete: ()=>{
                             this.liquidOut = true;
                             // this.outTubes[0].children[1].material.opacity = 1;
                             this.outTubes[0].children[1].visible = true;
@@ -526,8 +536,8 @@ export default class HaimAnimation extends THREE.Object3D {
         let rainOriginPositions = [];
 
         for(let i=0; i<this.particleGroup.emitters.length; i++){
-            this.particleGroup.emitters[i].activeMultiplier = 1;
-            this.particleGroup.emitters[i].size.value = [.2,6,8,6,2];
+            this.particleGroup.emitters[i].activeMultiplier = 1.5;
+            // this.particleGroup.emitters[i].size.value = [.2,6,8,6,2];
 
             let emitterPos = this.particleGroup.emitters[i].position.value;
             rainOriginPositions.push( emitterPos );
@@ -537,25 +547,25 @@ export default class HaimAnimation extends THREE.Object3D {
         TweenMax.to( this.parent.fullVideo.mesh.scale, 1.5, { x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, delay: 5, onStart: ()=>{
                         // 1. detach clouds from tubes
                         // 2. tubes & spine gone
+                        for(i=0; i<this.cloudGroup.in.length; i++){
+                            this.detach( this.cloudGroup.in[i], this.cloudGroup.in[i].parent, this );
+                        }
                         for(let i=0; i<this.tubes.length; i++){
-                            this.tubes[i].updateMatrixWorld();
-                            this.detach( this.tubes[i].children[3], this.tubes[i], this );
-                            // let child = this.tubes[i].children[3];
-                            // child.applyMatrix( this.tubes[i].matrixWorld );
-                            // this.tubes[i].remove( child );
-                            // this.add( child );
+                            // this.tubes[i].updateMatrixWorld();
+                            // this.detach( this.tubes[i].children[3], this.tubes[i], this );
+                            
                             TweenMax.to( this.tubes[i].scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
                                                                         this.tubes[i].visible = false;
                                                                     } } );
                         }
 
+                        for(i=0; i<this.cloudGroup.out.length; i++){
+                            this.detach( this.cloudGroup.out[i], this.cloudGroup.out[i].parent, this );
+                        }
                         for(let i=0; i<this.outTubes.length; i++) {
-                            this.outTubes[i].updateMatrixWorld();
-                            this.detach( this.outTubes[i].children[2], this.outTubes[i], this );
-                            // let child = this.outTubes[0].children[2];
-                            // child.applyMatrix( this.outTubes[i].matrixWorld );
-                            // this.outTubes[i].remove( child );
-                            // this.add( child );
+                            // this.outTubes[i].updateMatrixWorld();
+                            // this.detach( this.outTubes[i].children[2], this.outTubes[i], this );
+
                             TweenMax.to( this.outTubes[i].scale, 1, { x: 0.01, y: 0.01, z: 0.01, ease: Back.easeInOut, onComplete: ()=>{
                                                                         this.outTubes[i].visible = false;
                                                                     } } );
@@ -568,7 +578,7 @@ export default class HaimAnimation extends THREE.Object3D {
                         this.parent.fullVideo.setOpacity(0.0);
                         for(let i=0; i<this.particleGroup.emitters.length; i++){
                             this.particleGroup.emitters[i].activeMultiplier = 0.1;
-                            this.particleGroup.emitters[i].size.value = [.1,2,3,3,2];
+                            // this.particleGroup.emitters[i].size.value = [.1,2,3,3,2];
                             this.particleGroup.emitters[i].position.value = rainOriginPositions[i];
                         }
                     } } );
