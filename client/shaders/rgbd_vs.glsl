@@ -58,12 +58,14 @@ vec3 xyz( float x, float y, float depth ) {
     //Adding an if statment to determine where the face is and where the body
     //to get rid of this just --  z = depth * (maxdepth - mindepth) + mindepth;
 
+    /*
     if (position.y <= 250.0) {
         z = depth * ( maxdepth - mindepth ) + mindepth - 0.2;
     } 
     else if (position.y >= 250.0) {
         z = depth * ( maxdepth - mindepth ) + mindepth;
-    }
+    }*/
+    z = depth * ( maxdepth - mindepth ) + mindepth;
     return vec3( ( x / height  ) * z * fx, ( y / (width * 2.0)  ) * z * fy, - z );
 }
 
