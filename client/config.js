@@ -15,5 +15,6 @@ export default {
     noExtras: false,
     noTrees: false,
     noCharacters: false,
-    production: true
+    production: true,
+    videoHost: "http://assets.tzina.space/"
 }

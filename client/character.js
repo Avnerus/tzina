@@ -13,6 +13,12 @@ export default class Character extends THREE.Object3D {
         this.inShow = false;
         this.scene = scene;
 
+        if (config.videoHost) {
+            props.basePath = config.videoHost + props.basePath;
+        }
+
+        console.log("Character base path", props.basePath);
+
         if (!props.fullOnly) {
             this.idleVideo = new VideoRGBD({
                 mindepth: props.mindepth,

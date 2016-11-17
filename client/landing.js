@@ -6,7 +6,6 @@ import Trees from './trees'
 
 // DISABLE LOGGING
 window['console']['log'] = function() {};
-						
 
 var Game = require('./game').default;
 var config = require('./config').default;
