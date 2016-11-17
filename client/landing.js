@@ -4,6 +4,10 @@ import TzinaVRControls from './tzina_vr_controls'
 
 import Trees from './trees'
 
+// DISABLE LOGGING
+//window['console']['log'] = function() {};
+						
+
 var Game = require('./game').default;
 var config = require('./config').default;
 var Stats = require('stats.js');
@@ -295,7 +299,7 @@ try {
 
         
           console.log("Loading...");
-          document.getElementById('game').appendChild(stats.dom);
+            //document.getElementById('game').appendChild(stats.dom);
           game.init();
 
           try {
@@ -357,7 +361,7 @@ try {
 
 
           console.log("Loading...");
-          document.getElementById('game').appendChild(stats.dom);
+            //document.getElementById('game').appendChild(stats.dom);
           game.init();
 
           try {
@@ -430,25 +434,43 @@ var el = document.getElementById('game');
 //Vive
 $('#start_experience').click(function(){
 
-  $('#start_head').fadeOut(250,function(){
+if (!Modernizr.touchevents && lock.available()) {
+    
+    console.log("Landing requesting pointer lock")
+    var pointer = lock(document.getElementById('game'));
 
-    $('#start_experience').fadeOut(250);
-    //Show the Element
-    $('#game').show();
-      
-    if (!Modernizr.touchevents && config.controls == "locked" && lock.available()) {
-        
-        var pointer = lock(document.getElementById('game'));
+    pointer.on('attain', function() {
+        console.log("Pointer attained!");
+        if (!game.started) {
+            window.addEventListener('resize', resize, false);
+            window.addEventListener('vrdisplaypresentchange', vrchange, true);
+            game.start();
+            //Show the Element
+            console.log("Landing Show the game");
+            $('#game').show();
+            game.resize();
+            animate();
+                /*
 
-        pointer.on('attain', function() {
-            console.log("Pointer attained!");
-            if (!game.started) {
-                game.start();
-            }
-            });
+            $('#start_head').fadeOut(250,function(){
 
-            pointer.request(); 
-    }
+              $('#start_experience').fadeOut(250);
+
+            });*/
+        }
+    });
+    var fs = fullscreen(el);
+
+    fs.on('attain',function() {
+        console.log("Full screen attained!");
+        if (typeof(pointer) != 'undefined' && !game.started) {
+            pointer.request();
+        }
+    });
+    fs.request();
+    
+          /*
+    
 
     
     if (config.fullscreen && fullscreen.available()) {
@@ -474,10 +496,10 @@ $('#start_experience').click(function(){
                 game.start();
             }
         }
-    }
+    }*/
 
 
-  });
+  }
 });
 
 
@@ -528,6 +550,7 @@ $('#start_experience').click(function(){
 
 
  function killLanding(){
+    console.log("Kill landing");
 
     landingScreen = false;
     scene.remove(camera);
@@ -557,7 +580,10 @@ $('#start_experience').click(function(){
         landingControls.active = false;
 
         //Keyboard controls
-        landingKeyControl = new KeyboardController(null, camera);
+      landingKeyControl = new KeyboardController({
+          movementSpeed: 0.5,
+          enableFlying: false
+      }, camera);
 
         // load & add the trees
         trees = new Trees(camera, renderer);
@@ -601,19 +627,20 @@ $('#start_experience').click(function(){
         requestAnimationFrame(animate);
     }
 
-    /*
-    elapsed = t - lastTimestamp;
-    if (elapsed >= FPS_INTERVAL) {
-        lastTimestamp = t - (elapsed % FPS_INTERVAL);*/
-        game.animate(t);
-        stats.end();
-        stats.begin();
-   // }
+    game.animate(t);
+      //stats.end();
+      //stats.begin();
 }
 
 function resize() {
     game.resize();
 }
+
+function vrchange() {
+    game.resize();
+    game.vrChange();
+}
+
 
 }
 catch(e) {

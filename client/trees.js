@@ -86,25 +86,29 @@ export default class Trees extends THREE.Object3D {
                     }
                 })
 
-                events.on("control_threshold", (passed) => {
-                    this.controlPassed = passed;
-                    if (passed) {
-                        this.potreeWindMaterial.size = 0.03;
-                        //
-                        // In VR Hide some trees that won't be visible
-                        if (inVR) {
-                            let hide1 = this.children[8];
-                            let hide2 = this.children[13];
-                            console.log("Hiding 2 trees", hide1, hide2);
+                if (typeof(events) != 'undefined') {
 
-                            this.remove(hide1);
-                            this.remove(hide2);
+                    events.on("control_threshold", (passed) => {
+                        this.controlPassed = passed;
+                        if (passed) {
+                            this.potreeWindMaterial.size = 0.03;
+                            //
+                            // In VR Hide some trees that won't be visible
+                            if (inVR) {
+                                let hide1 = this.children[8];
+                                let hide2 = this.children[13];
+                                console.log("Hiding 2 trees", hide1, hide2);
+
+                                this.remove(hide1);
+                                this.remove(hide2);
+                            }
                         }
-                    }
-                });
-                events.on("vr_start", (cameras) => {
-                    this.cameras = cameras;
-                });
+                    });
+                    events.on("vr_start", (cameras) => {
+                        this.cameras = cameras;
+                    });
+                }
+
                 resolve();
             });
         });      

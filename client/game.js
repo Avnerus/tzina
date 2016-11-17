@@ -65,7 +65,7 @@ export default class Game {
         global.inVR = false;
 
         this.gui = new GuiManager(this.emitter);
-        this.gui.init();
+        //this.gui.init();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true,alpha: true});
         this.renderer.setClearColor( 0, 1 );
