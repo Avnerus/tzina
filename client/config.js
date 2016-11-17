@@ -14,5 +14,6 @@ export default {
     noAnimations: false,
     noExtras: false,
     noTrees: false,
-    noCharacters: false
+    noCharacters: false,
+    production: true
 }
