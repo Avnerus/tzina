@@ -5,7 +5,7 @@ import TzinaVRControls from './tzina_vr_controls'
 import Trees from './trees'
 
 // DISABLE LOGGING
-window['console']['log'] = function() {};
+//window['console']['log'] = function() {};
 
 var Game = require('./game').default;
 var config = require('./config').default;
@@ -129,7 +129,6 @@ try {
                   });
                     
                   //After scene loaded get rid of the progress bar
-                  $('#progress').hide();
 
                   //Ambient Sound
                   introSound.play();
@@ -307,6 +306,7 @@ try {
                   $('#instruction_screen').fadeOut(250, function(){
 
                     $('#tree_scene').fadeOut(250);
+                    $('#progress').hide();
 
                     killLanding();
 
@@ -322,6 +322,9 @@ try {
 
                   });
                   
+              }, function(url, itemsLoaded, itemsTotal) {
+                  console.log("Landing loaded", itemsLoaded, itemsTotal);
+
               });
           }
           catch(e) {
@@ -384,7 +387,10 @@ try {
 
                   });
                   
-              });
+              },
+             function(url, itemsLoaded, itemsTotal) {
+                $('#progress').css({'width': itemsLoaded / itemsTotal * 100 + '%'})
+            });
           }
           catch(e) {
               console.error("Exception during game load ", e);

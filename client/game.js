@@ -232,7 +232,7 @@ export default class Game {
 
     }
 
-    load(onLoad) {
+    load(onLoad, onProgress) {
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
@@ -257,7 +257,9 @@ export default class Game {
         };
 
         this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            console.log("Loaded " + itemsLoaded + "/" +  itemsTotal);
+            if (onProgress) {
+                onProgress(url, itemsLoaded, itemsTotal);
+            }
         }
 
         if (!this.config.noSquare) {

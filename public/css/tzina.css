@@ -91,7 +91,8 @@ body {
     align-items: c_;
     margin: auto;
     color: white;
-    font-size: 36px;
+    font-size: 18px;
+    font-family: Miriam Libre;
     position: relative;
 }
 #password {
@@ -133,6 +134,7 @@ body {
     height: 20px;
     background-color: #fff;
     width: 0%;
+    z-index: 1;
     -webkit-transition: 0.3s ease-in-out;
     -moz-transition: 0.3s ease-in-out;
     -o-transition: 0.3s ease-in-out;
@@ -420,7 +422,6 @@ body {
   background-color: #000;
   position: absolute;
   top: 0; left: 0;
-  width: 100%; height: 100%;
   z-index: 200 !important;
 }
 #mobile_splash img{
