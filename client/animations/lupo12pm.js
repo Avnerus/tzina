@@ -8,6 +8,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.BASE_PATH = 'assets/animations/lupo12pm';
         this.initialized = false;
         this.theDogs = null;
+
+        this.beDetached = false;
     }
 
     init(loadingManager) {
@@ -60,9 +62,18 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     { time: 24, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
                     { time: 28, anim: ()=>{this.shiftSculptures()} },
                     
-                    { time: 35, anim: ()=>{this.growCactusFloor()} },
-                    
-                    { time: 45, anim: ()=>{this.growFlower()} },
+                    // { time: 35, anim: ()=>{this.growCactusFloor()} },
+                    { time: 35, anim: ()=>{this.growSingleCactusFloor(0)} },
+                    { time: 36, anim: ()=>{this.growSingleCactusFloor(1)} },
+                    { time: 40, anim: ()=>{this.growSingleCactusFloor(2)} },
+                    { time: 43, anim: ()=>{this.growSingleCactusFloor(3)} },
+                    { time: 50, anim: ()=>{this.growSingleCactusFloor(4)} },
+
+                    { time: 45, anim: ()=>{this.growSingleFlower(0)} },
+                    { time: 46, anim: ()=>{this.growSingleFlower(1)} },
+                    { time: 50, anim: ()=>{this.growSingleFlower(2)} },
+                    { time: 53, anim: ()=>{this.growSingleFlower(3)} },
+                    { time: 60, anim: ()=>{this.growSingleFlower(4)} },
                     
 
                     // Scale dogs, total 2 times
@@ -72,7 +83,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
                     { time: 150, anim: ()=>{this.closeFlower()} },
                     // 203 ends
-                    { time: 198, anim: ()=>{this.characterDisappearNight()} }
+                    { time: 198, anim: ()=>{this.characterDisappearDay()} }
                 ]
         };
 
@@ -459,6 +470,12 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         for(let i=0; i<this.flowerTimeline.length; i++){
             this.flowerTimeline[i].play("open");
         }
+    }
+
+    growSingleFlower(index) {
+        // for(let i=0; i<this.flowerTimeline.length; i++){
+            this.flowerTimeline[index].play("open");
+        // }
     }
 
     closeFlower() {
@@ -866,6 +883,17 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             this.ropes[i].position.fromArray( this.dayRopeTransformation );
             this.ropes[i].rotation.set( 0,0,0 );
         }
+
+        // RESET CACTUS
+        for(let i=0; i<this.cactusFloorTimelines.length; i++){
+            this.cactusFloorTimelines[i].seek(0);
+        }
+        for(let i=0; i<this.flowerTimeline.length; i++){
+            this.flowerTimeline[i].seek(0);
+        }
+
+        this.fullVideo.mesh.rotation.x = 0;
+        this.liquidOut = false;
     }
 
     updateVideoTime(time) {
