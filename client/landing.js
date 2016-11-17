@@ -206,7 +206,7 @@ try {
 
           console.log('platform specific buttons');
 
-          $('#vive_button').delay(250).fadeIn(250);
+          $('#vive_button').delay(250).fadeIn(250).css("display", "inline-block");
 
           $('#desktop_button').delay(250).fadeIn(250, function(){
 
@@ -216,7 +216,7 @@ try {
 
               videoLogo.play();
 
-          });
+          }).css("display", "inline-block");
 
         });
 
