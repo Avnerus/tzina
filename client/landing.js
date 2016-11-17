@@ -5,7 +5,7 @@ import TzinaVRControls from './tzina_vr_controls'
 import Trees from './trees'
 
 // DISABLE LOGGING
-//window['console']['log'] = function() {};
+window['console']['log'] = function() {};
 						
 
 var Game = require('./game').default;
