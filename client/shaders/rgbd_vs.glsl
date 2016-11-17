@@ -10,6 +10,9 @@ const float fy = 0.832305;
 
 uniform sampler2D map;
 
+//Making z global
+float z;
+
 varying float visibility;
 varying vec2 vUv;
 
@@ -51,7 +54,16 @@ vec3 rgb2hsl( vec3 color ) {
 }
 
 vec3 xyz( float x, float y, float depth ) {
-    float z = depth * ( maxdepth - mindepth ) + mindepth;
+
+    //Adding an if statment to determine where the face is and where the body
+    //to get rid of this just --  z = depth * (maxdepth - mindepth) + mindepth;
+
+    if (position.y <= 250.0) {
+        z = depth * ( maxdepth - mindepth ) + mindepth - 0.2;
+    } 
+    else if (position.y >= 250.0) {
+        z = depth * ( maxdepth - mindepth ) + mindepth;
+    }
     return vec3( ( x / height  ) * z * fx, ( y / (width * 2.0)  ) * z * fy, - z );
 }
 
