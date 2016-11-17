@@ -699,13 +699,15 @@
         "uuid":"12D8220B-4C4F-4167-9A60-C23CDDBCC73B",
         "vertexColors":0,
         "depthTest":true,
+        "transparent":true,
+        "opacity":0.8,
         "type":"MeshLambertMaterial",
         "depthWrite":true,
-        "emissive":18651136,
+        "emissive":"0xFFFF00",
         "blending":"NoBlending",
         "name":"Sgin_Yellow_Mat",
         "map":"EB7F7690-F3CC-4AAE-AB40-8794695313ED",
-        "color":9292800
+        "color":"0xFFFFCC"
     },{
         "side":2,
         "transparent":true,
