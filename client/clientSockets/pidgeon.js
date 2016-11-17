@@ -1,5 +1,5 @@
 import {SpriteText2D , textAlign} from '../lib/text2d/index';
-var FLOORY=14.1;
+var FLOORY=13.85;
 var BlendCharacter=require('../util/BlendCharacter.js');
 
 
@@ -48,7 +48,7 @@ export default class Pidgeon extends THREE.Object3D{
     this.blendMesh.rotation.y=Math.PI;
     // this.mesh = new THREE.Mesh(Pidgeon.geometry,Pidgeon.material);
     this.blendMesh.position.set(0,-1,0);
-    // this.mesh.scale.set(0.3,0.3,0.3);
+    this.blendMesh.scale.set(0.3,0.3,0.3);
     // this.add(this.mesh);
     var box = new THREE.BoxGeometry(0.5,2,1);
     var material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe:true, visible:false} );
