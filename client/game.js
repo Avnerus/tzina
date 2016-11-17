@@ -330,13 +330,6 @@ export default class Game {
                 this.controlPassed = true;
                 this.soundManager.play("ambience");
                 this.introAni.disposeAni();
-                if (!this.shownWASD) {
-                    document.getElementById("wasd-container").style.display = "block";
-                    setTimeout(() => {
-                        document.getElementById("wasd-container").style.display = "none";
-                    },3000);
-                    this.shownWASD = true;
-                }
             }
         });
         events.on("character_ended", (name) => {
