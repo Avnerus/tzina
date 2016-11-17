@@ -450,13 +450,12 @@ if (!Modernizr.touchevents && lock.available()) {
             $('#game').show();
             game.resize();
             animate();
-                /*
 
             $('#start_head').fadeOut(250,function(){
 
               $('#start_experience').fadeOut(250);
 
-            });*/
+            });
         }
     });
     var fs = fullscreen(el);
