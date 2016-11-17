@@ -35,7 +35,7 @@ export default [
         height: 2048,
         scale: 0.003 * 0.5748,
         animationScale: 0.478, //.4
-        animationPosition: [-0.25, -0.48, 0.12],   // 0,-1.5,-2.2
+        animationPosition: [-0.43, -0.52, 0.51],
         animationRotation: [6, 0, -6],      // 20, 0, 0
         space: 0.01,
         spaceOffset: [0.11,0,-0.07],
