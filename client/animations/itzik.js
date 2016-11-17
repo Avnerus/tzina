@@ -128,7 +128,7 @@ export default class ItzikAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        // DebugUtil.positionObject(this, "Itzik Anim");
+        // DebugUtil.positionObject(this, "Itzik Ani");
 
         this.loadingManager.itemEnd("ItzikAnim");
     }
