@@ -105,9 +105,9 @@ function animate(t) {
     elapsed = t - lastTimestamp;
     if (elapsed >= FPS_INTERVAL) {
         lastTimestamp = t - (elapsed % FPS_INTERVAL);*/
-        game.animate(t);
-        stats.end();
-        stats.begin();
+    game.animate(t);
+    stats.end();
+    stats.begin();
    // }
 }
 
