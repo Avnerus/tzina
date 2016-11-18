@@ -341,6 +341,7 @@ export default class Game {
                 }
             }
         });
+            /*
         events.on("character_ended", (name) => {
             if (this.timeController.experienceProgress > 0.35 && !this.ended) {
                 setTimeout(() => {
@@ -348,7 +349,7 @@ export default class Game {
                     this.ending.start();
                 },3000);
             }
-        });
+        });*/
 
         this.started = true;
             /*
@@ -435,6 +436,15 @@ export default class Game {
 
         if (this.ended) {
             this.ending.update(dt);
+        }
+
+        this.endCheck(et);
+    }
+
+    endCheck(time) {
+        if (!this.ended && time > 60 * 15) {
+            this.ended = true;
+            this.ending.start();
         }
     }
 
