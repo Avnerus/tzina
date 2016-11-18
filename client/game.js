@@ -44,6 +44,7 @@ import VideoRGBD from './util/video_rgbd'
 
 import Ending from './ending'
 
+import PidgeonController from './clientSockets/index'
 
 
 export default class Game {
@@ -118,7 +119,7 @@ export default class Game {
             /*
         events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
         events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y");
-    
+
         events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
@@ -153,7 +154,7 @@ export default class Game {
 
         this.flood = new Flood();
         this.flood.init();
-        this.scene.add(this.flood); 
+        this.scene.add(this.flood);
 
         /*
         // Post processing
@@ -166,7 +167,7 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
-       
+
         this.vrControls = new TzinaVRControls(this.emitter, this.camera);
 
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene, this.vrControls);
@@ -224,12 +225,15 @@ export default class Game {
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
 
-        this.show = new Show(this.square, this.characterController, this.timeController); 
+        this.show = new Show(this.square, this.characterController, this.timeController);
         this.show.init();
 
         this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls);
         this.ending.init();
 
+
+        this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
+        this.pidgeonController.init(this.loadingManager);
     }
 
     load(onLoad, onProgress) {
@@ -239,7 +243,7 @@ export default class Game {
             if (!this.config.noSquare) {
                 this.scene.add(this.square);
                 this.sky.applyToMesh(this.square.getSphereMesh());
-                // this.introAni.initFBOParticle();
+
                 this.introAni.createSnowParticle();
                 this.scene.add(this.introAni);
             }
@@ -275,7 +279,7 @@ export default class Game {
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
-        
+
         VideoRGBD.initPool();
 
         // WebVR
@@ -293,6 +297,7 @@ export default class Game {
         this.container.appendChild(element);
 
         this.resize();
+
 
     }
 
@@ -430,6 +435,15 @@ export default class Game {
 
         if (this.ended) {
             this.ending.update(dt);
+        }
+        if(!this.pidgeonfailed){
+          // console.log("pidgeon second");
+          try{
+            this.pidgeonController.frame(dt);
+          }catch(e){
+            console.error("pidgeonContoller failed",e);
+            this.pidgeonfailed=true;
+          }
         }
     }
 
