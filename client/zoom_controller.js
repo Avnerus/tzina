@@ -58,9 +58,9 @@ export default class ZoomController {
 
         // IDFA:
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -3.14,
+            -3.45,
             12.67,
-            -6.07
+            -6.23
             );
 
         this.CHAPTER_THRESHOLD = 0.45;
@@ -140,7 +140,9 @@ export default class ZoomController {
             let currentVRPosition = this.vrControls.getCurrentPosition();
             console.log("Current VR Position", currentVRPosition);
             if (currentVRPosition) {
-                this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
+                this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION).add(this.vrControls.offset);
+                console.log("CALIBRATE - Base position SQUARE", this.vrControls.basePosition);
+
                 this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
                 //this.baseVRPosition.add(currentVRPosition);
             }

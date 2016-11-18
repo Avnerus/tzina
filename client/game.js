@@ -153,7 +153,6 @@ export default class Game {
 
         this.flood = new Flood();
         this.flood.init();
-        this.scene.add(this.flood); 
 
         /*
         // Post processing
@@ -332,6 +331,7 @@ export default class Game {
                 this.controlPassed = true;
                 this.soundManager.play("ambience");
                 this.introAni.disposeAni();
+                this.scene.add(this.flood); 
                 if (!this.shownWASD) {
                     document.getElementById("wasd-container").style.display = "block";
                     setTimeout(() => {
