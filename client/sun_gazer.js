@@ -9,7 +9,7 @@ export default class SunGazer extends THREE.Object3D  {
 
         this.active = false;
 
-        this.GAZE_THRESHOLD = 0.98;
+        this.GAZE_THRESHOLD = 0.97;
         this.BLUR_THRESHOLD = 0.93;
 
         this.gazingSun = null;
