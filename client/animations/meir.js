@@ -169,9 +169,9 @@ export default class MeirAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        this.pinBall = new THREE.Mesh( new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide}) );
+        // this.pinBall = new THREE.Mesh( new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide}) );
         //this.pinBall.position.copy( this.parent.fullVideo.mesh.geometry.faces[100].position );
-        this.add(this.pinBall);
+        // this.add(this.pinBall);
         // console.log(this.parent);
         // this.parent.fullvideo.updateMatrixWorld();
 
@@ -595,13 +595,13 @@ export default class MeirAnimation extends THREE.Object3D {
     }
 
     update(dt,et) {
-        let facePos = new THREE.Vector3( this.parent.fullVideo.mesh.geometry.faces[100].a,
-                                  this.parent.fullVideo.mesh.geometry.faces[100].b,
-                                  this.parent.fullVideo.mesh.geometry.faces[100].c);
-        facePos.multiplyScalar( this.parent.fullVideo.mesh.scale );
-        facePos.applyMatrix4( this.parent.fullVideo.mesh.matrixWorld );
+        // let facePos = new THREE.Vector3( this.parent.fullVideo.mesh.geometry.faces[100].a,
+        //                           this.parent.fullVideo.mesh.geometry.faces[100].b,
+        //                           this.parent.fullVideo.mesh.geometry.faces[100].c);
+        // facePos.multiplyScalar( this.parent.fullVideo.mesh.scale );
+        // facePos.applyMatrix4( this.parent.fullVideo.mesh.matrixWorld );
 
 
-        this.pinBall.position.copy( facePos );
+        // this.pinBall.position.copy( facePos );
     }
 }
