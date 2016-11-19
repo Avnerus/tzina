@@ -279,7 +279,7 @@ export default class Square extends THREE.Object3D{
         });
 
         events.on("gaze_started", (name) => {
-            this.turnOnSun(name);
+            this.turnOnSun(name, false);
             this.activateSun(name);
         });
         events.on("gaze_stopped", (name) => {
@@ -385,7 +385,7 @@ export default class Square extends THREE.Object3D{
         }
     }
 // material color under the texture
-    turnOnSun(name) {
+    turnOnSun(name, setCurrent) {
         if (this.suns) {
             let sun = this.suns.getObjectByName(name)
             if (sun) {
@@ -415,7 +415,9 @@ export default class Square extends THREE.Object3D{
                 sun.getObjectByName(name + "_L").disorganize();
 
                 //console.log("Turned on sun", sun);
-                this.currentSun = name;
+                if (setCurrent) {
+                    this.currentSun = name;
+                }
             }
         }
     }

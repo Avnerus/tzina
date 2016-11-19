@@ -75,7 +75,7 @@ export default class TimeController {
                     this.square.turnOffSun(this.square.currentSun);
                 }
                 this.square.currentSun = this.currentHour.toString();
-                this.square.turnOnSun(this.currentHour.toString());
+                this.square.turnOnSun(this.currentHour.toString(), true);
                 this.updateSunProgress();
             }
             this.clockRunning = passed;
@@ -250,7 +250,7 @@ export default class TimeController {
                     this.square.turnOffSun(this.square.currentSun);
                 }
                 this.square.currentSun = this.currentHour.toString();
-                this.square.turnOnSun(this.currentHour.toString());
+                this.square.turnOnSun(this.currentHour.toString(), true);
                 console.log("Time controller - next chapter");
 
                 if (!this.done) {
@@ -316,7 +316,7 @@ export default class TimeController {
                             this.square.turnOffSun(this.square.currentSun);
                         }
                         this.square.currentSun = this.currentHour.toString();
-                        this.square.turnOnSun(this.currentHour.toString());
+                        this.square.turnOnSun(this.currentHour.toString(), true);
                     }
                     this.setCurrentChapter();
                     events.emit("hour_updated", this.currentHour);
@@ -523,7 +523,7 @@ export default class TimeController {
             this.square.turnOffSun(this.square.currentSun);
         }
         this.square.currentSun = this.currentHour.toString();
-        this.turnOnChapterSun(this.currentHour);
+        this.turnOnChapterSun(this.currentHour, true);
     }
 
     getHourText(hour) {
@@ -584,11 +584,11 @@ export default class TimeController {
 
     turnOnChapterSun() {
         if (this.currentHour == 17 || this.currentHour == 9 ) {
-            this.square.turnOnSun("9");
+            this.square.turnOnSun("9", true);
         } else if (this.currentHour == 19 || this.currentHour == 7) {
-            this.square.turnOnSun("7");
+            this.square.turnOnSun("7", true);
         } else if (this.currentHour == 12) {
-            this.square.turnOnSun("12");
+            this.square.turnOnSun("12", true);
         }
         else {
             if (this.square.currentSun) {
