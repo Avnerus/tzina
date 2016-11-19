@@ -82,7 +82,7 @@ export default class Pidgeon extends THREE.Object3D{
       position:function(newPosition){
 
         if(thisPidgeon.walkingOnGround){
-          newPosition.y=this.FLOORY;
+          newPosition.y=thisPidgeon.FLOORY;
         }
 
         //get new vector to look at. this is only used for rotation and will ignore the y component avoiding weird rotations
@@ -160,9 +160,9 @@ export default class Pidgeon extends THREE.Object3D{
       jumpToFloor:function(checkIfWalking){
         if(checkIfWalking){
           if(this.walkingOnGround)
-            thisPidgeon.position.y=this.FLOORY;
+            thisPidgeon.position.y=thisPidgeon.FLOORY;
         }else{
-          thisPidgeon.position.y=this.FLOORY;
+          thisPidgeon.position.y=thisPidgeon.FLOORY;
         }
       },
       position: function(newPosition) {
