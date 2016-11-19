@@ -7,7 +7,7 @@ import Pidgeon from './pidgeon'
 
 //set here when to do certain things according to global events
 let eventWhenTo={
-  createSocket:"intro_end",
+  createSocket:"intro_start",
   land:"control_threshold"
 }
 
@@ -124,7 +124,7 @@ export default class PidgeonController {
         if(verbose)console.log("pidgeon client id:"+myClientId);
         //localSprite=new characters.Character({unique:myClientId});
         //console.log("new client Id",message);
-        console.log("created local sprite");
+        console.log("pidgeon created local sprite");
         localSprite=new Pidgeon({unique:message.pointer,skin:"localsprite"});
         thisPidgeonController.scene.add(localSprite);
 

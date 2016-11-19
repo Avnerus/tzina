@@ -165,6 +165,8 @@ export default class Intro {
             this.localHour = this.timeConroller.preloadLocalTime();
         }
 
+        events.emit("intro_start");
+
         // Load the sound
         this.soundManager.loadSound(this.INTRO_SOUND)
         .then((sound) => {

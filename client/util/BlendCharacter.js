@@ -19,7 +19,7 @@ THREE.BlendCharacter = function (loadedObject) {
 
 		THREE.BlendCharacter.loadGeometry(url,function(a,b){
 			thisBlendCharacter.applyLoadedGeometry(a,b);
-			console.log(thisBlendCharacter.mixer);
+            //console.log(thisBlendCharacter.mixer);
 		});
 
 		// if(onLoad!==undefined) onLoad();
