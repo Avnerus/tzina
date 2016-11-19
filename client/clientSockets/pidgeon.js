@@ -1,7 +1,5 @@
 import {SpriteText2D , textAlign} from '../lib/text2d/index';
-var FLOORY=13.85;
 var BlendCharacter=require('../util/BlendCharacter.js');
-
 
 var loaded3dObject;
 var loadedSkinTexture;
@@ -38,6 +36,8 @@ export default class Pidgeon extends THREE.Object3D{
     }else{
       this.blendMesh.applyNewDiffuse(loadedSkinTexture);
     }
+    this.FLOORY=13.85;
+    events.emit("add_gui", {folder: "Pidgeon Floor Y", listen: true, step: 0.01}, this, "FLOORY");
     this.add( this.blendMesh );
     // this.blendMesh.position.y=-1;
     this.blendMesh.play("Bird_Fly",1);
@@ -82,7 +82,7 @@ export default class Pidgeon extends THREE.Object3D{
       position:function(newPosition){
 
         if(thisPidgeon.walkingOnGround){
-          newPosition.y=FLOORY;
+          newPosition.y=this.FLOORY;
         }
 
         //get new vector to look at. this is only used for rotation and will ignore the y component avoiding weird rotations
@@ -160,9 +160,9 @@ export default class Pidgeon extends THREE.Object3D{
       jumpToFloor:function(checkIfWalking){
         if(checkIfWalking){
           if(this.walkingOnGround)
-            thisPidgeon.position.y=FLOORY;
+            thisPidgeon.position.y=this.FLOORY;
         }else{
-          thisPidgeon.position.y=FLOORY;
+          thisPidgeon.position.y=this.FLOORY;
         }
       },
       position: function(newPosition) {

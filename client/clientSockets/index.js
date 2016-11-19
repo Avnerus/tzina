@@ -141,8 +141,6 @@ export default class PidgeonController {
             }
             isLanded=true;
             localSprite.flyOrLand(1);
-
-
           }
         });
 
@@ -260,11 +258,6 @@ export default class PidgeonController {
       // console.log(collisionResults[a].object.pidgeonOwner);
       collisionResults[a].object.pidgeonOwner.labelTextGazed(dt);
     }
-    collisionResults.forEach((result) => {
-      // console.log("pidgeon raycast result",result);
-      // result.material=new THREE.MeshBasicMaterial({color:0xFF0000,wireframe:true});        result.material=new THREE.MeshBasicMaterial({color:0xFF0000,wireframe:true});
-      // console.log(result.mesh.showName());
-    });
   }
   socketEmitCameraPosition(){
     if(webSocketFinishedConnecting){

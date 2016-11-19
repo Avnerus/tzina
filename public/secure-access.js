@@ -3,7 +3,7 @@ var host = window.location.hostname;
 console.log("Current host: ", host);
 
 window.onload = function() {
-    if (0 && host == "localhost") {
+    if (host == "localhost") {
         $("#loading-container").show();
         $.getScript( "bundle.js");
     } else {

@@ -23,7 +23,7 @@ setInterval(function(){
 //when socketServerManager gets a client, we instance a client in clientsMan
 socketSM.on('connection',function(ws){
   //get country name of the websocket connection
-  console.log(geolocator);
+  console.log("New connection");
   // console.log("socketSMConn",ws);
   let client = new clientsMan.Client({
     ws: ws
@@ -33,6 +33,7 @@ socketSM.on('connection',function(ws){
   //inform all the other clients about the new user
   client.broadcast({header: "newclient",pointer: client.unique});
   //send the client Id to the client
+  console.log("Sending newid");
   client.send({
     header: "newid",
     pointer: client.unique

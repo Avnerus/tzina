@@ -154,7 +154,6 @@ export default class Game {
 
         this.flood = new Flood();
         this.flood.init();
-        this.scene.add(this.flood);
 
         /*
         // Post processing
@@ -337,6 +336,7 @@ export default class Game {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 this.controlPassed = true;
+                this.scene.add(this.flood);
                 this.soundManager.play("ambience");
                 this.introAni.disposeAni();
             }
