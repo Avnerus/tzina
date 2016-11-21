@@ -3,9 +3,11 @@
  * @author mrdoob / http://mrdoob.com
  * @author avnerus / http://avner.js.org
  */
-export default function ( emitter, object, onError ) {
+export default function ( emitter, object, onError, square ) {
 
 	var scope = this;
+
+    this.square = square;
 
 	var vrInput;
 
@@ -80,6 +82,18 @@ export default function ( emitter, object, onError ) {
     })
 
     this.calibrate = function() {
+
+        let squareCube = new THREE.Object3D();
+        squareCube.position.set(0.49,24,11.7);
+        this.square.clockwork.add(squareCube);
+
+
+        squareCube.updateMatrixWorld(true);
+        let worldPos = new THREE.Vector3().setFromMatrixPosition(squareCube.matrixWorld);
+        worldPos.multiplyScalar(1 / 0.013);
+
+        console.log("CALIBRATE - Desired world positon by square: ", worldPos);
+
         this.update();
         let currentPosition = new THREE.Vector3().copy(object.position);
         if (currentPosition) {

@@ -166,7 +166,7 @@ export default class Game {
         */
 
        
-        this.vrControls = new TzinaVRControls(this.emitter, this.camera);
+        this.vrControls = new TzinaVRControls(this.emitter, this.camera, null, this.square);
 
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene, this.vrControls);
         this.zoomController.init();
@@ -396,17 +396,24 @@ export default class Game {
             // start the intro
             this.intro.position();
 
-            if (!this.vrManager.isVRCompatible) {
+            console.log("VR Compatible?", this.vrManager.isVRCompatible);
+
+            if (!this.vrManager.isVRCompatible && !window.WebVRConfig.FORCE_ENABLE_VR) {
                 this.intro.start();
                 this.introAni.start();
             }
         }
+
             /*
-
-        let sqaureCube = DebugUtil.adjustableCube(new THREE.Vector3(0.49,14.39,6.66), "Square start", 0.3, 0xff000);
-        console.log("Square cube", sqaureCube);
-        this.square.add(sqaureCube);*/
-
+        this.squareCube = DebugUtil.adjustableCube(new THREE.Vector3(0.49,24,11.7), "Square start", 0.3, 0xff000);
+        this.square.clockwork.add(this.squareCube); */
+        
+            /*
+        this.squareCube = DebugUtil.adjustableCube(
+            new THREE.Vector3(3.345388650894165,30,-6.382382869720459), "Square start", 0.3, 0xff000
+        );
+        this.scene.add(this.squareCube); */
+        
     }
 
     animate(t) {
@@ -445,6 +452,8 @@ export default class Game {
         }
 
         this.endCheck(et);
+
+        //        console.log("SQUARE CUBE", worldPos.x, worldPos.z);
     }
 
     endCheck(time) {
