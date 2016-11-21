@@ -30,7 +30,7 @@ export default class ItzhakAnimation extends THREE.Object3D {
             { time: 120,  anim: ()=>{this.dropClouds(12, false)} },
             { time: 143,  anim: ()=>{this.dropClouds(16, false)} },
            
-            { time: 167,  anim: ()=>{this.dropClouds(20, true)} }, //12 sec before characterDisappear
+            { time: 166,  anim: ()=>{this.dropClouds(20, true)} }, //12 sec before characterDisappear
             { time: 179, anim: ()=>{this.characterDisappear()} } // total time: 186, characterDisappear() takes 6.5
         ];
         this.nextAnim = null;
@@ -310,7 +310,9 @@ export default class ItzhakAnimation extends THREE.Object3D {
 
         for(let i=0; i<this.cloudAmount; i++){
             let theCloud = this.cloudVirtualGroup[i].object;
-            this.attach(theCloud, this, theCloud.theParent);
+    
+            if(theCloud.theParent!=null)
+                this.attach(theCloud, this, theCloud.theParent);
 
             TweenMax.to( theCloud.rotation, 3, {x:0});
             TweenMax.to( theCloud.material.color, 2, {
