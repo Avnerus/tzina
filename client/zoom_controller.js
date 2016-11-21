@@ -58,9 +58,9 @@ export default class ZoomController {
 
         // IDFA:
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -6.77,
+            1.69,
             12.67,
-            1.89
+            7.27
             );
 
         this.CHAPTER_THRESHOLD = 0.45;
