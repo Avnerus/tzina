@@ -146,9 +146,6 @@ export default class Intro {
             console.log("CALIBRATE - Base position INTRO", this.vrControls.basePosition);
         });
 
-
-
-
     }
     position() {
         // Scale the square
@@ -156,7 +153,7 @@ export default class Intro {
 
 
         //DebugUtil.positionObject(this.square, "Square",true);
-        if (this.vrControls.getCurrentPosition()) {
+        if (inVR) {
             this.vrControls.basePosition.copy(this.STARTING_POSITION).add(this.vrControls.offset);
         } else {
             this.STARTING_POSITION.set(0,0.5,2);
