@@ -301,12 +301,9 @@ export default class Square extends THREE.Object3D{
         events.on("control_threshold", (passed) => {
             this.controlPassed = passed;
             if (passed) {
-                this.activeClockwork = this.clockwork;
-                this.clockwork.rotation.y = this.mesh.rotation.y;
-                this.clockworkOffset.rotation.y = -105 * Math.PI / 180;
-                this.mesh.rotation.y = 0;
+                this.clockworkShift();
 
-                // Show the hidden loader
+               // Show the hidden loader
                 let sun = this.suns.getObjectByName(this.currentSun)
                 if (sun) {
                     sun.getObjectByName(this.currentSun + "_L").visible = true;
@@ -319,6 +316,16 @@ export default class Square extends THREE.Object3D{
             }
         });
     }
+
+    clockworkShift() {
+        this.activeClockwork = this.clockwork;
+        THREE.SceneUtils.detach(this.clockwork, this.mesh, this.scene);
+        this.clockworkOffset.rotation.y = -105 * Math.PI / 180;
+        this.clockwork.rotation.y = this.mesh.rotation.y;
+        this.mesh.rotation.y = 0;
+        THREE.SceneUtils.attach(this.clockwork, this.scene, this.mesh);
+    }
+
     update(dt,et) {
         this.fountain.update(dt);
         if (this.controlPassed) {

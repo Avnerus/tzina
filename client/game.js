@@ -394,11 +394,10 @@ export default class Game {
 
         } else {
             // start the intro
-            this.intro.position();
-
             console.log("VR Compatible?", this.vrManager.isVRCompatible);
 
             if (!this.vrManager.isVRCompatible && !window.WebVRConfig.FORCE_ENABLE_VR) {
+                this.intro.position();
                 this.intro.start();
                 this.introAni.start();
             }
@@ -482,13 +481,14 @@ export default class Game {
 
     vrChange() {
         if (this.vrManager.hmd.isPresenting) {
-            if (!this.config.skipIntro && !this.controlPassed) {
-                this.intro.start();
-                this.introAni.start();
-            }
             let newCameras = this.vrEffect.getCameras();
             events.emit("vr_start", newCameras);
             inVR = true;
+            if (!this.config.skipIntro && !this.controlPassed) {
+                this.intro.position();
+                this.intro.start();
+                this.introAni.start();
+            }
         } else {
             events.emit("vr_stop")
             inVR = false;

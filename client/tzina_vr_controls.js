@@ -72,6 +72,8 @@ export default function ( emitter, object, onError, square ) {
         1.2663648128509521
     );
 
+    this.SQUARE_POSITION = new THREE.Vector3();
+
     events.on("control_threshold", (passed) => {
         if (passed) {
             console.log("VR Control threshold: ", object.position);
@@ -82,17 +84,21 @@ export default function ( emitter, object, onError, square ) {
     })
 
     this.calibrate = function() {
-
+        console.log("CALIBRATE with square");
         let squareCube = new THREE.Object3D();
         squareCube.position.set(0.49,24,11.7);
         this.square.clockwork.add(squareCube);
 
-
+        this.square.clockwork.updateMatrixWorld(true);
         squareCube.updateMatrixWorld(true);
         let worldPos = new THREE.Vector3().setFromMatrixPosition(squareCube.matrixWorld);
-        worldPos.multiplyScalar(1 / 0.013);
+        //worldPos.multiplyScalar(1 / 0.013);
 
         console.log("CALIBRATE - Desired world positon by square: ", worldPos);
+        worldPos.y = 12.67;
+        this.SQUARE_POSITION.copy(worldPos);
+
+            /*
 
         this.update();
         let currentPosition = new THREE.Vector3().copy(object.position);
@@ -101,7 +107,7 @@ export default function ( emitter, object, onError, square ) {
             this.offset.copy(this.BASE_VIVE).sub(currentPosition);
             this.offset.y = 0;
             console.log("CALIBRATE - Offset:", this.offset);
-        }
+        }*/
     }
 
     this.getCurrentPosition = function () {
@@ -137,6 +143,7 @@ export default function ( emitter, object, onError, square ) {
 
 
                 if ( this.active && pose.position !== null ) {
+                    //console.log("Calibrate VR Position", pose.position);
 
                     object.position.fromArray(pose.position).multiplyScalar(this.scale).add(this.basePosition);
                     //object.position.copy(this.basePosition);
@@ -176,6 +183,7 @@ export default function ( emitter, object, onError, square ) {
 
                 } 
             }
+            //console.log("Calibrate VR Position", pose.position);
 
         }
 	};
@@ -185,6 +193,7 @@ export default function ( emitter, object, onError, square ) {
 		if ( vrInput ) {
 
 			if ( vrInput.resetPose !== undefined ) {
+                console.log("CALIBRATE resetPose");
 
 				vrInput.resetPose();
 
