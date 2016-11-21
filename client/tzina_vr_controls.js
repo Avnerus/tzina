@@ -65,9 +65,9 @@ export default function ( emitter, object, onError ) {
     this.offset = new THREE.Vector3(0,0,0);
 
     this.BASE_VIVE = new THREE.Vector3(
-        0.005519921080349377,
-        1.4348190400374037, 
-        1.0025582582968013
+        0.030513843521475792,
+        0,
+        1.2663648128509521
     );
 
     events.on("control_threshold", (passed) => {
@@ -80,9 +80,10 @@ export default function ( emitter, object, onError ) {
     })
 
     this.calibrate = function() {
-        var currentPosition = this.getCurrentPosition();
+        this.update();
+        let currentPosition = new THREE.Vector3().copy(object.position);
         if (currentPosition) {
-            console.log("CALIBRATE - Current position", currentPosition, "base position", this.BASE_VIVE);
+            console.log("CALIBRATE - Current position", currentPosition.x, currentPosition.z);
             this.offset.copy(this.BASE_VIVE).sub(currentPosition);
             this.offset.y = 0;
             console.log("CALIBRATE - Offset:", this.offset);

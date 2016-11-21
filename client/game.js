@@ -401,6 +401,12 @@ export default class Game {
                 this.introAni.start();
             }
         }
+            /*
+
+        let sqaureCube = DebugUtil.adjustableCube(new THREE.Vector3(0.49,14.39,6.66), "Square start", 0.3, 0xff000);
+        console.log("Square cube", sqaureCube);
+        this.square.add(sqaureCube);*/
+
     }
 
     animate(t) {

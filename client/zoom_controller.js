@@ -58,9 +58,9 @@ export default class ZoomController {
 
         // IDFA:
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -3.45,
+            -6.77,
             12.67,
-            -6.23
+            1.89
             );
 
         this.CHAPTER_THRESHOLD = 0.45;
@@ -154,7 +154,9 @@ export default class ZoomController {
     }
 
     jumpIn() {
-        this.camera.position.copy(this.baseVRPosition);
+        if (!inVR) {
+            this.camera.position.copy(this.baseVRPosition);
+        }
         events.emit("control_threshold", true);
     }
 
