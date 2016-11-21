@@ -15,5 +15,5 @@ export default {
     noExtras: false,
     noTrees: false,
     noCharacters: false,
-    production: false
+    production: true
 }
