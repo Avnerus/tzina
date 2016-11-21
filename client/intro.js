@@ -141,9 +141,6 @@ export default class Intro {
             this.fadePlane.position.set(0, 0, -0.050001);
         });
 
-
-
-
     }
     position() {
         // Scale the square
@@ -153,7 +150,7 @@ export default class Intro {
         this.vrControls.calibrate();
 
         //DebugUtil.positionObject(this.square, "Square",true);
-        if (this.vrControls.getCurrentPosition()) {
+        if (inVR) {
             this.vrControls.basePosition.copy(this.STARTING_POSITION).add(this.vrControls.offset);
             console.log("CALIBRATE - Base position INTRO", this.vrControls.basePosition);
         } else {

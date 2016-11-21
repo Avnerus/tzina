@@ -136,25 +136,24 @@ export default class ZoomController {
 
         this.baseVRPosition = null;
 
-        if (this.vrControls) {
-            let currentVRPosition = this.vrControls.getCurrentPosition();
-            console.log("Current VR Position", currentVRPosition);
-            if (currentVRPosition) {
-                this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION).add(this.vrControls.offset);
-                console.log("CALIBRATE - Base position SQUARE", this.vrControls.basePosition);
+        if (this.vrControls && inVR) {
+            this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION).add(this.vrControls.offset);
+            console.log("CALIBRATE - Base world position", this.BASE_WORLD_POSITION);
+            console.log("CALIBRATE - Base position SQUARE", this.vrControls.basePosition);
 
-                this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
+            this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
                 //this.baseVRPosition.add(currentVRPosition);
-            }
         } 
-        if (!this.baseVRPosition) {
+        else {
             this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
             this.baseVRPosition.y = 13.5;
         }
     }
 
     jumpIn() {
-        this.camera.position.copy(this.baseVRPosition);
+        if (!inVR) {
+            this.camera.position.copy(this.baseVRPosition);
+        }
         events.emit("control_threshold", true);
     }
 
