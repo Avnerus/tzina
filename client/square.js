@@ -275,6 +275,8 @@ export default class Square extends THREE.Object3D{
             //events.emit("add_gui",{}, obj.position, "y"); 
             //events.emit("add_gui", obj.position, "z");
            // events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
+            events.emit("add_gui",{folder: "Clockwork rotation", listen: true, step: 0.001}, this.clockwork.rotation, "y"); 
+            events.emit("add_gui",{folder: "Square rotation", listen: true, step: 0.001}, this.mesh.rotation, "y"); 
 
         });
 
@@ -319,11 +321,11 @@ export default class Square extends THREE.Object3D{
 
     clockworkShift() {
         this.activeClockwork = this.clockwork;
-        THREE.SceneUtils.detach(this.clockwork, this.mesh, this.scene);
+        //THREE.SceneUtils.detach(this.clockwork, this.mesh, this.scene);
         this.clockworkOffset.rotation.y = -105 * Math.PI / 180;
         this.clockwork.rotation.y = this.mesh.rotation.y;
-        this.mesh.rotation.y = 0;
-        THREE.SceneUtils.attach(this.clockwork, this.scene, this.mesh);
+        //this.mesh.rotation.y = 0;
+        //THREE.SceneUtils.attach(this.clockwork, this.scene, this.mesh);
     }
 
     update(dt,et) {

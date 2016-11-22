@@ -58,9 +58,9 @@ export default class ZoomController {
 
         // IDFA:
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -5.75,
+            -5.9,
             12.67,
-            -6.94
+            -1.2
             );
 
         this.CHAPTER_THRESHOLD = 0.45;
@@ -106,10 +106,9 @@ export default class ZoomController {
             return false;
         }, false);
 
-        /*
         events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "x"); 
         events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "y"); 
-        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "z");  */
+        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "z");  
 
         events.on("angle_updated", (hour) => {
             if (!this.done && typeof(hour) != 'undefined') {
@@ -136,6 +135,12 @@ export default class ZoomController {
 
         this.baseVRPosition = null;
 
+
+        let worldPos = new THREE.Vector3().set(2.24,24,10.32);
+        this.square.mesh.updateMatrixWorld(true);
+        worldPos.applyMatrix4(this.square.mesh.matrixWorld);
+        
+
         if (this.vrControls && inVR) {
                 /*
             this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
@@ -143,12 +148,15 @@ export default class ZoomController {
             console.log("CALIBRATE - Base position SQUARE", this.vrControls.basePosition);*/
             //this.vrControls.calibrate();
 
-            this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
-            this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
+
+            this.vrControls.basePosition.copy(worldPos);
+            //this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
+            this.baseVRPosition = new THREE.Vector3().copy(worldPos);
+            //this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
                 //this.baseVRPosition.add(currentVRPosition);
         } 
         else {
-            this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
+            this.baseVRPosition = new THREE.Vector3().copy(worldPos);
             this.baseVRPosition.y = 13.5;
         }
     }

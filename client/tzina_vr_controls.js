@@ -85,6 +85,7 @@ export default function ( emitter, object, onError, square ) {
 
     this.calibrate = function() {
         console.log("CALIBRATE with square");
+            /*
         let squareCube = new THREE.Object3D();
         squareCube.position.set(0.49,24,11.7);
         this.square.clockwork.add(squareCube);
@@ -96,7 +97,7 @@ export default function ( emitter, object, onError, square ) {
 
         console.log("CALIBRATE - Desired world positon by square: ", worldPos);
         worldPos.y = 12.67;
-        this.SQUARE_POSITION.copy(worldPos);
+        this.SQUARE_POSITION.copy(worldPos); */
 
             /*
 
