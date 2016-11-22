@@ -49,19 +49,19 @@ export default class ZoomController {
             -6.56
             );
             */
-            /* MEDIA LAB
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -4.18,
+            5.34,
             12.67,
-            -5.62
-            );*/
+            -4.47
+            );
 
         // IDFA:
+        /*
         this.BASE_WORLD_POSITION = new THREE.Vector3(
             -5.9,
             12.67,
             -1.2
-            );
+            );*/
 
         this.CHAPTER_THRESHOLD = 0.45;
         this.CONTROL_THRESHOLD = 1;
@@ -135,10 +135,11 @@ export default class ZoomController {
 
         this.baseVRPosition = null;
 
+            /*
 
         let worldPos = new THREE.Vector3().set(2.24,24,10.32);
         this.square.mesh.updateMatrixWorld(true);
-        worldPos.applyMatrix4(this.square.mesh.matrixWorld);
+        worldPos.applyMatrix4(this.square.mesh.matrixWorld);*/
         
 
         if (this.vrControls && inVR) {
@@ -149,11 +150,12 @@ export default class ZoomController {
             //this.vrControls.calibrate();
 
 
+            this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
+            this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
+            //this.baseVRPosition.add(currentVRPosition);
+            /*
             this.vrControls.basePosition.copy(worldPos);
-            //this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
-            this.baseVRPosition = new THREE.Vector3().copy(worldPos);
-            //this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
-                //this.baseVRPosition.add(currentVRPosition);
+            this.baseVRPosition = new THREE.Vector3().copy(worldPos);*/
         } 
         else {
             this.baseVRPosition = new THREE.Vector3().copy(worldPos);

@@ -46,7 +46,7 @@ export default class SunGazer extends THREE.Object3D  {
         });
 
         events.on("character_playing", () => {
-            this.active = false;
+            //            this.active = false;
         });
         events.on("character_idle", () => {
             if (!this.ended) {

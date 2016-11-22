@@ -141,7 +141,7 @@ export default class Intro {
             this.fadePlane.position.set(0, 0, -0.050001);
 
             // Calibrate
-            this.vrControls.resetPose();
+            //this.vrControls.resetPose();
             //this.vrControls.calibrate();
             this.vrControls.basePosition.copy(this.STARTING_POSITION);
             console.log("CALIBRATE - Base position INTRO", this.vrControls.basePosition);
