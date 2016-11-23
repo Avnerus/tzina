@@ -158,7 +158,7 @@ export default class ZoomController {
             this.baseVRPosition = new THREE.Vector3().copy(worldPos);*/
         } 
         else {
-            this.baseVRPosition = new THREE.Vector3().copy(worldPos);
+            this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
             this.baseVRPosition.y = 13.5;
         }
     }

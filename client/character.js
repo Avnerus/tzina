@@ -285,6 +285,17 @@ export default class Character extends THREE.Object3D {
         }
         //this.remove(this.animation);
         this.active = false;
+        this.isPaused = false;
+        this.playingFull = false;
+        this.subtitlesReady = false;
+        this.fullReady = false;
+
+        this.nextAdjustment = null;
+        this.lastAdjustment = null;
+
+        this.adjustments = null;
+
+        this.colliding = false;
 
         // attach animation back
         if (this.props.adjustments) {
@@ -531,7 +542,7 @@ export default class Character extends THREE.Object3D {
             }
             events.emit("character_playing", this.props.name)
         } else {
-            console.error("Cannot play video!", this.props.name);
+            console.log("Cannot play video!", this.props.name);
         }
     }
 }
