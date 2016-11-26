@@ -124,9 +124,10 @@ export default class PidgeonController {
         if(verbose)console.log("pidgeon client id:"+myClientId);
         //localSprite=new characters.Character({unique:myClientId});
         //console.log("new client Id",message);
+        /*
         console.log("pidgeon created local sprite");
         localSprite=new Pidgeon({unique:message.pointer,skin:"localsprite"});
-        thisPidgeonController.scene.add(localSprite);
+        thisPidgeonController.scene.add(localSprite);*/
 
         events.on(eventWhenTo.land, (passed) => {
           if(!isLanded){
@@ -140,7 +141,9 @@ export default class PidgeonController {
               });
             }
             isLanded=true;
-            localSprite.flyOrLand(1);
+            if (localSprite) {
+                localSprite.flyOrLand(1);
+            }
           }
         });
 

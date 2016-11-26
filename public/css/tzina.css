@@ -20,8 +20,12 @@ body {
     bottom: 0;
     width: 100%;
     height: 100%;
+    z-index: 2;
 }
 
+.dg.ac {
+    z-index: 2 !important;
+}
 .splash {
     display: none;
     align-items: center;
