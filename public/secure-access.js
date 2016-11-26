@@ -22,7 +22,7 @@ function secureLogin(key) {
     var decrypted = CryptoJS.AES.decrypt("U2FsdGVkX1+7TXVwoaHMeRNPnuISDmJLc0HS2Qk0dyi8WHFbOP4yl2CX2+xsFXU6PxQsXaYEZjE8F234EdunyQ==", key);
 
     var awsKey = decrypted.toString(CryptoJS.enc.Utf8);
-    console.log("AWS KEY", awsKey);
+    //console.log("AWS KEY", awsKey);
 
     AWS.config.credentials = new AWS.Credentials('AKIAIFQRBJI52GUSXZQA', awsKey)
     var s3 = new AWS.S3();
