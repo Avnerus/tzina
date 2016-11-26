@@ -35,10 +35,6 @@ export default class KeyboardController {
 
         });
 
-        events.on("intro_start" ,() => {
-            this.active = false;
-        });
-
         events.on("intro_end" ,() => {
             this.active = true;
         });
