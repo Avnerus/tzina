@@ -48,7 +48,8 @@ socketSM.on('connection',function(ws){
   });
 
   //get my country and broadcast it.
-  geolocator.getCountryName(ws.ws.upgradeReq.connection.remoteAddress,function(data){
+  geolocator.getCountryName(
+      ws.ws.upgradeReq.headers['x-forwarded-for'] || ws.ws.upgradeReq.connection.remoteAddress,function(data){
     console.log("->"+data.country);
     let clientTextTag={header: "tagText",pointer:client.unique,data:data.country+""};
     client.broadcast(clientTextTag);

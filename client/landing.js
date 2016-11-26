@@ -4,12 +4,16 @@ import TzinaVRControls from './tzina_vr_controls'
 
 import Trees from './trees'
 
-// DISABLE LOGGING
-//window['console']['log'] = function() {};
 
 var Game = require('./game').default;
 var config = require('./config').default;
 var Stats = require('stats.js');
+
+// DISABLE LOGGING
+//
+if (config.production) {
+    window['console']['log'] = function() {};
+}
 
 var game = new Game(config);
 var stats = new Stats();
