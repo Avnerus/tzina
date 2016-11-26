@@ -22,7 +22,8 @@ export default class VideoRGBD  {
         this.SEC_PER_RGBD_FRAME = 1 / this.properties.fps;
 
         this.video = document.createElement( 'video' );
-	this.video.crossOrigin = "anonymous";
+        this.video.crossOrigin = "anonymous";
+        this.video.setAttribute('crossorigin', 'anonymous');
 
 
         this.isPlaying = false;

@@ -45,7 +45,7 @@ export default class PidgeonController {
   }
   startSocket() {
     let host = window.document.location.host.replace(/:.*/, '');
-    wsock=new Wsock('ws://' + host + ':9966');
+    wsock=new Wsock('ws://' + host + ':' + window.document.location.port);
     if(verbose)     console.log("Started pidgeon socket");
 
     let thisPidgeonController=this;
