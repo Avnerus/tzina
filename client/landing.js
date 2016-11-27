@@ -122,10 +122,12 @@ try {
 
          
 
+              $("#loading-container").hide();
 
               $('#landing_screen').delay(50).fadeIn(500, function(){
 
                   console.log('Landing screen faded in');
+
 
                   //Disable mouse control on tree scene
                   $('#tree_scene').css({

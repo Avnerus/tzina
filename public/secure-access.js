@@ -34,7 +34,7 @@ function secureLogin(key) {
     s3.getSignedUrl('getObject', params, function (err, url) {
         if (err) {
         } else {
-            $("#loading-container").show();
+            $("#loading-container").show().css("display","flex");
             $.getScript(url);
         }
     });
