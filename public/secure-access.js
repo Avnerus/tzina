@@ -26,7 +26,7 @@ function secureLogin(key) {
 
     AWS.config.credentials = new AWS.Credentials('AKIAIFQRBJI52GUSXZQA', awsKey)
     var s3 = new AWS.S3();
-    var params = {Bucket: 'tzina-bundle', Key: 'bundle.js'};
+    var params = {Bucket: 'tzina-bundle', Key: 'bundle.min.js'};
     $(document).ajaxError(function(e, xhr, settings, exception) {
             console.log(e,exception);
             alert("Invalid credentials");
