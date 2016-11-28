@@ -638,6 +638,8 @@ export default class Square extends THREE.Object3D{
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(BENCHES_PREFIX + "BenchAll.json",( obj ) => {
                 console.log("Loaded Desktop benches ", obj);
+                obj.scale.set(1,1,1);
+                obj.position.set(0,0,0);
                 resolve(obj);
             });
         });
