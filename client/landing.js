@@ -346,6 +346,8 @@ try {
     ////////////////////
       $('#desktop_button').click(function(){
 
+        game.setPlatform("desktop");
+
         //Fade out the overlays
         $('#landing_screen').fadeOut(250, function(){
 

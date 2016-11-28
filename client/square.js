@@ -158,6 +158,9 @@ export default class Square extends THREE.Object3D{
 
 
             this.clockwork.add(this.benches);
+
+            DebugUtil.positionObject(this.benches, "Benches");
+
             this.clockwork.add(this.buildings);
 
             // Starts as a child of the square which does the actual rotation
@@ -548,82 +551,98 @@ export default class Square extends THREE.Object3D{
         });
     }
     loadBenches(loadingManager) {
-        let benches = [
-            "bottomleft",
-            "topleft",
-            "group2",
-            "bottomright",
-            "topright",
-            "group1",
-        ]
 
-            /*
-        let benchPositions = [
-            [1.09, -10.65, -3.47],
-            [4.44, -10.65, -0.09],
-            [-0.52, 2.5, 1.66],
-            [0,-10.65,0],
-            [0,-10.65,0],
-            [0,2.5,0]
-            ];*/
+        if (this.config.platform == "desktop") {
+            return this.loadBenchesDesktop(loadingManager);
+        } else {
+            let benches = [
+                "bottomleft",
+                "topleft",
+                "group2",
+                "bottomright",
+                "topright",
+                "group1",
+            ]
+
+                /*
+            let benchPositions = [
+                [1.09, -10.65, -3.47],
+                [4.44, -10.65, -0.09],
+                [-0.52, 2.5, 1.66],
+                [0,-10.65,0],
+                [0,-10.65,0],
+                [0,2.5,0]
+                ];*/
 
 
-        let benchPositions = [
-            [9.68, -8.48, 30.72],
-            [-36.44, -8.48, -4.6],
-            [-0.79, 2.36, 1.9],
-            [-14.86,-8.48, 1.79],
-            [-33.54,-8.48,-15.01],
-            [-0.84,1.97,1.76]
-        ];
+            let benchPositions = [
+                [9.68, -8.48, 30.72],
+                [-36.44, -8.48, -4.6],
+                [-0.79, 2.36, 1.9],
+                [-14.86,-8.48, 1.79],
+                [-33.54,-8.48,-15.01],
+                [-0.84,1.97,1.76]
+            ];
 
-        let benchRotations = [
-            [0,243,0],
-            [0,172,0],
-            [0,0,0],
-            [0,0,0],
-            [0,297,0],
-            [0,20,0]
-        ];
+            let benchRotations = [
+                [0,243,0],
+                [0,172,0],
+                [0,0,0],
+                [0,0,0],
+                [0,297,0],
+                [0,20,0]
+            ];
 
-        let benchScales = [
-            1.4,
-            1.4,
-            0.9,
-            1.4,
-            1.4,
-            0.9
-        ]
-        let loaders = [];
-        benches.forEach((benchGroup) => {
-            loaders.push(this.loadFile(loadingManager, BENCHES_PREFIX + benchGroup + ".json"));
-        });
-        return new Promise((resolve, reject) => {
-            Promise.all(loaders)
-            .then((results) => {
-                console.log("Benches Load results", results);
-                let allBenches = new THREE.Object3D();
-                for (let i = 0; i < results.length; i++) {
-                    results[i].position.fromArray(benchPositions[i]);
-                    results[i].rotation.set(
-                        benchRotations[i][0] * Math.PI / 180,
-                        benchRotations[i][1] * Math.PI / 180,
-                        benchRotations[i][2] * Math.PI / 180,
-                        "YXZ"
-                    );
-                    let benchScale = benchScales[i];
-                    results[i].scale.set(benchScale, benchScale, benchScale);
-                    allBenches.add(results[i]);
+            let benchScales = [
+                1.4,
+                1.4,
+                0.9,
+                1.4,
+                1.4,
+                0.9
+            ]
+            let loaders = [];
+            benches.forEach((benchGroup) => {
+                loaders.push(this.loadFile(loadingManager, BENCHES_PREFIX + benchGroup + ".json"));
+            });
+            return new Promise((resolve, reject) => {
+                Promise.all(loaders)
+                .then((results) => {
+                    console.log("Benches Load results", results);
+                    let allBenches = new THREE.Object3D();
+                    for (let i = 0; i < results.length; i++) {
+                        results[i].position.fromArray(benchPositions[i]);
+                        results[i].rotation.set(
+                            benchRotations[i][0] * Math.PI / 180,
+                            benchRotations[i][1] * Math.PI / 180,
+                            benchRotations[i][2] * Math.PI / 180,
+                            "YXZ"
+                        );
+                        let benchScale = benchScales[i];
+                        results[i].scale.set(benchScale, benchScale, benchScale);
+                        allBenches.add(results[i]);
 
-                    if (this.debug) {
-                        //DebugUtil.positionObject(results[i], benches[i]);
+                        if (this.debug) {
+                            //DebugUtil.positionObject(results[i], benches[i]);
+                        }
                     }
-                }
 
-                resolve(allBenches);
+                    resolve(allBenches);
+                });
+            });
+        }
+    }
+
+    loadBenchesDesktop(loadingManager) {
+        return new Promise((resolve, reject) => {
+            let loader = new THREE.ObjectLoader(loadingManager);
+            loader.load(BENCHES_PREFIX + "BenchAll.json",( obj ) => {
+                console.log("Loaded Desktop benches ", obj);
+                resolve(obj);
             });
         });
     }
+
     disableDepthWrite(objectArray) {
         for (let i = 0; i < objectArray.children.length; i++) {
             if (objectArray.children[i].children[0]) {

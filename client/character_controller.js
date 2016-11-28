@@ -1,5 +1,6 @@
 import Chapters from './chapters'
 import Characters from './characters'
+import CharactersWeb from './web/characters'
 import Character from './character'
 import DebugUtil from './util/debug'
 
@@ -17,13 +18,20 @@ export default class CharacterController {
         this.animations = animations;
         this.addedColliders = false;
         this.inControl = false;
-        this.debug = false;
+        this.debug = true;
         this.scene = scene;
     }
     init(loadingManager) {
         console.log("Initializing Character controller");
+        let platformCharacters;
+        if (this.config.platform == "desktop") {
+            console.log("Loading characters definition for desktop");
+            platformCharacters = CharactersWeb;
+        } else {
+            platformCharacters = Characters;
+        }
         if (!this.config.noCharacters) {
-            Characters.forEach((characterProps) => {
+            platformCharacters.forEach((characterProps) => {
                 let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager, this.scene);
                 character.animation = this.animations[characterProps.animation];
                 character.init(loadingManager);

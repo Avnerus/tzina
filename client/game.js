@@ -478,4 +478,9 @@ export default class Game {
             inVR = false;
         }
     }
+
+    setPlatform(platform) {
+        console.log("Selected platform", platform);
+        this.config.platform = platform;
+    }
 }
