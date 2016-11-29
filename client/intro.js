@@ -42,8 +42,8 @@ export default class Intro {
 
         this.STARTING_POSITION = new THREE.Vector3(
             0,
-            -0.7,
-            0.1
+            -0.65,
+            0.11
         );
 
     }
@@ -139,18 +139,22 @@ export default class Intro {
         events.on("vr_start", () => {
             console.log("Into VR Start!");
             this.fadePlane.position.set(0, 0, -0.050001);
+
+            // Calibrate
+            //this.vrControls.resetPose();
+            //this.vrControls.calibrate();
+            this.vrControls.basePosition.copy(this.STARTING_POSITION);
+            console.log("CALIBRATE - Base position INTRO", this.vrControls.basePosition);
         });
-
-
-
 
     }
     position() {
         // Scale the square
         this.square.scale.set(0.013, 0.013, 0.013);
 
+
         //DebugUtil.positionObject(this.square, "Square",true);
-        if (this.vrControls.getCurrentPosition()) {
+        if (inVR) {
             this.vrControls.basePosition.copy(this.STARTING_POSITION);
         } else {
             this.STARTING_POSITION.set(0,0.5,2);
@@ -216,7 +220,7 @@ export default class Intro {
         })
         .then( () => { 
             setTimeout(() => {
-                this.fadeOut()
+                return this.fadeOut()
                 .then(() => {
                     this.enterSquare();                    
                 });

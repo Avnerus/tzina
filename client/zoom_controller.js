@@ -49,19 +49,19 @@ export default class ZoomController {
             -6.56
             );
             */
-            /* MEDIA LAB
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -4.18,
+            5.34,
             12.67,
-            -5.62
-            );*/
+            -4.47
+            );
 
         // IDFA:
+        /*
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -6.45,
+            -5.9,
             12.67,
-            2.9
-            );
+            -1.2
+            );*/
 
         this.CHAPTER_THRESHOLD = 0.45;
         this.CONTROL_THRESHOLD = 1;
@@ -106,10 +106,9 @@ export default class ZoomController {
             return false;
         }, false);
 
-        /*
         events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "x"); 
         events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "y"); 
-        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "z");  */
+        events.emit("add_gui",{folder: "Camera", listen: true, step: 0.1}, this.camera.position, "z");  
 
         events.on("angle_updated", (hour) => {
             if (!this.done && typeof(hour) != 'undefined') {
@@ -136,23 +135,38 @@ export default class ZoomController {
 
         this.baseVRPosition = null;
 
-        if (this.vrControls) {
-            let currentVRPosition = this.vrControls.getCurrentPosition();
-            console.log("Current VR Position", currentVRPosition);
-            if (currentVRPosition) {
-                this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
-                this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
-                //this.baseVRPosition.add(currentVRPosition);
-            }
+            /*
+
+        let worldPos = new THREE.Vector3().set(2.24,24,10.32);
+        this.square.mesh.updateMatrixWorld(true);
+        worldPos.applyMatrix4(this.square.mesh.matrixWorld);*/
+        
+
+        if (this.vrControls && inVR) {
+                /*
+            this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
+            console.log("CALIBRATE - Base world position", this.BASE_WORLD_POSITION);
+            console.log("CALIBRATE - Base position SQUARE", this.vrControls.basePosition);*/
+            //this.vrControls.calibrate();
+
+
+            this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
+            this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
+            //this.baseVRPosition.add(currentVRPosition);
+            /*
+            this.vrControls.basePosition.copy(worldPos);
+            this.baseVRPosition = new THREE.Vector3().copy(worldPos);*/
         } 
-        if (!this.baseVRPosition) {
+        else {
             this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
             this.baseVRPosition.y = 13.5;
         }
     }
 
     jumpIn() {
-        this.camera.position.copy(this.baseVRPosition);
+        if (!inVR) {
+            this.camera.position.copy(this.baseVRPosition);
+        }
         events.emit("control_threshold", true);
     }
 

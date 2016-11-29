@@ -131,8 +131,9 @@ export default class VideoRGBD  {
             this.mesh.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
             this.wire.scale.set(this.properties.scale, this.properties.scale, this.properties.scale);
 
+                /*
             events.emit("add_gui", {folder: this.properties.fileName + " UVDX", step: 0.001}, this.mesh.material.uniforms.uvdx, "value", -1,1);
-            events.emit("add_gui", {folder: this.properties.fileName + " UVDY", step: 0.001}, this.mesh.material.uniforms.uvdy, "value", -1,1);
+            events.emit("add_gui", {folder: this.properties.fileName + " UVDY", step: 0.001}, this.mesh.material.uniforms.uvdy, "value", -1,1);*/
 
             this.setOpacity(1.0);
         

@@ -155,6 +155,7 @@ export default class Game {
         this.flood = new Flood();
         this.flood.init();
 
+
         /*
         // Post processing
         this.composer = new THREE.EffectComposer(this.renderer);
@@ -166,8 +167,8 @@ export default class Game {
         this.composer.addPass( effect );
         */
 
-
-        this.vrControls = new TzinaVRControls(this.emitter, this.camera);
+       
+        this.vrControls = new TzinaVRControls(this.emitter, this.camera, null, this.square);
 
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene, this.vrControls);
         this.zoomController.init();
@@ -224,15 +225,12 @@ export default class Game {
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
 
-        this.show = new Show(this.square, this.characterController, this.timeController);
+        this.show = new Show(this.square, this.characterController, this.timeController); 
         this.show.init();
 
         this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls);
         this.ending.init();
 
-
-        this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
-        this.pidgeonController.init(this.loadingManager);
     }
 
     load(onLoad, onProgress) {
@@ -242,7 +240,7 @@ export default class Game {
             if (!this.config.noSquare) {
                 this.scene.add(this.square);
                 this.sky.applyToMesh(this.square.getSphereMesh());
-
+                // this.introAni.initFBOParticle();
                 this.introAni.createSnowParticle();
                 this.scene.add(this.introAni);
             }
@@ -278,7 +276,7 @@ export default class Game {
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
-
+        
         VideoRGBD.initPool();
 
         // WebVR
@@ -296,7 +294,6 @@ export default class Game {
         this.container.appendChild(element);
 
         this.resize();
-
 
     }
 
@@ -336,19 +333,27 @@ export default class Game {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 this.controlPassed = true;
-                this.scene.add(this.flood);
                 this.soundManager.play("ambience");
                 this.introAni.disposeAni();
+                this.scene.add(this.flood); 
+                if (!this.shownWASD) {
+                    document.getElementById("wasd-container").style.display = "block";
+                    setTimeout(() => {
+                        document.getElementById("wasd-container").style.display = "none";
+                    },3000);
+                    this.shownWASD = true;
+                }
             }
         });
+            /*
         events.on("character_ended", (name) => {
-            if (this.timeController.experienceProgress > 0.4 && !this.ended) {
+            if (this.timeController.experienceProgress > 0.35 && !this.ended) {
                 setTimeout(() => {
                     this.ended = true;
                     this.ending.start();
                 },3000);
             }
-        });
+        });*/
 
         this.started = true;
             /*
@@ -393,9 +398,10 @@ export default class Game {
 
         } else {
             // start the intro
-            this.intro.position();
+            console.log("VR Compatible?", this.vrManager.isVRCompatible);
 
-            if (!this.vrManager.isVRCompatible) {
+            if (!this.vrManager.isVRCompatible && !window.WebVRConfig.FORCE_ENABLE_VR) {
+                this.intro.position();
                 this.intro.start();
                 this.introAni.start();
             }
@@ -436,14 +442,16 @@ export default class Game {
         if (this.ended) {
             this.ending.update(dt);
         }
-        if(!this.pidgeonfailed){
-          // console.log("pidgeon second");
-          try{
-            this.pidgeonController.frame(dt);
-          }catch(e){
-            console.error("pidgeonContoller failed",e);
-            this.pidgeonfailed=true;
-          }
+
+        this.endCheck(et);
+
+        //        console.log("SQUARE CUBE", worldPos.x, worldPos.z);
+    }
+
+    endCheck(time) {
+        if (!this.ended && time > 60 * 15) {
+            this.ended = true;
+            this.ending.start();
         }
     }
 
@@ -466,21 +474,17 @@ export default class Game {
 
     vrChange() {
         if (this.vrManager.hmd.isPresenting) {
-            if (!this.config.skipIntro && !this.controlPassed) {
-                this.intro.start();
-                this.introAni.start();
-            }
             let newCameras = this.vrEffect.getCameras();
             events.emit("vr_start", newCameras);
             inVR = true;
+            if (!this.config.skipIntro && !this.controlPassed) {
+                this.intro.position();
+                this.intro.start();
+                this.introAni.start();
+            }
         } else {
             events.emit("vr_stop")
             inVR = false;
         }
-    }
-
-    setPlatform(platform) {
-        console.log("Selected platform", platform);
-        this.config.platform = platform;
     }
 }

@@ -2,7 +2,7 @@ export default {
     controls: "locked",
     basalHeight: 10,
     fps: 60,
-    enableFlying: false,
+    enableFlying: true,
     skipIntro: false,
     skipCharacters: false,
     speedIntro: true,
