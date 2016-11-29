@@ -308,20 +308,20 @@ export default class TimeController {
                 if (usingGaze) {
                     this.square.explodeSun(this.currentHour.toString());
                 }
-                setTimeout(() => {
-                    if (usingGaze) {
-                        this.sunGazer.stop();
-                        this.sunGazer.active = false;
-                        if (this.square.currentSun) {
-                            this.square.turnOffSun(this.square.currentSun);
-                        }
-                        this.square.currentSun = this.currentHour.toString();
-                        this.square.turnOnSun(this.currentHour.toString());
+                if (usingGaze) {
+                    this.sunGazer.stop();
+                    this.sunGazer.active = false;
+                    if (this.square.currentSun) {
+                        this.square.turnOffSun(this.square.currentSun);
                     }
-                    this.setCurrentChapter();
-                    events.emit("hour_updated", this.currentHour);
-                    // Rotate the clockwork only on vive
-                    if (this.config.platform != "desktop") {
+                    this.square.currentSun = this.currentHour.toString();
+                    this.square.turnOnSun(this.currentHour.toString());
+                }
+                this.setCurrentChapter();
+                events.emit("hour_updated", this.currentHour);
+                // Rotate the clockwork only on vive
+                if (this.config.platform != "desktop") {
+                    setTimeout(() => {
                         let targetRotationY = targetHour * 15;
                         targetRotationY *= Math.PI / 180;
                         console.log("Time controller - rotating square from ", this.square.clockRotation, " to ", targetRotationY);
@@ -335,15 +335,15 @@ export default class TimeController {
                                 this.clockRunning = true;
                             }
                         }});
-                    } else {
-                        events.emit("angle_updated", this.currentHour);
-                        this.updateNextHour();
-                        if (this.currentHour != 0) {
-                            this.sunGazer.active = true;
-                            this.clockRunning = true;
-                        }
+                    },1000);
+                } else {
+                    events.emit("angle_updated", this.currentHour);
+                    this.updateNextHour();
+                    if (this.currentHour != 0) {
+                        this.sunGazer.active = true;
+                        this.clockRunning = true;
                     }
-                },1000);
+                }
             }, onUpdate: () => {
                 //console.log("CURRENT HOUR", this.currentHour);
                 this.sky.setTime(this.currentHour);
