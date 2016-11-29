@@ -42,8 +42,8 @@ let landingScreen = true;
 try {
 
     if (/Mobi/.test(navigator.userAgent)) {
-    $('#mobile_splash').show();
-    console.log('mobile splash');
+        $('#mobile_splash').show();
+        console.log('mobile splash');
     }
 
     var loadingManager = new THREE.LoadingManager();
@@ -304,7 +304,6 @@ try {
         
           console.log("Loading...");
             //document.getElementById('game').appendChild(stats.dom);
-          game.init();
 
           try {
               game.load(function() {
@@ -372,7 +371,6 @@ try {
 
           console.log("Loading...");
             //document.getElementById('game').appendChild(stats.dom);
-          game.init();
 
           try {
               game.load(function() {
@@ -576,6 +574,9 @@ if (!Modernizr.touchevents && lock.available()) {
 
     //Threejs Tree Scene
   function init() {
+        
+
+        game.init();
 
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 0.1, 1000 );

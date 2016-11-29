@@ -59,6 +59,7 @@ export default class Game {
     }
     init() {
 
+        console.log("Game init!");
         class TzinaEmitter extends EventEmitter {}
         this.emitter = new TzinaEmitter();
         this.emitter.setMaxListeners(40);
@@ -231,9 +232,13 @@ export default class Game {
         this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls);
         this.ending.init();
 
+        this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
+        this.pidgeonController.init(this.loadingManager);
+
     }
 
     load(onLoad, onProgress) {
+        console.log("Game load!");
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
@@ -308,7 +313,6 @@ export default class Game {
 
     start() {
 
-
         this.counter = 0;
 
         events.on("zoom_used", () => {
@@ -336,13 +340,6 @@ export default class Game {
                 this.soundManager.play("ambience");
                 this.introAni.disposeAni();
                 this.scene.add(this.flood); 
-                if (!this.shownWASD) {
-                    document.getElementById("wasd-container").style.display = "block";
-                    setTimeout(() => {
-                        document.getElementById("wasd-container").style.display = "none";
-                    },3000);
-                    this.shownWASD = true;
-                }
             }
         });
             /*
@@ -446,6 +443,16 @@ export default class Game {
         this.endCheck(et);
 
         //        console.log("SQUARE CUBE", worldPos.x, worldPos.z);
+
+       if(!this.pidgeonfailed){
+          try{
+            this.pidgeonController.frame(dt);
+          }catch(e){
+            console.error("pidgeonContoller failed",e);
+            this.pidgeonfailed=true;
+          }
+
+        }
     }
 
     endCheck(time) {
@@ -486,5 +493,9 @@ export default class Game {
             events.emit("vr_stop")
             inVR = false;
         }
+    }
+    setPlatform(platform) {
+        console.log("Selected platform", platform);
+        this.config.platform = platform;
     }
 }
