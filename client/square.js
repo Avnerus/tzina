@@ -159,7 +159,6 @@ export default class Square extends THREE.Object3D{
 
             this.clockwork.add(this.benches);
 
-            DebugUtil.positionObject(this.benches, "Benches");
 
             this.clockwork.add(this.buildings);
 
