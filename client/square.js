@@ -305,7 +305,9 @@ export default class Square extends THREE.Object3D{
         events.on("control_threshold", (passed) => {
             this.controlPassed = passed;
             if (passed) {
-                this.clockworkShift();
+                if (this.config.platform != "desktop") {
+                    this.clockworkShift();
+                }
 
                // Show the hidden loader
                 let sun = this.suns.getObjectByName(this.currentSun)
