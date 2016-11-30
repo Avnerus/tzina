@@ -25,8 +25,8 @@ export default [
         basePath : 'assets/characters/miriam',
         mindepth : 2200,
         maxdepth : 3119.456298828,
-        position : [-2.17, 21.99, 11.89],
-        rotation: [10, 215, 12],
+        position : [-17.1, 22.1, 3.38],
+        rotation: [0, 78, 0],
         animation: 'Miriam',
         uvdy_idle: 0.47900390625,
         uvdy: 0.496,
@@ -37,8 +37,8 @@ export default [
         animationScale: 0.478, //.4
         animationPosition: [-0.43, -0.52, 0.51],
         animationRotation: [6, 0, -6],      // 20, 0, 0
-        space: 0.01,
-        spaceOffset: [0.11,0,-0.07],
+        space: 0.32,
+        spaceOffset: [5,0,8],
         subtitles: null,
         adjustments : [
             {
@@ -104,8 +104,8 @@ export default [
         basePath : 'assets/characters/rami',
         mindepth : 2225.287353516,
         maxdepth : 3252.206298828,
-        position : [-4.45, 22.14, 14.06],
-        rotation: [356, 55, 10],
+        position : [-9.19, 22.2, 14.6],
+        rotation: [0, 151, 0],
         animation: 'Rami',
         uvdy: 0.48,
         uvdy_idle: 0.477,
@@ -116,8 +116,8 @@ export default [
         animationScale: 0.25,
         animationPosition: [-0.43, 0.25, 0.14],
         animationRotation: [-4, -23, -9],
-        space: -0.06,
-        spaceOffset: [-0.08,0,0.38],
+        space: 0.46,
+        spaceOffset: [3,0.2,0.42],
         subtitles: false
     },
     {
@@ -138,8 +138,8 @@ export default [
         animationPosition: [-0.3,-0.1,-0.03], // -0.45,0,-0.4
         animationRotation: [0,14,0], // 7,25,-8
         subtitles: null,
-        space: 0.3,
-        spaceOffset: [-0.31,0,-0.28]
+        space: 0.46,
+        spaceOffset: [-0.03,0,-0.47]
     },
     {
         name: 'Sasha',
