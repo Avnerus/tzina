@@ -17,5 +17,6 @@ export default {
     noCharacters: false,
     production: false,
     videoHost: "http://assets.tzina.space/",
-    platform: ""
+    platform: "",
+    skipLanding: false
 }

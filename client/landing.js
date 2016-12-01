@@ -120,53 +120,55 @@ try {
 
           //Change language bind
 
+              if (!config.skipLanding) {
+                $("#loading-container").hide();
+
+                $('#landing_screen').delay(50).fadeIn(500, function(){
+
+                    console.log('Landing screen faded in');
+
+
+                    //Disable mouse control on tree scene
+                    $('#tree_scene').css({
+                      "pointer-events": "none"
+                    });
+                      
+                    //After scene loaded get rid of the progress bar
+
+                    //Ambient Sound
+                    introSound.play();
+
+                    $('#progress_text').fadeOut(50);
+
+                    $('#headphones_solo').delay(250).fadeIn(250).delay(5000).fadeOut(50, function(){
+
+                        $('#firstscreen').fadeIn(250);
+
+                        //Fade in the canvas
+                        $('#tree_scene').delay(250).fadeIn(500, function(){
+
+                              //Fade in about button
+                              $('#about').fadeIn(250);
+
+                              //Fade in language selector
+                              $('#language').fadeIn(250);
+
+                              $('#birds').fadeIn(250);
+
+                        });
+
+                        videoBirds.loop = true;
+
+                        videoBirds.play();
+
+                     }); 
+
+                    
+
+              });
+              }
          
 
-              $("#loading-container").hide();
-
-              $('#landing_screen').delay(50).fadeIn(500, function(){
-
-                  console.log('Landing screen faded in');
-
-
-                  //Disable mouse control on tree scene
-                  $('#tree_scene').css({
-                    "pointer-events": "none"
-                  });
-                    
-                  //After scene loaded get rid of the progress bar
-
-                  //Ambient Sound
-                  introSound.play();
-
-                  $('#progress_text').fadeOut(50);
-
-                  $('#headphones_solo').delay(250).fadeIn(250).delay(5000).fadeOut(50, function(){
-
-                      $('#firstscreen').fadeIn(250);
-
-                      //Fade in the canvas
-                      $('#tree_scene').delay(250).fadeIn(500, function(){
-
-                            //Fade in about button
-                            $('#about').fadeIn(250);
-
-                            //Fade in language selector
-                            $('#language').fadeIn(250);
-
-                            $('#birds').fadeIn(250);
-
-                      });
-
-                      videoBirds.loop = true;
-
-                      videoBirds.play();
-
-                   }); 
-
-                  
-
-            });
 
       // }
 
@@ -574,41 +576,54 @@ if (!Modernizr.touchevents && lock.available()) {
 
     //Threejs Tree Scene
   function init() {
-        
 
         game.init();
 
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 0.1, 1000 );
-        renderer = new THREE.WebGLRenderer();
-        renderer.setSize( window.innerWidth, window.innerHeight );
+        if (!config.skipLanding) {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 0.1, 1000 );
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
 
-        document.getElementById("tree_scene").appendChild(renderer.domElement);
+            document.getElementById("tree_scene").appendChild(renderer.domElement);
 
-        camera.position.set(3,20, 3.2893155474929934);
-        camera.rotation.set(2.897615188414925, -1, 3.0189561019538735);
+            camera.position.set(3,20, 3.2893155474929934);
+            camera.rotation.set(2.897615188414925, -1, 3.0189561019538735);
 
-        //Mouse controls
-        landingControls = new TzinaVRControls(null, camera);
-        landingControls.active = false;
+            //Mouse controls
+            landingControls = new TzinaVRControls(null, camera);
+            landingControls.active = false;
 
-        //Keyboard controls
-      landingKeyControl = new KeyboardController({
-          movementSpeed: 0.5,
-          enableFlying: false
-      }, camera);
+            //Keyboard controls
+          landingKeyControl = new KeyboardController({
+              movementSpeed: 0.5,
+              enableFlying: false
+          }, camera);
 
-        // load & add the trees
-        trees = new Trees(camera, renderer);
-        trees.init(loadingManager)
-        .then(() => {
-            scene.add(trees);
-            // we need to pass delta time to the shader so we need a clock
-            clock = new THREE.Clock();
-            clock.start();
-            render();
-            console.log(scene);
-        });
+            // load & add the trees
+            trees = new Trees(camera, renderer);
+            trees.init(loadingManager)
+            .then(() => {
+                scene.add(trees);
+                // we need to pass delta time to the shader so we need a clock
+                clock = new THREE.Clock();
+                clock.start();
+                render();
+                console.log(scene);
+            });
+
+        }
+        else {
+            game.load(function() {
+                console.log('Game Finished Loading');
+                $('#loading-container').hide();
+                $('#instruction_screen').fadeOut(250, function(){
+                  $('#start_head').fadeIn(250, function(){
+                    $('#start_experience').delay(100).fadeIn(250);
+                  });
+                });
+            });
+      }
   }
 
   var et = 0;
