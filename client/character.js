@@ -522,8 +522,8 @@ export default class Character extends THREE.Object3D {
     
     loadAudio() {
         return new Promise((resolve, reject) => {
-            console.log("Loading character audio", this.props.basePath + "_heb.ogg");
-            this.soundManager.createPositionalSoundSampler(this.props.basePath + "_heb.ogg",(sampler) => {
+            console.log("Loading character audio", this.props.basePath + "_" + this.config.language + ".ogg");
+            this.soundManager.createPositionalSoundSampler(this.props.basePath + "_" + this.config.language + ".ogg",(sampler) => {
                 console.log("Loaded character audio ", sampler);                              
                 this.audio = sampler;
                 this.updateAudioPosition();
