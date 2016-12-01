@@ -13,7 +13,7 @@ export default class Character extends THREE.Object3D {
         this.inShow = false;
         this.scene = scene;
 
-        if (config.videoHost) {
+        if (config.videoHost && config.production) {
             props.basePath = config.videoHost + props.basePath;
         }
 
@@ -50,7 +50,6 @@ export default class Character extends THREE.Object3D {
         }
 
 
-
         console.log(props.name + " character constructed!");
 
         this.props = props;
@@ -66,6 +65,7 @@ export default class Character extends THREE.Object3D {
 
         this.subtitlesReady = false;
         this.fullReady = false;
+        this.audioReady = false;
 
         this.nextAdjustment = null;
         this.lastAdjustment = null;
@@ -73,6 +73,7 @@ export default class Character extends THREE.Object3D {
         this.adjustments = null;
 
         this.colliding = false;
+        this.audio = null;
 
     }
     init(loadingManager) {
@@ -155,6 +156,12 @@ export default class Character extends THREE.Object3D {
             events.on("show_start", () => {this.inShow = true});
             events.on("show_end", () => {this.inShow = false});
 
+            if (this.props.event) {
+                events.on("square_rotating", () => {
+                    this.updateAudioPosition();
+                });
+            }
+
         //events.on("experience_end", () => {this.unload()});
     }
     idleException(name) {
@@ -193,12 +200,20 @@ export default class Character extends THREE.Object3D {
                 if (this.animation) {
                     this.animation.visible = true;
                 }
+                this.loadAudio()
+                .then(() => {
+                    this.soundManager.panorama.append(this.audio);
+                    this.audio.play();
+                })
                 events.emit("character_playing", this.props.name)
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {
                     console.log(this.props.name, "Character video ended");
                     this.idleVideo.pause();
                     this.idleVideo.unload();
+                    this.soundManager.panorama.detach(this.audio);
+                    this.audio.stop();
+                    this.audio.unload();
                     this.remove(this.idleVideo);
                     if (this.animation) {
                         this.remove(this.animation);
@@ -288,12 +303,18 @@ export default class Character extends THREE.Object3D {
             if (this.subtitlesVideo) {
                 this.subtitlesVideo.src = "";
             }
+            if (this.audio) {
+                this.soundManager.panorama.detach(this.audio);
+                this.audio.stop();
+                this.audio.unload();
+            }
         }
         //this.remove(this.animation);
         this.active = false;
         this.isPaused = false;
         this.playingFull = false;
         this.subtitlesReady = false;
+        this.audioReady = false;
         this.fullReady = false;
 
         this.nextAdjustment = null;
@@ -332,6 +353,10 @@ export default class Character extends THREE.Object3D {
         this.fullVideo.pause();
         this.fullVideo.unload();
 
+        this.soundManager.panorama.detach(this.audio);
+        this.audio.stop();
+        this.audio.unload()
+
         if (!this.props.fullOnly) {
             this.idleVideo.pause();
             this.idleVideo.unload();
@@ -366,6 +391,8 @@ export default class Character extends THREE.Object3D {
             this.idleVideo.play();
         }
         this.fullVideo.pause();
+        this.soundManager.panorama.append(this.audio);
+        this.audio.pause();
         this.fullVideo.mesh.visible = false;
         this.fullVideo.wire.visible = false;
         this.playingFull = false;
@@ -417,18 +444,22 @@ export default class Character extends THREE.Object3D {
         }
     }
     detach ( child, parent, scene ) {
-        child.applyMatrix( parent.matrixWorld );
-        parent.remove( child );
-        scene.add( child );
+        if (child && parent && scene) {
+            child.applyMatrix( parent.matrixWorld );
+            parent.remove( child );
+            scene.add( child );
+        }
     }
 
     attach ( child, scene, parent ) {
-        var matrixWorldInverse = new THREE.Matrix4();
-        matrixWorldInverse.getInverse( parent.matrixWorld );
-        child.applyMatrix( matrixWorldInverse );
+        if (child && parent && scene) {
+            var matrixWorldInverse = new THREE.Matrix4();
+            matrixWorldInverse.getInverse( parent.matrixWorld );
+            child.applyMatrix( matrixWorldInverse );
 
-        scene.remove( child );
-        parent.add( child );
+            scene.remove( child );
+            parent.add( child );
+        }
     }
     onCollision() {
         //console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);
@@ -445,9 +476,9 @@ export default class Character extends THREE.Object3D {
                         this.animation.visible = false;
                     }
 
-                    // load subtitles video
                     if (!this.isPaused) {
 
+                        // load subtitles video
                         if(this.props.subtitles) {
                             this.subtitlesVideo = document.getElementById("subtitles");
                             this.subtitlesVideo.addEventListener('canplay',() => {
@@ -469,6 +500,12 @@ export default class Character extends THREE.Object3D {
                         },false);
                         this.fullVideo.load();
 
+                        // Load audio
+                        this.loadAudio()
+                        .then((audio) => {
+                            this.audioReady = true;
+                            this.checkReady();
+                        })
                     } else {
                         console.log("Resume");
                         if (this.props.subtitles) {
@@ -482,14 +519,33 @@ export default class Character extends THREE.Object3D {
         }
 
     }
+    
+    loadAudio() {
+        return new Promise((resolve, reject) => {
+            console.log("Loading character audio", this.props.basePath + "_heb.ogg");
+            this.soundManager.createPositionalSoundSampler(this.props.basePath + "_heb.ogg",(sampler) => {
+                console.log("Loaded character audio ", sampler);                              
+                this.audio = sampler;
+                this.updateAudioPosition();
 
-    showAnimation(){
-        //
+                resolve(sampler);
+            });
+        });
+    }
+
+    updateAudioPosition() {
+        // Position audio
+        if (this.audio) {
+            this.updateMatrixWorld();
+            let worldPos = new THREE.Vector3().setFromMatrixPosition(this.matrixWorld);
+            //console.log("Setting character audio position: ", worldPos);                              
+            this.audio.position.set(worldPos.x, worldPos.y, worldPos.z);
+        }
     }
 
     checkReady() {
         console.log(this.props.name, "Checking ready");
-        if (this.fullReady && (this.subtitlesReady || !this.props.subtitles)) {
+        if (this.fullReady && this.audioReady && (this.subtitlesReady || !this.props.subtitles)) {
             if (this.animation) {
                 this.animation.start(this.props.name);
             }
@@ -537,6 +593,9 @@ export default class Character extends THREE.Object3D {
             }
 
             this.fullVideo.play();
+            this.soundManager.panorama.append(this.audio);
+            this.audio.play();
+        
             if (this.subtitlesReady) {
                 this.subtitlesVideo.style.display = "block";
                 this.subtitlesVideo.play();

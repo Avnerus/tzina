@@ -279,7 +279,7 @@ export default class TimeController {
             if (this.gazeCounter > 1 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
             }
-            if (this.gazeCounter >= 2.5) {
+            if (this.gazeCounter >= 4) {
 
                 let targetHour = this.gazeHour;
                 this.gazeHour = -1;
@@ -334,7 +334,7 @@ export default class TimeController {
                                 this.sunGazer.active = true;
                                 this.clockRunning = true;
                             }
-                        }});
+                        }, onUpdate: () => {events.emit("square_rotating")}});
                     },1000);
                 } else {
                     events.emit("angle_updated", this.currentHour);
