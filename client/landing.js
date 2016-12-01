@@ -237,6 +237,7 @@ try {
             console.log('language changed to Hebrew');
 
             currentLanguage = 'he';
+            config.language = 'heb';
 
             $('#language').html('ENGLISH');
 
@@ -253,6 +254,7 @@ try {
             console.log('language changed to English');
 
             currentLanguage = 'en';
+            config.language = 'eng';
 
             $('#language').html('עברית');
 

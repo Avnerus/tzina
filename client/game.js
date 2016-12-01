@@ -146,12 +146,6 @@ export default class Game {
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
-        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager);
-
-        this.extras.timeController = this.timeController;
-
-
-
 
         this.flood = new Flood();
         this.flood.init();
@@ -175,8 +169,6 @@ export default class Game {
         this.zoomController.init();
 
 
-        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config);
-        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
 
 
         if (!this.config.noAnimations) {
@@ -198,7 +190,12 @@ export default class Game {
         }
 
 
-        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager, this.timeController, this.scene);
+        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager, this.scene);
+
+        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager, this.characterController);
+
+        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config);
+        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
 
         // laura: i don't know other better way to do this..
         if (!this.config.noAnimations) {

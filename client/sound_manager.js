@@ -40,7 +40,9 @@ export default class SoundManager {
         },
         detach:function(who){
           try{
-            this.samplers.splice(this.samplers.indexOf(who),1);
+              if (this.samplers.indexOf(who) != -1) {
+                this.samplers.splice(this.samplers.indexOf(who),1);
+              }
           }catch(error){
             console.error("soundmanager.panorama could not detach the sampler: ");
             console.warn(error);
@@ -153,7 +155,7 @@ export default class SoundManager {
           let thisSample=ambientSamples[a];
           if(!thisSample.disable){
             let pSampler=new PositionalSoundSampler(this.listener,this.scene);
-            pSampler.blurModule.controlVolume(0.5);
+            pSampler.blurModule.controlVolume(0.7);
             pSampler.position.set(thisSample.position[0],thisSample.position[1],thisSample.position[2]);
             //pSampler.createDebugCube(0xFF0000);
             pSampler.init(SOUND_PATH + thisSample.path,loadingManager,function(thisSampler){
@@ -269,12 +271,18 @@ export class StaticSoundSampler{
     //in practical terms, where to connect the blurmodule:
     //if static, will be an audiocontext, but if positional, will be positional audionode
     this.staticSoundOutputDestination=audioContext.destination;
+
+    this.paused = false;
+    this.playStartTime = 0;
+    this.offset = 0;
+    this.loop = false;
+
   }
   setToLoop(loopValue){
     if(loopValue!==undefined){
-      this.source.loop=loopValue;
+      this.loop=loopValue;
     }else{
-      this.source.loop=true;
+      this.loop=true;
     }
   }
 
@@ -287,15 +295,6 @@ export class StaticSoundSampler{
     //so we can more safely check if (thisStaticSoundSampler.source)
     this.source=false;
     //pendant: I don't know what to do with the loadingManager
-    let source = audioContext.createBufferSource();
-    //connect my buffer source to the blur module, and then the blur module to the output.
-    try{
-      source.connect(this.blurModule.inputNode);
-      this.blurModule.connect(this.staticSoundOutputDestination);
-    }catch(e){
-      console.log(this.blurModule,this.blurModule.inputNode,audioContext.destination);
-      console.error(e);
-    }
     let request = new XMLHttpRequest();
     request.open('GET', this.sampleUrl, true);
     request.responseType = 'arraybuffer';
@@ -304,13 +303,10 @@ export class StaticSoundSampler{
       var audioData = request.response;
 
       audioContext.decodeAudioData(audioData, function(buffer) {
-          var myBuffer = buffer;
-          source.buffer = myBuffer;
-          thisStaticSoundSampler.source=source;
+          thisStaticSoundSampler.buffer = buffer;
           if(loadReadyCallback){
             loadReadyCallback(thisStaticSoundSampler);
           }
-
         },
 
         function(e){"Error with decoding audio data" + e.err});
@@ -318,23 +314,48 @@ export class StaticSoundSampler{
     }
     request.send();
   }
-  play(/*loop*/){
+  play(){
+    this.source = this.audioContext.createBufferSource();
+    this.source.buffer = this.buffer;
+    this.source.loop = this.loop;
+    //connect my buffer source to the blur module, and then the blur module to the output.
+    try{
+      this.source.connect(this.blurModule.inputNode);
+      this.blurModule.connect(this.staticSoundOutputDestination);
+    }catch(e){
+      console.log(this.blurModule,this.blurModule.inputNode,audioContext.destination);
+      console.error(e);
+    }
     
     if(this.source){
-       this.source.start();
+       this.playStartTime = this.audioContext.currentTime;
+       this.source.start(this.audioContext.currentTime, this.offset);
+       console.log("Audio started at time",this.playStartTime);
       /*this.source.loop = loop||false;*/
     }else{
       console.warn("thisStaticSoundSampler mistake: you requested to play, but the source has not been loaded yet");
     }
   }
   pause(){
-    console.warn("sound stop and pause is untested. Test it and remove these lines");
-    this.source.stop();
+    let pauseTime = this.audioContext.currentTime;
+    this.offset += (pauseTime - this.playStartTime);
+    console.log("Audio paused at time", pauseTime, "offset is ", this.offset);
+    if (this.source) {
+        this.source.stop();
+    }
+    this.source = null;
   }
   stop(){
-    console.warn("sound stop and pause is untested. Test it and remove these lines");
-    this.source.stop();
-    this.source.currentTime = 0;
+    if (this.source) {
+        this.source.stop();
+    }
+    this.playStartTime = 0;
+    this.offset = 0;
+    this.source = null;
+  }
+
+  unload() {
+      this.buffer = null;
   }
 }
 

@@ -7,18 +7,17 @@ import DebugUtil from './util/debug'
 import _ from 'lodash'
 
 export default class CharacterController {
-    constructor(config, animations, square, collisionManager, soundManager, timeConroller, scene)  {
+    constructor(config, animations, square, collisionManager, soundManager, scene)  {
         this.config = config;
         this.collisionManager = collisionManager;
         this.soundManager = soundManager;
-        this.timeConroller = timeConroller;
         this.characters = {};
         this.square = square;
         this.activeCharacters = [];
         this.animations = animations;
         this.addedColliders = false;
         this.inControl = false;
-        this.debug = true;
+        this.debug = false;
         this.scene = scene;
     }
     init(loadingManager) {
@@ -49,6 +48,7 @@ export default class CharacterController {
             if (this.inControl){ {
                 console.log("Angle updated", hour, this.activeCharacters);
                 this.activeCharacters.forEach((character) => {
+                    character.updateAudioPosition();
                     if (character.idleOnly) {
                         character.addedColliders = true;
                     }

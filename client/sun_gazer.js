@@ -129,6 +129,7 @@ export default class SunGazer extends THREE.Object3D  {
             events.emit("gaze_stopped", this.gazingSun.name);
             this.gazingSun = null;
             this.blurringSun = null;
+            this.setBlur(0);
         }
     }
 
