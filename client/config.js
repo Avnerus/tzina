@@ -11,13 +11,13 @@ export default {
     daySpeed: 0.001,
     noSquare: false,
     fullscreen: false,
-    noAnimations: false,
-    noExtras: false,
-    noTrees: false,
+    noAnimations: true,
+    noExtras: true,
+    noTrees: true,
     noCharacters: false,
     production: false,
     videoHost: "http://assets.tzina.space/",
     platform: "",
-    skipLanding: false,
+    skipLanding: true,
     language: "eng"
 }

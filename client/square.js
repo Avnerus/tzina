@@ -315,8 +315,12 @@ export default class Square extends THREE.Object3D{
                     sun.getObjectByName(this.currentSun + "_L").visible = true;
                 }
 
+
                 setTimeout(() => {
                     events.emit("angle_updated");
+
+                    // Add the sun colliders
+                    this.addSunColliders();
                 },0)
 
             }
@@ -521,6 +525,7 @@ export default class Square extends THREE.Object3D{
                             chapter.sunLoaderRotation[2] * Math.PI / 180,
                             "XYZ"
                         );
+
                         if (this.debug) {
                             //DebugUtil.positionObject(sunLoader, sunLoader.name, true, -50, 50, chapter.sunLoaderRotation);
                         }
@@ -541,6 +546,9 @@ export default class Square extends THREE.Object3D{
                 resolve(reorderedSuns);
             });
         });
+    }
+    addSunColliders() {
+        this.collisionManager.addSunColliders(this.suns);
     }
     loadFile(loadingManager, path) {
         return new Promise((resolve, reject) => {

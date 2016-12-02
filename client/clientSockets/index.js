@@ -33,6 +33,7 @@ export default class PidgeonController {
     this.scene = scene;
     this.camera=camera;
     this.lastCameraPosition={x:0,y:0,z:0};
+    this.raycaster = new THREE.Raycaster();
   }
   init(loadingManager){
     console.log("pidgeon init");
@@ -242,7 +243,7 @@ export default class PidgeonController {
     let vector = new THREE.Vector3(0, 0, -1);
     vector = this.camera.localToWorld(vector);
     vector.sub(this.camera.position); // Now vector is a unit vector with the same direction as the camera
-    let raycaster = new THREE.Raycaster( this.camera.position, vector);
+    this.raycaster.set( this.camera.position, vector);
     let thelist=[];
 
     Pidgeon.each(function(pidg){
@@ -255,7 +256,7 @@ export default class PidgeonController {
     //   console.log("the list",thelist);
     //   this.alreadyLoggedTheThing=true;
     // }
-    let collisionResults = raycaster.intersectObjects(thelist);
+    let collisionResults = this.raycaster.intersectObjects(thelist);
     for(let a in collisionResults){
       // console.log(collisionResults[a]);
       // console.log(collisionResults[a].object.pidgeonOwner);

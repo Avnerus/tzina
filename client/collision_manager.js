@@ -29,6 +29,10 @@ export default class CollisionManager {
         this.player = camera;
         this.meshColliders = [];
 
+        this.gazeObjects = [];
+
+        this.raycaster = new THREE.Raycaster();
+
         this.debug = false;
     }
     init() {
@@ -77,6 +81,8 @@ export default class CollisionManager {
             }
         });
 
+        this.gaze();
+
     }
     setPlayer(player) {
         this.player = player;
@@ -116,11 +122,12 @@ export default class CollisionManager {
 
 
     addCharacter(character) {
+        character.updateMatrixWorld(true);
+
         if (character.props.space) {
-            console.log("COLLISION MANAGER - Adding character ", character);
+            console.log("COLLISION MANAGER - Adding character ", character.props.name);
             let space = character.props.space;
 
-            this.scene.updateMatrixWorld(true);
 
             let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
             bbox.update();
@@ -169,10 +176,19 @@ export default class CollisionManager {
                 newBox.max.z
             ]);
 
-            character.obstacleIndex = this.characterObstacles.length -1;
-
             this.characterObstacleInfo.push(character);
         }
+
+        // Gaze box from the idle mesh
+        if (character.idleVideo && character.idleVideo.mesh) {
+            if (!character.gazeBox) {
+                character.gazeBox  = new THREE.BoundingBoxHelper(character.idleVideo.mesh, 0xffff00);
+                this.scene.add(character.gazeBox);
+            }
+            character.gazeBox.update();
+            this.gazeObjects.push(character.gazeBox);
+        }
+
     }
 
     enlargeBox(box, space, offset) {
@@ -188,11 +204,42 @@ export default class CollisionManager {
         return newBox;
     }
 
+    gaze() {
+        let camVector = new THREE.Vector3(0,0,-1).applyQuaternion(this.player.quaternion);
+        this.raycaster.set(this.player.position, camVector);
+
+        let collisionResults = this.raycaster.intersectObjects(this.gazeObjects);
+        console.log("Sun collision ?", collisionResults.length);
+    }
+
+    addSunColliders(suns) {
+        suns.children.forEach((sun) => {
+            // Add the collision bounding box
+            sun.updateMatrixWorld();
+            let bbox = new THREE.BoundingBoxHelper(sun, 0xff0000);
+            bbox.update();
+            bbox.scale.multiplyScalar(1.5);
+            this.scene.add(bbox);
+            this.gazeObjects.push(bbox);
+        })
+    }
+
     removeCharacter(character) {
         if (character.props.space) {
-            console.log("COLLISION MANAGER - Removing character ", character, "Obstacle index: ",character.obstacleIndex);
-            this.characterObstacles.splice(character.obstacleIndex, 1);
-            this.characterObstacleInfo.splice(character.obstacleIndex, 1);
+            let obstacleIndex = this.characterObstacles.indexOf(character);
+            console.log("COLLISION MANAGER - Removing character ", character.props.name, "Obstacle index: ", obstacleIndex);
+            if (obstacleIndex != -1) {
+                this.characterObstacles.splice(obstacleIndex, 1);
+                this.characterObstacleInfo.splice(obstacleIndex, 1);
+            }
+        }
+        // Gaze box from the idle mesh
+        if (character.gazeBox) {
+            let gazeIndex = this.gazeObjects.indexOf(character.gazeBox);
+            console.log("COLLISION MANAGER - Removing character ", character.props.name, "Gaze index: ", gazeIndex);
+            if (gazeIndex != -1) {
+                this.gazeObjects.splice(gazeIndex, 1);
+            }
         }
     }
 

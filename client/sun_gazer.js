@@ -15,7 +15,8 @@ export default class SunGazer extends THREE.Object3D  {
         this.gazingSun = null;
         this.lastBlur = 0;
         this.ended = false;
-
+        this.currentCollider = null;
+        this.raycaster = new THREE.Raycaster();
     }
     init() {
 
@@ -93,19 +94,26 @@ export default class SunGazer extends THREE.Object3D  {
             } else {
 
                 let thresholdPassed = false;
+                this.raycaster.set(this.camPosition, camVector);
 
+                //let collisionResults = this.raycaster.intersectObjects(this.square.sunColliders);
+                //console.log("Sun collision ?", collisionResults.length);
+
+                /*
                 // Skip the first child because it is a null parent
-                for (let i = 0; i < this.square.suns.children.length && !thresholdPassed; i++) {
+                for (let i = 0; i < this.square.sunColliders.length && !thresholdPassed; i++) {
                     let sun = this.square.suns.children[i];
+                    let sunCollider = this.square.sunColliders[i];
+
                     if (sun.name != this.square.currentSun) {
-                        let res = this.getDotProduct(camVector, sun.children[0]);
+                        let res = this.getDotProduct(camVector, sunCollider);
                         if (res > this.BLUR_THRESHOLD) {
                             this.blurringSun = sun;
                             this.setBlur(res);
                             thresholdPassed = true;
                         }
                     }
-                }
+                }*/
             }
         }
     }
