@@ -1,5 +1,5 @@
 export default class SunGazer extends THREE.Object3D  {
-    constructor(square, soundManager) {
+    constructor(square, soundManager, collisionManager) {
         super();
         this.camPosition = new THREE.Vector3();
         this.camQuaternion = new THREE.Quaternion();
@@ -16,34 +16,19 @@ export default class SunGazer extends THREE.Object3D  {
         this.lastBlur = 0;
         this.ended = false;
         this.currentCollider = null;
+        this.collisionManager = collisionManager;
         this.raycaster = new THREE.Raycaster();
     }
     init() {
 
-        let sunGazeSound, characterStartSound;
-
-         this.soundManager.createStaticSoundSampler("assets/sound/ui/Hour_Replace_3.ogg",(staticSoundSampler)=>{
-
-              // sunGazeSound = staticSoundSampler;
-
-              // sunGazeSound.blurModule.controlVolume(0);
-
-              // sunGazeSound.play();
-
-        });
-
-        this.soundManager.createStaticSoundSampler("assets/sound/ui/Button_C_3.ogg",(staticSoundSampler)=>{
-
-              // characterStartSound = staticSoundSampler;
-
-              // characterStartSound.blurModule.controlVolume(0);
-
-              // characterStartSound.play();
-              
-        });
-
         events.on("control_threshold", (passed) => {      
             this.active = passed;
+            if (passed) {
+                // Add the sun colliders
+                setTimeout(() => {
+                    this.addSunColliders();
+                },0)
+            }
         });
 
         events.on("character_playing", () => {
@@ -64,6 +49,26 @@ export default class SunGazer extends THREE.Object3D  {
             this.active = false;
             this.ended = true;
         });
+    }
+
+    addSunColliders() {
+        this.square.suns.children.forEach((sun) => {
+            // Add the collision bounding box
+            sun.updateMatrixWorld();
+            let bbox = new THREE.BoundingBoxHelper(sun, 0xff0000);
+            bbox.update();
+            bbox.scale.multiplyScalar(3);
+
+            bbox.onGaze = (camPosition, camVector, colliderPosition) => {
+                this.onGaze(camPosition, camVector, colliderPosition, sun);
+            }
+            this.collisionManager.addGazeCollider(bbox);
+        })
+    }
+
+    onGaze(camPosition, camVector, colliderPosition, sun) {
+       let gazeAngle = this.getDotProduct(camPosition, camVector, colliderPosition);
+       console.log("On gaze!",sun.name, gazeAngle); 
     }
 
     updateMatrixWorld(force) {
@@ -141,8 +146,8 @@ export default class SunGazer extends THREE.Object3D  {
         }
     }
 
-    getDotProduct(camVector, sunMesh) {
-        let camToSun = new THREE.Vector3().setFromMatrixPosition(sunMesh.matrixWorld).sub(this.camPosition).normalize();
+    getDotProduct(camPosition, camVector, colliderPosition) {
+        let camToSun = new THREE.Vector3().copy(colliderPosition).sub(camPosition).normalize();
         return camToSun.dot(camVector);
     }
 }

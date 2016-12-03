@@ -318,9 +318,6 @@ export default class Square extends THREE.Object3D{
 
                 setTimeout(() => {
                     events.emit("angle_updated");
-
-                    // Add the sun colliders
-                    this.addSunColliders();
                 },0)
 
             }
@@ -546,9 +543,6 @@ export default class Square extends THREE.Object3D{
                 resolve(reorderedSuns);
             });
         });
-    }
-    addSunColliders() {
-        this.collisionManager.addSunColliders(this.suns);
     }
     loadFile(loadingManager, path) {
         return new Promise((resolve, reject) => {

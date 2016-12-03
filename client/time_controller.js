@@ -3,12 +3,10 @@ import MathUtil from './util/math'
 import DebugUtil from './util/debug'
 import _ from 'lodash'
 import {MeshText2D, SpriteText2D, textAlign} from './lib/text2d/index'
-import SunGazer from './sun_gazer'
-
 import moment from 'moment';
 
 export default class TimeController {
-    constructor(config, element, square, sky, scene, camera, soundManager) {
+    constructor(config, element, square, sky, scene, camera, soundManager, sunGazer) {
         this.square = square;
         this.config = config;
         this.element = element;
@@ -20,6 +18,7 @@ export default class TimeController {
         this.camera = camera;
 
         this.soundManager = soundManager;
+        this.sunGazer = sunGazer;
 
         this.gazeCounter = 0;
         this.gazeHour = -1;
@@ -163,11 +162,6 @@ export default class TimeController {
         this.chapterTitle.add(this.chapterTitleLineTwo);
         this.chapterTitleLineTwo.position.y = -30;
         this.scene.add(this.chapterTitle)
-
-        // Sun gazer
-        this.sunGazer = new SunGazer(this.square, this.soundManager);
-        this.sunGazer.init();
-        this.camera.add(this.sunGazer);
 
         events.on("gaze_started", (hour) => {
             this.gazeHour = parseInt(hour);

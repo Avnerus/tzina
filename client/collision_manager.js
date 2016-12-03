@@ -35,14 +35,15 @@ export default class CollisionManager {
 
         this.raycaster = new THREE.Raycaster();
 
-        this.debug = true;
+        this.debugCollisions = false;
+        this.debugGaze = true;
     }
     init() {
     }
 
     refreshSquareColliders(colliders) {
         console.log("Refresh square colliders ", colliders);
-        if (this.debug) {
+        if (this.debugCollisions) {
             while(this.squareDebug.length > 0) {
                 let object = this.squareDebug.pop();
                 this.scene.remove(object);
@@ -84,7 +85,6 @@ export default class CollisionManager {
         });
 
         this.gaze();
-
     }
     setPlayer(player) {
         this.player = player;
@@ -141,12 +141,10 @@ export default class CollisionManager {
 
             let newBox = THREE.GeometryUtils.enlargeBox(bbox.box, space, offset);
 
-            /*
-            if (this.debug) {
-                let bboxmesh = debugutil.adjustbox(bbox.box, character.props.name + " - bbox", character.props.space, offset);
-                console.log("debug collision box", bboxmesh);
-                this.scene.add(bboxmesh);
-            }*/
+            if (this.debugCollisions) {
+                DebugUtil.adjustBBox(bbox, character.props.name + " - bbox", character.props.space, offset);
+                this.scene.add(bbox);
+            }
 
             console.log("Adding collision box ", newBox);
             this.characterObstacles.push([
@@ -182,13 +180,11 @@ export default class CollisionManager {
             newBox.getSize(character.gazeBox.scale);
             newBox.getCenter(character.gazeBox.position);
 
-            /*
 
-            if (this.debug) {
-                let bboxmesh = DebugUtil.adjustBox(character.gazeBox.box, character.props.name + " - Gaze",gazeSpace, gazeOffset);
-                console.log("debug gaze box", bboxmesh);
-                this.scene.add(bboxmesh);
-            }*/
+            if (this.debugGaze) {
+                DebugUtil.adjustBBox(character.gazeBox, character.props.name + " - Gaze",gazeSpace, gazeOffset);
+                this.scene.add(character.gazeBox);
+            }
             this.gazeObjects.push(character.gazeBox);
             this.scene.add(character.gazeBox);
         }
@@ -200,19 +196,14 @@ export default class CollisionManager {
         this.raycaster.set(this.player.position, camVector);
 
         let collisionResults = this.raycaster.intersectObjects(this.gazeObjects);
-        console.log("Sun collision ?", collisionResults.length);
+        if(collisionResults.length > 0 && collisionResults[0].object.onGaze) {
+            collisionResults[0].object.onGaze(this.player.position, camVector, collisionResults[0].object.position);
+        }
     }
 
-    addSunColliders(suns) {
-        suns.children.forEach((sun) => {
-            // Add the collision bounding box
-            sun.updateMatrixWorld();
-            let bbox = new THREE.BoundingBoxHelper(sun, 0xff0000);
-            bbox.update();
-            bbox.scale.multiplyScalar(3);
-            this.scene.add(bbox);
-            this.gazeObjects.push(bbox);
-        })
+    addGazeCollider(bbox) {
+        this.scene.add(bbox);
+        this.gazeObjects.push(bbox);
     }
 
     removeCharacter(character) {
@@ -239,7 +230,7 @@ export default class CollisionManager {
         //obj.children[0].material.visible = false;
         let bbox = new THREE.BoundingBoxHelper(obj,0x00ff00);
         bbox.update();
-        if (this.debug) {
+        if (this.debugCollisions) {
             console.log("Collision bounding box", bbox);
             this.scene.add(bbox);
             this.squareDebug.push(bbox);

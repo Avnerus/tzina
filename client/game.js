@@ -17,6 +17,7 @@ import TimeController from './time_controller'
 import CharacterController from './character_controller'
 import Show from './show'
 import Extras from './extras'
+import SunGazer from './sun_gazer'
 
 import DebugUtil from './util/debug'
 
@@ -143,6 +144,12 @@ export default class Game {
 
         // Square
         this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene, this.extras);
+
+        // Sun gazer
+        this.sunGazer = new SunGazer(this.square, this.soundManager, this.collisionManager);
+        this.sunGazer.init();
+
+
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
