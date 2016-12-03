@@ -1,4 +1,6 @@
 import boxIntersect from 'box-intersect'
+import GeometryUtils from './util/GeometryUtils'
+import DebugUtil from './util/debug'
 
 const PLAYER_SIZE = {
     x: 1, 
@@ -33,7 +35,7 @@ export default class CollisionManager {
 
         this.raycaster = new THREE.Raycaster();
 
-        this.debug = false;
+        this.debug = true;
     }
     init() {
     }
@@ -81,7 +83,7 @@ export default class CollisionManager {
             }
         });
 
-        this.gaze();
+        //this.gaze();
 
     }
     setPlayer(player) {
@@ -137,34 +139,14 @@ export default class CollisionManager {
                 offset.fromArray(character.props.spaceOffset);
             }
 
-            let newBox = this.enlargeBox(bbox.box, space, offset);
+            let newBox = THREE.GeometryUtils.enlargeBox(bbox.box, space, offset);
 
-           if (this.debug) {
-                let bboxMesh = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1 ), new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } ) );
-                newBox.getSize(bboxMesh.scale);
-                newBox.getCenter(bboxMesh.position);
-                this.scene.add(bboxMesh);
-                events.emit("add_gui", {folder:character.props.name + " - BBOX Offset", listen: true, step: 0.01, onChange: () => {
-                    newBox = this.enlargeBox(bbox.box,character.props.space,offset); 
-                    newBox.getSize(bboxMesh.scale);
-                    newBox.getCenter(bboxMesh.position);
-                }}, offset, "x", -5,5); 
-                events.emit("add_gui", {folder:character.props.name + " - BBOX Offset", listen: true, step: 0.01, onChange: () => {
-                    newBox = this.enlargeBox(bbox.box,space,offset); 
-                    newBox.getSize(bboxMesh.scale);
-                    newBox.getCenter(bboxMesh.position);
-                }}, offset, "y", -5,5); 
-                events.emit("add_gui", {folder:character.props.name + " - BBOX Offset", listen: true, step: 0.01, onChange: () => {
-                    newBox = this.enlargeBox(bbox.box,character.props.space,offset); 
-                    newBox.getSize(bboxMesh.scale);
-                    newBox.getCenter(bboxMesh.position);
-                }}, offset, "z", -5,5); 
-                events.emit("add_gui", {folder:character.props.name + " - BBOX Space", listen: true, step: 0.01, onChange: () => {
-                    newBox = this.enlargeBox(bbox.box,character.props.space,offset); 
-                    newBox.getSize(bboxMesh.scale);
-                    newBox.getCenter(bboxMesh.position);
-                }}, character.props, "space", -3,3); 
-           }
+            /*
+            if (this.debug) {
+                let bboxmesh = debugutil.adjustbox(bbox.box, character.props.name + " - bbox", character.props.space, offset);
+                console.log("debug collision box", bboxmesh);
+                this.scene.add(bboxmesh);
+            }*/
 
             console.log("Adding collision box ", newBox);
             this.characterObstacles.push([
@@ -181,27 +163,22 @@ export default class CollisionManager {
 
         // Gaze box from the idle mesh
         if (character.idleVideo && character.idleVideo.mesh) {
+            let gazeSpace = new THREE.Vector3();
+            let gazeOffset = new THREE.Vector3();
+
             if (!character.gazeBox) {
                 character.gazeBox  = new THREE.BoundingBoxHelper(character.idleVideo.mesh, 0xffff00);
-                this.scene.add(character.gazeBox);
+
             }
             character.gazeBox.update();
+            if (this.debug) {
+                let bboxmesh = DebugUtil.adjustBox(character.gazeBox.box, character.props.name + " - Gaze",gazeSpace, gazeOffset);
+                console.log("debug gaze box", bboxmesh);
+                this.scene.add(bboxmesh);
+            }
             this.gazeObjects.push(character.gazeBox);
         }
 
-    }
-
-    enlargeBox(box, space, offset) {
-        let newBox = new THREE.Box3();
-        newBox.copy(box);
-        newBox.min.x = box.min.x - space + offset.x; 
-        newBox.min.y = box.min.y - space + offset.y; 
-        newBox.min.z = box.min.z - space + offset.z; 
-        newBox.max.x = box.max.x +  space + offset.x
-        newBox.max.y = box.max.y + space + offset.y; 
-        newBox.max.z = box.max.z + space + offset.z;
-
-        return newBox;
     }
 
     gaze() {

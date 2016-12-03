@@ -93,5 +93,56 @@ export default {
         events.emit("remove_gui_folder", name + " - Position");
         events.emit("remove_gui_folder", name + " - Rotation");
         events.emit("remove_gui_folder", name + " - Scale");
+    },
+
+    adjustBox: function(box, prefix, space, offset) {
+
+        let newBox = THREE.GeometryUtils.enlargeBox(box, space, offset);
+        let bboxMesh = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1 ), new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } ) );
+        newBox.getSize(bboxMesh.scale);
+        newBox.getCenter(bboxMesh.position);
+        events.emit("add_gui", {folder:prefix + " Offset", listen: true, step: 0.01, onChange: () => {
+            newBox = THREE.GeometryUtils.enlargeBox(box,space,offset); 
+            newBox.getSize(bboxMesh.scale);
+            newBox.getCenter(bboxMesh.position);
+        }}, offset, "x", -5,5); 
+        events.emit("add_gui", {folder:prefix + " Offset", listen: true, step: 0.01, onChange: () => {
+            newBox = THREE.GeometryUtils.enlargeBox(box,space,offset); 
+            newBox.getSize(bboxMesh.scale);
+            newBox.getCenter(bboxMesh.position);
+        }}, offset, "y", -5,5); 
+        events.emit("add_gui", {folder:prefix + " Offset", listen: true, step: 0.01, onChange: () => {
+            newBox = THREE.GeometryUtils.enlargeBox(box,space,offset); 
+            newBox.getSize(bboxMesh.scale);
+            newBox.getCenter(bboxMesh.position);
+        }}, offset, "z", -5,5); 
+        if (typeof(space) == "number") {
+            let scale = {
+                space: space
+            };
+            events.emit("add_gui", {folder:prefix +  " Space", listen: true, step: 0.01, onChange: () => {
+                newBox = THREE.GeometryUtils.enlargeBox(box,scale.space,offset); 
+                newBox.getSize(bboxMesh.scale);
+                newBox.getCenter(bboxMesh.position);
+            }}, scale, "space", -3,3); 
+        } else {
+            events.emit("add_gui", {folder:prefix + " Space", listen: true, step: 0.01, onChange: () => {
+                newBox = THREE.GeometryUtils.enlargeBox(box,space,offset); 
+                newBox.getSize(bboxMesh.scale);
+                newBox.getCenter(bboxMesh.position);
+            }}, space, "x", -5,5); 
+            events.emit("add_gui", {folder:prefix + " Space", listen: true, step: 0.01, onChange: () => {
+                newBox = THREE.GeometryUtils.enlargeBox(box,space,offset); 
+                newBox.getSize(bboxMesh.scale);
+                newBox.getCenter(bboxMesh.position);
+            }}, space, "y", -5,5); 
+            events.emit("add_gui", {folder:prefix + " Space", listen: true, step: 0.01, onChange: () => {
+                newBox = THREE.GeometryUtils.enlargeBox(box,space,offset); 
+                newBox.getSize(bboxMesh.scale);
+                newBox.getCenter(bboxMesh.position);
+            }}, space, "z", -5,5); 
+        }
+
+        return bboxMesh;
     }
 }

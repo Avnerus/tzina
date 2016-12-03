@@ -94,7 +94,7 @@ export default class SunGazer extends THREE.Object3D  {
             } else {
 
                 let thresholdPassed = false;
-                this.raycaster.set(this.camPosition, camVector);
+                //this.raycaster.set(this.camPosition, camVector);
 
                 //let collisionResults = this.raycaster.intersectObjects(this.square.sunColliders);
                 //console.log("Sun collision ?", collisionResults.length);
