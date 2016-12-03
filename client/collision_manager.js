@@ -83,7 +83,7 @@ export default class CollisionManager {
             }
         });
 
-        //this.gaze();
+        this.gaze();
 
     }
     setPlayer(player) {
@@ -166,17 +166,31 @@ export default class CollisionManager {
             let gazeSpace = new THREE.Vector3();
             let gazeOffset = new THREE.Vector3();
 
+            if (character.props.gazeSpace) {
+                gazeSpace.fromArray(character.props.gazeSpace);
+            }
+            if (character.props.gazeOffset) {
+                gazeOffset.fromArray(character.props.gazeOffset);
+            }
+
             if (!character.gazeBox) {
                 character.gazeBox  = new THREE.BoundingBoxHelper(character.idleVideo.mesh, 0xffff00);
-
             }
+
             character.gazeBox.update();
+            let newBox = THREE.GeometryUtils.enlargeBox(character.gazeBox.box, gazeSpace, gazeOffset);
+            newBox.getSize(character.gazeBox.scale);
+            newBox.getCenter(character.gazeBox.position);
+
+            /*
+
             if (this.debug) {
                 let bboxmesh = DebugUtil.adjustBox(character.gazeBox.box, character.props.name + " - Gaze",gazeSpace, gazeOffset);
                 console.log("debug gaze box", bboxmesh);
                 this.scene.add(bboxmesh);
-            }
+            }*/
             this.gazeObjects.push(character.gazeBox);
+            this.scene.add(character.gazeBox);
         }
 
     }
@@ -195,7 +209,7 @@ export default class CollisionManager {
             sun.updateMatrixWorld();
             let bbox = new THREE.BoundingBoxHelper(sun, 0xff0000);
             bbox.update();
-            bbox.scale.multiplyScalar(1.5);
+            bbox.scale.multiplyScalar(3);
             this.scene.add(bbox);
             this.gazeObjects.push(bbox);
         })

@@ -118,7 +118,9 @@ export default [
         animationRotation: [-4, -23, -9],
         space: -0.06,
         spaceOffset: [-0.08,0,0.38],
-        subtitles: false
+        subtitles: false,
+        gazeSpace: [-0.55,0,0],
+        gazeOffset: [0,0,0.58]
     },
     {
         name: 'Meir',
