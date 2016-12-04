@@ -10,15 +10,17 @@ export default [
         name: 'Miriam',
         position : [-17.1, 22.1, 3.38],
         rotation: [0, 78, 0],
-        space: 0.32,
-        spaceOffset: [5,0,8],
+        scale: 0.003 * 0.661 * 1.071,
+        space: 0.76,
+        spaceOffset: [0.59,0,0.47],
     },
     {
         name: 'Itzik',
-        position : [-6.92, 21.92, 10.39],
+        position : [-6.08, 21.9, 10.8],
         rotation: [10, 216, 5],
-        space: 0.33, //anim:1.46
-        spaceOffset: [-0.25,0,0.15], //0.28,0.73,1.73
+        space: 1, //anim:1.46
+        spaceOffset: [0.02,0.59,-0.65], //0.28,0.73,1.73
+        gazeOffset: [0.14,0.25,0.47]
     },
     {
         name: 'Haim',
