@@ -6,18 +6,18 @@ export default {
     skipIntro: false,
     skipCharacters: false,
     speedIntro: true,
-    startTime: 19,
+    startTime: 7,
     movementSpeed: 0.2, //0.5
     daySpeed: 0.001,
     noSquare: false,
     fullscreen: false,
-    noAnimations: true,
+    noAnimations: false,
     noExtras: false,
     noTrees: true,
     noCharacters: false,
     production: false,
     videoHost: "http://assets.tzina.space/",
-    platform: "desktop",
+    platform: "vive",
     skipLanding: true,
     language: "eng"
 }
