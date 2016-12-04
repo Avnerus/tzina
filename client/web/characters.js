@@ -57,25 +57,45 @@ export default [
     },
     {
         name: 'LupoDogs12PM',
-        position : [-7.5, 21.94, 7.15],
-        rotation: [20, 241, 17.7],
+        position : [-21.34, 21.94, 3.78],
+        rotation: [0, 80, 0],
     },
     {
         name: 'LupoDogs5PM',
-        position : [-10.36, 21.94, -3.78],
-        rotation: [12, 150, 352],
+        position : [-21.34, 21.94, 3.78],
+        rotation: [0, 80, 0],
     },
     {
         name: 'Mark',
-        position : [-12.9, 21.86, 1.56],
-        rotation: [10, 76, 350],
-        space: 0.29, 
-        spaceOffset: [0.06,0,0.14],
+        mindepth : 1499.999877929688,
+        maxdepth : 4564.32861328125,
+        space: 0.8, 
+        spaceOffset: [-2.78,0,0.8],
+              adjustments : [
+            {
+                sec: 0,
+                mindepth : 1499.999877929688,
+                maxdepth : 4564.32861328125,
+               position : [7.2, 21.8, -16.2],
+                rotation: [11, 3254, 0],
+                scale: 0.003 * 0.458437 * 1.34174  * 0.865 * 1.246
+            },
+            {
+                sec: 92,
+                mindepth: 2689.701416015625,
+                maxdepth: 4381.86181640625
+            },
+            {
+                sec: 117,
+                mindepth : 1499.999877929688,
+                maxdepth : 4564.32861328125
+            }
+        ],
     },
     {
         name: 'FatmanSleep',
-        position : [-15.55, 22.05, 2.869],
-        rotation: [0,40,0],
+        position : [-3.5, 22.25, 6.98],
+        rotation: [0,197,0],
     },
     {
         name: 'Lupo9AM',
@@ -84,10 +104,10 @@ export default [
     },
     {
         name: 'Lupo12PM',
-        position : [-10.77, 22.02, 6.62],
-        rotation: [2, 216, 0],
-        space: 0.2, //2
-        spaceOffset: [0.06,0,-0.58]
+        position : [-16.86, 21.9, 0.6],
+        rotation: [0, 48, 0],
+        space: 1.2, //2
+        spaceOffset: [-0.87,0,0.92]
     },
     {
         name: 'Lupo5PM',
@@ -118,8 +138,8 @@ export default [
     },
     {
         name: 'FatmanShower',
-        position : [-5.74, 22.7, 2.85],
-        rotation: [192, 231, 197],
+        position : [-3.39, 22.8, -6.98],
+        rotation: [197, 322, 185],
     },
     {
         name: 'Agam7PM',
