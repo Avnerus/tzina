@@ -115,7 +115,7 @@ export default [
     },
     {
         name: 'Lupo12PM',
-        position : [22.74, 21.9, ],
+        position : [22.74, 21.9, 15.5],
         rotation: [351, 342, 360],
         space: 1.2, //2
         spaceOffset: [-0.87,0,0.92]
