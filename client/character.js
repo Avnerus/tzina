@@ -428,7 +428,7 @@ export default class Character extends THREE.Object3D {
             
             console.log("Adjustment!!", this.nextAdjustment.sec);
 
-            if(this.nextAdjustment.sec!=0 && !this.animation.beDetached){
+            if(this.nextAdjustment.sec!=0 && this.animation && !this.animation.beDetached){
                 this.detach( this.animation, this, this.scene );
                 console.log("detach animation!");
                 this.animation.beDetached = true;
