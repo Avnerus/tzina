@@ -39,6 +39,10 @@ export default class TimeController {
         this.chapterProgress = {};
 
         this.totalExperienceTime = 0;
+
+        events.on("experience_end", () => {
+            this.done = true;
+        });
     }
     init(loadingManager) {
         console.log("Initializing Time Controller", this.element)
@@ -324,7 +328,7 @@ export default class TimeController {
                             this.updateNextHour();
                             if (this.currentHour == 0) {
                                 this.square.clockRotation = 0;
-                            } else {
+                            } else if (!this.done) {
                                 this.sunGazer.active = true;
                                 this.clockRunning = true;
                             }
@@ -333,7 +337,7 @@ export default class TimeController {
                 } else {
                     events.emit("angle_updated", this.currentHour);
                     this.updateNextHour();
-                    if (this.currentHour != 0) {
+                    if (this.currentHour != 0 && !this.done) {
                         this.sunGazer.active = true;
                         this.clockRunning = true;
                     }

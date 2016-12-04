@@ -1,17 +1,20 @@
 import ExtrasDef from './extras_def'
 import Chapters from './chapters'
+import ChaptersWeb from './web/chapters'
 import _ from 'lodash'
 import DebugUtil from './util/debug'
+import MiscUtil from './util/misc'
 
 const EXTRAS_PATH = "assets/extras"
 
 export default class Extras extends THREE.Object3D {
-    constructor(camera, renderer) {
+    constructor(config, camera, renderer) {
         super();
 
         this.currentExtras = [];
         this.cameras = [camera];
         this.renderer = renderer;
+        this.config = config;
         this.debug = false;
         this.inControl = false;
     }
@@ -74,6 +77,14 @@ export default class Extras extends THREE.Object3D {
             if (this.store[asset.name]) {
                 console.log("Loading extra asset ", asset);
                 let type = this.store[asset.name];
+
+                if (this.config.platform == "desktop") {
+                    let chapterWeb = _.find(ChaptersWeb, {hour: hour });
+                    let assetWeb = _.find(chapterWeb.extraAssets, {name: asset.name})
+                    if (assetWeb) {
+                        MiscUtil.overwriteProps(asset, assetWeb);
+                    }
+                }
                 
                 let mesh = new Potree.PointCloudOctree(type.geometry);
                 mesh.material.rightSize = type.pointSize ? type.pointSize : 0.1;

@@ -3,6 +3,7 @@ import Characters from './characters'
 import CharactersWeb from './web/characters'
 import Character from './character'
 import DebugUtil from './util/debug'
+import MiscUtil from './util/misc'
 
 import _ from 'lodash'
 
@@ -22,15 +23,16 @@ export default class CharacterController {
     }
     init(loadingManager) {
         console.log("Initializing Character controller");
-        let platformCharacters;
-        if (this.config.platform == "desktop") {
-            console.log("Loading characters definition for desktop");
-            platformCharacters = CharactersWeb;
-        } else {
-            platformCharacters = Characters;
-        }
         if (!this.config.noCharacters) {
-            platformCharacters.forEach((characterProps) => {
+            Characters.forEach((characterProps) => {
+
+                if (this.config.platform == "desktop") {
+                    let updateCharacter = _.find(CharactersWeb, {name: characterProps.name});
+                    if (updateCharacter) {
+                        MiscUtil.overwriteProps(characterProps, updateCharacter);
+                    }
+                } 
+
                 let character = new Character(this.config, characterProps, this.collisionManager, this.soundManager, this.scene);
                 character.animation = this.animations[characterProps.animation];
                 character.init(loadingManager);
@@ -61,7 +63,7 @@ export default class CharacterController {
             }}
         });
     }
-
+    
     loadHour(hour) {
         console.log("Character controller loading hour ", hour);
         let clone = this.activeCharacters.slice(0);

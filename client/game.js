@@ -140,7 +140,7 @@ export default class Game {
         this.loadingManager = new THREE.LoadingManager();
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
-        this.extras = new Extras(this.camera, this.renderer);
+        this.extras = new Extras(this.config, this.camera, this.renderer);
 
         // Square
         this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene, this.extras);

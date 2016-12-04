@@ -12,12 +12,12 @@ export default {
     noSquare: false,
     fullscreen: false,
     noAnimations: true,
-    noExtras: true,
+    noExtras: false,
     noTrees: true,
     noCharacters: false,
     production: false,
     videoHost: "http://assets.tzina.space/",
     platform: "",
-    skipLanding: true,
+    skipLanding: false,
     language: "eng"
 }
