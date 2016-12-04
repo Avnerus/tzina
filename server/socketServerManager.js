@@ -7,8 +7,10 @@ let WebSocketServer = require('ws').Server
   , express = require('express')
   , app = express();
 
+
 export default class socketServerManager{
   constructor(port){
+
     eemiter.onHandlers.call(this);
     console.log("constructing socket server at port "+port);
     let parent=this;
@@ -17,6 +19,10 @@ export default class socketServerManager{
     server.listen(port);
     let wss = new WebSocketServer({
       server: server
+    });
+    wss.on('error',function(error){
+      console.log('♥');
+      console.log(error);
     });
     let thisWebSocketManager=this;
 
@@ -69,10 +75,19 @@ export default class socketServerManager{
           out=interpreter.encode(data);
         }
         this.ws.send(out,function(e) {
-          if (e){ console.warn(e) }else{
+          if (e){
+            console.log("this client is not connected, will remove");
+            console.warn(e);
+            if(thisWebSocketInstance.sendErrorCallback){
+              thisWebSocketInstance.sendErrorCallback();
+            }else{
+              console.log("no disconnect procedure defined");
+            }
+          }else{
             if(onFinish)onFinish();
           }
         });
+
       }
       return this;
     }
