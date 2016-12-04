@@ -22,6 +22,7 @@ setInterval(function(){
 
 //when socketServerManager gets a client, we instance a client in clientsMan
 socketSM.on('connection',function(ws){
+
   //get country name of the websocket connection
   console.log(geolocator);
   // console.log("socketSMConn",ws);
@@ -65,13 +66,23 @@ socketSM.on('connection',function(ws){
 
   //inform whoever is seeing the console about the new client
   console.log('New client [' + client.unique + '] connected');
-  //set some handlers to this client's websocket
-  ws.on('close', function() {
+  client.logout=function(){
+    console.log("logout"+client.unique);
+
     client.broadcast({
       header: "remove",
       pointer: client.unique
     });
     console.log('stopping client'+client.unique);
     clientsMan.removeClient(client);
+  }
+
+  //set some handlers to this client's websocket
+  ws.on('close', function() {
+    client.logout();
   });
+  ws.sendErrorCallback=function(){
+    client.logout();
+  }
+
 });
