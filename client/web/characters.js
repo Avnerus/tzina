@@ -10,9 +10,18 @@ export default [
         name: 'Miriam',
         position : [-17.1, 22.1, 3.38],
         rotation: [0, 78, 0],
-        scale: 0.003 * 0.661 * 1.071,
+        scale: 0.003 * 0.661 * 1.071 * 0.9,
         space: 0.76,
         spaceOffset: [0.59,0,0.47],
+         adjustments : [
+            {
+                sec: 0,
+                mindepth : 2200,
+                maxdepth : 3119.456298828,
+                position : [-17.6, 22.1, 3.38],
+                scale: 0.003 * 0.5748 * 1.106
+            }
+        ]
     },
     {
         name: 'Itzik',
@@ -70,15 +79,16 @@ export default [
         mindepth : 1499.999877929688,
         maxdepth : 4564.32861328125,
         space: 0.8, 
-        spaceOffset: [-2.78,0,0.8],
+        spaceOffset: [-1.2,0,-0.65],
+        position : [8.28, 21.8, -16.86],
+        rotation: [0, 286, 350],
               adjustments : [
             {
                 sec: 0,
                 mindepth : 1499.999877929688,
                 maxdepth : 4564.32861328125,
-               position : [7.2, 21.8, -16.2],
-                rotation: [11, 3254, 0],
-                scale: 0.003 * 0.458437 * 1.34174  * 0.865 * 1.246
+               position : [6, 21.9, -15.96],
+                scale: 0.003 * 0.458437 * 1.34174  * 0.865 * 1.246 * 0.85
             },
             {
                 sec: 92,
@@ -94,7 +104,7 @@ export default [
     },
     {
         name: 'FatmanSleep',
-        position : [-3.5, 22.25, 6.98],
+        position : [-3.5, 22.25, -6.98],
         rotation: [0,197,0],
     },
     {
