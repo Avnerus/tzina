@@ -392,7 +392,9 @@ export default class Character extends THREE.Object3D {
         }
         this.fullVideo.pause();
         this.soundManager.panorama.append(this.audio);
-        this.audio.pause();
+        if (this.audio) {
+            this.audio.pause();
+        }
         this.fullVideo.mesh.visible = false;
         this.fullVideo.wire.visible = false;
         this.playingFull = false;
@@ -594,8 +596,10 @@ export default class Character extends THREE.Object3D {
             }
 
             this.fullVideo.play();
-            this.soundManager.panorama.append(this.audio);
-            this.audio.play();
+            if (this.audio) {
+                this.soundManager.panorama.append(this.audio);
+                this.audio.play();
+            }
         
             if (this.subtitlesReady) {
                 this.subtitlesVideo.style.display = "block";
