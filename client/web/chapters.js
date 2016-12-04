@@ -5,26 +5,26 @@ export default
 			"extraAssets": [
 					{
 					name: "junkie",
-					position: [2.24,23.9,10.32],
-					rotation: [182,335,0],
+					position: [-9.67,23.9,2.89],
+					rotation: [182,229,0],
 					scale: 0.365
 				},
 					{
 					name: "pocketCam",
-					position: [-5.4,21.2,10],
+					position: [-5.49,21.2,10.97],
 					rotation: [0,81,0],
 					scale: 0.29
 				},
 						{
                     name: "cart",
-                    position: [-6.2,22.7,28.02],
-                    rotation: [193,31,0],
+                    position: [-9.67,23.5,-12.37],
+                    rotation: [181,246,0],
                     scale: 0.411
 				},
                        {
                        name: "dadOnBike",
-                       position: [11.22,21.2,11.22],
-                       rotation:[0,251,0],
+                       position: [14.56,21.2,6.48],
+                       rotation:[0,347,0],
                        scale: 0.45
                        }
             /*
@@ -41,32 +41,32 @@ export default
 			"extraAssets": [
 				       {
      		       name: "oldmansit",
-       			   position: [-12.93,23.2,3.79],
-      			   rotation: [178,129,0],
+       			   position: [9.5,23.2,-18.65],
+      			   rotation: [178,266,0],
          			 scale: 0.371
     			    },
     		     {
                     name: "sweetLady",
-                    position: [-7.03,21.5,4.66],
-                    rotation: [0,15,0],
+                    position: [7.6,21.5,-6.98],
+                    rotation: [0,189,0],
                     scale: 0.31
      		   },
 				    {
       			    name: "grandpa",
-        			  position: [9.42,21.2,12.11],
+        			  position: [14.56,21.2,2.89],
       	  			  rotation:[360,93,0],
        				  scale: 0.54
     	     },
          	 {
        			   name: "grandma",
-      			   position: [8.52,21.2,9.42],
+      			   position: [13.66,21.2,0.2],
         		   rotation:[0,360,0],
          		   scale: 0.233
        		 },
              {
               name: "firstcouple",
-              position: [-10.62,21.2,0.16],
-              rotation: [0,201,0],
+              position: [-16.86,21.2,-7.88],
+              rotation: [0,254,0],
               scale: 0.35
             },
                  {
@@ -88,31 +88,31 @@ export default
 			//	},
 				{
 					name: "100_",
-					position: [20.83,21.2,1.06],
-					rotation:[0,294,0],
+					position: [16.36,21.2,0.2],
+					rotation:[0,258,0],
 					scale: 0.233
 				},
 				{
 					name: "dude",
-					position: [-15.56,21.3,2.86],
+					position: [-9.67,21.3,2.86],
 					rotation:[0,102,0],
 					scale: 0.323
 				},
 				{
                     name: "twoNiceJewishMen",
-                    position: [13.64,23.65,11.85],
+                    position: [10.97,23.65,14.56],
                     rotation: [184,47,342],
                     scale: 0.43
 				},
 					{
 					name: "kadafi",
-					position: [-7.93,24.25,6.45],
-					rotation:[177,144,0],
+					position: [-9.67,24.25,-14.16],
+					rotation:[177,193,0],
 					scale: 0.372
 				},
 					{
 					name: "BlackGuy",
-					position: [12.03,21.37,3.806],
+					position: [14.56,21.37,-2.49],
 					rotation:[0,225,0],
 					scale: 0.43
 				}
@@ -123,20 +123,20 @@ export default
 			"extraAssets": [
 				{
                     name: "bridegroom",
-                    position: [1.22,21.15,8.1],
-                    rotation: [0,278,0],
+                    position: [-1.6,21.15,-10.5],
+                    rotation: [0,84,0],
                     scale: 0.348
 				},
 					{
                     name: "yukalele",
-                    position: [15.44,21.2,13.64],
-                    rotation: [0,144,0],
+                    position: [-14.16,21.2, -11.47],
+                    rotation: [0,306,0],
                     scale: 0.322
 				},
 					{
 					name: "bikeHottie",
-					position: [-9.72,21.2,15.72],
-					rotation:[0,19,0],
+					position: [14.56,21.2,14.56],
+					rotation:[0,52,0],
 					scale: 0.44
 				},
 					{
@@ -147,7 +147,7 @@ export default
 				},
                 {
                     name: "coolPair",
-                    position: [-11.94,21.4,5.42],
+                    position: [-14.16,21.4,3.79],
                     rotation: [0,0,0],
                     scale: 0.404
                 }
@@ -164,26 +164,26 @@ export default
                 //},
 				{
                     name: "manOnBench",
-                    position: [13.1,21.3,-6],
+                    position: [11.87,21.3,-6],
                     rotation: [0,186,0],
                     scale: 0.3,
 				},
                   {
                    name: "blueLady",
-                    position: [-5.73,21.5,12.29],
-                    rotation: [0,170,0],
+                    position: [-16.86,22,3.79],
+                    rotation: [0,161,0],
                     scale: 0.304
     		    },
     		       {
                     name: "Gyno",
-                    position: [-8.88,24.07,5.42],
+                    position: [-9.67,24.07,-13.27],
                     rotation: [186,138,18],
                     scale: 0.374
       			  },
       			  	{
                     name: "cat",
-                    position: [8,22.15,5],
-                    rotation: [353,152,0],
+                    position: [7.38,22.15,4.69],
+                    rotation: [7,270,355],
                     scale: 0.439
 				},
 					{

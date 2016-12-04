@@ -18,6 +18,6 @@ export default {
     production: false,
     videoHost: "http://assets.tzina.space/",
     platform: "vive",
-    skipLanding: true,
+    skipLanding: false,
     language: "eng"
 }
