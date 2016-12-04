@@ -37,6 +37,8 @@ export default class CollisionManager {
 
         this.debugCollisions = false;
         this.debugGaze = true;
+
+        this.lastGaze = null;
     }
     init() {
     }
@@ -196,8 +198,12 @@ export default class CollisionManager {
         this.raycaster.set(this.player.position, camVector);
 
         let collisionResults = this.raycaster.intersectObjects(this.gazeObjects);
-        if(collisionResults.length > 0 && collisionResults[0].object.onGaze) {
+        if (collisionResults.length > 0 && collisionResults[0].object.onGaze) {
             collisionResults[0].object.onGaze(this.player.position, camVector, collisionResults[0].object.position);
+            this.lastGaze = collisionResults[0].object;
+        } else if (this.lastGaze) {
+            this.lastGaze.onGazeStop();
+            this.lastGaze = null;
         }
     }
 

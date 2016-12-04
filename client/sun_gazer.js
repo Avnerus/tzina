@@ -9,8 +9,8 @@ export default class SunGazer extends THREE.Object3D  {
 
         this.active = false;
 
-        this.GAZE_THRESHOLD = 0.97;
-        this.BLUR_THRESHOLD = 0.93;
+        this.GAZE_THRESHOLD = 0.998;
+        this.BLUR_THRESHOLD = 0.985;
 
         this.gazingSun = null;
         this.lastBlur = 0;
@@ -62,63 +62,31 @@ export default class SunGazer extends THREE.Object3D  {
             bbox.onGaze = (camPosition, camVector, colliderPosition) => {
                 this.onGaze(camPosition, camVector, colliderPosition, sun);
             }
+            bbox.onGazeStop = () => {
+                this.stop();
+            }
             this.collisionManager.addGazeCollider(bbox);
         })
     }
 
     onGaze(camPosition, camVector, colliderPosition, sun) {
-       let gazeAngle = this.getDotProduct(camPosition, camVector, colliderPosition);
-       console.log("On gaze!",sun.name, gazeAngle); 
-    }
-
-    updateMatrixWorld(force) {
-        if (this.active) {
-            super.updateMatrixWorld(force);
-            //console.log("Sun Gazer - updateMatrixWorld");
-
-            this.matrixWorld.decompose( this.camPosition, this.camQuaternion, this.camScale );
-            let camVector = new THREE.Vector3(0,0,-1).applyQuaternion(this.camQuaternion);
+        if (this.active && sun.name != this.square.currentSun) {
+           let gazeAngle = this.getDotProduct(camPosition, camVector, colliderPosition);
 
             if (this.gazingSun) {
-                let res = this.getDotProduct(camVector, this.gazingSun.children[0]);
-                if (res <= this.GAZE_THRESHOLD) {
+                if (gazeAngle <= this.GAZE_THRESHOLD) {
                     this.stop();
                 }
-            } else if (this.blurringSun) {
-                let res = this.getDotProduct(camVector, this.blurringSun.children[0]);
-                if (res > this.GAZE_THRESHOLD) {
-                    this.gazingSun = this.blurringSun;
-                    events.emit("gaze_started", this.gazingSun.name);
-                    this.setBlur(res);
-                } else if (res > this.BLUR_THRESHOLD) {
-                    this.setBlur(res);
-                } else {
-                    this.setBlur(0);
-                    this.blurringSun = null;
-                }
+            }
+            else if (this.blurringSun) {
+               this.setBlur(gazeAngle);
+               if (gazeAngle > this.GAZE_THRESHOLD) {
+                   this.gazingSun = this.blurringSun;
+                   events.emit("gaze_started", this.gazingSun.name);
+               }
             } else {
-
-                let thresholdPassed = false;
-                //this.raycaster.set(this.camPosition, camVector);
-
-                //let collisionResults = this.raycaster.intersectObjects(this.square.sunColliders);
-                //console.log("Sun collision ?", collisionResults.length);
-
-                /*
-                // Skip the first child because it is a null parent
-                for (let i = 0; i < this.square.sunColliders.length && !thresholdPassed; i++) {
-                    let sun = this.square.suns.children[i];
-                    let sunCollider = this.square.sunColliders[i];
-
-                    if (sun.name != this.square.currentSun) {
-                        let res = this.getDotProduct(camVector, sunCollider);
-                        if (res > this.BLUR_THRESHOLD) {
-                            this.blurringSun = sun;
-                            this.setBlur(res);
-                            thresholdPassed = true;
-                        }
-                    }
-                }*/
+                this.blurringSun = sun;
+                this.setBlur(gazeAngle);
             }
         }
     }
@@ -130,6 +98,7 @@ export default class SunGazer extends THREE.Object3D  {
         }
         else {
             value = Math.min(1,(res - this.BLUR_THRESHOLD) / (this.GAZE_THRESHOLD - this.BLUR_THRESHOLD));
+            console.log("SET BLUR", res, value);
         }
         if (value != this.lastBlur) {
             this.soundManager.panorama.setFocusWithLevel(null, value);
@@ -140,10 +109,10 @@ export default class SunGazer extends THREE.Object3D  {
     stop() {
         if (this.gazingSun) {
             events.emit("gaze_stopped", this.gazingSun.name);
-            this.gazingSun = null;
-            this.blurringSun = null;
-            this.setBlur(0);
         }
+        this.gazingSun = null;
+        this.blurringSun = null;
+        this.setBlur(0);
     }
 
     getDotProduct(camPosition, camVector, colliderPosition) {
