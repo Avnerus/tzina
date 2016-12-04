@@ -1,10 +1,10 @@
 export default [
     {
         name: 'Hannah',
-        position : [-4.85, 22.04, -11.6],
-        rotation: [355, 0, 3],
-        space: 0.22,
-        spaceOffset: [-0.35,0,0.29],
+        position : [11.4, 22.04, -10.1],
+        rotation: [355, 302, 3],
+        space: 0.92,
+        spaceOffset: [0.02,0,0.92]
     },
     {
         name: 'Miriam',
@@ -33,10 +33,11 @@ export default [
     },
     {
         name: 'Haim',
-        position : [-15.45, 19.8, -11.2],
-        rotation: [313, 70, 46],
+        position : [21.74, 21.8, 12.77],
+        rotation: [0, 225, 0],
         space: -1.64,
         spaceOffset: [-0.11,0,0.43], //0.28,0.73,1.73
+        gazeOffset: [-4.46,0.9,0.02]
     },
     {
         name: 'Rami',
