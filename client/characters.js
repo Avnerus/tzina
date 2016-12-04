@@ -95,9 +95,9 @@ export default [
         animationScale: 0.4, // 0.25
         animationPosition: [1.14, -0.38, 6.85],
         animationRotation: [6, -50, -9], //6, -50, -9
-        space: -1.64,
         subtitles: false,
-        spaceOffset: [-0.11,0,0.43], //0.28,0.73,1.73
+        space: -1.03,
+        spaceOffset: [0.71, 1.14,4.26]
     },
     {
         name: 'Rami',

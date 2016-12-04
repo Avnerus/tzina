@@ -35,8 +35,8 @@ export default [
         name: 'Haim',
         position : [21.74, 21.8, 12.77],
         rotation: [0, 225, 0],
-        space: -1.64,
-        spaceOffset: [-0.11,0,0.43], //0.28,0.73,1.73
+        space: -1.03,
+        spaceOffset: [0.71, 1.14,4.26],
         gazeOffset: [-4.46,0.9,0.02]
     },
     {

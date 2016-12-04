@@ -98,7 +98,7 @@ export default class SunGazer extends THREE.Object3D  {
         }
         else {
             value = Math.min(1,(res - this.BLUR_THRESHOLD) / (this.GAZE_THRESHOLD - this.BLUR_THRESHOLD));
-            console.log("SET BLUR", res, value);
+            //console.log("SET BLUR", res, value);
         }
         if (value != this.lastBlur) {
             this.soundManager.panorama.setFocusWithLevel(null, value);

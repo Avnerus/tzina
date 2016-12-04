@@ -36,7 +36,7 @@ export default class CollisionManager {
         this.raycaster = new THREE.Raycaster();
 
         this.debugCollisions = true;
-        this.debugGaze = true;
+        this.debugGaze = false;
 
         this.lastGaze = null;
     }
@@ -185,7 +185,8 @@ export default class CollisionManager {
 
             if (this.debugGaze) {
                 DebugUtil.adjustBBox(character.gazeBox, character.props.name + " - Gaze",gazeSpace, gazeOffset);
-                this.scene.add(character.gazeBox);
+            } else {
+                character.gazeBox.material.visible = false;
             }
             this.gazeObjects.push(character.gazeBox);
             this.scene.add(character.gazeBox);
@@ -208,7 +209,12 @@ export default class CollisionManager {
     }
 
     addGazeCollider(bbox) {
+        console.log("addGazeCollider");
         this.scene.add(bbox);
+        if (!this.debugGaze) {
+            bbox.material.visible = false;
+            console.log("Sun gaze box", bbox);
+        }
         this.gazeObjects.push(bbox);
     }
 
