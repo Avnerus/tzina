@@ -110,7 +110,7 @@
         "color":16777215,
         "blending":"NormalBlending",
         "depthTest":true,
-        "lightMap":"31DFAB6E-56B7-4925-8FB6-490B4ED7733C",
+        "map":"31DFAB6E-56B7-4925-8FB6-490B4ED7733C",
         "type":"MeshPhongMaterial",
         "vertexColors":0,
         "normalScale":[-0.5,-0.5],
@@ -128,7 +128,7 @@
         "blending":"NormalBlending",
         "emissive":0,
         "transparent": true,
-        "lightMap":"5F20A22C-48FE-4FDE-86CB-74D5D8BC099E"
+        "map":"5F20A22C-48FE-4FDE-86CB-74D5D8BC099E"
     }],
     "animations":[{
         "name":"default",
