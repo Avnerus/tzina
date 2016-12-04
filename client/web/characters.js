@@ -35,7 +35,7 @@ export default [
         name: 'Haim',
         position : [21.74, 21.8, 12.77],
         rotation: [0, 225, 0],
-        space: -1.64,
+        space: 0.8,
         spaceOffset: [-0.11,0,0.43], //0.28,0.73,1.73
         gazeOffset: [-4.46,0.9,0.02]
     },
@@ -72,8 +72,8 @@ export default [
     },
     {
         name: 'LupoDogs5PM',
-        position : [-21.34, 21.94, 3.78],
-        rotation: [0, 80, 0],
+        position : [21, 21.8, 0],
+        rotation: [3, 213, 0],
     },
     {
         name: 'Mark',
@@ -115,24 +115,42 @@ export default [
     },
     {
         name: 'Lupo12PM',
-        position : [-16.86, 21.9, 0.6],
-        rotation: [0, 48, 0],
+        position : [22.74, 21.9, ],
+        rotation: [351, 342, 360],
         space: 1.2, //2
         spaceOffset: [-0.87,0,0.92]
     },
     {
         name: 'Lupo5PM',
-        position : [-12.2, 22.1, -5.91],
-        rotation: [40, 100, 310], //120
-        space: 0.51,
-        spaceOffset: [4.86,0,1.13]
+        position : [18.25, 22, -3.1],
+        rotation: [7, 225, 0], //120
+        adjustments: [
+            {
+                sec: 100,
+                mindepth: 1770.462036132813,
+                maxdepth: 3428.071533203125,
+                position : [18.2, 22.05, -3.3],
+                scale: 0.003 * 0.75 * 1.028 * 1.09 * 0.85
+            },
+            {
+                sec: 120,
+                mindepth: 1523.277099609375,
+                maxdepth: 3428.071533203125,
+                position : [18.9, 21.9, -2.1],
+                scale: 0.003 * 0.75 * 1.028 * 1.132 * 0.75
+            }
+        ],
+        scale: 0.003 * 0.75 * 1.028 * 0.9,
+        space: 0.9,
+        spaceOffset: [-0.42,0,0.47]
     },
     {
         name: 'Itzhak',
-        position : [-2.58, 21.87, -14.8],
-        rotation: [340, 72, 22], // 
-        space: -0.6,
-        spaceOffset: [1.58,0,-0.18], //0.88,0,0.58
+        position : [-8.2, 21.87, 18.15],
+        rotation: [360, 84, 0], // 
+        space: 1.2,
+        spaceOffset: [-0.87,0,-0.87], //0.88,0,0.58
+        gazeOffset: [0,0.47,-0.31]   
     },
     {
         name: 'Shirin7PM',
@@ -154,7 +172,7 @@ export default [
     },
     {
         name: 'Agam7PM',
-        position : [-1.75, 22.049, -7.4],
-        rotation: [0, 190, 2.3],
+        position : [4.69, 22.2, 6],
+        rotation: [0, 48, 2.3],
     }
 ]
