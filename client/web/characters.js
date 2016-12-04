@@ -31,8 +31,10 @@ export default [
         name: 'Rami',
         position : [-9.19, 22.2, 14.6],
         rotation: [0, 151, 0],
-        space: 0.46,
-        spaceOffset: [3,0.2,0.42],
+        space: 0.82,
+        spaceOffset: [0.02,0.2,0.25],
+        gazeSpace: [-0.55,0,0],
+        gazeOffset: [0.14,-0.05,-0.31]
     },
     {
         name: 'Meir',

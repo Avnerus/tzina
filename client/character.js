@@ -7,7 +7,7 @@ export default class Character extends THREE.Object3D {
         this.collisionManager = collisionManager;
         this.soundManager = soundManager;
         this.config = config;
-        this.inControl = true;
+        this.inControl = false;
 
         this.debug = true;
         this.inShow = false;
