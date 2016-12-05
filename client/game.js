@@ -486,6 +486,8 @@ export default class Game {
     vrChange() {
         if (this.vrManager.hmd.isPresenting) {
             let newCameras = this.vrEffect.getCameras();
+            document.getElementById('reset-pose').style.display = "block";
+            document.getElementById('reset-pose').addEventListener("click", () => {this.resetPose()});
             events.emit("vr_start", newCameras);
             inVR = true;
             if (!this.config.skipIntro && !this.controlPassed) {
@@ -498,6 +500,12 @@ export default class Game {
             inVR = false;
         }
     }
+
+    resetPose() {
+        console.log("Reset pose!");
+        this.vrControls.resetPose();
+    }
+
     setPlatform(platform) {
         console.log("Selected platform", platform);
         this.config.platform = platform;
