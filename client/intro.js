@@ -140,10 +140,6 @@ export default class Intro {
             console.log("Into VR Start!");
             this.fadePlane.position.set(0, 0, -0.050001);
 
-            // Calibrate
-            //this.vrControls.resetPose();
-            //this.vrControls.calibrate();
-            this.vrControls.basePosition.copy(this.STARTING_POSITION);
             console.log("CALIBRATE - Base position INTRO", this.vrControls.basePosition);
         });
 
@@ -155,7 +151,8 @@ export default class Intro {
 
         //DebugUtil.positionObject(this.square, "Square",true);
         if (inVR) {
-            this.vrControls.basePosition.copy(this.STARTING_POSITION);
+            let squarePosition = new THREE.Vector3().copy(this.STARTING_POSITION).multiplyScalar(-1.0);
+            this.square.position.copy(squarePosition);
         } else {
             this.STARTING_POSITION.set(0,0.5,2);
             this.camera.position.copy(this.STARTING_POSITION);

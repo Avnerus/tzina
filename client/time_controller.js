@@ -514,7 +514,7 @@ export default class TimeController {
 
         this.chapterTitle.text = "Your Local Time " + now.format("HH:mm");
         this.chapterTitle.visible = true;
-        this.chapterTitle.position.fromArray(this.currentChapter.titlePosition);
+        this.chapterTitle.position.fromArray(this.currentChapter.titlePosition).add(this.square.position);
         this.chapterTitle.material.opacity = 0;
 
         this.chapterTitleLineTwo.text = this.currentChapter.name;

@@ -17,7 +17,7 @@ export default {
     noCharacters: false,
     production: true,
     videoHost: "http://assets.tzina.space/",
-    platform: "vive",
+    platform: "desktop",
     skipLanding: false,
     language: "eng"
 }

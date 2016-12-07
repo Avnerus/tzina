@@ -233,7 +233,7 @@ export default class Game {
         this.show = new Show(this.square, this.characterController, this.timeController); 
         this.show.init();
 
-        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls);
+        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square);
         this.ending.init();
 
         this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
@@ -343,7 +343,7 @@ export default class Game {
                 this.controlPassed = true;
                 this.soundManager.play("ambience");
                 this.introAni.disposeAni();
-                this.scene.add(this.flood); 
+                this.square.add(this.flood); 
             }
         });
             /*
@@ -362,16 +362,23 @@ export default class Game {
             this.vrManager.setMode_(2);
             }*/
         if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
-                this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
-                this.keyboardController.init();
-                this.vrControls.standing = true;
+                
+                if (this.config.platform == "desktop") {
+                    this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+                    this.keyboardController.init();
+                } else {
+                    this.vrControls.standing = true;
+                }
+                    /*
                 // this.vrControls.scale = 1.5;
 
                 // --- hide by laura --- start
+                /*
                 events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "x");
                 events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "y");
                 events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "z");
                 // --- hide by laura --- end
+                */
         } else {
             this.vrControls = null;
             console.log("Orbit controls");

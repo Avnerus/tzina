@@ -62,8 +62,6 @@ export default function ( emitter, object, onError, square ) {
 
     this.active = true;
 
-    this.basePosition = new THREE.Vector3(0,0,0);
-
     this.offset = new THREE.Vector3(0,0,0);
 
     this.BASE_VIVE = new THREE.Vector3(
@@ -146,8 +144,7 @@ export default function ( emitter, object, onError, square ) {
                 if ( this.active && pose.position !== null ) {
                     //console.log("Calibrate VR Position", pose.position);
 
-                    object.position.fromArray(pose.position).multiplyScalar(this.scale).add(this.basePosition);
-                    //object.position.copy(this.basePosition);
+                    object.position.fromArray(pose.position).multiplyScalar(this.scale);
                     
                     if ( this.standing ) {
 

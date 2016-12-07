@@ -42,26 +42,18 @@ export default class ZoomController {
         );
 
 
-        /*
-        this.BASE_WORLD_POSITION = new THREE.Vector3(
-            1,
-            12.67,
-            -6.56
-            );
-            */
         this.BASE_WORLD_POSITION = new THREE.Vector3(
             5.34,
             12.67,
             -4.47
             );
 
-        // IDFA:
-        /*
-        this.BASE_WORLD_POSITION = new THREE.Vector3(
-            -5.9,
-            12.67,
-            -1.2
-            );*/
+        this.VR_SQUARE_POSITION = new THREE.Vector3(
+            -2.55,
+            -12.8,
+            5.91
+        );
+
 
         this.CHAPTER_THRESHOLD = 0.45;
         this.CONTROL_THRESHOLD = 1;
@@ -142,30 +134,16 @@ export default class ZoomController {
         worldPos.applyMatrix4(this.square.mesh.matrixWorld);*/
         
 
-        if (this.vrControls && inVR) {
-                /*
-            this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
-            console.log("CALIBRATE - Base world position", this.BASE_WORLD_POSITION);
-            console.log("CALIBRATE - Base position SQUARE", this.vrControls.basePosition);*/
-            //this.vrControls.calibrate();
-
-
-            this.vrControls.basePosition.copy(this.BASE_WORLD_POSITION);
-            this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
-            //this.baseVRPosition.add(currentVRPosition);
-            /*
-            this.vrControls.basePosition.copy(worldPos);
-            this.baseVRPosition = new THREE.Vector3().copy(worldPos);*/
-        } 
-        else {
-            this.baseVRPosition = new THREE.Vector3().copy(this.BASE_WORLD_POSITION);
-            this.baseVRPosition.y = 13.5;
-        }
+        this.square.position.copy(this.VR_SQUARE_POSITION);
+        this.baseVRPosition = new THREE.Vector3();
+        this.baseVRPosition.y = 1.2;
     }
 
     jumpIn() {
         if (!inVR) {
             this.camera.position.copy(this.baseVRPosition);
+        } else {
+            
         }
         events.emit("control_threshold", true);
     }

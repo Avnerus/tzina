@@ -449,13 +449,8 @@ var el = document.getElementById('game');
 //Vive
 $('#start_experience').click(function(){
 
-if (!Modernizr.touchevents && lock.available()) {
-    
-    console.log("Landing requesting pointer lock")
-    var pointer = lock(document.getElementById('game'));
 
-    pointer.on('attain', function() {
-        console.log("Pointer attained!");
+    function startExperience() {
         if (!game.started) {
             window.addEventListener('resize', resize, false);
             window.addEventListener('vrdisplaypresentchange', vrchange, true);
@@ -472,16 +467,32 @@ if (!Modernizr.touchevents && lock.available()) {
 
             });
         }
-    });
-    var fs = fullscreen(el);
+    }
 
-    fs.on('attain',function() {
-        console.log("Full screen attained!");
-        if (typeof(pointer) != 'undefined' && !game.started) {
-            pointer.request();
-        }
+if (!Modernizr.touchevents && lock.available()) {
+    
+    console.log("Landing requesting pointer lock")
+    var pointer = lock(document.getElementById('game'));
+
+    pointer.on('attain', function() {
+        console.log("Pointer attained!");
+        startExperience();
     });
-    fs.request();
+
+    if (config.platform == "desktop") {
+
+        var fs = fullscreen(el);
+
+        fs.on('attain',function() {
+            console.log("Full screen attained!");
+            if (typeof(pointer) != 'undefined' && !game.started) {
+                pointer.request();
+            }
+        });
+        fs.request();
+    } else {
+        startExperience();
+    }
     
           /*
     

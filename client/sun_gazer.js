@@ -9,8 +9,8 @@ export default class SunGazer extends THREE.Object3D  {
 
         this.active = false;
 
-        this.GAZE_THRESHOLD = 0.993;
-        this.BLUR_THRESHOLD = 0.985;
+        this.GAZE_THRESHOLD = 0.977;
+        this.BLUR_THRESHOLD = 0.965;
 
         this.gazingSun = null;
         this.lastBlur = 0;
@@ -57,7 +57,7 @@ export default class SunGazer extends THREE.Object3D  {
             sun.updateMatrixWorld();
             let bbox = new THREE.BoundingBoxHelper(sun, 0xff0000);
             bbox.update();
-            bbox.scale.multiplyScalar(3);
+            bbox.scale.multiplyScalar(4.5);
 
             bbox.onGaze = (camPosition, camVector, colliderPosition) => {
                 this.onGaze(camPosition, camVector, colliderPosition, sun);
