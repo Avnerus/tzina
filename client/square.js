@@ -157,6 +157,8 @@ export default class Square extends THREE.Object3D{
             THREE.SceneUtils.attach(cylinder, this.scene, this.clockwork);*/
 
 
+            DebugUtil.positionObject(this, "Square");
+
             this.clockwork.add(this.benches);
 
 
@@ -325,6 +327,7 @@ export default class Square extends THREE.Object3D{
     }
 
     clockworkShift() {
+        console.log("Performing clockwork shift");
         this.activeClockwork = this.clockwork;
         //THREE.SceneUtils.detach(this.clockwork, this.mesh, this.scene);
         this.clockworkOffset.rotation.y = -105 * Math.PI / 180;

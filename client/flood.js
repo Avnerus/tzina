@@ -14,7 +14,7 @@ export default class Flood extends THREE.Object3D  {
 
         this.END_SCALE = 0.447;
         this.START_SCALE = 0.005;
-        this.END_HEIGHT = 8.3;
+        this.END_HEIGHT = 12.45;
         this.START_HEIGHT = 11.65;
 
     }
@@ -47,11 +47,11 @@ export default class Flood extends THREE.Object3D  {
 
         //
         // Fountain center
-        this.mesh.position.set(0.42, this.START_HEIGHT, 0.42);
+        this.mesh.position.set(-0.7, this.START_HEIGHT, 0);
 
         this.mesh.rotation.x = -Math.PI / 2;
 
-        //DebugUtil.positionObject(this.mesh, "Flood", true);
+        DebugUtil.positionObject(this.mesh, "Flood", true);
 
         this.add(this.mesh);
 

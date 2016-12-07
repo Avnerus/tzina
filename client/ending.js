@@ -2,13 +2,14 @@ import EndCredits from './end_credits'
 import DebugUtil from './util/debug'
 
 export default class Ending {
-    constructor(config, camera, timeController, characterController, scene, vrControls) {
+    constructor(config, camera, timeController, characterController, scene, vrControls, square) {
         this.config = config;
         this.timeController = timeController;
         this.characterController;
         this.camera = camera;
         this.scene = scene;
         this.vrControls = vrControls;
+        this.square = square;
 
         this.endCredits = new EndCredits(this.camera);
         this.faded = false;
@@ -33,8 +34,8 @@ export default class Ending {
         events.emit("experience_end");
         this.endCredits.init();
         this.endCredits.scale.set(0.019, 0.019, 0.019);
-        this.endCredits.position.set(-33.62, 21.88, -11.75);
-        this.endCredits.rotation.y = 80 * Math.PI /180;
+        this.endCredits.position.set(30.51, 24, -7.18);
+        this.endCredits.rotation.y = 285 * Math.PI /180;
 
         // Move to midnight
         this.timeController.clockworkTransitionTo(0, 6, false);
@@ -42,10 +43,10 @@ export default class Ending {
 
         // Add the dramatic spotlight
         let spotLight = new THREE.SpotLight(0xffffff);
-        spotLight.position.set(-1.44, 22.69, -17.9 );
+        spotLight.position.set(21.69, 6.91, 15.93 );
         spotLight.intensity = 2;
         spotLight.castShadow = false;
-        spotLight.angle = 0.2;
+        spotLight.angle = 0.1;
         spotLight.distance = 50;
         spotLight.decay = 1;
         spotLight.penumbra = 0.5;
@@ -53,7 +54,7 @@ export default class Ending {
         events.on("character_playing", (name) => {
             setTimeout(() => {
                 console.log("Ending video");
-                this.scene.add(this.endCredits);
+                this.square.add(this.endCredits);
                 this.endCredits.play();
                 this.endCredits.creditsVideo.video.addEventListener('timeupdate',() => {
                     if(!this.faded && this.endCredits.creditsVideo.video.currentTime > 60) {
@@ -61,12 +62,12 @@ export default class Ending {
                         this.faded = true;                    
                         this.fadeOut()
                         .then(() => {
+                            this.camera.add(this.endCredits);
                             this.endCredits.scale.set(0.077, 0.077, 0.077);
                             this.endCredits.rotation.y = 0;
-                            this.camera.add(this.endCredits);
                             if (inVR) {
                                 this.endCredits.position.set(-0.02,-0.08,-60);
-                                this.vrControls.basePosition.set(0,15,150);
+                                this.square.position.set(0,-15,-150);
                             } else {
                                 this.endCredits.position.set(-0.02,-0.08,-50);
                                 this.camera.position.set(0, 15, 150);
@@ -83,7 +84,8 @@ export default class Ending {
 
         DebugUtil.positionObject(this.endCredits, "End credits");
 
-        /*
+            /*
+
         let i = 0;
         events.emit("add_gui", {folder:"Spotlight " + i, listen: true}, spotLight, "castShadow");
         events.emit("add_gui", {folder:"Spotlight " + i, listen: true, step: 0.01}, spotLight.position, "x", -100, 100);
@@ -94,9 +96,9 @@ export default class Ending {
         events.emit("add_gui", {folder:"Spotlight " + i, listen:true}, spotLight, "distance",0,100);
         events.emit("add_gui", {folder:"Spotlight " + i, listen:true, step: 0.1}, spotLight, "decay",1,2);
         events.emit("add_gui", {folder:"Spotlight " + i, listen:true, step: 0.1}, spotLight, "penumbra",0,1);
-        DebugUtil.colorPicker("Spotlight " + i, spotLight, "color");
-        */
-        this.scene.add(spotLight);
+        DebugUtil.colorPicker("Spotlight " + i, spotLight, "color");*/
+
+        this.square.add(spotLight);
     }
     fadeIn() {
         return new Promise((resolve, reject) => {

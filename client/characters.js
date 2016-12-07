@@ -18,7 +18,9 @@ export default [
         animationRotation: [15, 0, 2],
         space: 0.22,
         spaceOffset: [-0.35,0,0.29],
-        subtitles: null
+        subtitles: null,
+        gazeSpace: [-0.27,-0.21,-0.6],
+        gazeOffset: [0,0,0.16]
     },
     {
         name: 'Miriam',
@@ -48,7 +50,9 @@ export default [
                 position : [-1.83,22.05, 12.182],
                 scale: 0.003 * 0.5748 * 1.106
             }
-        ]
+        ],
+        gazeoffset: [-0.18,0.34,-0.14],
+        gazespace: [-0.52,-0.3,-0.29]
     },
     {
         name: 'Itzik',
@@ -77,7 +81,9 @@ export default [
                 position : [-6.95,  22.03, 10.41],
                 scale: 0.0027 * 0.4686
             }
-        ]
+        ],
+        gazeoffset: [-0.1,0.28,-0.04],
+        gazespace: [-0.39,-0.04,-0.21]
     },
     {
         name: 'Haim',
@@ -96,8 +102,10 @@ export default [
         animationPosition: [1.14, -0.38, 6.85],
         animationRotation: [6, -50, -9], //6, -50, -9
         subtitles: false,
-        space: -1.03,
-        spaceOffset: [0.71, 1.14,4.26]
+        space: -1.64,
+        spaceOffset: [-0.11,0,0.76],
+        gazeSpace: [-2.15,1.9,-0.95],
+        gazeOffset: [1.63,1.76,3.62]
     },
     {
         name: 'Rami',
@@ -120,7 +128,7 @@ export default [
         spaceOffset: [-0.08,0,0.38],
         subtitles: false,
         gazeSpace: [-0.55,0,0],
-        gazeOffset: [0,0,0.58]
+        gazeOffset: [0,-0.11,0.58]
     },
     {
         name: 'Meir',
@@ -141,7 +149,9 @@ export default [
         animationRotation: [0,14,0], // 7,25,-8
         subtitles: null,
         space: 0.3,
-        spaceOffset: [-0.31,0,-0.28]
+        spaceOffset: [-0.31,0,-0.28],
+        gazeSpace: [-0.59,-0.13,-0.37],
+        gazeOffset: [0.19,-0.06,-0.52]
     },
     {
         name: 'Sasha',
@@ -252,7 +262,9 @@ export default [
         animationRotation: [0, 275, 0], // 0, 214, 0
         space: 0.29, 
         spaceOffset: [0.06,0,0.14],
-        subtitles: null
+        subtitles: null,
+        gazeOffset: [-0.23,0.01,0],
+        gazeSpace: [-0.28,0,-0.64]
     },
     {
         name: 'FatmanSleep',
@@ -366,7 +378,9 @@ export default [
         animationRotation: [0,0,0], // 0,-25,0
         subtitles: null,
         space: 0.2, //2
-        spaceOffset: [0.06,0,-0.58]
+        spaceOffset: [0.06,0,-0.58],
+        gazeOffset: [0.19,0.13,0.22],
+        gazeSpace: [0.02,-0.2,-0.65]
     },
     /*
     {
@@ -468,7 +482,9 @@ export default [
         animationRotation: [5, 17, 0],
         space: -0.6,
         spaceOffset: [1.58,0,-0.18], //0.88,0,0.58
-        subtitles: false
+        subtitles: false,
+        gazeSpace: [0,0,-0.1],
+        gazeOffset: [-0.07,0.15,0.06]
         },
     {
         name: 'Shirin7PM',
