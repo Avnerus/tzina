@@ -50,9 +50,9 @@ export default class ZoomController {
             );
             */
         this.BASE_WORLD_POSITION = new THREE.Vector3(
-            5.34,
+            -6.75,
             12.67,
-            -4.47
+            0.47
             );
 
         // IDFA:
