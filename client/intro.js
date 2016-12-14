@@ -47,7 +47,7 @@ export default class Intro {
             0.11
         );
 
-        this.guideVideo = new Video360("assets/intro/guide-slide.webm")
+        this.guideVideo = new Video360("assets/intro/guide.webm")
 
     }
 
@@ -182,15 +182,33 @@ export default class Intro {
             this.localHour = this.timeConroller.preloadLocalTime();
         }
 
-        setTimeout(() => {
-            this.camera.add(this.guidePlane);
-            this.guideVideo.play();
-        },3000);
+        this.guideVideo.video.loop = false;
+
+        if (this.config.speedIntro) {
+            this.playIntro();
+        } else {
+            setTimeout(() => {
+                this.camera.add(this.guidePlane);
+                this.guideVideo.video.addEventListener('ended',() => {
+                    console.log("Guide video ended");
+                    this.playIntro();
+                });
+                this.guideVideo.play();
+            },3000);
+        }
 
         events.emit("intro_start");
 
-            /*
         // Load the sound
+    }
+
+    playIntro() {
+        this.camera.remove(this.guidePlane);
+        this.guideVideo.unload();
+        this.guidePlane.geometry.dispose();
+        this.guidePlane.material.dispose();
+        this.square.visible = true;
+        this.introAni.visible = true;
         this.soundManager.loadSound(this.INTRO_SOUND)
         .then((sound) => {
             console.log("Intro Sound ", sound);
@@ -205,8 +223,9 @@ export default class Intro {
                     this.bringUpSun();
                 }
 
-            },3000);
-            });*/
+            },2000);
+            });
+        
     }
 
     fadeIn() {

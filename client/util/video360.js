@@ -56,4 +56,13 @@ export default class Video360 {
         this.video.playbackRate = rate;
         console.log("Video360 playback rate = ", rate, this.video);
     }
+    unload() {
+        console.log("Video unload", this.path);
+        this.pause();
+        this.video.src = "";
+
+        if (this.texture) {
+            this.texture.dispose();
+        }
+    }
 }
