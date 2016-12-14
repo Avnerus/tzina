@@ -201,8 +201,8 @@ export default class Game {
 
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager, this.sunGazer);
 
-        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config);
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
+        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config, this.introAni);
 
         // laura: i don't know other better way to do this..
         if (!this.config.noAnimations) {
@@ -431,13 +431,12 @@ export default class Game {
             this.characterController.update(dt,et);
             this.waterDrops.update(dt);
             if (!this.controlPassed) {
-                this.intro.update();
+                this.intro.update(dt,et);
             }
         }
         if (this.keyboardController) {
             this.keyboardController.update(dt);
         }
-        this.introAni.update(dt,et);
         //this.zoomController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
