@@ -183,7 +183,9 @@ export default class Intro {
         }
 
         this.guideVideo.video.loop = false;
+        this.playIntro();
 
+            /*
         if (this.config.speedIntro) {
             this.playIntro();
         } else {
@@ -195,7 +197,7 @@ export default class Intro {
                 });
                 this.guideVideo.play();
             },3000);
-        }
+            }*/
 
         events.emit("intro_start");
 
