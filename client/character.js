@@ -528,7 +528,7 @@ export default class Character extends THREE.Object3D {
             this.soundManager.createPositionalSoundSampler(this.props.basePath + "_" + this.config.language + ".ogg",(sampler) => {
                 console.log("Loaded character audio ", sampler);                              
                 this.audio = sampler;
-                this.audio.controlVolume(1.0);
+                this.audio.controlVolume(2.5);
                 this.updateAudioPosition();
 
                 resolve(sampler);
