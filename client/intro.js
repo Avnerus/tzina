@@ -47,7 +47,7 @@ export default class Intro {
             0.11
         );
 
-        this.guideVideo = new Video360("assets/intro/guide.webm")
+        this.guideVideo = new Video360("assets/intro/guide-slide.webm")
 
     }
 
@@ -144,7 +144,7 @@ export default class Intro {
         let guideMaterial = new THREE.MeshBasicMaterial( {map: this.guideVideo.texture, side: THREE.DoubleSide, transparent:false}  );
         // let guideMaterial = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: false} );
         this.guidePlane = new THREE.Mesh(guidePlaneGeo, guideMaterial);
-        this.guidePlane.position.set(0,0,-2600);
+        this.guidePlane.position.set(0,0,-1600);
         DebugUtil.positionObject(this.guidePlane, "Guide plane", true, -3000,3000);
         
 
