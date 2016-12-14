@@ -49,9 +49,9 @@ export default class ZoomController {
             );
 
         this.VR_SQUARE_POSITION = new THREE.Vector3(
-            -2.55,
+            -3.01,
             -12.8,
-            5.91
+            5.85
         );
 
 

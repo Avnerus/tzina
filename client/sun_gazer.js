@@ -70,24 +70,30 @@ export default class SunGazer extends THREE.Object3D  {
     }
 
     onGaze(camPosition, camVector, colliderPosition, sun) {
-        if (this.active && sun.name != this.square.currentSun) {
+        if (this.active) {
            let gazeAngle = this.getDotProduct(camPosition, camVector, colliderPosition);
-
-            if (this.gazingSun) {
+           if (this.gazingSun) {
                 if (gazeAngle <= this.GAZE_THRESHOLD) {
                     this.stop();
                 }
-            }
-            else if (this.blurringSun) {
-               this.setBlur(gazeAngle);
+           }
+           else if (sun.name == this.square.currentSun ) {
                if (gazeAngle > this.GAZE_THRESHOLD) {
-                   this.gazingSun = this.blurringSun;
-                   events.emit("gaze_started", this.gazingSun.name);
+                  this.gazingSun = sun;
+                  events.emit("gaze_current_started", sun.name);
                }
-            } else {
-                this.blurringSun = sun;
-                this.setBlur(gazeAngle);
-            }
+           } else {
+                if (this.blurringSun) {
+                   this.setBlur(gazeAngle);
+                   if (gazeAngle > this.GAZE_THRESHOLD) {
+                       this.gazingSun = this.blurringSun;
+                       events.emit("gaze_started", this.gazingSun.name);
+                   }
+                } else {
+                    this.blurringSun = sun;
+                    this.setBlur(gazeAngle);
+                }
+           }
         }
     }
 
@@ -107,12 +113,19 @@ export default class SunGazer extends THREE.Object3D  {
     }
 
     stop() {
+        if (this.blurringSun) {
+            this.setBlur(0);
+        }
         if (this.gazingSun) {
-            events.emit("gaze_stopped", this.gazingSun.name);
+            if (this.gazingSun.name == this.square.currentSun) {
+                events.emit("gaze_current_stopped");
+            }
+            else {
+                events.emit("gaze_stopped", this.gazingSun.name);
+            }
         }
         this.gazingSun = null;
         this.blurringSun = null;
-        this.setBlur(0);
     }
 
     getDotProduct(camPosition, camVector, colliderPosition) {

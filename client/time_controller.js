@@ -154,11 +154,16 @@ export default class TimeController {
         this.insideChapterTitleLineTwo = new MeshText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitleLineTwo.scale.multiplyScalar(0.013);
 
+        this.insideChapterTitleLineNow = new MeshText2D("Now:", INSIDE_TEXT_DEFINITION);
+        this.insideChapterTitleLineNow.scale.multiplyScalar(0.013);
+
         this.insideChapterTitle.visible = false;
         this.insideChapterTitleLineTwo.visible = false;
+        this.insideChapterTitleLineNow.visible = false;
 
         this.scene.add(this.insideChapterTitle);
         this.scene.add(this.insideChapterTitleLineTwo);
+        this.scene.add(this.insideChapterTitleLineNow);
         //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
         //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
 
@@ -179,11 +184,29 @@ export default class TimeController {
             console.log("Time controller - Starting gaze counter for target hour " + this.gazeHour);
         });
 
+        events.on("gaze_current_started", (hour) => {
+            this.insideChapterTitle.visible = true;
+            this.insideChapterTitleLineTwo.visible = true;
+            this.insideChapterTitleLineNow.visible = true;
+
+            this.showInsideChapterTitle(hour);
+
+            console.log("Time controller - Starting gaze counter for current hour " + this.gazeHour);
+        });
+
         events.on("gaze_stopped", (hour) => {
             this.insideChapterTitle.visible = false;
             this.insideChapterTitleLineTwo.visible = false;
+            this.insideChapterTitleLineNow.visible = false;
             this.sunWorld = null;
             this.gazeHour = -1;
+        });
+
+        events.on("gaze_current_stopped", (hour) => {
+            this.insideChapterTitle.visible = false;
+            this.insideChapterTitleLineTwo.visible = false;
+            this.insideChapterTitleLineNow.visible = false;
+            this.sunWorld = null;
         });
 
         events.on("experience_end", () => {
@@ -272,7 +295,7 @@ export default class TimeController {
             } 
         }
 
-        if (this.gazeHour != -1) {
+        if (this.gazeHour != -1 && this.gazeHour != this.currentChapter.hour) {
             this.gazeCounter += dt;
             if (this.gazeCounter > 1 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
@@ -587,6 +610,14 @@ export default class TimeController {
             this.insideChapterTitleLineTwo.translateZ(5);
             this.insideChapterTitleLineTwo.quaternion.copy(this.camera.quaternion);
             this.insideChapterTitleLineTwo.translateY(-1.5);
+
+            if (this.insideChapterTitleLineNow.visible) {
+                this.insideChapterTitleLineNow.position.copy(this.sunWorld);
+                this.insideChapterTitleLineNow.lookAt(this.camera.position);
+                this.insideChapterTitleLineNow.translateZ(5);
+                this.insideChapterTitleLineNow.quaternion.copy(this.camera.quaternion);
+                this.insideChapterTitleLineNow.translateY(2.5);
+            }
         }
     }
 
