@@ -144,13 +144,14 @@ export default class Intro {
         let guideMaterial = new THREE.MeshBasicMaterial( {map: this.guideVideo.texture, side: THREE.DoubleSide, transparent:false}  );
         // let guideMaterial = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: false} );
         this.guidePlane = new THREE.Mesh(guidePlaneGeo, guideMaterial);
-        this.guidePlane.position.set(0,0,-1600);
+        this.guidePlane.position.set(0,0,-2000);
         DebugUtil.positionObject(this.guidePlane, "Guide plane", true, -3000,3000);
         
 
         events.on("vr_start", () => {
             console.log("Into VR Start!");
             this.fadePlane.position.set(0, 0, -0.050001);
+            this.guidePlane.position.set(0,0,-1600);
 
             console.log("CALIBRATE - Base position INTRO", this.vrControls.basePosition);
         });
