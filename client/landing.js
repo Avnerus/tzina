@@ -281,6 +281,8 @@ try {
     ////////////////////
       $('#vive_button').click(function(){
 
+        game.setPlatform("vive");
+
         //Fade out the overlays
         $('#landing_screen').fadeOut(250, function(){
           $('#about').animate({
