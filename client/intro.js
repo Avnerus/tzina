@@ -2,10 +2,10 @@ import _ from 'lodash'
 import Credits from './credits';
 import {SpriteText2D, textAlign} from './lib/text2d/index'
 import DebugUtil from './util/debug'
-import StaticSoundSampler from './sound_manager'
+import Video360 from './util/video360'
 
 export default class Intro {
-    constructor(camera, square, timeConroller, soundManager, scene, vrControls, zoomController, config) {
+    constructor(camera, square, timeConroller, soundManager, scene, vrControls, zoomController, config, introAni) {
         this.camera = camera;
         this.square = square;
         this.soundManager = soundManager;
@@ -14,6 +14,7 @@ export default class Intro {
         this.vrControls = vrControls;
         this.zoomController = zoomController;
         this.config = config;
+        this.introAni = introAni;
 
         this.soundEvents = [
             {
@@ -45,6 +46,8 @@ export default class Intro {
             -0.65,
             0.11
         );
+
+        this.guideVideo = new Video360("assets/intro/guide.webm")
 
     }
 
@@ -136,12 +139,24 @@ export default class Intro {
         DebugUtil.positionObject(this.fadePlane, "Fade plane");
         events.emit("add_gui", {folder: "Fade plane", step: 0.01, listen: true} ,this.fadePlane.material, "opacity", 0, 1);*/
 
+        this.guideVideo.init();
+        let guidePlaneGeo = new THREE.PlaneGeometry( 2048, 2048 );
+        let guideMaterial = new THREE.MeshBasicMaterial( {map: this.guideVideo.texture, side: THREE.DoubleSide, transparent:false}  );
+        // let guideMaterial = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: false} );
+        this.guidePlane = new THREE.Mesh(guidePlaneGeo, guideMaterial);
+        this.guidePlane.position.set(0,0,-2600);
+        DebugUtil.positionObject(this.guidePlane, "Guide plane", true, -3000,3000);
+        
+
         events.on("vr_start", () => {
             console.log("Into VR Start!");
             this.fadePlane.position.set(0, 0, -0.050001);
 
             console.log("CALIBRATE - Base position INTRO", this.vrControls.basePosition);
         });
+
+        this.square.visible = false;
+        this.introAni.visible = false;
 
     }
     position() {
@@ -166,8 +181,14 @@ export default class Intro {
             this.localHour = this.timeConroller.preloadLocalTime();
         }
 
+        setTimeout(() => {
+            this.camera.add(this.guidePlane);
+            this.guideVideo.play();
+        },3000);
+
         events.emit("intro_start");
 
+            /*
         // Load the sound
         this.soundManager.loadSound(this.INTRO_SOUND)
         .then((sound) => {
@@ -184,7 +205,7 @@ export default class Intro {
                 }
 
             },3000);
-        });
+            });*/
     }
 
     fadeIn() {
@@ -302,7 +323,7 @@ export default class Intro {
         events.emit("intro_end");
     }
 
-    update() {
+    update(dt,et) {
         if (this.sound && this.sound.isPlaying && this.currentEvent) {
             if (this.sound.getCurrentTime() >= this.currentEvent.time) {
                 this.currentEvent.action();
@@ -313,6 +334,10 @@ export default class Intro {
                 }
             }
         }
+        if (this.guideVideo) {
+            this.guideVideo.update(dt);
+        }
+        this.introAni.update(dt,et);
     }
 
     playCredits() {

@@ -309,7 +309,6 @@ try {
 
         
           console.log("Loading...");
-            //document.getElementById('game').appendChild(stats.dom);
 
           try {
               game.load(function() {
@@ -460,6 +459,9 @@ $('#start_experience').click(function(){
             //Show the Element
             console.log("Landing Show the game");
             $('#game').show();
+            if (!config.production || config.platform == "vive") {
+                document.getElementById('game').appendChild(stats.dom);
+            }
             game.resize();
             animate();
 
@@ -671,8 +673,8 @@ if (!Modernizr.touchevents && lock.available()) {
     }
 
     game.animate(t);
-      //stats.end();
-      //stats.begin();
+    stats.end();
+    stats.begin();
 }
 
 function resize() {
