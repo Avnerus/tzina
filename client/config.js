@@ -5,7 +5,7 @@ export default {
     enableFlying: false,
     skipIntro: false,
     skipCharacters: false,
-    speedIntro: true,
+    speedIntro: false,
     startTime: 9,
     movementSpeed: 0.2, //0.5
     daySpeed: 0.001,
@@ -18,6 +18,6 @@ export default {
     production: true,
     videoHost: "http://assets.tzina.space/",
     platform: "vive",
-    skipLanding: true,
+    skipLanding: false,
     language: "eng"
 }
