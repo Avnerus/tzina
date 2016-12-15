@@ -459,7 +459,7 @@ $('#start_experience').click(function(){
             //Show the Element
             console.log("Landing Show the game");
             $('#game').show();
-            if (!config.production || config.platform == "vive") {
+            if (!config.production) {
                 document.getElementById('game').appendChild(stats.dom);
             }
             game.resize();

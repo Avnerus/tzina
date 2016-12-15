@@ -438,6 +438,7 @@ export default class Game {
             this.keyboardController.update(dt);
         }
         //this.zoomController.update(dt);
+        this.introAni.update(dt,et);
         if (this.vrControls) {
                this.vrControls.update();
         } else {

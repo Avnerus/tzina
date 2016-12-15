@@ -47,7 +47,7 @@ export default class Intro {
             0.11
         );
 
-        this.guideVideo = new Video360("assets/intro/guide.webm")
+        //this.guideVideo = new Video360("assets/intro/guide.webm")
 
     }
 
@@ -139,25 +139,26 @@ export default class Intro {
         DebugUtil.positionObject(this.fadePlane, "Fade plane");
         events.emit("add_gui", {folder: "Fade plane", step: 0.01, listen: true} ,this.fadePlane.material, "opacity", 0, 1);*/
 
+    /*
         this.guideVideo.init();
         let guidePlaneGeo = new THREE.PlaneGeometry( 2048, 2048 );
         let guideMaterial = new THREE.MeshBasicMaterial( {map: this.guideVideo.texture, side: THREE.DoubleSide, transparent:false}  );
         // let guideMaterial = new THREE.MeshBasicMaterial( { color: 0x0000ff , wireframe: false} );
         this.guidePlane = new THREE.Mesh(guidePlaneGeo, guideMaterial);
         this.guidePlane.position.set(0,0,-2000);
-        DebugUtil.positionObject(this.guidePlane, "Guide plane", true, -3000,3000);
+        DebugUtil.positionObject(this.guidePlane, "Guide plane", true, -3000,3000);*/
         
 
         events.on("vr_start", () => {
             console.log("Into VR Start!");
             this.fadePlane.position.set(0, 0, -0.050001);
-            this.guidePlane.position.set(0,0,-1600);
+            //this.guidePlane.position.set(0,0,-1600);
 
             console.log("CALIBRATE - Base position INTRO", this.vrControls.basePosition);
         });
 
-        this.square.visible = false;
-        this.introAni.visible = false;
+        //this.square.visible = false;
+        // this.introAni.visible = false;
 
     }
     position() {
@@ -182,7 +183,7 @@ export default class Intro {
             this.localHour = this.timeConroller.preloadLocalTime();
         }
 
-        this.guideVideo.video.loop = false;
+        //this.guideVideo.video.loop = false;
         this.playIntro();
 
             /*
@@ -205,12 +206,14 @@ export default class Intro {
     }
 
     playIntro() {
+        /*
         this.camera.remove(this.guidePlane);
         this.guideVideo.unload();
         this.guidePlane.geometry.dispose();
         this.guidePlane.material.dispose();
         this.square.visible = true;
-        this.introAni.visible = true;
+        this.introAni.visible = true;*/
+
         this.soundManager.loadSound(this.INTRO_SOUND)
         .then((sound) => {
             console.log("Intro Sound ", sound);
@@ -356,10 +359,10 @@ export default class Intro {
                 }
             }
         }
+            /*
         if (this.guideVideo) {
             this.guideVideo.update(dt);
-        }
-        this.introAni.update(dt,et);
+            }*/
     }
 
     playCredits() {
