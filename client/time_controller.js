@@ -1,6 +1,8 @@
 import Chapters from './chapters'
+import ChaptersHeb from './chapters_heb'
 import MathUtil from './util/math'
 import DebugUtil from './util/debug'
+import MiscUtil from './util/misc'
 import _ from 'lodash'
 import {MeshText2D, SpriteText2D, textAlign} from './lib/text2d/index'
 import moment from 'moment';
@@ -154,7 +156,8 @@ export default class TimeController {
         this.insideChapterTitleLineTwo = new MeshText2D("", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitleLineTwo.scale.multiplyScalar(0.013);
 
-        this.insideChapterTitleLineNow = new MeshText2D("Now:", INSIDE_TEXT_DEFINITION);
+        let nowText = (this.config.language == "eng") ? "Now:" : ":כעת";
+        this.insideChapterTitleLineNow = new MeshText2D(nowText, INSIDE_TEXT_DEFINITION);
         this.insideChapterTitleLineNow.scale.multiplyScalar(0.013);
 
         this.insideChapterTitle.visible = false;
@@ -525,6 +528,10 @@ export default class TimeController {
 
     setCurrentChapter() {
         this.currentChapter = _.find(Chapters, {hour: this.currentHour });
+        if (this.config.language == "heb") {
+            let hebChapter = _.find(ChaptersHeb, {hour: this.currentHour});
+            MiscUtil.overwriteProps(this.currentChapter, hebChapter);
+        }
     }
 
    showChapterTitle() {
@@ -535,7 +542,11 @@ export default class TimeController {
 
         let targetOpacity = 1.0;
 
-        this.chapterTitle.text = "Your Local Time " + now.format("HH:mm");
+        if (this.config.language == "eng") {
+            this.chapterTitle.text = "Your Local Time " + now.format("HH:mm");
+        } else {
+            this.chapterTitle.text = "הזמן המקומי " + now.format("HH:mm");
+        }
         this.chapterTitle.visible = true;
         this.chapterTitle.position.fromArray(this.currentChapter.titlePosition).add(this.square.position);
         this.chapterTitle.material.opacity = 0;
@@ -576,7 +587,7 @@ export default class TimeController {
         if (!sun) {
             throw new Error("Invalid chapter sun " + hour);
         }
-        let chapter = _.find(Chapters, {hour: parseInt(hour)});
+        let chapter = this.config.language == "eng" ?  _.find(Chapters, {hour: parseInt(hour)}) : _.find(ChaptersHeb, {hour: parseInt(hour)});
         if (!chapter) {
             throw new Error("Invalid chapter hour " + hour);
         }

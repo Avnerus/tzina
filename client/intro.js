@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import Credits from './credits';
+import CreditsHeb from './credits_heb';
 import {SpriteText2D, textAlign} from './lib/text2d/index'
 import DebugUtil from './util/debug'
 import Video360 from './util/video360'
@@ -15,6 +16,8 @@ export default class Intro {
         this.zoomController = zoomController;
         this.config = config;
         this.introAni = introAni;
+
+        this.credits = this.config.language == "eng" ? Credits : CreditsHeb;
 
         this.soundEvents = [
             {
@@ -38,7 +41,7 @@ export default class Intro {
         ]
 
         
-        this.INTRO_SOUND = 'assets/sound/INTRO_Shirin.ogg'
+        this.INTRO_SOUND = this.config.language == "eng" ? 'assets/sound/INTRO_Shirin.ogg': 'assets/sound/INTRO_Shirin_heb.ogg';
         this.LOGO_PATH = 'assets/intro/logo/logo.json';
 
         this.STARTING_POSITION = new THREE.Vector3(
@@ -87,6 +90,12 @@ export default class Intro {
         this.creditTextTitle.scale.multiplyScalar(CREDIT_TEXT_SCALE);
         this.creditTextTitle.position.set(0.4,7.27,-17);
         this.creditTextTitle.material.opacity = 0;
+
+        if (this.config.platform == "desktop") {
+            this.creditTextTitle.position.set(-0.2, 6, -17);
+            this.creditTextTitle.scale.set(0.02, 0.02, 0.02);
+        }
+
         this.scene.add(this.creditTextTitle);
 
         this.creditTextName = new SpriteText2D("", CREDIT_TEXT_NAME);
@@ -94,7 +103,7 @@ export default class Intro {
         this.creditTextName.material.opacity = 0;
         this.creditTextTitle.add(this.creditTextName);
 
-        //DebugUtil.positionObject(this.creditTextTitle, "Credits title");
+        DebugUtil.positionObject(this.creditTextTitle, "Credits title");
 
         let loader = new THREE.ObjectLoader(loadingManager);
         loader.load(this.LOGO_PATH,( obj ) => {
@@ -371,8 +380,8 @@ export default class Intro {
     }
 
     showNextCredit() {
-        let name = Credits.credits[this.currentCredit].Name;
-        let title = Credits.credits[this.currentCredit].Role;
+        let name = this.credits.credits[this.currentCredit].Name;
+        let title = this.credits.credits[this.currentCredit].Role;
         
         this.creditTextTitle.text = title;
         this.creditTextName.text = name;
@@ -400,7 +409,7 @@ export default class Intro {
         TweenMax.to( this.creditTextTitle.material, 1, { opacity: 0, 
             onComplete: () => {
                 this.currentCredit++;
-                if (this.currentCredit < Credits.credits.length) {
+                if (this.currentCredit < this.credits.credits.length) {
                     this.showNextCredit();
                 } else {
                     this.camera.remove(this.creditTextTitle);
