@@ -2,7 +2,7 @@ export default
 {    
     "credits": [
         {
-            "Role": "מעת היוצרת",
+            "Role": "מאת היוצרת",
             "Name": "שירין אנלן",     
         },
         {
