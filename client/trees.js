@@ -3,12 +3,13 @@ const TREES_PATH = "assets/trees"
 import DebugUtil from './util/debug'
 
 export default class Trees extends THREE.Object3D {
-    constructor(camera, renderer) {
+    constructor(config, camera, renderer) {
         super();
         this.debug = false;
 
         this.cameras = [camera];
         this.renderer = renderer;
+        this.config = config;
 
         const glslify = require('glslify');
         this.windVertexShader = glslify('./shaders/potree_wind_vs.glsl');
@@ -91,7 +92,11 @@ export default class Trees extends THREE.Object3D {
                     events.on("control_threshold", (passed) => {
                         this.controlPassed = passed;
                         if (passed) {
-                            this.potreeWindMaterial.size = 0.03;
+
+                            let size = this.config.platform == "desktop" ? 0.07 : 0.03;
+                            this.potreeWindMaterial.size = size;
+                            this.potreeMaterial.size = size;
+
                             //
                             // In VR Hide some trees that won't be visible
                             if (inVR) {

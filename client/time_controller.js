@@ -545,7 +545,7 @@ export default class TimeController {
         if (this.config.language == "eng") {
             this.chapterTitle.text = "Your Local Time " + now.format("HH:mm");
         } else {
-            this.chapterTitle.text = "הזמן המקומי " + now.format("HH:mm");
+            this.chapterTitle.text = "השעה כעת " + now.format("HH:mm");
         }
         this.chapterTitle.visible = true;
         this.chapterTitle.position.fromArray(this.currentChapter.titlePosition).add(this.square.position);
