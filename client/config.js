@@ -18,6 +18,6 @@ export default {
     production: false,
     videoHost: "http://assets.tzina.space/",
     platform: "desktop",
-    skipLanding: true,
+    skipLanding: false,
     language: "heb"
 }

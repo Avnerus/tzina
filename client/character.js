@@ -13,7 +13,7 @@ export default class Character extends THREE.Object3D {
         this.inShow = false;
         this.scene = scene;
 
-        if (config.videoHost && config.production) {
+        if (config.videoHost) {
             props.basePath = config.videoHost + props.basePath;
         }
 
