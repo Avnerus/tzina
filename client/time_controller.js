@@ -141,6 +141,8 @@ export default class TimeController {
              antialias: true,
              shadow: true
         }
+
+        let SUN_TEXT_SCALE = this.config.platform == "desktop" ? 0.009 : 0.013;
         
         this.chapterTitle = new SpriteText2D("SPRITE", TEXT_DEFINITION)
         this.chapterTitle.scale.set(0.002, 0.002, 0.002);
@@ -154,11 +156,11 @@ export default class TimeController {
         this.insideChapterTitle.scale.multiplyScalar(0.01);
 
         this.insideChapterTitleLineTwo = new MeshText2D("", INSIDE_TEXT_DEFINITION);
-        this.insideChapterTitleLineTwo.scale.multiplyScalar(0.013);
+        this.insideChapterTitleLineTwo.scale.multiplyScalar(SUN_TEXT_SCALE);
 
         let nowText = (this.config.language == "eng") ? "Now:" : ":כעת";
         this.insideChapterTitleLineNow = new MeshText2D(nowText, INSIDE_TEXT_DEFINITION);
-        this.insideChapterTitleLineNow.scale.multiplyScalar(0.013);
+        this.insideChapterTitleLineNow.scale.multiplyScalar(SUN_TEXT_SCALE);
 
         this.insideChapterTitle.visible = false;
         this.insideChapterTitleLineTwo.visible = false;
