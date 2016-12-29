@@ -41,8 +41,8 @@ export default class ShirinAnimation extends THREE.Object3D {
                 { time: 8,  anim: ()=>{this.stopFragment(1)} }
             ],
             'Shirin7PM': [
-                { time: 5, anim: ()=>{this.crackCocoon(2)} },
-                { time: 8,  anim: ()=>{this.stopFragment(2)} }
+                { time: 5, anim: ()=>{this.crackCocoon(2)} }
+                //{ time: 8,  anim: ()=>{this.stopFragment(2)} }
             ]
         };
         // v.1
@@ -95,7 +95,7 @@ export default class ShirinAnimation extends THREE.Object3D {
         this.webMat = new THREE.MeshBasicMaterial({map: webTexture, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending});
         loader.load( this.BASE_PATH + "/models/branchWeb.json", (geometry) => {
             this.branchWeb = new THREE.Mesh( geometry, this.webMat );
-            this.branchWeb.scale.multiplyScalar(5);
+            this.branchWeb.scale.multiplyScalar(3);
             this.branchWeb.position.copy(this.branchWebPos);
             this.add(this.branchWeb);
         });
@@ -184,6 +184,12 @@ export default class ShirinAnimation extends THREE.Object3D {
             this.cocoonGroup.scale.multiplyScalar(5);
             this.cocoonGroup.position.copy(this.cocoonGroupPos);
             this.add(this.cocoonGroup);
+            // hide all the cocoon except 7pm
+            for(var i=0; i<this.cocoonGroup.children.length; i++){
+                if(i!=2){
+                    this.cocoonGroup.children[i].visible = false;
+                }
+            }
 
             this.initSPEParticles( tex_loader );
 
@@ -279,8 +285,8 @@ export default class ShirinAnimation extends THREE.Object3D {
                     value: [0,1,1,1,0]
                 },
                 size: {
-                    value: [0.1,2,2,2,.5], // 0.1,5,5,5,3    // 0.1,1,1,1,.5
-                    spread: 1 // 2
+                    value: [0.025, 0.5, 0.5, 0.5, .2], // 0.1,5,5,5,3    // 0.1,1,1,1,.5
+                    spread: 0.5 // 2
                 },
                 particleCount: 60 //20
             });
@@ -490,14 +496,14 @@ export default class ShirinAnimation extends THREE.Object3D {
     }
 
     start(time) {
-        this.reset();
+        this.reset(time);
 
         console.log("Shirin animation starting with ", time);
         this.currentSequence = this.sequenceConfig[time].slice(0);
         this.nextAnim = this.currentSequence.shift();
     }
 
-    reset() {
+    reset(time) {
         // stop animation
         for(let i=0; i<this.tweenAnimCollectors.length; i++){
             this.tweenAnimCollectors[i].kill();
@@ -508,6 +514,21 @@ export default class ShirinAnimation extends THREE.Object3D {
         // back to original status: closed
         for(let i=0; i<this.cocoonGroup.children.length; i++){
             this.cocoonGroup.children[i].morphTargetInfluences[0] = 0;
+        }
+
+        if(time == "Shirin7PM"){
+            var newEPos = this.particleGroup.emitters[2].position.value;
+            newEPos.y -= 25;
+            this.particleGroup.emitters[2].position.value = newEPos;
+            this.particleGroup.emitters[2].acceleration.value = new THREE.Vector3(0,1,0);
+            this.particleGroup.emitters[2].acceleration.spread = new THREE.Vector3(.5,1,.5);
+            //value: new THREE.Vector3(0,-2,0), //0,-.4,0
+            //spread: new THREE.Vector3(.1,1,.1)
+        } else {
+            // unhidden the cocoons
+            for(var i=0; i<this.cocoonGroup.children.length; i++){
+                this.cocoonGroup.children[i].visible = true;
+            }
         }
     }
 

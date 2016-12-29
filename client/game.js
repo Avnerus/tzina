@@ -189,8 +189,8 @@ export default class Game {
                 'Agam12PM' : new Agam12PMAnimation(this.square),
                 'Lupo12PM' : new Lupo12PMAnimation(),
                 'Itzhak' : new ItzhakAnimation(),
-                'Rami' : new RamiAnimation(this.renderer)
-                //'Shirin' : new ShirinAnimation()
+                'Rami' : new RamiAnimation(this.renderer),
+                'Shirin' : new ShirinAnimation()
             }
         } else {
             this.animations = {};
