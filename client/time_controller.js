@@ -302,14 +302,14 @@ export default class TimeController {
 
         if (this.gazeHour != -1 && this.gazeHour != this.currentChapter.hour) {
             this.gazeCounter += dt;
-            if (this.gazeCounter > 1 && this.sky.clouds.currentState != "transition" ) {
+            if (this.gazeCounter > 0.5 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
             }
             if (this.gazeCounter >= 4) {
 
                 let targetHour = this.gazeHour;
                 this.gazeHour = -1;
-                this.clockworkTransitionTo(targetHour, 3,  true);
+                this.clockworkTransitionTo(targetHour, 2,  true);
 
             }
         }
@@ -327,12 +327,13 @@ export default class TimeController {
             console.log("Time controller - Performing transition to " + targetHour + "!");
             this.clockRunning = false;
 
+            if (usingGaze) {
+                this.square.explodeSun(targetHour.toString());
+            }
+
             TweenMax.to(this, time, {ease: Power2.easeInOut, currentHour: targetHour, onComplete: () => {
                 if (targetHour == 24) {
                     this.currentHour = 0;
-                }
-                if (usingGaze) {
-                    this.square.explodeSun(this.currentHour.toString());
                 }
                 if (usingGaze) {
                     this.sunGazer.stop();

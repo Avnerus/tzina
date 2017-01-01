@@ -16,6 +16,8 @@ const BENCHES_PREFIX = "assets/square/benches/"
 const FOUNTAIN_PATH = "assets/square/fountain/fountain.json"
 const GROUND_PATH = "assets/square/squareRamp_22.json"
 
+let SUN_LOADER_TIME = 3;
+
 export default class Square extends THREE.Object3D{
     constructor(collisionManager, renderer, camera, config, soundManager, scene, extras) {
         super();
@@ -443,7 +445,7 @@ export default class Square extends THREE.Object3D{
         let sun = this.suns.getObjectByName(name)
         if (sun) {
             let sunLoader = sun.getObjectByName(name + "_L");
-            sunLoader.organize();
+            sunLoader.organize(SUN_LOADER_TIME);
         }
     }
     deactivateSun(name) {

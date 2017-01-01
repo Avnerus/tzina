@@ -9,6 +9,7 @@ uniform float radius;
 uniform float tube;
 
 uniform int boom;
+varying float progressInCircle;
 
 void main() {
 
@@ -19,6 +20,10 @@ void main() {
     /*
     vColor = vec3(distToCenter, 0.5, 0.5);
     */
+    progressInCircle = (1.0 - reference.x) * (1.1 - reference.y) / 0.84;
+    if (progressInCircle > 1.0) {
+        progressInCircle -= 0.3;
+    }
 
     vColor = vec3(1.0, mix(0.6,1.0,reference.x), mix(0.2,0.8,reference.y));
 
