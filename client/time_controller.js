@@ -305,7 +305,7 @@ export default class TimeController {
             if (this.gazeCounter > 0.5 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
             }
-            if (this.gazeCounter >= 4) {
+            if (this.gazeCounter >= 3.2) {
 
                 let targetHour = this.gazeHour;
                 this.gazeHour = -1;
