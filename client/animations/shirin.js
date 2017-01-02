@@ -125,6 +125,16 @@ export default class ShirinAnimation extends THREE.Object3D {
             this.createCandyAnimation();
         });
 
+        // MOON
+        let moonTexture = tex_loader.load( this.BASE_PATH + "/images/moon.jpg" );
+        let moonNRMTexture = tex_loader.load( this.BASE_PATH + "/images/moonNormal.jpg" );
+        let moonMat = new THREE.MeshPhongMaterial({map: moonTexture, normalMap: moonNRMTexture});
+        this.moon = new THREE.Mesh(new THREE.SphereGeometry(20, 32, 32), moonMat);
+        this.moon.rotation.set(Math.PI/2, Math.PI/2, Math.PI/2);
+        this.moon.position.y = 200;
+        this.add( this.moon );
+
+        //
         let cocoonTexFiles = [ this.BASE_PATH + "/images/seamless_circle.png",
                                this.BASE_PATH + "/images/seamless_color_noise.jpg",
                                this.BASE_PATH + "/images/seamless_curvy.jpg",
