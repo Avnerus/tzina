@@ -42,8 +42,8 @@ export default class ShirinAnimation extends THREE.Object3D {
             ],
             'Shirin7PM': [
                 { time: 5, anim: ()=>{this.crackCocoon(2)} },
-                { time: 6, anim: ()=>{this.dropShirin()}}
-                //{ time: 8,  anim: ()=>{this.stopFragment(2)} }
+                { time: 6, anim: ()=>{this.dropShirin()} },
+                { time: 76,  anim: ()=>{this.stopFragment(2)} }
             ]
         };
         // v.1
