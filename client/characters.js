@@ -500,8 +500,8 @@ export default [
         height: 2048,
         scale: 0.003 * 0.5327 * 1.244,
         animationScale: 0.08, //0.08
-        animationPosition: [0, 0, 0.8],   // -0.2, -0.1, 0
-        animationRotation: [0, 0, 0],      // 13, 0, 0
+        animationPosition: [0, 1, 0.8],   // 0, 0, 0.8
+        animationRotation: [0, 0, 0],      // 0, 0, 0
         space: 100,
         spaceOffset: [0,0,0],
         subtitles: null,
