@@ -333,7 +333,7 @@ export default class Square extends THREE.Object3D{
         this.activeClockwork = this.clockwork;
         //THREE.SceneUtils.detach(this.clockwork, this.mesh, this.scene);
         this.clockworkOffset.rotation.y = -105 * Math.PI / 180;
-        this.clockwork.rotation.y = this.mesh.rotation.y;
+   //     this.clockwork.rotation.y = this.mesh.rotation.y;
         this.mesh.rotation.set(0,0,0);
         //THREE.SceneUtils.attach(this.clockwork, this.scene, this.mesh);
     }

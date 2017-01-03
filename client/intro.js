@@ -103,7 +103,7 @@ export default class Intro {
         this.creditTextName.material.opacity = 0;
         this.creditTextTitle.add(this.creditTextName);
 
-        DebugUtil.positionObject(this.creditTextTitle, "Credits title");
+        //DebugUtil.positionObject(this.creditTextTitle, "Credits title");
 
         let loader = new THREE.ObjectLoader(loadingManager);
         loader.load(this.LOGO_PATH,( obj ) => {
