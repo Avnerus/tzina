@@ -51,7 +51,7 @@ export default class Flood extends THREE.Object3D  {
 
         this.mesh.rotation.x = -Math.PI / 2;
 
-        DebugUtil.positionObject(this.mesh, "Flood", true);
+        //DebugUtil.positionObject(this.mesh, "Flood", true);
 
         this.add(this.mesh);
 

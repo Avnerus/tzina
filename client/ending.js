@@ -13,6 +13,12 @@ export default class Ending {
 
         this.endCredits = new EndCredits(this.camera);
         this.faded = false;
+
+        this.SQUARE_POSITON = [
+            -29.02,
+            -16.95,
+            3.37
+        ]
     }
 
     init(loadingManager) {
