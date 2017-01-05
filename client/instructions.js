@@ -2,9 +2,10 @@ import DebugUtil from './util/debug'
 import {MeshText2D, textAlign} from './lib/text2d/index'
 
 export default class Instructions {
-    constructor(config, camera) {
+    constructor(config, camera, square) {
         this.config = config;
         this.camera = camera;
+        this.square = square;
 
         this.lines = [
             ["You are in one of the most iconic landmarks of Tel Aviv."],
@@ -76,14 +77,25 @@ export default class Instructions {
         TweenMax.to( this.instructionLineTwo.material, 1, { opacity: 0});
         TweenMax.to( this.instructionText.material, 1, { opacity: 0, 
             onComplete: () => {
-                this.currentLine++;
-                if (this.currentLine < this.lines.length) {
-                    this.showNextLine();
-                } else {
-                    this.camera.remove(this.instructionText);
-                }
+                setTimeout(() => {
+                    this.currentLine++;
+                    if (this.currentLine == 1 && this.config.platform == "vive") {
+                        events.emit("delayed_rotation");
+                    }
+                    if (this.currentLine < this.lines.length) {
+                        this.showNextLine();
+                    } else {
+                        this.camera.remove(this.instructionText);
+                        this.square.extras.showExtras();
+                        events.emit("instructions_end");
+                    }
+                },2000);
             } 
         });
+    }
+    dispose() {
+        this.instructionText.material.dispose();
+        this.instructionLineTwo.material.dispose();
     }
 }
 

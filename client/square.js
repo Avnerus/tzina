@@ -323,9 +323,19 @@ export default class Square extends THREE.Object3D{
                 setTimeout(() => {
                     events.emit("angle_updated");
                 },0)
-
             }
         });
+
+        events.on("delayed_rotation", () => {
+            this.delayedRotation();
+        })
+    }
+
+    delayedRotation() {
+        console.log("Instructions delayed rotation");
+        TweenMax.to(this, 29, {ease: Power1.easeInOut, clockRotation: this.delayedRotationY, onComplete: () => {
+            events.emit("angle_updated", this.delayedRotationY / 15);
+        }, onUpdate: () => {}});
     }
 
     clockworkShift() {
@@ -333,7 +343,8 @@ export default class Square extends THREE.Object3D{
         this.activeClockwork = this.clockwork;
         //THREE.SceneUtils.detach(this.clockwork, this.mesh, this.scene);
         this.clockworkOffset.rotation.y = -105 * Math.PI / 180;
-   //     this.clockwork.rotation.y = this.mesh.rotation.y;
+        this.clockwork.rotation.y = this.mesh.rotation.y - 135 * Math.PI / 180;
+        this.delayedRotationY = this.mesh.rotation.y;
         this.mesh.rotation.set(0,0,0);
         //THREE.SceneUtils.attach(this.clockwork, this.scene, this.mesh);
     }

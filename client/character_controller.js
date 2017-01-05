@@ -39,16 +39,17 @@ export default class CharacterController {
                 this.characters[characterProps.name] = character;
             });
         }
-        events.on("control_threshold", (passed) => {
-            this.inControl = passed;
+        events.on("instructions_end", () => {
+            console.log("Character controller now in control");
+            this.inControl = true;
         });
 
         events.on("hour_updated", (hour) => {
             this.loadHour(hour);            
         });
         events.on("angle_updated", (hour) => {
+            console.log("Character controller Angle updated", hour, this.activeCharacters, this.inControl);
             if (this.inControl){ {
-                console.log("Angle updated", hour, this.activeCharacters);
                 this.activeCharacters.forEach((character) => {
                     character.updateAudioPosition();
                     if (character.idleOnly) {

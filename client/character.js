@@ -140,8 +140,8 @@ export default class Character extends THREE.Object3D {
                 }
             });
 
-            events.on("control_threshold", (passed) => {
-                this.inControl = passed;
+            events.on("control_threshold", () => {
+                this.inControl = true;
                 setTimeout(() => {
                     if (this.onHold && this.active && !this.inShow) {
                         if (!this.props.fullOnly) {

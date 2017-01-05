@@ -275,6 +275,7 @@ export default class Intro {
                 return this.fadeOut()
                 .then(() => {
                     this.enterSquare();                    
+                    this.square.extras.hideExtras();
                 });
                 },speed3)
         });

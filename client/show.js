@@ -42,11 +42,9 @@ export default class Show {
             }                                     
         });
 
-        events.on("control_threshold", (passed) => {
-            if (passed) {
-                this.inControl = true;
-                this.checkShow(this.timeController.currentChapter.hour);
-            }
+        events.on("instructions_end", () => {
+            this.inControl = true;
+            this.checkShow(this.timeController.currentChapter.hour);
         });
 
         events.on("show_end", () => {

@@ -222,6 +222,7 @@ export default class VideoRGBD  {
 
     play() {
             if ( this.isPlaying === true ) return;
+            console.log("RGBD Play ",this.properties.fileName);
             this.video.play();
             this.isPlaying = true;
     }

@@ -21,14 +21,12 @@ export default class SunGazer extends THREE.Object3D  {
     }
     init() {
 
-        events.on("control_threshold", (passed) => {      
-            this.active = passed;
-            if (passed) {
-                // Add the sun colliders
-                setTimeout(() => {
-                    this.addSunColliders();
-                },0)
-            }
+        events.on("instructions_end", (passed) => {      
+            this.active = true;
+            // Add the sun colliders
+            setTimeout(() => {
+                this.addSunColliders();
+            },0)
         });
 
         events.on("character_playing", () => {
