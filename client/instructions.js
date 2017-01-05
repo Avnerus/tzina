@@ -5,6 +5,15 @@ export default class Instructions {
     constructor(config, camera) {
         this.config = config;
         this.camera = camera;
+
+        this.lines = [
+            ["You are in one of the most iconic landmarks of Tel Aviv."],
+            ["This place no longer exists.","On January 2017 it was demolished."],
+            ["It was a space that attracted outsiders,","joined only by their solitude."],
+            ["The time is now, but you can change it by", "focusing on one of the suns above you."]
+        ]
+
+        this.currentLine = 0;
     }
 
     init(loadingManager) {
@@ -15,21 +24,66 @@ export default class Instructions {
              antialias: true,
              shadow: true
         }
-        this.instructionText = new MeshText2D("You are in one of the most iconic landmarks of Tel Aviv.", TEXT_DEFINITION);
+        this.instructionText = new MeshText2D("", TEXT_DEFINITION);
         this.instructionText.scale.multiplyScalar(0.00005);
         this.instructionText.position.set(0, 0, -0.1001);
+        this.instructionText.material.opacity = 0;
+
+        this.instructionLineTwo = new MeshText2D("", TEXT_DEFINITION);
+        this.instructionLineTwo.material.opacity = 0;
+        this.instructionLineTwo.position.set(0,-100,0);
+        this.instructionText.add(this.instructionLineTwo);
 
         DebugUtil.positionObject(this.instructionText, "Instructions text");
+        DebugUtil.positionObject(this.instructionLineTwo, "Instructions Line Two");
 
+        events.on("vr_start", () => {
+            this.instructionText.position.set(0, 0, -0.050001);
+        });
         console.log("Instructions initialized");
     }
 
     start() {
         console.log("Instructions starting");
         this.camera.add(this.instructionText);
+        this.playLines();
     }
 
     update(dt) {
+    }
+
+    playLines() {
+        this.currentLine = 0;
+        this.showNextLine();
+    }
+
+    showNextLine() {
+        let texts = this.lines[this.currentLine];
+        this.instructionText.text = texts[0];
+        if (texts.length > 1) {
+            this.instructionLineTwo.text = texts[1];
+        }
+        TweenMax.to( this.instructionLineTwo.material, 1, { opacity: 1});
+        TweenMax.to( this.instructionText.material, 1, { opacity: 1, 
+            onComplete: () => {
+                setTimeout(() => {
+                    this.hideLine();
+                },5000);
+            } 
+        });
+    }
+    hideLine() {
+        TweenMax.to( this.instructionLineTwo.material, 1, { opacity: 0});
+        TweenMax.to( this.instructionText.material, 1, { opacity: 0, 
+            onComplete: () => {
+                this.currentLine++;
+                if (this.currentLine < this.lines.length) {
+                    this.showNextLine();
+                } else {
+                    this.camera.remove(this.instructionText);
+                }
+            } 
+        });
     }
 }
 
