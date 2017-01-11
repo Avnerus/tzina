@@ -57,7 +57,9 @@ export default class Sky {
                 inclination: 0.6,
                 azimuth: 0.5
             }
-        ]
+        ];
+
+        this.yesUpdateHemiLght = true;
     }
     init(loadingManager) {
 
@@ -213,7 +215,9 @@ export default class Sky {
             this.azimuth = baseAzimuth + ((time - baseTime) / (nextTime - baseTime)) * (nextAzimuth - baseAzimuth);
 
             this.updateSunPosition();
-            this.updateHemiLght();
+
+            if(this.yesUpdateHemiLght)
+                this.updateHemiLght();
         }
 
         if (time >= 11 && time <= 16) {
@@ -307,8 +311,35 @@ export default class Sky {
         }
     }
 
+    pauseUpdateHemiLight() {
+        this.yesUpdateHemiLght = false;
+    }
+
+    resumeUpdateHemiLight() {
+        this.yesUpdateHemiLght = true;
+    }
 
     getSunPosition() {
         return this.sunPosition;
+    }
+
+    getDirLghtOriStatus() {
+        return this.dirLight.clone();
+    }
+
+    getHemiLghtOriStatus() {
+        return this.hemiLight.clone();
+    }
+
+    getHemiLghtCorrectIntensity() {
+        if (this.currentTime > 0 && this.currentTime <= 14  ) {
+            return 0.6 * (this.currentTime / 14) * (this.currentTime / 14);
+        } 
+        else if (this.currentTime > 14 && this.currentTime <= 23) {
+            return 0.6 * ((23 - this.currentTime) / 9) * ((23 - this.currentTime) / 9);
+        }
+        else {
+            return 0;
+        }
     }
 }
