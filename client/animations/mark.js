@@ -1,9 +1,10 @@
 import DebugUtil from '../util/debug'
 
 export default class MeirAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( sky ) {
         super();
         this.BASE_PATH = 'assets/animations/mark';
+        this.sky = sky;
     }
 
     init(loadingManager) {
@@ -12,16 +13,17 @@ export default class MeirAnimation extends THREE.Object3D {
     }
 
     setupAnim() {
-
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
             { time: 5,  anim: ()=>{ this.pinkNeonOn() } },
+            { time: 6,  anim: ()=>{ this.skyLightDark1() } },
             { time: 10, anim: ()=>{ this.blueNeonOn() } },
-            { time: 15, anim: ()=>{ this.neonRotate() } },
+            { time: 11,  anim: ()=>{ this.skyLightDark2() } },
+            //{ time: 15, anim: ()=>{ this.neonRotate() } },
             { time: 32, anim: ()=>{ this.neonRotate() } },
             { time: 40, anim: ()=>{ this.neonFlickering( 0.2, 3 ) } },    // neonFlickering( speed, time ) <-- how fast & how many times of flickering
-            { time: 25, anim: ()=>{ this.neonRotateBack() } },
+            { time: 45, anim: ()=>{ this.neonRotateBack() } },
             { time: 55, anim: ()=>{ this.neonRotate() } },
             { time: 94, anim: ()=>{ this.neonRotateBack() } },
             { time: 99, anim: ()=>{ this.neonRotate() } },
@@ -32,7 +34,8 @@ export default class MeirAnimation extends THREE.Object3D {
             { time: 198, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } },
             { time: 200, anim: ()=>{ this.neonRotateBack() } },
             { time: 207, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } },
-            { time: 209, anim: ()=>{ this.neonRotate() } },  
+            { time: 209, anim: ()=>{ this.neonRotate() } },
+            { time: 210,  anim: ()=>{ this.skyLightBack() } },
             { time: 218, anim: ()=>{ this.characterDisappear() } }
         ];
         this.nextAnim = null;
@@ -126,6 +129,43 @@ export default class MeirAnimation extends THREE.Object3D {
         for(let i=0; i<this.sequenceConfig.length; i++){
             this.sequenceConfig[i].performed = false;
         }
+    }
+
+    skyLightDark1() {
+        this.oriHemi = this.sky.getHemiLghtOriStatus();
+        this.oriDir = this.sky.getDirLghtOriStatus();
+        this.sky.pauseUpdateHemiLight();
+        TweenMax.to( this.sky.dirLight, 3, {intensity: 0.2});
+        TweenMax.to( this.sky.hemiLight, 3, {intensity: 0.2});
+    }
+
+    skyLightDark2() {
+        TweenMax.to( this.sky.dirLight, 2, {intensity: 0.05});
+        TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.4});
+        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.078, g:0.29, b:0.404 } );
+        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.322, g:0.063, b:0.231 } );
+    }
+
+    skyLightBack() {
+        let hemiTargetIntensity = this.sky.getHemiLghtCorrectIntensity();
+        TweenMax.to( this.sky.hemiLight, 3, {intensity: hemiTargetIntensity});
+        TweenMax.to( this.sky.dirLight, 3, {
+            intensity: this.oriDir.intensity,
+            onComplete:()=>{
+                this.sky.resumeUpdateHemiLight();
+            }
+        });
+
+        TweenMax.to( this.sky.hemiLight.color, 2, { 
+            r:this.oriHemi.color.r,
+            g:this.oriHemi.color.g,
+            b:this.oriHemi.color.b
+        } );
+        TweenMax.to( this.sky.hemiLight.groundColor, 2, {
+            r:this.oriHemi.groundColor.r,
+            g:this.oriHemi.groundColor.g,
+            b:this.oriHemi.groundColor.b
+        } );
     }
 
     pinkNeonOn(){

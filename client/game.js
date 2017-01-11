@@ -185,7 +185,7 @@ export default class Game {
                 'Haim' : new HaimAnimation(this.renderer, this.sky),
                 'Itzik' : new ItzikAnimation(),
                 'Meir' : new MeirAnimation(),
-                'Mark' : new MarkAnimation(),
+                'Mark' : new MarkAnimation(this.sky),
                 'Agam12PM' : new Agam12PMAnimation(this.square),
                 'Lupo12PM' : new Lupo12PMAnimation(),
                 'Itzhak' : new ItzhakAnimation(),
