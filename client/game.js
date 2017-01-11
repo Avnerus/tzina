@@ -182,7 +182,7 @@ export default class Game {
             this.animations = {
                 'Hannah' : new HannahAnimation(),
                 'Miriam' : new MiriamAnimation(this.renderer),
-                'Haim' : new HaimAnimation(this.renderer),
+                'Haim' : new HaimAnimation(this.renderer, this.sky),
                 'Itzik' : new ItzikAnimation(),
                 'Meir' : new MeirAnimation(),
                 'Mark' : new MarkAnimation(),
