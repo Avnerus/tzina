@@ -8,9 +8,9 @@ export default class Instructions {
         this.square = square;
 
         this.lines = [
-            ["You are in one of the most iconic landmarks of Tel Aviv."],
-            ["This place no longer exists.","On January 2017 it was demolished."],
-            ["It was a space that attracted outsiders,","joined only by their solitude."],
+            //     ["You are in one of the most", "iconic landmarks of Tel Aviv."],
+            // ["This place no longer exists.","On January 2017 it was demolished."],
+                   ["It was a space that attracted outsiders,","joined only by their solitude."],
             ["The time is now, but you can change it by", "focusing on one of the suns above you."]
         ]
 
@@ -26,8 +26,13 @@ export default class Instructions {
              shadow: true
         }
         this.instructionText = new MeshText2D("", TEXT_DEFINITION);
-        this.instructionText.scale.multiplyScalar(0.00005);
-        this.instructionText.position.set(0, 0, -0.1001);
+        if (this.config.platform == "desktop") {
+            this.instructionText.scale.multiplyScalar(0.00005);
+            this.instructionText.position.set(0, 0, -0.1001);
+        } else {
+            this.instructionText.scale.multiplyScalar(0.0022);
+            this.instructionText.position.set(0, 0, -2);
+        }
         this.instructionText.material.opacity = 0;
 
         this.instructionLineTwo = new MeshText2D("", TEXT_DEFINITION);
@@ -38,9 +43,6 @@ export default class Instructions {
         DebugUtil.positionObject(this.instructionText, "Instructions text");
         DebugUtil.positionObject(this.instructionLineTwo, "Instructions Line Two");
 
-        events.on("vr_start", () => {
-            this.instructionText.position.set(0, 0, -0.050001);
-        });
         console.log("Instructions initialized");
     }
 
@@ -68,7 +70,7 @@ export default class Instructions {
         TweenMax.to( this.instructionText.material, 1, { opacity: 1, 
             onComplete: () => {
                 setTimeout(() => {
-                    this.hideLine();
+                    //this.hideLine();
                 },5000);
             } 
         });
