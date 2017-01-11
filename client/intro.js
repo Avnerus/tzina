@@ -103,7 +103,7 @@ export default class Intro {
         this.creditTextName.material.opacity = 0;
         this.creditTextTitle.add(this.creditTextName);
 
-        DebugUtil.positionObject(this.creditTextTitle, "Credits title");
+        //DebugUtil.positionObject(this.creditTextTitle, "Credits title");
 
         let loader = new THREE.ObjectLoader(loadingManager);
         loader.load(this.LOGO_PATH,( obj ) => {
@@ -175,7 +175,7 @@ export default class Intro {
         this.square.scale.set(0.013, 0.013, 0.013);
 
 
-        DebugUtil.positionObject(this.square, "Square",true);
+        //DebugUtil.positionObject(this.square, "Square",true);
         if (inVR) {
             let squarePosition = new THREE.Vector3().copy(this.STARTING_POSITION).multiplyScalar(-1.0);
             this.square.position.copy(squarePosition);

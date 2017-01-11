@@ -281,8 +281,8 @@ export default class Square extends THREE.Object3D{
             //events.emit("add_gui",{}, obj.position, "y"); 
             //events.emit("add_gui", obj.position, "z");
            // events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
-            events.emit("add_gui",{folder: "Clockwork rotation", listen: true, step: 0.001}, this.clockwork.rotation, "y"); 
-            events.emit("add_gui",{folder: "Square rotation", listen: true, step: 0.001}, this.mesh.rotation, "y"); 
+//events.emit("add_gui",{folder: "Clockwork rotation", listen: true, step: 0.001}, this.clockwork.rotation, "y"); 
+//events.emit("add_gui",{folder: "Square rotation", listen: true, step: 0.001}, this.mesh.rotation, "y"); 
 
         });
 
