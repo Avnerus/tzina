@@ -16,7 +16,7 @@ export default class Ending {
 
         this.SQUARE_POSITON = [
             -29.02,
-            -16.95,
+            -15.7,
             3.37
         ]
     }
@@ -43,19 +43,34 @@ export default class Ending {
         this.endCredits.position.set(30.51, 24, -7.18);
         this.endCredits.rotation.y = 285 * Math.PI /180;
 
-        // Move to midnight
-        this.timeController.clockworkTransitionTo(0, 6, false);
+        this.fadeOut()
+        .then(() => {
+            // Move to midnight
+            this.timeController.clockworkTransitionTo(0, 1, false);
 
+            // Add the dramatic spotlight
+            let spotLight = new THREE.SpotLight(0xffffff);
+            spotLight.position.set(21.69, 6.91, 15.93 );
+            spotLight.intensity = 2;
+            spotLight.castShadow = false;
+            spotLight.angle = 0.1;
+            spotLight.distance = 50;
+            spotLight.decay = 1;
+            spotLight.penumbra = 0.5;
 
-        // Add the dramatic spotlight
-        let spotLight = new THREE.SpotLight(0xffffff);
-        spotLight.position.set(21.69, 6.91, 15.93 );
-        spotLight.intensity = 2;
-        spotLight.castShadow = false;
-        spotLight.angle = 0.1;
-        spotLight.distance = 50;
-        spotLight.decay = 1;
-        spotLight.penumbra = 0.5;
+            this.square.add(spotLight);
+
+            this.square.position.fromArray(this.SQUARE_POSITON);
+
+            if (this.config.platform == "desktop") {
+                this.camera.position.set(0,1.2,0);
+            }
+
+            setTimeout(() => {
+                this.fadeIn();
+            },3000);
+        });
+
 
         events.on("character_playing", (name) => {
             setTimeout(() => {
@@ -104,7 +119,6 @@ export default class Ending {
         events.emit("add_gui", {folder:"Spotlight " + i, listen:true, step: 0.1}, spotLight, "penumbra",0,1);
         DebugUtil.colorPicker("Spotlight " + i, spotLight, "color");*/
 
-        this.square.add(spotLight);
     }
     fadeIn() {
         return new Promise((resolve, reject) => {
