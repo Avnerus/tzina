@@ -8,10 +8,10 @@ export default class Instructions {
         this.square = square;
 
         this.lines = [
-            //     ["You are in one of the most", "iconic landmarks of Tel Aviv."],
-            // ["This place no longer exists.","On January 2017 it was demolished."],
-                   ["It was a space that attracted outsiders,","joined only by their solitude."],
-            ["The time is now, but you can change it by", "focusing on one of the suns above you."]
+            ["You are in one of the", "most iconic landmarks", "of Tel Aviv."],
+            ["This place no longer exists.","On January 2017", "it was demolished."],
+            ["It was a space that", "attracted outsiders, joined", "only by their solitude."],
+            ["The time is now, but you can ","change it by focusing on", "one of the suns above you."]
         ]
 
         this.currentLine = 0;
@@ -35,13 +35,17 @@ export default class Instructions {
         }
         this.instructionText.material.opacity = 0;
 
+        DebugUtil.positionObject(this.instructionText, "Instrucitons text");
+
         this.instructionLineTwo = new MeshText2D("", TEXT_DEFINITION);
         this.instructionLineTwo.material.opacity = 0;
         this.instructionLineTwo.position.set(0,-100,0);
         this.instructionText.add(this.instructionLineTwo);
 
-        DebugUtil.positionObject(this.instructionText, "Instructions text");
-        DebugUtil.positionObject(this.instructionLineTwo, "Instructions Line Two");
+        this.instructionLineThree = new MeshText2D("", TEXT_DEFINITION);
+        this.instructionLineThree.material.opacity = 0;
+        this.instructionLineThree.position.set(0,-200,0);
+        this.instructionText.add(this.instructionLineThree);
 
         console.log("Instructions initialized");
     }
@@ -65,18 +69,27 @@ export default class Instructions {
         this.instructionText.text = texts[0];
         if (texts.length > 1) {
             this.instructionLineTwo.text = texts[1];
+        } else {
+            this.instructionLineTwo.text = "";
+        }
+        if (texts.length > 2) {
+            this.instructionLineThree.text = texts[2];
+        } else {
+            this.instructionLineThree.text = "";
         }
         TweenMax.to( this.instructionLineTwo.material, 1, { opacity: 1});
+        TweenMax.to( this.instructionLineThree.material, 1, { opacity: 1});
         TweenMax.to( this.instructionText.material, 1, { opacity: 1, 
             onComplete: () => {
                 setTimeout(() => {
-                    //this.hideLine();
+                    this.hideLine();
                 },5000);
             } 
         });
     }
     hideLine() {
         TweenMax.to( this.instructionLineTwo.material, 1, { opacity: 0});
+        TweenMax.to( this.instructionLineThree.material, 1, { opacity: 0});
         TweenMax.to( this.instructionText.material, 1, { opacity: 0, 
             onComplete: () => {
                 setTimeout(() => {
@@ -98,6 +111,7 @@ export default class Instructions {
     dispose() {
         this.instructionText.material.dispose();
         this.instructionLineTwo.material.dispose();
+        this.instructionLineThree.material.dispose();
     }
 }
 
