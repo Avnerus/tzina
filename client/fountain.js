@@ -387,10 +387,11 @@ export default class Fountain extends THREE.Object3D  {
     createTrickle(position, rotation, velocity, colorCode) {
         // Get the velocity after rotation
         let emitter = new SPE.Emitter({
-            maxAge: 5,
+            maxAge: 4,
             type: SPE.distributions.BOX,
             position : {
-                value: position
+                value: position,
+                spread: new THREE.Vector3(.2, 0, .2)
             },
             rotation: {
                 axis: new THREE.Vector3(0, 1, 0),
@@ -407,11 +408,11 @@ export default class Fountain extends THREE.Object3D  {
                 value: new THREE.Color(colorCode)
             },
             size: {
-                value: [0.0015, 0.003, 0.0] //[0.2, 0.4, 0.0]
+                value: [0.0025, 0.003, 0.0] //[0.0015, 0.003, 0.0]
             },
-            particleCount: 200,
+            particleCount: 300,
             opacity: {
-                value: [0.5, 0.8, 0.5] //[0.3, 0.8, 0.5]
+                value: [1, 0.8, 0.5] //[0.6, 0.8, 0.5]
             },
             transparent: true,
             wiggle: {
@@ -434,7 +435,7 @@ export default class Fountain extends THREE.Object3D  {
             type: SPE.distributions.BOX,
             position : {
                 value: position,
-                spread: new THREE.Vector3( .3, 0, .3 )
+                spread: new THREE.Vector3( .4, 0, .4 )
             },
             acceleration: {
                 value: new THREE.Vector3(0,-14,0),
@@ -470,10 +471,10 @@ export default class Fountain extends THREE.Object3D  {
             type: SPE.distributions.BOX,
             position : {
                 value: position,
-                spread: new THREE.Vector3( .2, 0, .2 )
+                spread: new THREE.Vector3( .3, 0, .3 )
             },
             velocity: {
-                value: new THREE.Vector3( 0, 5, 0 ),
+                value: new THREE.Vector3( 0, 6, 0 ),
                 spread: new THREE.Vector3( 0, 1, 0 )
             },
             acceleration: {
@@ -654,7 +655,7 @@ export default class Fountain extends THREE.Object3D  {
         // from 5
         this.updateEmittersValue( this.fireEmitters,
                                  [ 0 ],
-                                 [ {x:0, y:10, z:0} ],
+                                 [ {x:0, y:11, z:0} ],
                                  3, true, 1, 0, 1);
         //
         if (this.spotLightCenters) {
@@ -679,7 +680,7 @@ export default class Fountain extends THREE.Object3D  {
 
         this.updateEmittersValue( this.firstRingEmitters,
                                  [ 0 ],
-                                 [ {x:1.5, y:10, z:0} ],
+                                 [ {x:2, y:12, z:0} ],
                                  0, false, 3, 0, 5);
 
         this.updateEmittersValue( this.firstRingEmitters,
@@ -694,7 +695,7 @@ export default class Fountain extends THREE.Object3D  {
 
         this.updateEmittersValue( this.secondRingEmitters,
                                  [ 0 ],
-                                 [ {x:1.5, y:11, z:0} ],
+                                 [ {x:2, y:12, z:0} ],
                                  4, false, 2, 1, 1);
         //
         this.updateEmittersValue( this.fireEmitters,
@@ -703,7 +704,7 @@ export default class Fountain extends THREE.Object3D  {
                                  0, false, 3, 0, 5);
         this.updateEmittersValue( this.fireEmitters,
                                  [ 0 ],
-                                 [ {x:0, y:4, z:0} ],
+                                 [ {x:0, y:6, z:0} ],
                                  4, false, 3, 1, 1);
         //
         if (this.spotLightCenters) {
@@ -719,7 +720,7 @@ export default class Fountain extends THREE.Object3D  {
     thirdAni() {
         this.updateEmittersValue( this.centerRingEmitters,
                                  [ 0, 3 ],
-                                 [ {x:0, y:14, z:0}, {x:5, y:0, z:5} ],
+                                 [ {x:0, y:14, z:0}, {x:3, y:0, z:3} ],
                                  0.5, true, 3, 1, 2);
         //
         this.updateEmittersValue( this.firstRingEmitters,
@@ -751,15 +752,15 @@ export default class Fountain extends THREE.Object3D  {
         // tall & thin
         this.updateEmittersValue( this.centerRingEmitters,
                                  [ 0,2,3 ],
-                                 [ {x:0, y:16, z:0}, {x:0, y: -30, z:0}, {x:1, y:0, z:1} ],
+                                 [ {x:0, y:18, z:0}, {x:0, y: -30, z:0}, {x:1, y:0, z:1} ],
                                  0, false, 0, 0, 0);
         this.updateEmittersValue( this.centerRingEmitters,
                                  [ 0 ],
-                                 [ {x:0, y:14, z:0} ],
+                                 [ {x:0, y:15, z:0} ],
                                  0, false, 0, 1, 0);
         this.updateEmittersValue( this.centerRingEmitters,
                                  [ 1 ],
-                                 [ {x:3, y:.5, z:3} ],
+                                 [ {x:4, y:.5, z:4} ],
                                  1, true, 3, 1, 2);
 
         // 
@@ -770,7 +771,7 @@ export default class Fountain extends THREE.Object3D  {
 
         this.updateEmittersValue( this.secondRingEmitters,
                                  [ 0 ],
-                                 [ {x:1.5, y:12, z:0} ],
+                                 [ {x:1.5, y:14, z:0} ],
                                  1, true, 3, 1, 2);
         //
         this.updateEmittersValue( this.fireEmitters,
@@ -802,7 +803,7 @@ export default class Fountain extends THREE.Object3D  {
 
         this.updateEmittersValue( this.secondRingEmitters,
                                  [ 0 ],
-                                 [ {x:1.5, y:7, z:0} ],
+                                 [ {x:2, y:7, z:0} ],
                                  8, false, 0, 0, 0);
         //
         this.updateEmittersValue( this.fireEmitters,
@@ -828,12 +829,12 @@ export default class Fountain extends THREE.Object3D  {
 
         this.updateEmittersValue( this.secondRingEmitters,
                                  [ 0 ],
-                                 [ {x:2.5, y:9, z:0} ],
+                                 [ {x:3, y:9, z:0} ],
                                  1, true, 7, 0, 1);
         //
         this.updateEmittersValue( this.fireEmitters,
                                  [ 0 ],
-                                 [ {x:0, y:6, z:0} ],
+                                 [ {x:0, y:8, z:0} ],
                                  1, true, 7, 0, 1);
         //
         if (this.spotLightCenters) {
@@ -856,12 +857,12 @@ export default class Fountain extends THREE.Object3D  {
         //
         this.updateEmittersValue( this.firstRingEmitters,
                                  [ 0 ],
-                                 [ {x:2.5, y:9, z:0} ],
+                                 [ {x:3, y:9, z:0} ],
                                  1, true, 7, 0, 1);
 
         this.updateEmittersValue( this.secondRingEmitters,
                                  [ 0 ],
-                                 [ {x:1.5, y:12, z:0} ],
+                                 [ {x:1.5, y:13, z:0} ],
                                  1, true, 7, 0, 1);
         //
         this.updateEmittersValue( this.fireEmitters,
@@ -941,27 +942,27 @@ export default class Fountain extends THREE.Object3D  {
         //
         this.updateEmittersValue( this.firstRingEmitters,
                                  [ 0 ],
-                                 [ {x:1, y:10, z:0} ],
+                                 [ {x:1, y:12, z:0} ],
                                  0, false, 0, 0, 0);
 
         this.updateEmittersValue( this.firstRingEmitters,
                                  [ 0 ],
-                                 [ {x:1.5, y:6, z:0} ],
+                                 [ {x:2, y:6, z:0} ],
                                  8, false, 0, 2, 0);
 
         this.updateEmittersValue( this.secondRingEmitters,
                                  [ 0 ],
-                                 [ {x:1, y:14, z:0} ],
+                                 [ {x:1, y:16, z:0} ],
                                  0, false, 0, 0, 0);
 
         this.updateEmittersValue( this.secondRingEmitters,
                                  [ 0 ],
-                                 [ {x:1.5, y:7, z:0} ],
+                                 [ {x:2, y:7, z:0} ],
                                  8, false, 0, 2, 0);
         //
         this.updateEmittersValue( this.fireEmitters,
                                  [ 0 ],
-                                 [ {x:0, y:12, z:0} ],
+                                 [ {x:0, y:13, z:0} ],
                                  0, false, 0, 0, 0);
         this.updateEmittersValue( this.fireEmitters,
                                  [ 0 ],
