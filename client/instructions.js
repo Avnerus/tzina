@@ -8,10 +8,13 @@ export default class Instructions {
         this.square = square;
 
         this.lines = [
-            ["You are in one of the", "most iconic landmarks", "of Tel Aviv."],
-            ["This place no longer exists.","On January 2017", "it was demolished."],
-            ["It was a space that", "attracted outsiders, joined", "only by their solitude."],
-            ["The time is now, but you can ","change it by focusing on", "one of the suns above you."]
+            ["You are in one of the most","iconic landmarks of Tel Aviv."],
+            ["This place no longer exists."],
+            ["On January 2017", "it was demolished."],
+            ["It was a space that", "attracted outsiders"],
+            ["united only by their solitude."],
+            ["The time is now"],
+            ["but you can change it if", "you foucus on one of the", "suns above you."]
         ]
 
         this.currentLine = 0;
@@ -77,13 +80,15 @@ export default class Instructions {
         } else {
             this.instructionLineThree.text = "";
         }
+        let delay = 2500 * texts.length;
+
         TweenMax.to( this.instructionLineTwo.material, 1, { opacity: 1});
         TweenMax.to( this.instructionLineThree.material, 1, { opacity: 1});
         TweenMax.to( this.instructionText.material, 1, { opacity: 1, 
             onComplete: () => {
                 setTimeout(() => {
                     this.hideLine();
-                },5000);
+                },delay);
             } 
         });
     }
