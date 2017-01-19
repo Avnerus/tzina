@@ -18,7 +18,7 @@ export default class CharacterController {
         this.animations = animations;
         this.addedColliders = false;
         this.inControl = false;
-        this.debug = false;
+        this.debug = true;
         this.scene = scene;
     }
     init(loadingManager) {
@@ -72,7 +72,7 @@ export default class CharacterController {
         for (let i = 0; i < clone.length; i++) {
             let character = clone[i];
 
-            if (!character.done && !(character.props.event && hour == 9) && !(character.props.event && hour == 19)) {
+            if (!character.done && !character.ending && !(character.props.event && hour == 9) && !(character.props.event && hour == 19)) {
                 console.log("Removing character ", character.props.name, " when loading hour ", hour);
                 this.square.clockwork.remove(character);
                 character.unload();
@@ -95,7 +95,7 @@ export default class CharacterController {
         });
     }
 
-    addCharacter(characterName) {
+    addCharacter(characterName, ending = false) {
         if (this.characters[characterName] && !this.characters[characterName].done) {
             console.log("Adding character " + characterName);
             let character = this.characters[characterName];
@@ -108,7 +108,7 @@ export default class CharacterController {
                 bbox.update();
                 this.square.parent.add( bbox );*/
             }
-            character.load();
+            character.load(ending);
             character.play();
         }
     }

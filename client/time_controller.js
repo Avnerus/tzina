@@ -667,7 +667,6 @@ export default class TimeController {
         this.sky.setTime(this.currentHour);
         this.setCurrentChapter();
         events.emit("hour_updated", this.currentHour);
-        events.emit("angle_updated", this.currentHour);
         this.setCurrentChapter();
         this.showChapterTitle();
         this.updateNextHour();

@@ -116,7 +116,7 @@ export default class Character extends THREE.Object3D {
                 if (this.idleException(name)) {
                     return;
                 }
-                if (this.active && !this.done && this.props.name != name &&
+                if (this.active && !this.done && !this.ending && this.props.name != name &&
                     this.props.name != "FatmanShower" && this.props.name != "FatmanSleep")  {
                     this.onHold = true;
                     console.log(name, " is playing." , this.props.name, "is pausing");
@@ -130,7 +130,7 @@ export default class Character extends THREE.Object3D {
                 if (this.idleException(name)) {
                     return;
                 }
-                if (this.active && this.onHold && !this.done && this.props.name != name) {
+                if (this.active && this.onHold && !this.done && !this.ending && this.props.name != name) {
                     this.onHold = false;
                     console.log(name, " is idle." , this.props.name, "is playing");
                     if (!this.props.fullOnly) {
@@ -231,9 +231,10 @@ export default class Character extends THREE.Object3D {
         }
     }
 
-    load() {
+    load(ending) {
         console.log("Character " + this.props.name + ": Load");
-        if (!this.done) {
+        this.ending = ending;
+        if (!this.done || ending) {
             if (this.props.adjustments) {
                 this.adjustments = this.props.adjustments.slice(0);
                 this.nextAdjustment = this.adjustments.shift();
@@ -287,6 +288,15 @@ export default class Character extends THREE.Object3D {
                     this.props.animationRotation[2] * Math. PI / 180
                 );
             }
+        }
+
+        if (ending) {
+            this.position.fromArray(this.props.endingPosition);
+            this.rotation.set(
+                this.props.endingRotation[0] * Math. PI / 180,
+                this.props.endingRotation[1] * Math. PI / 180,
+                this.props.endingRotation[2] * Math. PI / 180
+            );
         }
         this.active = true;
     }

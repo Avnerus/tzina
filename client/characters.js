@@ -20,7 +20,9 @@ export default [
         spaceOffset: [-0.35,0,0.29],
         subtitles: null,
         gazeSpace: [-0.27,-0.21,-0.6],
-        gazeOffset: [0,0,0.16]
+        gazeOffset: [0,0,0.16],
+        endingPosition : [-1.91, 22.04, -16.18],
+        endingRotation: [355, 152, 3]
     },
     {
         name: 'Miriam',

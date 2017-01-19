@@ -5,7 +5,7 @@ export default class Ending {
     constructor(config, camera, timeController, characterController, scene, vrControls, square) {
         this.config = config;
         this.timeController = timeController;
-        this.characterController;
+        this.characterController = characterController;
         this.camera = camera;
         this.scene = scene;
         this.vrControls = vrControls;
@@ -15,9 +15,9 @@ export default class Ending {
         this.faded = false;
 
         this.SQUARE_POSITON = [
-            -29.02,
+            -28.24,
             -15.7,
-            3.37
+            7.48
         ]
     }
 
@@ -46,7 +46,10 @@ export default class Ending {
         this.fadeOut()
         .then(() => {
             // Move to midnight
-            this.timeController.clockworkTransitionTo(0, 1, false);
+            this.timeController.jumpToTime(0);
+            if (this.config.platform == "vive") {
+                this.square.clockRotation = 17 * 15 * Math.PI / 180; // Best view 
+            }
 
             // Add the dramatic spotlight
             let spotLight = new THREE.SpotLight(0xffffff);
@@ -65,6 +68,8 @@ export default class Ending {
             if (this.config.platform == "desktop") {
                 this.camera.position.set(0,1.2,0);
             }
+
+            this.characterController.addCharacter("Hannah", true);
 
             setTimeout(() => {
                 this.fadeIn();
@@ -100,7 +105,7 @@ export default class Ending {
                         });
                     }
                 },false);
-            },23000);
+            },2300000);
         });
 
         DebugUtil.positionObject(this.endCredits, "End credits");
