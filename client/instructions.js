@@ -34,7 +34,7 @@ export default class Instructions {
             this.instructionText.position.set(0, 0, -0.1001);
         } else {
             this.instructionText.scale.multiplyScalar(0.0022);
-            this.instructionText.position.set(0, 0, -2);
+            this.instructionText.position.set(0, 0, -2.6);
         }
         this.instructionText.material.opacity = 0;
 
@@ -99,8 +99,10 @@ export default class Instructions {
             onComplete: () => {
                 setTimeout(() => {
                     this.currentLine++;
-                    if (this.currentLine == 1 && this.config.platform == "vive") {
-                        events.emit("delayed_rotation");
+                    if (this.currentLine == 3 && this.config.platform == "vive") {
+                        setTimeout(() => {
+                            events.emit("delayed_rotation");
+                        },4000);
                     }
                     if (this.currentLine < this.lines.length) {
                         this.showNextLine();
