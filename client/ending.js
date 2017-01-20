@@ -16,7 +16,7 @@ export default class Ending {
 
         this.SQUARE_POSITON = [
             -28.24,
-            -15.7,
+            -15.22,
             7.48
         ]
     }
