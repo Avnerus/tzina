@@ -53,6 +53,7 @@ export default class CharacterController {
         events.on("angle_updated", (hour) => {
             console.log("Character controller Angle updated", hour, this.activeCharacters, this.inControl);
             if (this.inControl){ {
+                this.addColiders();
             }}
         });
     }

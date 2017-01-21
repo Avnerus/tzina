@@ -333,7 +333,7 @@ export default class Square extends THREE.Object3D{
 
     delayedRotation() {
         console.log("Instructions delayed rotation");
-        TweenMax.to(this, 29, {ease: Power1.easeInOut, clockRotation: this.delayedRotationY, onComplete: () => {
+        TweenMax.to(this, 32, {ease: Power1.easeInOut, clockRotation: this.delayedRotationY, onComplete: () => {
             events.emit("angle_updated", this.delayedRotationY / 15);
         }, onUpdate: () => {}});
     }
