@@ -235,8 +235,7 @@ export default class Game {
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
 
-        this.show = new Show(this.square, this.characterController, this.timeController); 
-        this.show.init();
+        this.show = new Show(this.square, this.characterController, this.timeController, this.soundManager); 
 
         this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square);
         this.ending.init();
@@ -290,6 +289,7 @@ export default class Game {
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
+        this.show.init();
         
         VideoRGBD.initPool();
 
