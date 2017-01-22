@@ -18,6 +18,7 @@ import CharacterController from './character_controller'
 import Show from './show'
 import Extras from './extras'
 import SunGazer from './sun_gazer'
+import Instructions from './instructions';
 
 import DebugUtil from './util/debug'
 
@@ -204,6 +205,10 @@ export default class Game {
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config, this.introAni);
 
+
+        this.instructions = new Instructions(this.config, this.camera, this.square);
+        this.instructions.init();
+
         // laura: i don't know other better way to do this..
         if (!this.config.noAnimations) {
             this.animations['Lupo12PM'].assignChController(this.characterController);
@@ -344,6 +349,9 @@ export default class Game {
                 this.soundManager.play("ambience");
                 this.introAni.disposeAni();
                 this.square.add(this.flood); 
+                setTimeout(() => {
+                    this.instructions.start();
+                },2000);
             }
         });
             /*
