@@ -19,5 +19,6 @@ export default {
     videoHost: "http://assets.tzina.space/",
     platform: "desktop",
     skipLanding: true,
+    skipInstructions: true,
     language: "heb"
 }

@@ -65,9 +65,18 @@ export default class Instructions {
     }
 
     start() {
-        console.log("Instructions starting");
-        this.camera.add(this.instructionText);
-        this.playLines();
+        if (this.config.skipInstructions) {
+            console.log("Instructions skipping");
+            if (this.config.platform == "vive") {
+                events.emit("delayed_rotation");
+            }
+            this.square.extras.showExtras();
+            events.emit("instructions_end");
+        } else {
+            console.log("Instructions starting");
+            this.camera.add(this.instructionText);
+            this.playLines();
+        }
     }
 
     update(dt) {
