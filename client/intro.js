@@ -17,7 +17,6 @@ export default class Intro {
         this.config = config;
         this.introAni = introAni;
 
-        this.credits = this.config.language == "eng" ? Credits : CreditsHeb;
 
         this.soundEvents = [
             {
@@ -71,6 +70,7 @@ export default class Intro {
             this.titlePlane.position.y = 400;
         });*/
 
+        this.credits = this.config.language == "eng" ? Credits : CreditsHeb;
 
         let CREDIT_TEXT_TITLE = {
              align: textAlign.center, 

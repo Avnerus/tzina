@@ -7,17 +7,17 @@ export default class Instructions {
         this.camera = camera;
         this.square = square;
 
-        let lines_eng = [
+        this.lines_eng = [
             ["You are in one of the most","iconic landmarks of Tel Aviv."],
             ["This place no longer exists."],
             ["On January 2017", "it was demolished."],
             ["It was a space that", "attracted outsiders"],
             ["united only by their solitude."],
             ["The time is now"],
-            ["but you can change it if", "you foucus on one of the", "suns above you."]
+            ["but you can change it if", "you focus on one of the", "suns above you."]
         ];
 
-        let lines_heb = [
+        this.lines_heb = [
             ["אנו נמצאים כעת באחד מסמליה",".החשובים של העיר תל אביב"],
             [".אתר זה אינו קיים עוד"],
             [",בינואר 2017", ".הוא הורד מטה"],
@@ -27,11 +27,11 @@ export default class Instructions {
             [",אך אם ברצונך לשנות אותו", "ביכולתך לעשות זאת בעזרת", ".התמקדות על אחת השמשות שמעליך"]
         ]
 
-        this.lines = config.language == "heb" ? lines_heb : lines_eng;
         this.currentLine = 0;
     }
 
     init(loadingManager) {
+
         let TEXT_DEFINITION = {
              align: textAlign.center, 
              font: '70px Miriam Libre',
@@ -65,6 +65,7 @@ export default class Instructions {
     }
 
     start() {
+        this.lines = this.config.language == "heb" ? this.lines_heb : this.lines_eng;
         if (this.config.skipInstructions) {
             console.log("Instructions skipping");
             if (this.config.platform == "vive") {
