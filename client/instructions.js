@@ -7,7 +7,7 @@ export default class Instructions {
         this.camera = camera;
         this.square = square;
 
-        this.lines = [
+        let lines_eng = [
             ["You are in one of the most","iconic landmarks of Tel Aviv."],
             ["This place no longer exists."],
             ["On January 2017", "it was demolished."],
@@ -15,8 +15,19 @@ export default class Instructions {
             ["united only by their solitude."],
             ["The time is now"],
             ["but you can change it if", "you foucus on one of the", "suns above you."]
+        ];
+
+        let lines_heb = [
+            ["אנו נמצאים כעת באחד מסמליה",".החשובים של העיר תל אביב"],
+            [".אתר זה אינו קיים עוד"],
+            [",בינואר 2017", ".הוא הורד מטה"],
+            ["היה זה מרחב מקבל", ".עבור אנשי השוליים של החברה"],
+            [".מאוחדים אך ורק בבדידותם"],
+            [".עכשיו הוא הזמן"],
+            [",אך אם ברצונך לשנות אותו", "ביכולתך לעשות זאת בעזרת", ".התמקדות על אחת השמשות שמעליך"]
         ]
 
+        this.lines = config.language == "heb" ? lines_heb : lines_eng;
         this.currentLine = 0;
     }
 
