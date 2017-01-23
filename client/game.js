@@ -207,7 +207,6 @@ export default class Game {
 
 
         this.instructions = new Instructions(this.config, this.camera, this.square);
-        this.instructions.init();
 
         // laura: i don't know other better way to do this..
         if (!this.config.noAnimations) {
@@ -290,6 +289,7 @@ export default class Game {
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
         this.show.init();
+        this.instructions.init();
         
         VideoRGBD.initPool();
 
