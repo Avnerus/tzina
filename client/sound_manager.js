@@ -277,6 +277,8 @@ export class StaticSoundSampler{
     this.offset = 0;
     this.loop = false;
 
+    this.controlVolume=function(...a){this.blurModule.controlVolume.apply(this.blurModule,a)};
+
   }
   setToLoop(loopValue){
     if(loopValue!==undefined){
