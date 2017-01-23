@@ -67,9 +67,9 @@ export default [
         width: 512,
         height: 2048,
         scale: 0.0027 * 0.5308,
-        animationScale: 0.248,
-        animationPosition: [-0.76, 0.42, -1.52],
-        animationRotation: [7.9, 7.7, 1],
+        animationScale: 0.26,
+        animationPosition: [-0.28, 0.51, -1.63],
+        animationRotation: [7.9, 0, 1],
         space: 0.33, //anim:1.46
         spaceOffset: [-0.25,0,0.15], //0.28,0.73,1.73
         subtitles: false,
@@ -78,7 +78,7 @@ export default [
                 sec: 0,
                 mindepth : 0,
                 maxdepth : 3494.158935547,
-                position : [-6.95,  22.03, 10.41],
+                position : [-6.3,  22, 10.88], //-6.95,  22.03, 10.41
                 scale: 0.0027 * 0.4686
             }
         ],
