@@ -92,9 +92,9 @@ export default class RamiAnimation extends THREE.Object3D {
             { time: 96, anim: ()=>{this.peacockBun(5)} },   //96
 
             { time: 137, anim: ()=>{this.peacockOpen(5)} }, //137
-            { time: 160, anim: ()=>{this.peacockBun(5)} },  //160
+            //{ time: 160, anim: ()=>{this.peacockBun(5)} },  //160
 
-            { time: 180, anim: ()=>{this.peacockSwallow(5)} },  //180
+            { time: 170, anim: ()=>{this.peacockSwallow(5)} },  //180
         ];
         this.nextAnim = null;
 
