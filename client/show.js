@@ -29,8 +29,8 @@ export default class Show {
         .then((results) => {
             this.music9am = results[0];
             this.music7pm = results[1];
-            this.music9am.controlVolume(0.2);
-            this.music7pm.controlVolume(0.2);
+            this.music9am.controlVolume(0.4);
+            this.music7pm.controlVolume(0.4);
         });
 
         events.on("hour_updated", (hour) => {
