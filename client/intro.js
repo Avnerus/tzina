@@ -40,7 +40,6 @@ export default class Intro {
         ]
 
         
-        this.INTRO_SOUND = this.config.language == "eng" ? 'assets/sound/INTRO_Shirin.ogg': 'assets/sound/INTRO_Shirin_heb.ogg';
         this.LOGO_PATH = 'assets/intro/logo/logo.json';
 
         this.STARTING_POSITION = new THREE.Vector3(
@@ -70,6 +69,7 @@ export default class Intro {
             this.titlePlane.position.y = 400;
         });*/
 
+        this.INTRO_SOUND = this.config.language == "eng" ? 'assets/sound/INTRO_Shirin.ogg': 'assets/sound/INTRO_Shirin_heb.ogg';
         this.credits = this.config.language == "eng" ? Credits : CreditsHeb;
 
         let CREDIT_TEXT_TITLE = {
