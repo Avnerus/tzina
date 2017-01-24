@@ -143,16 +143,14 @@ export default class Game {
 
         this.extras = new Extras(this.config, this.camera, this.renderer);
 
+        this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
+
         // Square
-        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene, this.extras);
+        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene, this.extras, this.sky);
 
         // Sun gazer
         this.sunGazer = new SunGazer(this.square, this.soundManager, this.collisionManager);
         this.sunGazer.init();
-
-
-
-        this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
 
         this.flood = new Flood();

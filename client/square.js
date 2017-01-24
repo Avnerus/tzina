@@ -19,7 +19,7 @@ const GROUND_PATH = "assets/square/squareRamp_22.json"
 let SUN_LOADER_TIME = 3;
 
 export default class Square extends THREE.Object3D{
-    constructor(collisionManager, renderer, camera, config, soundManager, scene, extras) {
+    constructor(collisionManager, renderer, camera, config, soundManager, scene, extras, sky) {
         super();
         console.log("Square constructed!")
 
@@ -29,6 +29,7 @@ export default class Square extends THREE.Object3D{
         this.camera = camera;
         this.scene = scene;
         this.extras = extras;
+        this.sky = sky;
 
         this.debug = false;
 

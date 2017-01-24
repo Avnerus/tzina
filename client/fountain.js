@@ -318,7 +318,7 @@ export default class Fountain extends THREE.Object3D  {
         this.centerRingEmitters[0].enable();
         this.changeWaterColor(true);
     
-        if(hour!=9)
+        //if(hour!=9)
             this.switchLight(true);
 
         this.currentSequence = this.soundEvents[hour].slice(0);
@@ -627,6 +627,38 @@ export default class Fountain extends THREE.Object3D  {
             this.cylinders[1].tweenAni.kill();
     }
 
+    skyLightDarken() {
+        this.oriHemi = this.square.sky.getHemiLghtOriStatus();
+        this.oriDir = this.square.sky.getDirLghtOriStatus();
+        this.square.sky.pauseUpdateHemiLight();
+
+        TweenMax.to( this.square.sky.dirLight, 3, {intensity: 0.15});
+        TweenMax.to( this.square.sky.hemiLight, 3, {intensity: 0.01});
+    }
+
+    skyLightBack() {
+        let hemiTargetIntensity = this.square.sky.getHemiLghtCorrectIntensity();
+        TweenMax.to( this.square.sky.hemiLight, 3, {intensity: hemiTargetIntensity});
+        TweenMax.to( this.square.sky.dirLight, 3, {
+            intensity: this.oriDir.intensity,
+            onComplete:()=>{
+                this.square.sky.resumeUpdateHemiLight();
+            }
+        });
+
+        // TweenMax.to( this.square.sky.hemiLight.color, 2, { 
+        //     r:this.oriHemi.color.r,
+        //     g:this.oriHemi.color.g,
+        //     b:this.oriHemi.color.b
+        // } );
+        // TweenMax.to( this.square.sky.hemiLight.groundColor, 2, {
+        //     r:this.oriHemi.groundColor.r,
+        //     g:this.oriHemi.groundColor.g,
+        //     b:this.oriHemi.groundColor.b
+        // } );
+    }
+
+
     // velocity, velocity.spread, acceleration, acceleration.spread
 
     // emitters, arrayOfIndex, _arrayOfValue,
@@ -643,6 +675,9 @@ export default class Fountain extends THREE.Object3D  {
                                  [ {x:1.5, y:6, z:0} ],
                                  0.1, true, 7, 0, 2);
         this.startCylinderAni();
+
+        // LIGHT
+        this.skyLightDarken();
     }
 
     firstAni() {
@@ -973,5 +1008,8 @@ export default class Fountain extends THREE.Object3D  {
             TweenMax.to( this.spotLightCenters.position, 2, { y: 1.8 } );
             TweenMax.to( this.spotLightCenters.position, 5, { y: -1.7, delay: 2} );
         }
+
+        // LIGHT
+        this.skyLightBack();
     }
 }
