@@ -2,7 +2,7 @@ import EndCredits from './end_credits'
 import DebugUtil from './util/debug'
 
 export default class Ending {
-    constructor(config, camera, timeController, characterController, scene, vrControls, square) {
+    constructor(config, camera, timeController, characterController, scene, vrControls, square, introAni) {
         this.config = config;
         this.timeController = timeController;
         this.characterController;
@@ -10,6 +10,7 @@ export default class Ending {
         this.scene = scene;
         this.vrControls = vrControls;
         this.square = square;
+        this.introAni = introAni;
 
         this.endCredits = new EndCredits(this.camera);
         this.faded = false;
@@ -62,6 +63,7 @@ export default class Ending {
                         this.faded = true;                    
                         this.fadeOut()
                         .then(() => {
+                            this.introAni.createSnowParticle();
                             this.camera.add(this.endCredits);
                             this.endCredits.scale.set(0.077, 0.077, 0.077);
                             this.endCredits.rotation.y = 0;

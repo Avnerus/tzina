@@ -234,7 +234,7 @@ export default class Game {
 
         this.show = new Show(this.square, this.characterController, this.timeController, this.soundManager); 
 
-        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square);
+        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni);
         this.ending.init();
 
         this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
@@ -250,7 +250,6 @@ export default class Game {
             if (!this.config.noSquare) {
                 this.scene.add(this.square);
                 this.sky.applyToMesh(this.square.getSphereMesh());
-                // this.introAni.initFBOParticle();
                 this.introAni.createSnowParticle();
                 this.scene.add(this.introAni);
             }
