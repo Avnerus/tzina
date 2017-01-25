@@ -69,20 +69,19 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     
                     // { time: 35, anim: ()=>{this.growCactusFloor()} },
                     { time: 35, anim: ()=>{this.growSingleCactusFloor(0)} },
-                    { time: 36, anim: ()=>{this.growSingleCactusFloor(1)} },
-                    { time: 40, anim: ()=>{this.growSingleCactusFloor(2)} },
-                    { time: 43, anim: ()=>{this.growSingleCactusFloor(3)} },
-                    { time: 47, anim: ()=>{this.growSingleCactusFloor(4)} },
+                    { time: 40, anim: ()=>{this.growSingleCactusFloor(1)} },
+                    { time: 47, anim: ()=>{this.growSingleCactusFloor(2)} },
+                    { time: 50, anim: ()=>{this.growSingleCactusFloor(3)} },
+                    { time: 55, anim: ()=>{this.growSingleCactusFloor(4)} },
 
-                    { time: 45, anim: ()=>{this.growSingleFlower(0)} },
-                    { time: 46, anim: ()=>{this.growSingleFlower(1)} },
-                    { time: 48, anim: ()=>{this.growSingleFlower(2)} },
-                    { time: 50, anim: ()=>{this.growSingleFlower(3)} },
-                    { time: 51, anim: ()=>{this.growSingleFlower(4)} },                    
+                    { time: 60, anim: ()=>{this.growSingleFlower(0)} },
+                    { time: 65, anim: ()=>{this.growSingleFlower(1)} },
+                    { time: 77, anim: ()=>{this.growSingleFlower(2)} },
+                    { time: 85, anim: ()=>{this.growSingleFlower(3)} },
+                    { time: 100, anim: ()=>{this.growSingleFlower(4)} },                    
 
                     // Scale dogs, total 2 times
                     //{ time: 76, anim: ()=>{this.scaleDogs(1)} },     // first time
-
                     //{ time: 100, anim: ()=>{this.scaleDogs(2)} },     // second time
 
                     { time: 150, anim: ()=>{this.closeFlower()} },
