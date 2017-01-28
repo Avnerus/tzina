@@ -16,9 +16,13 @@ export default class Ending {
 
         this.SQUARE_POSITON = [
             -28.24,
-            -15.22,
+            -15.41,
             7.48
         ]
+
+        this.CHARACTER_ORDER = ["Rami", "Meir", "Itzik", "Miriam", "Lupo5PM", "Mark", "Hannah", "Haim", "Itzhak" ]
+        
+        this.nextCharacter = null;
     }
 
     init(loadingManager) {
@@ -67,21 +71,29 @@ export default class Ending {
 
             if (this.config.platform == "desktop") {
                 this.camera.position.set(0,1.2,0);
+                this.square.mesh.rotation.y = 2.7;
             }
 
-            this.characterController.addCharacter("Hannah", true);
 
             setTimeout(() => {
-                this.fadeIn();
+                this.fadeIn()
+                .then(() => {
+                    setTimeout(() => {
+                        this.characterController.addColiders();
+                    },4000);
+                });
             },3000);
         });
 
 
         events.on("character_playing", (name) => {
             setTimeout(() => {
+                this.showCharacters();
+            },5000);
+            /*
+            setTimeout(() => {
                 console.log("Ending video");
                 this.square.add(this.endCredits);
-                this.endCredits.play();
                 this.endCredits.creditsVideo.video.addEventListener('timeupdate',() => {
                     if(!this.faded && this.endCredits.creditsVideo.video.currentTime > 60) {
                         console.log("Ending fade");
@@ -105,7 +117,7 @@ export default class Ending {
                         });
                     }
                 },false);
-            },2300000);
+            },2300000);*/
         });
 
         DebugUtil.positionObject(this.endCredits, "End credits");
@@ -124,6 +136,20 @@ export default class Ending {
         events.emit("add_gui", {folder:"Spotlight " + i, listen:true, step: 0.1}, spotLight, "penumbra",0,1);
         DebugUtil.colorPicker("Spotlight " + i, spotLight, "color");*/
 
+    }
+    showCharacters() {
+        this.showCharacters = this.CHARACTER_ORDER.slice(0);
+        this.showNextCharacter();
+    }
+    showNextCharacter() {
+        let nextCharacter = this.showCharacters.shift();
+        console.log("Ending - showing ", nextCharacter);
+        this.characterController.addCharacter(nextCharacter, true);
+        if (this.showCharacters.length > 0) {
+            setTimeout(() => {
+                this.showNextCharacter();
+            },4000);
+        }
     }
     fadeIn() {
         return new Promise((resolve, reject) => {

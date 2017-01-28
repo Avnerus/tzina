@@ -179,8 +179,7 @@ export default class Character extends THREE.Object3D {
         if (!this.done && !this.props.fullOnly) {
             console.log(this.props.name + " Play idle video");
             this.idleVideo.load();
-            this.idleVideo.mesh.visible = true;
-            this.idleVideo.wire.visible = true;
+            this.idleVideo.setVisible(true);
 
             if (this.inControl) {
                 this.idleVideo.play();
@@ -194,6 +193,15 @@ export default class Character extends THREE.Object3D {
                 },5000);
             }
 
+            if (this.ending) {
+                let fade = {opacity: 0};
+                this.idleVideo.setOpacity(fade.opacity);
+                TweenMax.to(fade, 1.0, { opacity:1.0, onComplete: () => {
+                    this.idleVideo.pause();
+                }, onUpdate: () => {
+                    this.idleVideo.setOpacity(fade.opacity);
+                }});
+            }
 
             if (this.props.event) {
                 // for event character
@@ -234,6 +242,7 @@ export default class Character extends THREE.Object3D {
     load(ending) {
         console.log("Character " + this.props.name + ": Load");
         this.ending = ending;
+        let withWire = this.ending ? false : true;
         if (!this.done || ending) {
             if (this.props.adjustments) {
                 this.adjustments = this.props.adjustments.slice(0);
@@ -241,13 +250,15 @@ export default class Character extends THREE.Object3D {
             }
 
             if (!this.props.fullOnly) {
-                this.idleVideo.init();
+                this.idleVideo.init(withWire);
                 this.idleVideo.video.loop = true;
                 this.add(this.idleVideo.mesh);
-                this.add(this.idleVideo.wire);
+                if (this.idleVideo.wire) {
+                    this.add(this.idleVideo.wire);
+                }
             }
             
-            if (!this.props.idleOnly) {
+            if (!this.props.idleOnly && !this.ending) {
                 this.fullVideo.init();
                 this.fullVideo.mesh.visible = false;
                 this.fullVideo.wire.visible = false;
@@ -396,8 +407,7 @@ export default class Character extends THREE.Object3D {
             if (this.animation) {
                 this.animation.visible = false;
             }
-            this.idleVideo.mesh.visible = true;
-            this.idleVideo.wire.visible = true;
+            this.idleVideo.setVisible(true);
             this.idleVideo.play();
         }
         this.fullVideo.pause();
@@ -405,8 +415,7 @@ export default class Character extends THREE.Object3D {
         if (this.audio) {
             this.audio.pause();
         }
-        this.fullVideo.mesh.visible = false;
-        this.fullVideo.wire.visible = false;
+        this.fullVideo.setVisible(false);
         this.playingFull = false;
         if (this.props.subtitles) {
             this.subtitlesVideo.pause();
@@ -474,7 +483,7 @@ export default class Character extends THREE.Object3D {
         }
     }
     onCollision() {
-        //console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);
+    //    console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
         if (!this.colliding) {
             this.colliding = true;
@@ -590,12 +599,10 @@ export default class Character extends THREE.Object3D {
             if (this.idleVideo) {
                 this.idleVideo.pause();
                 if (this.idleVideo.mesh) {
-                    this.idleVideo.mesh.visible = false;
-                    this.idleVideo.wire.visible = false;
+                    this.idleVideo.setVisible(false);
                 }
             }
-            this.fullVideo.mesh.visible = true;
-            this.fullVideo.wire.visible = true;
+            this.fullVideo.setVisible(true);
 
             if (this.lastAdjustment && this.lastAdjustment.position) {
                 this.position.fromArray(this.lastAdjustment.position);

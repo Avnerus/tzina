@@ -21,7 +21,7 @@ export default [
         subtitles: null,
         gazeSpace: [-0.27,-0.21,-0.6],
         gazeOffset: [0,0,0.16],
-        endingPosition : [-1.91, 22.04, -16.18],
+        endingPosition : [4.91, 22.04, -16.18],
         endingRotation: [355, 152, 3]
     },
     {
@@ -54,7 +54,9 @@ export default [
             }
         ],
         gazeoffset: [-0.18,0.34,-0.14],
-        gazespace: [-0.52,-0.3,-0.29]
+        gazespace: [-0.52,-0.3,-0.29],
+        endingPosition : [7.91, 22.04, -16.18],
+        endingRotation: [10, 215, 12]
     },
     {
         name: 'Itzik',
@@ -85,7 +87,10 @@ export default [
             }
         ],
         gazeoffset: [-0.1,0.28,-0.04],
-        gazespace: [-0.39,-0.04,-0.21]
+        gazespace: [-0.39,-0.04,-0.21],
+        endingPosition : [8.91, 22.04, -16.18],
+        endingRotation: [10, 216, 5]
+
     },
     {
         name: 'Haim',
@@ -107,7 +112,9 @@ export default [
         space: -1.64,
         spaceOffset: [-0.11,0,0.76],
         gazeSpace: [-2.15,1.9,-0.95],
-        gazeOffset: [1.63,1.76,3.62]
+        gazeOffset: [1.63,1.76,3.62],
+        endingPosition : [4.91, 22.04, -16.18],
+        endingRotation: [313, 70, 46]
     },
     {
         name: 'Rami',
@@ -130,7 +137,9 @@ export default [
         spaceOffset: [-0.08,0,0.38],
         subtitles: false,
         gazeSpace: [-0.55,0,0],
-        gazeOffset: [0,-0.11,0.58]
+        gazeOffset: [0,-0.11,0.58],
+        endingPosition : [9.91, 22.04, -16.18],
+        endingRotation: [356, 55, 10]
     },
     {
         name: 'Meir',
@@ -153,7 +162,9 @@ export default [
         space: 0.3,
         spaceOffset: [-0.31,0,-0.28],
         gazeSpace: [-0.59,-0.13,-0.37],
-        gazeOffset: [0.19,-0.06,-0.52]
+        gazeOffset: [0.19,-0.06,-0.52],
+        endingPosition : [8.91, 22.04, -16.18],
+        endingRotation: [7, 0, 0]
     },
     {
         name: 'Sasha',
@@ -266,7 +277,9 @@ export default [
         spaceOffset: [0.06,0,0.14],
         subtitles: null,
         gazeOffset: [-0.23,0.01,0],
-        gazeSpace: [-0.28,0,-0.64]
+        gazeSpace: [-0.28,0,-0.64],
+        endingPosition : [5.91, 22.04, -16.18],
+        endingRotation: [10, 76, 350]
     },
     {
         name: 'FatmanSleep',
@@ -440,7 +453,9 @@ export default [
         animationRotation: [6,-25,9],
         subtitles: null,
         space: 0.51,
-        spaceOffset: [4.86,0,1.13]
+        spaceOffset: [4.86,0,1.13],
+        endingPosition : [6.91, 22.04, -16.18],
+        endingRotation: [40, 100, 310] //120
     },
     /*
     {
@@ -486,14 +501,16 @@ export default [
         spaceOffset: [1.58,0,-0.18], //0.88,0,0.58
         subtitles: false,
         gazeSpace: [0,0,-0.1],
-        gazeOffset: [-0.07,0.15,0.06]
-        },
+        gazeOffset: [-0.07,0.15,0.06],
+        endingPosition : [3.91, 22.04, -16.18],
+        endingRotation: [340, 72, 22]
+    },
     {
         name: 'Shirin7PM',
         basePath : 'assets/characters/shirin7pm',
         mindepth : 1214.999755859,
         maxdepth : 3681.950439453,
-        position : [9.22, 22.37, -10.86],
+        position : [9.1, 26.36, -48.81],
         rotation: [0, 0, 0],
         animation: 'Shirin',
         uvdy: 0.47509765625,
