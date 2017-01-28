@@ -138,8 +138,8 @@ export default [
         subtitles: false,
         gazeSpace: [-0.55,0,0],
         gazeOffset: [0,-0.11,0.58],
-        endingPosition : [9.91, 22.04, -16.18],
-        endingRotation: [356, 55, 10]
+        endingPosition : [12.47, 22.04, -10.08],
+        endingRotation: [356, 180, 10]
     },
     {
         name: 'Meir',
