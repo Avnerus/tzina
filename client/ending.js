@@ -22,8 +22,8 @@ export default class Ending {
             7.48
         ]
 
-        //this.CHARACTER_ORDER = ["Rami", "Meir", "Itzik", "Miriam", "Lupo5PM", "Mark", "Hannah", "Haim", "Itzhak" ]
-        this.CHARACTER_ORDER = ["Rami"];
+        this.CHARACTER_ORDER = ["Rami", "Meir", "Itzik", "Miriam", "Lupo5PM", "Mark", "Hannah", "Haim", "Itzhak" ]
+        //this.CHARACTER_ORDER = ["Rami", "Hannah"];
         
         this.nextCharacter = null;
     }
@@ -50,6 +50,13 @@ export default class Ending {
         this.spotLight.decay = 1;
         this.spotLight.penumbra = 0.8;
         this.spotLight.position.set(-6,2.4,4.14);
+
+        let textPlaneGeo = new THREE.PlaneGeometry( 512, 128 );
+        let material = new THREE.MeshBasicMaterial( {map: null, side: THREE.DoubleSide, transparent:true}  );
+        this.textPlane = new THREE.Mesh(textPlaneGeo, material);
+        this.textPlane.scale.multiplyScalar(0.013);
+        this.textPlane.rotation.y = 113 * Math.PI / 180;
+        this.textPlane.visible = false;
 
         if (this.debug) {
             let i = 0;
@@ -138,6 +145,7 @@ export default class Ending {
 
         if (this.debug) {
             DebugUtil.positionObject(this.endCredits, "End credits");
+            DebugUtil.positionObject(this.textPlane, "End text plane");
         }
 
 
@@ -165,17 +173,29 @@ export default class Ending {
         this.showingTexts = this.CHARACTER_ORDER.slice(0);
         this.showNextText();
         this.scene.add(this.spotLight);
+        this.scene.add(this.textPlane);
     }
     showNextText() {
         let nextText = this.showingTexts.shift();
         let targetCharacter = this.characterController.characters[nextText];
-        console.log("Ending - showing text", nextText,targetCharacter);
-        this.spotLight.target = targetCharacter;
-        if (this.showingTexts.length > 0) {
-            setTimeout(() => {
-                this.showNextText();
-            },4000);
-        }     }
+        let textImage = 'assets/end/' + nextText.toLowerCase() + '.png';
+
+        let loader = new THREE.TextureLoader();
+        loader.load(textImage, (texture) => {
+            this.textPlane.material.map = texture; 
+            let worldPos = new THREE.Vector3().setFromMatrixPosition(targetCharacter.matrixWorld);
+            worldPos.y += 3;
+            this.textPlane.position.copy(worldPos);
+            console.log("Ending - showing text", nextText,texture);
+            this.spotLight.target = targetCharacter;
+            this.textPlane.visible = true;
+            if (this.showingTexts.length > 0) {
+                setTimeout(() => {
+                    this.showNextText();
+                },4000);
+            }     
+        });
+    }
     fadeIn() {
         return new Promise((resolve, reject) => {
             TweenMax.to(this.fadePlane.material, 2.0, { opacity:0, onComplete: () => {
