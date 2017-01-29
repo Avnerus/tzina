@@ -3,7 +3,7 @@ import DebugUtil from './util/debug'
 import {MeshText2D, textAlign} from './lib/text2d/index'
 
 export default class Ending {
-    constructor(config, camera, timeController, characterController, scene, vrControls, square) {
+    constructor(config, camera, timeController, characterController, scene, vrControls, square, introAni) {
         this.config = config;
         this.timeController = timeController;
         this.characterController = characterController;
@@ -11,6 +11,7 @@ export default class Ending {
         this.scene = scene;
         this.vrControls = vrControls;
         this.square = square;
+        this.introAni = introAni;
 
         this.debug = true;
 
@@ -187,6 +188,9 @@ export default class Ending {
                 this.camera.position.set(0,1.2,0);
                 this.square.mesh.rotation.y = 2.7;
             }
+
+            this.introAni.createSnowParticle();
+            this.introAni.simulationShader.uniforms.squareRadius.value = 0.0;
 
 
             setTimeout(() => {
