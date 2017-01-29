@@ -1,5 +1,6 @@
 import EndCredits from './end_credits'
 import DebugUtil from './util/debug'
+import {MeshText2D, textAlign} from './lib/text2d/index'
 
 export default class Ending {
     constructor(config, camera, timeController, characterController, scene, vrControls, square) {
@@ -26,6 +27,101 @@ export default class Ending {
         //this.CHARACTER_ORDER = ["Rami", "Hannah"];
         
         this.nextCharacter = null;
+
+        this.CHARACTER_TEXTS = {
+            "Meir": [
+                "Meir tried to form a Facebook group", 
+                "against the destruction of the square.",
+                "He was very upset and worried",
+                "over the impact it will have on the area.",
+                "He continues to feed the lost pigeons."
+            ],
+            "Rami": [
+                "Rami doesn’t care too much",
+                "about the removal of the square.",
+                "He says life is always in motion,",
+                "and one shouldn’t fear that."
+            ],
+            "Miriam": [
+                "Miriam passed away",
+                "around April-May 2015.",
+                "We shot a reenactment",
+                "of a conversation with her.",
+            ],
+            "Itzik": [
+                "Itzik hopes that the demolition",
+                "will keep the junkies away.",
+                "He will likely keep sitting",
+                "on the benches in the area."
+            ],
+            "Mark": [
+                "Mark found an apartment at south Tel Aviv",
+                "and doesn’t sleep on the benches anymore.",
+                "He still use drugs and he still comes",
+                "to visit the square every week.",
+                "He was in deep grief about the demolition."
+            ],
+            "Lupo5PM": [
+                "Lupo is bored from the area",
+                "and is happy with any change",
+                "that might energizes the place.",
+                "He wished that Agam’s sculpture",
+                "would have been destroyed as well."
+            ],
+            "Hannah": [
+                "Hanna get upset every time",
+                "she is reminded over the demolishion,",
+                "since she often forgets about it."
+            ],
+            "Itzhak": [
+                "Yitzhak says that for the lack",
+                "of a better option,",
+                "he will keep coming to the square."
+            ],
+            "Haim": [
+                "Haim wished that the square",
+                "would be torn down after his death.",
+                "That did not happen. Haim is alive",
+                "and still begs at the same spot."
+            ]
+        }
+    }
+
+    generateText() {
+        let TEXT_DEFINITION = {
+             align: textAlign.center, 
+             font: '70px Miriam Libre',
+             fillStyle: '#ffffff',
+             antialias: true
+        }
+        let text = new THREE.Object3D();
+
+        text.position.set(-45.22, 14.96, 11.3);
+        text.rotation.set(
+             327 * Math.PI / 180,
+             105 * Math.PI / 180,
+             31 * Math.PI / 180
+        );
+
+        text.scale.set(0.016, 0.016, 0.016);
+
+        if (this.config.platform == "desktop") {
+        } else {
+        }
+        if (this.debug) {
+            DebugUtil.positionObject(text, "Ending character text");
+        }
+        let offset = 0;
+
+        for (let i = 0; i < 5; i++) {
+            let line = new MeshText2D("", TEXT_DEFINITION);
+            line.material.opacity = 0;
+            line.position.set(0,offset,0);
+            text.add(line);
+            offset -= 100;
+        }
+
+        return text;
     }
 
     init(loadingManager) {
@@ -51,12 +147,7 @@ export default class Ending {
         this.spotLight.penumbra = 0.8;
         this.spotLight.position.set(-6,2.4,4.14);
 
-        let textPlaneGeo = new THREE.PlaneGeometry( 512, 128 );
-        let material = new THREE.MeshBasicMaterial( {map: null, side: THREE.DoubleSide, transparent:true}  );
-        this.textPlane = new THREE.Mesh(textPlaneGeo, material);
-        this.textPlane.scale.multiplyScalar(0.013);
-        this.textPlane.rotation.y = 113 * Math.PI / 180;
-        this.textPlane.visible = false;
+        this.text = this.generateText();
 
         if (this.debug) {
             let i = 0;
@@ -85,6 +176,7 @@ export default class Ending {
         .then(() => {
             // Move to midnight
             this.timeController.jumpToTime(0);
+            this.square.suns.visible = false;
             if (this.config.platform == "vive") {
                 this.square.clockRotation = 17 * 15 * Math.PI / 180; // Best view 
             }
@@ -145,7 +237,6 @@ export default class Ending {
 
         if (this.debug) {
             DebugUtil.positionObject(this.endCredits, "End credits");
-            DebugUtil.positionObject(this.textPlane, "End text plane");
         }
 
 
@@ -173,28 +264,46 @@ export default class Ending {
         this.showingTexts = this.CHARACTER_ORDER.slice(0);
         this.showNextText();
         this.scene.add(this.spotLight);
-        this.scene.add(this.textPlane);
+        this.scene.add(this.text);
+        this.showTextLines();
     }
+    showTextLines() {
+        for (let i = 0; i < this.text.children.length; i++) {
+            TweenMax.to( this.text.children[i].material, 1, { opacity: 1});
+        }
+    }
+
+    hideTextLines() {
+        for (let i = 0; i < this.text.children.length; i++) {
+            TweenMax.to( this.text.children[i].material, 1, { opacity: 0});
+        }
+    }
+
+    setTextLines(lines) {
+        for (let i = 0; i < this.text.children.length; i++) {
+            if (i < lines.length) {
+                this.text.children[i].text = lines[i];
+            }
+            else {
+                this.text.children[i].text = "";
+            }
+        }
+    }
+
     showNextText() {
         let nextText = this.showingTexts.shift();
         let targetCharacter = this.characterController.characters[nextText];
-        let textImage = 'assets/end/' + nextText.toLowerCase() + '.png';
-
-        let loader = new THREE.TextureLoader();
-        loader.load(textImage, (texture) => {
-            this.textPlane.material.map = texture; 
-            let worldPos = new THREE.Vector3().setFromMatrixPosition(targetCharacter.matrixWorld);
-            worldPos.y += 3;
-            this.textPlane.position.copy(worldPos);
-            console.log("Ending - showing text", nextText,texture);
-            this.spotLight.target = targetCharacter;
-            this.textPlane.visible = true;
+        //this.hideTextLines();
+        this.setTextLines(this.CHARACTER_TEXTS[nextText]); 
+        console.log("Ending - showing text", nextText, this.text);
+        this.spotLight.target = targetCharacter;
+        setTimeout(() => {
             if (this.showingTexts.length > 0) {
-                setTimeout(() => {
-                    this.showNextText();
-                },4000);
-            }     
-        });
+                this.showNextText();
+            } else {
+                this.hideTextLines();
+            }
+        },10000); 
     }
     fadeIn() {
         return new Promise((resolve, reject) => {
