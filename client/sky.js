@@ -333,10 +333,10 @@ export default class Sky {
 
     getHemiLghtCorrectIntensity() {
         if (this.currentTime > 0 && this.currentTime <= 14  ) {
-            return 0.6 * (this.currentTime / 14) * (this.currentTime / 14);
+            return (0.6 * (this.currentTime / 14) * (this.currentTime / 14));
         } 
         else if (this.currentTime > 14 && this.currentTime <= 23) {
-            return 0.6 * ((23 - this.currentTime) / 9) * ((23 - this.currentTime) / 9);
+            return (0.6 * ((23 - this.currentTime) / 9) * ((23 - this.currentTime) / 9));
         }
         else {
             return 0;
