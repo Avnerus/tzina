@@ -191,6 +191,7 @@ export default class Ending {
 
             this.introAni.createSnowParticle();
             this.introAni.simulationShader.uniforms.squareRadius.value = 0.0;
+            this.introAni.fbo.particles.position.x = -38;
 
 
             setTimeout(() => {
