@@ -128,7 +128,9 @@ export default [
         position : [-17.83, 22.1, 2.69],
         rotation: [0, 132, 0],
         space: 1.2, //2
-        spaceOffset: [-0.87,0,0.92]
+        spaceOffset: [-0.87,0,0.92],
+        animationPosition: [0.49, -0.46, -0.78],
+        animationRotation: [0,-50,0]
     },
     {
         name: 'Lupo5PM',
