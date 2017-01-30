@@ -30,10 +30,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
         // setup animation sequence
         this.sequenceConfig = {
-            'Lupo12PM': [        
-                    // { time: 8, anim: ()=>{this.growSingleCactus( 0, 0xff0000 )} },                                        
-                    // { time: 13, anim: ()=>{this.growSingleCactus( 1, 0xff0000 )} },
-                    // { time: 23, anim: ()=>{this.growSingleCactus( 2 )} },
+            'Lupo12PM': [
+                    { time: 0, anim: ()=>{this.setupForDay()} },
 
                     { time: 16, anim: ()=>{this.showSculptures()} },
                     { time: 24, anim: ()=>{this.flickerSculptureTextures()} },
@@ -52,7 +50,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     { time: 135, anim: ()=>{this.connectToDogs()} },
 
                     // 215 video ends, ani 210
-                    { time: 210, anim: ()=>{this.characterDisappearDay()} }
+                    { time: 209, anim: ()=>{this.characterDisappearDay()} }
                 ],
             'Lupo5PM': [
                     { time: 0, anim: ()=>{this.setupForNight()} },
@@ -84,9 +82,9 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     //{ time: 76, anim: ()=>{this.scaleDogs(1)} },     // first time
                     //{ time: 100, anim: ()=>{this.scaleDogs(2)} },     // second time
 
-                    { time: 150, anim: ()=>{this.closeFlower()} },
-                    // 203 ends
-                    { time: 198, anim: ()=>{this.characterDisappearDay()} }
+                    { time: 120, anim: ()=>{this.closeFlower()} },
+                    // 141 ends
+                    { time: 135, anim: ()=>{this.characterDisappearDay()} }
                 ]
         };
 
@@ -104,8 +102,14 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         let modelLoader = new THREE.JSONLoader(this.loadingManager);
 
         this.dogsTobePosition = {
-            1: [-10.2, 22.54, -1.33],
-            2: [-10.69, 23.21, -1.68]
+            "desktop": {
+                1: [19.83, 22.33, 1.04],
+                2: [20.06, 22.93, 1.72]
+            },
+            "vive": {
+                1: [-10.2, 22.54, -1.33],
+                2: [-10.69, 23.21, -1.68]
+            }
         };
 
         // url + targetPosition + startPosition
@@ -339,10 +343,16 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
             this.ropeMaterial = new THREE.MeshBasicMaterial({color: 0xb30000, wireframe: true});
             this.liquidMats = [];
-            this.nightRopeTransformation = [
-                [ [-2.18, -0.57, 5.71], [0,100*Math.PI/180,0] ],
-                [ [-1.92, -0.25, 7.15], [0,88*Math.PI/180,0] ]
-            ];
+            this.nightRopeTransformation = {
+                "vive": [
+                    [ [-2.18, -0.57, 5.71], [0,100*Math.PI/180,0] ],
+                    [ [-1.92, -0.25, 7.15], [0,88*Math.PI/180,0] ]
+                ],
+                "desktop": [
+                    [ [-2.66, 0.38, 5.11], [0,339*Math.PI/180,343*Math.PI/180] ],
+                    [ [-1.7, -0.07, 5.5], [0,346*Math.PI/180,0] ]
+                ]
+            };
             this.dayRopeTransformation = [1.4, -0.7, 4.1];
             for(let i=0; i<2; i++){
                 let liquidTex = p_tex_loader.load(this.BASE_PATH + '/images/liquid_trans.png');
@@ -378,12 +388,36 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.loadingManager.itemEnd("Lupo12PMAnim");
     }
 
+    setupForDay() {
+        //console.log( "lupo12anim: " + this.parent.config.platform );
+        /*
+        if( this.parent.config.platform=="desktop" )
+        {
+            this.originalPos = this.position.clone();
+            this.originalRot = this.rotation.clone();
+
+            this.position.set(0.49, -0.46, -0.78);
+            this.rotation.y = -50 * Math.PI / 180;
+
+            // dog (-20.89, 22, 4.72)
+        }
+        */
+    }
+
     setupForNight() {
         this.lupoArt.position.set(26.52, -2, -11.21);
         this.lupoArt.scale.multiplyScalar(1.2);
+
+        var newTranData = null;
+        if( this.parent.config.platform=="desktop" ){
+            newTranData = this.nightRopeTransformation["desktop"];
+        } else {
+            newTranData = this.nightRopeTransformation["vive"];
+        }
+
         for(let i=0; i<this.ropes.length; i++){
-            this.ropes[i].position.fromArray( this.nightRopeTransformation[i][0] );
-            this.ropes[i].rotation.fromArray( this.nightRopeTransformation[i][1] );
+            this.ropes[i].position.fromArray( newTranData[i][0] );
+            this.ropes[i].rotation.fromArray( newTranData[i][1] );
         }
     }
 
@@ -446,7 +480,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         ropee.add(liquid);
         this.add(ropee);
         ropee.position.set(1.4, -0.7, 4.1);
-        // DebugUtil.positionObject(ropee, "rope"+_index);
+        //DebugUtil.positionObject(ropee, "rope"+_index);
         this.ropes.push(ropee);
     }
 
@@ -582,9 +616,18 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
     scaleDogs( times ) {
         let dogPos = new THREE.Vector3();
-        dogPos.fromArray( this.dogsTobePosition[times] );
+
+        if( this.parent.config.platform=="desktop" )
+        {
+            dogPos.fromArray( this.dogsTobePosition["desktop"][times] );
+        }
+        else
+        {
+            dogPos.fromArray( this.dogsTobePosition["vive"][times] );
+        }
+        
         let dogSize = times + 1;
-        // this.theDogs.scale.multiplyScalar( size );
+
         TweenMax.to(this.theDogs.position, 6, { x:dogPos.x, y:dogPos.y, z:dogPos.z });
         TweenMax.to(this.theDogs.scale, 6, { x:dogSize, y:dogSize, z:dogSize });
     }
@@ -852,7 +895,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
         if(this.theDogs==null){
             this.theDogs = this.characterController.characters['LupoDogs5PM'];
-            DebugUtil.positionObject(this.theDogs, "Dogs");
+            //DebugUtil.positionObject(this.theDogs, "Dogs");
         }
     }
 
