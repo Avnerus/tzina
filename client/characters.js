@@ -55,7 +55,7 @@ export default [
         ],
         gazeoffset: [-0.18,0.34,-0.14],
         gazespace: [-0.52,-0.3,-0.29],
-        endingPosition : [-1.69, 22.04, 12],
+        endingPosition : [-2, 22.04, -16.9],
         endingRotation: [0, 178, 0]
     },
     {
