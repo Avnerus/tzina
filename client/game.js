@@ -369,7 +369,7 @@ export default class Game {
                 } else {
                     
                     this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
-                    this.keyboardController.init();*/
+                    this.keyboardController.init();
                     this.vrControls.standing = true;
                 }
                     

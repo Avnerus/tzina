@@ -256,6 +256,10 @@ export default class Character extends THREE.Object3D {
                 if (this.idleVideo.wire) {
                     this.add(this.idleVideo.wire);
                 }
+
+                if (this.ending) {
+                    this.idleVideo.multiplyScale(this.props.endingScaleMul);
+                }
             }
             
             if (!this.props.idleOnly && !this.ending) {

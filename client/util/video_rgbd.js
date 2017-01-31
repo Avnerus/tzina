@@ -293,6 +293,12 @@ export default class VideoRGBD  {
             this.wire.scale.set(scale, scale, scale);
         }
     }
+    multiplyScale(scalar) {
+        this.mesh.scale.multiplyScalar(scalar);
+        if (this.wire) {
+            this.wire.scale.multiplyScalar(scalar);
+        }
+    }
     setVisible(visible) {
         if (this.mesh) {
             this.mesh.visible = visible;
