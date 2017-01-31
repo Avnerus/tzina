@@ -26,6 +26,7 @@ export default class Ending {
 
         this.CHARACTER_ORDER = ["Rami", "Meir", "Itzik", "Miriam", "Lupo5PM", "Mark", "Hannah", "Haim", "Itzhak" ]
         //this.CHARACTER_ORDER = ["Rami", "Hannah"];
+        //this.CHARACTER_ORDER = ["Miriam"];
         
         this.nextCharacter = null;
 
@@ -132,6 +133,15 @@ export default class Ending {
         this.fadePlane.position.set(0, 0, -0.1001);
         //DebugUtil.positionObject(this.fadePlane, "Ending Fade plane");
         //events.emit("add_gui", {folder: "Ending Fade plane", step: 0.01, listen: true} ,this.fadePlane.material, "opacity", 0, 1);
+
+        let miriamGeo = new THREE.PlaneGeometry( 512, 1024 );
+        new THREE.TextureLoader(loadingManager).load('assets/end/miriam.png', (texture) => {
+            let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
+            this.miriamPlane = new THREE.Mesh(miriamGeo, material);
+            this.miriamPlane.position.set(610,-73,24);
+            this.miriamPlane.scale.set(0.83, 0.83, 0.83);
+            DebugUtil.positionObject(this.miriamPlane, "Miriam image", false, -1000, 1000);
+        });
 
         events.on("vr_start", () => {
             console.log("Into VR Start!");
@@ -302,7 +312,15 @@ export default class Ending {
         this.setTextLines(this.CHARACTER_TEXTS[nextText]); 
         console.log("Ending - showing text", nextText, this.text);
         this.spotLight.target = targetCharacter;
+        targetCharacter.idleVideo.play();
+        if (nextText == "Miriam") {
+            this.text.add(this.miriamPlane);
+        }
         setTimeout(() => {
+            targetCharacter.idleVideo.pause();
+            if (nextText == "Miriam") {
+                this.text.remove(this.miriamPlane);
+            }
             if (this.showingTexts.length > 0) {
                 this.showNextText();
             } else {
