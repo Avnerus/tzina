@@ -69,7 +69,7 @@ export default class Instructions {
         if (this.config.skipInstructions) {
             console.log("Instructions skipping");
             if (this.config.platform == "vive") {
-                events.emit("delayed_rotation");
+                events.emit("delayed_rotation", true);
             }
             this.square.extras.showExtras();
             events.emit("instructions_end");
@@ -122,7 +122,7 @@ export default class Instructions {
                     this.currentLine++;
                     if (this.currentLine == 3 && this.config.platform == "vive") {
                         setTimeout(() => {
-                            events.emit("delayed_rotation");
+                            events.emit("delayed_rotation", false);
                         },4000);
                     }
                     if (this.currentLine < this.lines.length) {

@@ -327,14 +327,14 @@ export default class Square extends THREE.Object3D{
             }
         });
 
-        events.on("delayed_rotation", () => {
-            this.delayedRotation();
+        events.on("delayed_rotation", (skip = false) => {
+            this.delayedRotation(skip);
         })
     }
 
-    delayedRotation() {
+    delayedRotation(skip) {
         console.log("Instructions delayed rotation");
-        TweenMax.to(this, 32, {ease: Power1.easeInOut, clockRotation: this.delayedRotationY, onComplete: () => {
+        TweenMax.to(this, skip ? 0 : 32, {ease: Power1.easeInOut, clockRotation: this.delayedRotationY, onComplete: () => {
             events.emit("angle_updated", this.delayedRotationY / 15);
         }, onUpdate: () => {}});
     }

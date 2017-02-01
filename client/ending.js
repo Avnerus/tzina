@@ -1,6 +1,7 @@
 import EndCredits from './end_credits'
 import DebugUtil from './util/debug'
-import {MeshText2D, textAlign} from './lib/text2d/index'
+import MultilineText from './util/multiline_text'
+import {textAlign} from './lib/text2d/index'
 
 export default class Ending {
     constructor(config, camera, timeController, characterController, scene, vrControls, square, introAni) {
@@ -96,7 +97,7 @@ export default class Ending {
              fillStyle: '#ffffff',
              antialias: true
         }
-        let text = new THREE.Object3D();
+        let text = new MultilineText(5, TEXT_DEFINITION, 100);
 
         text.position.set(-45.22, 14.96, 11.3);
         text.rotation.set(
@@ -113,15 +114,9 @@ export default class Ending {
         if (this.debug) {
             DebugUtil.positionObject(text, "Ending character text");
         }
-        let offset = 0;
 
-        for (let i = 0; i < 5; i++) {
-            let line = new MeshText2D("", TEXT_DEFINITION);
-            line.material.opacity = 0;
-            line.position.set(0,offset,0);
-            text.add(line);
-            offset -= 100;
-        }
+        text.init();
+        text.hide(0);
 
         return text;
     }
@@ -280,36 +275,14 @@ export default class Ending {
         this.showNextText();
         this.scene.add(this.spotLight);
         this.scene.add(this.text);
-        this.showTextLines();
-    }
-    showTextLines() {
-        for (let i = 0; i < this.text.children.length; i++) {
-            TweenMax.to( this.text.children[i].material, 1, { opacity: 1});
-        }
-    }
-
-    hideTextLines() {
-        for (let i = 0; i < this.text.children.length; i++) {
-            TweenMax.to( this.text.children[i].material, 1, { opacity: 0});
-        }
-    }
-
-    setTextLines(lines) {
-        for (let i = 0; i < this.text.children.length; i++) {
-            if (i < lines.length) {
-                this.text.children[i].text = lines[i];
-            }
-            else {
-                this.text.children[i].text = "";
-            }
-        }
+        this.text.show(1);
     }
 
     showNextText() {
         let nextText = this.showingTexts.shift();
         let targetCharacter = this.characterController.characters[nextText];
         //this.hideTextLines();
-        this.setTextLines(this.CHARACTER_TEXTS[nextText]); 
+        this.text.setText(this.CHARACTER_TEXTS[nextText]); 
         console.log("Ending - showing text", nextText, this.text);
         this.spotLight.target = targetCharacter;
         targetCharacter.idleVideo.play();
@@ -324,7 +297,7 @@ export default class Ending {
             if (this.showingTexts.length > 0) {
                 this.showNextText();
             } else {
-                this.hideTextLines();
+                this.text.hide(1);
             }
         },10000); 
     }
