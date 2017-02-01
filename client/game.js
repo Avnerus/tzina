@@ -372,9 +372,12 @@ export default class Game {
                     this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                     this.keyboardController.init();
                 } else {
+                    
+                    this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+                    this.keyboardController.init();
                     this.vrControls.standing = true;
                 }
-                    /*
+                    
                 // this.vrControls.scale = 1.5;
 
                 // --- hide by laura --- start
@@ -473,6 +476,7 @@ export default class Game {
 
     endCheck(time) {
         if (!this.ended && time > 60 * 15) {
+        //if (!this.ended && time > 60 * 0.4) {
             this.ended = true;
             this.ending.start();
         }

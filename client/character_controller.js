@@ -103,20 +103,20 @@ export default class CharacterController {
         });
     }
 
-    addCharacter(characterName) {
+    addCharacter(characterName, ending = false) {
         if (this.characters[characterName] && !this.characters[characterName].done) {
             console.log("Adding character " + characterName);
             let character = this.characters[characterName];
             this.activeCharacters.push(character);
             this.square.clockwork.add(character);
             if (this.debug) {
-                DebugUtil.positionObject(character, character.props.name, false, -40, 40, character.props.rotation);
+                DebugUtil.positionObject(character, character.props.name, false, -50, 50, character.props.rotation);
                     /*
                 let bbox = new THREE.BoundingBoxHelper( character, 0x00ffff  );
                 bbox.update();
                 this.square.parent.add( bbox );*/
             }
-            character.load();
+            character.load(ending);
             character.play();
         }
     }
