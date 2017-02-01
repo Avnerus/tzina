@@ -1,4 +1,6 @@
 import DebugUtil from '../util/debug'
+import MultilineText from '../util/multiline_text'
+import {textAlign} from '../lib/text2d/index'
 
 export default class Agam12PMAnimation extends THREE.Object3D {
     constructor( square ) {
@@ -7,20 +9,51 @@ export default class Agam12PMAnimation extends THREE.Object3D {
 
         this.square = square;
         this.didInit = false;
+
+        this.INTRO_TEXT = [
+            "Yaakov Agam, 89 years old.",
+            "The godfather of Kinetic art and one of the first",
+            "who asked the viewer to participate.",
+            "This fountain, \“Water and Fire\”, is a piece that",
+            "represents the core of his philosophy."
+        ]
     }
 
     init(loadingManager) {
         if (!this.didInit) {
             this.loadingManager = loadingManager;
             this.setupAnim();
+
+            // Intro text
+            this.text = this.generateText();
+            this.text.setText(this.INTRO_TEXT);
+            this.add(this.text);
+            DebugUtil.positionObject(this.text, "Agam text");
+
             this.didInit = true;
         }
+    }
+
+    generateText() {
+        let TEXT_DEFINITION = {
+             align: textAlign.center, 
+             font: '70px Miriam Libre',
+             fillStyle: '#33e5ab',
+             antialias: true,
+             shadow: true
+        }
+        let text = new MultilineText(5, TEXT_DEFINITION, 100);
+        text.init();
+
+        text.position.set(5,5,0);
+        text.scale.set(0.008,0.008,0.008);
+        
+        return text;
     }
 
     setupAnim() {
 
         // setup animation sequence
-        console.log("AGAM12PM setupanim");
         this.animStart = false;
         this.sequenceConfig = [
             { time: 15,  anim: ()=>{this.firstAni()} }

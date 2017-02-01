@@ -14,7 +14,6 @@ export default class MultilineText extends THREE.Object3D  {
 
         for (let i = 0; i < this.numLines; i++) {
             let line = new MeshText2D("", this.textDefinition);
-            line.material.opacity = 0;
             line.position.set(0,offset,0);
             this.add(line);
             offset -= this.lineOffset;
