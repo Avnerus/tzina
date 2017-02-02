@@ -37,7 +37,7 @@ export default class Agam12PMAnimation extends THREE.Object3D {
     generateText() {
         let TEXT_DEFINITION = {
              align: textAlign.center, 
-             font: '70px Miriam Libre',
+             font: '120px Miriam Libre',
              fillStyle: '#33e5ab',
              antialias: true,
              shadow: true
@@ -45,7 +45,7 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         let text = new MultilineText(5, TEXT_DEFINITION, 100);
         text.init();
 
-        text.position.set(5,5,0);
+        text.position.set(-9.9,5.35,-8.78);
         text.scale.set(0.008,0.008,0.008);
         
         return text;
