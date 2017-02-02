@@ -217,6 +217,7 @@ export default class Character extends THREE.Object3D {
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {
                     console.log(this.props.name, "Character video ended");
+                    /*
                     this.idleVideo.pause();
                     this.idleVideo.unload();
                     this.soundManager.panorama.detach(this.audio);
@@ -225,7 +226,7 @@ export default class Character extends THREE.Object3D {
                     this.remove(this.idleVideo);
                     if (this.animation) {
                         this.remove(this.animation);
-                    }
+                    }*/
                     this.done = true;
                     events.emit("character_idle", this.props.name)
                     events.emit("character_ended", this.props.name)
@@ -374,7 +375,6 @@ export default class Character extends THREE.Object3D {
     }
 
     endFull() {
-        /*
         console.log(this.props.name, "Video end full");
         this.fullVideo.pause();
         this.fullVideo.unload();
@@ -402,7 +402,7 @@ export default class Character extends THREE.Object3D {
         this.isPaused = false;
         this.done = true;
         events.emit("character_idle", this.props.name)
-        events.emit("character_ended", this.props.name)*/
+        events.emit("character_ended", this.props.name)
     }
 
 
