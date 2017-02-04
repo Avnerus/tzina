@@ -31,9 +31,9 @@ export default class HaimAnimation extends THREE.Object3D {
             { time: 12,  anim: ()=>{this.tubeDown(1)} },    // 12
             { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
 
-            { time: 180,  anim: ()=>{this.skyLightDarken()} },
-            { time: 212,  anim: ()=>{this.skyLightPurple()} },
-            { time: 245,  anim: ()=>{this.skyLightBack()} },
+            { time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
+            { time: 212,  anim: ()=>{this.skyLightPurple()} }, //212
+            { time: 246,  anim: ()=>{this.skyLightBack()} },
 
             { time: 252, anim: ()=>{this.characterDisappear()} }    //252
         ];
@@ -574,14 +574,15 @@ export default class HaimAnimation extends THREE.Object3D {
         this.oriDir = this.sky.getDirLghtOriStatus();
         this.sky.pauseUpdateHemiLight();
 
-        TweenMax.to( this.sky.dirLight, 4, {intensity: 0.4});
+        TweenMax.to( this.sky.dirLight, 2, {intensity: 0.2});
+        TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.2});
     }
 
     skyLightPurple() {
-        TweenMax.to( this.sky.dirLight, 3, {intensity: 0.2});
-        TweenMax.to( this.sky.hemiLight, 3, {intensity: 0.7});
-        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.078, g:0.29, b:0.404 } );
-        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.322, g:0.063, b:0.231 } );
+        TweenMax.to( this.sky.dirLight, 2, {intensity: 0.0});
+        TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.7});
+        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
+        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.32, g:0.063, b:0.29 } ); // #52104b
     }
 
     skyLightBack() {
