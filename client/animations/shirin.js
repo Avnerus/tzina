@@ -14,6 +14,8 @@ export default class ShirinAnimation extends THREE.Object3D {
     }
 
     init(loadingManager) {
+        this.callbackAfterLoaded = true;
+
         this.initialized = true;
         this.loadingManager = loadingManager;
         this.setupAnim();
@@ -131,8 +133,16 @@ export default class ShirinAnimation extends THREE.Object3D {
         let moonMat = new THREE.MeshPhongMaterial({map: moonTexture, normalMap: moonNRMTexture});
         this.moon = new THREE.Mesh(new THREE.SphereGeometry(20, 32, 32), moonMat);
         this.moon.rotation.set(Math.PI/2, Math.PI/2, Math.PI/2);
-        this.moon.position.y = 200;
+        // MOON location
+            // console.log(this.parent);
+            // if( this.parent.config.platform=="desktop" ){
+            //     this.moon.position.y = 200;
+            // } else {
+            //     this.moon.position.set(500,690,500);
+            //     this.moon.scale.set(4,4,4);
+            // }
         this.add( this.moon );
+        //DebugUtil.positionObject(this.moon, "moon");
 
         //
         let cocoonTexFiles = [ this.BASE_PATH + "/images/seamless_circle.png",
@@ -515,6 +525,15 @@ export default class ShirinAnimation extends THREE.Object3D {
     transY(geo, n){
         for(let i=0; i<geo.vertices.length; i++){
             geo.vertices[i].y += n;
+        }
+    }
+
+    afterLoaded() {
+        if( this.parent.config.platform=="desktop" ){
+            this.moon.position.y = 200;
+        } else {
+            this.moon.position.set(500,690,500);
+            this.moon.scale.set(4,4,4);
         }
     }
 

@@ -295,6 +295,7 @@ export default class Character extends THREE.Object3D {
 
             if (this.animation) {
                 this.add(this.animation);
+                if(this.animation.callbackAfterLoaded) this.animation.afterLoaded();
 
                 this.animation.scale.set(this.props.animationScale,this.props.animationScale,this.props.animationScale);
                 this.animation.position.fromArray(this.props.animationPosition);
