@@ -118,4 +118,15 @@ export default class Extras extends THREE.Object3D {
             }
         }  
     }
+
+    hideExtras() {
+        this.currentExtras.forEach((extra) => {
+            extra.mesh.material.opacity = 0;
+        });
+    }
+    showExtras() {
+        this.currentExtras.forEach((extra) => {
+            TweenMax.to( extra.mesh.material, 1, { opacity: 1});
+        });
+    }
 }

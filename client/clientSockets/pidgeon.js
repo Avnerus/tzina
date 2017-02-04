@@ -36,7 +36,7 @@ export default class Pidgeon extends THREE.Object3D{
     }else{
       this.blendMesh.applyNewDiffuse(loadedSkinTexture);
     }
-    this.FLOORY=13.85;
+    this.FLOORY=13.85 - 12.8;
     events.emit("add_gui", {folder: "Pidgeon Floor Y", listen: true, step: 0.01}, this, "FLOORY");
     this.add( this.blendMesh );
     // this.blendMesh.position.y=-1;

@@ -6,15 +6,15 @@ import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class HaimAnimation extends THREE.Object3D {
-    constructor( renderer ) {
+    constructor( renderer, sky ) {
         super();
         this.BASE_PATH = 'assets/animations/haim';
+        this.sky = sky;
     }
 
     init(loadingManager) {
         this.loadingManager = loadingManager;
         this.setupAnim();
-
         //DebugUtil.positionObject(this, "Haim Ani");
     }
 
@@ -30,6 +30,11 @@ export default class HaimAnimation extends THREE.Object3D {
             { time: 2,  anim: ()=>{this.bagOn()} },
             { time: 12,  anim: ()=>{this.tubeDown(1)} },    // 12
             { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
+
+            { time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
+            { time: 212,  anim: ()=>{this.skyLightPurple()} }, //212
+            { time: 246,  anim: ()=>{this.skyLightBack()} },
+
             { time: 252, anim: ()=>{this.characterDisappear()} }    //252
         ];
         this.nextAnim = null;
@@ -562,6 +567,44 @@ export default class HaimAnimation extends THREE.Object3D {
                         } } );
                     }
                } });
+    }
+
+    skyLightDarken() {
+        this.oriHemi = this.sky.getHemiLghtOriStatus();
+        this.oriDir = this.sky.getDirLghtOriStatus();
+        this.sky.pauseUpdateHemiLight();
+
+        TweenMax.to( this.sky.dirLight, 2, {intensity: 0.2});
+        TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.2});
+    }
+
+    skyLightPurple() {
+        TweenMax.to( this.sky.dirLight, 2, {intensity: 0.0});
+        TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.7});
+        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
+        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.32, g:0.063, b:0.29 } ); // #52104b
+    }
+
+    skyLightBack() {
+        let hemiTargetIntensity = this.sky.getHemiLghtCorrectIntensity();
+        TweenMax.to( this.sky.hemiLight, 3, {intensity: hemiTargetIntensity});
+        TweenMax.to( this.sky.dirLight, 3, {
+            intensity: this.oriDir.intensity,
+            onComplete:()=>{
+                this.sky.resumeUpdateHemiLight();
+            }
+        });
+
+        TweenMax.to( this.sky.hemiLight.color, 2, { 
+            r:this.oriHemi.color.r,
+            g:this.oriHemi.color.g,
+            b:this.oriHemi.color.b
+        } );
+        TweenMax.to( this.sky.hemiLight.groundColor, 2, {
+            r:this.oriHemi.groundColor.r,
+            g:this.oriHemi.groundColor.g,
+            b:this.oriHemi.groundColor.b
+        } );
     }
 
     characterDisappear() {

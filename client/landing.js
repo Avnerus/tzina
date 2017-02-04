@@ -618,7 +618,7 @@ if (!Modernizr.touchevents && lock.available()) {
           }, camera);
 
             // load & add the trees
-            trees = new Trees(camera, renderer);
+            trees = new Trees(config, camera, renderer);
             trees.init(loadingManager)
             .then(() => {
                 scene.add(trees);

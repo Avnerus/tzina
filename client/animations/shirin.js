@@ -14,6 +14,8 @@ export default class ShirinAnimation extends THREE.Object3D {
     }
 
     init(loadingManager) {
+        this.callbackAfterLoaded = true;
+
         this.initialized = true;
         this.loadingManager = loadingManager;
         this.setupAnim();
@@ -41,8 +43,9 @@ export default class ShirinAnimation extends THREE.Object3D {
                 { time: 8,  anim: ()=>{this.stopFragment(1)} }
             ],
             'Shirin7PM': [
-                { time: 5, anim: ()=>{this.crackCocoon(2)} }
-                //{ time: 8,  anim: ()=>{this.stopFragment(2)} }
+                { time: 5, anim: ()=>{this.crackCocoon(2)} },
+                { time: 6, anim: ()=>{this.dropShirin()} },
+                { time: 76,  anim: ()=>{this.stopFragment(2)} }
             ]
         };
         // v.1
@@ -124,6 +127,24 @@ export default class ShirinAnimation extends THREE.Object3D {
             this.createCandyAnimation();
         });
 
+        // MOON
+        let moonTexture = tex_loader.load( this.BASE_PATH + "/images/moon.jpg" );
+        let moonNRMTexture = tex_loader.load( this.BASE_PATH + "/images/moonNormal.jpg" );
+        let moonMat = new THREE.MeshPhongMaterial({map: moonTexture, normalMap: moonNRMTexture});
+        this.moon = new THREE.Mesh(new THREE.SphereGeometry(20, 32, 32), moonMat);
+        this.moon.rotation.set(Math.PI/2, Math.PI/2, Math.PI/2);
+        // MOON location
+            // console.log(this.parent);
+            // if( this.parent.config.platform=="desktop" ){
+            //     this.moon.position.y = 200;
+            // } else {
+            //     this.moon.position.set(500,690,500);
+            //     this.moon.scale.set(4,4,4);
+            // }
+        this.add( this.moon );
+        //DebugUtil.positionObject(this.moon, "moon");
+
+        //
         let cocoonTexFiles = [ this.BASE_PATH + "/images/seamless_circle.png",
                                this.BASE_PATH + "/images/seamless_color_noise.jpg",
                                this.BASE_PATH + "/images/seamless_curvy.jpg",
@@ -285,7 +306,7 @@ export default class ShirinAnimation extends THREE.Object3D {
                     value: [0,1,1,1,0]
                 },
                 size: {
-                    value: [0.025, 0.5, 0.5, 0.5, .2], // 0.1,5,5,5,3    // 0.1,1,1,1,.5
+                    value: [0.02, 0.3, 0.3, 0.3, .2], // 0.1,5,5,5,3    // 0.1,1,1,1,.5
                     spread: 0.5 // 2
                 },
                 particleCount: 60 //20
@@ -477,6 +498,18 @@ export default class ShirinAnimation extends THREE.Object3D {
         } 
     }
 
+    dropShirin() {
+        TweenMax.to(this.parent.fullVideo.mesh.position, 1.5, { ease: Bounce.easeOut, y:"-=2" });
+        TweenMax.to(this.parent.fullVideo.wire.position, 1.5, { ease: Bounce.easeOut, y:"-=2" });
+        TweenMax.to(this.parent.fullVideo.mesh.scale, 2, { x:this.oriShirinScale, y:this.oriShirinScale, z:this.oriShirinScale });
+        TweenMax.to(this.parent.fullVideo.wire.scale, 2, { x:this.oriShirinScale, y:this.oriShirinScale, z:this.oriShirinScale,
+            onComplete: ()=>{
+                this.parent.fullVideo.play();
+            }
+        });
+
+    }
+
     transX(geo, n){
         for(let i=0; i<geo.vertices.length; i++){
             geo.vertices[i].x += n;
@@ -492,6 +525,15 @@ export default class ShirinAnimation extends THREE.Object3D {
     transY(geo, n){
         for(let i=0; i<geo.vertices.length; i++){
             geo.vertices[i].y += n;
+        }
+    }
+
+    afterLoaded() {
+        if( this.parent.config.platform=="desktop" ){
+            this.moon.position.y = 200;
+        } else {
+            this.moon.position.set(500,690,500);
+            this.moon.scale.set(4,4,4);
         }
     }
 
@@ -518,12 +560,20 @@ export default class ShirinAnimation extends THREE.Object3D {
 
         if(time == "Shirin7PM"){
             var newEPos = this.particleGroup.emitters[2].position.value;
-            newEPos.y -= 25;
+            newEPos.y -= 28;
             this.particleGroup.emitters[2].position.value = newEPos;
-            this.particleGroup.emitters[2].acceleration.value = new THREE.Vector3(0,1,0);
-            this.particleGroup.emitters[2].acceleration.spread = new THREE.Vector3(.5,1,.5);
+            this.particleGroup.emitters[2].acceleration.value = new THREE.Vector3(0,0.7,0);
+            this.particleGroup.emitters[2].acceleration.spread = new THREE.Vector3(.8,1,.8);
             //value: new THREE.Vector3(0,-2,0), //0,-.4,0
             //spread: new THREE.Vector3(.1,1,.1)
+
+            // transforming video
+            this.oriShirinScale = this.parent.fullVideo.mesh.scale.x;
+            this.parent.fullVideo.setScale(this.oriShirinScale * 0.01);
+            this.parent.fullVideo.pause();
+            this.parent.fullVideo.mesh.position.y += 2;
+            this.parent.fullVideo.wire.position.y += 2;
+
         } else {
             // unhidden the cocoons
             for(var i=0; i<this.cocoonGroup.children.length; i++){

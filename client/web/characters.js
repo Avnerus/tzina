@@ -25,11 +25,21 @@ export default [
     },
     {
         name: 'Itzik',
-        position : [-6.08, 21.9, 10.8],
-        rotation: [10, 216, 5],
+        position : [-6.58,  22.06, 11.01], //-6.08, 21.9, 10.8
+        rotation: [9, 208, 3.6],
         space: 1, //anim:1.46
         spaceOffset: [0.02,0.59,-0.65], //0.28,0.73,1.73
-        gazeOffset: [0.14,0.25,0.47]
+        gazeOffset: [0.14,0.25,0.47],
+        adjustments : [
+            {
+                sec: 0,
+                mindepth : 0,
+                maxdepth : 3494.158935547,
+                position : [-6.58,  22.06, 11.01],
+                rotation: [9, 208, 3.6],
+                scale: 0.0027 * 0.4686
+            }
+        ]
     },
     {
         name: 'Haim',
@@ -115,10 +125,12 @@ export default [
     },
     {
         name: 'Lupo12PM',
-        position : [22.74, 21.9, 15.5],
-        rotation: [351, 342, 360],
+        position : [-17.83, 22.1, 2.69],
+        rotation: [0, 132, 0],
         space: 1.2, //2
-        spaceOffset: [-0.87,0,0.92]
+        spaceOffset: [-0.87,0,0.92],
+        animationPosition: [0.49, -0.46, -0.78],
+        animationRotation: [0,-50,0]
     },
     {
         name: 'Lupo5PM',

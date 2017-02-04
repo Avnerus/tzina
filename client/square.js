@@ -19,7 +19,7 @@ const GROUND_PATH = "assets/square/squareRamp_22.json"
 let SUN_LOADER_TIME = 3;
 
 export default class Square extends THREE.Object3D{
-    constructor(collisionManager, renderer, camera, config, soundManager, scene, extras) {
+    constructor(collisionManager, renderer, camera, config, soundManager, scene, extras, sky) {
         super();
         console.log("Square constructed!")
 
@@ -29,6 +29,7 @@ export default class Square extends THREE.Object3D{
         this.camera = camera;
         this.scene = scene;
         this.extras = extras;
+        this.sky = sky;
 
         this.debug = false;
 
@@ -281,8 +282,8 @@ export default class Square extends THREE.Object3D{
             //events.emit("add_gui",{}, obj.position, "y"); 
             //events.emit("add_gui", obj.position, "z");
            // events.emit("add_gui", {step: 0.01} ,obj.rotation, "y", 0, 2 * Math.PI);
-            events.emit("add_gui",{folder: "Clockwork rotation", listen: true, step: 0.001}, this.clockwork.rotation, "y"); 
-            events.emit("add_gui",{folder: "Square rotation", listen: true, step: 0.001}, this.mesh.rotation, "y"); 
+//events.emit("add_gui",{folder: "Clockwork rotation", listen: true, step: 0.001}, this.clockwork.rotation, "y"); 
+//events.emit("add_gui",{folder: "Square rotation", listen: true, step: 0.001}, this.mesh.rotation, "y"); 
 
         });
 
@@ -323,9 +324,19 @@ export default class Square extends THREE.Object3D{
                 setTimeout(() => {
                     events.emit("angle_updated");
                 },0)
-
             }
         });
+
+        events.on("delayed_rotation", (skip = false) => {
+            this.delayedRotation(skip);
+        })
+    }
+
+    delayedRotation(skip) {
+        console.log("Instructions delayed rotation");
+        TweenMax.to(this, skip ? 0 : 32, {ease: Power1.easeInOut, clockRotation: this.delayedRotationY, onComplete: () => {
+            events.emit("angle_updated", this.delayedRotationY / 15);
+        }, onUpdate: () => {}});
     }
 
     clockworkShift() {
@@ -333,7 +344,8 @@ export default class Square extends THREE.Object3D{
         this.activeClockwork = this.clockwork;
         //THREE.SceneUtils.detach(this.clockwork, this.mesh, this.scene);
         this.clockworkOffset.rotation.y = -105 * Math.PI / 180;
-        this.clockwork.rotation.y = this.mesh.rotation.y;
+        this.clockwork.rotation.y = this.mesh.rotation.y - 135 * Math.PI / 180;
+        this.delayedRotationY = this.mesh.rotation.y;
         this.mesh.rotation.set(0,0,0);
         //THREE.SceneUtils.attach(this.clockwork, this.scene, this.mesh);
     }

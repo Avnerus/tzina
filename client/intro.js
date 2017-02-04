@@ -17,7 +17,6 @@ export default class Intro {
         this.config = config;
         this.introAni = introAni;
 
-        this.credits = this.config.language == "eng" ? Credits : CreditsHeb;
 
         this.soundEvents = [
             {
@@ -41,7 +40,6 @@ export default class Intro {
         ]
 
         
-        this.INTRO_SOUND = this.config.language == "eng" ? 'assets/sound/INTRO_Shirin.ogg': 'assets/sound/INTRO_Shirin_heb.ogg';
         this.LOGO_PATH = 'assets/intro/logo/logo.json';
 
         this.STARTING_POSITION = new THREE.Vector3(
@@ -71,6 +69,8 @@ export default class Intro {
             this.titlePlane.position.y = 400;
         });*/
 
+        this.INTRO_SOUND = this.config.language == "eng" ? 'assets/sound/INTRO_Shirin.ogg': 'assets/sound/INTRO_Shirin_heb.ogg';
+        this.credits = this.config.language == "eng" ? Credits : CreditsHeb;
 
         let CREDIT_TEXT_TITLE = {
              align: textAlign.center, 
@@ -175,7 +175,7 @@ export default class Intro {
         this.square.scale.set(0.013, 0.013, 0.013);
 
 
-        DebugUtil.positionObject(this.square, "Square",true);
+        //DebugUtil.positionObject(this.square, "Square",true);
         if (inVR) {
             let squarePosition = new THREE.Vector3().copy(this.STARTING_POSITION).multiplyScalar(-1.0);
             this.square.position.copy(squarePosition);
@@ -275,6 +275,7 @@ export default class Intro {
                 return this.fadeOut()
                 .then(() => {
                     this.enterSquare();                    
+                    this.square.extras.hideExtras();
                 });
                 },speed3)
         });

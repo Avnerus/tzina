@@ -42,7 +42,7 @@ export default {
         }, object.angleRotation, "z", 0, 360);
 
         object.global = object.scale.x;
-        events.emit("add_gui", {folder:name + " - Scale", listen: listen, step: 0.001, onChange: () => {
+        events.emit("add_gui", {folder:name + " - Scale", listen: listen, step: 0.00001, onChange: () => {
            object.scale.set(object.global, object.global, object.global);
         }}, object, "global",0,4); 
 

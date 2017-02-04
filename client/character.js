@@ -140,8 +140,8 @@ export default class Character extends THREE.Object3D {
                 }
             });
 
-            events.on("control_threshold", (passed) => {
-                this.inControl = passed;
+            events.on("control_threshold", () => {
+                this.inControl = true;
                 setTimeout(() => {
                     if (this.onHold && this.active && !this.inShow) {
                         if (!this.props.fullOnly) {
@@ -217,6 +217,7 @@ export default class Character extends THREE.Object3D {
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {
                     console.log(this.props.name, "Character video ended");
+                    /*
                     this.idleVideo.pause();
                     this.idleVideo.unload();
                     this.soundManager.panorama.detach(this.audio);
@@ -225,7 +226,7 @@ export default class Character extends THREE.Object3D {
                     this.remove(this.idleVideo);
                     if (this.animation) {
                         this.remove(this.animation);
-                    }
+                    }*/
                     this.done = true;
                     events.emit("character_idle", this.props.name)
                     events.emit("character_ended", this.props.name)
@@ -294,6 +295,7 @@ export default class Character extends THREE.Object3D {
 
             if (this.animation) {
                 this.add(this.animation);
+                if(this.animation.callbackAfterLoaded) this.animation.afterLoaded();
 
                 this.animation.scale.set(this.props.animationScale,this.props.animationScale,this.props.animationScale);
                 this.animation.position.fromArray(this.props.animationPosition);

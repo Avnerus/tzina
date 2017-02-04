@@ -18,6 +18,7 @@ import CharacterController from './character_controller'
 import Show from './show'
 import Extras from './extras'
 import SunGazer from './sun_gazer'
+import Instructions from './instructions';
 
 import DebugUtil from './util/debug'
 
@@ -142,16 +143,14 @@ export default class Game {
 
         this.extras = new Extras(this.config, this.camera, this.renderer);
 
+        this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
+
         // Square
-        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene, this.extras);
+        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene, this.extras, this.sky);
 
         // Sun gazer
         this.sunGazer = new SunGazer(this.square, this.soundManager, this.collisionManager);
         this.sunGazer.init();
-
-
-
-        this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
 
         this.flood = new Flood();
@@ -182,10 +181,10 @@ export default class Game {
             this.animations = {
                 'Hannah' : new HannahAnimation(),
                 'Miriam' : new MiriamAnimation(this.renderer),
-                'Haim' : new HaimAnimation(this.renderer),
+                'Haim' : new HaimAnimation(this.renderer, this.sky),
                 'Itzik' : new ItzikAnimation(),
                 'Meir' : new MeirAnimation(),
-                'Mark' : new MarkAnimation(),
+                'Mark' : new MarkAnimation(this.sky),
                 'Agam12PM' : new Agam12PMAnimation(this.square),
                 'Lupo12PM' : new Lupo12PMAnimation(),
                 'Itzhak' : new ItzhakAnimation(),
@@ -203,6 +202,9 @@ export default class Game {
 
         this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config, this.introAni);
+
+
+        this.instructions = new Instructions(this.config, this.camera, this.square);
 
         // laura: i don't know other better way to do this..
         if (!this.config.noAnimations) {
@@ -230,8 +232,7 @@ export default class Game {
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
 
-        this.show = new Show(this.square, this.characterController, this.timeController); 
-        this.show.init();
+        this.show = new Show(this.square, this.characterController, this.timeController, this.soundManager); 
 
         this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni);
         this.ending.init();
@@ -249,7 +250,6 @@ export default class Game {
             if (!this.config.noSquare) {
                 this.scene.add(this.square);
                 this.sky.applyToMesh(this.square.getSphereMesh());
-                // this.introAni.initFBOParticle();
                 this.introAni.createSnowParticle();
                 this.scene.add(this.introAni);
             }
@@ -285,6 +285,8 @@ export default class Game {
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
+        this.show.init();
+        this.instructions.init();
         
         VideoRGBD.initPool();
 
@@ -344,6 +346,9 @@ export default class Game {
                 this.soundManager.play("ambience");
                 this.introAni.disposeAni();
                 this.square.add(this.flood); 
+                setTimeout(() => {
+                    this.instructions.start();
+                },2000);
             }
         });
             /*
@@ -470,8 +475,8 @@ export default class Game {
     }
 
     endCheck(time) {
-        //if (!this.ended && time > 60 * 15) {
-        if (!this.ended && time > 60 * 0.4) {
+        if (!this.ended && time > 60 * 15) {
+        //if (!this.ended && time > 60 * 0.4) {
             this.ended = true;
             this.ending.start();
         }
