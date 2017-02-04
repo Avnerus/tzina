@@ -185,7 +185,7 @@ export default class Square extends THREE.Object3D{
             this.mesh.add(this.textures);*/
 
            // Lights
-           //this.loadLights();
+           this.loadLights();
 
            // POOL Shader
             this.pool = new Pool(this.renderer);
