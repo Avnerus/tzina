@@ -6,10 +6,11 @@ import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class HaimAnimation extends THREE.Object3D {
-    constructor( renderer, sky ) {
+    constructor( renderer, sky, square ) {
         super();
         this.BASE_PATH = 'assets/animations/haim';
         this.sky = sky;
+        this.square = square;
     }
 
     init(loadingManager) {
@@ -32,7 +33,7 @@ export default class HaimAnimation extends THREE.Object3D {
             { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
 
             { time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
-            { time: 212,  anim: ()=>{this.skyLightPurple()} }, //212
+            { time: 212,  anim: ()=>{this.skyLightStorm()} }, //212
             { time: 246,  anim: ()=>{this.skyLightBack()} },
 
             { time: 252, anim: ()=>{this.characterDisappear()} }    //252
@@ -573,19 +574,22 @@ export default class HaimAnimation extends THREE.Object3D {
         this.oriHemi = this.sky.getHemiLghtOriStatus();
         this.oriDir = this.sky.getDirLghtOriStatus();
         this.sky.pauseUpdateHemiLight();
+        this.oriFLightIntensity = this.square.fountainLight.intensity;
 
         TweenMax.to( this.sky.dirLight, 2, {intensity: 0.2});
         TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.2});
+        TweenMax.to( this.square.fountainLight, 3, {intensity: 0});
     }
 
-    skyLightPurple() {
+    skyLightStorm() {
         TweenMax.to( this.sky.dirLight, 2, {intensity: 0.0});
         TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.7});
         TweenMax.to( this.sky.hemiLight.color, 2, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
-        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.32, g:0.063, b:0.29 } ); // #52104b
+        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.078, g:0.373, b:0.4 } ); // #145f67
     }
 
     skyLightBack() {
+        TweenMax.to( this.square.fountainLight, 3, {intensity: this.oriFLightIntensity});
         let hemiTargetIntensity = this.sky.getHemiLghtCorrectIntensity();
         TweenMax.to( this.sky.hemiLight, 3, {intensity: hemiTargetIntensity});
         TweenMax.to( this.sky.dirLight, 3, {
