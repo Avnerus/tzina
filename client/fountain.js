@@ -348,6 +348,7 @@ export default class Fountain extends THREE.Object3D  {
 
     resetAni() {
         console.log("SHOW END");
+
         for(let i=0; i<this.centerRingOriParameter.length; i++){
             this.setGroupEmittersValue( this.centerRingEmitters, i, this.centerRingOriParameter[i].clone() );
             this.setGroupEmittersValue( this.firstRingEmitters, i, this.firstRingOriParameter[i].clone() );
@@ -361,12 +362,20 @@ export default class Fountain extends THREE.Object3D  {
         }
         this.fireEmitters[0].disable();
         this.centerRingEmitters[0].disable();
-        this.changeWaterColor(false);
 
+        this.changeWaterColor(false);
         this.switchLight(false);
 
         // stop cylinder rotating
         this.stopCylinderAni();
+
+        // reset particleCount
+        // for(var i=0; i<this.firstRingEmitters.length; i++){
+        //     this.firstRingEmitters[i].particleCount = 200;
+        // }
+        // for(var i=0; i<this.secondRingEmitters.length; i++){
+        //     this.secondRingEmitters[i].particleCount = 200;
+        // }
 
         events.emit("show_end");
     }
@@ -410,7 +419,7 @@ export default class Fountain extends THREE.Object3D  {
             size: {
                 value: [0.0025, 0.003, 0.0] //[0.0015, 0.003, 0.0]
             },
-            particleCount: 300,
+            particleCount: 200,
             opacity: {
                 value: [1, 0.8, 0.5] //[0.6, 0.8, 0.5]
             },
@@ -665,6 +674,14 @@ export default class Fountain extends THREE.Object3D  {
     // time, yoyo, repeatTime, delay, repeatDelay
 
     zeroAni() {
+        // inscrease particleCount
+        // for(var i=0; i<this.firstRingEmitters.length; i++){
+        //     this.firstRingEmitters[i].particleCount = 300;
+        // }
+        // for(var i=0; i<this.secondRingEmitters.length; i++){
+        //     this.secondRingEmitters[i].particleCount = 300;
+        // }
+
         this.updateEmittersValue( this.firstRingEmitters,
                                  [ 0 ],
                                  [ {x:1.5, y:8, z:0} ],
