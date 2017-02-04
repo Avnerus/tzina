@@ -10,6 +10,7 @@ import _ from 'lodash';
 
 const MODEL_PATH = "assets/square/scene/scene.json"
 const BUILDINGS_PATH = "assets/square/buildings/buildings_new.json"
+const END_BUILDING_PATH = "assets/square/buildings/endBuilding.json"
 const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PREFIX = "assets/square/benches/"
@@ -111,7 +112,6 @@ export default class Square extends THREE.Object3D{
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
-            this.buildings = results[2];
             this.suns = results[3];
             this.suns.rotation.y = Math.PI * -70 / 180;
 
@@ -330,6 +330,10 @@ export default class Square extends THREE.Object3D{
         events.on("delayed_rotation", (skip = false) => {
             this.delayedRotation(skip);
         })
+
+        events.on("experience_end", () => {
+            this.setEndBuilding();            
+        });
     }
 
     delayedRotation(skip) {
@@ -478,12 +482,26 @@ export default class Square extends THREE.Object3D{
 
     loadBuildings(loadingManager) {
         return new Promise((resolve, reject) => {
-            let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(BUILDINGS_PATH,( obj ) => {
-                console.log("Loaded Buildings ", obj );
-                resolve(obj);
+            let loaders = [];
+            loaders.push(this.loadFile(loadingManager, BUILDINGS_PATH));
+            loaders.push(this.loadFile(loadingManager, END_BUILDING_PATH));
+            Promise.all(loaders)
+            .then((results) => {
+                console.log("Loaded Buildings ", results);
+                this.buildings = results[0];
+                this.endBuilding = results[1];
+                resolve(results[0]);
             })
         });
+    }
+    setEndBuilding() {
+        let originalEndBuilding = this.buildings.getObjectByName("5thBuilding");
+        let blockingWindow = this.buildings.getObjectByName("TheWindow");
+        originalEndBuilding.visible = false;
+        blockingWindow.visible = false;
+        this.buildings.remove(originalEndBuilding);
+        this.buildings.remove(blockingWindow);
+        this.buildings.add(this.endBuilding);
     }
     loadSuns(loadingManager) {
         console.log("Loading suns")

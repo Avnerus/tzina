@@ -6,7 +6,7 @@ export default {
     skipIntro: false,
     skipCharacters: false,
     speedIntro: true,
-    startTime: 19,
+    startTime: 9,
     movementSpeed: 0.5, //0.2
     daySpeed: 0.001,
     noSquare: false,
@@ -21,5 +21,5 @@ export default {
     platform: "vive", // desktop
     skipLanding: true,
     skipInstructions: true,
-    language: "eng"
+    language: "heb"
 }

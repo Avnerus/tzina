@@ -190,7 +190,7 @@ export default class Character extends THREE.Object3D {
                     this.onHold = true;
                     this.idleVideo.pause();
                     this.idleVideo.setOpacity(0.5);
-                },5000);
+                },7000);
             }
 
             if (this.ending) {
