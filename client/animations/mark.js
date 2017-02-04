@@ -135,15 +135,15 @@ export default class MeirAnimation extends THREE.Object3D {
         this.oriHemi = this.sky.getHemiLghtOriStatus();
         this.oriDir = this.sky.getDirLghtOriStatus();
         this.sky.pauseUpdateHemiLight();
-        TweenMax.to( this.sky.dirLight, 3, {intensity: 0.0});
-        TweenMax.to( this.sky.hemiLight, 3, {intensity: 0.0});
+        TweenMax.to( this.sky.dirLight, 3, {intensity: 1});
+        TweenMax.to( this.sky.hemiLight, 3, {intensity: 1});
     }
 
     skyLightDark2() {
         // TweenMax.to( this.sky.dirLight, 2, {intensity: 0.0});
-        TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.4});
-        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.063, g:0.10, b:0.31 } );  //18287b (navy blue)
-        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.49, g:0.094, b:0.25 } ); //7d1841 (red brown)
+        // TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.4});
+        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.325, g:0.412, b:0.867 } );  //5369dd (light blue)
+        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.882, g:0.392, b:0.592 } ); //e16497 (light pink)
     }
 
     skyLightBack() {
