@@ -16,8 +16,8 @@ export default class MeirAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{ this.pinkNeonOn() } },
-            { time: 6,  anim: ()=>{ this.skyLightDark1() } },
+            { time: 1,  anim: ()=>{ this.skyLightDark1() } },
+            { time: 5,  anim: ()=>{ this.pinkNeonOn() } },            
             { time: 10, anim: ()=>{ this.blueNeonOn() } },
             { time: 11,  anim: ()=>{ this.skyLightDark2() } },
             //{ time: 15, anim: ()=>{ this.neonRotate() } },
@@ -35,7 +35,7 @@ export default class MeirAnimation extends THREE.Object3D {
             { time: 200, anim: ()=>{ this.neonRotateBack() } },
             { time: 207, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } },
             { time: 209, anim: ()=>{ this.neonRotate() } },
-            { time: 210,  anim: ()=>{ this.skyLightBack() } },
+            { time: 211,  anim: ()=>{ this.skyLightBack() } },
             { time: 218, anim: ()=>{ this.characterDisappear() } }
         ];
         this.nextAnim = null;
@@ -53,9 +53,9 @@ export default class MeirAnimation extends THREE.Object3D {
         }
 
         // NEON       
-            this.neon1_light = new THREE.PointLight( 0xff0055, 0, 5 );
+            this.neon1_light = new THREE.PointLight( 0xff0055, 0, 3 ); // 5
             this.neon1_light.position.set(0.2, 1, 1);
-            this.neon2_light = new THREE.PointLight( 0x00eaff, 0, 5 );
+            this.neon2_light = new THREE.PointLight( 0x00eaff, 0, 3 ); // 5
             this.neon2_light.position.set(-0.2, 1, -1);
 
             let neonFiles = [];
@@ -135,15 +135,15 @@ export default class MeirAnimation extends THREE.Object3D {
         this.oriHemi = this.sky.getHemiLghtOriStatus();
         this.oriDir = this.sky.getDirLghtOriStatus();
         this.sky.pauseUpdateHemiLight();
-        TweenMax.to( this.sky.dirLight, 3, {intensity: 0.2});
-        TweenMax.to( this.sky.hemiLight, 3, {intensity: 0.2});
+        TweenMax.to( this.sky.dirLight, 3, {intensity: 0.0});
+        TweenMax.to( this.sky.hemiLight, 3, {intensity: 0.0});
     }
 
     skyLightDark2() {
-        TweenMax.to( this.sky.dirLight, 2, {intensity: 0.05});
+        // TweenMax.to( this.sky.dirLight, 2, {intensity: 0.0});
         TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.4});
-        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.078, g:0.29, b:0.404 } );
-        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.322, g:0.063, b:0.231 } );
+        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.063, g:0.10, b:0.31 } );  //18287b (navy blue)
+        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.49, g:0.094, b:0.25 } ); //7d1841 (red brown)
     }
 
     skyLightBack() {
