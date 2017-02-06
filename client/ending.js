@@ -14,7 +14,7 @@ export default class Ending {
         this.square = square;
         this.introAni = introAni;
 
-        this.debug = true;
+        this.debug = false;
 
         this.endCredits = new EndCredits(this.camera);
         this.faded = false;
@@ -135,7 +135,7 @@ export default class Ending {
             this.miriamPlane = new THREE.Mesh(miriamGeo, material);
             this.miriamPlane.position.set(610,-73,24);
             this.miriamPlane.scale.set(0.83, 0.83, 0.83);
-            DebugUtil.positionObject(this.miriamPlane, "Miriam image", false, -1000, 1000);
+            //DebugUtil.positionObject(this.miriamPlane, "Miriam image", false, -1000, 1000);
         });
 
         events.on("vr_start", () => {

@@ -782,7 +782,7 @@ export default class Square extends THREE.Object3D{
       this.fountainLight.intensity = 0.9;
       events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, this.fountainLight, "intensity", 0, 2); 
       this.mesh.add(this.fountainLight);
-      DebugUtil.positionObject(this.fountainLight, "Fountain light");
+      //DebugUtil.positionObject(this.fountainLight, "Fountain light");
     }
 
     get clockRotation() {
