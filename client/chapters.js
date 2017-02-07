@@ -23,7 +23,7 @@ export default
 				},
 					{
 					name: "pocketCam",
-					position: [-5.4,21.2,10],
+					position: [-5,21.2,2.24],
 					rotation: [0,81,0],
 					scale: 0.29
 				},
