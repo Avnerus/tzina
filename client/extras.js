@@ -62,7 +62,7 @@ export default class Extras extends THREE.Object3D {
         return new Promise((resolve, reject) => {
             new THREE.JSONLoader(loadingManager).load("assets/animations/itzhak/models/heart1.json", (geometry, material) => {
                 this.heartGeo = geometry;
-                this.heartMat = new THREE.MeshBasicMaterial({color: 0xff0000});
+                this.heartMat = new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.8, transparent: true});
                 resolve();
             })
         })
@@ -122,6 +122,7 @@ export default class Extras extends THREE.Object3D {
                     extra.scale.multiplyScalar(asset.scale);
                 }
                 // Add hearts
+                let hearts = [];
                 if (type.hearts) {
                     let counter = 1;
                     type.hearts.forEach((heartDef) => {
@@ -138,18 +139,19 @@ export default class Extras extends THREE.Object3D {
                             heart.scale.multiplyScalar(heartDef.scale);
                         }
                         if (this.debug) {
-                            DebugUtil.positionObject(heart, asset.name + "'s heart " + counter, false, -10, 10, heartDef.rotation);
+                            DebugUtil.positionObject(heart, asset.name + "'s heart " + counter, false, -50, 50, heartDef.rotation);
                         }
                         extra.add(heart);
+                        hearts.push(heart);
                     });
                 }
                 extra.add(mesh);
 
                 this.add(extra);
 
-                this.currentExtras.push({name: asset.name, mesh: mesh, handle: extra});
+                this.currentExtras.push({name: asset.name, mesh: mesh, handle: extra, hearts: hearts});
                 if (this.debug) {
-                    DebugUtil.positionObject(mesh, asset.name, false, -40,40, asset.rotation);
+                    DebugUtil.positionObject(extra, asset.name, false, -40,40, asset.rotation);
                 }
             }            
         });
@@ -165,11 +167,14 @@ export default class Extras extends THREE.Object3D {
     hideExtras() {
         this.currentExtras.forEach((extra) => {
             extra.mesh.children[0].material.opacity = 0;
+            extra.hearts.forEach((heart) => {heart.visible = false});
         });
     }
     showExtras() {
         this.currentExtras.forEach((extra) => {
-            TweenMax.to( extra.mesh.children[0].material, 1, { opacity: 1});
+            TweenMax.to( extra.mesh.children[0].material, 1, { opacity: 1, onComplete: () => {
+                extra.hearts.forEach((heart) => {heart.visible = true});
+            }});
         });
     }
 }

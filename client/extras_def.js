@@ -166,8 +166,15 @@ export default {
           {
             name: "100_",
             fileName: "100_/cloud.js",
-            pointSize : 0.012
-        },
+            pointSize : 0.012,
+            hearts: [
+                 {
+                    position: [2.4,7.24,2.38],
+                    rotation: [0,0,0],
+                    scale: 0.13
+                 }
+            ]
+         },
          {
            name: "twoNiceJewishMen",
            fileName: "twoNiceJewishMen/cloud.js",
@@ -226,12 +233,12 @@ export default {
                    scale: 0.1
                 },
                  {
-                   position: [10,5.84,6.62],
+                   position: [20.73,5.03,2.59],
                    rotation: [0,121,0],
                    scale: 0.1
                 },
                  {
-                   position: [10,5.84,10],
+                   position: [19.36,5.61,5.22],
                    rotation: [0,101,0],
                    scale: 0.1
                 }
