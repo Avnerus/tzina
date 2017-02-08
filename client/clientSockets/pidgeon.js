@@ -186,11 +186,11 @@ export default class Pidgeon extends THREE.Object3D{
     }
     // this.labelText("testext");
   }
-  labelText(text){
+  labelText(text,origin){
     if(this.textualLabel){
-      this.labelTextChange(text);
+      this.labelTextChange(text,origin);
     }else{
-      this.labelTextAdd(text);
+      this.labelTextAdd(text, origin);
     }
   }
   labelTextGazed(dt){
@@ -207,33 +207,33 @@ export default class Pidgeon extends THREE.Object3D{
       this.isBeingGazed--;
       if(this.textualLabel)
         if(this.textualLabel.opacity){
-          if(this.textualLabel.opacity()<1){
-            this.textualLabel.opacity(this.textualLabel.opacity()+1*dt);
+          if(this.textualLabel.opacity()<1.0){
+            this.textualLabel.opacity(this.textualLabel.opacity()+2*dt);
           }
         }
     }else{
       if(this.textualLabel)
         if(this.textualLabel.opacity)
         if(this.textualLabel.opacity()>0){
-          this.textualLabel.opacity(Math.floor(this.textualLabel.opacity()/5));
+          this.textualLabel.opacity(Math.floor(this.textualLabel.opacity()/2));
         }
     }
   }
 
-  labelTextAdd(text){
+  labelTextAdd(text, origin){
     // this.textualLabel = new SpriteText2D(text, {align: textAlign.center,
     //  font: '100px Miriam Libre',
     //  fillStyle: '#FFFFFF',
     //  antialias: true });
 
-    this.textualLabel = makeTextSprite( text,
-		{ fontsize: 50, color:"#FFF", fontface:"Miriam Libre", backgroundColor: {r:0, g:0, b:0, a:0.8} } );
+    this.textualLabel = makeTextSprite( text, origin,
+		{ fontsize: 24, color:"#FFF", fontface:"Miriam Libre", backgroundColor: {r:0, g:0, b:0, a:0} } );
   	// this.textualLabel.position.set(0,0.2,0);
   	// this.add( spritey );
     this.textualLabel.scale.multiplyScalar(0.0022);
     this.add(this.textualLabel);
     this.textualLabel.position.x=0;
-    this.textualLabel.position.y=-0.53;
+    this.textualLabel.position.y= -0.99;
     this.textualLabel.position.z=0;
     this.isBeingGazed=0;
     this.textualLabel.opacity=function(value){
@@ -251,7 +251,7 @@ export default class Pidgeon extends THREE.Object3D{
     }
     this.textualLabel.opacity(0);
   }
-  labelTextChange(text){
+  labelTextChange(text,origin){
     this.textualLabel.text = text;
   }
 
@@ -443,7 +443,7 @@ export default class Pidgeon extends THREE.Object3D{
 
 //these functions come from
 //http://stemkoski.github.io/Three.js/Sprite-Text-Labels.html
-function makeTextSprite( message, parameters )
+function makeTextSprite( message, origin, parameters )
 {
 	if ( parameters === undefined ) parameters = {};
 
@@ -454,7 +454,7 @@ function makeTextSprite( message, parameters )
 		parameters["fontsize"] : 18;
 
 	var borderThickness = parameters.hasOwnProperty("borderThickness") ?
-		parameters["borderThickness"] : 4;
+		parameters["borderThickness"] : 0;
 
 	var borderColor = parameters.hasOwnProperty("borderColor") ?
 		parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
@@ -472,11 +472,14 @@ function makeTextSprite( message, parameters )
 
 
   context.canvas.width  = 800;
-  context.canvas.height  = 85;
+  context.canvas.height  = 300; 
+
 	context.font = "Bold " + fontsize + "px " + fontface;
 	// get size data (height depends only on font size)
 	var metrics = context.measureText( message );
-	var textWidth = metrics.width;
+    var metricsOrigin = context.measureText(origin);
+    
+	var textWidth = metrics.width > metricsOrigin.width ? metrics.width : metricsOrigin.width;
 
 	// background color
 	context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
@@ -493,14 +496,28 @@ function makeTextSprite( message, parameters )
   // 1.4 is extra height factor for text below baseline: g,j,p,q.
 /*  context.strokeStyle="#FFFF00";/**/
   /**context.lineWidth = borderThickness;/**/
-  roundRect(context,(context.canvas.width/2)-(metrics.width/2)-borderThickness, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + 2*borderThickness, 6);
+  /*
+  roundRect(context,(
+      context.canvas.width/2)-(metrics.width/2)-borderThickness, 
+      borderThickness/2, 
+      textWidth + borderThickness + 20, 
+      fontsize * 2.5 + 2*borderThickness, 
+0);*/
 
   // text color
 	context.fillStyle = fontcolor;
-
+  
   context.textBaseline = 'middle';
   context.textAlign = "center";
-	context.fillText( message,  context.canvas.width/2, context.canvas.height/2);
+  context.fillText( message,  context.canvas.width/2 + 10, fontsize / 2 + 10);
+  context.fillText( origin,  context.canvas.width/2 + 10, fontsize * 1.7 + 10);
+
+  // Line
+  context.strokeStyle = "#FFFFFF";
+  context.beginPath();
+  context.moveTo(context.canvas.width / 2, fontsize * 2.5 + 10);
+  context.lineTo(context.canvas.width / 2, fontsize * 2.5 + 70);
+  context.stroke();
 
 	// canvas contents will be used for a texture
 	var texture = new THREE.Texture(canvas)
@@ -509,7 +526,7 @@ function makeTextSprite( message, parameters )
 	var spriteMaterial = new THREE.SpriteMaterial(
 		{ map: texture, useScreenCoordinates: false/*, alignment: spriteAlignment*/ } );
 	var sprite = new THREE.Sprite( spriteMaterial );
-	sprite.scale.set(800,90,1.0);
+	sprite.scale.set(800,300,1.0);
 	return sprite;
 }
 
@@ -528,7 +545,7 @@ function roundRect(ctx, x, y, w, h, r)
     ctx.quadraticCurveTo(x, y, x+r, y);
     ctx.closePath();
     ctx.fill();
-	ctx.stroke();
+	//ctx.stroke();
 }
 
 
