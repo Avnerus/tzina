@@ -28,7 +28,7 @@ export default class Agam12PMAnimation extends THREE.Object3D {
             this.text = this.generateText();
             this.text.setText(this.INTRO_TEXT);
             this.add(this.text);
-            DebugUtil.positionObject(this.text, "Agam text");
+            //DebugUtil.positionObject(this.text, "Agam text");
 
             this.didInit = true;
         }
