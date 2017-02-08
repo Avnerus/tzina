@@ -62,7 +62,7 @@ export default class Extras extends THREE.Object3D {
         return new Promise((resolve, reject) => {
             new THREE.JSONLoader(loadingManager).load("assets/animations/itzhak/models/heart1.json", (geometry, material) => {
                 this.heartGeo = geometry;
-                this.heartMat = new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.8, transparent: true});
+                this.heartMat = new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, transparent: true});
                 resolve();
             })
         })
