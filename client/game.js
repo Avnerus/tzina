@@ -48,6 +48,7 @@ import Ending from './ending'
 
 import PidgeonController from './clientSockets/index'
 
+import Coin from './coin'
 
 export default class Game {
     constructor(config) {
@@ -240,6 +241,7 @@ export default class Game {
         this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
         this.pidgeonController.init(this.loadingManager);
 
+        this.coin = new Coin(this.characterController);
     }
 
     load(onLoad, onProgress) {
@@ -252,6 +254,9 @@ export default class Game {
                 this.sky.applyToMesh(this.square.getSphereMesh());
                 this.introAni.createSnowParticle();
                 this.scene.add(this.introAni);
+
+                this.scene.add(this.coin);
+                this.coin.updateCoinPosition();
             }
 
             //DebugUtil.positionEntry(this.square.ENTRY_POINTS[4], this.square.mesh, this.scene);
@@ -287,6 +292,7 @@ export default class Game {
         this.waterDrops.init(this.loadingManager);
         this.show.init();
         this.instructions.init();
+        this.coin.init(this.loadingManager);
         
         VideoRGBD.initPool();
 
