@@ -137,4 +137,11 @@ export default class Trees extends THREE.Object3D {
             }
         }  
     }
+    clickEffect(input){
+        if(input == 1){
+            this.potreeWindMaterial.uniforms.speedFactor.value = 1.2;
+        } else {
+            this.potreeWindMaterial.uniforms.speedFactor.value = 1.0;
+        }
+    }
 }
