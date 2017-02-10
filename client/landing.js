@@ -603,9 +603,12 @@ if (!Modernizr.touchevents && lock.available()) {
             renderer.setSize( window.innerWidth, window.innerHeight );
             document.getElementById("tree_scene").appendChild(renderer.domElement);
           
-            camera.position.set(-12.05,23.46,12.21);
-            camera.rotation.set(25 * Math.PI / 180,10* Math.PI / 180,335* Math.PI / 180);
+            // camera.position.set(-12.05,23.46,12.21);
+            // camera.position.set(40.88,28.42,39.78);
+            // camera.rotation.set(360 * Math.PI / 180,41* Math.PI / 180,0* Math.PI / 180);
 
+        camera.position.set(50,30.08,-7.64);
+            camera.rotation.set(0,117* Math.PI / 180,0);
 
            
         DebugUtil.positionObject(camera, "Landing cam");
