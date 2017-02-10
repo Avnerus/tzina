@@ -5,10 +5,17 @@ html {
 }
 body {
     margin: 0px;
-    background-color: #000000;
+  /*  background-color: #000000;*/
+  background: red; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(red, yellow); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(red, yellow); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(red, yellow); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(red, yellow); /* Standard syntax */ 
+
     overflow: hidden;
     width: 100%;
     height: 100%;
+
 }
 
 #game {
@@ -119,8 +126,8 @@ body {
 }
 /* General Util */
   /*1.Fonts*/
-  .suez{
-    font-family: 'Suez One', serif;
+  .assistant{
+    font-family: 'Assistant', serif;
   }
   .miriam{
     font-family: 'Miriam Libre', sans-serif;
@@ -128,11 +135,16 @@ body {
   /*2.Spacers*/
   .absolute_10_spacer{
     position: relative;
-    height: 60px;
+    height: 10px;
   }
    .absolute_30_spacer{
     position: relative;
     height: 30px;
+  }
+
+   .absolute_20_spacer{
+    position: relative;
+    height: 20px;
   }
   /*General UI*/
   #progress{
@@ -169,11 +181,12 @@ body {
     margin: auto;
     width: 20%;
     color: #fff;
-    font-size: 1.5em;
-    padding-top: 15px; padding-bottom: 15px;
+    font-size: 1.2em;
+    padding-top: 20px; padding-bottom: 10px;
     letter-spacing: 2px;
-    border: 1px solid #fff;
-    border-radius: 10px;
+    text-decoration: underline;
+    /*border: 1px solid #fff;
+ */ /*  border-radius: 10px;*/
     background-color: transparent;
     /*padding-right: 5px; padding-right: 5px;*/
     transition-duration: 0.2s;
@@ -244,8 +257,8 @@ body {
   width: 45%;
 }
 #logo{
-  width: 50%;
-  height: 50%;
+  width: 30%;
+  height: 30%;
   -webkit-transition: 0.3s ease-in-out;
   -moz-transition: 0.3s ease-in-out;
   -o-transition: 0.3s ease-in-out;

@@ -19,7 +19,7 @@ export default {
     videoHost: "http://assets.tzina.space/",
     //videoHost: null,
     platform: "desktop", // desktop, vive
-    skipLanding: true,
-    skipInstructions: true,
+    skipLanding: false,
+    skipInstructions: false,
     language: "eng"
 }

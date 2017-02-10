@@ -1,7 +1,7 @@
 //Bring in all the stuff we need
 import KeyboardController from './keyboard_controller'
 import TzinaVRControls from './tzina_vr_controls'
-
+import DebugUtil from './util/debug'
 import Trees from './trees'
 
 
@@ -599,23 +599,30 @@ if (!Modernizr.touchevents && lock.available()) {
         if (!config.skipLanding) {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 0.1, 1000 );
-            renderer = new THREE.WebGLRenderer();
+            renderer = new THREE.WebGLRenderer({ alpha: true } );
             renderer.setSize( window.innerWidth, window.innerHeight );
-
             document.getElementById("tree_scene").appendChild(renderer.domElement);
+          
+            camera.position.set(12.21,38.35,21.03);
+            camera.rotation.set(0,291,0);
 
-            camera.position.set(3,20, 3.2893155474929934);
-            camera.rotation.set(2.897615188414925, -1, 3.0189561019538735);
 
-            //Mouse controls
-            landingControls = new TzinaVRControls(null, camera);
-            landingControls.active = false;
+           
+        DebugUtil.positionObject(camera, "Landing cam");
+//DebugUtil.positionObject(camera, "Landing cam");
 
-            //Keyboard controls
-          landingKeyControl = new KeyboardController({
-              movementSpeed: 0.5,
-              enableFlying: false
-          }, camera);
+  //camera.lookAt( new THREE.Vector3( 15, 40, 15 ) );
+  // controls = new THREE.OrbitControls( camera, renderer.domElement );
+  // controls.target.set( 15, 30, 15 );
+  //           //Mouse controls
+            // landingControls = new TzinaVRControls(null, camera);
+            // landingControls.active = false;
+
+          //   //Keyboard controls
+          // landingKeyControl = new KeyboardController({
+          //     movementSpeed: 0.5,
+          //     enableFlying: false
+          // }, camera);
 
             // load & add the trees
             trees = new Trees(config, camera, renderer);
@@ -655,8 +662,8 @@ if (!Modernizr.touchevents && lock.available()) {
           et += delta;
           trees.update(delta, et);
 
-          landingControls.update();
-          landingKeyControl.update(delta);
+          // landingControls.update();
+          // landingKeyControl.update(delta);
 
           renderer.render(scene, camera);
 
