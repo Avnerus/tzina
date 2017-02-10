@@ -603,8 +603,8 @@ if (!Modernizr.touchevents && lock.available()) {
             renderer.setSize( window.innerWidth, window.innerHeight );
             document.getElementById("tree_scene").appendChild(renderer.domElement);
           
-            camera.position.set(-16.47,30.08,19.93);
-            camera.rotation.set(14 * Math.PI / 180,49* Math.PI / 180,343* Math.PI / 180);
+            camera.position.set(-12.05,23.46,12.21);
+            camera.rotation.set(25 * Math.PI / 180,10* Math.PI / 180,335* Math.PI / 180);
 
 
            
