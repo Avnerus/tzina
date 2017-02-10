@@ -11,6 +11,8 @@ export default class Coin extends THREE.Object3D  {
     init(loadingManager) {
         
         this.coins = {};
+        this.coinsOffset = {};
+
         this.activeCoins = [];
         this.beLookedCount = 0;
 
@@ -18,11 +20,11 @@ export default class Coin extends THREE.Object3D  {
         let tex_map = tex_loader.load( this.BASE_PATH + "images/coin.jpg" );
         let NRM_map = tex_loader.load( this.BASE_PATH + "images/coin_NRM.png" );
         let DISP_map = tex_loader.load( this.BASE_PATH + "images/coin_DISP.png" );
-        this.coinMat = new THREE.MeshPhongMaterial( {
-            color: 0xa7874c,
-            normalMap: NRM_map,
-            specular: 0x110e02,
-            shininess: 76
+        this.coinMat = new THREE.MeshBasicMaterial( {
+            color: 0xa7874c
+            //normalMap: NRM_map,
+            //specular: 0x110e02,
+            //shininess: 76
         } );
         
         this.loadCoin( this.BASE_PATH + "/models/coin.json" )
@@ -31,22 +33,17 @@ export default class Coin extends THREE.Object3D  {
 
             for (var key in this.character_controller.characters) {
                 if (this.character_controller.characters.hasOwnProperty(key)) {
-                    var coinSet = {};
-                    coinSet.coin = this.coinModel.clone();
-                    coinSet.coin.visible = false;
 
-                    coinSet.character = this.character_controller.characters[key];
-                    coinSet.coin.position.copy(coinSet.character.position);
-                    this.coins[key] = coinSet;
+                    let coinn = this.coinModel.clone();
+                    coinn.visible = false;
 
-                    this.add(coinSet.coin);
+                    this.character_controller.characters[key].add(coinn);
+                    
+                    this.coins[key] = coinn;
                 }
             }
-            //console.log(this.coins);
-            DebugUtil.positionObject(this.coins['Mark'].coin, "Mark Coin");
+            //DebugUtil.positionObject(this.coins['Mark'].coin, "Mark Coin");
         });
-
-        
 
         events.on("hour_updated", (hour) => {
             this.loadHour(hour);            
@@ -79,11 +76,11 @@ export default class Coin extends THREE.Object3D  {
         let chapter = _.find(Chapters, {hour});
 
         for (var key in this.coins) {
-            this.coins[key].coin.visible = false;
+            this.coins[key].visible = false;
         }
 
         chapter.characters.forEach((characterName) => {
-            this.coins[characterName].coin.visible = true;
+            this.coins[characterName].visible = true;
         });
     }
 

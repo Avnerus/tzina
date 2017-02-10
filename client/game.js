@@ -255,8 +255,8 @@ export default class Game {
                 this.introAni.createSnowParticle();
                 this.scene.add(this.introAni);
 
-                this.scene.add(this.coin);
-                this.coin.updateCoinPosition();
+                //this.square.add(this.coin);
+                //this.coin.updateCoinPosition();
             }
 
             //DebugUtil.positionEntry(this.square.ENTRY_POINTS[4], this.square.mesh, this.scene);
