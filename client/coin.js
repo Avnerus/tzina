@@ -50,11 +50,11 @@ export default class Coin extends THREE.Object3D  {
         });
     }
 
-    updateCoinPosition() {
-        for (var key in this.coins) {
-            this.coins[key].coin.position.copy(this.coins[key].character.position);
-        }
-    }
+    // updateCoinPosition() {
+    //     for (var key in this.coins) {
+    //         this.coins[key].coin.position.copy(this.coins[key].character.position);
+    //     }
+    // }
 
     loadCoin( modelFile ) {
         let promise = new Promise( (resolve, reject) => {
@@ -73,15 +73,17 @@ export default class Coin extends THREE.Object3D  {
     }
 
     loadHour(hour) {
-        let chapter = _.find(Chapters, {hour});
+        //let chapter = _.find(Chapters, {hour});
 
         for (var key in this.coins) {
             this.coins[key].visible = false;
         }
 
+        /*
         chapter.characters.forEach((characterName) => {
             this.coins[characterName].visible = true;
         });
+        */
     }
 
     update(camera) {
