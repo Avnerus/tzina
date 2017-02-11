@@ -314,7 +314,7 @@ right:1em;
 }
 #instruction_screen{
   position: absolute;
-  bottom: 20%; left: 0;
+  top: 20%; left: 0;
   width: 100%;
   z-index: 2 !important;
   text-align: center;
@@ -411,11 +411,13 @@ right:1em;
 }
 #desktop_instruc{
   display: none;
-  text-align: left;
+  text-align: center;
   color: #fff;
 }
 #vive_instruc{
   display: none;
+  text-align: center;
+  color: #fff;
 }
 #vive_instruc img{
   width: 30% !important;
