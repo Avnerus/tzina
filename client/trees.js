@@ -140,13 +140,17 @@ export default class Trees extends THREE.Object3D {
     clickEffect(input){
         var counter = 1;
         if(input == 1){
-            for(var i = 0; i < 500; i++){
-                counter++
-                this.potreeWindMaterial.uniforms.speedFactor.value = counter * 0.01;
-            }
+                counter++;
+                this.potreeWindMaterial.uniforms.rustleFactor.value = counter;
         } else {
+                if(counter != 1.0){
+                    counter--;
+                    this.potreeWindMaterial.uniforms.rustleFactor.value = counter;
+                }
+                
+            this.potreeWindMaterial.uniforms.rustleFactor.value = 1.0;
             counter = 1;
-            this.potreeWindMaterial.uniforms.speedFactor.value = 1.0;
+            
         }
     }
 }
