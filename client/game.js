@@ -254,9 +254,6 @@ export default class Game {
                 this.sky.applyToMesh(this.square.getSphereMesh());
                 this.introAni.createSnowParticle();
                 this.scene.add(this.introAni);
-
-                //this.square.add(this.coin);
-                //this.coin.updateCoinPosition();
             }
 
             //DebugUtil.positionEntry(this.square.ENTRY_POINTS[4], this.square.mesh, this.scene);
@@ -285,6 +282,7 @@ export default class Game {
             // Characters
             console.log("Initializing characters");
             this.characterController.init(this.loadingManager);
+            this.coin.init(this.loadingManager);
         }
         this.intro.init(this.loadingManager);
         this.soundManager.init(this.loadingManager);
@@ -292,7 +290,6 @@ export default class Game {
         this.waterDrops.init(this.loadingManager);
         this.show.init();
         this.instructions.init();
-        this.coin.init(this.loadingManager);
         
         VideoRGBD.initPool();
 

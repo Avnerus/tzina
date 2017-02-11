@@ -1,6 +1,6 @@
-import Chapters from './chapters'
+//import Chapters from './chapters'
 import DebugUtil from './util/debug'
-import _ from 'lodash'
+//import _ from 'lodash'
 
 export default class Coin extends THREE.Object3D  {
     constructor(character_controller) {
@@ -12,7 +12,6 @@ export default class Coin extends THREE.Object3D  {
         
         this.coins = {};
         this.coinsOffset = {};
-
         this.activeCoins = [];
         this.beLookedCount = 0;
 
@@ -20,34 +19,38 @@ export default class Coin extends THREE.Object3D  {
         let tex_map = tex_loader.load( this.BASE_PATH + "images/coin.jpg" );
         let NRM_map = tex_loader.load( this.BASE_PATH + "images/coin_NRM.png" );
         let DISP_map = tex_loader.load( this.BASE_PATH + "images/coin_DISP.png" );
-        this.coinMat = new THREE.MeshBasicMaterial( {
-            color: 0xa7874c
-            //normalMap: NRM_map,
-            //specular: 0x110e02,
-            //shininess: 76
+        this.coinMat = new THREE.MeshPhongMaterial( {
+            color: 0xa7874c,
+            normalMap: NRM_map,
+            specular: 0x110e02,
+            shininess: 76
         } );
         
         this.loadCoin( this.BASE_PATH + "/models/coin.json" )
         .then( (coinModel) => {
             this.coinModel = coinModel;
 
+            
             for (var key in this.character_controller.characters) {
                 if (this.character_controller.characters.hasOwnProperty(key)) {
 
                     let coinn = this.coinModel.clone();
-                    coinn.visible = false;
+                    //coinn.visible = false;
 
                     this.character_controller.characters[key].add(coinn);
                     
                     this.coins[key] = coinn;
+
+                    console.log("add to " + key);
                 }
             }
+            
             //DebugUtil.positionObject(this.coins['Mark'].coin, "Mark Coin");
         });
 
-        events.on("hour_updated", (hour) => {
-            this.loadHour(hour);            
-        });
+        // events.on("hour_updated", (hour) => {
+        //     this.loadHour(hour);            
+        // });
     }
 
     // updateCoinPosition() {
@@ -64,7 +67,7 @@ export default class Coin extends THREE.Object3D  {
             loader.load( modelFile, (geometry)=>{
                 this.coinGeo = geometry;
                 coinModel = new THREE.Mesh(this.coinGeo, this.coinMat);
-                //coinModel.scale.multiplyScalar(5);
+                coinModel.scale.multiplyScalar(0.5);
 
                 resolve( coinModel );
             } );            
