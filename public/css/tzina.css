@@ -208,12 +208,15 @@ right:1em;
   }
   #language{
     position: absolute;
-    top: 20px; right: 20px;
+    top: 20px; right: -25%;
     color: #e2e2e2;
     z-index: 3;
     display: none;
     cursor: pointer;
     font-size: 15px;
+  }
+  #language img{
+    width: 18%;
   }
   #language:hover{
     color: #fff;
