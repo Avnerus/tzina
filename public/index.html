@@ -7,6 +7,9 @@
         <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link type="text/css" href="css/tzina.css" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=Assistant:200,300,400,600,700,800|Miriam+Libre:400,700&amp;subset=hebrew" rel="stylesheet">
+      <link href="css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="css/tzina-about.webflow.css" rel="stylesheet" type="text/css">
         <title>Tzina</title>
 
 	</head>
@@ -26,6 +29,7 @@
         <script>
             window.WebVRConfig = {FORCE_ENABLE_VR : false}
         </script>
+
         <script src="lib/modernizr-custom.js"></script>
         <script src="lib/TweenMax.min.js"></script>
         <script src="lib/dat.gui.min.js"></script>
@@ -52,7 +56,6 @@
   <div id="tree_scene"></div>
   <div id="game"></div>
 
-
   <div class="container-fluid" class="startExperienceScreen">
   <div class="row">
   <div class="col-sm-12">
@@ -71,7 +74,143 @@
 	<!--About-->
 	<div id="about" class="miriam">+</div>
     <div id="about_container">
-         <div class="container">
+
+        <div id="about_grid" class="background">
+
+ <ul class="menu">
+    <li class="menuitem"><a href="#1"><span class="link">אודות צינה</span></a>
+    </li>
+    <li class="menuitem">מקרא מפה</li>
+    <li class="link menuitem">מי יצר את הפרויקט</li>
+  </ul>
+  <div class="sectionofcontent w-row">
+    <div class="w-col w-col-2"></div>
+    <div class="innersection w-col w-col-7" id="1">
+      <div class="textwbline w-row">
+        <div class="w-col w-col-1"></div>
+        <div class="innersection w-col w-col-10">
+          <h1 class="title">אודות צינה</h1>
+          <div class="body heb">בתחילת 2017, כיכר צינה דיזנגוף בגרסתה הנוכחית נהרסה. הכיכר, אחד מסמליה האיקוניים של תל אביב, הפכה לביתם של בודדים ואנשי שולים החיים בסביבתה. ״צינה:סימפוניה של געגועים״ מביא את סיפורם של אותם אנשים המתמגנטים אל הכיכר ומעבירים בה את ימיהם. בפרויקט דוקומנטרי אינטראקטיבי זה הם מדברים על חייהם ועל הכיכר, ועל תחושות אובדן, אהבה ואכזבה אשר מביאות אותם לחלוק את אותה בדידות משותפת יום אחר יום. הפרויקט מזמין את הצופה ללכת פיזית בעולם הכיכר הוירטואלי המשלב אלמנטים של פנטזיה ואנימציה, תוך כדי חוויית הכיכר בשעות השונות של היום.</div><a class="readmore w-button" href="#more"><strong class="buttontext">עוד על הפרויקט</strong></a>
+        </div>
+        <div class="w-col w-col-1"></div>
+      </div>
+      <div class="video w-embed w-video" style="padding-top: 56.17021276595745%;">
+        <iframe class="embedly-embed" src="https://cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2FtkLO9YHtnUo%3Ffeature%3Doembed&url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DtkLO9YHtnUo&image=https%3A%2F%2Fi.ytimg.com%2Fvi%2FtkLO9YHtnUo%2Fhqdefault.jpg&key=c4e54deccf4d4ec997a64902e9a30300&type=text%2Fhtml&schema=youtube" scrolling="no" frameborder="0" allowfullscreen=""></iframe>
+      </div>
+    </div>
+    <div class="w-col w-col-3"></div>
+  </div>
+
+  <div class="sectionofcontent w-row" id="2">
+    <div class="w-col w-col-2"></div>
+    <div class="innersection legend w-col w-col-7">
+      <div class="w-container">
+        <h1 class="title">מקרא מפה</h1>
+        <div class="w-row">
+          <div class="legend w-col w-col-4"><img class="icon" src="assets/images/Legend_heb-03.png" width="500">
+            <div class="abouticon heb">13 דמויות כיכר קבועות, לרוב מיוחסות על ידי החברה כאוטסיידרים, המאוחדים בתחושת הנחמה במרחב האורבני</div>
+          </div>
+          <div class="legend w-col w-col-4"><img class="icon" src="assets/images/Legend_heb-02.png" width="500">
+            <div class="abouticon heb">פסל המים והאש של האמן הבינלאומי יעקב אגם, מבקש להמחיש לנו כמה לא ניתן לעצור את החיים מלהמשיך לזרום</div>
+          </div>
+          <div class="legend w-col w-col-4"><img class="icon" src="assets/images/Legend_heb-01.png" width="500">
+            <div class="abouticon heb">כיכר צינה דיזנגוף, סמל איקוני תרבותי מרכזי בעיר תל אביב, המועמדת להריסה בתחילת 2017 הכיכר מאז ומתמיד הייתה שנוייה במחלוקת ומאבקים ציבורים רבים נערכו במטרה להשיג את המטרה הקרבה</div>
+          </div>
+        </div>
+        <div class="textwbline w-row">
+          <div class="legend w-col w-col-4"><img class="icon" src="assets/images/Legend_heb-04.png" width="500">
+            <div class="abouticon heb">יוזרים אחרים שנמצאים איתך עכשיו אונליין</div>
+            <div class="abouticon body heb vive">על מנת לצפות בצינה ב HTC VIVE &nbsp;עקבו אחר ההוראות ב<a href="https://drive.google.com/file/d/0ByXX_Frv0mq9NlBXS3JrWFpwT1U/view">מסמך הזה</a>
+            </div>
+          </div>
+          <div class="legend w-col w-col-4"><img class="icon" src="assets/images/Legend_heb-05.png" width="500">
+            <div class="abouticon heb">את נכנסת בשעה של הזמן המקומי שלך עכשיו, אבל יש בפרויקט הזה יותר משמש אחת, חמש לייתר דיוק, ועל ידי התמקדות באחת מהן ניתן לשנות ולשלוט על הזמן</div><img class="icon" src="assets/images/Legend_heb-08.png" width="500">
+            <div class="abouticon heb">הכיכר הוענקה לזכרה של צינה דיזנגוף, אישתו של ראש העיר הראשון של תל אביב. מאיר נהג לכנות את צינה "חברתי בחיים". היש ביטוי רומנטי מזה?</div>
+          </div>
+          <div class="legend w-col w-col-4"><img class="icon" src="assets/images/Legend_heb-06.png" width="500">
+            <div class="abouticon heb">אם את בweb התנועה היא עם העכבר שיאפשר לך להסתכל סביב, ועם מקשי הw,a,s,d שיקדמו אותך במרחב, אם את עם הvive התנועה היא פיזית, הליכה בקצב שלך בתוך מרחב 3X3.</div><img class="icon" src="assets/images/Legend_heb-07.png" width="500">
+            <div class="abouticon heb">לאט לאט החללים התחתונים של הכיכר יהפכו למוצפים. הכיכר תתנתק מהסביבה המוכרת, תהפוך לרפסודה של מיכל הבדידות שהיא</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-col w-col-3"></div>
+  </div>
+  <div class="team w-row" id="team">
+    <div class="w-col w-col-2"></div>
+    <div class="w-col w-col-7">
+      <h1 class="title">הצוות מאחורי צינה</h1>
+      <div class="video w-embed w-video" style="padding-top: 56.17021276595745%;">
+        <iframe class="embedly-embed" src="https://cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2Fn0IIKgNnctY%3Ffeature%3Doembed&url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dn0IIKgNnctY&image=https%3A%2F%2Fi.ytimg.com%2Fvi%2Fn0IIKgNnctY%2Fhqdefault.jpg&key=c4e54deccf4d4ec997a64902e9a30300&type=text%2Fhtml&schema=youtube" scrolling="no" frameborder="0" allowfullscreen=""></iframe>
+      </div>
+      <div class="body heb w-row">
+        <div class="w-col w-col-2"></div>
+        <div class="w-col w-col-5">
+          <p class="body credits heb"><strong>תודות<br></strong>אילת בן אליהו, דובי רובינשטיין, קפה נחת, ידידה בר צבי, ירון בלוך, אמיר טאוזינגר, רן טל, אופיימי אולקומי, סנדרה גאודנזי, מייק רובינס, אוני אלבר, חכים בישארה, טל הרינג, דגן וולד, דוד רות, דפת׳ קיט - ג׳יימס, קייל ואלכסנדר, מוחמד מלחם, אריק רפאל מזרחי, גלעד רייך, אלינור סלומון, יעקב אגם, רחלי מנשה, נילי יבניאל, סשה, ערן היללי, אורי לוטן, מוטי אנלן, אלישבע אלינור אנלן אלדור, דן פרידמן, אדם עציון, חנן פלד, שי רינגל, רעות מרים כהן</p>
+          <div class="link">
+            <a href="http://rip.tzina.space" class="link about" target="_blank"></a>תודה&nbsp;לעצים של כיכר צינה על הצל,
+            <br>האוויר שטיהרו, ועל היופי שנתנו במשך 80 שנה.</div><img class="unilogo" sizes="(max-width: 479px) 85vw, (max-width: 767px) 87vw, (max-width: 991px) 21vw, 22vw" src="assets/images/קולנוע-עברית-לבן.png" srcset="assets/images/קולנוע-עברית-לבן-p-500x76.png 500w, assets/images/קולנוע-עברית-לבן-p-800x121.png 800w, assets/images/קולנוע-עברית-לבן-p-1080x163.png 1080w, assets/images/קולנוע-עברית-לבן-p-1600x241.png 1600w, assets/images/קולנוע-עברית-לבן-p-2000x301.png 2000w, assets/images/קולנוע-עברית-לבן-p-2600x392.png 2600w, assets/images/קולנוע-עברית-לבן-p-3200x482.png 3200w, assets/images/קולנוע-עברית-לבן.png 3378w"><img class="unilogo" sizes="(max-width: 479px) 85vw, (max-width: 767px) 87vw, (max-width: 991px) 21vw, 22vw" src="assets/images/logo.png" srcset="assets/images/logo-p-500x169.png 500w, assets/images/logo-p-800x270.png 800w, assets/images/logo-p-1080x364.png 1080w, assets/images/logo.png 1101w">
+        </div>
+        <div class="w-col w-col-5">
+          <p class="body credits heb">נוצר על ידי <a href="http://shirinanlen.xyz/" class="link">שירין אנלן</a>
+            <br>מפתח ראשי -<a href="http://avner.js.org" class="link"> אבנר פלד</a>
+            <br>ארט דירקטור &nbsp;-<a href="http://zivschneider.com" class="link"> זיו שניידר</a>
+            <br>ראש פיתוח - <a href="http://phenomenalabs.com" class="link">אור פליישר </a>
+            <br>
+            <br>אנימציות קוד - <a href="http://www.jhclaura.com/" class="link">לורה צ׳ן</a>
+            <br>עורך תסריט - אודי בן-אריה
+            <br>
+            <br>מומחה חווית משתמש: אודי בן אריה
+            <br>ייעוץ חוויית משתמש: שלו מורן
+            <br>צולם בעזרת depth kit
+            <br>רוטו- מוניש צ׳אודהארי
+            <br>מידול הכיכר וסביבתה- קריסטיאן טוט, אדוורדס קוג׳ינדס, גילי רון
+            <br>מיקסינג סאונד דמויות- אביב משולם
+            <br>שיידרינג עצים ושיידרינג מים מזרקה- יוקה אריקיינן
+            <br>עוזר פיתוח: חוואקין אלדונטה אינפנטה
+            <br>&nbsp;אנימציית יונים: קריסטיאן טוט
+            <br>דיבוב: אריק ברנשטיין, אדל אלדור, אלכס זמושקין, ג'ודי וולד, מיכה יונה, אבי אלדור, עמית איצקר, יגאל בן נון, אור פליישר</p>
+        </div>
+      </div>
+    </div>
+    <div class="w-col w-col-3"></div>
+  </div>
+  <div class="w-row">
+    <div class="w-col w-col-2"></div>
+    <div class="w-col w-col-7">
+      <h1 class="title">עוד אודות הפרויקט</h1>
+      <div class="w-row">
+        <div class="w-col w-col-6"><img sizes="(max-width: 479px) 92vw, (max-width: 767px) 385px, 28vw" src="assets/images/real.jpg" srcset="assets/images/real-p-500x281.jpeg 500w, assets/images/real-p-800x450.jpeg 800w, assets/images/real.jpg 1000w" width="385">
+        </div>
+        <div class="w-col w-col-6"><img class="beforeafter" sizes="(max-width: 479px) 96vw, (max-width: 767px) 97vw, (max-width: 991px) 28vw, 29vw" src="assets/images/tzina.jpg" srcset="assets/images/tzina-p-500x281.jpeg 500w, assets/images/tzina-p-800x450.jpeg 800w, assets/images/tzina.jpg 1000w" width="385">
+        </div>
+      </div>
+      <p class="body bottom heb" id="more">צינה: סימפוניה של געגועים הינו פרויקט תיעודי בפלטפורמת webVR עבור כרום וHTC Vive.
+        <br>הסיפור מתרחש בכיכר המרכזית של העיר תל אביב- "כיכר דיזנגוף", אשר קרויה גם "כיכר צינה", על שמה של צינה אישתו של ראש העיר הראשון של תל אביב, מאיר דיזנגוף. הסיפור הדוקומנטרי מצייר דיוקן של כיכר צינה דיזנגוף ואנשיה, המעבירים בה את ימיהם תוך הסתכלות אינטימית על נושאים של אהבה, געגועים ובדידות אשר מובילים את כולם לאותו מרחב פיזי הנידון לההרס, מסביב למזרקה המונומנטלית "מים ואש". כולם כאחד באים אליה, כי בה הם מרגישים בבית, מתנחמים בבדידות המשותפת ובשייכות למרחב האורבני הנמצא בתנועה בלתי מפסקת.
+        <br>
+        <br>צינה הינה חוויית הליכה פיזית בעולם מציאות מדומה באמצעות שימוש בטכנולוגיית HTC Vive. הצופה מקדמת את הסיפור בהיותה אקטיבית במרחב הוירטואלי- על ידי ההליכה הפיזית בכיכר הווירטואלית והפגישות עם הדמויות של הסרט. צינה הינה חוויה אינטראקטיבית לא לינארית כוללת. הדמויות צולמו במצלמת קינקט על מנת לייצר גוף תלת מימדי המתעד את הראיונות הדוקומנטריים שנערכו. הצופה נפגשת עם דמויות הכיכר האמתיות בזמן שהיא מתיישבת לצידם בכיכר הווירטואלית. 13 דמויות שונות, מפוזרות לאורך 5 אפיזודות.
+        <br>
+        <br>כל אפיזודה בחוויה מייצגת זמן אחר של היום- מזריחה ועד שקיעה, מקשרים את גיבורי הפרק אל תוך תמה משותפת הקשורה לסיפורם. כל מפגש מעלה אלמנטים של אנימציה המסמלים חלקים מהדברים שנאמרים ומנתקים אט אט את האספקט הדוקומנטרי ומובילים את הפרויקט אל עבר עולמות הפנטזיה. הצופה יכולה לעבור בין האפיזודות השונות על ידי בהייה בשמשות השונות המצויות בשמיים. צינה הינה פרויקט דוקומנטרי המיועד לחוויה מרובת משתמשים- כל צופה מיוצגת על ידי יונה המתהלכת בתוך הכיכר הווירטואלית. בדרך זו, הצופים יכולים להיות לבד, אך עם זאת יחד בכיכר (ממש כשם הדמויות עצמן).
+        <br>
+        <br>בתחילת 2017 כיכר צינה תהרס ותורד לפני השטח. בפעם השלישית בהיסטוריה שלה תשנה את צורתה. והינה שוב נוסטלגיית העבר מדלגת לזמן עתיד, והחללים התחתונים האפלים של הכיכר המורמת נפערים ומתגלים. אין לדעת מה יעלה בגורלם של אנשי הכיכר ומחשיבים אותה לביתם. הפרויקט מאפשר לבקר במקום שבקרוב יחדל מלהתקיים.
+        <br>
+        <br>צינה היא הזמנה למסע הנע בין אהבה ובדידות דרך שילוב בין דוקומנטרי לפנטזיה. עם התגלגלות הסרט, אותם חללים יחלו לצוף והכיכר תהפוך למעין רפסודה עצמאית בתוך מרחב אורבני לא אורבני. געגועים יכולים לחנוק. השחרור מעלה מפלס אחר של שקט. לאחר מותה של צינה, מאיר כתב ביומנו "יש רגעים ששוחים ממצולות עבר". מה שוחה אליך מהעבר?</p>
+      <div class="w-row">
+        <div class="w-col w-col-9"></div>
+        <div class="w-col w-col-3"></div>
+      </div>
+    </div>
+    <div class="w-col w-col-3"></div>
+  </div>
+  <div class="w-tabs" data-duration-in="300" data-duration-out="100">
+    <div class="w-tab-content">
+      <div class="w-tab-pane" data-w-tab="Tab 2"></div>
+      <div class="w-tab-pane" data-w-tab="Tab 3"></div>
+    </div>
+  </div>
+        </div>
+    </div>
+         <!-- <div class="container">
             <div class="row" id="about_grid">
 
                 <div class="col-xs-6">
@@ -125,25 +264,25 @@
                     <h1 class="assistant">
                     על הפרויקט
                     </h1>
-                    <img src="assets/images/early_days.jpg" />
+                    <img src="assets/assets/images/early_days.jpg" />
                     <p class="miriam">
                         "ייחודה של עיר מתקיים בכיכרותיה, בכבישיה, ברחובותיה, במבניה ובגניה ובהתארגנותם במרחב. למתגורר בעיר ולמבקר בה הם אלה שיוצרים את תחושת המקום. אלא שהתחושה איננה אחידה: למתגורר בעיר נוצרת התחושה מתוך הזיכרונות, ההיכרות האינטימית והידיעה; המבקר בעיר מסתפק בהנאה. כדי לקרב את המבקר לעיר ולייחודה הוא נדרש ללימוד, להתעמקות, לסיפור ולמחשבה".<br></p>
                         <p style="direction: ltr;">(J.B.Jackson, 1994)</span>
                     <p class="miriam">
                         כיכר צינה דיזינגוף הוקמה לזכר צינה אישתו של ראש העיר הראשון של תל אביב. בעיר בה רק 3% מרחובותיה קרויים על שם נשים אקט של הענקת השם של הכיכר המרכזית של העיר הינה אקט יוצא דופן העומד בניגוד חד להיסטוריה הפוליטית של תל אביב, לא רק זה, הכיכר תוכננה על ידי אדריכלית אישה, גניה אוורבוך. וכל זאת בשנות השלושים של המאה הקודמת.
                     </p>
-                    <img src="assets/images/invite.jpg" />
+                    <img src="assets/assets/images/invite.jpg" />
                     <p class="miriam">
                         אולי יש בכך שאריות מהעצמה של האהבה בין מאיר וצינה שאפשרה זאת.
                     </p>
-                    <img src="assets/images/she.jpg" />
+                    <img src="assets/assets/images/she.jpg" />
                     <p class="miriam">
                         מאיר כינה את צינה "חברתי בחיים", היש ביטוי לזוגיות יפה מכך?
                     </p>
                     <p class="miriam">
                         כיכר צינה הוענקה לצינה מתוך געגוע וכמיהתו של מאיר להתאחד עם צינה שוב. בתוך רחוב מאיר דיזינגוף הארוך נמצאת האישה העגולה והמרכזית צינה, לנצח ההיסטוריה התל אביבית. תל אביב, שם המכיל בתוכו ניגודיות כמעט בלתי נסבלת. תל מהווה קבר, מוות. אביב המסמל חיים ופריחה. 
                     </p>
-                    <img src="assets/images/sign.png" />
+                    <img src="assets/assets/images/sign.png" />
                     <p class="miriam">
                         צינה, סימפוניה של געגועים מכילה בתוכה את אותם קונפליקטים וניגודים כמעט בלתי נסבלים של החיים. בת בבד בלתי נפרדים מהם גם כן. דמויות כיכר קבועות, המתמזגות עימה באופן כמעט סימביוטי, החשות נחמה בשייכות למרחב האורבני הנמצא בתנועה בלתי מפסקת בתוך מחשבות סטטיות, בבדידות המשותפת. כולם כאחד באים אליה, כי בה הם מרגישים בבית. השעון המנגן הניצב במרכז הכיכר בצורת המזרקה משקף בטעם ציני מתקתק כיצד הזמן מתקפל לו במרחב הכיכר, וכשהזמן נע קדימה, אנשי הכיכר נשענים על כמיהות עבר. 
                     </p>
@@ -164,7 +303,7 @@
             </div>     
          </div>
     </div>
-
+ -->
     <!-- Language selector-->
 	<div id="language" class="miriam"><img src="assets/ui/language-Heb.png"></div>
 
@@ -228,14 +367,14 @@
 		<!--Instructions-->
 		<div id="instruction_screen">
 			<div id="desktop_instruc">
-                    USE ARROW/WASD KEYS<br> TO MOVE AROUND
+                    USE ARROW/WASD KEYS TO MOVE AROUND<br>
                     USE MOUSE<br> TO LOOK AROUND
-                    GAZE AT THE SUN<br> TO CHANGE THE TIME  
+                    GAZE AT THE SUN TO CHANGE THE TIME  
 			</div>
             <div id="vive_instruc">
              
-                    LOOK AROUND AND WALK<br>WITHIN A 3X3 METER RANGE      
-                    GAZE AT THE SUN<br> TO CHANGE THE TIME
+                    LOOK AROUND AND WALK WITHIN A 3X3 METER RANGE <br>     
+                    GAZE AT THE SUN TO CHANGE THE TIME
 
                     <div class="button">Need more help?</div>
 		</div> 
