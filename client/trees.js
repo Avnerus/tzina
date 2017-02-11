@@ -140,7 +140,6 @@ export default class Trees extends THREE.Object3D {
     clickEffect(input){
         var counter = 1;
         if(input == 1){
-            var shaderValue = Math.sin(counter) + 1.0;
             for(var i = 0; i < 500; i++){
                 counter++
                 this.potreeWindMaterial.uniforms.speedFactor.value = counter * 0.01;
