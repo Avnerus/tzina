@@ -1,21 +1,26 @@
 export default {
     types: [
 
-  {
+      {
              name: "Bagel",
              fileName: "Bagel/cloud.js",
              pointSize : 0.013
          },
-  {
+      {
              name: "Bun",
              fileName: "Bun/cloud.js",
              pointSize : 0.013
          },
-   {
+       {
              name: "whiteBread",
              fileName: "whiteBread/cloud.js",
              pointSize : 0.013
          },
+        {
+              name: "umbrella",
+              fileName: "umbrella/cloud.js",
+              pointSize : 0.013
+          },
           {
             name: "junkie",
             fileName: "junkie/cloud.js",

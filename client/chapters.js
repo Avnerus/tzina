@@ -16,17 +16,14 @@ export default
 			],
 			"extraAssets": [
 
-			{
+                {
 
-            name: "Bagel",
-          			position: [-18.89,51.21,28.02],
-					rotation: [160,360,0],
+                    name: "Bagel",
+          			position: [-6.37,22.79,10.88],
+					rotation: [160,0,0],
 					scale: 0.37
-     		   },
-     	
- 		
-
-					{
+                },
+				{
 					name: "junkie",
 					position: [2.24,23.9,10.32],
 					rotation: [182,335,0],
@@ -49,7 +46,8 @@ export default
                        position: [11.22,21.2,11.22],
                        rotation:[0,251,0],
                        scale: 0.45
-               },
+               }]
+        },
 		{
 		"name": "ep.2: home",
 			"hour": 9,
@@ -101,19 +99,19 @@ export default
          		   scale: 0.233
        		 },
        		  {	
-            name: "Umbrella",
+            name: "umbrella",
           			position: [-17.08,18.73,29.82],
 					rotation: [0,205,0],
 					scale: 0.514
      		   },
  		{	
-            name: "Umbrella",
+            name: "umbrella",
           			position: [-40,19,4.57],
 					rotation: [0,205,0],
 					scale: 0.514
      		   },
      		   {	
-            name: "Umbrella",
+            name: "umbrella",
           			position: [-32.42,19,30],
 					rotation: [0,205,0],
 					scale: 0.514
