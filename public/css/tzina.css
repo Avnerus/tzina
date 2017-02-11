@@ -215,6 +215,7 @@ right:1em;
     cursor: pointer;
     font-size: 15px;
   }
+  /*To comment out once the image is resized*/
   #language img{
     width: 18%;
   }

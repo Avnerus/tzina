@@ -253,7 +253,7 @@ try {
             currentLanguage = 'he';
             config.language = 'heb';
 
-            $('#language').html('ENGLISH');
+            $('#language').html('<img src="assets/ui/language_Eng.png">');
 
             $('#desc_sub').html('מאת שירין אנלן webVR דוקומנטרי');
 
@@ -270,7 +270,7 @@ try {
             currentLanguage = 'en';
             config.language = 'eng';
 
-            $('#language').html('עברית');
+            $('#language').html('<img src="assets/ui/language-Heb.png">');
 
             $('#desc_sub').html('A WEBVR DOCUMENTARY BY SHIRIN ANLEN');
 
