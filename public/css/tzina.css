@@ -26,9 +26,10 @@ body {
 }
 
 #idfa-image{
-position: absolute;
-bottom: 0;
-right: 0;
+position: fixed;
+right:0.5em;
+    bottom: 0.5em;
+/*top:80%;*/
 
 }
 .dg.ac {
