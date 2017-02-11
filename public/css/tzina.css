@@ -187,11 +187,8 @@ right:1em;
     padding-top: 20px; padding-bottom: 10px;
     letter-spacing: 2px;
     text-decoration: underline;
-    /*border: 1px solid #fff;
- */ /*  border-radius: 10px;*/
     background-color: transparent;
-    /*padding-right: 5px; padding-right: 5px;*/
-    transition-duration: 0.2s;
+    transition-duration: 0.6s;
     transition-timing-function: linear;
     width: 20%;
   }
@@ -199,8 +196,7 @@ right:1em;
     margin-right: 2px; margin-left: 2px;
   }
   .button:hover{
-    color: #000000;
-    background-color: #ffffff;
+    text-decoration: line-through;
   }
   .grayscale{
     -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
@@ -208,12 +204,16 @@ right:1em;
   }
   #language{
     position: absolute;
-    top: 20px; right: 20px;
+    top: 20px; right: -25%; 
     color: #e2e2e2;
     z-index: 3;
     display: none;
     cursor: pointer;
     font-size: 15px;
+  }
+  /*To comment out once the image is resized*/
+  #language img{
+    width: 18%;
   }
   #language:hover{
     color: #fff;
