@@ -38,8 +38,7 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         let TEXT_DEFINITION = {
              align: textAlign.center, 
              font: '70px Miriam Libre',
-             //fillStyle: '#33e5ab',
-             fillStyle: '#ffffff',
+             fillStyle: '#33e5ab',
              antialias: true,
              shadow: true
         }
