@@ -232,9 +232,9 @@ try {
 
               $('#logo').removeClass('grayscale');
 
-              videoLogo.loop = true;
+              //videoLogo.loop = true;
 
-              videoLogo.play();
+              //videoLogo.play();
 
           }).css("display", "inline-block");
 
