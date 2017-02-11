@@ -207,6 +207,8 @@ try {
         //Toggle the screen container (display on/off)
         $('#about_container').toggle(250);
 
+        $('#about_grid').toggle(250);
+
       });
     //Device Chooser Buttons
       $('#enter_button').mouseenter(function(){
