@@ -138,8 +138,11 @@ export default class Trees extends THREE.Object3D {
         }  
     }
     clickEffect(input){
+        var counter = 1;
         if(input == 1){
-            this.potreeWindMaterial.uniforms.speedFactor.value = 1.2;
+            counter++;
+            var shaderValue = Math.sin(counter) + 1.0;
+            this.potreeWindMaterial.uniforms.speedFactor.value = shaderValue;
         } else {
             this.potreeWindMaterial.uniforms.speedFactor.value = 1.0;
         }

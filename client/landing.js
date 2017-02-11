@@ -39,7 +39,7 @@ $('body').click(function(){
 
     clickShaderEffect = 0;
 
-  }, 1000);
+  }, 2000);
 
 });
 
