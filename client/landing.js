@@ -29,6 +29,20 @@ var FPS_INTERVAL = 1000 / FPS;
 var elapsed = 0
 var lastTimestamp = 0;
 
+var clickShaderEffect = 0;
+
+$('body').click(function(){
+
+  clickShaderEffect = 1;
+
+  setTimeout(function(){
+
+    clickShaderEffect = 0;
+
+  }, 2000);
+
+});
+
 //Paths
 const SOUND_PATH = 'assets/ui_sounds/';
 
@@ -157,9 +171,9 @@ try {
 
                         });
 
-                        videoBirds.loop = true;
+                       // videoBirds.loop = true;
 
-                        videoBirds.play();
+                        //videoBirds.play();
 
                      }); 
 
@@ -667,6 +681,8 @@ if (!Modernizr.touchevents && lock.available()) {
 
           // landingControls.update();
           // landingKeyControl.update(delta);
+
+          trees.clickEffect(clickShaderEffect);
 
           renderer.render(scene, camera);
 
