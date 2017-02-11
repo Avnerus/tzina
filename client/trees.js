@@ -3,12 +3,13 @@ const TREES_PATH = "assets/trees"
 import DebugUtil from './util/debug'
 
 export default class Trees extends THREE.Object3D {
-    constructor(camera, renderer) {
+    constructor(config, camera, renderer) {
         super();
         this.debug = false;
 
-        this.camera = camera;
+        this.cameras = [camera];
         this.renderer = renderer;
+        this.config = config;
 
         const glslify = require('glslify');
         this.windVertexShader = glslify('./shaders/potree_wind_vs.glsl');
@@ -24,7 +25,9 @@ export default class Trees extends THREE.Object3D {
             .then((results) => {
 
                 // Modify the potree point cloud material with a shader that supports wind
+                this.potreeWindMaterial = new Potree.PointCloudMaterial();
                 this.potreeMaterial = new Potree.PointCloudMaterial();
+
                 let windUniforms = { 
                     time: { type: "f", value: 0 },
                     speedFactor: { type: "f", value: 1.0 },
@@ -38,23 +41,27 @@ export default class Trees extends THREE.Object3D {
                     rustleFrequency: { type: "f", value: 0.2 }
                 };
 
-                Object.assign(windUniforms, this.potreeMaterial.uniforms);
-                let windShader = this.potreeMaterial.getDefines() + this.windVertexShader;
+                Object.assign(windUniforms, this.potreeWindMaterial.uniforms);
+                let windShader = this.potreeWindMaterial.getDefines() + this.windVertexShader;
 
-                this.potreeMaterial.setValues({
+                this.potreeWindMaterial.setValues({
                     uniforms: windUniforms,
                     vertexShader: windShader
                     });
 
-                //console.log("Material shader ", this.potreeMaterial.vertexShader);
 
                 let counter = 0;
                 TreesDef.instances.forEach((instance) => {
         //            let mesh = new THREE.Points( treeTypes[instance.type], material );
                     if (treeTypes[instance.type]) {
-                        let mesh = new Potree.PointCloudOctree(treeTypes[instance.type], this.potreeMaterial);
+                        let mesh;
+                        if (instance.scale > 0.5) {
+                            mesh = new Potree.PointCloudOctree(treeTypes[instance.type], this.potreeWindMaterial);
+                        } else {
+                            mesh = new Potree.PointCloudOctree(treeTypes[instance.type], this.potreeMaterial);
+                        }
                         //mesh.material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-                        mesh.material.size = 0.03;
+                        mesh.material.size = 0.003;
                         mesh.material.lights = false;
                         mesh.position.fromArray(instance.position);
                         if (instance.scale) {
@@ -79,6 +86,34 @@ export default class Trees extends THREE.Object3D {
                         counter++;
                     }
                 })
+
+                if (typeof(events) != 'undefined') {
+
+                    events.on("control_threshold", (passed) => {
+                        this.controlPassed = passed;
+                        if (passed) {
+
+                            let size = this.config.platform == "desktop" ? 0.07 : 0.03;
+                            this.potreeWindMaterial.size = size;
+                            this.potreeMaterial.size = size;
+
+                            //
+                            // In VR Hide some trees that won't be visible
+                            if (inVR) {
+                                let hide1 = this.children[8];
+                                let hide2 = this.children[13];
+                                console.log("Hiding 2 trees", hide1, hide2);
+
+                                this.remove(hide1);
+                                this.remove(hide2);
+                            }
+                        }
+                    });
+                    events.on("vr_start", (cameras) => {
+                        this.cameras = cameras;
+                    });
+                }
+
                 resolve();
             });
         });      
@@ -95,9 +130,11 @@ export default class Trees extends THREE.Object3D {
     }
 
     update(dt,et) {
-        this.potreeMaterial.uniforms.time.value = et;
+        this.potreeWindMaterial.uniforms.time.value = et;
         for (let i = 0; i < this.children.length; i++) {
-            this.children[i].update(this.camera, this.renderer);
+            for (let j = 0; j < this.cameras.length; j++) {
+                this.children[i].update(this.cameras[j], this.renderer);
+            }
         }  
     }
 }

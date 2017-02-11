@@ -1,9 +1,11 @@
 import DebugUtil from '../util/debug'
 
 export default class MeirAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( sky, square ) {
         super();
         this.BASE_PATH = 'assets/animations/mark';
+        this.sky = sky;
+        this.square = square;
     }
 
     init(loadingManager) {
@@ -12,16 +14,17 @@ export default class MeirAnimation extends THREE.Object3D {
     }
 
     setupAnim() {
-
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 5,  anim: ()=>{ this.pinkNeonOn() } },
+            { time: 1,  anim: ()=>{ this.skyLightBright() } },
+            { time: 5,  anim: ()=>{ this.pinkNeonOn() } },            
             { time: 10, anim: ()=>{ this.blueNeonOn() } },
-            { time: 15, anim: ()=>{ this.neonRotate() } },
+            { time: 11,  anim: ()=>{ this.skyLightBright2() } },
+            //{ time: 15, anim: ()=>{ this.neonRotate() } },
             { time: 32, anim: ()=>{ this.neonRotate() } },
             { time: 40, anim: ()=>{ this.neonFlickering( 0.2, 3 ) } },    // neonFlickering( speed, time ) <-- how fast & how many times of flickering
-            { time: 25, anim: ()=>{ this.neonRotateBack() } },
+            { time: 45, anim: ()=>{ this.neonRotateBack() } },
             { time: 55, anim: ()=>{ this.neonRotate() } },
             { time: 94, anim: ()=>{ this.neonRotateBack() } },
             { time: 99, anim: ()=>{ this.neonRotate() } },
@@ -32,7 +35,8 @@ export default class MeirAnimation extends THREE.Object3D {
             { time: 198, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } },
             { time: 200, anim: ()=>{ this.neonRotateBack() } },
             { time: 207, anim: ()=>{ this.neonFlickering( 0.15, 6 ) } },
-            { time: 209, anim: ()=>{ this.neonRotate() } },  
+            { time: 209, anim: ()=>{ this.neonRotate() } },
+            { time: 211,  anim: ()=>{ this.skyLightBack() } },
             { time: 218, anim: ()=>{ this.characterDisappear() } }
         ];
         this.nextAnim = null;
@@ -50,9 +54,9 @@ export default class MeirAnimation extends THREE.Object3D {
         }
 
         // NEON       
-            this.neon1_light = new THREE.PointLight( 0xff0055, 0, 5 );
+            this.neon1_light = new THREE.PointLight( 0xff0055, 0, 3 ); // 5
             this.neon1_light.position.set(0.2, 1, 1);
-            this.neon2_light = new THREE.PointLight( 0x00eaff, 0, 5 );
+            this.neon2_light = new THREE.PointLight( 0x00eaff, 0, 3 ); // 5
             this.neon2_light.position.set(-0.2, 1, -1);
 
             let neonFiles = [];
@@ -113,7 +117,7 @@ export default class MeirAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
-        // DebugUtil.positionObject(this, "mark ani");
+        // DebugUtil.positionObject(this, "Mark Ani");
         //
         this.loadingManager.itemEnd("MarkAnim");
     }
@@ -126,6 +130,47 @@ export default class MeirAnimation extends THREE.Object3D {
         for(let i=0; i<this.sequenceConfig.length; i++){
             this.sequenceConfig[i].performed = false;
         }
+    }
+
+    skyLightBright() {
+        this.oriHemi = this.sky.getHemiLghtOriStatus();
+        this.oriDir = this.sky.getDirLghtOriStatus();
+        this.sky.pauseUpdateHemiLight();
+        this.oriFLightIntensity = this.square.fountainLight.intensity;
+
+        TweenMax.to( this.sky.dirLight, 3, {intensity: 1});
+        TweenMax.to( this.sky.hemiLight, 3, {intensity: 1});
+        TweenMax.to( this.square.fountainLight, 3, {intensity: 2});
+    }
+
+    skyLightBright2() {
+        // TweenMax.to( this.sky.dirLight, 2, {intensity: 0.0});
+        // TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.4});
+        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.325, g:0.412, b:0.867 } );  //5369dd (light blue)
+        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.882, g:0.392, b:0.592 } ); //e16497 (light pink)
+    }
+
+    skyLightBack() {
+        TweenMax.to( this.square.fountainLight, 3, {intensity: this.oriFLightIntensity});
+        let hemiTargetIntensity = this.sky.getHemiLghtCorrectIntensity();
+        TweenMax.to( this.sky.hemiLight, 3, {intensity: hemiTargetIntensity});
+        TweenMax.to( this.sky.dirLight, 3, {
+            intensity: this.oriDir.intensity,
+            onComplete:()=>{
+                this.sky.resumeUpdateHemiLight();
+            }
+        });
+
+        TweenMax.to( this.sky.hemiLight.color, 2, { 
+            r:this.oriHemi.color.r,
+            g:this.oriHemi.color.g,
+            b:this.oriHemi.color.b
+        } );
+        TweenMax.to( this.sky.hemiLight.groundColor, 2, {
+            r:this.oriHemi.groundColor.r,
+            g:this.oriHemi.groundColor.g,
+            b:this.oriHemi.groundColor.b
+        } );
     }
 
     pinkNeonOn(){

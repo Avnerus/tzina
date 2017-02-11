@@ -15,13 +15,13 @@ var Text2D = (function (_super) {
         _super.call(this);
         this._font = options.font || '30px Arial';
         this._fillStyle = options.fillStyle || '#FFFFFF';
+        this._shadow = options.shadow || false;
         this.canvas = new CanvasText_1.CanvasText();
         this.align = options.align || utils_1.textAlign.center;
         this.side = options.side || THREE.DoubleSide;
         // this.anchor = Label.fontAlignAnchor[ this._textAlign ]
         this.antialias = (typeof options.antialias === "undefined") ? true : options.antialias;
         this.text = text;
-        this._shadow = options.shadow || false;
     }
     Object.defineProperty(Text2D.prototype, "width", {
         get: function () { return this.canvas.textWidth; },

@@ -14,7 +14,7 @@ void main() {
     vec3 pos = texture2D( positions, vUv ).rgb;
     vec3 morphPos = texture2D( morphPositions, vUv ).rgb;
 
-    if( timer<0.97 ){
+    if( timer<0.47 ){
         pos = pos + (morphPos-pos) * timer;
     }
     

@@ -17,24 +17,45 @@ export default class SunLoader extends THREE.Object3D  {
         this.width = 32;
         this.height = 32;
 
-        this.timer = 0;
+        this.orderTimer = 0;
 
         this.renderer = renderer;
 
         this.radius = 3;
         this.tube = 0.2;
+        
+        this.organizeTween = null;
     }
-    organize() {
-        TweenMax.to(this.simulationShader.uniforms.orderTimer, 1, {value: 1.0});
+    organize(time) {
+        console.log("Sun loader - organize!");
+        this.renderShader.uniforms.organizing.value = 1;
+        this.organizeTween = TweenMax.to(this, time, {ease: Linear.easeNone, orderTimer: 1.0, onUpdate: () => {
+                this.simulationShader.uniforms.orderTimer.value = 
+                this.renderShader.uniforms.orderTimer.value = this.orderTimer;
+        }, onComplete: () => {
+            this.organizeTween = null;
+            this.renderShader.uniforms.organizing.value = 0;
+            console.log("Sun loader - organize done");
+        }});
     }
     disorganize() {
-        TweenMax.to(this.simulationShader.uniforms.orderTimer, 1, {value: 0.0});
+        console.log("Sun loader - disorganize!");
+        if (this.organizeTween) {
+            this.organizeTween.kill();
+            this.organizeTween = null;
+        }
+        this.orderTimer = 0;
+        this.simulationShader.uniforms.orderTimer.value = this.renderShader.uniforms.orderTimer.value = this.orderTimer;
+        this.renderShader.uniforms.organizing.value = 0;
+        //TweenMax.to(this.simulationShader.uniforms.orderTimer, 1, {value: 0.0});
     }
     explode() {
+        console.log("Sun loader - explode!");
         this.renderShader.uniforms.boom.value = 1;
         TweenMax.to(this.simulationShader.uniforms.explodeTimer, 1, {ease: Linear.None, onComplete: () => {
             this.simulationShader.uniforms.explodeTimer.value = 0;
             this.simulationShader.uniforms.orderTimer.value = 0;
+            this.renderShader.uniforms.orderTimer.value = 0;
             this.renderShader.uniforms.boom.value = 0;
         },value: 1.0});
     }
@@ -77,7 +98,9 @@ export default class SunLoader extends THREE.Object3D  {
                 pointSize: { type: "f", value: 2.0},
                 radius: { type: "f", value: this.radius },
                 tube: { type: "f", value: this.tube },
-                boom: { type: "1", value: 0 }
+                boom: { type: "1", value: 0 },
+                organizing: { type: "1", value: 0 },
+                orderTimer: { type: "f", value: 0.0 },
             },
             vertexShader: this.render_vs,
             fragmentShader: this.render_fs,
@@ -109,9 +132,5 @@ export default class SunLoader extends THREE.Object3D  {
     update(dt,et) {
         this.simulationShader.uniforms.timer.value = et;
         this.fbo.update();
-        if (this.simulationShader.uniforms.orderTimer.value > 0.3 && 
-           this.simulationShader.uniforms.explodeTimer.value == 0.0) {
-            this.rotateZ(0.5 * dt);
-        }
     }
 }

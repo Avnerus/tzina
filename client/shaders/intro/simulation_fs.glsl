@@ -62,8 +62,8 @@ void main() {
 
     // if hitting ground, reset
     if (pos.y < -300.0) {  //
-       pos.y += 450.0;     // top: ~150
-       pos.x = -40.0 + random(pos.xz) * 70.0;
+       pos.y += 550.0;     // top: ~250
+       pos.x = -30.0 + random(pos.xz) * 60.0;
        pos.z = -20.0 + random(pos.xz) * 50.0;
 
        //acce *= 0.0;

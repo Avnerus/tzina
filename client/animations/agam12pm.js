@@ -1,4 +1,6 @@
 import DebugUtil from '../util/debug'
+import MultilineText from '../util/multiline_text'
+import {textAlign} from '../lib/text2d/index'
 
 export default class Agam12PMAnimation extends THREE.Object3D {
     constructor( square ) {
@@ -6,11 +8,47 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         this.BASE_PATH = 'assets/animations/agam12pm';
 
         this.square = square;
+        this.didInit = false;
+
+        this.INTRO_TEXT = [
+            "Yaakov Agam, 89 years old.",
+            "The godfather of Kinetic art and one of the first",
+            "who asked the viewer to participate.",
+            "This fountain, \“Water and Fire\”, is a piece that",
+            "represents the core of his philosophy."
+        ]
     }
 
     init(loadingManager) {
-        this.loadingManager = loadingManager;
-        this.setupAnim();
+        if (!this.didInit) {
+            this.loadingManager = loadingManager;
+            this.setupAnim();
+
+            // Intro text
+            this.text = this.generateText();
+            this.text.setText(this.INTRO_TEXT);
+            this.add(this.text);
+            //DebugUtil.positionObject(this.text, "Agam text");
+
+            this.didInit = true;
+        }
+    }
+
+    generateText() {
+        let TEXT_DEFINITION = {
+             align: textAlign.center, 
+             font: '70px Miriam Libre',
+             fillStyle: '#33e5ab',
+             antialias: true,
+             shadow: true
+        }
+        let text = new MultilineText(5, TEXT_DEFINITION, 100);
+        text.init();
+
+        text.position.set(-9.1,5.4,-9,56);
+        text.scale.set(0.0087,0.0087,0.0087);
+        
+        return text;
     }
 
     setupAnim() {
@@ -63,13 +101,14 @@ export default class Agam12PMAnimation extends THREE.Object3D {
             // DebugUtil.positionObject(this.agamSmall_2, "agamSmall_2");
         });
 
-        // let testCube = new THREE.Mesh( new THREE.BoxGeometry(4,1,1), new THREE.MeshLambertMaterial({color: 0xff0000}) );
-        // this.add(testCube);
-        // DebugUtil.positionObject(testCube, "testCube");
+        /*
+        let testCube = new THREE.Mesh( new THREE.BoxGeometry(4,1,1), new THREE.MeshLambertMaterial({color: 0xff0000}) );
+        this.add(testCube);
+        DebugUtil.positionObject(testCube, "testCube");*/
 
         this.dummy = {opacity: 1};
 
-        // DebugUtil.positionObject(this, "agam");
+        // DebugUtil.positionObject(this, "Agam Ani");
         //
         this.loadingManager.itemEnd("Agam12PMAnim");
     }

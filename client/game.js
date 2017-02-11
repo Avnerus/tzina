@@ -16,7 +16,9 @@ import SoundManager from './sound_manager'
 import TimeController from './time_controller'
 import CharacterController from './character_controller'
 import Show from './show'
-import EndCredits from './end_credits'
+import Extras from './extras'
+import SunGazer from './sun_gazer'
+import Instructions from './instructions';
 
 import DebugUtil from './util/debug'
 
@@ -29,6 +31,9 @@ import ItzikAnimation from './animations/itzik'
 import MeirAnimation from './animations/meir'
 import MarkAnimation from './animations/mark'
 import Agam12PMAnimation from './animations/agam12pm'
+import ItzhakAnimation from './animations/itzhak'
+import ShirinAnimation from './animations/shirin'
+import RamiAnimation from './animations/rami'
 
 import IntroAnimation from './animations/introAni'
 import {MeshText2D, textAlign} from './lib/text2d/index'
@@ -39,6 +44,11 @@ import FPSCount from './util/fpscount'
 
 import VideoRGBD from './util/video_rgbd'
 
+import Ending from './ending'
+
+import PidgeonController from './clientSockets/index'
+
+
 export default class Game {
     constructor(config) {
         console.log("Game constructed!")
@@ -47,16 +57,21 @@ export default class Game {
         this.controlPassed = false;
         this.shownWASD = false;
         this.shownZoom = false;
+        this.ended = false;
     }
     init() {
 
+        console.log("Game init!");
         class TzinaEmitter extends EventEmitter {}
         this.emitter = new TzinaEmitter();
         this.emitter.setMaxListeners(40);
         global.events = this.emitter;
+        global.inVR = false;
 
         this.gui = new GuiManager(this.emitter);
-        this.gui.init();
+        if (!this.config.production) {
+            this.gui.init();
+        }
 
         this.renderer = new THREE.WebGLRenderer({antialias: true,alpha: true});
         this.renderer.setClearColor( 0, 1 );
@@ -95,9 +110,6 @@ export default class Game {
         this.scene.add( this.hemiLight );
 
 
-            /*
-        events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
-        events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y"); */
 
 
         this.dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
@@ -107,18 +119,16 @@ export default class Game {
         this.dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
         this.dirLight.color.setHSL(0.1,0.42,0.9);
 
-
-        // --- hide by laura --- start
-    
             /*
+        events.emit("add_gui", {folder:"Hemi light", listen: true, step: 0.01}, this.hemiLight, "intensity", 0, 1);
+        events.emit("add_gui", {folder:"Hemi light"}, this.hemiLight.position, "y");
+
         events.emit("add_gui", {folder:"Dir light", listen:true}, this.dirLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true, step: 0.01}, this.hemiLight, "intensity",0,2);
         events.emit("add_gui", {folder:"Hemi light", listen:true}, this.hemiLight.position, "y");
         DebugUtil.colorPicker("Dir light", this.dirLight, "color");
         DebugUtil.colorPicker("Hemi light", this.hemiLight, "groundColor");
-        DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");
-        */
-        // --- hide by laura --- end
+        DebugUtil.colorPicker("Hemi light", this.hemiLight, "color");*/
 
         //dirLight.target.position.set(0,100,0);
         //
@@ -131,14 +141,21 @@ export default class Game {
         this.loadingManager = new THREE.LoadingManager();
         this.collisionManager = new CollisionManager(this.camera, this.scene);
 
-        // Square
-        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene);
+        this.extras = new Extras(this.config, this.camera, this.renderer);
 
         this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
+        // Square
+        this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene, this.extras, this.sky);
+
+        // Sun gazer
+        this.sunGazer = new SunGazer(this.square, this.soundManager, this.collisionManager);
+        this.sunGazer.init();
+
+
         this.flood = new Flood();
         this.flood.init();
-        this.scene.add(this.flood); 
+
 
         /*
         // Post processing
@@ -152,34 +169,47 @@ export default class Game {
         */
 
        
-        this.vrControls = new TzinaVRControls(this.emitter, this.camera);
+        this.vrControls = new TzinaVRControls(this.emitter, this.camera, null, this.square);
 
         this.zoomController = new ZoomController(this.config, this.emitter, this.camera, this.square, this.scene, this.vrControls);
         this.zoomController.init();
 
-        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager);
 
-        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene);
-        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
 
 
         if (!this.config.noAnimations) {
             this.animations = {
                 'Hannah' : new HannahAnimation(),
                 'Miriam' : new MiriamAnimation(this.renderer),
-                'Haim' : new HaimAnimation(this.renderer),
+                'Haim' : new HaimAnimation(this.renderer, this.sky, this.square),
                 'Itzik' : new ItzikAnimation(),
                 'Meir' : new MeirAnimation(),
-                'Mark' : new MarkAnimation(),
+                'Mark' : new MarkAnimation(this.sky, this.square),
                 'Agam12PM' : new Agam12PMAnimation(this.square),
-                'Lupo12PM' : new Lupo12PMAnimation()
+                'Lupo12PM' : new Lupo12PMAnimation(),
+                'Itzhak' : new ItzhakAnimation(),
+                'Rami' : new RamiAnimation(this.renderer),
+                'Shirin' : new ShirinAnimation()
             }
         } else {
             this.animations = {};
         }
 
 
-        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager);
+        this.characterController = new CharacterController(this.config, this.animations, this.square, this.collisionManager, this.soundManager, this.scene);
+
+        this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager, this.sunGazer);
+
+        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
+        this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config, this.introAni);
+
+
+        this.instructions = new Instructions(this.config, this.camera, this.square);
+
+        // laura: i don't know other better way to do this..
+        if (!this.config.noAnimations) {
+            this.animations['Lupo12PM'].assignChController(this.characterController);
+        }
 
         let TEXT_DEFINITION = {
              align: textAlign.center,
@@ -202,20 +232,25 @@ export default class Game {
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
 
-        this.show = new Show(this.square, this.characterController, this.timeController); 
-        this.show.init();
+        this.show = new Show(this.square, this.characterController, this.timeController, this.soundManager); 
 
-        this.endCredits = new EndCredits(this.camera);
+        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni);
+        this.ending.init();
+
+        this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
+        this.pidgeonController.init(this.loadingManager);
+
     }
 
-    load(onLoad) {
+    load(onLoad, onProgress) {
+        console.log("Game load!");
         this.loadingManager.onLoad = () => {
 
             console.log("Done loading everything!");
             if (!this.config.noSquare) {
                 this.scene.add(this.square);
                 this.sky.applyToMesh(this.square.getSphereMesh());
-                this.introAni.initFBOParticle();
+                this.introAni.createSnowParticle();
                 this.scene.add(this.introAni);
             }
 
@@ -232,7 +267,9 @@ export default class Game {
         };
 
         this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            console.log("Loaded " + itemsLoaded + "/" +  itemsTotal);
+            if (onProgress) {
+                onProgress(url, itemsLoaded, itemsTotal);
+            }
         }
 
         if (!this.config.noSquare) {
@@ -248,6 +285,8 @@ export default class Game {
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
+        this.show.init();
+        this.instructions.init();
         
         VideoRGBD.initPool();
 
@@ -280,18 +319,6 @@ export default class Game {
 
     start() {
 
-        events.on("intro_end", () => {
-            console.log("Intro ended");
-            if (!this.config.noSquare) {
-                setTimeout(() => {
-                    this.introAni.start();
-
-                   // this.endCredits.init();
-                    //this.endCredits.play();
-                },5000);
-            }
-        });
-
         this.counter = 0;
 
         events.on("zoom_used", () => {
@@ -316,73 +343,50 @@ export default class Game {
         events.on("control_threshold", (passed) => {
             if (passed) {
                 this.controlPassed = true;
+                this.soundManager.play("ambience");
                 this.introAni.disposeAni();
-                if (!this.shownWASD) {
-                    document.getElementById("wasd-container").style.display = "block";
-                    setTimeout(() => {
-                        document.getElementById("wasd-container").style.display = "none";
-                    },3000);
-                    this.shownWASD = true;
-                }
-            }
-        });
-
-        this.charactersEnded = [];
-        events.on("character_ended", (name) => {
-            this.charactersEnded.push(name);
-            if (this.charactersEnded.length == 4) {
-                this.timeController.setDaySpeed(0.1);
-                this.timeController.done = true;
-                this.zoomController.done = true;
-                this.timeController.chapterTitle.visible = false;
+                this.square.add(this.flood); 
                 setTimeout(() => {
-                    this.vrControls.active = false;
-                    this.zoomController.velocityZ = -15.0;
-                    this.zoomController.friction = 0;
-                    document.getElementById("coming-soon").style.display = "block";
-                    events.on("base_position", () => {
-                            document.getElementById("coming-img").style.opacity = 1;
-                    });
-                    this.soundManager.loadSound(this.ZOOM_OUT_SOUND)
-                    .then((sound) => {
-                        sound.playIn(3);
-                    });
-                },40000);
+                    this.instructions.start();
+                },2000);
             }
-            else if (this.charactersEnded.indexOf("Itzik") != -1 &&
-                this.charactersEnded.indexOf("Hannah") != -1 &&
-                this.timeController.currentHour >= 17 &&
-                this.timeController.currentHour < 19
-               ) {
-                   this.timeController.setDaySpeed(0.06);
-            }
-            else if (this.charactersEnded.indexOf("Miriam") != -1 &&
-                this.charactersEnded.indexOf("Haim") != -1 &&
-                this.timeController.currentHour >= 19
-               ) {
-                 this.timeController.jumpToTime(17);
-            }
-
         });
+            /*
+        events.on("character_ended", (name) => {
+            if (this.timeController.experienceProgress > 0.35 && !this.ended) {
+                setTimeout(() => {
+                    this.ended = true;
+                    this.ending.start();
+                },3000);
+            }
+        });*/
 
         this.started = true;
             /*
         if (this.config.fullscreen) {
             this.vrManager.setMode_(2);
             }*/
-        this.soundManager.play("ambience");
-        console.log("VR Compatible?", this.vrManager.isVRCompatible);
         if (this.config.controls == "locked" && !window.WebVRConfig.FORCE_ENABLE_VR) {
-                this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
-                this.keyboardController.init();
-                this.vrControls.standing = true;
+                
+                if (this.config.platform == "desktop") {
+                    this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+                    this.keyboardController.init();
+                } else {
+                    
+                    this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
+                    this.keyboardController.init();
+                    this.vrControls.standing = true;
+                }
+                    
                 // this.vrControls.scale = 1.5;
 
                 // --- hide by laura --- start
+                /*
                 events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "x");
                 events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "y");
                 events.emit("add_gui", {folder: "VR Position", listen: true, step: 0.01}, this.vrControls.basePosition, "z");
                 // --- hide by laura --- end
+                */
         } else {
             this.vrControls = null;
             console.log("Orbit controls");
@@ -392,7 +396,6 @@ export default class Game {
         }
 
 
-        this.zoomController.start();
 
         if (!this.config.noSquare) {
             this.square.fountain.startCycle();
@@ -402,18 +405,23 @@ export default class Game {
             if (!this.config.noSquare) {
                 this.timeController.transitionTo(this.config.startTime, 1);
             }
+            this.zoomController.start();
+            this.soundManager.play("ambience");
             setTimeout(() => {
                 events.emit("intro_end");
                 this.intro.playCredits();
             },3000);
 
-
         } else {
             // start the intro
-            this.intro.start();
-            //this.timeController.setTime(17);//17
-        }
+            console.log("VR Compatible?", this.vrManager.isVRCompatible);
 
+            if (!this.vrManager.isVRCompatible && !window.WebVRConfig.FORCE_ENABLE_VR) {
+                this.intro.position();
+                this.intro.start();
+                this.introAni.start();
+            }
+        }
     }
 
     animate(t) {
@@ -431,14 +439,14 @@ export default class Game {
             this.characterController.update(dt,et);
             this.waterDrops.update(dt);
             if (!this.controlPassed) {
-                this.intro.update();
+                this.intro.update(dt,et);
             }
         }
         if (this.keyboardController) {
             this.keyboardController.update(dt);
         }
+        //this.zoomController.update(dt);
         this.introAni.update(dt,et);
-        this.zoomController.update(dt);
         if (this.vrControls) {
                this.vrControls.update();
         } else {
@@ -446,7 +454,32 @@ export default class Game {
         }
         this.collisionManager.update(dt);
         this.flood.update(dt);
-        this.endCredits.update(dt);
+
+        if (this.ended) {
+            this.ending.update(dt);
+        }
+
+        this.endCheck(et);
+
+        //        console.log("SQUARE CUBE", worldPos.x, worldPos.z);
+
+       if(!this.pidgeonfailed){
+          try{
+            this.pidgeonController.frame(dt);
+          }catch(e){
+            console.error("pidgeonContoller failed",e);
+            this.pidgeonfailed=true;
+          }
+
+        }
+    }
+
+    endCheck(time) {
+        if (!this.ended && time > 60 * 15) {
+        //if (!this.ended && time > 60 * 0.4) {
+            this.ended = true;
+            this.ending.start();
+        }
     }
 
     render() {
@@ -464,5 +497,33 @@ export default class Game {
         this.renderer.setSize(width, height);
         this.vrEffect.setSize(width, height);
         //this.composer.setSize(width, height);
+    }
+
+    vrChange() {
+        if (this.vrManager.hmd.isPresenting) {
+            let newCameras = this.vrEffect.getCameras();
+            document.getElementById('reset-pose').style.display = "block";
+            document.getElementById('reset-pose').addEventListener("click", () => {this.resetPose()});
+            events.emit("vr_start", newCameras);
+            inVR = true;
+            if (!this.config.skipIntro && !this.controlPassed) {
+                this.intro.position();
+                this.intro.start();
+                this.introAni.start();
+            }
+        } else {
+            events.emit("vr_stop")
+            inVR = false;
+        }
+    }
+
+    resetPose() {
+        console.log("Reset pose!");
+        this.vrControls.resetPose();
+    }
+
+    setPlatform(platform) {
+        console.log("Selected platform", platform);
+        this.config.platform = platform;
     }
 }

@@ -576,6 +576,24 @@ THREE.GeometryUtils = {
 		console.warn( 'THREE.GeometryUtils: .center() has been moved to Geometry. Use geometry.center() instead.' );
 		return geometry.center();
 
-	}
+	},
 
+    enlargeBox: function(box, space, offset) {
+        let scale = new THREE.Vector3();
+        if (typeof(space) == "number") {
+            scale.set(space,space,space);
+        } else {
+            scale.copy(space);
+        }
+        let newBox = new THREE.Box3();
+        newBox.copy(box);
+        newBox.min.x = box.min.x - scale.x + offset.x; 
+        newBox.min.y = box.min.y - scale.y + offset.y; 
+        newBox.min.z = box.min.z - scale.z + offset.z; 
+        newBox.max.x = box.max.x +  scale.x + offset.x
+        newBox.max.y = box.max.y + scale.y + offset.y; 
+        newBox.max.z = box.max.z + scale.z + offset.z;
+
+        return newBox;
+    }
 };

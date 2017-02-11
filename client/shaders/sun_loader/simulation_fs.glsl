@@ -24,7 +24,7 @@ void main() {
         pos = originPos;
     } 
 
-    if (orderTimer <= 0.3) {
+    if (orderTimer == 0.0) {
         if ( random(vUv + timer ) > 0.99 ) {
             pos = texture2D( origin, vUv ).xyz;
         } else {
@@ -46,17 +46,14 @@ void main() {
         if (explodeTimer > 0.0 && explodeTimer < 1.0) {
             float variation = 0.2 + random(vUv + explodeTimer) * 0.8;
             particleRadius += (50.0 * explodeTimer * explodeTimer * variation);
-//            pos.z = originPos.z + 10.0 * explodeTimer * explodeTimer * variation;
-        } else {
- //           pos.z = originPos.z;
         }
 
         float progressInCircle = (1.0 - vUv.x) * (1.1 - vUv.y) / 0.84;
         if (progressInCircle > 1.0) {
             progressInCircle -= 0.3;
         }
-        pos.x = mix(originPos.x,cos(progressInCircle * 2.0 * PI) * particleRadius, (orderTimer-0.3)/0.7);
-        pos.y = mix(originPos.y, sin(progressInCircle * 2.0 * PI) * particleRadius, (orderTimer-0.3)/0.7);
+        pos.x = cos(progressInCircle * 2.0 * PI) * particleRadius;
+        pos.y = sin(progressInCircle * 2.0 * PI) * particleRadius;
     }
 
 

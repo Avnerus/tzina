@@ -12,6 +12,7 @@ body {
 }
 
 #game {
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -19,10 +20,14 @@ body {
     bottom: 0;
     width: 100%;
     height: 100%;
+    z-index: 2;
 }
 
+.dg.ac {
+    z-index: 2 !important;
+}
 .splash {
-    display: flex;
+    display: none;
     align-items: center;
     height: 100%;
     width: 100%;
@@ -30,17 +35,22 @@ body {
 }
 
 .splash-container {
-    display: flex;
+    display: none;
     align-items: center;
     margin: auto;
     color: white;
     font-size: 36px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
 }
 #start-container {
     display:none;
 }
 
 #start-button {
+    display: none;
     color: white;
     margin: auto;
 }
@@ -50,10 +60,12 @@ body {
 }
 
 #title-label {
+    display: none;
     margin: auto;
 }
 
 #title-container {
+    display: none;
     display: flex;
     align-items: center;
     margin: auto;
@@ -63,13 +75,14 @@ body {
     bottom: 30%
 }
 .subtitles {
-font-family: 'Miriam Libre', sans-serif;
+    display: none;
+    font-family: 'Miriam Libre', sans-serif;
   position: absolute;
   width: 100%;
   left: 0; bottom: 0;
   z-index: 4000;
-  //height:0px;
-  //overflow:visible;
+  height:0px;
+  overflow:visible;
   pointer-events:none;
 }
 #zoom-arrow {
@@ -80,11 +93,13 @@ font-family: 'Miriam Libre', sans-serif;
     top: 15%;
 }
 #secure-access {
+    display: none;
     display: inline-flex;
-    align-items: center;
+    align-items: c_;
     margin: auto;
     color: white;
-    font-size: 36px;
+    font-size: 18px;
+    font-family: Miriam Libre;
     position: relative;
 }
 #password {
@@ -93,4 +108,336 @@ font-family: 'Miriam Libre', sans-serif;
     background-color: black;
     border: solid 2px;
     height: 20px;
+}
+#tree_scene{
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 1 !important;
+  height: 100%; width: 100%;
+  display: none;
+  overflow: none;
+}
+/* General Util */
+  /*1.Fonts*/
+  .suez{
+    font-family: 'Suez One', serif;
+  }
+  .miriam{
+    font-family: 'Miriam Libre', sans-serif;
+  }
+  /*2.Spacers*/
+  .absolute_10_spacer{
+    position: relative;
+    height: 60px;
+  }
+   .absolute_30_spacer{
+    position: relative;
+    height: 30px;
+  }
+  /*General UI*/
+  #progress{
+    position: absolute;
+    left: 0; top: 0;
+    height: 20px;
+    background-color: #fff;
+    width: 0%;
+    z-index: 1;
+    -webkit-transition: 0.3s ease-in-out;
+    -moz-transition: 0.3s ease-in-out;
+    -o-transition: 0.3s ease-in-out;
+    transition: 0.3s ease-in-out;
+  }
+  #progress_text{
+    margin: 0;
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .open{
+    -webkit-transform:rotate(45deg);
+    -moz-transform:rotate(45deg);
+    -o-transform:rotate(45deg);
+  }
+  .subhead{
+    color: #fff;
+    font-size: 1.2em;
+    letter-spacing: 1px;
+  }
+  .button{
+    margin: auto;
+    width: 20%;
+    color: #fff;
+    font-size: 1.5em;
+    padding-top: 15px; padding-bottom: 15px;
+    letter-spacing: 2px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    background-color: transparent;
+    /*padding-right: 5px; padding-right: 5px;*/
+    transition-duration: 0.2s;
+    transition-timing-function: linear;
+    width: 20%;
+  }
+  .platform_selection{
+    margin-right: 2px; margin-left: 2px;
+  }
+  .button:hover{
+    color: #000000;
+    background-color: #ffffff;
+  }
+  .grayscale{
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+  }
+  #language{
+    position: absolute;
+    top: 20px; right: 20px;
+    color: #e2e2e2;
+    z-index: 3;
+    display: none;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  #language:hover{
+    color: #fff;
+  }
+#headphones_solo{
+  display: none;
+  /*position: absolute;*/
+  margin: auto;
+  margin-top: 35vh;
+  z-index: 6 !important;
+}
+#headphones_solo img{
+   width: 15%;
+}
+
+/* Landing 1st Screen */
+#landing_screen{
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 2 !important;
+  text-align: center;
+  display: none;
+}
+#birds{
+  display: none;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+}
+#firstscreen{
+  display: none;
+  z-index: 5 !important;
+}
+#lower_tag{
+  color: #fff;
+  font-size: 1em;
+}
+.icon{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 45%;
+}
+#logo{
+  width: 50%;
+  height: 50%;
+  -webkit-transition: 0.3s ease-in-out;
+  -moz-transition: 0.3s ease-in-out;
+  -o-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
+}
+
+#vive_button{
+  display: none;
+}
+#desktop_button{
+  display: none;
+}
+
+
+#about{
+  position: absolute;
+  display: none;
+  left: 15px; top: 0px;
+  font-size: 40px;
+  color: #fff;
+  z-index: 5;
+  -webkit-transition-duration: 0.8s;
+  -moz-transition-duration: 0.8s;
+  -o-transition-duration: 0.8s;
+  transition-duration: 0.8s;
+}
+#about_container{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  opacity: 0.8;
+  z-index: 4;
+  display: none;
+}
+#keyboard_tagline{
+  position: relative;
+  top: 20px;
+  color: #fff;
+}
+#vive_360{
+  position: relative;
+  top: 20px;
+  color: #fff;
+}
+#vive_image{
+  position: absolute;
+  width: 40%;
+  bottom: 50px;
+  left: 30%;
+}
+#instruction_screen{
+  position: absolute;
+  bottom: 20%; left: 0;
+  width: 100%;
+  z-index: 2 !important;
+  text-align: center;
+  display: none;
+}
+#keyboard{
+  text-align: center;
+}
+#keyall{
+  position: absolute;
+  width: 55%;
+  bottom:100%;
+
+}
+#wkey{
+  position: absolute;
+  display: none;
+  width: 55%;
+  bottom:100%;
+}
+#akey{
+  position: absolute;
+  display: none;
+  width: 55%;
+  bottom:100%;
+}
+#skey{
+  position: absolute;
+  display: none;
+  width: 55%;
+  bottom:100%;
+}
+#dkey{
+  position: absolute;
+  display: none;
+    width: 55%;
+  bottom:100%;
+}
+#mouse{
+    position: absolute;
+    width: 40%;
+    bottom: 41px;
+    left: 30%;
+}
+#about_grid{
+  overflow: auto;
+  height: 100%;
+  color: #fff;
+  direction: rtl;
+}
+#about_grid img{
+  width: 100%;
+}
+#sunsall{
+  position: absolute;
+  width: 55%;
+  bottom:100%;
+  left: 23%;
+}
+#sun7{
+  display: none;
+  position: absolute;
+  width: 55%;
+  bottom:100%;
+  left: 23%;
+}
+#sun9{
+  display: none;
+    position: absolute;
+  width: 55%;
+  bottom:100%;
+  left: 23%;
+}
+#sun12{
+  display: none;
+  position: absolute;
+  width: 55%;
+  bottom:100%;
+  left: 23%;
+}
+#sun5{
+  display: none;
+    position: absolute;
+  width: 55%;
+  bottom:100%;
+  left: 23%;
+}
+#sun7p{
+  display: none;
+  position: absolute;
+  width: 55%;
+  bottom:100%;
+  left: 23%;
+}
+#desktop_instruc{
+  display: none;
+}
+#vive_instruc{
+  display: none;
+}
+#vive_instruc img{
+  width: 30% !important;
+  left: 34% !important;
+}
+#about_grid{
+  display: none;
+}
+#startExperienceScreen{
+
+}
+#start_experience{
+  display: none;
+  position: relative;
+  top:37vh;
+  text-align: center;
+}
+#start_head{
+  display: none;
+  position: relative;
+  top: 35vh;
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
+}
+#mobile_splash{
+  display: none;
+  background-color: #000;
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 200 !important;
+}
+#mobile_splash img{
+  width: 100%;
+  position: absolute;
+  bottom: 0; left: 0;
+  z-index: 200 !important;
+}
+
+.webvr-button {
+z-index: 2 !important;
 }

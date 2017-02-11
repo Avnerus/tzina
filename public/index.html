@@ -1,15 +1,30 @@
-<!doctype html>
 <html>
-    <head>
+	<head>
+		 <head>
        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <meta name="apple-mobile-web-app-capable" content="yes">
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link type="text/css" href="css/tzina.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Miriam+Libre|Suez" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Suez+One" rel="stylesheet">
 
         <title>Tzina</title>
-    </head>
-    <body>
+
+	</head>
+	<body>
+
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-88046278-1', 'auto');
+          ga('send', 'pageview');
+
+        </script>
+
         <script>
             window.WebVRConfig = {FORCE_ENABLE_VR : false}
         </script>
@@ -30,56 +45,251 @@
         <script src="lib/VREffect.js"></script>
         <script src="lib/aws-sdk-2.5.3.min.js"></script>
         <script src="lib/jquery-2.2.4.min.js"></script>
-
-        
-        
-        <!--script src="lib/CopyShader.js"></script>
-        <script src="lib/EffectComposer.js"></script>
-        <script src="lib/RenderPass.js"></script>
-        <script src="lib/ShaderPass.js"></script>
-        <script src="lib/MaskPass.js"></script-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
 
         <script src="secure-access.js"></script>
 
-        <video id="subtitles" class="subtitles" src="" style="display:none;"></video>
-        <div id="game"></div>
-        <div class="splash">
-            <div id="loading-container" class="splash-container" style="display:none;">
-                <div id="loading-image">
-                    <img src="assets/splash/loading_fountain.gif" width="200px"></img>
+        <div id="mobile_splash"><img src="assets/ui/splashMobile.jpg" /></div>
+
+  <div id="tree_scene"></div>
+  <div id="game"></div>
+
+
+  <div class="container-fluid" class="startExperienceScreen">
+  <div class="row">
+  <div class="col-sm-12">
+  <div class="absolute_10_spacer"></div>
+  <div id="start_head" class="miriam">We are ready, are you?</div>
+    <div class="absolute_10_spacer"></div>
+  <div id="start_experience" class="button suez">START</div>
+  </div>
+  </div>
+  </div>
+
+
+	<div id="progress"></div>
+    <div id="progress_text" class="miriam"></div>
+
+	<!--About-->
+	<div id="about" class="miriam">+</div>
+    <div id="about_container">
+         <div class="container">
+            <div class="row" id="about_grid">
+
+                <div class="col-xs-6">
+                <div class="absolute_10_spacer"></div>
+                    <h1 class="suez">
+                    מה אני עושה פה?
+                    </h1>
+                    <p class="miriam">
+                        מאוד פשוט, את נכנסת עכשיו למרחב הכיכר, בו את מוזמנת לשוטט, לנוח, להכיר את האנשים הנמצאים שם ולחבר את פיסות הזיכרונות.
+                    </p>
+                    <p class="miriam">
+                        כפי שתיראי החוויה מתחילה על פי השעה האמיתית שלך, כרגע, שנכנסת לחווויה. רוצה לשנות את זה? התמקדי באחת השמשות בתוך הכיכר. 
+                    </p>
+                    <h1 class="suez">
+                    מי יצר את הפרויקט?
+                    </h1>
+                    <iframe width="100%" src="https://www.youtube.com/embed/n0IIKgNnctY?rel=0&controls=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+                     <p class="miriam">
+                        ״צינה: סימפוניה של געגועים״ פותחה בעזרת טכנולוגית webVR על מנת ליצור חוויה נגישה וחלקה ככל האפשר. על מנת ליצור את ״צינה״ נדרש צוות בעל כישורים מגוונים על מנת לפרש מחדש פיתוח לרשת וטכניקות סריקה תלת ממדיות המתחברות לכדי חוויה אחת קוהרנטית.
+                    </p>
+
+                    <p class="miriam">
+                    נוצר על ידי <a href="http://shirinanlen.xyz/">שירין אנלן</a>
+                    </p>
+
+                    <p class="miriam">
+                    ארט דירקטור  - <a href="http://zivschneider.com">זיו שניידר</a>       
+                    </p>
+
+                    <p class="miriam">
+                    ראש פיתוח -  <a href="http://phenomenalabs.com">אור פליישר</a>
+                    </p>
+
+                    <p class="miriam">
+                    מפתח ראשי - <a href="http://avner.js.org">אבנר פלד</a>          
+                    </p>
+
+                    <p class="miriam">
+                    אנימציות קוד - <a href="http://www.jhclaura.com/">לורה צ׳ן</a>
+                    </p>
+
+                    <p class="miriam">
+                    עורך תסריט - <a href="https://www.researchgate.net/profile/Udi_Ben-Arie/publications">אודי בן-ארי</a>
+                    </p>
+
+                </div>
+
+                <div class="col-xs-6">
+                <div class="absolute_10_spacer"></div>
+                    <h1 class="suez">
+                    על הפרויקט
+                    </h1>
+                    <img src="assets/images/early_days.jpg" />
+                    <p class="miriam">
+                        "ייחודה של עיר מתקיים בכיכרותיה, בכבישיה, ברחובותיה, במבניה ובגניה ובהתארגנותם במרחב. למתגורר בעיר ולמבקר בה הם אלה שיוצרים את תחושת המקום. אלא שהתחושה איננה אחידה: למתגורר בעיר נוצרת התחושה מתוך הזיכרונות, ההיכרות האינטימית והידיעה; המבקר בעיר מסתפק בהנאה. כדי לקרב את המבקר לעיר ולייחודה הוא נדרש ללימוד, להתעמקות, לסיפור ולמחשבה".<br></p>
+                        <p style="direction: ltr;">(J.B.Jackson, 1994)</span>
+                    <p class="miriam">
+                        כיכר צינה דיזינגוף הוקמה לזכר צינה אישתו של ראש העיר הראשון של תל אביב. בעיר בה רק 3% מרחובותיה קרויים על שם נשים אקט של הענקת השם של הכיכר המרכזית של העיר הינה אקט יוצא דופן העומד בניגוד חד להיסטוריה הפוליטית של תל אביב, לא רק זה, הכיכר תוכננה על ידי אדריכלית אישה, גניה אוורבוך. וכל זאת בשנות השלושים של המאה הקודמת.
+                    </p>
+                    <img src="assets/images/invite.jpg" />
+                    <p class="miriam">
+                        אולי יש בכך שאריות מהעצמה של האהבה בין מאיר וצינה שאפשרה זאת.
+                    </p>
+                    <img src="assets/images/she.jpg" />
+                    <p class="miriam">
+                        מאיר כינה את צינה "חברתי בחיים", היש ביטוי לזוגיות יפה מכך?
+                    </p>
+                    <p class="miriam">
+                        כיכר צינה הוענקה לצינה מתוך געגוע וכמיהתו של מאיר להתאחד עם צינה שוב. בתוך רחוב מאיר דיזינגוף הארוך נמצאת האישה העגולה והמרכזית צינה, לנצח ההיסטוריה התל אביבית. תל אביב, שם המכיל בתוכו ניגודיות כמעט בלתי נסבלת. תל מהווה קבר, מוות. אביב המסמל חיים ופריחה. 
+                    </p>
+                    <img src="assets/images/sign.png" />
+                    <p class="miriam">
+                        צינה, סימפוניה של געגועים מכילה בתוכה את אותם קונפליקטים וניגודים כמעט בלתי נסבלים של החיים. בת בבד בלתי נפרדים מהם גם כן. דמויות כיכר קבועות, המתמזגות עימה באופן כמעט סימביוטי, החשות נחמה בשייכות למרחב האורבני הנמצא בתנועה בלתי מפסקת בתוך מחשבות סטטיות, בבדידות המשותפת. כולם כאחד באים אליה, כי בה הם מרגישים בבית. השעון המנגן הניצב במרכז הכיכר בצורת המזרקה משקף בטעם ציני מתקתק כיצד הזמן מתקפל לו במרחב הכיכר, וכשהזמן נע קדימה, אנשי הכיכר נשענים על כמיהות עבר. 
+                    </p>
+                    <p class="miriam">
+                        הגורל הוא פאטלי עבור כיכר צינה. נדמה כי ייעודה מעלה ניחוחות של כמיהה לעבר.אנשי הכיכר אינם מכירים אחד את השניה, וסביב הפסל "מים ואש" הכיכר הפכה למיכל של בדידות, והם עצמם לשותפים לזכרונות עבר. רגעים בחיים המהווים מוות של אפשרות למה שיכול היה להיות. 
+                    </p>
+                    <p class="miriam">
+                        בחורף 2016, כיכר צינה דיזינגוף, עומדת לההרס ולשנות את צורתה בפעם השלישית בהיסטוריה שלה, והינה שוב נוסטלגיית העבר מדלגת לזמן עתיד, והחללים התחתונים האפלים של הכיכר המורמת נפערים ומתגלים.
+                    </p>
+                    <p class="miriam">
+                        צינה היא הזמנה למסע הנע בין אהבה ובדידות דרך שילוב בין דוקומנטרי לפנטזיה. 
+                    </p>
+                    <p class="miriam">
+                        עם התגלגלות הסרט, אותם חללים יחלו לצוף (הכוונה להיות מוצפים)- והכיכר תהפוך למעין רפסודה עצמאית בתוך מרחב אורבני לא אורבני. געגועים יכולים לחנוק. השחרור מעלה מפלס אחר של שקט. לאחר מותה של צינה, מאיר כתב ביומנו "יש רגעים ששוחים ממצולות עבר". מה שוחה אליך מהעבר?
+                    </p>
+                    <div class="absolute_10_spacer"></div>
+                </div>
+            </div>     
+         </div>
+    </div>
+
+    <!-- Language selector-->
+	<div id="language" class="miriam">עברית</div>
+
+
+
+    <div id="loading-container" class="splash-container" style="display:none;">
+        <div id="loading-image">
+            <img src="assets/splash/loading_fountain.gif" width="200px"></img>
+        </div>
+    </div>
+
+    <div id="landing_screen">
+	<!--First Screen-->/
+     <!--Headphones-->
+    <div id="headphones_solo"><img src="assets/ui/headphones_solo-11.png" /></div>
+
+     <video id="birds">
+        <source src="./assets/ui/pigeons.webm" type="video/webm" />
+     </video>
+      <div class="container-fluid" id="firstscreen">
+        <div class="absolute_10_spacer"></div>
+        <div class="row">
+          <div class="col-sm-12">
+            <video id="logo" class="grayscale">
+              <source src="./assets/ui/logo.webm" type="video/webm" />
+            </video>
+            <div id="desc_sub" class="subhead suez">
+              A WEBVR DOCUMENTARY BY SHIRIN ANLEN
+            </div>
+            <div class="absolute_30_spacer"></div>
+            <div id="lower_tag" class="miriam">a journey through an emotional flood<br>of love and loneliness</div>
+          </div>
+        </div>
+        <div class="absolute_10_spacer"></div>
+        <div class="row">
+          <div class="col-sm-12">
+						<!-- First enter button-->
+            <div id="enter_button" class="button suez">
+              ENTER
+            </div>
+							<div class="row">
+								<!--Specific Platform buttons-->
+                                <!--div class="col-xs-3"></div-->
+                                <div style="margin:auto;">
+                                    <span id="vive_button" class="platform_selection button suez">HTC Vive</span>
+                                    <span id ="desktop_button" class="platform_selection button suez ">Desktop</span>
+                                </div>
+							</div>
+          </div>
+        </div>
+				<div class="absolute_10_spacer"></div>
+				<div class="row">
+					<div class="col-xs-12">
+						
+					</div>
+				</div>
+      </div>
+    </div>
+		<!--Instructions-->
+		<div id="instruction_screen">
+			<div class="container-fluid" id="desktop_instruc">
+                <div id="keyboard">
+                <div class="row">
+
+                    <div class="col-xs-4" id="keyboard_tagline">
+                    <img id="keyall" src="assets/ui/WASD-All.png" />
+                    <img id="akey" src="assets/ui/WASD-A.png" />
+                    <img id="dkey" src="assets/ui/WASD-D.png" />
+                    <img id="skey" src="assets/ui/WASD-S.png" />
+                    <img id="wkey" src="assets/ui/WASD-W.png" />
+                    USE ARROW/WASD KEYS<br> TO MOVE AROUND
+                    </div>
+					
+                    <div class="col-xs-4" id="keyboard_tagline">
+                    <img id="mouse" src="assets/ui/360_Rotate-13.png" />
+                    USE MOUSE<br> TO LOOK AROUND
+                    </div>
+
+                    <div class="col-xs-4" id="keyboard_tagline">
+                     <img id="sunsall" src="assets/ui/suns_all.png" />
+                    <img id="sun7" src="assets/ui/sun_7AM.png" />
+                    <img id="sun9" src="assets/ui/sun_9AM.png" />
+                    <img id="sun12" src="assets/ui/sun_12PM.png" />
+                    <img id="sun5" src="assets/ui/sun_5PM.png" />
+                    <img id="sun7p" src="assets/ui/sun_7PM.png" />          
+                    GAZE AT THE SUN<br> TO CHANGE THE TIME
+                    </div>
+
+                </div>
+                </div>
+			</div>
+            <div class="container-fluid" id="vive_instruc">
+                <div id="keyboard">
+                <div class="row">
+                    
+                    <div class="col-xs-6" id="keyboard_tagline">
+                    <img id="vive_image" src="assets/ui/vive.png" />
+                    LOOK AROUND AND WALK<br>WITHIN A 3X3 METER RANGE
+                    </div>
+
+                    <div class="col-xs-6" id="keyboard_tagline">
+                        <img id="sunsall" src="assets/ui/suns_all.png" />
+                        <img id="sun7" src="assets/ui/sun_7AM.png" />
+                        <img id="sun9" src="assets/ui/sun_9AM.png" />
+                        <img id="sun12" src="assets/ui/sun_12PM.png" />
+                        <img id="sun5" src="assets/ui/sun_5PM.png" />
+                        <img id="sun7p" src="assets/ui/sun_7PM.png" />          
+                    GAZE AT THE SUN<br> TO CHANGE THE TIME
+                    </div>
+
+                </div>
                 </div>
             </div>
-            <div id="start-container" class="splash-container">
-                <a target="_self" href="#" id="start-button">
-                    <img src="assets/splash/chapter_title.png"></img>
-                </a>
-            </div>
-            <div id="coming-soon" class="splash-container" style="display:none;"><img id="coming-img" src="assets/splash/coming_soon.png" style="
-                width: 600px;
-                position: relative;
-                top: 200px;
-                opacity: 0;
-                transition: opacity .5s ease-in-out;
-            ">
-            </div>
-            <div id="wasd-container" class="splash-container" style="
-                position: relative;
-                left: 40%;
-                top: 35%;
-                display: none;
-            ">
-                            <img id="wasd-img" src="assets/splash/wasd.png" style="
-                width: 200px;
-            ">
-           </div>
-        </div>
+		</div> 
         <div id="secure-access-container" style="display:none;" class="splash">
             <div id="secure-access">
                 <form id="secure-form" method="POST">
-                    <div>Enter Password</div>
+                    <div>Enter Password <3</div>
                     <div><input id="password" name="password" type="password"></div>
                 </form>
             </div>
         </div>
-    </body>
+        <img class="webvr-button" id="reset-pose" draggable="false" src="assets/ui/reset_pose.png" title="Reset pose" style="position: absolute; width: 24px; height: 24px; background-size: cover; background-color: transparent; border: 0px; user-select: none; cursor: pointer; padding: 12px; z-index: 3; display: none; box-sizing: content-box; bottom: 0px; right: 96px;">
+    <!--script src="src/js/treeScene.js"></script-->
+    <!-- <script src="dist/bundle.js"></script> -->
+	</body>
 </html>

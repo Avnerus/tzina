@@ -42,7 +42,7 @@ export default {
         }, object.angleRotation, "z", 0, 360);
 
         object.global = object.scale.x;
-        events.emit("add_gui", {folder:name + " - Scale", listen: listen, step: 0.001, onChange: () => {
+        events.emit("add_gui", {folder:name + " - Scale", listen: listen, step: 0.00001, onChange: () => {
            object.scale.set(object.global, object.global, object.global);
         }}, object, "global",0,4); 
 
@@ -50,7 +50,7 @@ export default {
     },
 
     fastForward : function(video) {
-        video.currentTime = video.duration - 5;        
+        video.currentTime = video.duration - 10;        
     },
 
     colorPicker: function(name, object, prop) {
@@ -93,5 +93,54 @@ export default {
         events.emit("remove_gui_folder", name + " - Position");
         events.emit("remove_gui_folder", name + " - Rotation");
         events.emit("remove_gui_folder", name + " - Scale");
+    },
+
+    adjustBBox: function(bboxMesh, prefix, space, offset) {
+
+        let scale = {
+            space: space
+        };
+
+        let newBox = THREE.GeometryUtils.enlargeBox(bboxMesh.box, scale.space, offset);
+        newBox.getSize(bboxMesh.scale);
+        newBox.getCenter(bboxMesh.position);
+        events.emit("add_gui", {folder:prefix + " Offset", listen: true, step: 0.01, onChange: () => {
+            newBox = THREE.GeometryUtils.enlargeBox(bboxMesh.box,scale.space,offset); 
+            newBox.getSize(bboxMesh.scale);
+            newBox.getCenter(bboxMesh.position);
+        }}, offset, "x", -5,5); 
+        events.emit("add_gui", {folder:prefix + " Offset", listen: true, step: 0.01, onChange: () => {
+            newBox = THREE.GeometryUtils.enlargeBox(bboxMesh.box,scale.space,offset); 
+            newBox.getSize(bboxMesh.scale);
+            newBox.getCenter(bboxMesh.position);
+        }}, offset, "y", -5,5); 
+        events.emit("add_gui", {folder:prefix + " Offset", listen: true, step: 0.01, onChange: () => {
+            newBox = THREE.GeometryUtils.enlargeBox(bboxMesh.box,scale.space,offset); 
+            newBox.getSize(bboxMesh.scale);
+            newBox.getCenter(bboxMesh.position);
+        }}, offset, "z", -5,5); 
+        if (typeof(space) == "number") {
+            events.emit("add_gui", {folder:prefix +  " Space", listen: true, step: 0.01, onChange: () => {
+                newBox = THREE.GeometryUtils.enlargeBox(bboxMesh.box,scale.space,offset); 
+                newBox.getSize(bboxMesh.scale);
+                newBox.getCenter(bboxMesh.position);
+            }}, scale, "space", -3,3); 
+        } else {
+            events.emit("add_gui", {folder:prefix + " Space", listen: true, step: 0.01, onChange: () => {
+                newBox = THREE.GeometryUtils.enlargeBox(bboxMesh.box,scale.space,offset); 
+                newBox.getSize(bboxMesh.scale);
+                newBox.getCenter(bboxMesh.position);
+            }}, scale.space, "x", -5,5); 
+            events.emit("add_gui", {folder:prefix + " Space", listen: true, step: 0.01, onChange: () => {
+                newBox = THREE.GeometryUtils.enlargeBox(bboxMesh.box,scale.space,offset); 
+                newBox.getSize(bboxMesh.scale);
+                newBox.getCenter(bboxMesh.position);
+            }}, scale.space, "y", -5,5); 
+            events.emit("add_gui", {folder:prefix + " Space", listen: true, step: 0.01, onChange: () => {
+                newBox = THREE.GeometryUtils.enlargeBox(bboxMesh.box,scale.space,offset); 
+                newBox.getSize(bboxMesh.scale);
+                newBox.getCenter(bboxMesh.position);
+            }}, scale.space, "z", -5,5); 
+        }
     }
 }

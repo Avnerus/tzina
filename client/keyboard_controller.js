@@ -19,9 +19,7 @@ export default class KeyboardController {
         this.playerToCenter = new THREE.Vector3();
         this.walkingDirection = new THREE.Vector3();
 
-        this.height = config.basalHeight;
-
-        this.active = false;
+        this.active = true;
 
         this.zAxis = new THREE.Vector3(0,0,1);
         this.xAxis = new THREE.Vector3(1,0,0);
@@ -29,6 +27,7 @@ export default class KeyboardController {
     init() {
 
         console.log("Keyboard controller init");
+
         this.pointer = lock(document.getElementById('game'));
 
         events.on("start_zoom" ,() => {
@@ -36,21 +35,9 @@ export default class KeyboardController {
 
         });
 
-        events.on("intro_start" ,() => {
-            this.active = false;
-        });
-
         events.on("intro_end" ,() => {
             this.active = true;
         });
-
-        events.on("control_threshold", (passed) => {
-            if (passed) {
-                this.active = true;
-            } else {
-                this.active = false;
-            }
-        })
 
         document.addEventListener('keydown', (event) => {
             switch ( event.keyCode ) {
@@ -174,16 +161,5 @@ export default class KeyboardController {
             }
         }
 
-    }
-
-    climbStairs() {
-        let distanceToCenter = this.camera.position.distanceTo(this.square.getCenterPosition());
-        let distanceInStairs = Math.max(0, 260 - distanceToCenter);
-        this.height = Math.max(Math.min(30,distanceInStairs),this.config.basalHeight);
-    }
-
-    setPosition(x,y,z) {
-        this.height = y;
-        this.camera.position.set(x,y,z);
     }
 }

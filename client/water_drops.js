@@ -6,6 +6,7 @@ export default class WaterDrops extends THREE.Object3D  {
 
         this.active = false;
         this.fading = false;
+        this.inControl = false;
 
         this.drops = [];
         this.timeSinceCollision = 0;
@@ -19,10 +20,15 @@ export default class WaterDrops extends THREE.Object3D  {
 
         //DebugUtil.positionObject(sprite, "Water drop");
 
+        events.on("control_threshold", (passed) => {
+            this.inControl = passed;
+        });
+
         events.on("fountain_collision", (distance) => {
-            if (distance < 4) {
+            //console.log("Fountain collision!", distance);
+            if (distance < 15) {
                 this.timeSinceCollision = 0;
-                if (!this.active) {
+                if (this.inControl && !this.active) {
                     this.timeSinceChange = 0;
                     this.active = true;
                 }

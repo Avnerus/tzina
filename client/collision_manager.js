@@ -1,4 +1,6 @@
 import boxIntersect from 'box-intersect'
+import GeometryUtils from './util/GeometryUtils'
+import DebugUtil from './util/debug'
 
 const PLAYER_SIZE = {
     x: 1, 
@@ -29,14 +31,21 @@ export default class CollisionManager {
         this.player = camera;
         this.meshColliders = [];
 
-        this.debug = false;
+        this.gazeObjects = [];
+
+        this.raycaster = new THREE.Raycaster();
+
+        this.debugCollisions = false;
+        this.debugGaze = false;
+
+        this.lastGaze = null;
     }
     init() {
     }
 
     refreshSquareColliders(colliders) {
         console.log("Refresh square colliders ", colliders);
-        if (this.debug) {
+        if (this.debugCollisions) {
             while(this.squareDebug.length > 0) {
                 let object = this.squareDebug.pop();
                 this.scene.remove(object);
@@ -63,7 +72,7 @@ export default class CollisionManager {
         // Characters
         boxIntersect(this.playerBox, this.characterObstacles, (i,j) => {
             if (this.characterObstacleInfo[j].onCollision) {
-                //this.characterObstacleInfo[j].onCollision();
+                this.characterObstacleInfo[j].onCollision();
             }
         });
 
@@ -77,6 +86,7 @@ export default class CollisionManager {
             }
         });
 
+        this.gaze();
     }
     setPlayer(player) {
         this.player = player;
@@ -116,11 +126,12 @@ export default class CollisionManager {
 
 
     addCharacter(character) {
+        character.updateMatrixWorld(true);
+
         if (character.props.space) {
-            console.log("COLLISION MANAGER - Adding character ", character);
+            console.log("COLLISION MANAGER - Adding character ", character.props.name);
             let space = character.props.space;
 
-            this.scene.updateMatrixWorld(true);
 
             let bbox = new THREE.BoundingBoxHelper(character, 0x00ff00);
             bbox.update();
@@ -130,34 +141,12 @@ export default class CollisionManager {
                 offset.fromArray(character.props.spaceOffset);
             }
 
-            let newBox = this.enlargeBox(bbox.box, space, offset);
+            let newBox = THREE.GeometryUtils.enlargeBox(bbox.box, space, offset);
 
-           if (this.debug) {
-                let bboxMesh = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1 ), new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } ) );
-                newBox.getSize(bboxMesh.scale);
-                newBox.getCenter(bboxMesh.position);
-                this.scene.add(bboxMesh);
-                events.emit("add_gui", {folder:character.props.name + " - BBOX Offset", listen: true, step: 0.01, onChange: () => {
-                    newBox = this.enlargeBox(bbox.box,character.props.space,offset); 
-                    newBox.getSize(bboxMesh.scale);
-                    newBox.getCenter(bboxMesh.position);
-                }}, offset, "x", -5,5); 
-                events.emit("add_gui", {folder:character.props.name + " - BBOX Offset", listen: true, step: 0.01, onChange: () => {
-                    newBox = this.enlargeBox(bbox.box,space,offset); 
-                    newBox.getSize(bboxMesh.scale);
-                    newBox.getCenter(bboxMesh.position);
-                }}, offset, "y", -5,5); 
-                events.emit("add_gui", {folder:character.props.name + " - BBOX Offset", listen: true, step: 0.01, onChange: () => {
-                    newBox = this.enlargeBox(bbox.box,character.props.space,offset); 
-                    newBox.getSize(bboxMesh.scale);
-                    newBox.getCenter(bboxMesh.position);
-                }}, offset, "z", -5,5); 
-                events.emit("add_gui", {folder:character.props.name + " - BBOX Space", listen: true, step: 0.01, onChange: () => {
-                    newBox = this.enlargeBox(bbox.box,character.props.space,offset); 
-                    newBox.getSize(bboxMesh.scale);
-                    newBox.getCenter(bboxMesh.position);
-                }}, character.props, "space", 0,2); 
-           }
+            if (this.debugCollisions) {
+                DebugUtil.adjustBBox(bbox, character.props.name + " - bbox", character.props.space, offset);
+                this.scene.add(bbox);
+            }
 
             console.log("Adding collision box ", newBox);
             this.characterObstacles.push([
@@ -169,30 +158,82 @@ export default class CollisionManager {
                 newBox.max.z
             ]);
 
-            character.obstacleIndex = this.characterObstacles.length -1;
-
             this.characterObstacleInfo.push(character);
+        }
+
+        // Gaze box from the idle mesh
+        if (character.idleVideo && character.idleVideo.mesh) {
+            let gazeSpace = new THREE.Vector3();
+            let gazeOffset = new THREE.Vector3();
+
+            if (character.props.gazeSpace) {
+                gazeSpace.fromArray(character.props.gazeSpace);
+            }
+            if (character.props.gazeOffset) {
+                gazeOffset.fromArray(character.props.gazeOffset);
+            }
+
+            if (!character.gazeBox) {
+                character.gazeBox  = new THREE.BoundingBoxHelper(character.idleVideo.mesh, 0xffff00);
+            }
+
+            character.gazeBox.update();
+            let newBox = THREE.GeometryUtils.enlargeBox(character.gazeBox.box, gazeSpace, gazeOffset);
+            newBox.getSize(character.gazeBox.scale);
+            newBox.getCenter(character.gazeBox.position);
+
+
+            if (this.debugGaze) {
+                DebugUtil.adjustBBox(character.gazeBox, character.props.name + " - Gaze",gazeSpace, gazeOffset);
+            } else {
+                character.gazeBox.material.visible = false;
+            }
+            this.gazeObjects.push(character.gazeBox);
+            this.scene.add(character.gazeBox);
+        }
+
+    }
+
+    gaze() {
+        let camVector = new THREE.Vector3(0,0,-1).applyQuaternion(this.player.quaternion);
+        this.raycaster.set(this.player.position, camVector);
+
+        let collisionResults = this.raycaster.intersectObjects(this.gazeObjects);
+        if (collisionResults.length > 0 && collisionResults[0].object.onGaze) {
+            collisionResults[0].object.onGaze(this.player.position, camVector, collisionResults[0].object.position);
+            this.lastGaze = collisionResults[0].object;
+        } else if (this.lastGaze) {
+            this.lastGaze.onGazeStop();
+            this.lastGaze = null;
         }
     }
 
-    enlargeBox(box, space, offset) {
-        let newBox = new THREE.Box3();
-        newBox.copy(box);
-        newBox.min.x = box.min.x - space + offset.x; 
-        newBox.min.y = box.min.y - space + offset.y; 
-        newBox.min.z = box.min.z - space + offset.z; 
-        newBox.max.x = box.max.x +  space + offset.x
-        newBox.max.y = box.max.y + space + offset.y; 
-        newBox.max.z = box.max.z + space + offset.z;
-
-        return newBox;
+    addGazeCollider(bbox) {
+        console.log("addGazeCollider");
+        this.scene.add(bbox);
+        if (!this.debugGaze) {
+            bbox.material.visible = false;
+            console.log("Sun gaze box", bbox);
+        }
+        this.gazeObjects.push(bbox);
     }
 
     removeCharacter(character) {
         if (character.props.space) {
-            console.log("COLLISION MANAGER - Removing character ", character, "Obstacle index: ",character.obstacleIndex);
-            this.characterObstacles.splice(character.obstacleIndex, 1);
-            this.characterObstacleInfo.splice(character.obstacleIndex, 1);
+            let obstacleIndex = this.characterObstacles.indexOf(character);
+            console.log("COLLISION MANAGER - Removing character ", character.props.name, "Obstacle index: ", obstacleIndex);
+            if (obstacleIndex != -1) {
+                this.characterObstacles.splice(obstacleIndex, 1);
+                this.characterObstacleInfo.splice(obstacleIndex, 1);
+            }
+        }
+        // Gaze box from the idle mesh
+        if (character.gazeBox) {
+            let gazeIndex = this.gazeObjects.indexOf(character.gazeBox);
+            console.log("COLLISION MANAGER - Removing character ", character.props.name, "Gaze index: ", gazeIndex);
+            if (gazeIndex != -1) {
+                this.gazeObjects.splice(gazeIndex, 1);
+            }
         }
     }
 
@@ -201,7 +242,7 @@ export default class CollisionManager {
         //obj.children[0].material.visible = false;
         let bbox = new THREE.BoundingBoxHelper(obj,0x00ff00);
         bbox.update();
-        if (this.debug) {
+        if (this.debugCollisions) {
             console.log("Collision bounding box", bbox);
             this.scene.add(bbox);
             this.squareDebug.push(bbox);

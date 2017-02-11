@@ -2,7 +2,7 @@
   "name": "tzina",
   "version": "1.0.0",
   "description": "Tzina Experience",
-  "main": "index.js",
+  "main": "landing.js",
   "scripts": {
     "start": "node ./node_modules/gulp/bin/gulp.js"
   },
@@ -45,6 +45,7 @@
     "babel-register": "^6.16.3",
     "box-intersect": "^1.0.1",
     "core-js": "^2.4.0",
+    "crypto-js": "^3.1.8",
     "earcut": "^2.1.1",
     "easing-utils": "0.0.5",
     "express": "^4.14.0",
@@ -52,12 +53,15 @@
     "gl-shader": "^4.2.0",
     "glsl-curl-noise": "0.0.4",
     "glsl-random": "0.0.5",
+    "ip2countrify": "^0.2.0",
     "jquery-browserify": "^1.8.1",
     "jquery-mousewheel": "^3.1.13",
     "lodash": "^4.14.0",
+    "moment": "^2.16.0",
     "pointer-lock": "git+https://github.com/bunnybones1/pointer-lock-chrome-tolerant.git",
     "pointer-lock-chrome-tolerant": "0.0.7",
-    "stats.js": "^0.16.0"
+    "stats.js": "^0.16.0",
+    "ws": "^1.1.1"
   },
   "browserify": {
     "transform": [

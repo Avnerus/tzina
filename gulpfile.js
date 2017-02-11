@@ -14,17 +14,17 @@ var beeper = require('beeper');
 
 // add custom browserify options here
 var customOpts = {
-  entries: ['./client/index.js'],
+  entries: ['./client/landing.js'],
   transform: [babelify.configure({presets: ["es2015"]})],
   debug: true
 };
 var opts = assign({}, watchify.args, customOpts);
-var b = watchify(browserify(opts)); 
+var b = watchify(browserify(opts));
 
 // add transformations here
 // i.e. b.transform(coffeeify);
 
-gulp.task('client', bundle); 
+gulp.task('client', bundle);
 b.on('update', bundle); // on any dep update, runs the bundler
 b.on('log', gutil.log); // output build logs to terminal
 
@@ -43,7 +43,7 @@ function bundle() {
 
 gulp.task('server', ['client'], function (cb) {
   return nodemon({
-      script: './server/app.js',
+      script: './server/index.js',
       watch: './server/'
   });
 });

@@ -9,6 +9,10 @@ stats.showPanel(0);
 var fullscreen = require('fullscreen');
 var lock = require('pointer-lock-chrome-tolerant');
 
+if (config.production) {
+    window['console']['log'] = function() {};
+}
+
 console.log("Touch? ", Modernizr.touchevents)
 
 var FPS  = config.fps;
@@ -68,6 +72,7 @@ document.getElementById('start-button').addEventListener('click',function(event)
 
 try {
     game.load(function() {
+        console.log("GAME LOADED");
         document.getElementById('start-container').style.display = "flex";
         document.getElementById('loading-container').style.display = "none";
     });
@@ -82,7 +87,7 @@ function start() {
     document.getElementById('game').appendChild(stats.dom);
     game.start();
     window.addEventListener('resize', resize, false);
-    window.addEventListener('vrdisplaypresentchange', resize, true);
+    window.addEventListener('vrdisplaypresentchange', vrchange, true);
     game.resize();
     stats.begin();
     animate();
@@ -100,13 +105,18 @@ function animate(t) {
     elapsed = t - lastTimestamp;
     if (elapsed >= FPS_INTERVAL) {
         lastTimestamp = t - (elapsed % FPS_INTERVAL);*/
-        game.animate(t);
-        stats.end();
-        stats.begin();
+    game.animate(t);
+    stats.end();
+    stats.begin();
    // }
 }
 
 function resize() {
     game.resize();
+}
+
+function vrchange() {
+    game.resize();
+    game.vrChange();
 }
 

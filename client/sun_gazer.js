@@ -1,5 +1,5 @@
 export default class SunGazer extends THREE.Object3D  {
-    constructor(square, soundManager) {
+    constructor(square, soundManager, collisionManager) {
         super();
         this.camPosition = new THREE.Vector3();
         this.camQuaternion = new THREE.Quaternion();
@@ -9,76 +9,89 @@ export default class SunGazer extends THREE.Object3D  {
 
         this.active = false;
 
-        this.GAZE_THRESHOLD = 0.98;
-        this.BLUR_THRESHOLD = 0.93;
+        this.GAZE_THRESHOLD = 0.977;
+        this.BLUR_THRESHOLD = 0.965;
 
         this.gazingSun = null;
         this.lastBlur = 0;
+        this.ended = false;
+        this.currentCollider = null;
+        this.collisionManager = collisionManager;
+        this.raycaster = new THREE.Raycaster();
     }
     init() {
-        events.on("control_threshold", (passed) => {
-            this.active = passed;
+
+        events.on("instructions_end", (passed) => {      
+            this.active = true;
+            // Add the sun colliders
+            setTimeout(() => {
+                this.addSunColliders();
+            },0)
         });
 
         events.on("character_playing", () => {
-            this.active = false;
+            //            this.active = false;
         });
         events.on("character_idle", () => {
-            this.active = true;
+            if (!this.ended) {
+                this.active = true;
+            }
         });
         events.on("character_ended", () => {
-            this.active = true;
+            if (!this.ended) {
+                this.active = true;
+            }
         });
-        events.on("gaze_started", () => {
-            this.soundManager.loadSound('./assets/sound/ui/Hour_Replace_1.ogg')
-            .then((sound) => {
-                sound.playIn(0);
-            });
+
+        events.on("experience_end", () => {
+            this.active = false;
+            this.ended = true;
         });
     }
 
-    updateMatrixWorld(force) {
+    addSunColliders() {
+        this.square.suns.children.forEach((sun) => {
+            // Add the collision bounding box
+            sun.updateMatrixWorld();
+            let bbox = new THREE.BoundingBoxHelper(sun, 0xff0000);
+            bbox.update();
+            bbox.scale.multiplyScalar(4.5);
+
+            bbox.onGaze = (camPosition, camVector, colliderPosition) => {
+                this.onGaze(camPosition, camVector, colliderPosition, sun);
+            }
+            bbox.onGazeStop = () => {
+                this.stop();
+            }
+            this.collisionManager.addGazeCollider(bbox);
+        })
+    }
+
+    onGaze(camPosition, camVector, colliderPosition, sun) {
         if (this.active) {
-            super.updateMatrixWorld(force);
-            //console.log("Sun Gazer - updateMatrixWorld");
-
-            this.matrixWorld.decompose( this.camPosition, this.camQuaternion, this.camScale );
-            let camVector = new THREE.Vector3(0,0,-1).applyQuaternion(this.camQuaternion);
-
-            if (this.gazingSun) {
-                let res = this.getDotProduct(camVector, this.gazingSun.children[0]);
-                if (res <= this.GAZE_THRESHOLD) {
+           let gazeAngle = this.getDotProduct(camPosition, camVector, colliderPosition);
+           if (this.gazingSun) {
+                if (gazeAngle <= this.GAZE_THRESHOLD) {
                     this.stop();
                 }
-            } else if (this.blurringSun) {
-                let res = this.getDotProduct(camVector, this.blurringSun.children[0]);
-                if (res > this.GAZE_THRESHOLD) {
-                    this.gazingSun = this.blurringSun;
-                    events.emit("gaze_started", this.gazingSun.name);
-                    this.setBlur(res);
-                } else if (res > this.BLUR_THRESHOLD) {
-                    this.setBlur(res);                    
+           }
+           else if (sun.name == this.square.currentSun ) {
+               if (gazeAngle > this.GAZE_THRESHOLD) {
+                  this.gazingSun = sun;
+                  events.emit("gaze_current_started", sun.name);
+               }
+           } else {
+                if (this.blurringSun) {
+                   this.setBlur(gazeAngle);
+                   if (gazeAngle > this.GAZE_THRESHOLD) {
+                       this.gazingSun = this.blurringSun;
+                       events.emit("gaze_started", this.gazingSun.name);
+                   }
                 } else {
-                    this.setBlur(0);
-                    this.blurringSun = null;
+                    this.blurringSun = sun;
+                    this.setBlur(gazeAngle);
                 }
-            } else {
-
-                let thresholdPassed = false;
-
-                // Skip the first child because it is a null parent
-                for (let i = 0; i < this.square.suns.children.length && !thresholdPassed; i++) {
-                    let sun = this.square.suns.children[i];
-                    if (sun.name != this.square.currentSun) {
-                        let res = this.getDotProduct(camVector, sun.children[0]);
-                        if (res > this.BLUR_THRESHOLD) {
-                            this.blurringSun = sun;
-                            this.setBlur(res);
-                            thresholdPassed = true;
-                        }
-                    }
-                }
-            }
+           }
         }
     }
 
@@ -89,6 +102,7 @@ export default class SunGazer extends THREE.Object3D  {
         }
         else {
             value = Math.min(1,(res - this.BLUR_THRESHOLD) / (this.GAZE_THRESHOLD - this.BLUR_THRESHOLD));
+            //console.log("SET BLUR", res, value);
         }
         if (value != this.lastBlur) {
             this.soundManager.panorama.setFocusWithLevel(null, value);
@@ -97,14 +111,23 @@ export default class SunGazer extends THREE.Object3D  {
     }
 
     stop() {
-        if (this.gazingSun) {
-            events.emit("gaze_stopped", this.gazingSun.name);
-            this.gazingSun = null;
+        if (this.blurringSun) {
+            this.setBlur(0);
         }
+        if (this.gazingSun) {
+            if (this.gazingSun.name == this.square.currentSun) {
+                events.emit("gaze_current_stopped");
+            }
+            else {
+                events.emit("gaze_stopped", this.gazingSun.name);
+            }
+        }
+        this.gazingSun = null;
+        this.blurringSun = null;
     }
 
-    getDotProduct(camVector, sunMesh) {
-        let camToSun = new THREE.Vector3().setFromMatrixPosition(sunMesh.matrixWorld).sub(this.camPosition).normalize();
+    getDotProduct(camPosition, camVector, colliderPosition) {
+        let camToSun = new THREE.Vector3().copy(colliderPosition).sub(camPosition).normalize();
         return camToSun.dot(camVector);
     }
 }
