@@ -411,6 +411,8 @@ right:1em;
 }
 #desktop_instruc{
   display: none;
+  text-align: left;
+  color: #fff;
 }
 #vive_instruc{
   display: none;
