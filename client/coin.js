@@ -15,17 +15,13 @@ export default class Coin extends THREE.Object3D  {
         this.coinsOffset = {
             "Meir": [0.5, -0.95, 1.35],
             "Rami": [-0.3, -0.9, 0],
-            "Mark": [0, -0.7, 0],
-            "Hannah": [0, -0.8, 0],
+            "Mark": [0.27, -0.63, -0.77],
+            "Hannah": [0.14, -0.84, 0.79],
             "Itzik": [-0.85, -0.84, 0.57],
-            // "Lupo12PM":{
-            //     "desktop": [-17.1, 22.1, 3.38],
-            //     "vive": [-17.1, 22.1, 3.38]
-            // },
-            "Lupo12PM": [0, -0.7, 0],
-            "Lupo5PM": [0, -0.8, 0],
-            "Haim": [0, -0.8, 0],
-            "Itzhak": [0, -0.8, 0],
+            "Lupo12PM": [0.56, -0.78, 1.17],
+            "Lupo5PM": [0, -0.77, 0],
+            "Haim": [0.93, -0.56, 8.06],
+            "Itzhak": [0.04, -0.74, 1.3],
             "Miriam": [0.09, -0.85, 0.55],
         };
         this.activeCoins = [];
@@ -56,23 +52,23 @@ export default class Coin extends THREE.Object3D  {
         .then( (coinModel) => {
             this.coinModel = coinModel;
             
-            // for (var key in this.character_controller.characters) {
-            //     if (this.character_controller.characters.hasOwnProperty(key)) {
+            for (var key in this.character_controller.characters) {
+                if (this.character_controller.characters.hasOwnProperty(key)) {
 
-            //         if(key in this.coinsOffset){
-            //             let coinn = this.coinModel.clone();
-            //             coinn.position.fromArray(this.coinsOffset[key]);
-            //             coinn.visible = false;
-            //             this.character_controller.characters[key].add(coinn);
+                    if(key in this.coinsOffset){
+                        let coinn = this.coinModel.clone();
+                        coinn.position.fromArray(this.coinsOffset[key]);
+                        coinn.visible = false;
+                        this.character_controller.characters[key].add(coinn);
                         
-            //             this.coins[key] = {};
-            //             this.coins[key].coin = coinn;
-            //             this.coins[key].beLooked = false;
-            //         }                    
-            //     }
-            // }
-            // DebugUtil.positionObject(this.coins['Mark'].coin, "Coin Mark");
-            // DebugUtil.positionObject(this.coins['Lupo12PM'].coin, "Coin Lupo12PM");
+                        this.coins[key] = {};
+                        this.coins[key].coin = coinn;
+                        this.coins[key].beLooked = false;
+                    }                    
+                }
+            }
+            DebugUtil.positionObject(this.coins['Itzhak'].coin, "Coin Itzhak");
+            DebugUtil.positionObject(this.coins['Lupo5PM'].coin, "Coin Lupo5PM");
         });
 
         // events.on("hour_updated", (hour) => {
@@ -202,7 +198,7 @@ export default class Coin extends THREE.Object3D  {
                     TweenMax.to( this.coins[this.currentOnCharacter].coin.rotation, 0.5, {
                         z: Math.PI*2, repeat: 12, ease: Power0.easeNone, onStart:()=>{
                             TweenMax.to( this.coins[this.currentOnCharacter].coin.position, 2, {
-                                delay: 2.5, y:"-=3", ease: Back.easeInOut, onComplete:()=>{
+                                delay: 2.5, y:"-=1", onComplete:()=>{
                                     this.reset();
                                     console.log("reset!");
                                 }
