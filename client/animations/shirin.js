@@ -131,7 +131,7 @@ export default class ShirinAnimation extends THREE.Object3D {
         let moonTexture = tex_loader.load( this.BASE_PATH + "/images/moon.jpg" );
         let moonNRMTexture = tex_loader.load( this.BASE_PATH + "/images/moonNormal.jpg" );
         let moonMat = new THREE.MeshPhongMaterial({map: moonTexture, normalMap: moonNRMTexture});
-        this.moon = new THREE.Mesh(new THREE.SphereGeometry(20, 32, 32), moonMat);
+        this.moon = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), moonMat);
         this.moon.rotation.set(Math.PI/2, Math.PI/2, Math.PI/2);
         // MOON location
             // console.log(this.parent);
