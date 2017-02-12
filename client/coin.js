@@ -35,10 +35,6 @@ export default class Coin extends THREE.Object3D  {
 
         let tex_loader = new THREE.TextureLoader(loadingManager);
         let tex_map = tex_loader.load( this.BASE_PATH + "images/coin.jpg" );
-        // let shine_map = tex_loader.load( this.BASE_PATH + "images/coin_shine.png" );
-        // shine_map.repeat.x = 1;
-        // shine_map.repeat.y = 1;
-        // shine_map.offset.x = -1.5;
         let NRM_map = tex_loader.load( this.BASE_PATH + "images/coin_NRM.png" );
         let DISP_map = tex_loader.load( this.BASE_PATH + "images/coin_DISP.png" );
         this.coinMat = new THREE.MeshPhongMaterial( {
@@ -71,10 +67,6 @@ export default class Coin extends THREE.Object3D  {
             DebugUtil.positionObject(this.coins['Lupo5PM'].coin, "Coin Lupo5PM");
         });
 
-        // events.on("hour_updated", (hour) => {
-        //     this.loadHour(hour);            
-        // });
-
         events.on("character_playing", (name) => {
 
             if(name in this.coinsOffset){
@@ -91,12 +83,6 @@ export default class Coin extends THREE.Object3D  {
         });
     }
 
-    // updateCoinPosition() {
-    //     for (var key in this.coins) {
-    //         this.coins[key].coin.position.copy(this.coins[key].character.position);
-    //     }
-    // }
-
     loadCoin( modelFile ) {
         let promise = new Promise( (resolve, reject) => {
             let loader = new THREE.JSONLoader(this.loadingManager);
@@ -112,17 +98,9 @@ export default class Coin extends THREE.Object3D  {
     }
 
     loadHour(hour) {
-        //let chapter = _.find(Chapters, {hour});
-
         for (var key in this.coins) {
             this.coins[key].coin.visible = false;
         }
-
-        /*
-        chapter.characters.forEach((characterName) => {
-            this.coins[characterName].visible = true;
-        });
-        */
     }
 
     reset() {
@@ -159,7 +137,7 @@ export default class Coin extends THREE.Object3D  {
 
         // if camera doesn't bend down after 10 sec, shine
         if( !this.isShining && ((et - this.coinTimestamp)>13) ) {
-            console.log("start shining");
+            //console.log("start shining");
 
             // shine
             this.coinMat.shininess = 80;
@@ -200,7 +178,7 @@ export default class Coin extends THREE.Object3D  {
                             TweenMax.to( this.coins[this.currentOnCharacter].coin.position, 2, {
                                 delay: 2.5, y:"-=1", onComplete:()=>{
                                     this.reset();
-                                    console.log("reset!");
+                                    //console.log("reset!");
                                 }
                             });
                         }
@@ -212,8 +190,7 @@ export default class Coin extends THREE.Object3D  {
             this.beLookedCount++;
             this.coins[this.currentOnCharacter].beLooked = true;
             this.toCheck = false;
-
-            console.log("a coin be looked!");
+            //console.log("a coin be looked!");
         }
         
     }
