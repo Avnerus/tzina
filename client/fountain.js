@@ -331,6 +331,7 @@ export default class Fountain extends THREE.Object3D  {
 
     resetShow() {
         // this.soundEvents = this.soundEventsRecords.slice();
+        this.skyLightBack();
         this.resetAni();
     }
 
