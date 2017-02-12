@@ -444,6 +444,9 @@ export default class Game {
             if (!this.controlPassed) {
                 this.intro.update(dt,et);
             }
+            if(this.coin.toCheck){
+                this.coin.update(this.camera,dt,et);
+            }
         }
         if (this.keyboardController) {
             this.keyboardController.update(dt);

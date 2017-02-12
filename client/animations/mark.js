@@ -17,11 +17,10 @@ export default class MeirAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 1,  anim: ()=>{ this.skyLightBright() } },
-            { time: 5,  anim: ()=>{ this.pinkNeonOn() } },            
-            { time: 10, anim: ()=>{ this.blueNeonOn() } },
-            { time: 11,  anim: ()=>{ this.skyLightBright2() } },
-            //{ time: 15, anim: ()=>{ this.neonRotate() } },
+            { time: 3,  anim: ()=>{ this.skyLightBright() } },
+            { time: 7,  anim: ()=>{ this.pinkNeonOn() } },            
+            { time: 12, anim: ()=>{ this.blueNeonOn() } },
+            { time: 15,  anim: ()=>{ this.skyLightBright2() } },
             { time: 32, anim: ()=>{ this.neonRotate() } },
             { time: 40, anim: ()=>{ this.neonFlickering( 0.2, 3 ) } },    // neonFlickering( speed, time ) <-- how fast & how many times of flickering
             { time: 45, anim: ()=>{ this.neonRotateBack() } },
