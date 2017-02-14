@@ -248,10 +248,11 @@
         "side":2,
         "map":"80A06DB6-BC0D-44FE-A857-F9C05708C987",
         "blending":"NormalBlending",
+        "specular":16777215,
         "emissive":0,
-        "color":13421772,
+        "color":5718851,
         "name":"glass",
-        "type":"MeshLambertMaterial",
+        "type":"MeshPhongMaterial",
         "depthTest":true,
         "depthWrite":true
     },{
