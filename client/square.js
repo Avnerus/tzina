@@ -502,6 +502,30 @@ export default class Square extends THREE.Object3D{
         this.buildings.remove(originalEndBuilding);
         this.buildings.remove(blockingWindow);
         this.buildings.add(this.endBuilding);
+
+        // add neon effect to this.endBuilding
+        this.endNeonThing = this.buildings.getObjectByName("Neon");
+        this.endNeonThing.material = new THREE.MeshPhongMaterial({color: 0xe5eff1, emissive: 0xebfcff, emissiveIntensity: .1});
+        this.endNeonThingLight = new THREE.PointLight( 0xeaffff, 1, 5 ); // 5
+        this.endNeonThing.add(this.endNeonThingLight);
+        
+        let tweenM = TweenMax.to( this.endNeonThing.material, 2, {
+            emissiveIntensity: 0.9,
+            delay: 1.5, 
+            repeat: -1, 
+            repeatDelay: 1,
+            ease: RoughEase.ease.config({
+                template: Power0.easeNone,
+                strength: 2,
+                points: 20,
+                taper: "none",
+                randomize: true,
+                clamp: false}),
+            onUpdate:()=>{
+                this.endNeonThingLight.intensity = this.endNeonThing.material.emissiveIntensity;
+            }
+        });
+        this.endNeonThing.tween = tweenM;
     }
     loadSuns(loadingManager) {
         console.log("Loading suns")
