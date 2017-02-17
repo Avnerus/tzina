@@ -80,7 +80,7 @@ export default class CharacterController {
         for (let i = 0; i < clone.length; i++) {
             let character = clone[i];
 
-            if (!character.done && !(character.props.event && hour == 9) && !(character.props.event && hour == 19)) {
+            if (!character.done && !(character.props.name == "Agam9AM" && hour == 9) && !(character.props.name == "Agam12PM" && hour == 19)) {
                 console.log("Removing character ", character.props.name, " when loading hour ", hour);
                 this.square.clockwork.remove(character);
                 character.unload();
