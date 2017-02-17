@@ -66,11 +66,13 @@ export default class Show {
                 this.ended7pmShow = true;
                 this.music7pm.stop();
                 this.music7pm.unload();
+                this.soundManager.panorama.detach(this.music7pm);
             }
             else if (this.in9amshow || this.timeController.currentChapter.hour == 9) {
                 this.ended9amShow = true;
                 this.music9am.stop();
                 this.music9am.unload();
+                this.soundManager.panorama.detach(this.music9am);
             }
         });
     }
@@ -111,6 +113,7 @@ export default class Show {
             console.log("Loading show audio ", path);
             this.soundManager.createStaticSoundSampler(path, (sampler) => {
                 console.log("Loaded show audio ", sampler);                              
+                this.soundManager.panorama.append(sampler);
                 resolve(sampler);
             });
         });
