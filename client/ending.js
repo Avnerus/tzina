@@ -20,9 +20,9 @@ export default class Ending {
         this.faded = false;
 
         this.SQUARE_POSITON = [
-            -28.24,
+            -28.53,
             -15.41,
-            7.48
+            7.77
         ]
 
         this.CHARACTER_ORDER = ["Rami", "Meir", "Itzik", "Miriam", "Lupo5PM", "Mark", "Hannah", "Haim", "Itzhak" ]
