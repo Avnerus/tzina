@@ -430,12 +430,15 @@ export default class Character extends THREE.Object3D {
         this.isPaused = true;
         events.emit("character_idle", this.props.name)
 
-        if (this.lastAdjustment && this.lastAdjustment.position) {
+        if (this.lastAdjustment) {
+            console.log("Character was adjusted - reverting")
             this.position.fromArray(this.props.position);
         }
     }
     adjust() {
         this.fullVideo.setDepth(this.nextAdjustment.mindepth, this.nextAdjustment.maxdepth);
+        console.log(this.props.name + " Adjustment!!", this.nextAdjustment.sec);
+
         if (this.nextAdjustment.scale) {
             this.fullVideo.setScale(this.nextAdjustment.scale);
         }
@@ -451,7 +454,6 @@ export default class Character extends THREE.Object3D {
             // possitionOffset.add(this.fullVideo.mesh.position);
             // this.fullVideo.setPosition(possitionOffset);
             
-            console.log("Adjustment!!", this.nextAdjustment.sec);
 
             if(this.nextAdjustment.sec!=0 && this.animation && !this.animation.beDetached){
                 this.detach( this.animation, this, this.scene );
@@ -469,6 +471,7 @@ export default class Character extends THREE.Object3D {
         } else {
             this.nextAdjustment = null;
         }
+        console.log(this.props.name + " last adjustment ", this.lastAdjustment);
     }
     detach ( child, parent, scene ) {
         if (child && parent && scene) {
