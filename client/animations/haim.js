@@ -29,11 +29,13 @@ export default class HaimAnimation extends THREE.Object3D {
         // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
             { time: 2,  anim: ()=>{this.bagOn()} },
+            { time: 10,  anim: ()=>{this.skyLightDarken()} },
             { time: 12,  anim: ()=>{this.tubeDown(1)} },    // 12
             { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
+            { time: 74,  anim: ()=>{this.skyLightStorm()} },
 
-            { time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
-            { time: 212,  anim: ()=>{this.skyLightStorm()} }, //212
+            //{ time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
+            //{ time: 212,  anim: ()=>{this.skyLightStorm()} }, //212
             { time: 246,  anim: ()=>{this.skyLightBack()} },
 
             { time: 252, anim: ()=>{this.characterDisappear()} }    //252
