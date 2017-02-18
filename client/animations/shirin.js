@@ -352,7 +352,7 @@ export default class ShirinAnimation extends THREE.Object3D {
     }
 
     pauseVideo() {
-        this.parent.fullVideo.pause();
+        //this.parent.fullVideo.pause();
         this.parent.fullVideo.mesh.position.y += 2;
         this.parent.fullVideo.wire.position.y += 2;
 
@@ -364,7 +364,7 @@ export default class ShirinAnimation extends THREE.Object3D {
 
         setTimeout( ()=>{
             this.stopFragment(0);
-            this.parent.fullVideo.play();
+          //  this.parent.fullVideo.play();
         }, 8000 );
     }
 

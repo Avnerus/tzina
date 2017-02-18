@@ -88,6 +88,62 @@ export default class Ending {
                 "and still begs at the same spot."
             ]
         }
+        this.CHARACTER_TEXTS_HEB = {
+            "Meir": [
+                "מאיר ניסה להקים קבוצת פייסבוק", 
+                ".נגד הריסת הכיכר",
+                "הוא נסער מאוד מהשינוי",
+                ".ופוחד ממה שיקרה לאזור",
+                ".ממשיך להגיע ולהאכיל את היונים האבודות"
+            ],
+            "Rami": [
+                ",רמי אדיש להורדת הכיכר",
+                "מרגיש שהחיים הם חלק מתנועה",
+                ".ואין מה לפחד ממה שהם מזמנים",
+            ],
+            "Miriam": [
+                "מרים נפטרה",
+                ".באזור אפריל-מאי 2015",
+                ",לצורך הצילומים",
+                ".בוצע שחזור של שיחה עמה",
+            ],
+            "Itzik": [
+                "איציק מקווה שהורדת הכיכר",
+                ".תרחיק את הנרקומנים מהאזור",
+                "הוא ככל הנראה ימשיך להגיע",
+                ".ולשבת על הספסלים"
+            ],
+            "Mark": [
+                ",מארק מצא דירה בדרום תל אביב",
+                ".הוא יותר לא ישן על ספסלי הכיכר",
+                "עדיין משתמש בסמים",
+                ".ועדיין מגיע לבקר כמדי שבוע בכיכר",
+                ".הוא כאב מאוד את הריסתו"
+            ],
+            "Lupo5PM": [
+                "לופו משעומם ביותר מהאזור",
+                "ושמח על כל שינוי",
+                ".שמביא עמו אנרגיה חדשה",
+                "הוא קיווה שהפסל של אגם",
+                ".יהרס גם הוא יחד עם הכיכר"
+            ],
+            "Hannah": [
+                "חנה מצטערת על הרס הכיכר",
+                ",בכל פעם מחדש",
+                ".מאחר והיא נוטה לשכוח שזה קרה"
+            ],
+            "Itzhak": [
+                ",יצחק מעיד כי ימשיך להגיע לשבת בכיכר",
+                ".בלית ברירה"
+            ],
+            "Haim": [
+                "חיים יחל לכך שיהרסו את הכיכר",
+                ".רק לאחר מותו",
+                "זה לא קרה, חיים עדיין חי",
+                ",ועדיין יושב באותו מקום",
+                ".מקבץ נדבות"
+            ]
+        }
     }
 
     generateText() {
@@ -108,9 +164,6 @@ export default class Ending {
 
         text.scale.set(0.0136, 0.0136, 0.0136);
 
-        if (this.config.platform == "desktop") {
-        } else {
-        }
         if (this.debug) {
             DebugUtil.positionObject(text, "Ending character text");
         }
@@ -133,9 +186,10 @@ export default class Ending {
         new THREE.TextureLoader(loadingManager).load('assets/end/miriam.png', (texture) => {
             let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
             this.miriamPlane = new THREE.Mesh(miriamGeo, material);
-            this.miriamPlane.position.set(610,-73,24);
-            this.miriamPlane.scale.set(0.83, 0.83, 0.83);
-            DebugUtil.positionObject(this.miriamPlane, "Miriam image", false, -1000, 1000);
+            this.miriamPlane.position.set(-3.93,13.4,8.61);
+            this.miriamPlane.rotation.set(0,112 * Math.PI/180,0);
+            this.miriamPlane.scale.set(0.00169, 0.00169, 0.00169);
+            DebugUtil.positionObject(this.miriamPlane, "Miriam image");
         });
 
         events.on("vr_start", () => {
@@ -173,6 +227,9 @@ export default class Ending {
     start() {
         console.log("Ending is starting!");
         events.emit("experience_end");
+        if (this.config.language == "heb") {
+            this.CHARACTER_TEXTS = this.CHARACTER_TEXTS_HEB;
+        }
         this.endCredits.init();
         this.endCredits.scale.set(0.019, 0.019, 0.019);
         this.endCredits.position.set(30.51, 24, -7.18);
@@ -214,34 +271,10 @@ export default class Ending {
             setTimeout(() => {
                 this.showCharacters();
             },5000);
-            /*
-            setTimeout(() => {
-                console.log("Ending video");
-                this.square.add(this.endCredits);
-                this.endCredits.creditsVideo.video.addEventListener('timeupdate',() => {
-                    if(!this.faded && this.endCredits.creditsVideo.video.currentTime > 60) {
-                        console.log("Ending fade");
-                        this.faded = true;                    
-                        this.fadeOut()
-                        .then(() => {
-                            this.camera.add(this.endCredits);
-                            this.endCredits.scale.set(0.077, 0.077, 0.077);
-                            this.endCredits.rotation.y = 0;
-                            if (inVR) {
-                                this.endCredits.position.set(-0.02,-0.08,-60);
-                                this.square.position.set(0,-15,-150);
-                            } else {
-                                this.endCredits.position.set(-0.02,-0.08,-50);
-                                this.camera.position.set(0, 15, 150);
-                            }
-                            this.fadeIn()
-                            .then(() => {
+        });
 
-                            })
-                        });
-                    }
-                },false);
-            },2300000);*/
+        events.on("character_ended", (name) => {
+            this.showTexts();
         });
 
 
@@ -263,12 +296,7 @@ export default class Ending {
             setTimeout(() => {
                 this.showNextCharacter();
             },4000);
-        } else {
-            setTimeout(() => {
-                this.showTexts();
-            },2000);
-        }
-
+        } 
     }
     showTexts() {
         this.showingTexts = this.CHARACTER_ORDER.slice(0);
@@ -287,12 +315,13 @@ export default class Ending {
         this.spotLight.target = targetCharacter;
         targetCharacter.idleVideo.play();
         if (nextText == "Miriam") {
-            this.text.add(this.miriamPlane);
-        }
+            console.log("Ending - Miriam plane");
+            this.square.add(this.miriamPlane);
+        } 
         setTimeout(() => {
             targetCharacter.idleVideo.pause();
             if (nextText == "Miriam") {
-                this.text.remove(this.miriamPlane);
+                this.square.remove(this.miriamPlane);
             }
             if (this.showingTexts.length > 0) {
                 this.showNextText();

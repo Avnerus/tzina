@@ -116,8 +116,8 @@ export default [
         spaceOffset: [-0.11,0,0.76],
         gazeSpace: [-2.15,1.9,-0.95],
         gazeOffset: [1.63,1.76,3.62],
-        endingPosition : [1.65, 16.5, 15.14],
-        endingRotation: [218, 0, 190],
+        endingPosition : [6.24, 19.83, 11.35],
+        endingRotation: [196, 29, 188],
         endingScaleMul: 1.2
     },
     {
@@ -519,7 +519,7 @@ export default [
         basePath : 'assets/characters/shirin7pm',
         mindepth : 1214.999755859,
         maxdepth : 3681.950439453,
-        position : [23.2, 27.2, -43.8],
+        position : [16.98, 27.2, -46.32],
         rotation: [0, 270, 0],
         animation: 'Shirin',
         uvdy: 0.47509765625,
