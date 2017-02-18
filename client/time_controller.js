@@ -65,6 +65,23 @@ export default class TimeController {
             });
         });
 
+        //Load all the voice over chapter intros
+        Promise.all([
+            this.loadChapterVO("assets/sound/chapter_vo/7_" + this.config.language + ".ogg"),
+            this.loadChapterVO("assets/sound/chapter_vo/9_" + this.config.language + ".ogg"),
+            this.loadChapterVO("assets/sound/chapter_vo/12_" + this.config.language + ".ogg"),
+            this.loadChapterVO("assets/sound/chapter_vo/17_" + this.config.language + ".ogg"),
+            this.loadChapterVO("assets/sound/chapter_vo/19_" + this.config.language + ".ogg")
+        ]).then(sounds=>{
+            this.sevenAM = sounds[0];
+            this.nineAM = sounds[1];
+            this.twelvePM = sounds[2];
+            this.fivePM = sounds[3];
+            this.sevenPM = sounds[4];
+        }).catch(error=>{
+            console.log(error);
+        });
+
         console.log("Total experience time:", this.totalExperienceTime);
 
 
@@ -535,6 +552,32 @@ export default class TimeController {
             let hebChapter = _.find(ChaptersHeb, {hour: this.currentHour});
             MiscUtil.overwriteProps(this.currentChapter, hebChapter);
         }
+
+        switch (this.currentHour) {
+            case 7:
+                console.log('7AM chapter voice over started');
+                this.sevenAM.play();
+                break;
+            case 9:
+                console.log('9AM chapter voice over started');
+                this.nineAM.play();
+                break;
+            case 12:
+                console.log('12pm chapter voice over started');
+                this.twelvePM.play();
+                break;
+            case 17:
+                console.log('17PM chapter voice over started');
+                this.fivePM.play();
+                break;
+            case 19:
+                console.log('19PM chapter voice over started');
+                this.sevenPM.play();
+                break;
+            default:
+                console.log("Some hour was chosen but we don't have it?");
+        }
+        
     }
 
    showChapterTitle() {
@@ -670,5 +713,16 @@ export default class TimeController {
         this.setCurrentChapter();
         this.showChapterTitle();
         this.updateNextHour();
+    }
+
+    loadChapterVO(path) {
+        return new Promise((resolve, reject) => {
+            console.log("Loading chapter VO audio ", path);
+            this.soundManager.createStaticSoundSampler(path, (sampler) => {
+                console.log("Loaded chapter VO audio ", sampler);                              
+                this.soundManager.panorama.append(sampler);
+                resolve(sampler);
+            });
+        });
     }
 }
