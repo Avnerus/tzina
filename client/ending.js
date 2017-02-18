@@ -20,8 +20,8 @@ export default class Ending {
         this.faded = false;
 
         this.SQUARE_POSITON = [
-            -28.53,
-            -15.41,
+            -29.17,
+            -15.13,
             7.77
         ]
 
@@ -99,14 +99,14 @@ export default class Ending {
         }
         let text = new MultilineText(5, TEXT_DEFINITION, 100);
 
-        text.position.set(-45.22, 14.96, 11.3);
+        text.position.set(-45.22, 9, 11.3);
         text.rotation.set(
              327 * Math.PI / 180,
              105 * Math.PI / 180,
              31 * Math.PI / 180
         );
 
-        text.scale.set(0.016, 0.016, 0.016);
+        text.scale.set(0.0136, 0.0136, 0.0136);
 
         if (this.config.platform == "desktop") {
         } else {

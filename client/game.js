@@ -476,7 +476,7 @@ export default class Game {
 
     endCheck(time) {
         //if (!this.ended && time > 60 * 15) {
-        if (!this.ended && time > 60 * 0.4) {
+        if (!this.ended && time > 60 * 0.6) {
             this.ended = true;
             this.ending.start();
         }
