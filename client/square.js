@@ -505,19 +505,25 @@ export default class Square extends THREE.Object3D{
 
         // add neon effect to this.endBuilding
         this.endNeonThing = this.buildings.getObjectByName("Neon");
-        this.endNeonThing.material = new THREE.MeshPhongMaterial({color: 0xe5eff1, emissive: 0xebfcff, emissiveIntensity: .1});
+        
+        this.endNeonThing.geometry.computeFaceNormals();
+        this.endNeonThing.geometry.computeVertexNormals();
+        this.endNeonThing.geometry.normalsNeedUpdate = true;
+        
+        this.endNeonThing.material = new THREE.MeshPhongMaterial({color: 0xe5eff1, emissive: 0xebfcff, emissiveIntensity: .2});
         this.endNeonThingLight = new THREE.PointLight( 0xeaffff, 1, 5 ); // 5
         this.endNeonThing.add(this.endNeonThingLight);
         
         let tweenM = TweenMax.to( this.endNeonThing.material, 2, {
-            emissiveIntensity: 0.9,
-            delay: 1.5, 
-            repeat: -1, 
-            repeatDelay: 1,
+            emissiveIntensity: 0.7,
+            delay: 2, 
+            repeat: -1,
+            yoyo: true, 
+            repeatDelay: 7,
             ease: RoughEase.ease.config({
                 template: Power0.easeNone,
                 strength: 2,
-                points: 20,
+                points: 10,
                 taper: "none",
                 randomize: true,
                 clamp: false}),
