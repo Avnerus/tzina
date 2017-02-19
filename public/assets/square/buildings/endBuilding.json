@@ -38,16 +38,14 @@
         "depthTest":true,
         "blending":"NormalBlending"
     },{
-        "type":"MeshPhongMaterial",
+        "type":"MeshLambertMaterial",
         "name":"Cigarete",
         "map":"E07DDEF3-186F-46CF-8E60-6F05879A5E3B",
         "vertexColors":0,
         "blending":"NormalBlending",
         "depthTest":true,
-        "specular":8355711,
         "depthWrite":true,
         "emissive":0,
-        "shininess":50,
         "uuid":"25A35721-8341-48B2-B533-068F726875AB",
         "color":10724259
     },{
