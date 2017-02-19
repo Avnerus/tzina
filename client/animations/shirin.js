@@ -43,9 +43,9 @@ export default class ShirinAnimation extends THREE.Object3D {
                 { time: 8,  anim: ()=>{this.stopFragment(1)} }
             ],
             'Shirin7PM': [
-                { time: 5, anim: ()=>{this.crackCocoon(2)} },
-                { time: 6, anim: ()=>{this.dropShirin()} },
-                { time: 76,  anim: ()=>{this.stopFragment(2)} }
+                { time: 1, anim: ()=>{this.crackCocoon(2)} },
+                { time: 3, anim: ()=>{this.showShirin()} },
+                { time: 73,  anim: ()=>{this.stopFragment(2)} }
             ]
         };
         // v.1
@@ -207,7 +207,13 @@ export default class ShirinAnimation extends THREE.Object3D {
             this.add(this.cocoonGroup);
             // hide all the cocoon except 7pm
             for(var i=0; i<this.cocoonGroup.children.length; i++){
-                if(i!=2){
+                if(i==2){
+                    this.cocoonGroup.children[i].rotation.x = 233 * Math.PI/180;
+                    this.cocoonGroup.children[i].rotation.y = 14 * Math.PI/180;
+                    // DebugUtil.positionObject(this.cocoonGroup.children[i], "cocoon");
+                    this.cocoonGroup.children[i].position.set(0.02, -9.48, -1.82);
+                    this.cocoonGroup.children[i].scale.set(1.55, 1.55, 1.55);
+                }else{
                     this.cocoonGroup.children[i].visible = false;
                 }
             }
@@ -510,6 +516,15 @@ export default class ShirinAnimation extends THREE.Object3D {
 
     }
 
+    showShirin() {
+        TweenMax.to(this.parent.fullVideo.mesh.scale, 2, { x:this.oriShirinScale, y:this.oriShirinScale, z:this.oriShirinScale });
+        TweenMax.to(this.parent.fullVideo.wire.scale, 2, { x:this.oriShirinScale, y:this.oriShirinScale, z:this.oriShirinScale,
+            onComplete: ()=>{
+                this.parent.fullVideo.play();
+            }
+        });
+    }
+
     transX(geo, n){
         for(let i=0; i<geo.vertices.length; i++){
             geo.vertices[i].x += n;
@@ -571,8 +586,8 @@ export default class ShirinAnimation extends THREE.Object3D {
             this.oriShirinScale = this.parent.fullVideo.mesh.scale.x;
             this.parent.fullVideo.setScale(this.oriShirinScale * 0.01);
             this.parent.fullVideo.pause();
-            this.parent.fullVideo.mesh.position.y += 2;
-            this.parent.fullVideo.wire.position.y += 2;
+            // this.parent.fullVideo.mesh.position.y += 2;
+            // this.parent.fullVideo.wire.position.y += 2;
 
         } else {
             // unhidden the cocoons
