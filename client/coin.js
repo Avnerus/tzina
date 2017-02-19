@@ -168,9 +168,9 @@ export default class Coin extends THREE.Object3D  {
             this.coins[this.currentOnCharacter].coin.rotation.set(0,0,0);
 
             TweenMax.to( this.coins[this.currentOnCharacter].coin.rotation, .7, {
-                delay: 3, x: 90*Math.PI/180, onStart:()=>{
+                delay: 6, x: 90*Math.PI/180, onStart:()=>{
                     TweenMax.to( this.coins[this.currentOnCharacter].coin.position, .7, {
-                        delay: 3, y:"+=0.05"
+                        delay: 6, y:"+=0.05"
                     });
                 }, onComplete:()=>{
                     TweenMax.to( this.coins[this.currentOnCharacter].coin.rotation, 0.5, {
