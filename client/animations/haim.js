@@ -16,7 +16,7 @@ export default class HaimAnimation extends THREE.Object3D {
     init(loadingManager) {
         this.loadingManager = loadingManager;
         this.setupAnim();
-        //DebugUtil.positionObject(this, "Haim Ani");
+        // DebugUtil.positionObject(this, "Haim Ani");
     }
 
     setupAnim() {
@@ -29,10 +29,10 @@ export default class HaimAnimation extends THREE.Object3D {
         // time: when to start animation, duration: how fast the animation is
         this.sequenceConfig = [
             { time: 2,  anim: ()=>{this.bagOn()} },
-            { time: 10,  anim: ()=>{this.skyLightDarken()} },
             { time: 12,  anim: ()=>{this.tubeDown(1)} },    // 12
             { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
-            { time: 74,  anim: ()=>{this.skyLightStorm()} },
+            { time: 75,  anim: ()=>{this.skyLightDarken()} },   // took 3 sec
+            { time: 82,  anim: ()=>{this.skyLightStorm()} },
 
             //{ time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
             //{ time: 212,  anim: ()=>{this.skyLightStorm()} }, //212
