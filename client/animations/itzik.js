@@ -18,11 +18,11 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.animStart = false;
         this.sequenceConfig = [
             { time: 50, anim: ()=>{this.benchOutFirst()} },     //50
-            { time: 60, anim: ()=>{this.benchMove(1)} },        //60
-            { time: 68, anim: ()=>{this.benchMove(2)} },        //68
-            { time: 75, anim: ()=>{this.benchMove(3)} },        //75
-            { time: 80, anim: ()=>{this.benchMove(4)} },        //80
-            { time: 85, anim: ()=>{this.benchMove(5)} },        //85
+            { time: 68, anim: ()=>{this.benchMove(1)} },        //60
+            { time: 90, anim: ()=>{this.benchMove(2)} },        //68
+            { time: 112, anim: ()=>{this.benchMove(3)} },        //75
+            { time: 131, anim: ()=>{this.benchMove(4)} },        //80
+            { time: 148, anim: ()=>{this.benchMove(5)} },        //85
             // end: 211, ani takes 13
             { time: 197, anim: ()=>{this.characterDisappear()} }//197
         ];
