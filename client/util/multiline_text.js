@@ -21,14 +21,28 @@ export default class MultilineText extends THREE.Object3D  {
         console.log("Multinline text initialized with " + this.numLines + " lines");
     }
     show(time) {
-        for (let i = 0; i < this.children.length; i++) {
-            TweenMax.to( this.children[i].material, time, { opacity: 1});
+        if (this.children.length > 0) {
+            return new Promise((resolve, reject) => {
+                TweenMax.to( this.children[0].material, time, { opacity: 1, onComplete:() => {
+                    resolve();
+                }});
+                for (let i = 1; i < this.children.length; i++) {
+                    TweenMax.to( this.children[i].material, time, { opacity: 1});
+                }
+            });
         }
     }
 
     hide(time) {
-        for (let i = 0; i < this.children.length; i++) {
-            TweenMax.to( this.children[i].material, time, { opacity: 0});
+        if (this.children.length > 0) {
+            return new Promise((resolve, reject) => {
+                TweenMax.to( this.children[0].material, time, { opacity: 0, onComplete:() => {
+                    resolve();
+                }});
+                for (let i = 1; i < this.children.length; i++) {
+                    TweenMax.to( this.children[i].material, time, { opacity: 0});
+                }
+            });
         }
     }
 

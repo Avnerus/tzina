@@ -17,6 +17,8 @@ export default class Agam12PMAnimation extends THREE.Object3D {
             "This fountain, \“Water and Fire\”, is a piece that",
             "represents the core of his philosophy."
         ]
+
+        this.showedIntro = false;
     }
 
     init(loadingManager) {
@@ -26,12 +28,26 @@ export default class Agam12PMAnimation extends THREE.Object3D {
 
             // Intro text
             this.text = this.generateText();
+            this.text.hide(0);
             this.text.setText(this.INTRO_TEXT);
             this.add(this.text);
             //DebugUtil.positionObject(this.text, "Agam text");
 
             this.didInit = true;
         }
+    }
+
+    showIntroText() {
+        this.showedIntro = true;
+        this.text.show(1);
+        setTimeout(() => {
+            if (this.text) {
+                this.text.hide(1)
+                .then(() => {
+                    this.remove(this.text);
+                });
+            }            
+        },30000);
     }
 
     generateText() {
@@ -161,6 +177,11 @@ export default class Agam12PMAnimation extends THREE.Object3D {
     }
 
     updateVideoTime(time) {
+        
+        if (!this.showedIntro && time >= 10) {
+            this.showIntroText();
+        }
+
         if (this.nextAnim && time >= this.nextAnim.time) {
             console.log("do anim sequence ", this.nextAnim);
             this.nextAnim.anim();
