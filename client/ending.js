@@ -33,43 +33,33 @@ export default class Ending {
 
         this.CHARACTER_TEXTS = {
             "Meir": [
-                "Meir tried to form a Facebook group", 
-                "against the destruction of the square.",
-                "He was very upset and worried",
-                "over the impact it will have on the area.",
-                "He continues to feed the lost pigeons."
+                "Meir tried to form a Facebook group against the ruin", 
+                "He was very worried for what it willl do to the area.",
+                "He continues to feed the lost pigeons.",
             ],
             "Rami": [
-                "Rami doesn’t care too much",
-                "about the removal of the square.",
-                "He says life is always in motion,",
-                "and one shouldn’t fear that."
+                "Rami doesn’t care too much about the removal",
+                "of the square. He says life is always",
+                "in motion, and one shouldn’t fear that."
             ],
             "Miriam": [
-                "Miriam passed away",
-                "around April-May 2015.",
-                "We shot a reenactment",
-                "of a conversation with her.",
+                "Miriam passed away around April-May 2015.",
+                "We shot a reenactment of a conversation with her."
             ],
             "Itzik": [
-                "Itzik hopes that the demolition",
-                "will keep the junkies away.",
-                "He will likely keep sitting",
-                "on the benches in the area."
+                "Itzik hopes that the demolition will keep the",
+                "junkies away. He will likely keep sitting",
+                " on the benches in the area."
             ],
             "Mark": [
-                "Mark found an apartment at south Tel Aviv",
-                "and doesn’t sleep on the benches anymore.",
-                "He still use drugs and he still comes",
-                "to visit the square every week.",
+                "Mark found an apartment at south Tel Aviv and doesn’t sleep",
+                "on the benches anymore. He still use drugs and still visit.",
                 "He was in deep grief about the demolition."
             ],
             "Lupo5PM": [
-                "Lupo is bored from the area",
-                "and is happy with any change",
-                "that might energizes the place.",
-                "He wished that Agam’s sculpture",
-                "would have been destroyed as well."
+                "Lupo is bored from the area and is happy with any change",
+                "that might energizes the place. He wished that Agam’s",
+                "fountain would have been destroyed as well."
             ],
             "Hannah": [
                 "Hanna get upset every time",
@@ -77,55 +67,43 @@ export default class Ending {
                 "since she often forgets about it."
             ],
             "Itzhak": [
-                "Yitzhak says that for the lack",
-                "of a better option,",
+                "Yitzhak says that for the lack of a better option,",
                 "he will keep coming to the square."
             ],
             "Haim": [
-                "Haim wished that the square",
-                "would be torn down after his death.",
-                "That did not happen. Haim is alive",
-                "and still begs at the same spot."
+                "Haim wished that the square would be torn down",
+                "after his death. That did not happen.",
+                "Haim is alive and still begs at the same spot."
             ]
         }
         this.CHARACTER_TEXTS_HEB = {
             "Meir": [
-                "מאיר ניסה להקים קבוצת פייסבוק", 
-                ".נגד הריסת הכיכר",
-                "הוא נסער מאוד מהשינוי",
-                ".ופוחד ממה שיקרה לאזור",
+                ".מאיר ניסה להקים קבוצת פייסבוק נגד הריסת הכיכר", 
+                ".הוא נסער מאוד מהשינוי ופוחד ממה שיקרה לאזור",
                 ".ממשיך להגיע ולהאכיל את היונים האבודות"
             ],
             "Rami": [
-                ",רמי אדיש להורדת הכיכר",
-                "מרגיש שהחיים הם חלק מתנועה",
-                ".ואין מה לפחד ממה שהם מזמנים",
+                ",רמי אדיש להורדת הכיכר מרגיש שהחיים הם",
+                ".חלק מתנועה ואין מה לפחד ממה שהם מזמנים"
             ],
             "Miriam": [
-                "מרים נפטרה",
-                ".באזור אפריל-מאי 2015",
-                ",לצורך הצילומים",
-                ".בוצע שחזור של שיחה עמה",
+                ".מרים נפטרה באזור אפריל-מאי 2015",
+                ".לצורך הצילומים בוצע שחזור של שיחה עמה"
             ],
             "Itzik": [
-                "איציק מקווה שהורדת הכיכר",
-                ".תרחיק את הנרקומנים מהאזור",
-                "הוא ככל הנראה ימשיך להגיע",
-                ".ולשבת על הספסלים"
+                "איציק מקווה שהורדת הכיכר תרחיק את",
+                "הנרקומנים מהאזור. הוא ככל הנראה ימשיך",
+                ".להגיע ולשבת על הספסלים"
             ],
             "Mark": [
-                ",מארק מצא דירה בדרום תל אביב",
-                ".הוא יותר לא ישן על ספסלי הכיכר",
-                "עדיין משתמש בסמים",
-                ".ועדיין מגיע לבקר כמדי שבוע בכיכר",
-                ".הוא כאב מאוד את הריסתו"
+                "מארק מצא דירה בדרום תל אביב, הוא יותר לא ישן על",
+                "ספסלי הכיכר. עדיין משתמש בסמים",
+                ".ועדיין מגיע לבקר. הוא כאב מאוד את ההריסה"
             ],
             "Lupo5PM": [
-                "לופו משעומם ביותר מהאזור",
-                "ושמח על כל שינוי",
-                ".שמביא עמו אנרגיה חדשה",
-                "הוא קיווה שהפסל של אגם",
-                ".יהרס גם הוא יחד עם הכיכר"
+                "לופו משעומם ביותר מהאזור ושמח על כל שינוי",
+                "שמביא עמו אנרגיה חדשה. הוא קיווה שהפסל",
+                ".של אגם יהרס גם יחד עם הכיכר"
             ],
             "Hannah": [
                 "חנה מצטערת על הרס הכיכר",
@@ -138,10 +116,8 @@ export default class Ending {
             ],
             "Haim": [
                 "חיים יחל לכך שיהרסו את הכיכר",
-                ".רק לאחר מותו",
-                "זה לא קרה, חיים עדיין חי",
-                ",ועדיין יושב באותו מקום",
-                ".מקבץ נדבות"
+                "רק לאחר מותו ,זה לא קרה. חיים עדיין חי",
+                ".ועדיין יושב באותו מקום מקבץ נדבות"
             ]
         }
     }

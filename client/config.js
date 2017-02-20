@@ -21,5 +21,5 @@ export default {
     platform: "vive", // desktop
     skipLanding: true,
     skipInstructions: true,
-    language: "heb"
+    language: "eng"
 }
