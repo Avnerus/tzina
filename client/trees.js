@@ -1,4 +1,5 @@
 import TreesDef from './trees/trees_def'
+import TreesDefLanding from './trees/trees_def_landing'
 const TREES_PATH = "assets/trees"
 import DebugUtil from './util/debug'
 
@@ -15,12 +16,19 @@ export default class Trees extends THREE.Object3D {
         this.windVertexShader = glslify('./shaders/potree_wind_vs.glsl');
     }
 
-    init(loadingManager) {
+    init(loadingManager, which) {
         let treeTypes = {};
 
+        let treeSelector;
+        if(which == "landing"){
+            treeSelector = TreesDefLanding;
+        } else {
+            treeSelector = TreesDef;
+        }
+
         return new Promise((resolve, reject) => {
-            console.log("Loading trees", TreesDef)
-            let typePromises = TreesDef.types.map((type) => {return this.loadType(type, treeTypes)});
+            console.log("Loading trees", treeSelector)
+            let typePromises = treeSelector.types.map((type) => {return this.loadType(type, treeTypes)});
             Promise.all(typePromises)
             .then((results) => {
 
@@ -51,7 +59,7 @@ export default class Trees extends THREE.Object3D {
 
 
                 let counter = 0;
-                TreesDef.instances.forEach((instance) => {
+                treeSelector.instances.forEach((instance) => {
         //            let mesh = new THREE.Points( treeTypes[instance.type], material );
                     if (treeTypes[instance.type]) {
                         let mesh;

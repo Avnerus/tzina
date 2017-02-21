@@ -645,7 +645,7 @@ if (!Modernizr.touchevents && lock.available()) {
 
             // load & add the trees
             trees = new Trees(config, camera, renderer);
-            trees.init(loadingManager)
+            trees.init(loadingManager, "landing")
             .then(() => {
                 scene.add(trees);
                 // we need to pass delta time to the shader so we need a clock
