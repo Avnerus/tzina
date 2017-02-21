@@ -615,10 +615,10 @@ export default class HaimAnimation extends THREE.Object3D {
     }
 
     skyLightStorm() {
-        TweenMax.to( this.sky.dirLight, 2, {intensity: 0.0});
-        TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.7});
-        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
-        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.078, g:0.373, b:0.4 } ); // #145f67
+        TweenMax.to( this.sky.dirLight, 4, {intensity: 0.0});
+        TweenMax.to( this.sky.hemiLight, 4, {intensity: 0.7});
+        TweenMax.to( this.sky.hemiLight.color, 4, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
+        TweenMax.to( this.sky.hemiLight.groundColor, 4, { r:0.078, g:0.373, b:0.4 } ); // #145f67
     }
 
     skyLightBack() {
