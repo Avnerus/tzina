@@ -44,8 +44,9 @@ export default class ShirinAnimation extends THREE.Object3D {
             ],
             'Shirin7PM': [
                 { time: 1, anim: ()=>{this.crackCocoon(2)} },
-                { time: 3, anim: ()=>{this.showShirin()} },
-                { time: 73,  anim: ()=>{this.stopFragment(2)} }
+                { time: 2, anim: ()=>{this.showShirin()} },
+                { time: 77, anim: ()=>{this.closeCocoon(2)} },
+                { time: 80,  anim: ()=>{this.stopFragment(2)} }
             ]
         };
         // v.1
@@ -92,7 +93,7 @@ export default class ShirinAnimation extends THREE.Object3D {
             this.candyGroupPos = new THREE.Vector3( -12,0,0 );
             this.cocoonGroupPos = new THREE.Vector3( 0,25,0 );
             this.cobwebGroupPos = new THREE.Vector3( 14,10,0 );
-
+            this.smallShirinPos = new THREE.Vector3( 0.05, -0.24, 0.64 );
         //
         let webTexture = tex_loader.load( this.BASE_PATH + "/images/web2.jpg" );
         this.webMat = new THREE.MeshBasicMaterial({map: webTexture, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending});
@@ -374,10 +375,25 @@ export default class ShirinAnimation extends THREE.Object3D {
         }, 8000 );
     }
 
+    closeCocoon(index) {
+        let crackTween = TweenMax.to( this.cocoonGroup.children[index].morphTargetInfluences, 3, {
+            endArray: [0],
+            ease: RoughEase.ease.config({ template:  Power0.easeNone, 
+                                         strength: 1, points: 20, taper: "none",
+                                         randomize:  true, clamp: false}) 
+        });
+        this.tweenAnimCollectors.push(crackTween);
+
+        TweenMax.to(this.parent.fullVideo.mesh.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 0.5 });
+        TweenMax.to(this.parent.fullVideo.wire.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 0.5 });
+        TweenMax.to(this.parent.fullVideo.mesh.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 0.5 });
+        TweenMax.to(this.parent.fullVideo.wire.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 0.5 });
+    }
+
     crackCocoon(index) {
         this.dropFragment(index);
         let crackTween = TweenMax.to( this.cocoonGroup.children[index].morphTargetInfluences, 2, {
-            delay: 1,
+            //delay: 1,
             endArray: [1], // yoyo: true, repeat:-1, repeatDelay: 1,
             ease: RoughEase.ease.config({ template:  Power0.easeNone, 
                                          strength: 1, points: 20, taper: "none",
@@ -517,8 +533,10 @@ export default class ShirinAnimation extends THREE.Object3D {
     }
 
     showShirin() {
-        TweenMax.to(this.parent.fullVideo.mesh.scale, 2, { x:this.oriShirinScale, y:this.oriShirinScale, z:this.oriShirinScale });
-        TweenMax.to(this.parent.fullVideo.wire.scale, 2, { x:this.oriShirinScale, y:this.oriShirinScale, z:this.oriShirinScale,
+        TweenMax.to(this.parent.fullVideo.mesh.position, 3, { x:this.oriShirinPos.x, y:this.oriShirinPos.y, z:this.oriShirinPos.z });
+        TweenMax.to(this.parent.fullVideo.wire.position, 3, { x:this.oriShirinPos.x, y:this.oriShirinPos.y, z:this.oriShirinPos.z });
+        TweenMax.to(this.parent.fullVideo.mesh.scale, 3, { x:this.oriShirinScale, y:this.oriShirinScale, z:this.oriShirinScale });
+        TweenMax.to(this.parent.fullVideo.wire.scale, 3, { x:this.oriShirinScale, y:this.oriShirinScale, z:this.oriShirinScale,
             onComplete: ()=>{
                 this.parent.fullVideo.play();
             }
@@ -588,7 +606,9 @@ export default class ShirinAnimation extends THREE.Object3D {
             this.parent.fullVideo.pause();
             // this.parent.fullVideo.mesh.position.y += 2;
             // this.parent.fullVideo.wire.position.y += 2;
-
+            this.oriShirinPos = this.parent.fullVideo.mesh.position.clone();
+            this.parent.fullVideo.mesh.position.copy(this.smallShirinPos);
+            this.parent.fullVideo.wire.position.copy(this.smallShirinPos);
         } else {
             // unhidden the cocoons
             for(var i=0; i<this.cocoonGroup.children.length; i++){
