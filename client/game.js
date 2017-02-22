@@ -204,7 +204,7 @@ export default class Game {
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config, this.introAni);
 
 
-        this.instructions = new Instructions(this.config, this.camera, this.square);
+        this.instructions = new Instructions(this.config, this.camera, this.square, this.soundManager);
 
         // laura: i don't know other better way to do this..
         if (!this.config.noAnimations) {
