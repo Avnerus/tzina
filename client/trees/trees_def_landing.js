@@ -29,9 +29,9 @@ export default {
 
                {
             type: "ThreeTrees",
-            position: [-27.91,14.67,0.96],
-            rotation: [360,14,87],
-            scale: 0.92
+            position: [40,-8.33,30.73],
+            rotation: [0,5.7,91],
+            scale: 2.228
         },
         //  {
         //     type: "ThreeTrees",
@@ -54,29 +54,29 @@ export default {
 
          {
             type: "ThreeTrees",
-            position: [-30.61,13.32,9.8],
-            rotation: [339,0,71],
-            scale: 1
+            position: [13.59,20.08,-1.75],
+            rotation: [253,123,233],
+            scale: 0.469
         },
          {
             type: "ThreeTrees",
-            position: [10.88,20.08,25.31],
-            rotation: [119,192,233],
-            scale: 0.44
+            position: [8.17,20.08,-1.75],
+            rotation: [237,132,245],
+            scale: 0.46
         }, 
     
-        {
-            type: "ThreeTrees",
-            position: [31.63,9.5,-19.79],
-            rotation: [83,38,90],
-            scale: 0.87
-        },
-        {
-            type: "ThreeTrees",
-            position: [-1.75,17.38,23.51],
-            rotation: [343,18,99],
-            scale: 0.65
-        },
+        // {
+        //     type: "ThreeTrees",
+        //     position: [31.63,9.5,-19.79],
+        //     rotation: [83,38,90],
+        //     scale: 0.87
+        // // },
+        // {
+        //     type: "ThreeTrees",
+        //     position: [-1.75,17.38,23.51],
+        //     rotation: [343,18,99],
+        //     scale: 0.65
+        // },
 
  {
             type: "ThreeTrees",
@@ -87,19 +87,38 @@ export default {
 
  {
             type: "ThreeTrees",
-            position: [-14.38,16.03,-26],
-            rotation: [225,13.8,115],
-            scale: 0.469
+            position: [27.12,18.73,-4.45],
+            rotation: [253,42,140],
+            scale: 0.559
+        },
+         {
+            type: "ThreeTrees",
+            position: [27.12,18.73,-4.45],
+            rotation: [253,42,140],
+            scale: 0.559
         },
 
+  // {
+  //           type: "ThreeTrees",
+  //           position: [40,17,0.06],
+  //           rotation: [253,140,127],
+  //           scale: 0.6
+  //       },
 
- {
+
+ // {
+ //            type: "ThreeTrees",
+ //            position: [-29.71,17.38,-26.1],
+ //            rotation: [201,2,103],
+ //            scale: 0.65
+ //        },
+    {
             type: "ThreeTrees",
-            position: [-29.71,17.38,-26.1],
-            rotation: [201,2,103],
+            position: [40,17.38,0.06],
+            rotation: [257,46,132],
             scale: 0.65
         },
-    {
+          {
             type: "ThreeTrees",
             position: [40,17.38,0.06],
             rotation: [257,46,132],
@@ -115,16 +134,16 @@ export default {
 
         {
             type: "palm",
-            position: [-18,16,10],
-            rotation: [260,0,90],
-            scale: 0.75
+            position: [-40,21.44,-10.77],
+            rotation: [95,0,95],
+            scale: 0.334
         },
 
         {
             type: "palm",
-            position: [26.62,16.03,15],
-            rotation: [60,0,90],
-            scale: 0.69
+            position: [21.71,10.61,40],
+            rotation: [360,0,91],
+            scale: 0.965
         },
          {
             type: "palm",
