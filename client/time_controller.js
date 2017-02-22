@@ -67,17 +67,37 @@ export default class TimeController {
 
         //Load all the voice over chapter intros
         Promise.all([
+            //Ambience with voice over
             this.loadChapterVO("assets/sound/chapter_vo/7_" + this.config.language + ".ogg"),
             this.loadChapterVO("assets/sound/chapter_vo/9_" + this.config.language + ".ogg"),
             this.loadChapterVO("assets/sound/chapter_vo/12_" + this.config.language + ".ogg"),
             this.loadChapterVO("assets/sound/chapter_vo/17_" + this.config.language + ".ogg"),
-            this.loadChapterVO("assets/sound/chapter_vo/19_" + this.config.language + ".ogg")
+            this.loadChapterVO("assets/sound/chapter_vo/19_" + this.config.language + ".ogg"),
+            //Ambience only
+            this.loadChapterVO("assets/sound/chapter_vo/ambience/7_ambience.ogg"),
+            this.loadChapterVO("assets/sound/chapter_vo/ambience/9_ambience.ogg"),
+            this.loadChapterVO("assets/sound/chapter_vo/ambience/12_ambience.ogg"),
+            this.loadChapterVO("assets/sound/chapter_vo/ambience/17_ambience.ogg"),
+            this.loadChapterVO("assets/sound/chapter_vo/ambience/19_ambience.ogg")
         ]).then(sounds=>{
+            //Ambience with voice over plus playedOnce bool
             this.sevenAM = sounds[0];
+            this.sevenAM.playedOnce = false;
             this.nineAM = sounds[1];
+            this.nineAM.playedOnce = false;
             this.twelvePM = sounds[2];
+            this.twelvePM.playedOnce = false;
             this.fivePM = sounds[3];
+            this.fivePM.playedOnce = false;
             this.sevenPM = sounds[4];
+            this.sevenPM.playedOnce = false;
+            //Ambience only
+            this.ambience7 = sounds[5];
+            this.ambience9 = sounds[6];
+            this.ambience12 = sounds[7];
+            this.ambience17 = sounds[8];
+            this.ambience19 = sounds[9];
+
         }).catch(error=>{
             console.log(error);
         });
@@ -555,24 +575,49 @@ export default class TimeController {
 
         switch (this.currentHour) {
             case 7:
-                console.log('7AM chapter voice over started');
-                this.sevenAM.play();
+                console.log('7AM chapter sound started');
+                if(!this.sevenAM.playedOnce){
+                    this.sevenAM.play();
+                    this.sevenAM.playedOnce = true;
+                } else {
+                    this.ambience7.play();
+                }               
                 break;
             case 9:
-                console.log('9AM chapter voice over started');
-                this.nineAM.play();
+                console.log('9AM chapter sound started');
+                if(!this.nineAM.playedOnce){
+                    this.nineAM.play();
+                    this.nineAM.playedOnce = true;
+                } else {
+                    this.ambience9.play();
+                }      
                 break;
             case 12:
-                console.log('12pm chapter voice over started');
-                this.twelvePM.play();
+                console.log('12pm chapter sound started');
+                if(!this.twelvePM.playedOnce){
+                    this.twelvePM.play();
+                    this.twelvePM.playedOnce = true;
+                } else {
+                    this.ambience12.play();
+                }      
                 break;
             case 17:
-                console.log('17PM chapter voice over started');
-                this.fivePM.play();
+                console.log('17PM chapter sound started');
+                if(!this.fivePM.playedOnce){
+                    this.fivePM.play();
+                    this.fivePM.playedOnce = true;
+                } else {
+                    this.ambience17.play();
+                }              
                 break;
             case 19:
-                console.log('19PM chapter voice over started');
-                this.sevenPM.play();
+                console.log('19PM chapter sound started');
+                if(!this.sevenPM.playedOnce){
+                    this.sevenPM.play();
+                    this.sevenPM.playedOnce = true;
+                } else {
+                    this.ambience19.play();
+                }               
                 break;
             default:
                 console.log("Some hour was chosen but we don't have it?");
