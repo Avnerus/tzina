@@ -66,6 +66,7 @@ export default class Character extends THREE.Object3D {
         this.subtitlesReady = false;
         this.fullReady = false;
         this.audioReady = false;
+        this.ambientReady = false;
 
         this.nextAdjustment = null;
         this.lastAdjustment = null;
@@ -75,7 +76,6 @@ export default class Character extends THREE.Object3D {
         this.colliding = false;
         this.audio = null;
         this.ambientAudio = null;
-
     }
     init(loadingManager) {
             this.position.fromArray(this.props.position);
@@ -209,11 +209,19 @@ export default class Character extends THREE.Object3D {
                 if (this.animation) {
                     this.animation.visible = true;
                 }
+                //Load the positional dialog audio
                 this.loadAudio()
                 .then(() => {
                     this.soundManager.panorama.append(this.audio);
                     this.audio.play();
-                })
+                });
+                //Load the ambient track to accompany the character
+                if(this.props.hasAmbience){
+                    this.loadCharacterAmbience().then(()=>{
+                        this.ambientAudio.play();
+                    });
+                }
+               
                 events.emit("character_playing", this.props.name)
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {
@@ -336,6 +344,10 @@ export default class Character extends THREE.Object3D {
                 this.audio.stop();
                 this.audio.unload();
             }
+            if(this.ambientAudio && this.props.hasAmbience){
+                this.ambientAudio.stop();
+                this.ambientAudio.unload();
+            }
         }
         //this.remove(this.animation);
         this.active = false;
@@ -343,6 +355,7 @@ export default class Character extends THREE.Object3D {
         this.playingFull = false;
         this.subtitlesReady = false;
         this.audioReady = false;
+        this.ambientReady = false;
         this.fullReady = false;
 
         this.nextAdjustment = null;
@@ -383,7 +396,13 @@ export default class Character extends THREE.Object3D {
 
         this.soundManager.panorama.detach(this.audio);
         this.audio.stop();
-        this.audio.unload()
+        this.audio.unload();
+
+        if(this.props.hasAmbience){
+            this.ambientAudio.stop();
+            this.ambientAudio.unload();
+        }
+        
 
         if (!this.props.fullOnly) {
             this.idleVideo.pause();
@@ -420,8 +439,12 @@ export default class Character extends THREE.Object3D {
         this.fullVideo.pause();
         this.soundManager.panorama.append(this.audio);
         if (this.audio) {
-            this.audio.pause();
+            this.audio.pause();         
         }
+        if(this.ambientAudio && this.props.hasAmbience){
+            this.ambientAudio.pause();
+        }
+
         this.fullVideo.setVisible(false);
         this.playingFull = false;
         if (this.props.subtitles) {
@@ -533,12 +556,21 @@ export default class Character extends THREE.Object3D {
                         },false);
                         this.fullVideo.load();
 
-                        // Load audio
+                        // Load dialog audio
                         this.loadAudio()
                         .then((audio) => {
                             this.audioReady = true;
                             this.checkReady();
-                        })
+                        });
+                        if(this.props.hasAmbience){
+                            // Load ambient audio
+                            this.loadCharacterAmbience()
+                            .then((audio)=>{
+                                this.ambientReady = true;
+                                this.checkReady();
+                            });
+                        }
+                      
                     } else {
                         console.log("Resume");
                         if (this.props.subtitles) {
@@ -568,10 +600,11 @@ export default class Character extends THREE.Object3D {
         });
     }
 
-    loadCharacterAmbience(path) {
+    loadCharacterAmbience() {
         return new Promise((resolve, reject) => {
-            console.log("Loading characters ambience ", path);
-            this.soundManager.createStaticSoundSampler(path, sampler=> {
+            let relPath = "assets/sound/character_ambience/" + this.props.name + ".ogg";
+            console.log("Loading characters ambience ", relPath);
+            this.soundManager.createStaticSoundSampler(relPath, sampler=> {
                 console.log("Loaded characters ambience ", sampler);
                 this.ambientAudio = sampler;
                 resolve(sampler);
@@ -591,7 +624,7 @@ export default class Character extends THREE.Object3D {
 
     checkReady() {
         console.log(this.props.name, "Checking ready");
-        if (this.fullReady && this.audioReady && (this.subtitlesReady || !this.props.subtitles)) {
+        if (this.fullReady && this.audioReady && this.ambientReady && (this.subtitlesReady || !this.props.subtitles)) {
             if (this.animation) {
                 this.animation.start(this.props.name);
             }
@@ -640,6 +673,10 @@ export default class Character extends THREE.Object3D {
             if (this.audio) {
                 this.soundManager.panorama.append(this.audio);
                 this.audio.play();
+            }
+
+            if(this.ambientAudio && this.props.name != this.ambienceExceptions) {
+                this.ambientAudio.play();
             }
         
             if (this.subtitlesReady) {
