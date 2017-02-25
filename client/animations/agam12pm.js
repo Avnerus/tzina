@@ -56,7 +56,8 @@ export default class Agam12PMAnimation extends THREE.Object3D {
              font: '70px Miriam Libre',
              fillStyle: '#33e5ab',
              antialias: true,
-             shadow: true
+             shadow: true,
+             shadowSize: 6
         }
         let text = new MultilineText(5, TEXT_DEFINITION, 100);
         text.init();

@@ -6,6 +6,7 @@ import MiscUtil from './util/misc'
 import _ from 'lodash'
 import {MeshText2D, SpriteText2D, textAlign} from './lib/text2d/index'
 import moment from 'moment';
+import MultilineText from './util/multiline_text'
 
 export default class TimeController {
     constructor(config, element, square, sky, scene, camera, soundManager, sunGazer) {
@@ -42,8 +43,11 @@ export default class TimeController {
 
         this.idleTimer = 0;
         this.inShow = false;
+        this.usedSun = false;
+
 
         this.IDLE_TIMEOUT = 30;
+        this.HELP_TIMEOUT = 10;
 
         events.on("experience_end", () => {
             this.done = true;
@@ -186,6 +190,8 @@ export default class TimeController {
         this.chapterTitleLineTwo.position.y = -30;
         this.scene.add(this.chapterTitle)
 
+        this.helpText = this.generateHelpText();
+
         events.on("gaze_started", (hour) => {
             this.idleTimer = 0;
 
@@ -229,7 +235,43 @@ export default class TimeController {
             this.clockRunning = false;
         })
     }
+    generateHelpText() {
+        let TEXT_DEFINITION = {
+             align: textAlign.center, 
+             font: '70px Miriam Libre',
+             fillStyle: '#33e5ab',
+             antialias: true,
+             shadow: true
+        }
+        let text = new MultilineText(2, TEXT_DEFINITION, 100);
+        text.init();
 
+        if (this.config.platform == "desktop") {
+            text.scale.multiplyScalar(0.00005);
+            text.position.set(0, 0, -0.1001);
+        } else {
+            text.scale.multiplyScalar(0.00151);
+            text.position.set(0, 0, -1.56);
+        }
+
+        if (this.config.language == "heb") {
+            text.setText([
+                ",אם ברצונך לשנות את השעה",
+                ".עליך להתמקד על אחת השמשות שמעליך",
+            ]);
+        } else {
+            text.setText([
+                "When you want to change the time,",
+                "Focus you gaze on one of the suns above.",
+            ]);
+        }
+
+        text.hide(0);
+
+        //DebugUtil.positionObject(text, "Help text");
+        
+        return text;
+    }
     updateSunProgress() {
         let sum = 0;
         _.forEach(this.chapterProgress[this.currentChapter.hour], (value, key) => {
@@ -272,6 +314,11 @@ export default class TimeController {
                 console.log("Idle timer reached!", this.idleTimer);
                 this.setDaySpeed(0.5);
                 this.idleTimer = 0;
+            }
+
+            if (!this.usedSun && this.idleTimer > this.HELP_TIMEOUT) {
+                this.idleTimer = 0;
+                this.showHelp();
             }
 
             this.currentHour += dt * this.daySpeed;
@@ -317,6 +364,13 @@ export default class TimeController {
             }
             if (this.gazeCounter >= 3.2) {
 
+                if (!this.usedSun) {
+                    this.usedSun = true;
+                    if (this.helpText.parent == this.camera) {
+                        this.camera.remove(this.helpText);
+                    }
+                }
+
                 let targetHour = this.gazeHour;
                 this.gazeHour = -1;
                 this.clockworkTransitionTo(targetHour, 2,  true);
@@ -326,6 +380,17 @@ export default class TimeController {
         if (this.sunWorld) {
             this.updateSunTitle();
         }
+    }
+
+    showHelp() {
+        this.camera.add(this.helpText);
+        this.helpText.show(1)
+        .then(() => {
+            setTimeout(() => {
+                this.helpText.hide(1);
+                this.idleTimer = 0;
+            },5000);
+        });
     }
 
     clockworkTransitionTo(targetHour, time, usingGaze) {
