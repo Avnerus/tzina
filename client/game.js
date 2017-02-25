@@ -58,6 +58,7 @@ export default class Game {
         this.shownWASD = false;
         this.shownZoom = false;
         this.ended = false;
+        this.endTime = 0;
     }
     init() {
 
@@ -287,6 +288,14 @@ export default class Game {
         this.waterDrops.init(this.loadingManager);
         this.show.init();
         this.instructions.init();
+
+        if (this.config.platform == "desktop") {
+            this.endTime = 60 * 25;
+        } else {
+            this.endTime = 60 * 15;
+        }
+
+        console.log("Experence end time: ", this.endTime);
         
         VideoRGBD.initPool();
 
@@ -475,7 +484,7 @@ export default class Game {
     }
 
     endCheck(time) {
-        if (!this.ended && time > 60 * 15) {
+        if (!this.ended && time >= this.endTime) {
         //if (!this.ended && time > 60 * 0.4) {
             this.ended = true;
             this.ending.start();
