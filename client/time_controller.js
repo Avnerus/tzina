@@ -34,13 +34,16 @@ export default class TimeController {
         this.wasUsed = false;
         this.done = false;
 
-        this.accelerating = false;
-
         this.currentChapter;
 
         this.chapterProgress = {};
 
         this.totalExperienceTime = 0;
+
+        this.idleTimer = 0;
+        this.inShow = false;
+
+        this.IDLE_TIMEOUT = 30;
 
         events.on("experience_end", () => {
             this.done = true;
@@ -104,6 +107,8 @@ export default class TimeController {
         });
 
         events.on("character_progress", (data) => {
+            this.idleTimer = 0;
+
             if (
                 this.chapterProgress[this.currentChapter.hour] &&
                 typeof(this.chapterProgress[this.currentChapter.hour][data.name]) != 'undefined'
@@ -116,9 +121,13 @@ export default class TimeController {
 
         events.on("show_start", () => {
             this.clockRunning = false;
+            this.inShow = true;
+            console.log("Time controller - Show start. Stopping clock");
         });
         events.on("show_end", () => {
             this.clockRunning = true;
+            this.inShow = false;
+            console.log("Time controller - Show end. Resuming clock");
         });
 
         let TEXT_DEFINITION = {
@@ -178,6 +187,8 @@ export default class TimeController {
         this.scene.add(this.chapterTitle)
 
         events.on("gaze_started", (hour) => {
+            this.idleTimer = 0;
+
             this.gazeHour = parseInt(hour);
             this.gazeCounter = 0;
 
@@ -254,7 +265,15 @@ export default class TimeController {
             //console.log("Square RotY: ", this.square.mesh.rotation.y);
             this.updateRotation();
         }
-        if (this.clockRunning) {
+        if (this.clockRunning && !this.done) {
+            // Increase the idle timer
+            this.idleTimer += dt;
+            if (this.idleTimer > this.IDLE_TIMEOUT) {
+                console.log("Idle timer reached!", this.idleTimer);
+                this.setDaySpeed(0.5);
+                this.idleTimer = 0;
+            }
+
             this.currentHour += dt * this.daySpeed;
             if (this.currentHour >= 24) {
                 this.currentHour = 0;
@@ -266,40 +285,31 @@ export default class TimeController {
                   {
                 this.currentHour = this.nextHour;
                 let roundHour = this.nextHour;
-                this.setCurrentChapter();
                 if (roundHour != 0) {
+                    this.setCurrentChapter();
+                    console.log("Time - Updating next hour due to clock");
                     events.emit("hour_updated", roundHour);
-                } else {
-                    console.log("Updating next hour due to clock");
-                }
-                if (this.square.currentSun) {
-                    this.square.turnOffSun(this.square.currentSun);
-                }
-                this.square.currentSun = this.currentHour.toString();
-                this.square.turnOnSun(this.currentHour.toString(), true);
-                console.log("Time controller - next chapter");
+                    if (this.square.currentSun) {
+                        this.square.turnOffSun(this.square.currentSun);
+                    }
+                    this.square.currentSun = this.currentHour.toString();
+                    this.square.turnOnSun(this.currentHour.toString(), true);
+                    console.log("Time controller - next chapter");
 
-                if (!this.done) {
-                    this.daySpeed = this.config.daySpeed;
+                    if (!this.done) {
+                        this.setDaySpeed(this.config.daySpeed);
+                    }
+
+                    if (this.config.platform == "vive") {
+                        let previousHour = this.square.clockRotation * 180 / (Math.PI * 15);
+                        this.rotateClockwork(previousHour, roundHour);
+                    }
                 }
                 this.updateNextHour();
             }
+            //console.log("Current time: ", this.currentHour, this.clockRunning, this.done);
             this.sky.setTime(this.currentHour);
         }
-        if (!this.accelerating) {
-            if (this.rotateVelocity < 0) {
-                this.rotateVelocity = Math.min(0, this.rotateVelocity + 0.03);
-                if (this.rotateVelocity == 0) {
-                    this.stoppedTurning();
-                }
-            } else if (this.rotateVelocity > 0) {
-                this.rotateVelocity = Math.max(0, this.rotateVelocity - 0.03);
-                if (this.rotateVelocity == 0) {
-                    this.stoppedTurning();
-                }
-            } 
-        }
-
         if (this.gazeHour != -1 && this.gazeHour != this.currentChapter.hour) {
             this.gazeCounter += dt;
             if (this.gazeCounter > 0.5 && this.sky.clouds.currentState != "transition" ) {
@@ -324,7 +334,7 @@ export default class TimeController {
                 targetHour = 24;
             }
             let baseHour = this.currentHour;
-            console.log("Time controller - Performing transition to " + targetHour + "!");
+            console.log("Time controller - Performing transition to " + targetHour + "! Stopping clock");
             this.clockRunning = false;
 
             if (usingGaze) {
@@ -349,25 +359,14 @@ export default class TimeController {
                 // Rotate the clockwork only on vive
                 if (this.config.platform != "desktop") {
                     setTimeout(() => {
-                        let targetRotationY = targetHour * 15;
-                        targetRotationY *= Math.PI / 180;
-                        console.log("Time controller - rotating square from ", this.square.clockRotation, " to ", targetRotationY);
-                        TweenMax.to(this.square, 7 * (Math.abs(targetHour - baseHour) * 0.5), {ease: Power2.easeInOut, delay: 1, clockRotation: targetRotationY, onComplete: () => {
-                            events.emit("angle_updated", this.currentHour);
-                            this.updateNextHour();
-                            if (this.currentHour == 0) {
-                                this.square.clockRotation = 0;
-                            } else if (!this.done) {
-                                this.sunGazer.active = true;
-                                this.clockRunning = true;
-                            }
-                        }, onUpdate: () => {events.emit("square_rotating")}});
+                        this.rotateClockwork(baseHour, targetHour);
                     },1000);
                 } else {
                     events.emit("angle_updated", this.currentHour);
                     this.updateNextHour();
                     if (this.currentHour != 0 && !this.done) {
                         this.sunGazer.active = true;
+                        console.log("Time controller Finished transition -Resuming clock")
                         this.clockRunning = true;
                     }
                 }
@@ -376,6 +375,27 @@ export default class TimeController {
                 this.sky.setTime(this.currentHour);
             }});
         })       
+    }
+
+    rotateClockwork(baseHour, targetHour) {
+        console.log("Time controller rotating clockwork from " + baseHour + " to " + targetHour);
+        let targetRotationY = targetHour * 15;
+        targetRotationY *= Math.PI / 180;
+        console.log("Time controller - rotating square from ", this.square.clockRotation, " to ", targetRotationY," Stopping clock");
+        this.sunGazer.active = false;
+        this.clockRunning = false;
+        TweenMax.to(this.square, 7 * (Math.abs(targetHour - baseHour) * 0.5), {ease: Power2.easeInOut, delay: 1, clockRotation: targetRotationY, onComplete: () => {
+            events.emit("angle_updated", this.currentHour);
+            this.updateNextHour();
+            if (this.currentHour == 0) {
+                this.square.clockRotation = 0;
+            } else if (!this.done) {
+                this.sunGazer.active = true;
+                if (!this.inShow) {
+                    this.clockRunning = true;
+                }
+            }
+        }, onUpdate: () => {events.emit("square_rotating")}});
     }
 
     setDaySpeed(speed) {
