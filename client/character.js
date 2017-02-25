@@ -74,6 +74,7 @@ export default class Character extends THREE.Object3D {
 
         this.colliding = false;
         this.audio = null;
+        this.ambientAudio = null;
 
     }
     init(loadingManager) {
@@ -553,6 +554,7 @@ export default class Character extends THREE.Object3D {
     }
     
     loadAudio() {
+        console.log("The current character sound is " + this.props.name);
         return new Promise((resolve, reject) => {
             console.log("Loading character audio", this.props.basePath + "_" + this.config.language + ".ogg");
             this.soundManager.createPositionalSoundSampler(this.props.basePath + "_" + this.config.language + ".ogg",(sampler) => {
@@ -566,12 +568,12 @@ export default class Character extends THREE.Object3D {
         });
     }
 
-    loadCharacterAmbience() {
+    loadCharacterAmbience(path) {
         return new Promise((resolve, reject) => {
             console.log("Loading characters ambience ", path);
-            this.soundManager.createStaticSoundSampler(path, (sampler) => {
-                console.log("Loaded characters ambience ", sampler);                              
-                this.soundManager.panorama.append(sampler);
+            this.soundManager.createStaticSoundSampler(path, sampler=> {
+                console.log("Loaded characters ambience ", sampler);
+                this.ambientAudio = sampler;
                 resolve(sampler);
             });
         });
