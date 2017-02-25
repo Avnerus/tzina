@@ -20,6 +20,6 @@ export default {
     //videoHost: null,
     platform: "desktop", // desktop
     skipLanding: true,
-    skipInstructions: false,
+    skipInstructions: true,
     language: "eng"
 }

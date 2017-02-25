@@ -580,6 +580,7 @@ export default class TimeController {
                     this.sevenAM.play();
                     this.sevenAM.playedOnce = true;
                 } else {
+                    this.sevenAM.unload();
                     this.ambience7.play();
                 }               
                 break;
@@ -589,6 +590,7 @@ export default class TimeController {
                     this.nineAM.play();
                     this.nineAM.playedOnce = true;
                 } else {
+                    this.nineAM.unload();
                     this.ambience9.play();
                 }      
                 break;
@@ -598,6 +600,7 @@ export default class TimeController {
                     this.twelvePM.play();
                     this.twelvePM.playedOnce = true;
                 } else {
+                    this.twelvePM.unload();
                     this.ambience12.play();
                 }      
                 break;
@@ -607,6 +610,7 @@ export default class TimeController {
                     this.fivePM.play();
                     this.fivePM.playedOnce = true;
                 } else {
+                    this.fivePM.unload();
                     this.ambience17.play();
                 }              
                 break;
@@ -616,6 +620,7 @@ export default class TimeController {
                     this.sevenPM.play();
                     this.sevenPM.playedOnce = true;
                 } else {
+                    this.sevenPM.unload();
                     this.ambience19.play();
                 }               
                 break;
