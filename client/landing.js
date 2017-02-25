@@ -154,7 +154,7 @@ try {
 
                     $('#progress_text').fadeOut(50);
 
-                    $('#headphones_solo').delay(250).fadeIn(250).delay(5000).fadeOut(50, function(){
+                    $('#headphones-solo').delay(250).fadeIn(250).delay(5000).fadeOut(50, function(){
 
                         $('#firstscreen').fadeIn(250);
 
