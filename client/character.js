@@ -566,6 +566,17 @@ export default class Character extends THREE.Object3D {
         });
     }
 
+    loadCharacterAmbience() {
+        return new Promise((resolve, reject) => {
+            console.log("Loading characters ambience ", path);
+            this.soundManager.createStaticSoundSampler(path, (sampler) => {
+                console.log("Loaded characters ambience ", sampler);                              
+                this.soundManager.panorama.append(sampler);
+                resolve(sampler);
+            });
+        });
+    }
+
     updateAudioPosition() {
         // Position audio
         if (this.audio) {
