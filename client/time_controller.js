@@ -44,10 +44,11 @@ export default class TimeController {
         this.idleTimer = 0;
         this.inShow = false;
         this.usedSun = false;
-
+        this.nowCount = 0;
 
         this.IDLE_TIMEOUT = 30;
         this.HELP_TIMEOUT = 10;
+        this.NOW_HELP_TRIGGER = 2;
 
         events.on("experience_end", () => {
             this.done = true;
@@ -155,6 +156,14 @@ export default class TimeController {
              shadow: true
         }
 
+        let NOWHELP_TEXT_DEFINITION = {
+             align: textAlign.center, 
+             font: '70px Miriam Libre',
+             fillStyle: '#33e5ab',
+             antialias: true,
+             shadow: true
+        }
+
         let SUN_TEXT_SCALE = this.config.platform == "desktop" ? 0.009 : 0.013;
         
         this.chapterTitle = new SpriteText2D("SPRITE", TEXT_DEFINITION)
@@ -175,13 +184,19 @@ export default class TimeController {
         this.insideChapterTitleLineNow = new MeshText2D(nowText, INSIDE_TEXT_DEFINITION);
         this.insideChapterTitleLineNow.scale.multiplyScalar(SUN_TEXT_SCALE);
 
+        let nowHelpText = (this.config.language == "eng") ? "Try a different sun" : "נסו שמש אחרת";
+        this.insideChapterTitleLineNowHelp = new MeshText2D(nowHelpText, NOWHELP_TEXT_DEFINITION);
+        this.insideChapterTitleLineNowHelp.scale.multiplyScalar(SUN_TEXT_SCALE);
+
         this.insideChapterTitle.visible = false;
         this.insideChapterTitleLineTwo.visible = false;
         this.insideChapterTitleLineNow.visible = false;
+        this.insideChapterTitleLineNowHelp.visible = false;
 
         this.scene.add(this.insideChapterTitle);
         this.scene.add(this.insideChapterTitleLineTwo);
         this.scene.add(this.insideChapterTitleLineNow);
+        this.scene.add(this.insideChapterTitleLineNowHelp);
         //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
         //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
 
@@ -213,13 +228,19 @@ export default class TimeController {
 
             this.showInsideChapterTitle(hour);
 
-            console.log("Time controller - Starting gaze counter for current hour " + this.gazeHour);
+            if (!this.usedSun) {
+                this.nowCount++;
+                if (this.nowCount >= this.NOW_HELP_TRIGGER) {
+                    this.insideChapterTitleLineNowHelp.visible = true;
+                }
+            }
+
+            console.log("Time controller - Starting gaze counter for current hour " + this.gazeHour, "now count",this.nowCount);
         });
 
         events.on("gaze_stopped", (hour) => {
             this.insideChapterTitle.visible = false;
             this.insideChapterTitleLineTwo.visible = false;
-            this.insideChapterTitleLineNow.visible = false;
             this.sunWorld = null;
             this.gazeHour = -1;
         });
@@ -228,6 +249,7 @@ export default class TimeController {
             this.insideChapterTitle.visible = false;
             this.insideChapterTitleLineTwo.visible = false;
             this.insideChapterTitleLineNow.visible = false;
+            this.insideChapterTitleLineNowHelp.visible = false;
             this.sunWorld = null;
         });
 
@@ -366,6 +388,8 @@ export default class TimeController {
 
                 if (!this.usedSun) {
                     this.usedSun = true;
+                    this.insideChapterTitleLineNowHelp.visible = false;
+                    this.scene.remove(this.insideChapterTitleLineNowHelp);
                     if (this.helpText.parent == this.camera) {
                         this.camera.remove(this.helpText);
                     }
@@ -716,6 +740,14 @@ export default class TimeController {
                 this.insideChapterTitleLineNow.translateZ(5);
                 this.insideChapterTitleLineNow.quaternion.copy(this.camera.quaternion);
                 this.insideChapterTitleLineNow.translateY(2.5);
+
+                if (this.insideChapterTitleLineNowHelp.visible) {
+                    this.insideChapterTitleLineNowHelp.position.copy(this.sunWorld);
+                    this.insideChapterTitleLineNowHelp.lookAt(this.camera.position);
+                    this.insideChapterTitleLineNowHelp.translateZ(5);
+                    this.insideChapterTitleLineNowHelp.quaternion.copy(this.camera.quaternion);
+                    this.insideChapterTitleLineNowHelp.translateY(-2.5);
+                }
             }
         }
     }
