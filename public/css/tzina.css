@@ -12,7 +12,6 @@ body {
     height: 100%;
 
 }
-
 #game {
     display: none;
     position: absolute;
@@ -225,9 +224,9 @@ right:1em;
   margin-top: 35vh;
   z-index: 6 !important;
 }
-#headphones_solo img{
+/*#headphones_solo img{
    width: 15%;
-}
+}*/
 
 /* Landing 1st Screen */
 #landing_screen{
@@ -460,3 +459,8 @@ right:1em;
 .webvr-button {
 z-index: 2 !important;
 }
+/*
+#headphones{
+width: 300px;
+margin-top: 20%;
+}*/
