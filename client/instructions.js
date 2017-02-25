@@ -119,6 +119,7 @@ export default class Instructions {
         TweenMax.to( this.instructionText.material, 1, { opacity: 1, 
             onComplete: () => {
                 setTimeout(() => {
+                    this.instructionSound.stop();
                     this.hideLine();
                 },delay);
             } 
@@ -151,6 +152,7 @@ export default class Instructions {
         this.instructionText.material.dispose();
         this.instructionLineTwo.material.dispose();
         this.instructionLineThree.material.dispose();
+        this.instructionSound.unload();
     }
     loadInstructionSound(path) {
         return new Promise((resolve, reject) => {
