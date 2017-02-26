@@ -667,9 +667,20 @@ if (!Modernizr.touchevents && lock.available()) {
                 });
             });
       }
+      window.addEventListener('resize', onWindowResize, false);
   }
 
   var et = 0;
+
+  
+function onWindowResize(){
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
 
   function render() {
       if(landingScreen){
