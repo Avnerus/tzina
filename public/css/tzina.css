@@ -279,9 +279,9 @@ body {
 
 
 #about{
-  position: absolute;
+  position: fixed;
   display: none;
-  left: 20px; top: 20px;
+  left: 20px; top: -5px;
   font-size: 40px;
   color: #fff;
   z-index: 5;
