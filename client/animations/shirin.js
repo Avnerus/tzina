@@ -384,10 +384,10 @@ export default class ShirinAnimation extends THREE.Object3D {
         });
         this.tweenAnimCollectors.push(crackTween);
 
-        TweenMax.to(this.parent.fullVideo.mesh.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 0.5 });
-        TweenMax.to(this.parent.fullVideo.wire.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 0.5 });
-        TweenMax.to(this.parent.fullVideo.mesh.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 0.5 });
-        TweenMax.to(this.parent.fullVideo.wire.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 0.5 });
+        TweenMax.to(this.parent.fullVideo.mesh.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 1 });
+        TweenMax.to(this.parent.fullVideo.wire.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 1 });
+        TweenMax.to(this.parent.fullVideo.mesh.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 1 });
+        TweenMax.to(this.parent.fullVideo.wire.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 1 });
     }
 
     crackCocoon(index) {
