@@ -206,8 +206,8 @@ body {
     filter: grayscale(100%);
   }
   #language{
-    position: absolute;
-    top: 20px; right: -25%; 
+    position: fixed;
+    top: 20px; right: 20px; 
     color: #e2e2e2;
     z-index: 3;
     display: none;
@@ -216,7 +216,7 @@ body {
   }
   /*To comment out once the image is resized*/
   #language img{
-    width: 18%;
+    width: 100%;
   }
   #language:hover{
     color: #fff;
