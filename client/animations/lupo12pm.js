@@ -56,7 +56,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     { time: 0, anim: ()=>{this.setupForNight()} },
                     { time: 1, anim: ()=>{this.connectToDogs()} },
 
-                    { time: 3, anim: ()=>{this.scaleDogs(1)} },     // first time
+                    { time: 7, anim: ()=>{this.scaleDogs(1)} },     // first time
                     
                     { time: 16, anim: ()=>{this.showSculptures()} },    // 16
                     { time: 24, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
