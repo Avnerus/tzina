@@ -464,6 +464,10 @@ body {
 .webvr-button {
 z-index: 2 !important;
 }
+#headphones-solo{
+  position: fixed;
+  top: 30%; left: 30%;
+}
 /*
 #headphones{
 width: 300px;
