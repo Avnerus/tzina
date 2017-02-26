@@ -137,6 +137,9 @@ export default class Extras extends THREE.Object3D {
                         }
                         if (heartDef.scale) {
                             heart.scale.multiplyScalar(heartDef.scale);
+                            if (this.config.platform == "vive") {
+                                heart.scale.multiplyScalar(2);
+                            }
                         }
                         if (this.debug) {
                             DebugUtil.positionObject(heart, asset.name + "'s heart " + counter, false, -50, 50, heartDef.rotation);
