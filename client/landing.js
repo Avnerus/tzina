@@ -263,7 +263,7 @@ try {
 
         $('#enter_button').html('כניסה');
 
-        $('#lower_tag').html('מסע דרך שטפון רגשי של בדידות ואהבה');
+        $('#lower_tag').html('מסע דרך שטפון של בדידות ואהבה');
 
         $('#landing_screen').fadeIn(250);
 
@@ -276,11 +276,11 @@ try {
 
         $('#language').html('<img src="assets/ui/language-Heb.png">');
 
-        $('#desc_sub').html('A WEBVR DOCUMENTARY BY SHIRIN ANLEN');
+        $('#desc_sub').html('A webVR Documentary by Shirin Anlen');
 
         $('#enter_button').html('ENTER');
 
-        $('#lower_tag').html('a journey through an emotional flood<br>of love and loneliness');
+        $('#lower_tag').html('journey through a flood of love and loneliness');
 
         $('#landing_screen').fadeIn(250);
 
