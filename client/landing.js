@@ -209,9 +209,7 @@ try {
     $('#about').toggleClass('open');
 
     //Toggle the screen container (display on/off)
-    $('#about_container').toggle(250);
-
-    $('#about_grid').toggle(250);
+    $('#about_container').fadeToggle(500);
 
   });
   //Device Chooser Buttons

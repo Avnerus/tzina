@@ -1,267 +1,326 @@
 html {
-
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
+
 body {
-    margin: 0px;
+  margin: 0px;
   /*  background-color: #000000;*/
-  background: linear-gradient(#e19dfd,#415cff)!important; 
-   overflow: hidden;
-    width: 100%;
-    height: 100%;
-
+  background: linear-gradient(#e19dfd, #415cff)!important;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
+
 #game {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
 }
 
-#idfa-image{
+#idfa-image {
   position: fixed;
   right: 15px;
   bottom: 15px;
-/*top:80%;*/
+  /*top:80%;*/
 }
-#keren-image{
+
+#keren-image {
   position: fixed;
   right: 170px;
   bottom: 30px;
 }
+
 .dg.ac {
-    z-index: 2 !important;
+  z-index: 2 !important;
 }
+
 .splash {
-    display: none;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    position: absolute;
+  display: none;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
 }
 
 .splash-container {
-    display: none;
-    align-items: center;
-    margin: auto;
-    color: white;
-    font-size: 36px;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
+  display: none;
+  align-items: center;
+  margin: auto;
+  color: white;
+  font-size: 36px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
 }
+
 #start-container {
-    display:none;
+  display: none;
 }
 
 #start-button {
-    display: none;
-    color: white;
-    margin: auto;
+  display: none;
+  color: white;
+  margin: auto;
 }
 
 #loading-image {
-    margin: auto;
+  margin: auto;
 }
 
 #title-label {
-    display: none;
-    margin: auto;
+  display: none;
+  margin: auto;
 }
 
 #title-container {
-    display: none;
-    display: flex;
-    align-items: center;
-    margin: auto;
-    color: white;
-    font-size: 36px;
-    position: relative;
-    bottom: 30%
+  display: none;
+  display: flex;
+  align-items: center;
+  margin: auto;
+  color: white;
+  font-size: 36px;
+  position: relative;
+  bottom: 30%
 }
+
 .subtitles {
-    display: none;
-    font-family: 'Miriam Libre', sans-serif;
+  display: none;
+  font-family: 'Miriam Libre', sans-serif;
   position: absolute;
   width: 100%;
-  left: 0; bottom: 0;
+  left: 0;
+  bottom: 0;
   z-index: 4000;
-  height:0px;
-  overflow:visible;
-  pointer-events:none;
+  height: 0px;
+  overflow: visible;
+  pointer-events: none;
 }
+
+.about_paragraph {
+  text-align: left;
+  direction: ltr;
+}
+
 #zoom-arrow {
-    display: inline-flex;
-    align-items: center;
-    margin: auto;
-    position: relative;
-    top: 15%;
+  display: inline-flex;
+  align-items: center;
+  margin: auto;
+  position: relative;
+  top: 15%;
 }
+
 #secure-access {
-    display: none;
-    display: inline-flex;
-    align-items: c_;
-    margin: auto;
-    color: white;
-    font-size: 18px;
-    font-family: Miriam Libre;
-    position: relative;
+  display: none;
+  display: inline-flex;
+  align-items: c_;
+  margin: auto;
+  color: white;
+  font-size: 18px;
+  font-family: Miriam Libre;
+  position: relative;
 }
+
 #password {
-    width: 280px;
-    color: white;
-    background-color: black;
-    border: solid 2px;
-    height: 20px;
+  width: 280px;
+  color: white;
+  background-color: black;
+  border: solid 2px;
+  height: 20px;
 }
-#tree_scene{
+
+#tree_scene {
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   z-index: 1 !important;
-  height: 100%; width: 100%;
+  height: 100%;
+  width: 100%;
   display: none;
   overflow: none;
 }
-/* General Util */
-  /*1.Fonts*/
-  .assistant{
-    font-family: 'Assistant', serif;
-  }
-  .miriam{
-    font-family: 'Miriam Libre', sans-serif;
-  }
-  /*2.Spacers*/
-  .absolute_10_spacer{
-    position: relative;
-    height: 10px;
-  }
-   .absolute_30_spacer{
-    position: relative;
-    height: 30px;
-  }
 
-   .absolute_20_spacer{
-    position: relative;
-    height: 20px;
-  }
-  /*General UI*/
-  #progress{
-    position: absolute;
-    left: 0; top: 0;
-    height: 20px;
-    background-color: #fff;
-    width: 0%;
-    z-index: 1;
-    -webkit-transition: 0.3s ease-in-out;
-    -moz-transition: 0.3s ease-in-out;
-    -o-transition: 0.3s ease-in-out;
-    transition: 0.3s ease-in-out;
-  }
-  #progress_text{
-    margin: 0;
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .open{
-    -webkit-transform:rotate(45deg);
-    -moz-transform:rotate(45deg);
-    -o-transform:rotate(45deg);
-  }
-  .subhead{
-    color: #fff;
-    font-size: 1.2em;
-    letter-spacing: 1px;
-  }
-  .button{
-    margin: auto;
-    width: 20%;
-    color: #fff;
-    font-size: 1.2em;
-    padding-top: 20px; padding-bottom: 10px;
-    letter-spacing: 2px;
-    text-decoration: underline;
-    background-color: transparent;
-    transition-duration: 0.6s;
-    transition-timing-function: linear;
-    width: 20%;
-  }
-  .platform_selection{
-    margin-right: 2px; margin-left: 2px;
-  }
-  .button:hover{
-    text-decoration: line-through;
-  }
-  .grayscale{
-    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
-    filter: grayscale(100%);
-  }
-  #language{
-    position: fixed;
-    top: 20px; right: 20px; 
-    color: #e2e2e2;
-    z-index: 3;
-    display: none;
-    cursor: pointer;
-    font-size: 15px;
-  }
-  /*To comment out once the image is resized*/
-  #language img{
-    width: 100%;
-  }
-  #language:hover{
-    color: #fff;
-  }
-#headphones_solo{
+
+/* General Util */
+
+
+/*1.Fonts*/
+
+.assistant {
+  font-family: 'Assistant', serif;
+}
+
+.miriam {
+  font-family: 'Miriam Libre', sans-serif;
+}
+
+
+/*2.Spacers*/
+
+.absolute_10_spacer {
+  position: relative;
+  height: 10px;
+}
+
+.absolute_30_spacer {
+  position: relative;
+  height: 30px;
+}
+
+.absolute_20_spacer {
+  position: relative;
+  height: 20px;
+}
+
+
+/*General UI*/
+
+#progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 20px;
+  background-color: #fff;
+  width: 0%;
+  z-index: 1;
+  -webkit-transition: 0.3s ease-in-out;
+  -moz-transition: 0.3s ease-in-out;
+  -o-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
+}
+
+#progress_text {
+  margin: 0;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.open {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+}
+
+.subhead {
+  color: #fff;
+  font-size: 1.2em;
+  letter-spacing: 1px;
+}
+
+.button {
+  margin: auto;
+  width: 20%;
+  color: #fff;
+  font-size: 1.2em;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  letter-spacing: 2px;
+  text-decoration: underline;
+  background-color: transparent;
+  transition-duration: 0.6s;
+  transition-timing-function: linear;
+  width: 20%;
+}
+
+.platform_selection {
+  margin-right: 2px;
+  margin-left: 2px;
+}
+
+.button:hover {
+  text-decoration: line-through;
+}
+
+.grayscale {
+  -webkit-filter: grayscale(100%);
+  /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
+}
+
+#language {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  color: #e2e2e2;
+  z-index: 3;
+  display: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+
+/*To comment out once the image is resized*/
+
+#language img {
+  width: 100%;
+}
+
+#language:hover {
+  color: #fff;
+}
+
+#headphones_solo {
   display: none;
   /*position: absolute;*/
   margin: auto;
   margin-top: 35vh;
   z-index: 6 !important;
 }
+
+
 /*#headphones_solo img{
    width: 15%;
 }*/
 
+
 /* Landing 1st Screen */
-#landing_screen{
+
+#landing_screen {
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   z-index: 2 !important;
   text-align: center;
   display: none;
 }
-#birds{
+
+#birds {
   display: none;
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
 }
-#firstscreen{
+
+#firstscreen {
   display: none;
   z-index: 5 !important;
 }
-#lower_tag{
+
+#lower_tag {
   color: #fff;
   font-size: 1em;
 }
-.icon{
+
+.icon {
   display: block;
   margin-left: auto;
   margin-right: auto;
   width: 45%;
 }
-#logo{
+
+#logo {
   width: 30%;
   height: 30%;
   -webkit-transition: 0.3s ease-in-out;
@@ -270,18 +329,19 @@ body {
   transition: 0.3s ease-in-out;
 }
 
-#vive_button{
-  display: none;
-}
-#desktop_button{
+#vive_button {
   display: none;
 }
 
+#desktop_button {
+  display: none;
+}
 
-#about{
+#about {
   position: fixed;
   display: none;
-  left: 20px; top: -5px;
+  left: 20px;
+  top: -5px;
   font-size: 40px;
   color: #fff;
   z-index: 5;
@@ -290,156 +350,179 @@ body {
   -o-transition-duration: 0.8s;
   transition-duration: 0.8s;
 }
-#about_container{
+
+#about_container {
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-color: transparent;
-  opacity: 0.5;
+  opacity: 1;
   z-index: 4;
   display: none;
+  overflow: scroll !important;
 }
-#keyboard_tagline{
+#about_container::-webkit-scrollbar {
+    display: none;
+}
+
+#keyboard_tagline {
   position: relative;
   top: 20px;
   color: #fff;
 }
-#vive_360{
+
+#vive_360 {
   position: relative;
   top: 20px;
   color: #fff;
 }
-#vive_image{
+
+#vive_image {
   position: absolute;
   width: 40%;
   bottom: 50px;
   left: 30%;
 }
-#instruction_screen{
+
+#instruction_screen {
   position: absolute;
-  top: 20%; left: 0;
+  top: 20%;
+  left: 0;
   width: 100%;
   z-index: 2 !important;
   text-align: center;
   display: none;
 }
-#keyboard{
+
+#keyboard {
   text-align: center;
 }
-#keyall{
-  position: absolute;
-  width: 55%;
-  bottom:100%;
 
+#keyall {
+  position: absolute;
+  width: 55%;
+  bottom: 100%;
 }
-#wkey{
+
+#wkey {
   position: absolute;
   display: none;
   width: 55%;
-  bottom:100%;
+  bottom: 100%;
 }
-#akey{
+
+#akey {
   position: absolute;
   display: none;
   width: 55%;
-  bottom:100%;
+  bottom: 100%;
 }
-#skey{
+
+#skey {
   position: absolute;
   display: none;
   width: 55%;
-  bottom:100%;
+  bottom: 100%;
 }
-#dkey{
+
+#dkey {
   position: absolute;
   display: none;
-    width: 55%;
-  bottom:100%;
+  width: 55%;
+  bottom: 100%;
 }
-#mouse{
-    position: absolute;
-    width: 40%;
-    bottom: 41px;
-    left: 30%;
+
+#mouse {
+  position: absolute;
+  width: 40%;
+  bottom: 41px;
+  left: 30%;
 }
-#about_grid{
-  overflow: auto;
-  height: 100%;
+
+#about_grid {
+  /*overflow: scroll;*/
+  /*height: 100%;*/
   color: #fff;
-  direction: rtl;
 }
-#about_grid img{
+
+#about_grid img {
   width: 100%;
 }
-#sunsall{
+
+#sunsall {
   position: absolute;
   width: 55%;
-  bottom:100%;
+  bottom: 100%;
   left: 23%;
 }
-#sun7{
-  display: none;
-  position: absolute;
-  width: 55%;
-  bottom:100%;
-  left: 23%;
-}
-#sun9{
-  display: none;
-    position: absolute;
-  width: 55%;
-  bottom:100%;
-  left: 23%;
-}
-#sun12{
+
+#sun7 {
   display: none;
   position: absolute;
   width: 55%;
-  bottom:100%;
+  bottom: 100%;
   left: 23%;
 }
-#sun5{
-  display: none;
-    position: absolute;
-  width: 55%;
-  bottom:100%;
-  left: 23%;
-}
-#sun7p{
+
+#sun9 {
   display: none;
   position: absolute;
   width: 55%;
-  bottom:100%;
+  bottom: 100%;
   left: 23%;
 }
-#desktop_instruc{
+
+#sun12 {
+  display: none;
+  position: absolute;
+  width: 55%;
+  bottom: 100%;
+  left: 23%;
+}
+
+#sun5 {
+  display: none;
+  position: absolute;
+  width: 55%;
+  bottom: 100%;
+  left: 23%;
+}
+
+#sun7p {
+  display: none;
+  position: absolute;
+  width: 55%;
+  bottom: 100%;
+  left: 23%;
+}
+
+#desktop_instruc {
   display: none;
   text-align: center;
   color: #fff;
 }
-#vive_instruc{
+
+#vive_instruc {
   display: none;
   text-align: center;
   color: #fff;
 }
-#vive_instruc img{
+
+#vive_instruc img {
   width: 30% !important;
   left: 34% !important;
 }
-#about_grid{
-  display: none;
-}
-#startExperienceScreen{
 
-}
-#start_experience{
+#start_experience {
   display: none;
   position: relative;
-  top:37vh;
+  top: 37vh;
   text-align: center;
 }
-#start_head{
+
+#start_head {
   display: none;
   position: relative;
   top: 35vh;
@@ -447,27 +530,35 @@ body {
   font-size: 18px;
   color: #fff;
 }
-#mobile_splash{
+
+#mobile_splash {
   display: none;
   background-color: #000;
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   z-index: 200 !important;
 }
-#mobile_splash img{
+
+#mobile_splash img {
   width: 100%;
   position: absolute;
-  bottom: 0; left: 0;
+  bottom: 0;
+  left: 0;
   z-index: 200 !important;
 }
 
 .webvr-button {
-z-index: 2 !important;
+  z-index: 2 !important;
 }
-#headphones-solo{
+
+#headphones-solo {
   position: fixed;
-  top: 30%; left: 30%;
+  top: 30%;
+  left: 30%;
 }
+
+
 /*
 #headphones{
 width: 300px;
