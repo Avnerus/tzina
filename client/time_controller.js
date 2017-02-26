@@ -42,13 +42,14 @@ export default class TimeController {
         this.totalExperienceTime = 0;
 
         this.idleTimer = 0;
+        this.helpTimer = 0;
         this.inShow = false;
         this.usedSun = false;
         this.nowCount = 0;
 
-        this.IDLE_TIMEOUT = 30;
-        this.HELP_TIMEOUT = 10;
-        this.NOW_HELP_TRIGGER = 2;
+        this.IDLE_TIMEOUT = 60;
+        this.HELP_TIMEOUT = 20;
+        this.NOW_HELP_TRIGGER = 3;
 
         events.on("experience_end", () => {
             this.done = true;
@@ -113,6 +114,7 @@ export default class TimeController {
 
         events.on("character_progress", (data) => {
             this.idleTimer = 0;
+            this.helpTimer = 0;
 
             if (
                 this.chapterProgress[this.currentChapter.hour] &&
@@ -209,6 +211,7 @@ export default class TimeController {
 
         events.on("gaze_started", (hour) => {
             this.idleTimer = 0;
+            this.helpTimer = 0;
 
             this.gazeHour = parseInt(hour);
             this.gazeCounter = 0;
@@ -261,7 +264,7 @@ export default class TimeController {
         let TEXT_DEFINITION = {
              align: textAlign.center, 
              font: '70px Miriam Libre',
-             fillStyle: '#33e5ab',
+             fillStyle: '#bfbfbf',
              antialias: true,
              shadow: true
         }
@@ -283,8 +286,8 @@ export default class TimeController {
             ]);
         } else {
             text.setText([
-                "When you want to change the time,",
-                "Focus you gaze on one of the suns above.",
+                "When you would like to change the time,",
+                "Focus your gaze on one of the suns above.",
             ]);
         }
 
@@ -332,14 +335,18 @@ export default class TimeController {
         if (this.clockRunning && !this.done) {
             // Increase the idle timer
             this.idleTimer += dt;
+            this.helpTimer += dt;
+
             if (this.idleTimer > this.IDLE_TIMEOUT) {
                 console.log("Idle timer reached!", this.idleTimer);
                 this.setDaySpeed(0.5);
                 this.idleTimer = 0;
+                this.helpTimer = 0;
             }
 
-            if (!this.usedSun && this.idleTimer > this.HELP_TIMEOUT) {
-                this.idleTimer = 0;
+            if (!this.usedSun && this.helpTimer > this.HELP_TIMEOUT) {
+                this.helpTimer = 0;
+                this.HELP_TIMEOUT = 60;
                 this.showHelp();
             }
 
@@ -412,7 +419,7 @@ export default class TimeController {
         .then(() => {
             setTimeout(() => {
                 this.helpText.hide(1);
-                this.idleTimer = 0;
+                this.helpTimer = 0;
             },5000);
         });
     }
