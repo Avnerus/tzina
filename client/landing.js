@@ -12,7 +12,7 @@ var Stats = require('stats.js');
 // DISABLE LOGGING
 //
 if (config.production) {
-    window['console']['log'] = function() {};
+  window['console']['log'] = function () {};
 }
 
 var game = new Game(config);
@@ -24,18 +24,18 @@ var lock = require('pointer-lock-chrome-tolerant');
 
 console.log("Touch? ", Modernizr.touchevents);
 
-var FPS  = config.fps;
+var FPS = config.fps;
 var FPS_INTERVAL = 1000 / FPS;
 var elapsed = 0
 var lastTimestamp = 0;
 
 var clickShaderEffect = 0;
 
-$('body').click(function(){
+$('body').click(function () {
 
   clickShaderEffect = 1;
 
-  setTimeout(function(){
+  setTimeout(function () {
 
     clickShaderEffect = 0;
 
@@ -55,466 +55,470 @@ let landingScreen = true;
 
 try {
 
-    if (/Mobi/.test(navigator.userAgent)) {
-        $('#mobile_splash').show();
-        console.log('mobile splash');
-    }
+  if (/Mobi/.test(navigator.userAgent)) {
+    $('#mobile_splash').show();
+    console.log('mobile splash');
+  }
 
-    var loadingManager = new THREE.LoadingManager();
+  var loadingManager = new THREE.LoadingManager();
 
-     loadingManager.onProgress = function (item, loaded, total) {
+  loadingManager.onProgress = function (item, loaded, total) {
 
-      console.log(loaded / total * 100 + '%');
+    console.log(loaded / total * 100 + '%');
 
 
-      $('#progress').css({'width': loaded / total * 100 + '%'})
-        //console.log(loaded * 20);
+    $('#progress').css({
+        'width': loaded / total * 100 + '%'
+      })
+      //console.log(loaded * 20);
 
-      $('#progress_text').html('Loading Tzina...' + loaded / total * 100 + '%');
+    $('#progress_text').html('Loading Tzina...' + loaded / total * 100 + '%');
 
-     };
+  };
 
-      var videoLogo = $('#logo').get(0);
+  var videoLogo = $('#logo').get(0);
 
-      var videoBirds = $('#birds').get(0);
+  var videoBirds = $('#birds').get(0);
 
-      //Init the three scene first
-      init();
+  //Init the three scene first
+  init();
 
-      var currentLanguage = 'en';
+  var currentLanguage = 'en';
 
-      //Intro sound
-      var introSound = new Audio(SOUND_PATH + 'Theme_Intro_1.ogg');
+  //Intro sound
+  var introSound = new Audio(SOUND_PATH + 'Theme_Intro_1.ogg');
 
-      introSound.loop = true;
+  introSound.loop = true;
 
-      introSound.volume = 0.5;
+  introSound.volume = 0.5;
 
-    //Declare all button sounds and play logo video
+  //Declare all button sounds and play logo video
 
-      //Hover
-      var buttonSound = new Audio(SOUND_PATH + 'Button_C_1_new.ogg');
+  //Hover
+  var buttonSound = new Audio(SOUND_PATH + 'Button_C_1_new.ogg');
 
-      var buttonClick = new Audio(SOUND_PATH + 'Button_Click_new.ogg');
+  var buttonClick = new Audio(SOUND_PATH + 'Button_Click_new.ogg');
 
-      $('.button').mouseenter(function(){
+  $('.button').mouseenter(function () {
 
-        buttonSound.play();
+    buttonSound.play();
 
+  });
+
+  //Reset the sound
+  $('.button').mouseleave(function () {
+
+    buttonSound.pause();
+
+    buttonSound.currentTime = 0;
+
+  });
+
+  //Click
+  $('.button').click(function () {
+
+    buttonClick.play();
+
+    setTimeout(function () {
+
+      buttonClick.pause();
+
+      buttonClick.currentTime = 0;
+
+    }, 1000);
+
+  });
+
+  //Fade in the first screen from black after tree scene was loaded
+  // loadingManager.onLoad = function(){
+
+  //Start rendering the canvas
+
+  //Change language bind
+
+  if (!config.skipLanding) {
+    $("#loading-container").hide();
+
+    $('#landing_screen').delay(50).fadeIn(500, function () {
+
+      console.log('Landing screen faded in');
+
+
+      //Disable mouse control on tree scene
+      $('#tree_scene').css({
+        "pointer-events": "none"
       });
 
-      //Reset the sound
-      $('.button').mouseleave(function(){
+      //After scene loaded get rid of the progress bar
 
-        buttonSound.pause();
+      //Ambient Sound
+      introSound.play();
 
-        buttonSound.currentTime = 0;
+      $('#progress_text').fadeOut(50);
 
-      });
+      $('#headphones-solo').delay(250).fadeIn(250).delay(5000).fadeOut(50, function () {
 
-      //Click
-      $('.button').click(function(){
+        $('#firstscreen').fadeIn(250);
 
-        buttonClick.play();
+        //Fade in the canvas
+        $('#tree_scene').delay(250).fadeIn(500, function () {
 
-        setTimeout( function() {
+          //Fade in about button
+          $('#about').fadeIn(250);
 
-          buttonClick.pause();
+          //Fade in language selector
+          $('#language').fadeIn(250);
 
-          buttonClick.currentTime = 0;
-
-        }, 1000);
-
-      });
-
-      //Fade in the first screen from black after tree scene was loaded
-      // loadingManager.onLoad = function(){
-
-          //Start rendering the canvas
-
-          //Change language bind
-
-              if (!config.skipLanding) {
-                $("#loading-container").hide();
-
-                $('#landing_screen').delay(50).fadeIn(500, function(){
-
-                    console.log('Landing screen faded in');
-
-
-                    //Disable mouse control on tree scene
-                    $('#tree_scene').css({
-                      "pointer-events": "none"
-                    });
-                      
-                    //After scene loaded get rid of the progress bar
-
-                    //Ambient Sound
-                    introSound.play();
-
-                    $('#progress_text').fadeOut(50);
-
-                    $('#headphones-solo').delay(250).fadeIn(250).delay(5000).fadeOut(50, function(){
-
-                        $('#firstscreen').fadeIn(250);
-
-                        //Fade in the canvas
-                        $('#tree_scene').delay(250).fadeIn(500, function(){
-
-                              //Fade in about button
-                              $('#about').fadeIn(250);
-
-                              //Fade in language selector
-                              $('#language').fadeIn(250);
-
-                              $('#birds').fadeIn(250);
-
-                        });
-
-                       // videoBirds.loop = true;
-
-                        //videoBirds.play();
-
-                     }); 
-
-                    
-
-              });
-              }
-         
-
-
-      // }
-
-    //Pagination
-    //About
-      $('#about').click(function(){
-
-        //Click sound
-        buttonClick.play();
-
-        setTimeout( function() {
-
-          buttonClick.pause();
-
-          buttonClick.currentTime = 0;
-
-        }, 1000);
-
-        //Rotate the icon
-        $('#about').toggleClass('open');
-
-        //Toggle the screen container (display on/off)
-        $('#about_container').toggle(250);
-
-        $('#about_grid').toggle(250);
-
-      });
-    //Device Chooser Buttons
-      $('#enter_button').mouseenter(function(){
-          $('#logo').removeClass('grayscale');
-          videoLogo.play();
-      });
-
-      $('#enter_button').mouseleave(function(){
-          $('#logo').addClass('grayscale');
-          videoLogo.pause();
-          videoLogo.currentTime = 0;
-      });
-
-      $('#enter_button').click(function(){
-
-        $('#enter_button').fadeOut(250, function(){
-
-          console.log('platform specific buttons');
-
-          $('#vive_button').delay(250).fadeIn(250).css("display", "inline-block");
-
-          $('#desktop_button').delay(250).fadeIn(250, function(){
-
-              $('#logo').removeClass('grayscale');
-
-              //videoLogo.loop = true;
-
-              //videoLogo.play();
-
-          }).css("display", "inline-block");
+          $('#birds').fadeIn(250);
 
         });
 
-      });
-      //Change language functionallity
-      $('#language').click(function(){
+        // videoBirds.loop = true;
 
-        $('#landing_screen').fadeOut(500, function(){
-
-          if(currentLanguage == 'en'){
-
-            console.log('language changed to Hebrew');
-
-            currentLanguage = 'he';
-            config.language = 'heb';
-
-            $('#language').html('<img src="assets/ui/language_Eng.png">');
-
-            $('#desc_sub').html('מאת שירין אנלן webVR דוקומנטרי');
-
-            $('#enter_button').html('כניסה');
-
-            $('#lower_tag').html('מסע דרך שטפון רגשי של בדידות ואהבה');
-
-            $('#landing_screen').fadeIn(250);
-
-          } else if(currentLanguage == 'he') {
-
-            console.log('language changed to English');
-
-            currentLanguage = 'en';
-            config.language = 'eng';
-
-            $('#language').html('<img src="assets/ui/language-Heb.png">');
-
-            $('#desc_sub').html('A WEBVR DOCUMENTARY BY SHIRIN ANLEN');
-
-            $('#enter_button').html('ENTER');
-
-            $('#lower_tag').html('a journey through an emotional flood<br>of love and loneliness');
-
-            $('#landing_screen').fadeIn(250);
-
-          }
-
-        });
+        //videoBirds.play();
 
       });
 
 
 
+    });
+  }
 
 
-    ////////////////////
-    //////HTC VIVE//////
-    ////////////////////
-      $('#vive_button').click(function(){
 
-        game.setPlatform("vive");
+  // }
 
-        //Fade out the overlays
-        $('#landing_screen').fadeOut(250, function(){
-          $('#about').animate({
-            top: '-100px'
-          }, 100);
+  //Pagination
+  //About
+  $('#about').click(function () {
 
-          $('#language').animate({
-            top: '-100px'
-          }, 100);
-        });
+    //Click sound
+    buttonClick.play();
 
-        //Fade in the first set of instructions
-        $('#instruction_screen').delay(500).fadeIn(250, function(){
+    $('#landing_screen').fadeToggle(250);
 
-            $('#vive_instruc').fadeIn(250);
+    setTimeout(function () {
 
-          console.log('instructions faded in');
+      buttonClick.pause();
 
-          //Enable mouse events on instructions
-          $('#tree_scene').css({
-                "pointer-events": "auto"
-          });
+      buttonClick.currentTime = 0;
+
+    }, 1000);
+
+    //Rotate the icon
+    $('#about').toggleClass('open');
+
+    //Toggle the screen container (display on/off)
+    $('#about_container').toggle(250);
+
+    $('#about_grid').toggle(250);
+
+  });
+  //Device Chooser Buttons
+  $('#enter_button').mouseenter(function () {
+    $('#logo').removeClass('grayscale');
+    videoLogo.play();
+  });
+
+  $('#enter_button').mouseleave(function () {
+    $('#logo').addClass('grayscale');
+    videoLogo.pause();
+    videoLogo.currentTime = 0;
+  });
+
+  $('#enter_button').click(function () {
+
+    $('#enter_button').fadeOut(250, function () {
+
+      console.log('platform specific buttons');
+
+      $('#vive_button').delay(250).fadeIn(250).css("display", "inline-block");
+
+      $('#desktop_button').delay(250).fadeIn(250, function () {
+
+        $('#logo').removeClass('grayscale');
+
+        //videoLogo.loop = true;
+
+        //videoLogo.play();
+
+      }).css("display", "inline-block");
+
+    });
+
+  });
+  //Change language functionallity
+  $('#language').click(function () {
+
+    $('#landing_screen').fadeOut(500, function () {
+
+      if (currentLanguage == 'en') {
+
+        console.log('language changed to Hebrew');
+
+        currentLanguage = 'he';
+        config.language = 'heb';
+
+        $('#language').html('<img src="assets/ui/language_Eng.png">');
+
+        $('#desc_sub').html('מאת שירין אנלן webVR דוקומנטרי');
+
+        $('#enter_button').html('כניסה');
+
+        $('#lower_tag').html('מסע דרך שטפון רגשי של בדידות ואהבה');
+
+        $('#landing_screen').fadeIn(250);
+
+      } else if (currentLanguage == 'he') {
+
+        console.log('language changed to English');
+
+        currentLanguage = 'en';
+        config.language = 'eng';
+
+        $('#language').html('<img src="assets/ui/language-Heb.png">');
+
+        $('#desc_sub').html('A WEBVR DOCUMENTARY BY SHIRIN ANLEN');
+
+        $('#enter_button').html('ENTER');
+
+        $('#lower_tag').html('a journey through an emotional flood<br>of love and loneliness');
+
+        $('#landing_screen').fadeIn(250);
+
+      }
+
+    });
+
+  });
 
 
-        
-          console.log("Loading...");
 
-          try {
-              game.load(function() {
-                  console.log('Game Finished Loading');
-                  $('#instruction_screen').fadeOut(250, function(){
 
-                    $('#tree_scene').fadeOut(250);
-                    $('#progress').hide();
 
-                    killLanding();
+  ////////////////////
+  //////HTC VIVE//////
+  ////////////////////
+  $('#vive_button').click(function () {
 
-                    $('#start_head').fadeIn(250, function(){
+    game.setPlatform("vive");
 
-                      $('#start_experience').delay(100).fadeIn(250);
+    //Fade out the overlays
+    $('#landing_screen').fadeOut(250, function () {
+      $('#about').animate({
+        top: '-100px'
+      }, 100);
 
-                      buttonClick.play();
+      $('#language').animate({
+        top: '-100px'
+      }, 100);
+    });
 
-                      introSound.pause();
+    //Fade in the first set of instructions
+    $('#instruction_screen').delay(500).fadeIn(250, function () {
 
-                    });
+      $('#vive_instruc').fadeIn(250);
 
-                  });
-                  
-              }, function(url, itemsLoaded, itemsTotal) {
-                  console.log("Landing loaded", itemsLoaded, itemsTotal);
+      console.log('instructions faded in');
 
-              });
-          }
-          catch(e) {
-              console.error("Exception during game load ", e);
-          }
-
-        });
-
+      //Enable mouse events on instructions
+      $('#tree_scene').css({
+        "pointer-events": "auto"
       });
 
-    ////////////////////
-    //////DESKTOP///////
-    ////////////////////
-      $('#desktop_button').click(function(){
-
-        game.setPlatform("desktop");
-
-        //Fade out the overlays
-        $('#landing_screen').fadeOut(250, function(){
-
-          //Get rid of the about button
-          $('#about').animate({
-            top: '-100px'
-          }, 100);
-
-          $('#language').animate({
-            top: '-100px'
-          }, 100);
-
-        });
-
-        //Fade in the first set of instructions
-        $('#instruction_screen').delay(500).fadeIn(250, function(){
-
-            $('#desktop_instruc').fadeIn(250);
-
-          console.log('instructions faded in');
 
 
-          console.log("Loading...");
-            //document.getElementById('game').appendChild(stats.dom);
+      console.log("Loading...");
 
-          try {
-              game.load(function() {
-                  console.log('Game Finished Loading');
-                  $('#instruction_screen').fadeOut(250, function(){
+      try {
+        game.load(function () {
+          console.log('Game Finished Loading');
+          $('#instruction_screen').fadeOut(250, function () {
 
-                    $('#tree_scene').fadeOut(250);
+            $('#tree_scene').fadeOut(250);
+            $('#progress').hide();
 
-                    killLanding();
+            killLanding();
 
-                    $('#start_head').fadeIn(250, function(){
+            $('#start_head').fadeIn(250, function () {
 
-                      $('#start_experience').delay(100).fadeIn(250);
+              $('#start_experience').delay(100).fadeIn(250);
 
-                      buttonClick.play();
+              buttonClick.play();
 
-                      introSound.pause();
+              introSound.pause();
 
-                    });
-
-                  });
-                  
-              },
-             function(url, itemsLoaded, itemsTotal) {
-                $('#progress').css({'width': itemsLoaded / itemsTotal * 100 + '%'})
             });
-          }
-          catch(e) {
-              console.error("Exception during game load ", e);
-          }
-
-          //Enable mouse events on instructions
-          $('#tree_scene').css({
-                "pointer-events": "auto"
-          });
-
-          $( document ).on( "mousemove", function( mousePosition ) {
-
-          var mouseToRadius = Math.round((mousePosition.pageX * (Math.PI / 360) * 36) + 30);
-
-          //console.log(mouseToRadius);
-
-          $('#mouse').css({
-
-            'transform': 'rotate(' + mouseToRadius + 'deg)'
-
-          }); 
 
           });
 
+        }, function (url, itemsLoaded, itemsTotal) {
+          console.log("Landing loaded", itemsLoaded, itemsTotal);
 
-          //Fade in the first instruction screen and timeout fadeout
-          $('#sunsall').mouseenter(function(){
-            $('#sun7').fadeIn(250).delay(200).fadeOut(250, function(){
-              $('#sun9').fadeIn(250).delay(200).fadeOut(250, function(){
-                $('#sun12').fadeIn(250).delay(200).fadeOut(250, function(){
-                  $('#sun5').fadeIn(250).delay(200).fadeOut(250, function(){
-                    $('#sun7p').fadeIn(250).delay(200).fadeOut(250);
-                  })
-                })
-              })
+        });
+      } catch (e) {
+        console.error("Exception during game load ", e);
+      }
+
+    });
+
+  });
+
+  ////////////////////
+  //////DESKTOP///////
+  ////////////////////
+  $('#desktop_button').click(function () {
+
+    game.setPlatform("desktop");
+
+    //Fade out the overlays
+    $('#landing_screen').fadeOut(250, function () {
+
+      //Get rid of the about button
+      $('#about').animate({
+        top: '-100px'
+      }, 100);
+
+      $('#language').animate({
+        top: '-100px'
+      }, 100);
+
+    });
+
+    //Fade in the first set of instructions
+    $('#instruction_screen').delay(500).fadeIn(250, function () {
+
+      $('#desktop_instruc').fadeIn(250);
+
+      console.log('instructions faded in');
+
+
+      console.log("Loading...");
+      //document.getElementById('game').appendChild(stats.dom);
+
+      try {
+        game.load(function () {
+            console.log('Game Finished Loading');
+            $('#instruction_screen').fadeOut(250, function () {
+
+              $('#tree_scene').fadeOut(250);
+
+              killLanding();
+
+              $('#start_head').fadeIn(250, function () {
+
+                $('#start_experience').delay(100).fadeIn(250);
+
+                buttonClick.play();
+
+                introSound.pause();
+
+              });
+
+            });
+
+          },
+          function (url, itemsLoaded, itemsTotal) {
+            $('#progress').css({
+              'width': itemsLoaded / itemsTotal * 100 + '%'
             })
           });
+      } catch (e) {
+        console.error("Exception during game load ", e);
+      }
 
-          });
+      //Enable mouse events on instructions
+      $('#tree_scene').css({
+        "pointer-events": "auto"
+      });
+
+      $(document).on("mousemove", function (mousePosition) {
+
+        var mouseToRadius = Math.round((mousePosition.pageX * (Math.PI / 360) * 36) + 30);
+
+        //console.log(mouseToRadius);
+
+        $('#mouse').css({
+
+          'transform': 'rotate(' + mouseToRadius + 'deg)'
 
         });
-///////////////////////////
-////Main start buttons/////
-///////////////////////////
-var el = document.getElementById('game');
-//Vive
-$('#start_experience').click(function(){
+
+      });
+
+
+      //Fade in the first instruction screen and timeout fadeout
+      $('#sunsall').mouseenter(function () {
+        $('#sun7').fadeIn(250).delay(200).fadeOut(250, function () {
+          $('#sun9').fadeIn(250).delay(200).fadeOut(250, function () {
+            $('#sun12').fadeIn(250).delay(200).fadeOut(250, function () {
+              $('#sun5').fadeIn(250).delay(200).fadeOut(250, function () {
+                $('#sun7p').fadeIn(250).delay(200).fadeOut(250);
+              })
+            })
+          })
+        })
+      });
+
+    });
+
+  });
+  ///////////////////////////
+  ////Main start buttons/////
+  ///////////////////////////
+  var el = document.getElementById('game');
+  //Vive
+  $('#start_experience').click(function () {
 
 
     function startExperience() {
-        if (!game.started) {
-            window.addEventListener('resize', resize, false);
-            window.addEventListener('vrdisplaypresentchange', vrchange, true);
-            game.start();
-            //Show the Element
-            console.log("Landing Show the game");
-            $('#game').show();
-            if (!config.production) {
-                document.getElementById('game').appendChild(stats.dom);
-            }
-            game.resize();
-            animate();
-
-            $('#start_head').fadeOut(250,function(){
-
-              $('#start_experience').fadeOut(250);
-
-            });
+      if (!game.started) {
+        window.addEventListener('resize', resize, false);
+        window.addEventListener('vrdisplaypresentchange', vrchange, true);
+        game.start();
+        //Show the Element
+        console.log("Landing Show the game");
+        $('#game').show();
+        if (!config.production) {
+          document.getElementById('game').appendChild(stats.dom);
         }
+        game.resize();
+        animate();
+
+        $('#start_head').fadeOut(250, function () {
+
+          $('#start_experience').fadeOut(250);
+
+        });
+      }
     }
 
-if (!Modernizr.touchevents && lock.available()) {
-    
-    console.log("Landing requesting pointer lock")
-    var pointer = lock(document.getElementById('game'));
+    if (!Modernizr.touchevents && lock.available()) {
 
-    pointer.on('attain', function() {
+      console.log("Landing requesting pointer lock")
+      var pointer = lock(document.getElementById('game'));
+
+      pointer.on('attain', function () {
         console.log("Pointer attained!");
         startExperience();
-    });
+      });
 
-    if (config.platform == "desktop") {
+      if (config.platform == "desktop") {
 
         var fs = fullscreen(el);
 
-        fs.on('attain',function() {
-            console.log("Full screen attained!");
-            if (typeof(pointer) != 'undefined' && !game.started) {
-                pointer.request();
-            }
+        fs.on('attain', function () {
+          console.log("Full screen attained!");
+          if (typeof (pointer) != 'undefined' && !game.started) {
+            pointer.request();
+          }
         });
         fs.request();
-    } else {
+      } else {
         startExperience();
-    }
-    
-          /*
+      }
+
+      /*
     
 
     
@@ -544,57 +548,57 @@ if (!Modernizr.touchevents && lock.available()) {
     }*/
 
 
-  }
-});
+    }
+  });
 
 
 
-          //Utility Functions
+  //Utility Functions
 
-            //Keycodes for the keyboard tutorial
-           $(document).on( "keypress", function(key){
-              //console.log(key.keyCode);
+  //Keycodes for the keyboard tutorial
+  $(document).on("keypress", function (key) {
+    //console.log(key.keyCode);
 
-                if( key.keyCode == 119 ){
-                  console.log('W key pressed');
-                  $('#wkey').fadeIn(50);
-                  //Then remove it
-                  setTimeout(function(){
-                  $('#wkey').fadeOut(50);
-                }, 350);
+    if (key.keyCode == 119) {
+      console.log('W key pressed');
+      $('#wkey').fadeIn(50);
+      //Then remove it
+      setTimeout(function () {
+        $('#wkey').fadeOut(50);
+      }, 350);
 
-                } else if ( key.keyCode == 115 ) {
-                  console.log('S key pressed');
-                  //Turn the key white
-                  $('#skey').fadeIn(50);
-                  //Then remove it
-                  setTimeout(function(){
-                  $('#skey').fadeOut(50);
-                }, 350);
+    } else if (key.keyCode == 115) {
+      console.log('S key pressed');
+      //Turn the key white
+      $('#skey').fadeIn(50);
+      //Then remove it
+      setTimeout(function () {
+        $('#skey').fadeOut(50);
+      }, 350);
 
-                } else if( key.keyCode == 100 ){
-                   console.log('D key pressed');
-                  //Turn the key white
-                  $('#dkey').fadeIn(50);
-                  //Then remove it
-                  setTimeout(function(){
-                  $('#dkey').fadeOut(50);
-                }, 350);
+    } else if (key.keyCode == 100) {
+      console.log('D key pressed');
+      //Turn the key white
+      $('#dkey').fadeIn(50);
+      //Then remove it
+      setTimeout(function () {
+        $('#dkey').fadeOut(50);
+      }, 350);
 
-                } else if( key.keyCode == 97 ){
-                    console.log('A key pressed');
-                  //Turn the key white
-                  $('#akey').fadeIn(50);
-                  //Then remove it
-                  setTimeout(function(){
-                  $('#akey').fadeOut(50);
-                }, 350);
-                }
-           });
+    } else if (key.keyCode == 97) {
+      console.log('A key pressed');
+      //Turn the key white
+      $('#akey').fadeIn(50);
+      //Then remove it
+      setTimeout(function () {
+        $('#akey').fadeOut(50);
+      }, 350);
+    }
+  });
 
 
 
- function killLanding(){
+  function killLanding() {
     console.log("Kill landing");
 
     landingScreen = false;
@@ -607,128 +611,108 @@ if (!Modernizr.touchevents && lock.available()) {
 
   }
 
-    //Threejs Tree Scene
+  //Threejs Tree Scene
   function init() {
 
-        game.init();
+    game.init();
 
-        if (!config.skipLanding) {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 0.1, 1000 );
-            renderer = new THREE.WebGLRenderer({ alpha: true } );
-            renderer.setSize( window.innerWidth, window.innerHeight );
-            document.getElementById("tree_scene").appendChild(renderer.domElement);
-          
-            // camera.position.set(-12.05,23.46,12.21);
-            // camera.position.set(40.88,28.42,39.78);
-            // camera.rotation.set(360 * Math.PI / 180,41* Math.PI / 180,0* Math.PI / 180);
+    if (!config.skipLanding) {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      renderer = new THREE.WebGLRenderer({
+        alpha: true
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.getElementById("tree_scene").appendChild(renderer.domElement);
 
-        camera.position.set(50,30.08,-7.64);
-            camera.rotation.set(0,117* Math.PI / 180,0);
+      camera.position.set(50, 30.08, -7.64);
+      camera.rotation.set(0, 117 * Math.PI / 180, 0);
 
-           
-        DebugUtil.positionObject(camera, "Landing cam");
-//DebugUtil.positionObject(camera, "Landing cam");
 
-  //camera.lookAt( new THREE.Vector3( 15, 40, 15 ) );
-  // controls = new THREE.OrbitControls( camera, renderer.domElement );
-  // controls.target.set( 15, 30, 15 );
-  //           //Mouse controls
-            // landingControls = new TzinaVRControls(null, camera);
-            // landingControls.active = false;
+      DebugUtil.positionObject(camera, "Landing cam");
 
-          //   //Keyboard controls
-          // landingKeyControl = new KeyboardController({
-          //     movementSpeed: 0.5,
-          //     enableFlying: false
-          // }, camera);
+      // load & add the trees
+      trees = new Trees(config, camera, renderer);
+      trees.init(loadingManager, "landing")
+        .then(() => {
+          scene.add(trees);
+          // we need to pass delta time to the shader so we need a clock
+          clock = new THREE.Clock();
+          clock.start();
+          render();
+          console.log(scene);
+        });
 
-            // load & add the trees
-            trees = new Trees(config, camera, renderer);
-            trees.init(loadingManager, "landing")
-            .then(() => {
-                scene.add(trees);
-                // we need to pass delta time to the shader so we need a clock
-                clock = new THREE.Clock();
-                clock.start();
-                render();
-                console.log(scene);
-            });
-
-        }
-        else {
-            game.load(function() {
-                console.log('Game Finished Loading');
-                $('#loading-container').hide();
-                $('#instruction_screen').fadeOut(250, function(){
-                  $('#start_head').fadeIn(250, function(){
-                    $('#start_experience').delay(100).fadeIn(250);
-                  });
-                });
-            });
-      }
-      window.addEventListener('resize', onWindowResize, false);
+    } else {
+      game.load(function () {
+        console.log('Game Finished Loading');
+        $('#loading-container').hide();
+        $('#instruction_screen').fadeOut(250, function () {
+          $('#start_head').fadeIn(250, function () {
+            $('#start_experience').delay(100).fadeIn(250);
+          });
+        });
+      });
+    }
+    window.addEventListener('resize', onWindowResize, false);
   }
 
   var et = 0;
 
-  
-function onWindowResize(){
+
+  function onWindowResize() {
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-}
+  }
 
   function render() {
-      if(landingScreen){
+    if (landingScreen) {
 
-          requestAnimationFrame( render );
+      requestAnimationFrame(render);
 
-          // update time
-          var delta = clock.getDelta();
-          et += delta;
-          trees.update(delta, et);
+      // update time
+      var delta = clock.getDelta();
+      et += delta;
+      trees.update(delta, et);
 
-          // landingControls.update();
-          // landingKeyControl.update(delta);
+      // landingControls.update();
+      // landingKeyControl.update(delta);
 
-          trees.clickEffect(clickShaderEffect);
+      trees.clickEffect(clickShaderEffect);
 
-          renderer.render(scene, camera);
+      renderer.render(scene, camera);
 
-        } else {
-          cancelAnimationFrame( render );
-        }
+    } else {
+      cancelAnimationFrame(render);
+    }
   }
 
   function animate(t) {
-    if(game.vrManager.hmd.isPresenting) {
-        game.vrManager.hmd.requestAnimationFrame(animate) 
+    if (game.vrManager.hmd.isPresenting) {
+      game.vrManager.hmd.requestAnimationFrame(animate)
     } else {
-        requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     }
 
     game.animate(t);
     stats.end();
     stats.begin();
-}
+  }
 
-function resize() {
+  function resize() {
     game.resize();
-}
+  }
 
-function vrchange() {
+  function vrchange() {
     game.resize();
     game.vrChange();
+  }
+
+
+} catch (e) {
+  console.error("Exception", e);
 }
-
-
-}
-catch(e) {
-    console.error("Exception", e);
-}
-
-
