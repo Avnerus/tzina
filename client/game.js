@@ -58,7 +58,7 @@ export default class Game {
         this.shownWASD = false;
         this.shownZoom = false;
         this.ended = false;
-        this.endTime = 0;
+        this.config.endTime = 0;
     }
     init() {
 
@@ -154,8 +154,7 @@ export default class Game {
         this.sunGazer.init();
 
 
-        this.flood = new Flood();
-        this.flood.init();
+        this.flood = new Flood(this.config);
 
 
         /*
@@ -286,16 +285,17 @@ export default class Game {
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
+        this.flood.init(this.loadingManager);
         this.show.init();
         this.instructions.init();
 
         if (this.config.platform == "desktop") {
-            this.endTime = 60 * 25;
+            this.config.endTime = 60 * 25;
         } else {
-            this.endTime = 60 * 15;
+            this.config.endTime = 60 * 15;
         }
 
-        console.log("Experence end time: ", this.endTime);
+        console.log("Experence end time: ", this.config.endTime);
         
         VideoRGBD.initPool();
 
@@ -462,7 +462,7 @@ export default class Game {
             this.controls.update();
         }
         this.collisionManager.update(dt);
-        this.flood.update(dt);
+        this.flood.update(dt,et);
 
         if (this.ended) {
             this.ending.update(dt);
@@ -484,7 +484,7 @@ export default class Game {
     }
 
     endCheck(time) {
-        if (!this.ended && time >= this.endTime) {
+        if (!this.ended && time >= this.config.endTime) {
         //if (!this.ended && time > 60 * 0.4) {
             this.ended = true;
             this.ending.start();

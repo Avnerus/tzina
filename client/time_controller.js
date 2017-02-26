@@ -252,7 +252,7 @@ export default class TimeController {
             this.insideChapterTitle.visible = false;
             this.insideChapterTitleLineTwo.visible = false;
             this.insideChapterTitleLineNow.visible = false;
-            this.insideChapterTitleLineNowHelp.visible = false;
+            his.insideChapterTitleLineNowHelp.visible = false;
             this.sunWorld = null;
         });
 
@@ -418,7 +418,10 @@ export default class TimeController {
         this.helpText.show(1)
         .then(() => {
             setTimeout(() => {
-                this.helpText.hide(1);
+                this.helpText.hide(1)
+                .then(() => {
+                    this.camera.remove(this.helpText);
+                });
                 this.helpTimer = 0;
             },5000);
         });
