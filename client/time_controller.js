@@ -252,7 +252,7 @@ export default class TimeController {
             this.insideChapterTitle.visible = false;
             this.insideChapterTitleLineTwo.visible = false;
             this.insideChapterTitleLineNow.visible = false;
-            his.insideChapterTitleLineNowHelp.visible = false;
+            this.insideChapterTitleLineNowHelp.visible = false;
             this.sunWorld = null;
         });
 
