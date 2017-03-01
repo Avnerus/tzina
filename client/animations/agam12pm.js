@@ -47,7 +47,7 @@ export default class Agam12PMAnimation extends THREE.Object3D {
                     this.remove(this.text);
                 });
             }            
-        },30000);
+        },20000);
     }
 
     generateText() {

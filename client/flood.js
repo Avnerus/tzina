@@ -78,7 +78,7 @@ export default class Flood extends THREE.Object3D  {
 
 
     updateFlood(percentage) {
-        console.log("Update flood progress:", percentage);
+        //console.log("Update flood progress:", percentage);
         if (percentage <= 0.5) {
             let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.5));
             this.mesh.scale.set(scale, scale, scale);

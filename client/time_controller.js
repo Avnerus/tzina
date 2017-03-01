@@ -92,7 +92,9 @@ export default class TimeController {
                 this.square.turnOnSun(this.currentHour.toString(), true);
                 this.updateSunProgress();
             }
-            this.clockRunning = passed;
+        });
+        events.on("instructions_end", () => {
+            this.clockRunning = true;
         });
 
         events.on("base_position", () => {
