@@ -558,8 +558,7 @@ body {
   left: 30%;
 }
 #legendIMG{
-
-/*    filter: grayscale(100%);*/
+  width : 100px;
 
 }
 /*#legendIMG a: hover{
