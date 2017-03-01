@@ -495,7 +495,7 @@ export default class Character extends THREE.Object3D {
     onCollision() {
     //    console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
-        if (!this.colliding) {
+        if (this.active && !this.colliding) {
             this.colliding = true;
             // Avoiding 2 collisions at the same time
             setTimeout(() => {
