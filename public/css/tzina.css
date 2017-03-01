@@ -557,6 +557,15 @@ body {
   top: 30%;
   left: 30%;
 }
+#legendIMG{
+
+/*    filter: grayscale(100%);*/
+
+}
+/*#legendIMG a: hover{
+
+  filter:none;
+}*/
 /*#videoFrame{
   
   position: absolute;
