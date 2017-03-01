@@ -223,7 +223,7 @@ export default class Ending {
             this.square.position.fromArray(this.SQUARE_POSITON);
 
             if (this.config.platform == "desktop") {
-                this.camera.position.set(0,1.2,0);
+                this.camera.position.set(-1.2,1.6,-3.1);
                 this.square.mesh.rotation.y = 2.7;
             }
 
