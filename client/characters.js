@@ -17,7 +17,7 @@ export default [
         animationPosition: [0,-0.3,-0.85], //z: 0.55
         animationRotation: [15, 0, 2],
         space: 0.22,
-        spaceOffset: [-0.35,0,0.29],
+        spaceOffset: [-0.2,0,0.29],
         subtitles: null,
         gazeSpace: [-0.27,-0.21,-0.6],
         gazeOffset: [0,0,0.16],
@@ -112,8 +112,8 @@ export default [
         animationPosition: [1.27, -0.53, 6.92],
         animationRotation: [0, -50, 0], //6, -50, -9
         subtitles: false,
-        space: -1.64,
-        spaceOffset: [-0.11,0,0.76],
+        space: -1.85,
+        spaceOffset: [0.32,0,0.71],
         gazeSpace: [-2.15,1.9,-0.95],
         gazeOffset: [1.63,1.76,3.62],
         endingPosition : [1.65, 16.5, 15.14],

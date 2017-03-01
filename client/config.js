@@ -20,6 +20,6 @@ export default {
     //videoHost: null,
     platform: "vive", // desktop
     skipLanding: true,
-    skipInstructions: false,
+    skipInstructions: true,
     language: "heb"
 }
