@@ -502,8 +502,9 @@ export default class Game {
     vrChange() {
         if (this.vrManager.hmd.isPresenting) {
             let newCameras = this.vrEffect.getCameras();
+                /*
             document.getElementById('reset-pose').style.display = "block";
-            document.getElementById('reset-pose').addEventListener("click", () => {this.resetPose()});
+            document.getElementById('reset-pose').addEventListener("click", () => {this.resetPose()});*/
             events.emit("vr_start", newCameras);
             inVR = true;
             if (!this.config.skipIntro && !this.controlPassed) {

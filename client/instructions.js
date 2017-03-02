@@ -49,7 +49,7 @@ export default class Instructions {
         }
         this.instructionText.material.opacity = 0;
 
-        DebugUtil.positionObject(this.instructionText, "Instrucitons text");
+        //DebugUtil.positionObject(this.instructionText, "Instrucitons text");
 
         this.instructionLineTwo = new MeshText2D("", TEXT_DEFINITION);
         this.instructionLineTwo.material.opacity = 0;

@@ -33,6 +33,7 @@ export default class Square extends THREE.Object3D{
         this.sky = sky;
 
         this.debug = false;
+        this.ending = false;
 
         this.sunTextureOffsets = {
             19 : 0,
@@ -160,7 +161,7 @@ export default class Square extends THREE.Object3D{
             THREE.SceneUtils.attach(cylinder, this.scene, this.clockwork);*/
 
 
-            DebugUtil.positionObject(this, "Square");
+            DebugUtil.positionObject(this, "Square", true);
 
             this.clockwork.add(this.benches);
 
@@ -332,7 +333,10 @@ export default class Square extends THREE.Object3D{
         })
 
         events.on("experience_end", () => {
+            this.ending = true;
             this.setEndBuilding();            
+            this.pool.enableWaves = false;
+            this.disposeSuns();
         });
     }
 
@@ -393,6 +397,26 @@ export default class Square extends THREE.Object3D{
             }
         })
     }
+
+    disposeSuns() {
+        console.log("Disposing suns");
+        this.suns.children.forEach((obj) => {
+            let fill = obj.getObjectByName(obj.name + "_F").children[0];
+            fill.material.dispose();
+            fill.geometry.dispose();
+            let stroke = obj.getObjectByName(obj.name + "_S").children[0];
+            stroke.material.dispose();
+            stroke.geometry.dispose();
+            let loader = obj.getObjectByName(obj.name + "_L");
+            loader.dispose();
+        })
+        this.sunTexture.dispose();
+        for( let i = this.suns.children.length - 1; i >= 0; i--) {
+            this.suns.remove(this.suns.children[i]);
+        }
+    }
+
+
 //change material of non active sun
     turnOffSun(name) {
         console.log("Turn off sun ", name);

@@ -14,7 +14,7 @@ export default class Ending {
         this.square = square;
         this.introAni = introAni;
 
-        this.debug = true;
+        this.debug = false;
 
         this.endCredits = new EndCredits(this.camera);
         this.faded = false;
@@ -165,7 +165,7 @@ export default class Ending {
             this.miriamPlane.position.set(-3.93,13.4,8.61);
             this.miriamPlane.rotation.set(0,112 * Math.PI/180,0);
             this.miriamPlane.scale.set(0.00169, 0.00169, 0.00169);
-            DebugUtil.positionObject(this.miriamPlane, "Miriam image");
+            //DebugUtil.positionObject(this.miriamPlane, "Miriam image");
         });
 
         events.on("vr_start", () => {
@@ -216,6 +216,8 @@ export default class Ending {
             // Move to midnight
             this.timeController.jumpToTime(0);
             this.square.suns.visible = false;
+            this.square.pool.enableWaves = false;
+
             if (this.config.platform == "vive") {
                 this.square.clockRotation = 17 * 15 * Math.PI / 180; // Best view 
             }

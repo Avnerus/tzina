@@ -129,6 +129,12 @@ export default class SunLoader extends THREE.Object3D  {
 
 
     }
+    dispose() {
+        console.log("Disposing sun loader");
+        this.fbo.particles.geometry.dispose();
+        this.simulationShader.dispose();
+        this.renderShader.dispose();
+    }
     update(dt,et) {
         this.simulationShader.uniforms.timer.value = et;
         this.fbo.update();
