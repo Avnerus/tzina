@@ -2,7 +2,7 @@ export default {
     controls: "locked",
     basalHeight: 10,
     fps: 60,
-    enableFlying: true,
+    enableFlying: false,
     skipIntro: false,
     skipCharacters: false,
     speedIntro: true,
@@ -21,5 +21,5 @@ export default {
     platform: "vive", // desktop
     skipLanding: true,
     skipInstructions: true,
-    language: "heb"
+    language: "eng"
 }

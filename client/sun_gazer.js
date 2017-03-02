@@ -68,7 +68,7 @@ export default class SunGazer extends THREE.Object3D  {
     }
 
     onGaze(camPosition, camVector, colliderPosition, sun) {
-        if (this.active) {
+        if (this.active && !this.ended) {
            let gazeAngle = this.getDotProduct(camPosition, camVector, colliderPosition);
            if (this.gazingSun) {
                 if (gazeAngle <= this.GAZE_THRESHOLD) {

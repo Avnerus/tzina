@@ -33,6 +33,7 @@ export default class Square extends THREE.Object3D{
         this.sky = sky;
 
         this.debug = false;
+        this.ending = false;
 
         this.sunTextureOffsets = {
             19 : 0,
@@ -160,7 +161,7 @@ export default class Square extends THREE.Object3D{
             THREE.SceneUtils.attach(cylinder, this.scene, this.clockwork);*/
 
 
-            DebugUtil.positionObject(this, "Square");
+            DebugUtil.positionObject(this, "Square", true);
 
             this.clockwork.add(this.benches);
 
@@ -332,7 +333,10 @@ export default class Square extends THREE.Object3D{
         })
 
         events.on("experience_end", () => {
+            this.ending = true;
             this.setEndBuilding();            
+            this.pool.enableWaves = false;
+            this.disposeSuns();
         });
     }
 
@@ -393,6 +397,26 @@ export default class Square extends THREE.Object3D{
             }
         })
     }
+
+    disposeSuns() {
+        console.log("Disposing suns");
+        this.suns.children.forEach((obj) => {
+            let fill = obj.getObjectByName(obj.name + "_F").children[0];
+            fill.material.dispose();
+            fill.geometry.dispose();
+            let stroke = obj.getObjectByName(obj.name + "_S").children[0];
+            stroke.material.dispose();
+            stroke.geometry.dispose();
+            let loader = obj.getObjectByName(obj.name + "_L");
+            loader.dispose();
+        })
+        this.sunTexture.dispose();
+        for( let i = this.suns.children.length - 1; i >= 0; i--) {
+            this.suns.remove(this.suns.children[i]);
+        }
+    }
+
+
 //change material of non active sun
     turnOffSun(name) {
         console.log("Turn off sun ", name);
@@ -505,19 +529,25 @@ export default class Square extends THREE.Object3D{
 
         // add neon effect to this.endBuilding
         this.endNeonThing = this.buildings.getObjectByName("Neon");
-        this.endNeonThing.material = new THREE.MeshPhongMaterial({color: 0xe5eff1, emissive: 0xebfcff, emissiveIntensity: .1});
+        
+        this.endNeonThing.geometry.computeFaceNormals();
+        this.endNeonThing.geometry.computeVertexNormals();
+        this.endNeonThing.geometry.normalsNeedUpdate = true;
+        
+        this.endNeonThing.material = new THREE.MeshPhongMaterial({color: 0xe5eff1, emissive: 0xebfcff, emissiveIntensity: .2});
         this.endNeonThingLight = new THREE.PointLight( 0xeaffff, 1, 5 ); // 5
         this.endNeonThing.add(this.endNeonThingLight);
         
         let tweenM = TweenMax.to( this.endNeonThing.material, 2, {
-            emissiveIntensity: 0.9,
-            delay: 1.5, 
-            repeat: -1, 
-            repeatDelay: 1,
+            emissiveIntensity: 0.7,
+            delay: 2, 
+            repeat: -1,
+            yoyo: true, 
+            repeatDelay: 7,
             ease: RoughEase.ease.config({
                 template: Power0.easeNone,
                 strength: 2,
-                points: 20,
+                points: 10,
                 taper: "none",
                 randomize: true,
                 clamp: false}),
