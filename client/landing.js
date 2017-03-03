@@ -129,6 +129,10 @@ try {
 
   });
 
+  $('#about_readmore').click(function(){
+    $('.about_moretext').fadeToggle(250);
+  });
+
   //Fade in the first screen from black after tree scene was loaded
   // loadingManager.onLoad = function(){
 
