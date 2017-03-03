@@ -11,7 +11,7 @@ export default
 				},
 					{
 					name: "pocketCam",
-					position: [-5.49,21.2,10.97],
+                    position: [-4.8,21.34,11.95],
 					rotation: [0,81,0],
 					scale: 0.29
 				},
@@ -170,7 +170,7 @@ export default
 				},
                   {
                    name: "blueLady",
-                    position: [-16.86,22,3.79],
+                    position: [-16.95,21.41,4.21],
                     rotation: [0,161,0],
                     scale: 0.304
     		    },

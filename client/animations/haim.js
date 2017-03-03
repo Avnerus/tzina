@@ -16,7 +16,7 @@ export default class HaimAnimation extends THREE.Object3D {
     init(loadingManager) {
         this.loadingManager = loadingManager;
         this.setupAnim();
-        //DebugUtil.positionObject(this, "Haim Ani");
+        // DebugUtil.positionObject(this, "Haim Ani");
     }
 
     setupAnim() {
@@ -31,9 +31,11 @@ export default class HaimAnimation extends THREE.Object3D {
             { time: 2,  anim: ()=>{this.bagOn()} },
             { time: 12,  anim: ()=>{this.tubeDown(1)} },    // 12
             { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
+            { time: 75,  anim: ()=>{this.skyLightDarken()} },   // took 3 sec
+            { time: 82,  anim: ()=>{this.skyLightStorm()} },
 
-            { time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
-            { time: 212,  anim: ()=>{this.skyLightStorm()} }, //212
+            //{ time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
+            //{ time: 212,  anim: ()=>{this.skyLightStorm()} }, //212
             { time: 246,  anim: ()=>{this.skyLightBack()} },
 
             { time: 252, anim: ()=>{this.characterDisappear()} }    //252
@@ -45,6 +47,8 @@ export default class HaimAnimation extends THREE.Object3D {
         for (let i=0; i<50; i++) {
           this.lookupTable.push(Math.random());
         }
+
+        this.envLightChanged = false;
 
         // TUBE
         this.ARC_SEGMENTS = 20;
@@ -175,6 +179,33 @@ export default class HaimAnimation extends THREE.Object3D {
             this.boneGeo = geometry.clone();
             this.spine = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({map: boneTex}) );
             this.add( this.spine );
+        });
+
+        // ENV_LIGHT
+        // envLight reacts to character PAUSE
+        events.on("character_idle", (name) => {
+            if(name=="Haim" && this.envLightChanged){
+                //console.log("pause so bring light back");
+                this.skyLightBack();                
+            }
+        });
+
+        // envLight reacts to character RESUME
+        events.on("character_playing", (name) => {
+            if(name=="Haim" && this.envLightChanged){
+                //console.log("change the color again");
+
+                this.oriHemi = this.sky.getHemiLghtOriStatus();
+                this.oriDir = this.sky.getDirLghtOriStatus();
+                this.sky.pauseUpdateHemiLight();
+                this.oriFLightIntensity = this.square.fountainLight.intensity;
+
+                TweenMax.to( this.sky.dirLight, 1, {intensity: 0.0});
+                TweenMax.to( this.sky.hemiLight, 1, {intensity: 0.7});
+                TweenMax.to( this.square.fountainLight, 1, {intensity: 0});
+                TweenMax.to( this.sky.hemiLight.color, 1, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
+                TweenMax.to( this.sky.hemiLight.groundColor, 1, { r:0.078, g:0.373, b:0.4 } );
+            }
         });
 
         //
@@ -579,32 +610,34 @@ export default class HaimAnimation extends THREE.Object3D {
         TweenMax.to( this.sky.dirLight, 2, {intensity: 0.2});
         TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.2});
         TweenMax.to( this.square.fountainLight, 3, {intensity: 0});
+
+        this.envLightChanged = true;
     }
 
     skyLightStorm() {
-        TweenMax.to( this.sky.dirLight, 2, {intensity: 0.0});
-        TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.7});
-        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
-        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.078, g:0.373, b:0.4 } ); // #145f67
+        TweenMax.to( this.sky.dirLight, 4, {intensity: 0.0});
+        TweenMax.to( this.sky.hemiLight, 4, {intensity: 0.7});
+        TweenMax.to( this.sky.hemiLight.color, 4, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
+        TweenMax.to( this.sky.hemiLight.groundColor, 4, { r:0.078, g:0.373, b:0.4 } ); // #145f67
     }
 
     skyLightBack() {
-        TweenMax.to( this.square.fountainLight, 3, {intensity: this.oriFLightIntensity});
+        TweenMax.to( this.square.fountainLight, 2, {intensity: this.oriFLightIntensity});
         let hemiTargetIntensity = this.sky.getHemiLghtCorrectIntensity();
-        TweenMax.to( this.sky.hemiLight, 3, {intensity: hemiTargetIntensity});
-        TweenMax.to( this.sky.dirLight, 3, {
+        TweenMax.to( this.sky.hemiLight, 2, {intensity: hemiTargetIntensity});
+        TweenMax.to( this.sky.dirLight, 2, {
             intensity: this.oriDir.intensity,
             onComplete:()=>{
                 this.sky.resumeUpdateHemiLight();
             }
         });
 
-        TweenMax.to( this.sky.hemiLight.color, 2, { 
+        TweenMax.to( this.sky.hemiLight.color, 1, { 
             r:this.oriHemi.color.r,
             g:this.oriHemi.color.g,
             b:this.oriHemi.color.b
         } );
-        TweenMax.to( this.sky.hemiLight.groundColor, 2, {
+        TweenMax.to( this.sky.hemiLight.groundColor, 1, {
             r:this.oriHemi.groundColor.r,
             g:this.oriHemi.groundColor.g,
             b:this.oriHemi.groundColor.b
@@ -661,6 +694,8 @@ export default class HaimAnimation extends THREE.Object3D {
                             this.particleGroup.emitters[i].position.value = rainOriginPositions[i];
                         }
                     } } );
+
+        this.envLightChanged = false;
     }
 
     detach ( child, parent, scene ) {

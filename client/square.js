@@ -10,6 +10,7 @@ import _ from 'lodash';
 
 const MODEL_PATH = "assets/square/scene/scene.json"
 const BUILDINGS_PATH = "assets/square/buildings/buildings_new.json"
+const END_BUILDING_PATH = "assets/square/buildings/endBuilding.json"
 const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
 const BENCHES_PREFIX = "assets/square/benches/"
@@ -32,6 +33,7 @@ export default class Square extends THREE.Object3D{
         this.sky = sky;
 
         this.debug = false;
+        this.ending = false;
 
         this.sunTextureOffsets = {
             19 : 0,
@@ -111,7 +113,6 @@ export default class Square extends THREE.Object3D{
         .then((results) => {
             console.log("Load results", results);
             let obj = results[0];
-            this.buildings = results[2];
             this.suns = results[3];
             this.suns.rotation.y = Math.PI * -70 / 180;
 
@@ -160,7 +161,7 @@ export default class Square extends THREE.Object3D{
             THREE.SceneUtils.attach(cylinder, this.scene, this.clockwork);*/
 
 
-            DebugUtil.positionObject(this, "Square");
+            DebugUtil.positionObject(this, "Square", true);
 
             this.clockwork.add(this.benches);
 
@@ -330,6 +331,13 @@ export default class Square extends THREE.Object3D{
         events.on("delayed_rotation", (skip = false) => {
             this.delayedRotation(skip);
         })
+
+        events.on("experience_end", () => {
+            this.ending = true;
+            this.setEndBuilding();            
+            this.pool.enableWaves = false;
+            this.disposeSuns();
+        });
     }
 
     delayedRotation(skip) {
@@ -389,6 +397,26 @@ export default class Square extends THREE.Object3D{
             }
         })
     }
+
+    disposeSuns() {
+        console.log("Disposing suns");
+        this.suns.children.forEach((obj) => {
+            let fill = obj.getObjectByName(obj.name + "_F").children[0];
+            fill.material.dispose();
+            fill.geometry.dispose();
+            let stroke = obj.getObjectByName(obj.name + "_S").children[0];
+            stroke.material.dispose();
+            stroke.geometry.dispose();
+            let loader = obj.getObjectByName(obj.name + "_L");
+            loader.dispose();
+        })
+        this.sunTexture.dispose();
+        for( let i = this.suns.children.length - 1; i >= 0; i--) {
+            this.suns.remove(this.suns.children[i]);
+        }
+    }
+
+
 //change material of non active sun
     turnOffSun(name) {
         console.log("Turn off sun ", name);
@@ -478,12 +506,56 @@ export default class Square extends THREE.Object3D{
 
     loadBuildings(loadingManager) {
         return new Promise((resolve, reject) => {
-            let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(BUILDINGS_PATH,( obj ) => {
-                console.log("Loaded Buildings ", obj );
-                resolve(obj);
+            let loaders = [];
+            loaders.push(this.loadFile(loadingManager, BUILDINGS_PATH));
+            loaders.push(this.loadFile(loadingManager, END_BUILDING_PATH));
+            Promise.all(loaders)
+            .then((results) => {
+                console.log("Loaded Buildings ", results);
+                this.buildings = results[0];
+                this.endBuilding = results[1];
+                resolve(results[0]);
             })
         });
+    }
+    setEndBuilding() {
+        let originalEndBuilding = this.buildings.getObjectByName("5thBuilding");
+        let blockingWindow = this.buildings.getObjectByName("TheWindow");
+        originalEndBuilding.visible = false;
+        blockingWindow.visible = false;
+        this.buildings.remove(originalEndBuilding);
+        this.buildings.remove(blockingWindow);
+        this.buildings.add(this.endBuilding);
+
+        // add neon effect to this.endBuilding
+        this.endNeonThing = this.buildings.getObjectByName("Neon");
+        
+        this.endNeonThing.geometry.computeFaceNormals();
+        this.endNeonThing.geometry.computeVertexNormals();
+        this.endNeonThing.geometry.normalsNeedUpdate = true;
+        
+        this.endNeonThing.material = new THREE.MeshPhongMaterial({color: 0xe5eff1, emissive: 0xebfcff, emissiveIntensity: .2});
+        this.endNeonThingLight = new THREE.PointLight( 0xeaffff, 1, 5 ); // 5
+        this.endNeonThing.add(this.endNeonThingLight);
+        
+        let tweenM = TweenMax.to( this.endNeonThing.material, 2, {
+            emissiveIntensity: 0.7,
+            delay: 2, 
+            repeat: -1,
+            yoyo: true, 
+            repeatDelay: 7,
+            ease: RoughEase.ease.config({
+                template: Power0.easeNone,
+                strength: 2,
+                points: 10,
+                taper: "none",
+                randomize: true,
+                clamp: false}),
+            onUpdate:()=>{
+                this.endNeonThingLight.intensity = this.endNeonThing.material.emissiveIntensity;
+            }
+        });
+        this.endNeonThing.tween = tweenM;
     }
     loadSuns(loadingManager) {
         console.log("Loading suns")
@@ -782,7 +854,7 @@ export default class Square extends THREE.Object3D{
       this.fountainLight.intensity = 0.9;
       events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, this.fountainLight, "intensity", 0, 2); 
       this.mesh.add(this.fountainLight);
-      DebugUtil.positionObject(this.fountainLight, "Fountain light");
+      //DebugUtil.positionObject(this.fountainLight, "Fountain light");
     }
 
     get clockRotation() {

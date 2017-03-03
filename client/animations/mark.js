@@ -17,10 +17,11 @@ export default class MeirAnimation extends THREE.Object3D {
         // setup animation sequence
         this.animStart = false;
         this.sequenceConfig = [
-            { time: 3,  anim: ()=>{ this.skyLightBright() } },
-            { time: 7,  anim: ()=>{ this.pinkNeonOn() } },            
-            { time: 12, anim: ()=>{ this.blueNeonOn() } },
-            { time: 15,  anim: ()=>{ this.skyLightBright2() } },
+            { time: 2,  anim: ()=>{ this.skyLightBright() } },
+            { time: 5,  anim: ()=>{ this.pinkNeonOn() } },            
+            { time: 10, anim: ()=>{ this.blueNeonOn() } },
+            { time: 11,  anim: ()=>{ this.skyLightBright2() } },
+            //{ time: 15, anim: ()=>{ this.neonRotate() } },
             { time: 32, anim: ()=>{ this.neonRotate() } },
             { time: 40, anim: ()=>{ this.neonFlickering( 0.2, 3 ) } },    // neonFlickering( speed, time ) <-- how fast & how many times of flickering
             { time: 45, anim: ()=>{ this.neonRotateBack() } },
@@ -43,7 +44,8 @@ export default class MeirAnimation extends THREE.Object3D {
 
         this.loadingManager.itemStart("MarkAnim");
 
-        //        
+        this.envLightChanged = false;
+
         let tex_loader = new THREE.TextureLoader(this.loadingManager);
         let loader = new THREE.JSONLoader(this.loadingManager);
 
@@ -116,6 +118,32 @@ export default class MeirAnimation extends THREE.Object3D {
 
         this.dummy = {opacity: 1};
 
+        // envLight reacts to character PAUSE
+        events.on("character_idle", (name) => {
+            if(name=="Mark" && this.envLightChanged){
+                //console.log("pause so bring light back");
+                this.skyLightBack();                
+            }
+        });
+
+        // envLight reacts to character RESUME
+        events.on("character_playing", (name) => {
+            if(name=="Mark" && this.envLightChanged){                
+                //console.log("change the color again");
+
+                this.oriHemi = this.sky.getHemiLghtOriStatus();
+                this.oriDir = this.sky.getDirLghtOriStatus();
+                this.sky.pauseUpdateHemiLight();
+                this.oriFLightIntensity = this.square.fountainLight.intensity;
+
+                TweenMax.to( this.sky.dirLight, 1, {intensity: 1});
+                TweenMax.to( this.sky.hemiLight, 1, {intensity: 1});
+                TweenMax.to( this.square.fountainLight, 1, {intensity: 2});
+                TweenMax.to( this.sky.hemiLight.color, 1, { r:0.325, g:0.412, b:0.867 } );  //5369dd (light blue)
+                TweenMax.to( this.sky.hemiLight.groundColor, 1, { r:0.882, g:0.392, b:0.592 } );
+            }
+        });
+
         // DebugUtil.positionObject(this, "Mark Ani");
         //
         this.loadingManager.itemEnd("MarkAnim");
@@ -140,6 +168,8 @@ export default class MeirAnimation extends THREE.Object3D {
         TweenMax.to( this.sky.dirLight, 3, {intensity: 1});
         TweenMax.to( this.sky.hemiLight, 3, {intensity: 1});
         TweenMax.to( this.square.fountainLight, 3, {intensity: 2});
+
+        this.envLightChanged = true;
     }
 
     skyLightBright2() {
@@ -147,25 +177,27 @@ export default class MeirAnimation extends THREE.Object3D {
         // TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.4});
         TweenMax.to( this.sky.hemiLight.color, 2, { r:0.325, g:0.412, b:0.867 } );  //5369dd (light blue)
         TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.882, g:0.392, b:0.592 } ); //e16497 (light pink)
+
+        this.envLightChanged = true;
     }
 
     skyLightBack() {
-        TweenMax.to( this.square.fountainLight, 3, {intensity: this.oriFLightIntensity});
+        TweenMax.to( this.square.fountainLight, 2, {intensity: this.oriFLightIntensity});
         let hemiTargetIntensity = this.sky.getHemiLghtCorrectIntensity();
-        TweenMax.to( this.sky.hemiLight, 3, {intensity: hemiTargetIntensity});
-        TweenMax.to( this.sky.dirLight, 3, {
+        TweenMax.to( this.sky.hemiLight, 2, {intensity: hemiTargetIntensity});
+        TweenMax.to( this.sky.dirLight, 2, {
             intensity: this.oriDir.intensity,
             onComplete:()=>{
                 this.sky.resumeUpdateHemiLight();
             }
         });
 
-        TweenMax.to( this.sky.hemiLight.color, 2, { 
+        TweenMax.to( this.sky.hemiLight.color, 1, { 
             r:this.oriHemi.color.r,
             g:this.oriHemi.color.g,
             b:this.oriHemi.color.b
         } );
-        TweenMax.to( this.sky.hemiLight.groundColor, 2, {
+        TweenMax.to( this.sky.hemiLight.groundColor, 1, {
             r:this.oriHemi.groundColor.r,
             g:this.oriHemi.groundColor.g,
             b:this.oriHemi.groundColor.b
@@ -244,6 +276,8 @@ export default class MeirAnimation extends THREE.Object3D {
             }, onComplete: ()=>{
                 this.parent.fullVideo.setOpacity(0.0);
             } } );
+
+        this.envLightChanged = false;
     }
 
     createNeonAnim( object, index ){

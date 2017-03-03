@@ -191,7 +191,7 @@ export default class PidgeonController {
         }else{
           //the whole string would more orderly be sent from server, but that costs some data.
           //while we don't want to show anything more htan the country, we may sum this part on clientside
-          remoteSprite.labelText("A friend from "+message.string);
+          remoteSprite.labelText("a friend from",message.string);
         }
 
       }else  if(message.header=="landedbatch"){
@@ -236,7 +236,9 @@ export default class PidgeonController {
       this.socketEmitCameraPosition();
       lastEmitTime=this.time;
     }
-    this.gaze(dt);
+    if (isLanded) {
+        this.gaze(dt);
+    }
   }
   gaze(dt){
     //raycast to get objects in center of sight

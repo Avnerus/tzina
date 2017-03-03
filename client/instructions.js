@@ -49,7 +49,7 @@ export default class Instructions {
         }
         this.instructionText.material.opacity = 0;
 
-        DebugUtil.positionObject(this.instructionText, "Instrucitons text");
+        //DebugUtil.positionObject(this.instructionText, "Instrucitons text");
 
         this.instructionLineTwo = new MeshText2D("", TEXT_DEFINITION);
         this.instructionLineTwo.material.opacity = 0;
@@ -67,12 +67,15 @@ export default class Instructions {
     start() {
         this.lines = this.config.language == "heb" ? this.lines_heb : this.lines_eng;
         if (this.config.skipInstructions) {
-            console.log("Instructions skipping");
-            events.emit("instructions_end");
-            if (this.config.platform == "vive") {
-                events.emit("delayed_rotation", true);
-            }
-            this.square.extras.showExtras();
+            setTimeout(() => {
+                console.log("Instructions skipping");
+                events.emit("instructions_end");
+                if (this.config.platform == "vive") {
+                    events.emit("delayed_rotation", true);
+                }
+                this.square.extras.showExtras();
+
+            },500);
         } else {
             console.log("Instructions starting");
             this.camera.add(this.instructionText);

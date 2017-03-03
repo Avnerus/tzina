@@ -278,6 +278,7 @@ export class StaticSoundSampler{
     this.loop = false;
 
     this.controlVolume=function(...a){this.blurModule.controlVolume.apply(this.blurModule,a)};
+    this.controlBlur=function(...a){this.blurModule.controlBlur.apply(this.blurModule,a)};
 
   }
   setToLoop(loopValue){

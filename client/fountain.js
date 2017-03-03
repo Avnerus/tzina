@@ -190,26 +190,29 @@ export default class Fountain extends THREE.Object3D  {
         this.spotLights[0] = this.createSpotLight( new THREE.Vector3(6.8, -3.2, 0.96),
                                                    new THREE.Vector3(0.3, 1, -0.3),
                                                    1,   // intensity
-                                                   0.6, // angle
+                                                   0.8, // angle
                                                    20,  // distance
                                                    1.5, // decay
-                                                   0.3  // penumbra
+                                                   0.3,  // penumbra
+                                                   0xffe945 // yellow
                                                 );
         this.spotLights[1] = this.createSpotLight( new THREE.Vector3(-7.8, -3.2, 1.2),
                                                    new THREE.Vector3(-0.3, 1, 0.3),
                                                    1,   // intensity
-                                                   0.6, // angle
+                                                   0.8, // angle
                                                    20,  // distance
                                                    1.5, // decay
-                                                   0.3  // penumbra
+                                                   0.3,  // penumbra
+                                                   0xff5ec2 // pink
                                                 );
         this.spotLights[2] = this.createSpotLight( new THREE.Vector3(-0.78, -3.2, -7.9),
                                                    new THREE.Vector3(-0.3, 1, -0.3),
                                                    1,   // intensity
-                                                   0.7, // angle
+                                                   0.8, // angle
                                                    20,  // distance
                                                    1.5, // decay
-                                                   0.3  // penumbra
+                                                   0.3,  // penumbra
+                                                   0x2cfff7 // blue
                                                 );
         this.spotLightCenters = new THREE.Object3D();
         this.spotLightCenters.add(this.spotLights[0].target);
@@ -250,12 +253,12 @@ export default class Fountain extends THREE.Object3D  {
         //DebugUtil.positionObject(this.cylinders[2], "Fountain 2"); // doesn't move*/
     }
 
-    createSpotLight( pos, pos2, _intensity, _angle, _distance, _decay, _penumbra ) {
+    createSpotLight( pos, pos2, _intensity, _angle, _distance, _decay, _penumbra, _color ) {
         let geometry = new THREE.ConeGeometry( .1, .2, 8 );
         let material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
         let cone = new THREE.Mesh( geometry, material );
         cone.visible = false;
-        let s_l = new THREE.SpotLight( 0xfff291, _intensity, _distance, _angle, _penumbra, _decay ); //0xfff291
+        let s_l = new THREE.SpotLight( _color, _intensity, _distance, _angle, _penumbra, _decay ); //0xfff291
         // s_l.target.add( this.center.clone() );
         s_l.target.position.copy( pos2 );
         s_l.position.copy( pos );
@@ -298,7 +301,7 @@ export default class Fountain extends THREE.Object3D  {
             } else {
                 this.nextAnim = null;
                 //
-                console.log("count down 10 sec to reset ani");
+                console.log("Show - count down 10 sec to reset ani");
                 setTimeout(()=>{
                     this.resetAni();
                     this.startCycle();
@@ -328,6 +331,7 @@ export default class Fountain extends THREE.Object3D  {
 
     resetShow() {
         // this.soundEvents = this.soundEventsRecords.slice();
+        this.skyLightBack();
         this.resetAni();
     }
 
@@ -640,9 +644,16 @@ export default class Fountain extends THREE.Object3D  {
         this.oriHemi = this.square.sky.getHemiLghtOriStatus();
         this.oriDir = this.square.sky.getDirLghtOriStatus();
         this.square.sky.pauseUpdateHemiLight();
+        this.oriFLightIntensity = this.square.fountainLight.intensity;
+        this.oriFLightDistance = this.square.fountainLight.distance;
 
         TweenMax.to( this.square.sky.dirLight, 3, {intensity: 0.15});
         TweenMax.to( this.square.sky.hemiLight, 3, {intensity: 0.01});
+
+        // this.square.fountainLight.distance = 20;
+        // this.square.fountainLight.intensity = 2;
+        TweenMax.to( this.square.fountainLight, 1, {intensity: 2});
+        TweenMax.to( this.square.fountainLight, 1, {distance: 20});
     }
 
     skyLightBack() {
@@ -665,6 +676,11 @@ export default class Fountain extends THREE.Object3D  {
         //     g:this.oriHemi.groundColor.g,
         //     b:this.oriHemi.groundColor.b
         // } );
+
+        // this.square.fountainLight.distance = this.oriFLightDistance;
+        // this.square.fountainLight.intensity = this.oriFLightIntensity;
+        TweenMax.to( this.square.fountainLight, 1, {intensity: this.oriFLightIntensity});
+        TweenMax.to( this.square.fountainLight, 1, {distance: this.oriFLightDistance});
     }
 
 

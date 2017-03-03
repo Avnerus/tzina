@@ -190,7 +190,7 @@ export default class Character extends THREE.Object3D {
                     this.onHold = true;
                     this.idleVideo.pause();
                     this.idleVideo.setOpacity(0.5);
-                },5000);
+                },7000);
             }
 
             if (this.ending) {
@@ -217,7 +217,6 @@ export default class Character extends THREE.Object3D {
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {
                     console.log(this.props.name, "Character video ended");
-                    /*
                     this.idleVideo.pause();
                     this.idleVideo.unload();
                     this.soundManager.panorama.detach(this.audio);
@@ -226,7 +225,7 @@ export default class Character extends THREE.Object3D {
                     this.remove(this.idleVideo);
                     if (this.animation) {
                         this.remove(this.animation);
-                    }*/
+                    }
                     this.done = true;
                     events.emit("character_idle", this.props.name)
                     events.emit("character_ended", this.props.name)
@@ -430,12 +429,15 @@ export default class Character extends THREE.Object3D {
         this.isPaused = true;
         events.emit("character_idle", this.props.name)
 
-        if (this.lastAdjustment && this.lastAdjustment.position) {
+        if (this.lastAdjustment) {
+            console.log("Character was adjusted - reverting")
             this.position.fromArray(this.props.position);
         }
     }
     adjust() {
         this.fullVideo.setDepth(this.nextAdjustment.mindepth, this.nextAdjustment.maxdepth);
+        console.log(this.props.name + " Adjustment!!", this.nextAdjustment.sec);
+
         if (this.nextAdjustment.scale) {
             this.fullVideo.setScale(this.nextAdjustment.scale);
         }
@@ -451,7 +453,6 @@ export default class Character extends THREE.Object3D {
             // possitionOffset.add(this.fullVideo.mesh.position);
             // this.fullVideo.setPosition(possitionOffset);
             
-            console.log("Adjustment!!", this.nextAdjustment.sec);
 
             if(this.nextAdjustment.sec!=0 && this.animation && !this.animation.beDetached){
                 this.detach( this.animation, this, this.scene );
@@ -461,6 +462,8 @@ export default class Character extends THREE.Object3D {
     
             this.position.fromArray(this.nextAdjustment.position);
             // this.attach( this.animation, this.scene, this );
+        } else if (this.lastAdjustment.position) {
+            this.nextAdjustment.position = this.lastAdjustment.position.slice(0);
         }
 
         this.lastAdjustment = this.nextAdjustment;
@@ -469,6 +472,7 @@ export default class Character extends THREE.Object3D {
         } else {
             this.nextAdjustment = null;
         }
+        console.log(this.props.name + " last adjustment ", this.lastAdjustment);
     }
     detach ( child, parent, scene ) {
         if (child && parent && scene) {
@@ -491,7 +495,7 @@ export default class Character extends THREE.Object3D {
     onCollision() {
     //    console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
-        if (!this.colliding) {
+        if (this.active && !this.colliding) {
             this.colliding = true;
             // Avoiding 2 collisions at the same time
             setTimeout(() => {

@@ -23,6 +23,8 @@ export default class ItzikAnimation extends THREE.Object3D {
             { time: 75, anim: ()=>{this.benchMove(3)} },        //75
             { time: 80, anim: ()=>{this.benchMove(4)} },        //80
             { time: 85, anim: ()=>{this.benchMove(5)} },        //85
+            { time: 93, anim: ()=>{this.benchRotateNoScale_On()} },     //93
+            { time: 190, anim: ()=>{this.benchRotateNoScale_Off()} },   //190
             // end: 211, ani takes 13
             { time: 197, anim: ()=>{this.characterDisappear()} }//197
         ];
@@ -192,7 +194,21 @@ export default class ItzikAnimation extends THREE.Object3D {
                     }
                 } } );
         }
+    }
 
+    benchRotateNoScale_On(){
+        let angle = Math.PI * 2 / this.benchCount;
+        this.benchTimeline = new TimelineMax({repeat:-1});
+        this.benchTimeline.to( this.benchGroup.rotation, 2, { y:"+="+angle, ease:Power3.easeInOut }, "+=2" );
+        this.benchTimeline.to( this.benchGroup.rotation, 2, { y:"+="+angle, ease:Power3.easeInOut }, "+=2" );
+        this.benchTimeline.to( this.benchGroup.rotation, 2, { y:"+="+angle, ease:Power3.easeInOut }, "+=2" );
+        this.benchTimeline.to( this.benchGroup.rotation, 2, { y:"+="+angle, ease:Power3.easeInOut }, "+=2" );
+        this.benchTimeline.to( this.benchGroup.rotation, 2, { y:"+="+angle, ease:Power3.easeInOut }, "+=2" );
+        this.benchTimeline.to( this.benchGroup.rotation, 2, { y:"+="+angle, ease:Power3.easeInOut }, "+=2" );
+    }
+    benchRotateNoScale_Off(){
+        if(this.benchTimeline==null) return;
+        this.benchTimeline.pause();
     }
 
     benchGroupRotateOn(_this, angle){
