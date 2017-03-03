@@ -346,12 +346,14 @@ export class StaticSoundSampler{
     console.log("Audio paused at time", pauseTime, "offset is ", this.offset);
     if (this.source) {
         this.source.stop();
+        this.source.disconnect();
     }
     this.source = null;
   }
   stop(){
     if (this.source) {
         this.source.stop();
+        this.source.disconnect();
     }
     this.playStartTime = 0;
     this.offset = 0;

@@ -3,15 +3,15 @@ export default [
         name: 'Hannah',
         position : [11.4, 22.04, -10.1],
         rotation: [355, 302, 3],
-        space: 0.92,
-        spaceOffset: [0.02,0,0.92]
+        space: 1.3,
+        spaceOffset: [-0.17,0,-0.39]
     },
     {
         name: 'Miriam',
         position : [-17.1, 22.1, 3.38],
         rotation: [0, 78, 0],
         scale: 0.003 * 0.661 * 1.071 * 0.9,
-        space: 0.76,
+        space: 1.2,
         spaceOffset: [0.59,0,0.47],
          adjustments : [
             {
@@ -27,8 +27,8 @@ export default [
         name: 'Itzik',
         position : [-6.58,  22.06, 11.01], //-6.08, 21.9, 10.8
         rotation: [9, 208, 3.6],
-        space: 1, //anim:1.46
-        spaceOffset: [0.02,0.59,-0.65], //0.28,0.73,1.73
+        space: 1.5, //anim:1.46
+        spaceOffset: [0.62,0.59,-0.17], //0.28,0.73,1.73
         gazeOffset: [0.14,0.25,0.47],
         adjustments : [
             {
@@ -53,8 +53,8 @@ export default [
         name: 'Rami',
         position : [-9.19, 22.2, 14.6],
         rotation: [0, 151, 0],
-        space: 0.82,
-        spaceOffset: [0.02,0.2,0.25],
+        space: 1.2,
+        spaceOffset: [-0.06,0.2,0.25],
         gazeSpace: [-0.55,0,0],
         gazeOffset: [0.14,-0.05,-0.31]
     },
@@ -62,8 +62,8 @@ export default [
         name: 'Meir',
         position : [-0.43, 22.39, 7.43],
         rotation: [7, 0, 0],
-        space: 0.46,
-        spaceOffset: [-0.03,0,-0.47]
+        space: 0.8,
+        spaceOffset: [-0.17,0,0.62]
     },
     {
         name: 'Sasha',
@@ -89,8 +89,8 @@ export default [
         name: 'Mark',
         mindepth : 1499.999877929688,
         maxdepth : 4564.32861328125,
-        space: 0.8, 
-        spaceOffset: [-1.2,0,-0.65],
+        space: 1, 
+        spaceOffset: [-1,0,-0.4],
         position : [8.28, 21.8, -16.86],
         rotation: [0, 286, 350],
               adjustments : [
@@ -128,7 +128,7 @@ export default [
         position : [-17.83, 22.1, 2.69],
         rotation: [0, 132, 0],
         space: 1.2, //2
-        spaceOffset: [-0.87,0,0.92],
+        spaceOffset: [0.5,0,0.28],
         animationPosition: [0.49, -0.46, -0.78],
         animationRotation: [0,-50,0]
     },
@@ -153,15 +153,15 @@ export default [
             }
         ],
         scale: 0.003 * 0.75 * 1.028 * 0.9,
-        space: 0.9,
-        spaceOffset: [-0.42,0,0.47]
+        space: 1,
+        spaceOffset: [0.28,0,-0.62]
     },
     {
         name: 'Itzhak',
         position : [-8.2, 21.87, 18.15],
         rotation: [360, 84, 0], // 
         space: 1.2,
-        spaceOffset: [-0.87,0,-0.87], //0.88,0,0.58
+        spaceOffset: [0.62,0,-0.17], //0.88,0,0.58
         gazeOffset: [0,0.47,-0.31]   
     },
     {

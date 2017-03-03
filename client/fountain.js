@@ -301,7 +301,7 @@ export default class Fountain extends THREE.Object3D  {
             } else {
                 this.nextAnim = null;
                 //
-                console.log("count down 10 sec to reset ani");
+                console.log("Show - count down 10 sec to reset ani");
                 setTimeout(()=>{
                     this.resetAni();
                     this.startCycle();

@@ -41,14 +41,15 @@ export default class Show {
             
         events.on("character_ended", (name) => {
             let hour = this.timeController.currentChapter.hour;
-            console.log("SHOW character ended", name);
             if (hour == 19 && !this.ended7pmShow && name != "Waterman" && !this.in7pmShow) {
+                console.log("7PM Show starting", name);
                 this.square.fountain.startShow(hour);
                 this.music7pm.play();
                 this.characterController.addCharacter("Agam7PM");
                 this.in7pmShow = true;
             }                                     
             else if (hour == 9 && !this.ended9amShow && !this.in9amshow) {
+                console.log("9AM Show starting", name);
                 this.square.fountain.startShow(hour);
                 this.music9am.play();
                 this.characterController.addCharacter("Agam12PM");
@@ -63,12 +64,14 @@ export default class Show {
 
         events.on("show_end", () => {
             if (this.in7pmShow || this.timeController.currentChapter.hour == 19) {
+                console.log("7PM Show ended");
                 this.ended7pmShow = true;
                 this.music7pm.stop();
                 this.music7pm.unload();
                 this.soundManager.panorama.detach(this.music7pm);
             }
             else if (this.in9amshow || this.timeController.currentChapter.hour == 9) {
+                console.log("9AM Show ended");
                 this.ended9amShow = true;
                 this.music9am.stop();
                 this.music9am.unload();

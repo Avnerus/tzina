@@ -58,6 +58,7 @@ export default class Game {
         this.shownWASD = false;
         this.shownZoom = false;
         this.ended = false;
+        this.config.endTime = 0;
     }
     init() {
 
@@ -153,8 +154,7 @@ export default class Game {
         this.sunGazer.init();
 
 
-        this.flood = new Flood();
-        this.flood.init();
+        this.flood = new Flood(this.config);
 
 
         /*
@@ -285,8 +285,17 @@ export default class Game {
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
+        this.flood.init(this.loadingManager);
         this.show.init();
         this.instructions.init();
+
+        if (this.config.platform == "desktop") {
+            this.config.endTime = 60 * 25;
+        } else {
+            this.config.endTime = 60 * 15;
+        }
+
+        console.log("Experence end time: ", this.config.endTime);
         
         VideoRGBD.initPool();
 
@@ -453,7 +462,7 @@ export default class Game {
             this.controls.update();
         }
         this.collisionManager.update(dt);
-        this.flood.update(dt);
+        this.flood.update(dt,et);
 
         if (this.ended) {
             this.ending.update(dt);
@@ -475,7 +484,7 @@ export default class Game {
     }
 
     endCheck(time) {
-        if (!this.ended && time > 60 * 15) {
+        if (!this.ended && time >= this.config.endTime) {
         //if (!this.ended && time > 60 * 0.4) {
             this.ended = true;
             this.ending.start();
@@ -502,8 +511,9 @@ export default class Game {
     vrChange() {
         if (this.vrManager.hmd.isPresenting) {
             let newCameras = this.vrEffect.getCameras();
+                /*
             document.getElementById('reset-pose').style.display = "block";
-            document.getElementById('reset-pose').addEventListener("click", () => {this.resetPose()});
+            document.getElementById('reset-pose').addEventListener("click", () => {this.resetPose()});*/
             events.emit("vr_start", newCameras);
             inVR = true;
             if (!this.config.skipIntro && !this.controlPassed) {

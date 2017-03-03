@@ -2,11 +2,11 @@ export default {
     controls: "locked",
     basalHeight: 10,
     fps: 60,
-    enableFlying: true,
+    enableFlying: false,
     skipIntro: false,
     skipCharacters: false,
     speedIntro: true,
-    startTime: 19,
+    startTime: 17,
     movementSpeed: 0.3, //0.2
     daySpeed: 0.001,
     noSquare: false,
@@ -18,7 +18,7 @@ export default {
     production: false,
     videoHost: "http://assets.tzina.space/",
     //videoHost: null,
-    platform: "desktop", // desktop
+    platform: "vive", // desktop
     skipLanding: true,
     skipInstructions: true,
     language: "eng"

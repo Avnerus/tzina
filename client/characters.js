@@ -17,7 +17,7 @@ export default [
         animationPosition: [0,-0.3,-0.85], //z: 0.55
         animationRotation: [15, 0, 2],
         space: 0.22,
-        spaceOffset: [-0.35,0,0.29],
+        spaceOffset: [-0.2,0,0.29],
         subtitles: null,
         gazeSpace: [-0.27,-0.21,-0.6],
         gazeOffset: [0,0,0.16],
@@ -112,15 +112,15 @@ export default [
         height: 2048,
         scale: 0.003 * 1.243 * 1.455 * 1.048 * 1.024,
         animationScale: 0.4, // 0.25
-        animationPosition: [1.14, -0.38, 6.85],
-        animationRotation: [6, -50, -9], //6, -50, -9
+        animationPosition: [1.27, -0.53, 6.92],
+        animationRotation: [0, -50, 0], //6, -50, -9
         subtitles: false,
-        space: -1.64,
-        spaceOffset: [-0.11,0,0.76],
+        space: -1.85,
+        spaceOffset: [0.32,0,0.71],
         gazeSpace: [-2.15,1.9,-0.95],
         gazeOffset: [1.63,1.76,3.62],
-        endingPosition : [1.65, 16.5, 15.14],
-        endingRotation: [218, 0, 190],
+        endingPosition : [6.24, 19.83, 11.35],
+        endingRotation: [196, 29, 188],
         endingScaleMul: 1.2,
         hasAmbience: true
     },
@@ -536,7 +536,7 @@ export default [
         basePath : 'assets/characters/shirin7pm',
         mindepth : 1214.999755859,
         maxdepth : 3681.950439453,
-        position : [23.2, 27.2, -43.8],
+        position : [16.98, 27.2, -46.32],
         rotation: [0, 270, 0],
         animation: 'Shirin',
         uvdy: 0.47509765625,

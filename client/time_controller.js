@@ -6,6 +6,7 @@ import MiscUtil from './util/misc'
 import _ from 'lodash'
 import {MeshText2D, SpriteText2D, textAlign} from './lib/text2d/index'
 import moment from 'moment';
+import MultilineText from './util/multiline_text'
 
 export default class TimeController {
     constructor(config, element, square, sky, scene, camera, soundManager, sunGazer) {
@@ -34,13 +35,21 @@ export default class TimeController {
         this.wasUsed = false;
         this.done = false;
 
-        this.accelerating = false;
-
         this.currentChapter;
 
         this.chapterProgress = {};
 
         this.totalExperienceTime = 0;
+
+        this.idleTimer = 0;
+        this.helpTimer = 0;
+        this.inShow = false;
+        this.usedSun = false;
+        this.nowCount = 0;
+
+        this.IDLE_TIMEOUT = 60;
+        this.HELP_TIMEOUT = 20;
+        this.NOW_HELP_TRIGGER = 3;
 
         events.on("experience_end", () => {
             this.done = true;
@@ -120,7 +129,9 @@ export default class TimeController {
                 this.square.turnOnSun(this.currentHour.toString(), true);
                 this.updateSunProgress();
             }
-            this.clockRunning = passed;
+        });
+        events.on("instructions_end", () => {
+            this.clockRunning = true;
         });
 
         events.on("base_position", () => {
@@ -141,6 +152,9 @@ export default class TimeController {
         });
 
         events.on("character_progress", (data) => {
+            this.idleTimer = 0;
+            this.helpTimer = 0;
+
             if (
                 this.chapterProgress[this.currentChapter.hour] &&
                 typeof(this.chapterProgress[this.currentChapter.hour][data.name]) != 'undefined'
@@ -153,9 +167,13 @@ export default class TimeController {
 
         events.on("show_start", () => {
             this.clockRunning = false;
+            this.inShow = true;
+            console.log("Time controller - Show start. Stopping clock");
         });
         events.on("show_end", () => {
             this.clockRunning = true;
+            this.inShow = false;
+            console.log("Time controller - Show end. Resuming clock");
         });
 
         let TEXT_DEFINITION = {
@@ -175,6 +193,14 @@ export default class TimeController {
              align: textAlign.center, 
              font: '70px Miriam Libre',
              fillStyle: '#cccccc',
+             antialias: true,
+             shadow: true
+        }
+
+        let NOWHELP_TEXT_DEFINITION = {
+             align: textAlign.center, 
+             font: '70px Miriam Libre',
+             fillStyle: '#33e5ab',
              antialias: true,
              shadow: true
         }
@@ -199,13 +225,19 @@ export default class TimeController {
         this.insideChapterTitleLineNow = new MeshText2D(nowText, INSIDE_TEXT_DEFINITION);
         this.insideChapterTitleLineNow.scale.multiplyScalar(SUN_TEXT_SCALE);
 
+        let nowHelpText = (this.config.language == "eng") ? "Try a different sun" : "נסו שמש אחרת";
+        this.insideChapterTitleLineNowHelp = new MeshText2D(nowHelpText, NOWHELP_TEXT_DEFINITION);
+        this.insideChapterTitleLineNowHelp.scale.multiplyScalar(SUN_TEXT_SCALE);
+
         this.insideChapterTitle.visible = false;
         this.insideChapterTitleLineTwo.visible = false;
         this.insideChapterTitleLineNow.visible = false;
+        this.insideChapterTitleLineNowHelp.visible = false;
 
         this.scene.add(this.insideChapterTitle);
         this.scene.add(this.insideChapterTitleLineTwo);
         this.scene.add(this.insideChapterTitleLineNow);
+        this.scene.add(this.insideChapterTitleLineNowHelp);
         //DebugUtil.positionObject(this.insideChapterTitle, "Inside", true);
         //DebugUtil.positionObject(this.insideChapterTitleLineTwo, "Inside Line 2", true);
 
@@ -214,7 +246,12 @@ export default class TimeController {
         this.chapterTitleLineTwo.position.y = -30;
         this.scene.add(this.chapterTitle)
 
+        this.helpText = this.generateHelpText();
+
         events.on("gaze_started", (hour) => {
+            this.idleTimer = 0;
+            this.helpTimer = 0;
+
             this.gazeHour = parseInt(hour);
             this.gazeCounter = 0;
 
@@ -233,13 +270,19 @@ export default class TimeController {
 
             this.showInsideChapterTitle(hour);
 
-            console.log("Time controller - Starting gaze counter for current hour " + this.gazeHour);
+            if (!this.usedSun) {
+                this.nowCount++;
+                if (this.nowCount >= this.NOW_HELP_TRIGGER) {
+                    this.insideChapterTitleLineNowHelp.visible = true;
+                }
+            }
+
+            console.log("Time controller - Starting gaze counter for current hour " + this.gazeHour, "now count",this.nowCount);
         });
 
         events.on("gaze_stopped", (hour) => {
             this.insideChapterTitle.visible = false;
             this.insideChapterTitleLineTwo.visible = false;
-            this.insideChapterTitleLineNow.visible = false;
             this.sunWorld = null;
             this.gazeHour = -1;
         });
@@ -248,6 +291,7 @@ export default class TimeController {
             this.insideChapterTitle.visible = false;
             this.insideChapterTitleLineTwo.visible = false;
             this.insideChapterTitleLineNow.visible = false;
+            this.insideChapterTitleLineNowHelp.visible = false;
             this.sunWorld = null;
         });
 
@@ -255,7 +299,43 @@ export default class TimeController {
             this.clockRunning = false;
         })
     }
+    generateHelpText() {
+        let TEXT_DEFINITION = {
+             align: textAlign.center, 
+             font: '70px Miriam Libre',
+             fillStyle: '#bfbfbf',
+             antialias: true,
+             shadow: true
+        }
+        let text = new MultilineText(2, TEXT_DEFINITION, 100);
+        text.init();
 
+        if (this.config.platform == "desktop") {
+            text.scale.multiplyScalar(0.00005);
+            text.position.set(0, 0, -0.1001);
+        } else {
+            text.scale.multiplyScalar(0.00151);
+            text.position.set(0, 0, -1.56);
+        }
+
+        if (this.config.language == "heb") {
+            text.setText([
+                ",אם ברצונך לשנות את השעה",
+                ".עליך להתמקד על אחת השמשות שמעליך",
+            ]);
+        } else {
+            text.setText([
+                "When you would like to change the time,",
+                "Focus your gaze on one of the suns above.",
+            ]);
+        }
+
+        text.hide(0);
+
+        //DebugUtil.positionObject(text, "Help text");
+        
+        return text;
+    }
     updateSunProgress() {
         let sum = 0;
         _.forEach(this.chapterProgress[this.currentChapter.hour], (value, key) => {
@@ -291,7 +371,24 @@ export default class TimeController {
             //console.log("Square RotY: ", this.square.mesh.rotation.y);
             this.updateRotation();
         }
-        if (this.clockRunning) {
+        if (this.clockRunning && !this.done) {
+            // Increase the idle timer
+            this.idleTimer += dt;
+            this.helpTimer += dt;
+
+            if (this.idleTimer > this.IDLE_TIMEOUT) {
+                console.log("Idle timer reached!", this.idleTimer);
+                this.setDaySpeed(0.5);
+                this.idleTimer = 0;
+                this.helpTimer = 0;
+            }
+
+            if (!this.usedSun && this.helpTimer > this.HELP_TIMEOUT) {
+                this.helpTimer = 0;
+                this.HELP_TIMEOUT = 60;
+                this.showHelp();
+            }
+
             this.currentHour += dt * this.daySpeed;
             if (this.currentHour >= 24) {
                 this.currentHour = 0;
@@ -303,46 +400,46 @@ export default class TimeController {
                   {
                 this.currentHour = this.nextHour;
                 let roundHour = this.nextHour;
-                this.setCurrentChapter();
                 if (roundHour != 0) {
+                    this.setCurrentChapter();
+                    console.log("Time - Updating next hour due to clock");
                     events.emit("hour_updated", roundHour);
-                } else {
-                    console.log("Updating next hour due to clock");
-                }
-                if (this.square.currentSun) {
-                    this.square.turnOffSun(this.square.currentSun);
-                }
-                this.square.currentSun = this.currentHour.toString();
-                this.square.turnOnSun(this.currentHour.toString(), true);
-                console.log("Time controller - next chapter");
+                    if (this.square.currentSun) {
+                        this.square.turnOffSun(this.square.currentSun);
+                    }
+                    this.square.currentSun = this.currentHour.toString();
+                    this.square.turnOnSun(this.currentHour.toString(), true);
+                    console.log("Time controller - next chapter");
 
-                if (!this.done) {
-                    this.daySpeed = this.config.daySpeed;
+                    if (!this.done) {
+                        this.setDaySpeed(this.config.daySpeed);
+                    }
+
+                    if (this.config.platform == "vive") {
+                        let previousHour = this.square.clockRotation * 180 / (Math.PI * 15);
+                        this.rotateClockwork(previousHour, roundHour);
+                    }
                 }
                 this.updateNextHour();
             }
+            //console.log("Current time: ", this.currentHour, this.clockRunning, this.done);
             this.sky.setTime(this.currentHour);
         }
-        if (!this.accelerating) {
-            if (this.rotateVelocity < 0) {
-                this.rotateVelocity = Math.min(0, this.rotateVelocity + 0.03);
-                if (this.rotateVelocity == 0) {
-                    this.stoppedTurning();
-                }
-            } else if (this.rotateVelocity > 0) {
-                this.rotateVelocity = Math.max(0, this.rotateVelocity - 0.03);
-                if (this.rotateVelocity == 0) {
-                    this.stoppedTurning();
-                }
-            } 
-        }
-
         if (this.gazeHour != -1 && this.gazeHour != this.currentChapter.hour) {
             this.gazeCounter += dt;
             if (this.gazeCounter > 0.5 && this.sky.clouds.currentState != "transition" ) {
                 this.sky.clouds.startTransition();
             }
             if (this.gazeCounter >= 3.2) {
+
+                if (!this.usedSun) {
+                    this.usedSun = true;
+                    this.insideChapterTitleLineNowHelp.visible = false;
+                    this.scene.remove(this.insideChapterTitleLineNowHelp);
+                    if (this.helpText.parent == this.camera) {
+                        this.camera.remove(this.helpText);
+                    }
+                }
 
                 let targetHour = this.gazeHour;
                 this.gazeHour = -1;
@@ -355,13 +452,27 @@ export default class TimeController {
         }
     }
 
+    showHelp() {
+        this.camera.add(this.helpText);
+        this.helpText.show(1)
+        .then(() => {
+            setTimeout(() => {
+                this.helpText.hide(1)
+                .then(() => {
+                    this.camera.remove(this.helpText);
+                });
+                this.helpTimer = 0;
+            },5000);
+        });
+    }
+
     clockworkTransitionTo(targetHour, time, usingGaze) {
         return new Promise((resolve, reject) => {
             if (targetHour == 0) {
                 targetHour = 24;
             }
             let baseHour = this.currentHour;
-            console.log("Time controller - Performing transition to " + targetHour + "!");
+            console.log("Time controller - Performing transition to " + targetHour + "! Stopping clock");
             this.clockRunning = false;
 
             if (usingGaze) {
@@ -386,25 +497,14 @@ export default class TimeController {
                 // Rotate the clockwork only on vive
                 if (this.config.platform != "desktop") {
                     setTimeout(() => {
-                        let targetRotationY = targetHour * 15;
-                        targetRotationY *= Math.PI / 180;
-                        console.log("Time controller - rotating square from ", this.square.clockRotation, " to ", targetRotationY);
-                        TweenMax.to(this.square, 7 * (Math.abs(targetHour - baseHour) * 0.5), {ease: Power2.easeInOut, delay: 1, clockRotation: targetRotationY, onComplete: () => {
-                            events.emit("angle_updated", this.currentHour);
-                            this.updateNextHour();
-                            if (this.currentHour == 0) {
-                                this.square.clockRotation = 0;
-                            } else if (!this.done) {
-                                this.sunGazer.active = true;
-                                this.clockRunning = true;
-                            }
-                        }, onUpdate: () => {events.emit("square_rotating")}});
+                        this.rotateClockwork(baseHour, targetHour);
                     },1000);
                 } else {
                     events.emit("angle_updated", this.currentHour);
                     this.updateNextHour();
                     if (this.currentHour != 0 && !this.done) {
                         this.sunGazer.active = true;
+                        console.log("Time controller Finished transition -Resuming clock")
                         this.clockRunning = true;
                     }
                 }
@@ -413,6 +513,27 @@ export default class TimeController {
                 this.sky.setTime(this.currentHour);
             }});
         })       
+    }
+
+    rotateClockwork(baseHour, targetHour) {
+        console.log("Time controller rotating clockwork from " + baseHour + " to " + targetHour);
+        let targetRotationY = targetHour * 15;
+        targetRotationY *= Math.PI / 180;
+        console.log("Time controller - rotating square from ", this.square.clockRotation, " to ", targetRotationY," Stopping clock");
+        this.sunGazer.active = false;
+        this.clockRunning = false;
+        TweenMax.to(this.square, 7 * (Math.abs(targetHour - baseHour) * 0.5), {ease: Power2.easeInOut, delay: 1, clockRotation: targetRotationY, onComplete: () => {
+            events.emit("angle_updated", this.currentHour);
+            this.updateNextHour();
+            if (this.currentHour == 0) {
+                this.square.clockRotation = 0;
+            } else if (!this.done) {
+                this.sunGazer.active = true;
+                if (!this.inShow) {
+                    this.clockRunning = true;
+                }
+            }
+        }, onUpdate: () => {events.emit("square_rotating")}});
     }
 
     setDaySpeed(speed) {
@@ -724,6 +845,14 @@ export default class TimeController {
                 this.insideChapterTitleLineNow.translateZ(5);
                 this.insideChapterTitleLineNow.quaternion.copy(this.camera.quaternion);
                 this.insideChapterTitleLineNow.translateY(2.5);
+
+                if (this.insideChapterTitleLineNowHelp.visible) {
+                    this.insideChapterTitleLineNowHelp.position.copy(this.sunWorld);
+                    this.insideChapterTitleLineNowHelp.lookAt(this.camera.position);
+                    this.insideChapterTitleLineNowHelp.translateZ(5);
+                    this.insideChapterTitleLineNowHelp.quaternion.copy(this.camera.quaternion);
+                    this.insideChapterTitleLineNowHelp.translateY(-2.5);
+                }
             }
         }
     }

@@ -226,7 +226,6 @@ export default class Character extends THREE.Object3D {
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {
                     console.log(this.props.name, "Character video ended");
-                    /*
                     this.idleVideo.pause();
                     this.idleVideo.unload();
                     this.soundManager.panorama.detach(this.audio);
@@ -235,7 +234,7 @@ export default class Character extends THREE.Object3D {
                     this.remove(this.idleVideo);
                     if (this.animation) {
                         this.remove(this.animation);
-                    }*/
+                    }
                     this.done = true;
                     events.emit("character_idle", this.props.name)
                     events.emit("character_ended", this.props.name)
@@ -520,7 +519,7 @@ export default class Character extends THREE.Object3D {
     onCollision() {
     //    console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
-        if (!this.colliding) {
+        if (this.active && !this.colliding) {
             this.colliding = true;
             // Avoiding 2 collisions at the same time
             setTimeout(() => {
