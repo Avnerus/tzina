@@ -362,7 +362,9 @@ body {
   z-index: 4;
   display: none;
   overflow: scroll !important;
+
 }
+
 #about_container::-webkit-scrollbar {
     display: none;
 }
@@ -561,6 +563,26 @@ body {
   width : 100px;
 
 }
+/* unvisited link */
+a:link {
+    color: green;
+}
+
+/* visited link */
+a:visited {
+    color: green;
+}
+
+/* mouse over link */
+a:hover {
+    color: red;
+}
+
+/* selected link */
+a:active {
+    color: yellow;
+}
+
 /*#legendIMG a: hover{
 
   filter:none;

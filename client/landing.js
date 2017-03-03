@@ -142,6 +142,7 @@ try {
     $('#landing_screen').delay(50).fadeIn(500, function () {
 
       console.log('Landing screen faded in');
+            // $('#div_id').readmore();
 
 
       //Disable mouse control on tree scene
@@ -192,12 +193,15 @@ try {
   //About
   $('#about').click(function () {
 
-    //Click sound
+  
+
+        //Click sound
     buttonClick.play();
 
     $('#landing_screen').fadeToggle(250);
 
     setTimeout(function () {
+
 
       buttonClick.pause();
 
