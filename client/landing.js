@@ -128,9 +128,12 @@ try {
     }, 1000);
 
   });
-
+  
+  var isReadMoreOpen = false;
   $('#about_readmore').click(function(){
-    $('.about_moretext').fadeToggle(250);
+      $('.about_moretext').fadeToggle(250);  
+      $('#about_readmore :nth-child(2)').fadeToggle(100);
+      $('#about_readmore :nth-child(1)').fadeToggle(100);
   });
 
   //Fade in the first screen from black after tree scene was loaded
