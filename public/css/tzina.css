@@ -4,9 +4,13 @@ html {
 }
 
 
-h1,h4{
+h1{
 
 font-family: "Miriam Libre", sans-serif;
+font-size: 2em;
+}
+h4{
+  font-family: "Miriam Libre", sans-serif;
 }
 p{
   font-family: "Assistant", serif;
@@ -253,6 +257,9 @@ body {
 .button:hover {
   text-decoration: line-through;
 }
+#readmore{
+  font-style: red;
+}
 
 .grayscale {
   -webkit-filter: grayscale(100%);
@@ -285,8 +292,8 @@ body {
 #headphones_solo {
   
   position: absolute;
-    top: 0; bottom:0; left: 0; right:0;
-    margin: auto;
+  top:30%;
+  /*  margin: auto;*/
 
   z-index: 6 !important;
 }
@@ -568,12 +575,12 @@ body {
 }
 /* unvisited link */
 a:link {
-    color: green;
+    color: red;
 }
 
 /* visited link */
 a:visited {
-    color: green;
+    color: red;
 }
 
 /* mouse over link */
