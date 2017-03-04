@@ -581,8 +581,12 @@ body {
   z-index: 2 !important;
 }
 
-.img.legendIMG{
-  width : 60px;
+img#legendIMG{
+  width : 200px;
+   /* -webkit-filter: grayscale(20%);*/
+  
+/*vertical-align: center;*/
+
 
 }
 /* unvisited link */
