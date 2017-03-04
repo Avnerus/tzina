@@ -205,7 +205,7 @@ try {
   //About
   $('#about').click(function () {
 
-  
+    $('#language').fadeToggle(250);
 
         //Click sound
     buttonClick.play();
