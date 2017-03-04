@@ -91,9 +91,10 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         }
 
         let agamTex = tex_loader.load( this.BASE_PATH + "/images/agamFigure.jpg" );
-        let agamMat = new THREE.MeshLambertMaterial({map: agamTex});
+        this.agamMat = new THREE.MeshLambertMaterial({map: agamTex});
         loader.load( this.BASE_PATH + "/models/agamFigure.json", (geometry, material) => {
-            this.agamArt = new THREE.Mesh( geometry, agamMat );
+            this.agamGeo = geometry;
+            this.agamArt = new THREE.Mesh( this.agamGeo, this.agamMat );
             this.agamArt.position.set(-.44, .32, -4.78);
             this.agamArt.scale.multiplyScalar(1.31);
             this.add(this.agamArt);
@@ -102,16 +103,18 @@ export default class Agam12PMAnimation extends THREE.Object3D {
 
         let agamSmallTex_1 = tex_loader.load( this.BASE_PATH + "/images/agamSmall_1.jpg" );
         let agamSmallTex_2 = tex_loader.load( this.BASE_PATH + "/images/agamSmall_2.jpg" );
-        let agamSMat1 = new THREE.MeshLambertMaterial({map: agamSmallTex_1});
-        let agamSMat2 = new THREE.MeshLambertMaterial({map: agamSmallTex_2});
+        this.agamSMat1 = new THREE.MeshLambertMaterial({map: agamSmallTex_1});
+        this.agamSMat2 = new THREE.MeshLambertMaterial({map: agamSmallTex_2});
         loader.load( this.BASE_PATH + "/models/agamSmall.json", (geometry, material) => {
-            this.agamSmall_1 = new THREE.Mesh( geometry, agamSMat1 );
+            this.agamGeoS = geometry;
+
+            this.agamSmall_1 = new THREE.Mesh( this.agamGeoS, this.agamSMat1 );
             this.agamSmall_1.position.set(2.88, .26, -2.21);
             this.agamSmall_1.scale.multiplyScalar(0.56);
             this.add(this.agamSmall_1);
             // DebugUtil.positionObject(this.agamSmall_1, "agamSmall_1");
 
-            this.agamSmall_2 = new THREE.Mesh( geometry, agamSMat2 );
+            this.agamSmall_2 = new THREE.Mesh( this.agamGeoS, this.agamSMat2 );
             this.agamSmall_2.position.set(-2, .18, -1.85);
             this.agamSmall_2.scale.multiplyScalar(0.5);
             this.add(this.agamSmall_2);
@@ -124,6 +127,10 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         DebugUtil.positionObject(testCube, "testCube");*/
 
         this.dummy = {opacity: 1};
+
+        events.on("experience_end", ()=>{
+            this.disposeAni();
+        });
 
         // DebugUtil.positionObject(this, "Agam Ani");
         //
@@ -152,6 +159,24 @@ export default class Agam12PMAnimation extends THREE.Object3D {
             }, onComplete: ()=>{
                 this.parent.fullVideo.setOpacity(0.0);
             } } );
+    }
+
+    disposeAni() {
+        this.remove(this.text);
+        this.remove(this.agamArt);
+        this.remove(this.agamSmall_1);
+        this.remove(this.agamSmall_2);
+
+        this.agamMat.map.dispose();
+        this.agamSMat1.map.dispose();
+        this.agamSMat2.map.dispose();
+        this.agamMat.dispose();
+        this.agamSMat1.dispose();
+        this.agamSMat2.dispose();
+        this.agamGeo.dispose();
+        this.agamGeoS.dispose();
+
+        console.log("dispose Agam ani!");
     }
 
     transX(geo, n){
