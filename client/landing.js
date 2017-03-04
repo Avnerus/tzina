@@ -129,14 +129,12 @@ try {
 
   });
   
-  var isReadMoreOpen = false;
   $('#about_readmore').click(function(){
       $('.about_moretext').fadeToggle(250);  
       $('#about_readmore :nth-child(2)').fadeToggle(100);
       $('#about_readmore :nth-child(1)').fadeToggle(100);
   });
 
-  var isReadMoreOpenHeb = false;
   $('#about_readmore_heb').click(function(){
       $('.about_moretext_heb').fadeToggle(250);  
       $('#about_readmore_heb :nth-child(2)').fadeToggle(100);
@@ -265,6 +263,9 @@ try {
   });
   //Change language functionallity
   $('#language').click(function () {
+
+    $("#about_grid_he").toggle();
+    $("#about_grid_en").toggle();
 
     $('#landing_screen').fadeOut(500, function () {
 

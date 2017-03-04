@@ -465,7 +465,6 @@ body {
 
 #about_grid_en {
   color: #fff;
-  display: none;
 }
 
 #about_grid_en img {
@@ -474,7 +473,7 @@ body {
 
 #about_grid_he {
   color: #fff;
-  /*display: none;*/
+  display: none;
 }
 
 #about_grid_he img {
