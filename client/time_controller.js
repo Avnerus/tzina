@@ -718,11 +718,13 @@ export default class TimeController {
             let hebChapter = _.find(ChaptersHeb, {hour: this.currentHour});
             MiscUtil.overwriteProps(this.currentChapter, hebChapter);
         }
-
-        if(this.chapterSounds[this.currentHour].VO.playedOnce){
-            this.chapterSounds[this.currentHour].ambience.play();
-        } else {
-            this.chapterSounds[this.currentHour].VO.play();
+        
+        if (this.chapterSounds[this.currentHour]){
+            if(this.chapterSounds[this.currentHour].VO.playedOnce){
+                this.chapterSounds[this.currentHour].ambience.sampler.play();
+            } else {
+                this.chapterSounds[this.currentHour].VO.sampler.play();
+            }
         }
         
     }
