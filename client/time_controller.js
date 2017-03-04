@@ -74,42 +74,64 @@ export default class TimeController {
             });
         });
 
-        //Load all the voice over chapter intros
-        Promise.all([
-            //Ambience with voice over
-            this.loadChapterVO("assets/sound/chapter_vo/7_" + this.config.language + ".ogg"),
-            this.loadChapterVO("assets/sound/chapter_vo/9_" + this.config.language + ".ogg"),
-            this.loadChapterVO("assets/sound/chapter_vo/12_" + this.config.language + ".ogg"),
-            this.loadChapterVO("assets/sound/chapter_vo/17_" + this.config.language + ".ogg"),
-            this.loadChapterVO("assets/sound/chapter_vo/19_" + this.config.language + ".ogg"),
-            //Ambience only
-            this.loadChapterVO("assets/sound/chapter_vo/ambience/7_ambience.ogg"),
-            this.loadChapterVO("assets/sound/chapter_vo/ambience/9_ambience.ogg"),
-            this.loadChapterVO("assets/sound/chapter_vo/ambience/12_ambience.ogg"),
-            this.loadChapterVO("assets/sound/chapter_vo/ambience/17_ambience.ogg"),
-            this.loadChapterVO("assets/sound/chapter_vo/ambience/19_ambience.ogg")
-        ]).then(sounds=>{
-            //Ambience with voice over plus playedOnce bool
-            this.sevenAM = sounds[0];
-            this.sevenAM.playedOnce = false;
-            this.nineAM = sounds[1];
-            this.nineAM.playedOnce = false;
-            this.twelvePM = sounds[2];
-            this.twelvePM.playedOnce = false;
-            this.fivePM = sounds[3];
-            this.fivePM.playedOnce = false;
-            this.sevenPM = sounds[4];
-            this.sevenPM.playedOnce = false;
-            //Ambience only
-            this.ambience7 = sounds[5];
-            this.ambience9 = sounds[6];
-            this.ambience12 = sounds[7];
-            this.ambience17 = sounds[8];
-            this.ambience19 = sounds[9];
+        this.chapterSounds = {};
 
-        }).catch(error=>{
-            console.log(error);
+        Promise.all([
+            this.loadChapterSounds("VO", 7),
+            this.loadChapterSounds("VO", 9),
+            this.loadChapterSounds("VO", 12),
+            this.loadChapterSounds("VO", 17),
+            this.loadChapterSounds("VO", 19),
+            this.loadChapterSounds("ambience", 7),
+            this.loadChapterSounds("ambience", 9),
+            this.loadChapterSounds("ambience", 12),
+            this.loadChapterSounds("ambience", 17),
+            this.loadChapterSounds("ambience", 19)   
+        ]).then(sounds=>{
+            sounds.forEach((sound)=>{
+                this.chapterSounds[sound.hour][sound.type] = sound;
+                console.log(sound);
+            });
+        }).catch(err=>{
+            console.warn("An error with loading chapter sounds " + err);
         });
+
+        //Load all the voice over chapter intros
+        // Promise.all([
+        //     //Ambience with voice over
+        //     this.loadChapterVO("assets/sound/chapter_vo/7_" + this.config.language + ".ogg"),
+        //     this.loadChapterVO("assets/sound/chapter_vo/9_" + this.config.language + ".ogg"),
+        //     this.loadChapterVO("assets/sound/chapter_vo/12_" + this.config.language + ".ogg"),
+        //     this.loadChapterVO("assets/sound/chapter_vo/17_" + this.config.language + ".ogg"),
+        //     this.loadChapterVO("assets/sound/chapter_vo/19_" + this.config.language + ".ogg"),
+        //     //Ambience only
+        //     this.loadChapterVO("assets/sound/chapter_vo/ambience/7_ambience.ogg"),
+        //     this.loadChapterVO("assets/sound/chapter_vo/ambience/9_ambience.ogg"),
+        //     this.loadChapterVO("assets/sound/chapter_vo/ambience/12_ambience.ogg"),
+        //     this.loadChapterVO("assets/sound/chapter_vo/ambience/17_ambience.ogg"),
+        //     this.loadChapterVO("assets/sound/chapter_vo/ambience/19_ambience.ogg")
+        // ]).then(sounds=>{
+        //     //Ambience with voice over plus playedOnce bool
+        //     this.sevenAM = sounds[0];
+        //     this.sevenAM.playedOnce = false;
+        //     this.nineAM = sounds[1];
+        //     this.nineAM.playedOnce = false;
+        //     this.twelvePM = sounds[2];
+        //     this.twelvePM.playedOnce = false;
+        //     this.fivePM = sounds[3];
+        //     this.fivePM.playedOnce = false;
+        //     this.sevenPM = sounds[4];
+        //     this.sevenPM.playedOnce = false;
+        //     //Ambience only
+        //     this.ambience7 = sounds[5];
+        //     this.ambience9 = sounds[6];
+        //     this.ambience12 = sounds[7];
+        //     this.ambience17 = sounds[8];
+        //     this.ambience19 = sounds[9];
+
+        // }).catch(error=>{
+        //     console.log(error);
+        // });
 
         console.log("Total experience time:", this.totalExperienceTime);
 
@@ -694,60 +716,11 @@ export default class TimeController {
             MiscUtil.overwriteProps(this.currentChapter, hebChapter);
         }
 
-        switch (this.currentHour) {
-            case 7:
-                console.log('7AM chapter sound started');
-                if(!this.sevenAM.playedOnce){
-                    this.sevenAM.play();
-                    this.sevenAM.playedOnce = true;
-                } else {
-                    this.sevenAM.unload();
-                    this.ambience7.play();
-                }               
-                break;
-            case 9:
-                console.log('9AM chapter sound started');
-                if(!this.nineAM.playedOnce){
-                    this.nineAM.play();
-                    this.nineAM.playedOnce = true;
-                } else {
-                    this.nineAM.unload();
-                    this.ambience9.play();
-                }      
-                break;
-            case 12:
-                console.log('12pm chapter sound started');
-                if(!this.twelvePM.playedOnce){
-                    this.twelvePM.play();
-                    this.twelvePM.playedOnce = true;
-                } else {
-                    this.twelvePM.unload();
-                    this.ambience12.play();
-                }      
-                break;
-            case 17:
-                console.log('17PM chapter sound started');
-                if(!this.fivePM.playedOnce){
-                    this.fivePM.play();
-                    this.fivePM.playedOnce = true;
-                } else {
-                    this.fivePM.unload();
-                    this.ambience17.play();
-                }              
-                break;
-            case 19:
-                console.log('19PM chapter sound started');
-                if(!this.sevenPM.playedOnce){
-                    this.sevenPM.play();
-                    this.sevenPM.playedOnce = true;
-                } else {
-                    this.sevenPM.unload();
-                    this.ambience19.play();
-                }               
-                break;
-            default:
-                console.log("Some hour was chosen but we don't have it?");
-        }
+        // if(this.chapterSounds[this.currentHour].VO.playedOnce){
+        //     this.chapterSounds[this.currentHour].ambience.play();
+        // } else {
+        //     this.chapterSounds[this.currentHour].VO.play();
+        // }
         
     }
 
@@ -894,15 +867,39 @@ export default class TimeController {
         this.updateNextHour();
     }
 
-    loadChapterVO(path) {
-        return new Promise((resolve, reject) => {
-            console.log("Loading chapter VO audio ", path);
-            this.soundManager.createStaticSoundSampler(path, (sampler) => {
-                console.log("Loaded chapter VO audio ", sampler);                              
-                //This isn't meant to be a part of the blur effect anyway so no need to append it
-                //this.soundManager.panorama.append(sampler);
-                resolve(sampler);
+    // loadChapterVO(path) {
+    //     return new Promise((resolve, reject) => {
+    //         console.log("Loading chapter VO audio ", path);
+    //         this.soundManager.createStaticSoundSampler(path, (sampler) => {
+    //             console.log("Loaded chapter VO audio ", sampler);                              
+    //             //This isn't meant to be a part of the blur effect anyway so no need to append it
+    //             //this.soundManager.panorama.append(sampler);
+    //             resolve(sampler);
+    //         });
+    //     });
+    // }
+    loadChapterSounds(type, hour){
+        if(type == "ambience"){
+            return new Promise((resolve, reject) => {
+                this.soundManager.createStaticSoundSampler("assets/sound/chapter_vo/ambience/" + hour + "_" + type + ".ogg", sampler=>{
+                    resolve({
+                        sampler: sampler,
+                        type: type,
+                        hour: hour
+                    });
+                });
             });
-        });
+        } else if(type == "VO"){
+            return new Promise((resolve, reject) => {
+                this.soundManager.createStaticSoundSampler("assets/sound/chapter_vo/" + hour + "_" + this.config.language + ".ogg", sampler=>{
+                    resolve({
+                        sampler: sampler,
+                        type: type,
+                        hour: hour,
+                        playedOnce: false
+                    });
+                });
+            });
+        }
     }
 }
