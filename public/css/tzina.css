@@ -463,13 +463,21 @@ body {
   left: 30%;
 }
 
-#about_grid {
-  /*overflow: scroll;*/
-  /*height: 100%;*/
+#about_grid_en {
   color: #fff;
+  display: none;
 }
 
-#about_grid img {
+#about_grid_en img {
+  width: 100%;
+}
+
+#about_grid_he {
+  color: #fff;
+  /*display: none;*/
+}
+
+#about_grid_he img {
   width: 100%;
 }
 
@@ -614,6 +622,10 @@ font-size: .8em;
 letter-spacing: 2px;
   text-align: left;
 
+}
+.about_paragraph_he{
+  text-align: right;
+  direction: rtl;
 }
 
 /*#legendIMG a: hover{
