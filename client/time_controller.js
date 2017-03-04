@@ -899,7 +899,8 @@ export default class TimeController {
             console.log("Loading chapter VO audio ", path);
             this.soundManager.createStaticSoundSampler(path, (sampler) => {
                 console.log("Loaded chapter VO audio ", sampler);                              
-                this.soundManager.panorama.append(sampler);
+                //This isn't meant to be a part of the blur effect anyway so no need to append it
+                //this.soundManager.panorama.append(sampler);
                 resolve(sampler);
             });
         });
