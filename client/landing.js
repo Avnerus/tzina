@@ -136,6 +136,13 @@ try {
       $('#about_readmore :nth-child(1)').fadeToggle(100);
   });
 
+  var isReadMoreOpenHeb = false;
+  $('#about_readmore_heb').click(function(){
+      $('.about_moretext_heb').fadeToggle(250);  
+      $('#about_readmore_heb :nth-child(2)').fadeToggle(100);
+      $('#about_readmore_heb :nth-child(1)').fadeToggle(100);
+  });
+
   //Fade in the first screen from black after tree scene was loaded
   // loadingManager.onLoad = function(){
 

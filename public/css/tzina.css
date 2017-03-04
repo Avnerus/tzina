@@ -627,7 +627,23 @@ letter-spacing: 2px;
   text-align: right;
   direction: rtl;
 }
+.about_moretext_heb{
+  display: none;
 
+  text-align: left;
+}
+#about_readmore_heb :nth-child(2){
+ 
+  display: none;
+}
+#about_readmore_heb {
+/*   color:red;*/
+font-family: "Miriam Libre", sans-serif;
+font-size: .8em;
+letter-spacing: 2px;
+  text-align: left;
+
+}
 /*#legendIMG a: hover{
 
   filter:none;
