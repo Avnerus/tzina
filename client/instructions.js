@@ -75,7 +75,7 @@ export default class Instructions {
                 }
                 this.square.extras.showExtras();
 
-            },500);
+            },1000);
         } else {
             console.log("Instructions starting");
             this.camera.add(this.instructionText);
