@@ -85,7 +85,7 @@ export default class HannahAnimation extends THREE.Object3D {
         loader.load(this.BASE_PATH + "/models/leavesss_less_s.js", (geometry, material) => {
             this.leafGeo = geometry;
             //
-            this.domeRelatedGeos.push(this.leafGeo);
+            scope.domeRelatedGeos.push(this.leafGeo);
 
             // ref: https://stemkoski.github.io/Three.js/Vertex-Colors.html
             let face, numberOfSides, vertexIndex, point, color;
@@ -142,7 +142,7 @@ export default class HannahAnimation extends THREE.Object3D {
                 m1.lookAt( centerV, vA, upp );
                 fMesh.mesh.quaternion.setFromRotationMatrix( m1 );
 
-                this.domeMorphTargets.push( fMesh );
+                scope.domeMorphTargets.push( fMesh );
             }
             console.log("domeMorphTargets length: " + this.domeMorphTargets.length);
 
@@ -181,13 +181,13 @@ export default class HannahAnimation extends THREE.Object3D {
         for(let i = 0; i < hannahRoomFiles.length; i++){
             loader.load( hannahRoomFiles[i], function(geometry){
                 //
-                this.roomGeos.push(geometry);
+                scope.roomGeos.push(geometry);
 
                 let colorValue = Math.random() * 0xFF | 0;
                 let colorString = "rgb("+colorValue+","+colorValue+","+colorValue+")";
                 let mat = new THREE.MeshLambertMaterial({ color: colorString });
                 //
-                this.roomMats.push(mat);
+                scope.roomMats.push(mat);
 
                 let meshhh = new THREE.Mesh(geometry, mat);
                 scope.hannahRoom.add(meshhh);
