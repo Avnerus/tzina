@@ -14,7 +14,7 @@ export default class Ending {
         this.square = square;
         this.introAni = introAni;
 
-        this.debug = false;
+        this.debug = true;
 
         this.endCredits = new EndCredits(this.camera);
         this.faded = false;
@@ -181,7 +181,11 @@ export default class Ending {
         this.spotLight.distance = 0;
         this.spotLight.decay = 1;
         this.spotLight.penumbra = 0.8;
-        this.spotLight.position.set(-6,2.4,4.14);
+        if (this.config.platform == "vive") {
+            this.spotLight.position.set(-6,2.4,4.14);
+        } else {
+            this.spotLight.position.set(-35.94,9.16,18.18);
+        }
 
         this.text = this.generateText();
 
@@ -206,20 +210,16 @@ export default class Ending {
         if (this.config.language == "heb") {
             this.CHARACTER_TEXTS = this.CHARACTER_TEXTS_HEB;
         }
-        this.endCredits.init();
-        this.endCredits.scale.set(0.019, 0.019, 0.019);
-        this.endCredits.position.set(30.51, 24, -7.18);
-        this.endCredits.rotation.y = 285 * Math.PI /180;
-
         this.floodLight = new THREE.PointLight( 0xffffff, 0.6, 13); // 5
         this.floodLight.position.set(-15.3,2.36,2.36);
-        /*
-        events.emit("add_gui", {folder:"floodLight " + i, listen:true, step: 0.1}, this.floodLight, "decay",1,2);
-        events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "x", -100, 100);
-        events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "y", -100, 100);
-        events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "z", -100, 100);
-        events.emit("add_gui", {folder:"floodLight " + i, listen:true}, this.floodLight, "intensity",0,2);
-        events.emit("add_gui", {folder:"floodLight " + i, listen:true}, this.floodLight, "distance",0,100);*/
+        if (this.debug) {
+            events.emit("add_gui", {folder:"floodLight " + i, listen:true, step: 0.1}, this.floodLight, "decay",1,2);
+            events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "x", -100, 100);
+            events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "y", -100, 100);
+            events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "z", -100, 100);
+            events.emit("add_gui", {folder:"floodLight " + i, listen:true}, this.floodLight, "intensity",0,2);
+            events.emit("add_gui", {folder:"floodLight " + i, listen:true}, this.floodLight, "distance",0,100);
+        }
         this.scene.add(this.floodLight);
 
         this.fadeOut()
@@ -228,6 +228,7 @@ export default class Ending {
             this.timeController.jumpToTime(0);
             this.square.suns.visible = false;
             this.square.pool.enableWaves = false;
+            this.square.fountainLight.intensity = 0.2;
 
             if (this.config.platform == "vive") {
                 this.square.clockRotation = 17 * 15 * Math.PI / 180; // Best view 
@@ -243,7 +244,6 @@ export default class Ending {
             this.introAni.createSnowParticle();
             this.introAni.simulationShader.uniforms.squareRadius.value = 0.0;
             this.introAni.fbo.particles.position.x = -38;
-
 
             setTimeout(() => {
                 this.fadeIn()
@@ -308,7 +308,7 @@ export default class Ending {
             this.square.add(this.miriamPlane);
         } 
         setTimeout(() => {
-            targetCharacter.idleVideo.pause();
+            this.characterController.removeCharacter(nextText);
             if (nextText == "Miriam") {
                 this.square.remove(this.miriamPlane);
             }
@@ -316,8 +316,32 @@ export default class Ending {
                 this.showNextText();
             } else {
                 this.text.hide(1);
+                setTimeout(() => {
+                    this.showCredits();
+                },3000);
             }
         },10000); 
+    }
+    showCredits() {
+        this.fadeOut()
+        .then(() => {
+            this.introAni.disposeAni();
+            this.camera.add(this.endCredits);
+            this.endCredits.scale.set(0.077, 0.077, 0.077);
+            this.endCredits.rotation.y = 0;
+            this.endCredits.init();
+            if (this.config.platform == "vive") {
+                this.endCredits.position.set(-0.02,-0.08,-60);
+                this.square.position.set(0,-15,-150);
+            } else {
+                this.endCredits.position.set(-0.02,-0.08,-50);
+                this.camera.position.set(0, 15, 150);
+            }
+            this.fadeIn()
+            .then(() => {
+                this.endCredits.play();
+            });
+        });
     }
     fadeIn() {
         return new Promise((resolve, reject) => {
