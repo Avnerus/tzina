@@ -120,7 +120,7 @@ export default class Square extends THREE.Object3D{
             this.mesh.rotation.order = "YXZ";
 
             this.colliders = results[4];
-            //this.mesh.add(this.colliders);
+            this.mesh.add(this.colliders);
 
             this.benches = results[5];
             this.benches.rotation.order = "YXZ";
@@ -646,7 +646,7 @@ export default class Square extends THREE.Object3D{
             let loader = new THREE.ObjectLoader(loadingManager);
             loader.load(COLLIDERS_PATH,( obj ) => {
                 let colliders;
-                obj.children  = _.filter(obj.children, function(o) { return (o.name != "BenchColliders2" && o.name != "BenchColliders"); });
+                obj.children  = _.filter(obj.children, function(o) { return (o.name != "BenchColliders2" && o.name != "BenchColliders" && o.children.length > 1); });
                 obj.children.forEach((o) => {o.children.splice(0,1)});
                 console.log("Loaded square colliders ", obj);
                 resolve(obj);
@@ -806,19 +806,15 @@ export default class Square extends THREE.Object3D{
     }
 
     addColliders() {
-        this.mesh.updateMatrixWorld(true);
-        //let aroundFountain  = this.mesh.getObjectByName("f_11_SubMesh 0");
-        /*
-        this.colliders.forEach((collider) => {
-            collider.matrixWorld.multiply(this.mesh.matrixWorld);
-        })*/
         let aroundFountain  = this.fountainMesh.getObjectByName("f_11_SubMesh 0");
         aroundFountain.onCollision = (distance) => {
             events.emit("fountain_collision", distance);
         }
-        //let aroundFountain  = this.mesh.getObjectByName("fntn");
-        //this.collisionManager.refreshSquareColliders(this.colliders.children);
-        this.collisionManager.refreshSquareColliders([aroundFountain]);
+        if (this.config.platform == "desktop") {
+            this.collisionManager.refreshSquareColliders([...this.colliders.children, aroundFountain]);
+        } else {
+            this.collisionManager.refreshSquareColliders([aroundFountain]);
+        }
     }
 
     getSphereMesh() {

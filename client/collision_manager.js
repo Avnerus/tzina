@@ -21,8 +21,10 @@ export default class CollisionManager {
         this.characterObstacleInfo = [];
 
         this.squareObstacles = [];
+        this.squareEventObstacles = [];
         this.squareDebug = [];
         this.squareMeshes = [];
+        this.squareEventMeshes = [];
 
 
         this.climbingStairs = false;
@@ -52,7 +54,9 @@ export default class CollisionManager {
             }
         }
         this.squareObstacles.splice(0);
+        this.squareEventObstacles.splice(0);
         this.squareMeshes.splice(0);
+        this.squareEventMeshes.splice(0);
 
         for (let i = 0; i < colliders.length; i++) {
             this.addBoundingBox(colliders[i]);
@@ -77,13 +81,11 @@ export default class CollisionManager {
         });
 
         // Square
-        boxIntersect(this.playerBox, this.squareObstacles, (i,j) => {
+        boxIntersect(this.playerBox, this.squareEventObstacles, (i,j) => {
             let distance = this.player.position.distanceTo(
-                new THREE.Vector3().setFromMatrixPosition(this.squareMeshes[j].matrixWorld)
+                new THREE.Vector3().setFromMatrixPosition(this.squareEventMeshes[j].matrixWorld)
             );
-            if (this.squareMeshes[j].onCollision) {
-                this.squareMeshes[j].onCollision(distance);
-            }
+            this.squareEventMeshes[j].onCollision(distance);
         });
 
         this.gaze();
@@ -94,8 +96,6 @@ export default class CollisionManager {
 
     testMovement(source, destination) {
         return new Promise((resolve, reject) => {
-            resolve(true);
-            /*
             // Square
             this.meshColliders.splice(0);
             boxIntersect(this.playerBox, this.squareObstacles, (i,j) => {
@@ -103,7 +103,7 @@ export default class CollisionManager {
             });
             if (this.meshColliders.length > 0) {
                 let legs = new THREE.Vector3().copy(source);
-                legs.y = 21.7;
+                legs.y = 0;
 
                 let directionVector = new THREE.Vector3().copy(destination);
                 directionVector.sub(source).normalize();
@@ -120,7 +120,7 @@ export default class CollisionManager {
                 resolve(true);
             } else {
                 resolve(true);
-            }*/
+            }
         })
     }
 
@@ -239,15 +239,33 @@ export default class CollisionManager {
 
     addBoundingBox(obj) {
         //obj.children[0].material.wireframe = true;
-        //obj.children[0].material.visible = false;
         let bbox = new THREE.BoundingBoxHelper(obj,0x00ff00);
+        //console.log("Add bounding box", obj);
         bbox.update();
         if (this.debugCollisions) {
             console.log("Collision bounding box", bbox);
             this.scene.add(bbox);
             this.squareDebug.push(bbox);
         }
-        this.squareMeshes.push(obj);
+        let mesh;
+        if (obj.type == "Mesh") {
+            mesh = obj;
+        } else {
+            mesh = obj.children[0];
+            mesh.material.visible = false; // A specially crafted collider
+        }
+        if (obj.onCollision) {
+            this.squareEventMeshes.push(mesh);
+            this.squareEventObstacles.push([
+                bbox.box.min.x,
+                bbox.box.min.y,
+                bbox.box.min.z,
+                bbox.box.max.x,
+                bbox.box.max.y,
+                bbox.box.max.z
+            ]);
+        } 
+        this.squareMeshes.push(mesh);
         this.squareObstacles.push([
             bbox.box.min.x,
             bbox.box.min.y,

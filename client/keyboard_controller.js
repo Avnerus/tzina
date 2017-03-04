@@ -151,9 +151,7 @@ export default class KeyboardController {
                     .then((result) => {
                         if (result) {
                             this.camera.position.copy(target);
-                        } else {
-                            console.log("NO GO");
-                        }
+                        } 
                     }); 
                 } else {
                     this.camera.position.copy(target);
