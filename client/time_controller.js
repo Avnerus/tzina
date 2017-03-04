@@ -682,13 +682,17 @@ export default class TimeController {
             MiscUtil.overwriteProps(this.currentChapter, hebChapter);
         }
 
+        //this.clearVoiceovers();
+
         if (this.chapterSounds[this.currentHour]){
             if(this.chapterSounds[this.currentHour].VO.playedOnce){
                 this.chapterSounds[this.currentHour].ambience.sampler.play();
             } else {
                 this.chapterSounds[this.currentHour].VO.sampler.play();
+                this.chapterSounds[this.currentHour].VO.playedOnce = true;
             }
         }
+        
         
     }
 
@@ -836,17 +840,17 @@ export default class TimeController {
     }
 
     clearVoiceovers() {
-        this.chapterSounds.forEach((chapterSound) => {
-            if (chapterSound.VO && chapterSound.VO.playedOnce) {
-                unloadChapterSound(chapterSound);
-            }    
-        })
+            this.chapterSounds.forEach((chapterSound) => {
+                if (chapterSound.VO && chapterSound.VO.playedOnce) {
+                    this.unloadChapterSound(chapterSound);
+                }    
+            });
     } 
 
     unloadChapterSound(chapter){
         chapter.sampler.stop();
         chapter.sampler.unload();
-        delete this.chapterSounds[chapter];
+        delete this.chapterSounds[chapter.hour];
     }
     loadChapterSounds(type, hour) {
         return new Promise((resolve, reject) => {
