@@ -719,11 +719,11 @@ export default class TimeController {
             MiscUtil.overwriteProps(this.currentChapter, hebChapter);
         }
 
-        // if(this.chapterSounds[this.currentHour].VO.playedOnce){
-        //     this.chapterSounds[this.currentHour].ambience.play();
-        // } else {
-        //     this.chapterSounds[this.currentHour].VO.play();
-        // }
+        if(this.chapterSounds[this.currentHour].VO.playedOnce){
+            this.chapterSounds[this.currentHour].ambience.play();
+        } else {
+            this.chapterSounds[this.currentHour].VO.play();
+        }
         
     }
 
