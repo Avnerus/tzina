@@ -27,16 +27,17 @@ export default class Coin extends THREE.Object3D  {
         this.activeCoins = [];
         this.beLookedCount = 0;
 
-        this.toCheck = false;
+        this.toCheck = false; // determines if call update() in game.js or not
         this.coinTimestamp = -1;
         this.currentOnCharacter = null;
         this.isShining = false;
         this.tweenAnimCollectors = [];
+        this.coinsDeleted = false;
 
         let tex_loader = new THREE.TextureLoader(loadingManager);
-        let tex_map = tex_loader.load( this.BASE_PATH + "images/coin.jpg" );
+        //let tex_map = tex_loader.load( this.BASE_PATH + "images/coin.jpg" );
         let NRM_map = tex_loader.load( this.BASE_PATH + "images/coin_NRM.png" );
-        let DISP_map = tex_loader.load( this.BASE_PATH + "images/coin_DISP.png" );
+        //let DISP_map = tex_loader.load( this.BASE_PATH + "images/coin_DISP.png" );
         this.coinMat = new THREE.MeshPhongMaterial( {
             color: 0xebc41c,
             normalMap: NRM_map,
@@ -63,8 +64,8 @@ export default class Coin extends THREE.Object3D  {
                     }                    
                 }
             }
-            DebugUtil.positionObject(this.coins['Itzhak'].coin, "Coin Itzhak");
-            DebugUtil.positionObject(this.coins['Lupo5PM'].coin, "Coin Lupo5PM");
+            //DebugUtil.positionObject(this.coins['Itzhak'].coin, "Coin Itzhak");
+            //DebugUtil.positionObject(this.coins['Lupo5PM'].coin, "Coin Lupo5PM");
         });
 
         events.on("character_playing", (name) => {
@@ -74,10 +75,20 @@ export default class Coin extends THREE.Object3D  {
                 this.reset();
 
                 // start new character if hasn't got 2 coins to be looked yet
-                if(this.beLookedCount<2) {
+                // CHANGE_TO: if hasn't got 3 coins to be looked + don't do 2nd one
+                if(this.beLookedCount==1) {
+                    // skip the 2nd CH
+                    this.currentOnCharacter = name;
+                    this.beLookedCount++;
+                    this.coins[this.currentOnCharacter].beLooked = true;
+                    this.toCheck = false;
+                    console.log("skip the 2nd coin for " + name);
+                }
+                else if(this.beLookedCount<3) {
                     this.coins[name].coin.visible = true;
                     this.toCheck = true;
                     this.currentOnCharacter = name;
+                    console.log("show coin for " + name);
                 }
             }            
         });
@@ -122,11 +133,28 @@ export default class Coin extends THREE.Object3D  {
         }        
 
         // if this.beLookedCount==2, job done!! never starts againn
-        if (this.beLookedCount==2) {
+        if (this.beLookedCount==3) {
             this.toCheck = false;   // double-check
-            // delete all the coins??
+    
+            // delete all the coins
+            if(!this.coinsDeleted)
+                this.disposeCoins();
+
             // stop event.on??
         }
+    }
+
+    disposeCoins() {
+        console.log("delete all the coins!");
+
+        for( var key in this.coinsOffset) {
+            this.character_controller.characters[key].remove( this.coins[key].coin );
+        }
+        this.coinMat.normalMap.dispose();
+        this.coinMat.dispose();
+        this.coinGeo.dispose();
+
+        this.coinsDeleted = true;
     }
 
     update(camera, dt, et) {
@@ -162,11 +190,12 @@ export default class Coin extends THREE.Object3D  {
             // audio cue
 
             // rotate/spin + sink
+            // CHANGE_TO_NO_REACTION            
             for(let i=0; i<this.tweenAnimCollectors.length; i++){
                 this.tweenAnimCollectors[i].kill();
             }
             this.coins[this.currentOnCharacter].coin.rotation.set(0,0,0);
-
+            /*
             TweenMax.to( this.coins[this.currentOnCharacter].coin.rotation, .7, {
                 delay: 6, x: 90*Math.PI/180, onStart:()=>{
                     TweenMax.to( this.coins[this.currentOnCharacter].coin.position, .7, {
@@ -185,6 +214,7 @@ export default class Coin extends THREE.Object3D  {
                     });
                 }
             });
+            */
 
             // report to coinMaster
             this.beLookedCount++;
