@@ -211,6 +211,17 @@ export default class Ending {
         this.endCredits.position.set(30.51, 24, -7.18);
         this.endCredits.rotation.y = 285 * Math.PI /180;
 
+        this.floodLight = new THREE.PointLight( 0xffffff, 0.6, 13); // 5
+        this.floodLight.position.set(-15.3,2.36,2.36);
+        /*
+        events.emit("add_gui", {folder:"floodLight " + i, listen:true, step: 0.1}, this.floodLight, "decay",1,2);
+        events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "x", -100, 100);
+        events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "y", -100, 100);
+        events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "z", -100, 100);
+        events.emit("add_gui", {folder:"floodLight " + i, listen:true}, this.floodLight, "intensity",0,2);
+        events.emit("add_gui", {folder:"floodLight " + i, listen:true}, this.floodLight, "distance",0,100);*/
+        this.scene.add(this.floodLight);
+
         this.fadeOut()
         .then(() => {
             // Move to midnight

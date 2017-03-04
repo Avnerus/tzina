@@ -35,13 +35,12 @@ export default class Flood extends THREE.Object3D  {
         texture.repeat.set(10,10);
 
         let material = new THREE.MeshLambertMaterial({
-//           color: 0x99F9FF,
             opacity: 0.80,
             map:texture,
           //  shininess: 164,
             shading: THREE.FlatShading,
             transparent: true,
-            side: THREE.DoubleSide,
+            //side: THREE.DoubleSide,
             wireframe: false,
         });
         this.mesh = new THREE.Mesh(geometry, material);
