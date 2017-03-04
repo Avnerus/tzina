@@ -2,17 +2,17 @@ import Video360 from './util/video360'
 import DebugUtil from './util/debug'
 
 export default class EndCredits extends THREE.Object3D {
-    constructor() {
+    constructor(config) {
         super();
         console.log("End Credits constructed!")
         this.playing = false;
+        this.config = config;
     
     }
     init() {
         try {
-
             console.log("Credits init");
-            this.creditsVideo = new Video360("assets/end/credits.webm")
+            this.creditsVideo = new Video360("assets/end/credits_" + this.config.language + ".webm")
             this.creditsVideo.init();
 
             let titlePlaneGeo = new THREE.PlaneGeometry( 2048, 1024 );

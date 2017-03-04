@@ -21,5 +21,5 @@ export default {
     platform: "desktop", // desktop
     skipLanding: true,
     skipInstructions: true,
-    language: "eng"
+    language: "heb"
 }
