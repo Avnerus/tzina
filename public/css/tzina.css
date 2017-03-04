@@ -596,12 +596,12 @@ img#legendIMG:hover{
 
 /* unvisited link */
 a:link {
-    color: red;
+    color: #00ffce;
 }
 
 /* visited link */
 a:visited {
-    color: red;
+ color: #00ffce;
 }
 
 /* mouse over link */
