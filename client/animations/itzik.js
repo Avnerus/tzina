@@ -13,6 +13,7 @@ export default class ItzikAnimation extends THREE.Object3D {
     }
 
     setupAnim() {
+        let scope = this;
 
         // setup animation sequence
         this.animStart = false;
@@ -84,6 +85,8 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.benchTextures = [];
         this.benchTexturesNRM = [];
         this.benchMats = [];
+        // dispose
+        this.disposeRelatedGeos = [];
 
         for(let i=0; i<this.benchCount; i++){
             let bt = tex_loader.load( this.benchTexFiles[i] );
@@ -94,21 +97,22 @@ export default class ItzikAnimation extends THREE.Object3D {
             this.benchMats.push(bm);
         }
 
-        let cloudTex = tex_loader.load( this.BASE_PATH + "/images/clouds.jpg" );
-        let cloudMat = new THREE.MeshLambertMaterial({map: cloudTex});
+        this.cloudTex = tex_loader.load( this.BASE_PATH + "/images/clouds.jpg" );
+        this.cloudMat = new THREE.MeshLambertMaterial({map: this.cloudTex});
 
-        let itemsTex = tex_loader.load( this.BASE_PATH + "/images/items.jpg" );
-        let itemsMat = new THREE.MeshLambertMaterial({map: itemsTex});
-        let itemsTex2 = tex_loader.load( this.BASE_PATH + "/images/items2.png" );
-        let itemsMat2 = new THREE.MeshLambertMaterial({map: itemsTex2, transparent: true});
+        this.itemsTex = tex_loader.load( this.BASE_PATH + "/images/items.jpg" );
+        this.itemsMat = new THREE.MeshLambertMaterial({map: this.itemsTex});
+        this.itemsTex2 = tex_loader.load( this.BASE_PATH + "/images/items2.png" );
+        this.itemsMat2 = new THREE.MeshLambertMaterial({map: this.itemsTex2, transparent: true});
 
-        let smokeTex = tex_loader.load( this.BASE_PATH + "/images/smoke2.png" );
-        this.smokeMat = new THREE.SpriteMaterial( { map: smokeTex, color: 0x053d96, transparent: true, opacity: 0 } ); //0x053d96
+        this.smokeTex = tex_loader.load( this.BASE_PATH + "/images/smoke2.png" );
+        this.smokeMat = new THREE.SpriteMaterial( { map: this.smokeTex, color: 0x053d96, transparent: true, opacity: 0 } ); //0x053d96
         this.fog = new THREE.Object3D();
 
         for(let i=0; i<this.benchCount; i++){
             loader.load( this.cloudFiles[i], (geometry, material) => {
-                let tmpCloud = new THREE.Mesh( geometry, cloudMat );
+                scope.disposeRelatedGeos.push(geometry);
+                let tmpCloud = new THREE.Mesh( geometry, this.cloudMat );
 
                 // add point light
                     let pointLight = new THREE.PointLight( this.lightColor[i], 1, 2 );
@@ -123,7 +127,7 @@ export default class ItzikAnimation extends THREE.Object3D {
                 this.clouds[i] = tmpCloud;
 
                 if( i==(this.benchCount-1) ){
-                    this.loadModelItems( this.itemFiles, itemsMat, itemsMat2, loader );
+                    this.loadModelItems( this.itemFiles, this.itemsMat, this.itemsMat2, loader );
                 }
             });
         }
@@ -131,6 +135,10 @@ export default class ItzikAnimation extends THREE.Object3D {
         this.dummy = {opacity: 1};
 
         // DebugUtil.positionObject(this, "Itzik Ani");
+
+        events.on("experience_end", ()=>{
+            this.disposeAni();
+        });
 
         this.loadingManager.itemEnd("ItzikAnim");
     }
@@ -196,6 +204,27 @@ export default class ItzikAnimation extends THREE.Object3D {
         }
     }
 
+    disposeAni(){
+        // bench
+        this.remove(this.benchGroup);   // has clouds + items
+        for(var i=0; i<this.disposeRelatedGeos.length; i++){ this.disposeRelatedGeos[i].dispose(); }
+        for(var i=0; i<this.benchMats.length; i++){ this.benchMats[i].dispose(); }
+        for(var i=0; i<this.benchTextures.length; i++){ this.benchTextures[i].dispose(); }
+        for(var i=0; i<this.benchTexturesNRM.length; i++){ this.benchTexturesNRM[i].dispose(); }
+
+        // smoke, item, fog
+        this.cloudMat.dispose();
+        this.itemsMat.dispose();
+        this.itemsMat2.dispose();
+        this.smokeMat.dispose();
+        this.cloudTex.dispose();
+        this.itemsTex.dispose();
+        this.itemsTex2.dispose();
+        this.smokeTex.dispose();
+
+        console.log("dispose Itzik ani!");
+    }
+
     benchRotateNoScale_On(){
         let angle = Math.PI * 2 / this.benchCount;
         this.benchTimeline = new TimelineMax({repeat:-1});
@@ -227,6 +256,7 @@ export default class ItzikAnimation extends THREE.Object3D {
     loadModelItems( urls, mat, mat2, loader) {
         for(let i=0; i<urls.length; i++){
             loader.load( urls[i], (geometry, material) => {
+                this.disposeRelatedGeos.push(geometry);
 
                 if(i==3){
                     geometry.applyMatrix(new THREE.Matrix4().makeTranslation( -2, -1.5, 0 ) );
@@ -263,7 +293,9 @@ export default class ItzikAnimation extends THREE.Object3D {
         loader.load( url, (geometry, material) => {
 
             for(let i=0; i<this.clouds.length; i++){
-                let tmp_bench = new THREE.Mesh( geometry.clone(), this.benchMats[i] );
+                let _geo = geometry.clone();
+                this.disposeRelatedGeos.push(_geo);
+                let tmp_bench = new THREE.Mesh( _geo, this.benchMats[i] );
 
                 tmp_bench.position.set( Math.sin(Math.PI*2/10*this.b_offset)*this.b_radius, 0, Math.cos(Math.PI*2/10*this.b_offset)*this.b_radius );
                 tmp_bench.rotation.y = Math.PI*2/10*this.b_offset + Math.PI;
