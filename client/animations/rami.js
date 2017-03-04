@@ -110,18 +110,25 @@ export default class RamiAnimation extends THREE.Object3D {
           this.lookupTable.push(Math.random());
         }
 
+        // dispose
+        this.disposeRelatedGeos=[];
+        this.disposeRelatedTexs=[];
+
         let peacockTex = tex_loader.load( this.BASE_PATH + "/images/peacockB.jpg" );
         this.peacockTexAni = new TextureAnimator( peacockTex, 3, 1, 15, 60, [0,1,2,0,0,0,0,0,0,0,0,0,0,0,0] );
         peacockTex.wrapS = THREE.RepeatWrapping;
         peacockTex.wrapT = THREE.RepeatWrapping;
         peacockTex.repeat.set( 1,2 );
+        this.disposeRelatedTexs.push(peacockTex);
 
         let feathersTex = tex_loader.load( this.BASE_PATH + "/images/pea.jpg" );
         feathersTex.wrapS = THREE.RepeatWrapping;
         feathersTex.wrapT = THREE.RepeatWrapping;
         feathersTex.repeat.set( 5, 5 );
+        this.disposeRelatedTexs.push(feathersTex);
 
         let grassTex = tex_loader.load( this.BASE_PATH + "/images/redlight-thin.jpg" );
+        this.disposeRelatedTexs.push(grassTex);
         this.peacockMaterial = new THREE.MeshBasicMaterial({ map: peacockTex,
                                                             side: THREE.DoubleSide,
                                                             wireframe: true,
@@ -170,6 +177,10 @@ export default class RamiAnimation extends THREE.Object3D {
 
         // DebugUtil.positionObject(this, "Rami Ani");
         //
+        events.on("experience_end", ()=>{
+            this.disposeAni();
+        });
+        
         this.loadingManager.itemEnd("RamiAnim");
     }
 
@@ -231,6 +242,8 @@ export default class RamiAnimation extends THREE.Object3D {
         for(let i=0; i<files.length; i++){
             pLoader.load(files[i], (geometry)=>{
                 this.peacockGeos[i] = geometry;
+
+                this.disposeRelatedGeos.push(geometry);
             });
         }
     }
@@ -238,6 +251,7 @@ export default class RamiAnimation extends THREE.Object3D {
     initSPEParticles() {
         let p_tex_loader = new THREE.TextureLoader(this.loadingManager);
         let particleTex = p_tex_loader.load(this.BASE_PATH + '/images/feather_particle.jpg');
+        this.particleEmitters = [];
 
         this.particleGroup = new SPE.Group({
             texture: {
@@ -283,6 +297,8 @@ export default class RamiAnimation extends THREE.Object3D {
                 activeMultiplier: 1
             });
             this.particleGroup.addEmitter( emitter );
+
+            this.particleEmitters.push(emitter);
         // }
         this.add( this.particleGroup.mesh );
     }
@@ -365,6 +381,27 @@ export default class RamiAnimation extends THREE.Object3D {
             x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, onComplete: ()=>{
             this.parent.fullVideo.setOpacity(0.0);
         } } );
+    }
+
+    disposeAni(){
+        // peacock
+        this.remove(this.peacock);
+        this.peacockMaterial.dispose();
+
+        // FBO
+        this.remove( this.fbo.particles );
+        this.fbo.particles.geometry.dispose();
+
+        // SPE
+        this.remove( this.particleGroup.mesh );
+        this.particleEmitters.forEach( (e)=>{ this.particleGroup.removeEmitter(e); } );
+        this.particleGroup.dispose();
+
+        // all the rest
+        for(var i=0; i<this.disposeRelatedGeos.length; i++){ this.disposeRelatedGeos[i].dispose(); }
+        for(var i=0; i<this.disposeRelatedTexs.length; i++){ this.disposeRelatedTexs[i].dispose(); }
+
+        console.log("dispose Rami ani!");
     }
 
     clamp(num, min, max) {
