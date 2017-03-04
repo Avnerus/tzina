@@ -301,6 +301,7 @@ export default class Square extends THREE.Object3D{
 
         events.on("angle_updated", (hour) => {
             console.log("Square angle updated. Adding colliders");
+            this.updateMatrixWorld(true);
             this.addColliders();
             this.setSquareMiddle(); 
         });

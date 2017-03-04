@@ -315,6 +315,7 @@ export default class Character extends THREE.Object3D {
             );
         }
         this.active = true;
+        this.onHold = false;
     }
 
     unload() {
@@ -493,7 +494,7 @@ export default class Character extends THREE.Object3D {
         }
     }
     onCollision() {
-    //    console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);
+        //console.log("Collision!! ", this.onHold, this.props.name, this.inControl, this.active, this.playingFull, this.done);
         this.timeSinceCollision = 0;
         if (this.active && !this.colliding) {
             this.colliding = true;
