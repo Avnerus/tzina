@@ -18,6 +18,8 @@ export default class HannahAnimation extends THREE.Object3D {
     setupAnim() {
         // DebugUtil.positionObject(this, "HannahAni");
 
+        let scope = this;
+
         this.loadingManager.itemStart("HannahAnim");
         this.domeMorphTargets = [];
         this.perlin = new ImprovedNoise();
@@ -51,12 +53,21 @@ export default class HannahAnimation extends THREE.Object3D {
         let p_tex_loader = new THREE.TextureLoader(this.loadingManager);
 
         let twigGeo, leafGeo, twigMat, leafMat; //evilGeo, evilMat
+        // dispose
+        this.hannahRoom = new THREE.Object3D();
+        this.domeRelatedGeos = [];
+        this.domeRelatedMats = [];
+        this.domeRelatedTexs = [];
 
         leafMat = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors, wireframe: true } );
+        //
+        this.domeRelatedMats.push(leafMat);
 
         this.evilTex = p_tex_loader.load(this.BASE_PATH + '/images/spike3.jpg');
 
         twigMat = new THREE.MeshBasicMaterial( {color: 0x985a17, wireframe: true} );
+        //
+        this.domeRelatedMats.push(twigMat);
 
         this.evilTex.wrapS = THREE.RepeatWrapping;
         this.evilTex.wrapT = THREE.RepeatWrapping;
@@ -73,6 +84,8 @@ export default class HannahAnimation extends THREE.Object3D {
         });
         loader.load(this.BASE_PATH + "/models/leavesss_less_s.js", (geometry, material) => {
             this.leafGeo = geometry;
+            //
+            this.domeRelatedGeos.push(this.leafGeo);
 
             // ref: https://stemkoski.github.io/Three.js/Vertex-Colors.html
             let face, numberOfSides, vertexIndex, point, color;
@@ -99,6 +112,8 @@ export default class HannahAnimation extends THREE.Object3D {
 
         loader.load(this.BASE_PATH + "/models/twig_s.js", function(geometry, material){
             twigGeo = geometry;
+            //
+            scope.domeRelatedGeos.push(twigGeo);
         });
 
         this.loadModelDome(this.BASE_PATH + '/models/shield_s.js', this.BASE_PATH + '/models/dome_s.js', this.BASE_PATH + '/models/collapse_s.js', this.BASE_PATH + '/models/exitCover.json')
@@ -134,36 +149,53 @@ export default class HannahAnimation extends THREE.Object3D {
             // this.updateVertices();
             this.initParticles();
         });
-        let hannahRoom = new THREE.Object3D();
+        
+        // dispose
+        this.menTexs = [];
+        this.menMats = [];
 
         // DOODLE_MEN
-        let menGeometry = new THREE.PlaneGeometry( 5, 10 );
+        this.menGeometry = new THREE.PlaneGeometry( 5, 10 );
         for(let i = 0; i < doodleMenTexFiles.length; i++){
             let mTex = p_tex_loader.load( doodleMenTexFiles[i] );
+            //
+            this.menTexs.push(mTex);
         
             let mAni = new TextureAnimator( mTex, 2, 1, 2, 60, [0,1] );
             this.doodleMenAnimators.push(mAni);
 
             let mMat = new THREE.MeshBasicMaterial( {map: mTex, side: THREE.DoubleSide, transparent: true} );
-            let mMesh = new THREE.Mesh( menGeometry, mMat );
+            //
+            this.menMats.push(mMat);
+
+            let mMesh = new THREE.Mesh( this.menGeometry, mMat );
             mMesh.position.x = -15-i*6;
             mMesh.position.y = 7.5;
-            hannahRoom.add(mMesh);
+            this.hannahRoom.add(mMesh);
             doodleMen.push(mMesh);
         }
+        // dispose
+        this.roomGeos = [];
+        this.roomMats = [];
 
         for(let i = 0; i < hannahRoomFiles.length; i++){
             loader.load( hannahRoomFiles[i], function(geometry){
+                //
+                this.roomGeos.push(geometry);
+
                 let colorValue = Math.random() * 0xFF | 0;
                 let colorString = "rgb("+colorValue+","+colorValue+","+colorValue+")";
                 let mat = new THREE.MeshLambertMaterial({ color: colorString });
+                //
+                this.roomMats.push(mat);
+
                 let meshhh = new THREE.Mesh(geometry, mat);
-                hannahRoom.add(meshhh);
+                scope.hannahRoom.add(meshhh);
             });
         }
-        hannahRoom.scale.multiplyScalar(0.015);
-        hannahRoom.position.set(0.5,2,0.8);
-        this.add(hannahRoom);
+        this.hannahRoom.scale.multiplyScalar(0.015);
+        this.hannahRoom.position.set(0.5,2,0.8);
+        this.add(this.hannahRoom);
 
         this.loadingManager.itemEnd("HannahAnim");
 
@@ -171,6 +203,10 @@ export default class HannahAnimation extends THREE.Object3D {
         for (var i=0; i<50; i++) {
           this.lookupTable.push(Math.random());
         }
+
+        events.on("experience_end", ()=>{
+            this.disposeAni();
+        });
 
         this.completeSequenceSetup();
     }
@@ -192,6 +228,9 @@ export default class HannahAnimation extends THREE.Object3D {
             depthTest: false,
             maxParticleCount: 1000
         });
+
+        //
+        this.particleEmitters = [];
 
         // reduce emitter amount to be 1/5 of domeMorphTargets.length
         for(let i = 0; i < this.domeMorphTargets.length-2; i+=2){
@@ -230,6 +269,8 @@ export default class HannahAnimation extends THREE.Object3D {
                 activeMultiplier: 0.3
             });
             this.particleGroup.addEmitter( emitter );
+            //
+            this.particleEmitters.push(emitter);
         }
         this.add( this.particleGroup.mesh );
         // console.log( this.particleGroup.emitters.length );
@@ -357,6 +398,33 @@ export default class HannahAnimation extends THREE.Object3D {
                 TweenMax.to( this.dome.morphTargetInfluences, 4, { endArray: tmpEndArray, ease: Power2.easeInOut, onUpdate: ()=>{this.updateVertices()} } );
                 TweenMax.to( this.domeMorphTargets[0].mesh.children[1].material, 1, { wireframeLinewidth: 1 } );
             } } );
+    }
+
+    disposeAni(){
+        this.remove( this.hannahRoom ); // include doodleMen
+        this.remove(this.center);
+        for(var i=0; i<this.domeMorphTargets.length; i++){ this.remove(this.domeMorphTargets[i].mesh); }
+        this.remove(this.dome);
+
+        this.menGeometry.dispose();
+        for(var i=0; i<this.menMats.length; i++){ this.menMats[i].dispose(); }
+        for(var i=0; i<this.menTexs.length; i++){ this.menTexs[i].dispose(); }        
+
+        // twig, leaf, evil, center
+        for(var i=0; i<this.domeRelatedGeos.length; i++){ this.domeRelatedGeos[i].dispose(); }
+        for(var i=0; i<this.domeRelatedMats.length; i++){ this.domeRelatedMats[i].dispose(); }
+        for(var i=0; i<this.domeRelatedTexs.length; i++){ this.domeRelatedTexs[i].dispose(); }
+
+        // home
+        for(var i=0; i<this.roomGeos.length; i++){ this.roomGeos[i].dispose(); }
+        for(var i=0; i<this.roomMats.length; i++){ this.roomMats[i].dispose(); }
+
+        // particles
+        this.remove( this.particleGroup.mesh );
+        this.particleEmitters.forEach( (e)=>{ this.particleGroup.removeEmitter(e); } );
+        this.particleGroup.dispose();
+
+        console.log("dispose Hannah ani!");
     }
 
     loadModelDome (modelS, modelD, modelC, modelE) {
