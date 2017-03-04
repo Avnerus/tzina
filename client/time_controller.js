@@ -89,6 +89,9 @@ export default class TimeController {
             this.loadChapterSounds("ambience", 19)   
         ]).then(sounds=>{
             sounds.forEach((sound)=>{
+                if (!this.chapterSounds[sound.hour]) {
+                    this.chapterSounds[sound.hour] = {};
+                }
                 this.chapterSounds[sound.hour][sound.type] = sound;
                 console.log(sound);
             });
@@ -878,28 +881,33 @@ export default class TimeController {
     //         });
     //     });
     // }
-    loadChapterSounds(type, hour){
-        if(type == "ambience"){
-            return new Promise((resolve, reject) => {
-                this.soundManager.createStaticSoundSampler("assets/sound/chapter_vo/ambience/" + hour + "_" + type + ".ogg", sampler=>{
-                    resolve({
-                        sampler: sampler,
-                        type: type,
-                        hour: hour
-                    });
-                });
-            });
-        } else if(type == "VO"){
-            return new Promise((resolve, reject) => {
-                this.soundManager.createStaticSoundSampler("assets/sound/chapter_vo/" + hour + "_" + this.config.language + ".ogg", sampler=>{
-                    resolve({
-                        sampler: sampler,
-                        type: type,
-                        hour: hour,
-                        playedOnce: false
-                    });
-                });
-            });
-        }
+    loadChapterSounds(type, hour) {
+        return new Promise((resolve, reject) => {
+            if(type == "ambience"){
+                this.soundManager.createStaticSoundSampler(
+                    "assets/sound/chapter_vo/ambience/" + hour + "_" + type + ".ogg", 
+                    (sampler) => {
+                        resolve({
+                            sampler: sampler,
+                            type: type,
+                            hour: hour
+                        });
+                
+                    }
+                );
+            } else if (type == "VO"){
+                this.soundManager.createStaticSoundSampler(
+                    "assets/sound/chapter_vo/" + hour + "_" + this.config.language + ".ogg",
+                    (sampler) => {
+                        resolve({
+                            sampler: sampler,
+                            type: type,
+                            hour: hour,
+                            playedOnce: false
+                        });
+                    }
+                );
+            }
+        });
     }
 }
