@@ -74,6 +74,31 @@ export default class TimeController {
             });
         });
 
+        this.chapterSounds = {};
+
+        Promise.all([
+            this.loadChapterSounds("VO", 7),
+            this.loadChapterSounds("VO", 9),
+            this.loadChapterSounds("VO", 12),
+            this.loadChapterSounds("VO", 17),
+            this.loadChapterSounds("VO", 19),
+            this.loadChapterSounds("ambience", 7),
+            this.loadChapterSounds("ambience", 9),
+            this.loadChapterSounds("ambience", 12),
+            this.loadChapterSounds("ambience", 17),
+            this.loadChapterSounds("ambience", 19)   
+        ]).then(sounds=>{
+            sounds.forEach((sound)=>{
+                if (!this.chapterSounds[sound.hour]) {
+                    this.chapterSounds[sound.hour] = {};
+                }
+                this.chapterSounds[sound.hour][sound.type] = sound;
+                console.log(sound);
+            });
+        }).catch(err=>{
+            console.warn("An error with loading chapter sounds " + err);
+        });
+
         console.log("Total experience time:", this.totalExperienceTime);
 
 
@@ -656,6 +681,19 @@ export default class TimeController {
             let hebChapter = _.find(ChaptersHeb, {hour: this.currentHour});
             MiscUtil.overwriteProps(this.currentChapter, hebChapter);
         }
+
+        this.clearVoiceovers();
+
+        if (this.chapterSounds[this.currentHour]){
+            if(!this.chapterSounds[this.currentHour].VO){
+                this.chapterSounds[this.currentHour].ambience.sampler.play();
+            } else {
+                this.chapterSounds[this.currentHour].VO.sampler.play();
+                this.chapterSounds[this.currentHour].VO.playedOnce = true;
+            }
+        }
+        
+        
     }
 
    showChapterTitle() {
@@ -799,5 +837,49 @@ export default class TimeController {
         this.setCurrentChapter();
         this.showChapterTitle();
         this.updateNextHour();
+    }
+
+    clearVoiceovers() {
+            _.forIn(this.chapterSounds,(chapterSound,hour) => {
+                if (chapterSound.VO && chapterSound.VO.playedOnce) {
+                    console.log("Clear chapter sound", hour, chapterSound.VO);
+                    this.unloadChapterSound(chapterSound.VO);
+                    delete this.chapterSounds[hour].VO;
+                }    
+            });
+    } 
+
+    unloadChapterSound(chapterSound){
+        chapterSound.sampler.stop();
+        chapterSound.sampler.unload();
+    }
+    loadChapterSounds(type, hour) {
+        return new Promise((resolve, reject) => {
+            if(type == "ambience"){
+                this.soundManager.createStaticSoundSampler(
+                    "assets/sound/chapter_vo/ambience/" + hour + "_" + type + ".ogg", 
+                    (sampler) => {
+                        resolve({
+                            sampler: sampler,
+                            type: type,
+                            hour: hour
+                        });
+                
+                    }
+                );
+            } else if (type == "VO"){
+                this.soundManager.createStaticSoundSampler(
+                    "assets/sound/chapter_vo/" + hour + "_" + this.config.language + ".ogg",
+                    (sampler) => {
+                        resolve({
+                            sampler: sampler,
+                            type: type,
+                            hour: hour,
+                            playedOnce: false
+                        });
+                    }
+                );
+            }
+        });
     }
 }
