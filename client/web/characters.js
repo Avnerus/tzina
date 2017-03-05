@@ -4,7 +4,8 @@ export default [
         position : [11.4, 22.04, -10.1],
         rotation: [355, 302, 3],
         space: 1.3,
-        spaceOffset: [-0.17,0,-0.39]
+        spaceOffset: [-0.17,0,-0.39],
+        endingPosition : [-12.91, 22.04, 6.4]
     },
     {
         name: 'Miriam',
@@ -166,8 +167,8 @@ export default [
     },
     {
         name: 'Shirin7PM',
-        position : [9.22, 22.37, -10.86],
-        rotation: [0, 0, 0],
+        position : [16.7, 27.3, -46.57],
+        rotation: [0, 307, 0],
         space: 100,
         spaceOffset: [0,0,0],
     },
