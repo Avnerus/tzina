@@ -168,7 +168,7 @@ export default [
     {
         name: 'Shirin7PM',
         position : [16.7, 27.3, -46.57],
-        rotation: [0, 307, 0],
+        rotation: [0, 275, 0],
         space: 100,
         spaceOffset: [0,0,0],
     },
