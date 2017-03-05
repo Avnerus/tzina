@@ -225,7 +225,7 @@ export default class Game {
         this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
         this.SUN_GAZE_SOUND = 'assets/sound/ui/Hour_Replace_1.ogg'
 
-        this.waterDrops = new WaterDrops();
+        this.waterDrops = new WaterDrops(this.config);
         this.camera.add(this.waterDrops);
 
             /*
