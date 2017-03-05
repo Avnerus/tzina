@@ -640,6 +640,10 @@ letter-spacing: 2px;
 
   text-align: right;
 }
+img#icons_heb{
+  text-align: right;
+  vertical-align: right;
+}
 #about_readmore_heb :nth-child(2){
  
   display: none;
