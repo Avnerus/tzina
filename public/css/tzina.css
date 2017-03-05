@@ -638,7 +638,7 @@ letter-spacing: 2px;
 .about_moretext_heb{
   display: none;
 
-  text-align: left;
+  text-align: right;
 }
 #about_readmore_heb :nth-child(2){
  
