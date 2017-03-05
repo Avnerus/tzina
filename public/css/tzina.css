@@ -15,9 +15,25 @@ padding-top: 5%;
 padding-bottom: 5%;
 text-align: center;
 }
+h3{
+
+font-family: "Miriam Libre", sans-serif;
+font-size: 1.6em;
+
+/*color:#ffa300;*/
+   letter-spacing: 8px;
+padding-top: 5%;
+padding-bottom: 5%;
+text-align: center;
+}
 h4{
   font-family: "Miriam Libre", sans-serif;
   font-size: 0.8em;
+     letter-spacing: 2px;
+}
+h5{
+  font-family: "Miriam Libre", sans-serif;
+  font-size: 1em;
      letter-spacing: 2px;
 }
 p{
@@ -606,7 +622,7 @@ a:visited {
 
 /* mouse over link */
 a:hover {
-    color: #4e45f4;
+    color: #ce7bff;
 }
 
 /* selected link */
@@ -640,9 +656,9 @@ letter-spacing: 2px;
 
   text-align: right;
 }
-img#icons_heb{
-  text-align: right;
-  vertical-align: right;
+#icons_heb{
+float: right;
+
 }
 #about_readmore_heb :nth-child(2){
  
@@ -655,6 +671,12 @@ font-size: .8em;
 letter-spacing: 2px;
   text-align: left;
 
+}
+#pdf{
+ border-style: solid;
+ border-width: 2px;
+ padding: 1%;
+ margin-top: 2%
 }
 /*#legendIMG a: hover{
 
