@@ -44,7 +44,7 @@ export default class ShirinAnimation extends THREE.Object3D {
             ],
             'Shirin7PM': [
                 { time: 1, anim: ()=>{this.crackCocoon(2)} },
-                { time: 2, anim: ()=>{this.showShirin()} },
+                { time: 3, anim: ()=>{this.showShirin()} },
                 { time: 77, anim: ()=>{this.closeCocoon(2)} },
                 { time: 80,  anim: ()=>{this.stopFragment(2)} }
             ]
@@ -316,8 +316,9 @@ export default class ShirinAnimation extends THREE.Object3D {
                     value: [0.02, 0.3, 0.3, 0.3, .2], // 0.1,5,5,5,3    // 0.1,1,1,1,.5
                     spread: 0.5 // 2
                 },
-                particleCount: 60 //20
+                particleCount: 120 //60
             });
+            emitter.activeMultiplier = 0.5;
             emitter.disable();
 
             this.particleGroup.addEmitter( emitter );
@@ -376,7 +377,25 @@ export default class ShirinAnimation extends THREE.Object3D {
     }
 
     closeCocoon(index) {
+        this.particleGroup.emitters[index].activeMultiplier = 1;
+
+        var newEPos = this.particleGroup.emitters[2].position.value;
+        newEPos.y -= 9;
+        newEPos.z += 18;
+        this.particleGroup.emitters[2].position.value = newEPos;
+
+        setTimeout( (_index)=>{
+            this.resetFragment(_index);
+
+            var newEPos2 = this.particleGroup.emitters[2].position.value;
+            newEPos2.y += 9;
+            newEPos2.z -= 18;
+            this.particleGroup.emitters[2].position.value = newEPos2;
+
+        }, 3000, index);
+
         let crackTween = TweenMax.to( this.cocoonGroup.children[index].morphTargetInfluences, 3, {
+            delay: 1,
             endArray: [0],
             ease: RoughEase.ease.config({ template:  Power0.easeNone, 
                                          strength: 1, points: 20, taper: "none",
@@ -384,16 +403,16 @@ export default class ShirinAnimation extends THREE.Object3D {
         });
         this.tweenAnimCollectors.push(crackTween);
 
-        TweenMax.to(this.parent.fullVideo.mesh.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 1 });
-        TweenMax.to(this.parent.fullVideo.wire.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 1 });
-        TweenMax.to(this.parent.fullVideo.mesh.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 1 });
-        TweenMax.to(this.parent.fullVideo.wire.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 1 });
+        TweenMax.to(this.parent.fullVideo.mesh.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 2.5 });
+        TweenMax.to(this.parent.fullVideo.wire.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 2.5 });
+        TweenMax.to(this.parent.fullVideo.mesh.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 2.5 });
+        TweenMax.to(this.parent.fullVideo.wire.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 2.5 });
     }
 
     crackCocoon(index) {
         this.dropFragment(index);
         let crackTween = TweenMax.to( this.cocoonGroup.children[index].morphTargetInfluences, 2, {
-            //delay: 1,
+            delay: 1,
             endArray: [1], // yoyo: true, repeat:-1, repeatDelay: 1,
             ease: RoughEase.ease.config({ template:  Power0.easeNone, 
                                          strength: 1, points: 20, taper: "none",
@@ -431,6 +450,16 @@ export default class ShirinAnimation extends THREE.Object3D {
         // console.log("do first animation.");
         // for(let i=0; i<this.particleGroup.emitters.length; i++){
             this.particleGroup.emitters[f_i].enable();
+            this.particleGroup.emitters[f_i].activeMultiplier = 1;
+            setTimeout( (index)=>{
+                this.resetFragment(index);
+
+                var newEPos = this.particleGroup.emitters[2].position.value;
+                newEPos.y += 9;
+                newEPos.z -= 18;
+                this.particleGroup.emitters[2].position.value = newEPos;
+
+            }, 3000, f_i);
         // }
     }
 
@@ -438,6 +467,10 @@ export default class ShirinAnimation extends THREE.Object3D {
         // for(let i=0; i<this.particleGroup.emitters.length; i++){
             this.particleGroup.emitters[f_i].disable();
         // }
+    }
+
+    resetFragment(index) {
+        this.particleGroup.emitters[index].activeMultiplier = 0.5;
     }
 
     dropCaterpillars() {
@@ -593,7 +626,8 @@ export default class ShirinAnimation extends THREE.Object3D {
 
         if(time == "Shirin7PM"){
             var newEPos = this.particleGroup.emitters[2].position.value;
-            newEPos.y -= 28;
+            newEPos.y -= 37; //-=28
+            newEPos.z += 18;
             this.particleGroup.emitters[2].position.value = newEPos;
             this.particleGroup.emitters[2].acceleration.value = new THREE.Vector3(0,0.7,0);
             this.particleGroup.emitters[2].acceleration.spread = new THREE.Vector3(.8,1,.8);
