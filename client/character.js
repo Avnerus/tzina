@@ -437,7 +437,6 @@ export default class Character extends THREE.Object3D {
             this.idleVideo.play();
         }
         this.fullVideo.pause();
-        this.soundManager.panorama.append(this.audio);
         if (this.audio) {
             this.audio.pause();         
         }
