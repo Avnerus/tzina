@@ -5,7 +5,6 @@ export default [
         rotation: [355, 302, 3],
         space: 1.3,
         spaceOffset: [-0.17,0,-0.39],
-        endingPosition : [-12.91, 22.04, 6.4]
     },
     {
         name: 'Miriam',
@@ -31,7 +30,7 @@ export default [
         rotation: [9, 208, 3.6],
         space: 1.5, //anim:1.46
         spaceOffset: [0.62,0.59,-0.17], //0.28,0.73,1.73
-        endingPosition : [6.3, 22.04, -12.91],
+        endingPosition : [7.29, 21.8, -12.91],
         gazeOffset: [0.14,0.25,0.47],
         adjustments : [
             {
@@ -142,6 +141,7 @@ export default [
     {
         name: 'Lupo5PM',
         position : [18.25, 22, -3.1],
+        endingPosition : [22.99, 22.04, -3.93],
         rotation: [7, 225, 0], //120
         adjustments: [
             {
