@@ -692,24 +692,16 @@ export default class TimeController {
 
         this.clearVoiceovers();
 
-        //Play the sounds
-        if(!this.isFirstChapter.check){
-            if (this.chapterSounds[this.currentHour]){
-                if(!this.chapterSounds[this.currentHour].VO){
-                    this.chapterSounds[this.currentHour].ambience.sampler.play();
-                } else {
-                    this.chapterSounds[this.currentHour].VO.sampler.play();
-                    this.chapterSounds[this.currentHour].VO.playedOnce = true;
-                }
-            }
+        //Seven PM play call comes in the show_ended event since we want to delay it
+        if(this.currentHour != 19){
+            this.playChapterSounds();
         }
 
         if(this.isFirstChapter.check && this.isFirstChapter.counter == 1){
             this.isFirstChapter.check = false;
         }
 
-    this.isFirstChapter.counter++;   
-    console.log(this.isFirstChapter); 
+    this.isFirstChapter.counter++;
 
     }
 
@@ -898,5 +890,18 @@ export default class TimeController {
                 );
             }
         });
+    }
+    playChapterSounds(){
+        //Play the sounds
+        if(!this.isFirstChapter.check){
+                if (this.chapterSounds[this.currentHour]){
+                    if(!this.chapterSounds[this.currentHour].VO){
+                        this.chapterSounds[this.currentHour].ambience.sampler.play();
+                    } else {
+                        this.chapterSounds[this.currentHour].VO.sampler.play();
+                        this.chapterSounds[this.currentHour].VO.playedOnce = true;
+                    }
+                }
+        }
     }
 }
