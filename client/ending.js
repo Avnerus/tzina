@@ -308,7 +308,7 @@ export default class Ending {
             this.square.add(this.miriamPlane);
         } 
         setTimeout(() => {
-            this.characterController.removeCharacter(nextText);
+         //   this.characterController.removeCharacter(nextText);
             if (nextText == "Miriam") {
                 this.square.remove(this.miriamPlane);
             }
