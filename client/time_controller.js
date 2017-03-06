@@ -74,6 +74,14 @@ export default class TimeController {
             });
         });
 
+        //An object to check wheter this is first chapter played or not
+        //this is an object since on load set current chapter is called twice, so a counter is used to selectivly choose the second time
+        this.isFirstChapter = {
+            check: true,
+            counter: 0
+        }
+        
+        //Load all sounds and create chapterSounds object to hold them
         this.chapterSounds = {};
 
         Promise.all([
@@ -684,16 +692,25 @@ export default class TimeController {
 
         this.clearVoiceovers();
 
-        if (this.chapterSounds[this.currentHour]){
-            if(!this.chapterSounds[this.currentHour].VO){
-                this.chapterSounds[this.currentHour].ambience.sampler.play();
-            } else {
-                this.chapterSounds[this.currentHour].VO.sampler.play();
-                this.chapterSounds[this.currentHour].VO.playedOnce = true;
+        //Play the sounds
+        if(!this.isFirstChapter.check){
+            if (this.chapterSounds[this.currentHour]){
+                if(!this.chapterSounds[this.currentHour].VO){
+                    this.chapterSounds[this.currentHour].ambience.sampler.play();
+                } else {
+                    this.chapterSounds[this.currentHour].VO.sampler.play();
+                    this.chapterSounds[this.currentHour].VO.playedOnce = true;
+                }
             }
         }
-        
-        
+
+        if(this.isFirstChapter.check && this.isFirstChapter.counter == 1){
+            this.isFirstChapter.check = false;
+        }
+
+    this.isFirstChapter.counter++;   
+    console.log(this.isFirstChapter); 
+
     }
 
    showChapterTitle() {
