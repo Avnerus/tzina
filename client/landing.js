@@ -340,12 +340,13 @@ try {
     });
 
     //Fade in the first set of instructions
-    $('#instruction_screen').delay(500).fadeIn(250, function () {
+    $('#instruction_screen').fadeIn(250, function () {
 
       $('#vive_instruc').fadeIn(250);
 
-      $('#progress_text').fadeIn(250);
+      $('#progress_text').fadeIn(250).delay(2000, function(){
 
+        
       console.log('instructions faded in');
 
       //Enable mouse events on instructions
@@ -392,6 +393,10 @@ try {
         console.error("Exception during game load ", e);
       }
 
+
+      });
+
+
     });
 
   });
@@ -418,11 +423,11 @@ try {
     });
 
     //Fade in the first set of instructions
-    $('#instruction_screen').delay(500).fadeIn(250, function () {
+    $('#instruction_screen').fadeIn(250, function () {
 
       $('#desktop_instruc').fadeIn(250);
 
-      $('#progress_text').fadeIn(250);
+      $('#progress_text').fadeIn(250).delay(2000, function(){
 
       console.log('instructions faded in');
 
@@ -468,19 +473,7 @@ try {
       $('#tree_scene').css({
         "pointer-events": "auto"
       });
-
-      $(document).on("mousemove", function (mousePosition) {
-
-        var mouseToRadius = Math.round((mousePosition.pageX * (Math.PI / 360) * 36) + 30);
-
-        //console.log(mouseToRadius);
-
-        $('#mouse').css({
-
-          'transform': 'rotate(' + mouseToRadius + 'deg)'
-
-        });
-
+        
       });
 
     });
