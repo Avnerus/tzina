@@ -68,8 +68,6 @@ export default class Character extends THREE.Object3D {
         this.audioReady = false;
         this.ambientReady = false;
 
-        this.chapterSoundPlaying = false;
-
         this.nextAdjustment = null;
         this.lastAdjustment = null;
 
@@ -116,9 +114,9 @@ export default class Character extends THREE.Object3D {
 
             events.on("chapter_sound_playing", (isIt)=>{
                 if(isIt){
-                    this.chapterSoundPlaying = true;
+                    this.hold();
                 } else {
-                    this.chapterSoundPlaying = false;
+                    this.unhold();
                 }
             });
 
@@ -126,27 +124,17 @@ export default class Character extends THREE.Object3D {
                 if (this.idleException(name)) {
                     return;
                 }
-                if (this.active && !this.done && !this.ending && this.props.name != name &&
+                if (this.props.name != name &&
                     this.props.name != "FatmanShower" && this.props.name != "FatmanSleep")  {
-                    this.onHold = true;
-                    console.log(name, " is playing." , this.props.name, "is pausing");
-                    if (!this.props.fullOnly) {
-                        this.idleVideo.pause();
-                        this.idleVideo.setOpacity(0.5);
-                    }
+                    this.hold();
                 }
             });
             events.on("character_idle", (name) => {
                 if (this.idleException(name)) {
                     return;
                 }
-                if (this.active && this.onHold && !this.done && !this.ending && this.props.name != name) {
-                    this.onHold = false;
-                    console.log(name, " is idle." , this.props.name, "is playing");
-                    if (!this.props.fullOnly) {
-                        this.idleVideo.setOpacity(1.0);
-                        this.idleVideo.play();
-                    }
+                if (this.props.name != name) {
+                    this.unhold();
                 }
             });
 
@@ -183,6 +171,26 @@ export default class Character extends THREE.Object3D {
             return true;
         } else {
             return false;
+        }
+    }
+    hold() {
+        if (this.active && !this.done && !this.ending) {
+            this.onHold = true;
+            console.log(name, " is playing." , this.props.name, "is pausing");
+            if (!this.props.fullOnly) {
+                this.idleVideo.pause();
+                this.idleVideo.setOpacity(0.5);
+            }
+        }
+    }
+    unhold() {
+        if (this.active && this.onHold && !this.done && !this.ending) {
+            this.onHold = false;
+            console.log(name, " is idle." , this.props.name, "is playing");
+            if (!this.props.fullOnly) {
+                this.idleVideo.setOpacity(1.0);
+                this.idleVideo.play();
+            }
         }
     }
     play() {
@@ -632,7 +640,7 @@ export default class Character extends THREE.Object3D {
 
     checkReady() {
         console.log(this.props.name, "Checking ready");
-        if (this.fullReady && this.audioReady && this.ambientReady && (this.subtitlesReady || !this.props.subtitles)) {
+        if (this.fullReady && this.active && !this.onHold && this.audioReady && this.ambientReady && (this.subtitlesReady || !this.props.subtitles)) {
             if (this.animation) {
                 this.animation.start(this.props.name);
             }
@@ -659,7 +667,7 @@ export default class Character extends THREE.Object3D {
     }
 
     playFull() {
-        if (this.fullVideo.mesh && !this.chapterSoundPlaying) {
+        if (this.fullVideo.mesh) {
             this.playingFull = true;
             if (this.idleVideo) {
                 this.idleVideo.pause();

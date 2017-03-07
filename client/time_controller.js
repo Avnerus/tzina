@@ -74,12 +74,7 @@ export default class TimeController {
             });
         });
 
-        //An object to check wheter this is first chapter played or not
-        //this is an object since on load set current chapter is called twice, so a counter is used to selectivly choose the second time
-        this.isFirstChapter = {
-            check: true,
-            counter: 0
-        }
+        this.isFirstChapter = true;
         
         //Load all sounds and create chapterSounds object to hold them
         this.chapterSounds = {};
@@ -127,6 +122,7 @@ export default class TimeController {
         });
         events.on("instructions_end", () => {
             this.clockRunning = true;
+            this.isFirstChapter = false;
         });
 
         events.on("base_position", () => {
@@ -413,6 +409,8 @@ export default class TimeController {
                     if (this.config.platform == "vive") {
                         let previousHour = this.square.clockRotation * 180 / (Math.PI * 15);
                         this.rotateClockwork(previousHour, roundHour);
+                    } else {
+                        events.emit("angle_updated", roundHour);
                     }
                 }
                 this.updateNextHour();
@@ -692,16 +690,13 @@ export default class TimeController {
         this.clearVoiceovers();
 
         //Seven PM play call comes in the show_ended event since we want to delay it
-        if(this.currentHour != 19){
-            this.playChapterSounds();
+        console.log("Chapter sound check ", this.currentHour, this.isFirstChapter, this.chapterSounds);
+        if(this.currentHour != 19 && !this.isFirstChapter){
+            let hour = this.currentHour;
+            setTimeout(() => {
+                this.playChapterSounds(hour);
+            },1000);
         }
-
-        if(this.isFirstChapter.check && this.isFirstChapter.counter == 1){
-            this.isFirstChapter.check = false;
-        }
-
-    this.isFirstChapter.counter++;
-
     }
 
    showChapterTitle() {
@@ -890,27 +885,20 @@ export default class TimeController {
             }
         });
     }
-    playChapterSounds(){
+    playChapterSounds(hour){
         //Play the sounds
-        if(!this.isFirstChapter.check){
-                if (this.chapterSounds[this.currentHour]){
-                    if(!this.chapterSounds[this.currentHour].VO){
-                        this.chapterSounds[this.currentHour].ambience.sampler.play();
-                        events.emit("chapter_sound_playing", true);
-                        this.chapterSounds[this.currentHour].ambience.sampler.source.onended = ()=>{
-                            events.emit("chapter_sound_playing", false);
-                        }
-
-                    } else {
-                        this.chapterSounds[this.currentHour].VO.sampler.play();
-                        events.emit("chapter_sound_playing", true);
-                        this.chapterSounds[this.currentHour].VO.playedOnce = true;
-                        this.chapterSounds[this.currentHour].VO.sampler.source.onended = () =>{
-                            events.emit("chapter_sound_playing", false);
-                            this.clearVoiceovers();
-                        }
-                    }
+        if (this.chapterSounds[hour]){
+            if(!this.chapterSounds[hour].VO){
+                this.chapterSounds[hour].ambience.sampler.play();
+            } else {
+                this.chapterSounds[hour].VO.sampler.play();
+                events.emit("chapter_sound_playing", true);
+                this.chapterSounds[hour].VO.playedOnce = true;
+                this.chapterSounds[hour].VO.sampler.source.onended = () =>{
+                    events.emit("chapter_sound_playing", false);
+                    this.clearVoiceovers();
                 }
+            }
         }
     }
 }

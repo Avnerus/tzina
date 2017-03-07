@@ -90,7 +90,7 @@ export default class KeyboardController {
 
 
         document.addEventListener('keyup', (event) => {
-            console.log("Key up", event);
+            //console.log("Key up", event);
             switch( event.keyCode ) {
                 case 16: // Shift
                     event.preventDefault();
