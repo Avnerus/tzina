@@ -81,13 +81,18 @@ export default class ItzhakAnimation extends THREE.Object3D {
         this.cloudGroup = [];
         this.cloudOuterGroup = [];
         this.cloudVirtualGroup = {};
+        // dispose
+        this.cloudMats = [];
         
         this.loadClouds( cloudFiles, heartFiles );
 
         this.treeTex = tex_loader.load( this.BASE_PATH + "/images/house.jpg" );
         this.treeMat = new THREE.MeshBasicMaterial({map: this.treeTex});
         this.treeGroup = new THREE.Object3D();
+
         loader.load( this.BASE_PATH + "/models/singleTree.json", (geometry)=>{
+            this.treeGeo = geometry;
+
             let tree = new THREE.Mesh(geometry, this.treeMat);
 
             for(let i=0; i<16; i++){
@@ -128,16 +133,24 @@ export default class ItzhakAnimation extends THREE.Object3D {
         this.loadRock( this.BASE_PATH + "/models/rock1.json", this.BASE_PATH + "/models/rock2.json", loader );
 
         // DebugUtil.positionObject(this, "Itzhak Anim");
+
+        events.on("experience_end", ()=>{
+            this.disposeAni();
+        });
+
         //
         this.loadingManager.itemEnd("ItzhakAnim");
     }
 
     loadRock(r_f_1, r_f_2, loader) {
-        let rockss = []
+        let rockss = [];
+        this.rockGeo, this.rockGeo2;
         loader.load( r_f_1, (geometry)=>{
+            this.rockGeo = geometry;
             let rock1 = new THREE.Mesh(geometry, this.rockMat);
             rockss.push(rock1);
             loader.load( r_f_2, (geometry2)=>{
+                this.rockGeo2 = geometry2;
                 let rock2 = new THREE.Mesh(geometry2, this.rockMat);
                 rockss.push(rock2);
 
@@ -176,7 +189,7 @@ export default class ItzhakAnimation extends THREE.Object3D {
 
     createClouds() {
         // let cloudMaterial = new THREE.MeshLambertMaterial({color: this.cloudColors[0], morphTargets: true, morphNormals: true});
-        let cloudMaterial = new THREE.MeshBasicMaterial({
+        this.cloudMaterial = new THREE.MeshBasicMaterial({
             color: this.cloudColors[0], map: this.cloudTex, //side: THREE.DoubleSide,
             transparent: true, opacity: .5, //blending: THREE.AdditiveBlending,
             morphTargets: true, morphNormals: true
@@ -225,7 +238,9 @@ export default class ItzhakAnimation extends THREE.Object3D {
 
         for(let i=0; i<this.cloudAmount; i++){
             let cloudObject = {};
-            let cloudd = new THREE.Mesh( this.cloudGeos[i%2], cloudMaterial.clone() );
+            let _cloudMat = this.cloudMaterial.clone();
+            this.cloudMats.push(_cloudMat);
+            let cloudd = new THREE.Mesh( this.cloudGeos[i%2], _cloudMat );
             cloudd.position.set(
                 Math.sin(Math.PI*2/this.cloudAmount*i) * this.cloudRadius[i%3],
                 this.lookupTable[i],
@@ -344,6 +359,35 @@ export default class ItzhakAnimation extends THREE.Object3D {
             x:0.00001,y:0.00001,z:0.00001, ease: Back.easeInOut, delay: 5.5, onComplete: ()=>{
             this.parent.fullVideo.setOpacity(0.0);
         } } );
+    }
+
+    disposeAni(){
+        // cloud
+        for(var i=0; i<this.cloudGroup.length; i++){ this.remove(this.cloudGroup[i]); }
+        for(var i=0; i<this.cloudOuterGroup.length; i++){ this.remove(this.cloudOuterGroup[i]); }
+        for(var i=0; i<this.cloudGeos.length; i++){ this.cloudGeos[i].dispose(); }
+        this.cloudMaterial.dispose();
+        this.outerCloudMaterial.dispose();
+        for(var i=0; i<this.cloudMats.length; i++){ this.cloudMats[i].dispose(); }
+        this.cloudTex.dispose();
+
+        // tree
+        this.remove(this.treeGroup);
+        this.treeGeo.dispose();
+        this.treeMat.dispose();
+        this.treeTex.dispose();
+
+        // rock
+        this.remove(this.rockGroup);
+        this.rockGeo.dispose();
+        this.rockGeo2.dispose();
+        this.rockMat.dispose();
+        this.rockTex.dispose();
+
+        // heart
+        for(var i=0; i<this.heartGeos.length; i++){ this.heartGeos[i].dispose(); }
+
+        console.log("dispose Itzhak ani!");
     }
 
     growClouds(diff) {

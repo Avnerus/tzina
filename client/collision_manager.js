@@ -148,7 +148,7 @@ export default class CollisionManager {
                 this.scene.add(bbox);
             }
 
-            console.log("Adding collision box ", newBox);
+            console.log("Adding collision box for " + character.props.name, newBox);
             this.characterObstacles.push([
                 newBox.min.x,
                 newBox.min.y,
@@ -220,19 +220,23 @@ export default class CollisionManager {
 
     removeCharacter(character) {
         if (character.props.space) {
-            let obstacleIndex = this.characterObstacles.indexOf(character);
-            console.log("COLLISION MANAGER - Removing character ", character.props.name, "Obstacle index: ", obstacleIndex);
+            let obstacleIndex = this.characterObstacleInfo.indexOf(character);
             if (obstacleIndex != -1) {
+                console.log("COLLISION MANAGER - Removing character ", character.props.name, "Obstacle index: ", obstacleIndex);
                 this.characterObstacles.splice(obstacleIndex, 1);
                 this.characterObstacleInfo.splice(obstacleIndex, 1);
+            } else {
+                console.log("COLLISION MANAGER - no obstacle object for ", character.props.name);
             }
         }
         // Gaze box from the idle mesh
         if (character.gazeBox) {
             let gazeIndex = this.gazeObjects.indexOf(character.gazeBox);
-            console.log("COLLISION MANAGER - Removing character ", character.props.name, "Gaze index: ", gazeIndex);
             if (gazeIndex != -1) {
+                console.log("COLLISION MANAGER - Removing character ", character.props.name, "Gaze index: ", gazeIndex);
                 this.gazeObjects.splice(gazeIndex, 1);
+            } else {
+                console.log("COLLISION MANAGER - no gaze object for ", character.props.name);
             }
         }
     }

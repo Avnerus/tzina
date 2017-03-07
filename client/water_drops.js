@@ -1,12 +1,13 @@
 import DebugUtil from './util/debug'
 
 export default class WaterDrops extends THREE.Object3D  {
-    constructor() {
+    constructor(config) {
         super();
 
         this.active = false;
         this.fading = false;
         this.inControl = false;
+        this.config = config;
 
         this.drops = [];
         this.timeSinceCollision = 0;
@@ -18,6 +19,8 @@ export default class WaterDrops extends THREE.Object3D  {
         this.material = new THREE.SpriteMaterial( { map: map } );
         this.position.z = -0.5;
 
+        this.FOUNTAIN_DISTANCE = this.config.platform == "vive" ? 15 : 15.3;
+
         //DebugUtil.positionObject(sprite, "Water drop");
 
         events.on("control_threshold", (passed) => {
@@ -26,7 +29,7 @@ export default class WaterDrops extends THREE.Object3D  {
 
         events.on("fountain_collision", (distance) => {
             //console.log("Fountain collision!", distance);
-            if (distance < 15.3) {
+            if (distance < this.FOUNTAIN_DISTANCE) {
                 this.timeSinceCollision = 0;
                 if (this.inControl && !this.active) {
                     this.timeSinceChange = 0;

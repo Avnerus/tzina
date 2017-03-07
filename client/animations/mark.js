@@ -54,6 +54,11 @@ export default class MeirAnimation extends THREE.Object3D {
           this.lookupTable.push(Math.random());
         }
 
+        // dispose
+        this.disposeRelatedGeos = [];
+        this.disposeRelatedMats = [];
+        //this.disposeRelatedTexs = [];
+
         // NEON       
             this.neon1_light = new THREE.PointLight( 0xff0055, 0, 3 ); // 5
             this.neon1_light.position.set(0.2, 1, 1);
@@ -76,7 +81,10 @@ export default class MeirAnimation extends THREE.Object3D {
 
             for(let i=0; i<neonFiles.length; i++){
                 loader.load( neonFiles[i], (geometry, material) => {
+                    this.disposeRelatedGeos.push(geometry);
                     let neonMat = new THREE.MeshPhongMaterial({color: 0xc43b69, emissive: 0xff0055, emissiveIntensity: .1});
+                    this.disposeRelatedMats.push(neonMat);
+
                     let neon = new THREE.Mesh( geometry, neonMat );
 
                     if(i==0){
@@ -97,7 +105,10 @@ export default class MeirAnimation extends THREE.Object3D {
 
             for(let i=0; i<neonFiles2.length; i++){
                 loader.load( neonFiles2[i], (geometry, material) => {
+                    this.disposeRelatedGeos.push(geometry);
                     let neonMat = new THREE.MeshPhongMaterial({color: 0x45baba, emissive: 0x00ffff, emissiveIntensity: .1});
+                    this.disposeRelatedMats.push(neonMat);
+
                     let neon = new THREE.Mesh( geometry, neonMat );
                     // TweenMax.to( neon.material, 2, { emissiveIntensity: 1, ease: Bounce.easeInOut, delay: i, repeat: -1, repeatDelay: 5 } );
 
@@ -142,6 +153,10 @@ export default class MeirAnimation extends THREE.Object3D {
                 TweenMax.to( this.sky.hemiLight.color, 1, { r:0.325, g:0.412, b:0.867 } );  //5369dd (light blue)
                 TweenMax.to( this.sky.hemiLight.groundColor, 1, { r:0.882, g:0.392, b:0.592 } );
             }
+        });
+
+        events.on("experience_end", ()=>{
+            this.disposeAni();
         });
 
         // DebugUtil.positionObject(this, "Mark Ani");
@@ -278,6 +293,16 @@ export default class MeirAnimation extends THREE.Object3D {
             } } );
 
         this.envLightChanged = false;
+    }
+
+    disposeAni(){
+        this.remove(this.neon1);
+        this.remove(this.neon2);
+
+        for(var i=0; i<this.disposeRelatedGeos.length; i++){ this.disposeRelatedGeos[i].dispose(); }
+        for(var i=0; i<this.disposeRelatedMats.length; i++){ this.disposeRelatedMats[i].dispose(); }
+
+        console.log("dispose Mark ani!");
     }
 
     createNeonAnim( object, index ){

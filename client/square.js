@@ -301,6 +301,7 @@ export default class Square extends THREE.Object3D{
 
         events.on("angle_updated", (hour) => {
             console.log("Square angle updated. Adding colliders");
+            this.updateMatrixWorld(true);
             this.addColliders();
             this.setSquareMiddle(); 
         });
@@ -345,6 +346,7 @@ export default class Square extends THREE.Object3D{
     delayedRotation(skip) {
         console.log("Instructions delayed rotation");
         TweenMax.to(this, skip ? 0 : 32, {ease: Power1.easeInOut, clockRotation: this.delayedRotationY, onComplete: () => {
+            this.updateMatrixWorld(true);
             events.emit("angle_updated", this.delayedRotationY / 15);
         }, onUpdate: () => {}});
     }

@@ -10,14 +10,15 @@ you need to add a StaticSoundSampler or PositionalSoundSampler that will become
 focused and unfocused, append it to the panorama by using the panorama.append.
 */
 
-let fountain, highway_1, highway_2, innerKikar, wind, testsound;
+//let fountain, highway_1, highway_2, innerKikar, wind, testsound;
 let ambientSamples=[
   {name: "fountain", path:'Kikar_Inner.ogg', color:0x00ffFF, position:[0, 20, 0]},
   {name: "highway_1", path:'Kikar_Ambiance_1_Loud.ogg', color:0xF0ff00, position:[-25, 15, 0]},
   {name: "highway_2", path:'Kikar_Ambiance_2_Loud.ogg', color:0x0Fff00, position:[25, 15, 0]},
   {name: "innerKikar", path:'Pigeons_Center_Kikar.ogg', color:0x00ff0F, position:[0, 20, 0]},
   {name: "wind", path:'WindinTrees.ogg', color:0x00ffF0, position:[0, 30, 20]},
-  {name: "testsound", path:'testsound.ogg', color:0xFF0000, position:[0, 25, 15], disable:true}
+  {name: "birds", path:'Birds.ogg', color:0xFF0000, position:[0, 30, -25]},
+  {name: "wind_2", path:'Trees_1.ogg', color:0xFF0000, position:[20, 30, -20]},
 ];
 
 
@@ -345,12 +346,14 @@ export class StaticSoundSampler{
     console.log("Audio paused at time", pauseTime, "offset is ", this.offset);
     if (this.source) {
         this.source.stop();
+        this.source.disconnect();
     }
     this.source = null;
   }
   stop(){
     if (this.source) {
         this.source.stop();
+        this.source.disconnect();
     }
     this.playStartTime = 0;
     this.offset = 0;
