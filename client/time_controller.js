@@ -109,7 +109,6 @@ export default class TimeController {
 
         console.log("Total experience time:", this.totalExperienceTime);
 
-
         events.on("chapter_threshold", (passed) => {
             this.active = !passed;
         });
@@ -897,9 +896,19 @@ export default class TimeController {
                 if (this.chapterSounds[this.currentHour]){
                     if(!this.chapterSounds[this.currentHour].VO){
                         this.chapterSounds[this.currentHour].ambience.sampler.play();
+                        events.emit("chapter_sound_playing", true);
+                        this.chapterSounds[this.currentHour].ambience.sampler.source.onended = ()=>{
+                            events.emit("chapter_sound_playing", false);
+                        }
+
                     } else {
                         this.chapterSounds[this.currentHour].VO.sampler.play();
+                        events.emit("chapter_sound_playing", true);
                         this.chapterSounds[this.currentHour].VO.playedOnce = true;
+                        this.chapterSounds[this.currentHour].VO.sampler.source.onended = () =>{
+                            events.emit("chapter_sound_playing", false);
+                            this.clearVoiceovers();
+                        }
                     }
                 }
         }
