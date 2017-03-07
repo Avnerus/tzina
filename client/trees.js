@@ -149,11 +149,9 @@ export default class Trees extends THREE.Object3D {
         if(input == 1){
                 this.potreeWindMaterial.uniforms.rustleFrequency.value = 30.0;
                 this.potreeWindMaterial.uniforms.rustleFactor.value = 5.0;
-                this.potreeWindMaterial.uniforms.wireframe = true;
         } else {
                 this.potreeWindMaterial.uniforms.rustleFrequency.value = 0.2;
                 this.potreeWindMaterial.uniforms.rustleFactor.value = 1.0;
-                this.potreeWindMaterial.uniforms.wireframe = false;
         }
     }
 }

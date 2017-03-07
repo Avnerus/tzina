@@ -344,6 +344,8 @@ try {
 
       $('#vive_instruc').fadeIn(250);
 
+      $('#progress_text').fadeIn(250);
+
       console.log('instructions faded in');
 
       //Enable mouse events on instructions
@@ -362,7 +364,7 @@ try {
 
             $('#tree_scene').fadeOut(250);
             $('#progress').hide();
-
+            $('#progress_text').hide();
             killLanding();
 
             $('#start_head').fadeIn(250, function () {
@@ -379,6 +381,11 @@ try {
 
         }, function (url, itemsLoaded, itemsTotal) {
           console.log("Landing loaded", itemsLoaded, itemsTotal);
+               $('#progress').css({
+              'width': itemsLoaded / itemsTotal * 100 + '%'
+            })
+            $('#progress_text').html('Loading Tzina...' + Math.round(itemsLoaded / itemsTotal * 100) + '%');
+          
 
         });
       } catch (e) {
@@ -415,6 +422,8 @@ try {
 
       $('#desktop_instruc').fadeIn(250);
 
+      $('#progress_text').fadeIn(250);
+
       console.log('instructions faded in');
 
 
@@ -427,6 +436,8 @@ try {
             $('#instruction_screen').fadeOut(250, function () {
 
               $('#tree_scene').fadeOut(250);
+
+              $('#progress_text').hide();
 
               killLanding();
 
@@ -447,7 +458,8 @@ try {
             $('#progress').css({
               'width': itemsLoaded / itemsTotal * 100 + '%'
             })
-          });
+            $('#progress_text').html('Loading Tzina...' + Math.round(itemsLoaded / itemsTotal * 100) + '%');   
+        });
       } catch (e) {
         console.error("Exception during game load ", e);
       }
@@ -469,20 +481,6 @@ try {
 
         });
 
-      });
-
-
-      //Fade in the first instruction screen and timeout fadeout
-      $('#sunsall').mouseenter(function () {
-        $('#sun7').fadeIn(250).delay(200).fadeOut(250, function () {
-          $('#sun9').fadeIn(250).delay(200).fadeOut(250, function () {
-            $('#sun12').fadeIn(250).delay(200).fadeOut(250, function () {
-              $('#sun5').fadeIn(250).delay(200).fadeOut(250, function () {
-                $('#sun7p').fadeIn(250).delay(200).fadeOut(250);
-              })
-            })
-          })
-        })
       });
 
     });
