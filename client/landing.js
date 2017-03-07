@@ -51,6 +51,16 @@ const TREES_PATH = "assets/trees/";
 //Global Variables
 var camera, renderer, trees, clock, landingControls, scene, trees, landingKeyControl;
 
+			var FLOOR = -180;
+
+			var mouseX=0;
+			var mouseY=0;
+			var followX = 0;
+			var followY = 0;
+
+			var windowHalfX = window.innerWidth >> 1;
+			var windowHalfY = window.innerHeight >> 1;
+
 let landingScreen = true;
 
 try {
@@ -672,10 +682,18 @@ try {
       });
     }
     window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener('mousemove', onMouseMove, false);
   }
 
   var et = 0;
 
+  function onMouseMove(e){
+    console.log(e);
+
+    		mouseX = ( event.clientX - windowHalfX );
+				mouseY = ( event.clientY - windowHalfY );
+
+  }
 
   function onWindowResize() {
 
@@ -690,6 +708,16 @@ try {
     if (landingScreen) {
 
       requestAnimationFrame(render);
+
+      //Mouse movement
+      	var moveX = (mouseX-followX)/150;
+				var moveY = (mouseY-followY)/150;
+
+				followX += moveX;
+				followY += moveY;
+
+        camera.position.y = 30 +(followY/70)*-1;
+        camera.position.x = 30 +(followX/70)*-1;
 
       // update time
       var delta = clock.getDelta();
