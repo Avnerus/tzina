@@ -48,7 +48,7 @@ export default class TimeController {
         this.nowCount = 0;
 
         this.IDLE_TIMEOUT = 60;
-        this.HELP_TIMEOUT = 20;
+        this.HELP_TIMEOUT = 30;
         this.NOW_HELP_TRIGGER = 3;
 
         events.on("experience_end", () => {
@@ -195,7 +195,7 @@ export default class TimeController {
         let NOWHELP_TEXT_DEFINITION = {
              align: textAlign.center, 
              font: '70px Miriam Libre',
-             fillStyle: '#33e5ab',
+            fillStyle: '#bfbfbf',
              antialias: true,
              shadow: true
         }
@@ -309,7 +309,7 @@ export default class TimeController {
             text.scale.multiplyScalar(0.00005);
             text.position.set(0, 0, -0.1001);
         } else {
-            text.scale.multiplyScalar(0.00151);
+            text.scale.multiplyScalar(0.001);
             text.position.set(0, 0, -1.56);
         }
 

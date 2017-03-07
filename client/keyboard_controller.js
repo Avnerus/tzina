@@ -9,6 +9,7 @@ export default class KeyboardController {
         this.moveLeft = false;
         this.moveRight = false;
         this.moveBackward = false;
+        this.crouch = false;
         this.isOnObject = false;
 
         this.velocity = new THREE.Vector3();
@@ -23,6 +24,9 @@ export default class KeyboardController {
 
         this.zAxis = new THREE.Vector3(0,0,1);
         this.xAxis = new THREE.Vector3(1,0,0);
+
+        this.CROUCH_HEIGHT = 0.3;
+        this.STAND_HEIGHT = 0.5
     }
     init() {
 
@@ -36,11 +40,21 @@ export default class KeyboardController {
         });
 
         events.on("intro_end" ,() => {
-            this.active = true;
+            this.CROUCH_HEIGHT = 0.55;
+            this.STAND_HEIGHT = 1.2;
+        });
+
+        events.on("experience_end" ,() => {
+            this.CROUCH_HEIGHT = 1;
+            this.STAND_HEIGHT = 1.6;
         });
 
         document.addEventListener('keydown', (event) => {
             switch ( event.keyCode ) {
+                case 16: // Shift
+                    event.preventDefault();
+                    this.crouch = true;
+                    break;
                 case 38: // up
                 case 87: // w
                     event.preventDefault();
@@ -76,8 +90,12 @@ export default class KeyboardController {
 
 
         document.addEventListener('keyup', (event) => {
+            console.log("Key up", event);
             switch( event.keyCode ) {
-
+                case 16: // Shift
+                    event.preventDefault();
+                    this.crouch = false;
+                    break;
                 case 38: // up
                 case 87: // w
                     event.preventDefault();
@@ -102,6 +120,7 @@ export default class KeyboardController {
                     this.moveRight = false;
                     break;
             }
+
             return false;
         }, false);
     }
@@ -110,13 +129,18 @@ export default class KeyboardController {
         if (this.active && delta < 0.1) {
             if (this.velocity.x > 0) {
                 this.velocity.x = Math.max(this.velocity.x - this.velocity.x * 10.0 * delta, 0);
-            } else {
+            } else if (this.velocity.x < 0) {
                 this.velocity.x = Math.min(this.velocity.x - this.velocity.x * 10.0 * delta, 0);
             }
             if (this.velocity.z > 0) {
                 this.velocity.z = Math.max(this.velocity.z - this.velocity.z * 10.0 * delta, 0);
-            } else {
+            } else if (this.velocity.z < 0) {
                 this.velocity.z = Math.min(this.velocity.z - this.velocity.z * 10.0 * delta, 0);
+            }
+            if (this.velocity.y > 0) {
+                this.velocity.y = Math.max(this.velocity.y - this.velocity.y * delta, 0);
+            } else if (this.velocity.y < 0) {
+                this.velocity.y = Math.min(this.velocity.y - this.velocity.y * delta, 0);
             }
 
             //this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
@@ -126,6 +150,17 @@ export default class KeyboardController {
 
             if ( this.moveLeft ) this.velocity.x -= 100.0 * delta * this.config.movementSpeed;
             if ( this.moveRight ) this.velocity.x += 100.0 * delta * this.config.movementSpeed;
+
+            if (this.crouch) {
+                this.velocity.y -= delta * 0.8;
+                this.camera.position.y = Math.max(this.camera.position.y + this.velocity.y, this.CROUCH_HEIGHT);
+            } else if (this.camera.position.y < this.STAND_HEIGHT) {
+                this.velocity.y = Math.max(0, this.velocity.y + delta * 0.8);
+                this.camera.position.y = Math.min(this.camera.position.y + this.velocity.y, this.STAND_HEIGHT);
+            } else {
+                this.velocity.y = 0;
+            }
+            //console.log("Velocity Y: ", this.velocity.y);
 
             /*
             if (this.collisionManager.isClimbingStairs() && this.velocity.z != 0) {
@@ -151,9 +186,7 @@ export default class KeyboardController {
                     .then((result) => {
                         if (result) {
                             this.camera.position.copy(target);
-                        } else {
-                            console.log("NO GO");
-                        }
+                        } 
                     }); 
                 } else {
                     this.camera.position.copy(target);

@@ -48,6 +48,7 @@ import Ending from './ending'
 
 import PidgeonController from './clientSockets/index'
 
+import Coin from './coin'
 
 export default class Game {
     constructor(config) {
@@ -225,7 +226,7 @@ export default class Game {
         this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
         this.SUN_GAZE_SOUND = 'assets/sound/ui/Hour_Replace_1.ogg'
 
-        this.waterDrops = new WaterDrops();
+        this.waterDrops = new WaterDrops(this.config);
         this.camera.add(this.waterDrops);
 
             /*
@@ -240,6 +241,7 @@ export default class Game {
         this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
         this.pidgeonController.init(this.loadingManager);
 
+        this.coin = new Coin(this.characterController);
     }
 
     load(onLoad, onProgress) {
@@ -280,6 +282,7 @@ export default class Game {
             // Characters
             console.log("Initializing characters");
             this.characterController.init(this.loadingManager);
+            this.coin.init(this.loadingManager);
         }
         this.intro.init(this.loadingManager);
         this.soundManager.init(this.loadingManager);
@@ -449,6 +452,9 @@ export default class Game {
             this.waterDrops.update(dt);
             if (!this.controlPassed) {
                 this.intro.update(dt,et);
+            }
+            if(this.coin.toCheck){
+                this.coin.update(this.camera,dt,et);
             }
         }
         if (this.keyboardController) {

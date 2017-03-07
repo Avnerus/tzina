@@ -121,6 +121,14 @@ export default class CharacterController {
         }
     }
 
+    removeCharacter(characterName) {
+        let character = this.characters[characterName];
+        if (character) {
+            this.square.clockwork.remove(character);
+            character.unload();
+        }
+    }
+
     update(dt,et) {
         for (let i = 0; i < this.activeCharacters.length; i++) {
             this.activeCharacters[i].update(dt,et);

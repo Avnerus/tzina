@@ -19,7 +19,7 @@ export default class Flood extends THREE.Object3D  {
         this.END_HEIGHT = 12.45;
         this.START_HEIGHT = 11.65;
 
-        this.UPDATE_INTERVAL = 5;
+        this.UPDATE_INTERVAL = 1 / 25;
 
     }
     init(loadingManager) {
@@ -35,13 +35,12 @@ export default class Flood extends THREE.Object3D  {
         texture.repeat.set(10,10);
 
         let material = new THREE.MeshLambertMaterial({
-//           color: 0x99F9FF,
             opacity: 0.80,
             map:texture,
           //  shininess: 164,
             shading: THREE.FlatShading,
             transparent: true,
-            side: THREE.DoubleSide,
+            //side: THREE.DoubleSide,
             wireframe: false,
         });
         this.mesh = new THREE.Mesh(geometry, material);
@@ -79,11 +78,11 @@ export default class Flood extends THREE.Object3D  {
 
     updateFlood(percentage) {
         //console.log("Update flood progress:", percentage);
-        if (percentage <= 0.5) {
-            let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.5));
+        if (percentage >= 0.3 && percentage <= 0.7) {
+            let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * ((percentage - 0.3) / 0.4));
             this.mesh.scale.set(scale, scale, scale);
-        } else {
-            let height = (this.START_HEIGHT + (this.END_HEIGHT - this.START_HEIGHT) * ((percentage - 0.5) / 0.5));
+        } else if (percentage > 0.7 && percentage <= 1.0) {
+            let height = (this.START_HEIGHT + (this.END_HEIGHT - this.START_HEIGHT) * ((percentage - 0.7) / 0.3));
             this.mesh.position.y = height;
         }
     }
