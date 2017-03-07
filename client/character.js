@@ -68,6 +68,8 @@ export default class Character extends THREE.Object3D {
         this.audioReady = false;
         this.ambientReady = false;
 
+        this.chapterSoundPlaying = false;
+
         this.nextAdjustment = null;
         this.lastAdjustment = null;
 
@@ -112,6 +114,13 @@ export default class Character extends THREE.Object3D {
                 this.animation = null;
             }
 
+            events.on("chapter_sound_playing", (isIt)=>{
+                if(isIt){
+                    this.chapterSoundPlaying = true;
+                } else {
+                    this.chapterSoundPlaying = false;
+                }
+            });
 
             events.on("character_playing", (name) => {
                 if (this.idleException(name)) {
@@ -650,7 +659,7 @@ export default class Character extends THREE.Object3D {
     }
 
     playFull() {
-        if (this.fullVideo.mesh) {
+        if (this.fullVideo.mesh && !this.chapterSoundPlaying) {
             this.playingFull = true;
             if (this.idleVideo) {
                 this.idleVideo.pause();
