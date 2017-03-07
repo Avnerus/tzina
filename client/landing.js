@@ -39,7 +39,7 @@ $('body').click(function () {
 
     clickShaderEffect = 0;
 
-  }, 2000);
+  }, 100);
 
 });
 
@@ -50,8 +50,6 @@ const TREES_PATH = "assets/trees/";
 
 //Global Variables
 var camera, renderer, trees, clock, landingControls, scene, trees, landingKeyControl;
-
-			var FLOOR = -180;
 
 			var mouseX=0;
 			var mouseY=0;
@@ -688,7 +686,6 @@ try {
   var et = 0;
 
   function onMouseMove(e){
-    console.log(e);
 
     		mouseX = ( event.clientX - windowHalfX );
 				mouseY = ( event.clientY - windowHalfY );
