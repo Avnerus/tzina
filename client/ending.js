@@ -239,11 +239,13 @@ export default class Ending {
             if (this.config.platform == "desktop") {
                 this.camera.position.set(-1.2,1.6,-3.1);
                 this.square.mesh.rotation.y = 2.7;
+                this.square.setEndingColliders();
             }
 
             this.introAni.createSnowParticle();
             this.introAni.simulationShader.uniforms.squareRadius.value = 0.0;
             this.introAni.fbo.particles.position.x = -38;
+
 
             setTimeout(() => {
                 this.fadeIn()

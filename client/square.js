@@ -13,6 +13,7 @@ const BUILDINGS_PATH = "assets/square/buildings/buildings_new.json"
 const END_BUILDING_PATH = "assets/square/buildings/endBuilding.json"
 const SUNS_PATH = "assets/square/suns.json"
 const COLLIDERS_PATH = "assets/square/colliders.json"
+const END_COLLIDERS_PATH = "assets/square/buildings/colliderBalcony.json"
 const BENCHES_PREFIX = "assets/square/benches/"
 const FOUNTAIN_PATH = "assets/square/fountain/fountain.json"
 const GROUND_PATH = "assets/square/squareRamp_22.json"
@@ -119,7 +120,9 @@ export default class Square extends THREE.Object3D{
             this.mesh = obj;
             this.mesh.rotation.order = "YXZ";
 
-            this.colliders = results[4];
+            this.colliders = results[4][0];
+            this.endColliders = results[4][1];
+
             if (this.config.platform == "desktop") {
                 this.mesh.add(this.colliders);
             }
@@ -560,6 +563,17 @@ export default class Square extends THREE.Object3D{
             }
         });
         this.endNeonThing.tween = tweenM;
+
+        if (this.config.platform == "desktop") {
+            // Colliders
+            this.mesh.remove(this.colliders);
+            this.colliders = null;
+            this.clockwork.add(this.endColliders);
+        }
+    }
+    setEndingColliders() {
+        this.updateMatrixWorld(true);
+        this.collisionManager.refreshSquareColliders(this.endColliders.children);
     }
     loadSuns(loadingManager) {
         console.log("Loading suns")
@@ -646,15 +660,22 @@ export default class Square extends THREE.Object3D{
         });
     }
     loadColliders(loadingManager) {
-        return new Promise((resolve, reject) => {
-            let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(COLLIDERS_PATH,( obj ) => {
+        let loaders = [
+            this.loadFile(loadingManager, COLLIDERS_PATH),
+            this.loadFile(loadingManager, END_COLLIDERS_PATH)
+        ];
+        return Promise.all(loaders)
+        .then((objects) => {
                 let colliders;
+                let obj = objects[0];
                 obj.children  = _.filter(obj.children, function(o) { return (o.name != "BenchColliders2" && o.name != "BenchColliders" && o.children.length > 1); });
                 obj.children.forEach((o) => {o.children.splice(0,1)});
                 console.log("Loaded square colliders ", obj);
-                resolve(obj);
-            });
+
+                obj = objects[1];
+                console.log("Loaded ending colliders",obj);
+
+                return (objects);
         });
     }
     loadBenches(loadingManager) {
