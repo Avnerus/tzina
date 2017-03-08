@@ -1,4 +1,4 @@
-import BlurModule from "./util/SoundBlur";
+//import BlurModule from "./util/SoundBlur";
 const SOUND_PATH = "assets/sound/"
 
 /*note on sound focus and defocus:
@@ -60,11 +60,11 @@ export default class SoundManager {
         setFocus:function(on,time){
           //blurr all except the one in focus
           this.eachSampler(function(thisSampler,n){
-            thisSampler.controlBlur(1,time);
+           // thisSampler.controlBlur(1,time);
           },on);
           //focus the one we are focusing, if there is any
           if(on && on!==undefined) if(typeof(on.controlBlur)==='function'){
-            on.controlBlur(0,time);
+         //   on.controlBlur(0,time);
           }else{
             console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
           }
@@ -72,11 +72,11 @@ export default class SoundManager {
         setFocusWithLevel:function(on,level){
           //blurr all except the one in focus
           this.eachSampler(function(thisSampler,n){
-            thisSampler.controlBlur(level, 0);
+          //  thisSampler.controlBlur(level, 0);
           },on);
           //focus the one we are focusing, if there is any
           if(on && on!==undefined) if(typeof(on.controlBlur)==='function'){
-            on.controlBlur(0,0);
+         //   on.controlBlur(0,0);
           }else{
             console.warn("you tried to set sound focus, but the provided object didn't have a controlBlur function.");
           }
@@ -86,7 +86,7 @@ export default class SoundManager {
           console.log("here 2");
           this.eachSampler(function(thisSampler,n){
             console.log("refocus"+n);
-            thisSampler.controlBlur(0,time);
+          //  thisSampler.controlBlur(0,time);
           });
         },
       };
@@ -156,7 +156,7 @@ export default class SoundManager {
           let thisSample=ambientSamples[a];
           if(!thisSample.disable){
             let pSampler=new PositionalSoundSampler(this.listener,this.scene);
-            pSampler.blurModule.controlVolume(1.5);
+          //  pSampler.blurModule.controlVolume(1.5);
             pSampler.position.set(thisSample.position[0],thisSample.position[1],thisSample.position[2]);
             //pSampler.createDebugCube(0xFF0000);
             pSampler.init(SOUND_PATH + thisSample.path,loadingManager,function(thisSampler){
@@ -168,7 +168,7 @@ export default class SoundManager {
               let thisSamplerGuiControl={
                 // blur:0.5,
                 focus:function(){
-                  thisSoundManager.panorama.setFocus(thisSampler,3);
+                 // thisSoundManager.panorama.setFocus(thisSampler,3);
                 },
               }
 
@@ -267,7 +267,7 @@ export default class SoundManager {
 
 export class StaticSoundSampler{
   constructor(audioContext){
-    this.blurModule=new BlurModule(audioContext);
+   // this.blurModule=new BlurModule(audioContext);
     this.audioContext=audioContext;
     //in practical terms, where to connect the blurmodule:
     //if static, will be an audiocontext, but if positional, will be positional audionode
@@ -278,8 +278,8 @@ export class StaticSoundSampler{
     this.offset = 0;
     this.loop = false;
 
-    this.controlVolume=function(...a){this.blurModule.controlVolume.apply(this.blurModule,a)};
-    this.controlBlur=function(...a){this.blurModule.controlBlur.apply(this.blurModule,a)};
+    this.controlVolume=function(...a){/*this.blurModule.controlVolume.apply(this.blurModule,a)*/};
+    this.controlBlur=function(...a){/*this.blurModule.controlBlur.apply(this.blurModule,a)*/};
 
   }
   setToLoop(loopValue){
@@ -295,7 +295,7 @@ export class StaticSoundSampler{
     let audioContext=this.audioContext;
     let thisStaticSoundSampler=this;
     //blurModule loads a impulse response audio file
-    this.blurModule.init(loadingManager);
+   // this.blurModule.init(loadingManager);
     //so we can more safely check if (thisStaticSoundSampler.source)
     this.source=false;
     //pendant: I don't know what to do with the loadingManager
@@ -324,10 +324,11 @@ export class StaticSoundSampler{
     this.source.loop = this.loop;
     //connect my buffer source to the blur module, and then the blur module to the output.
     try{
-      this.source.connect(this.blurModule.inputNode);
-      this.blurModule.connect(this.staticSoundOutputDestination);
+      this.source.connect(this.staticSoundOutputDestination);
+     // this.source.connect(this.blurModule.inputNode);
+     // this.blurModule.connect(this.staticSoundOutputDestination);
     }catch(e){
-      console.log(this.blurModule,this.blurModule.inputNode,audioContext.destination);
+    //  console.log(this.blurModule,this.blurModule.inputNode,audioContext.destination);
       console.error(e);
     }
     
@@ -383,9 +384,9 @@ export class PositionalSoundSampler extends StaticSoundSampler{
       get:function(){return pa.position.get()}
     }
     //using apply because there are n arguments
-    this.control=function(...a){this.blurModule.control.apply(this.blurModule,a)};
-    this.controlBlur=function(...a){this.blurModule.controlBlur.apply(this.blurModule,a)};
-    this.controlVolume=function(...a){this.blurModule.controlVolume.apply(this.blurModule,a)};
+    this.control=function(...a){/*this.blurModule.control.apply(this.blurModule,a*)*/};
+    this.controlBlur=function(...a){/*this.blurModule.controlBlur.apply(this.blurModule,a)*/};
+    this.controlVolume=function(...a){/*this.blurModule.controlVolume.apply(this.blurModule,a)*/};
     // this.position=this.positionalAudio.position;
   }
   init(sampleUrl,loadingManager,loadReadyCallback){
