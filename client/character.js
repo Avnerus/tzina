@@ -329,6 +329,9 @@ export default class Character extends THREE.Object3D {
                     this.props.animationRotation[1] * Math. PI / 180,
                     this.props.animationRotation[2] * Math. PI / 180
                 );
+                if (!this.props.fullOnly) {
+                    this.animation.visible = false;
+                } 
             }
         }
 
