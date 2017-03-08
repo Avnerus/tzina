@@ -120,8 +120,7 @@ export default class Square extends THREE.Object3D{
             this.mesh = obj;
             this.mesh.rotation.order = "YXZ";
 
-            this.colliders = results[4][0];
-            this.endColliders = results[4][1];
+            this.colliders = results[4];
 
             if (this.config.platform == "desktop") {
                 this.mesh.add(this.colliders);
@@ -568,12 +567,12 @@ export default class Square extends THREE.Object3D{
             // Colliders
             this.mesh.remove(this.colliders);
             this.colliders = null;
-            this.clockwork.add(this.endColliders);
         }
     }
     setEndingColliders() {
         this.updateMatrixWorld(true);
-        this.collisionManager.refreshSquareColliders(this.endColliders.children);
+        let colliderParent = this.endBuilding.getObjectByName("ColliderParent");
+        this.collisionManager.refreshSquareColliders(colliderParent.children);
     }
     loadSuns(loadingManager) {
         console.log("Loading suns")
@@ -660,22 +659,14 @@ export default class Square extends THREE.Object3D{
         });
     }
     loadColliders(loadingManager) {
-        let loaders = [
-            this.loadFile(loadingManager, COLLIDERS_PATH),
-            this.loadFile(loadingManager, END_COLLIDERS_PATH)
-        ];
-        return Promise.all(loaders)
-        .then((objects) => {
+        return this.loadFile(loadingManager, COLLIDERS_PATH)
+        .then((obj) => {
                 let colliders;
-                let obj = objects[0];
                 obj.children  = _.filter(obj.children, function(o) { return (o.name != "BenchColliders2" && o.name != "BenchColliders" && o.children.length > 1); });
                 obj.children.forEach((o) => {o.children.splice(0,1)});
                 console.log("Loaded square colliders ", obj);
 
-                obj = objects[1];
-                console.log("Loaded ending colliders",obj);
-
-                return (objects);
+                return (obj);
         });
     }
     loadBenches(loadingManager) {

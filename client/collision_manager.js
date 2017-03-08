@@ -258,7 +258,7 @@ export default class CollisionManager {
         } else {
             mesh = obj.children[0];
         }
-        if (obj.type != "Mesh" || obj.parent.type == "Scene") {
+        if (obj.name != "f_11_SubMesh 0") {
             mesh.material.visible = false; // Our specially crafted collider
         }
 
