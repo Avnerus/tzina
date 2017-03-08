@@ -640,7 +640,12 @@ export default class Character extends THREE.Object3D {
 
     checkReady() {
         console.log(this.props.name, "Checking ready");
-        if (this.fullReady && this.active && !this.onHold && this.audioReady && this.ambientReady && (this.subtitlesReady || !this.props.subtitles)) {
+        if (this.fullReady && 
+            this.audioReady && 
+	    this.active && !this.onHold &&
+            (this.ambientReady || !this.props.hasAmbience)&& 
+            (this.subtitlesReady || !this.props.subtitles)) {
+        
             if (this.animation) {
                 this.animation.start(this.props.name);
             }

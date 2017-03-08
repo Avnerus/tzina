@@ -39,6 +39,7 @@ export default class CollisionManager {
 
         this.debugCollisions = false;
         this.debugGaze = false;
+        this.debugCharacters = false;
 
         this.lastGaze = null;
     }
@@ -143,7 +144,7 @@ export default class CollisionManager {
 
             let newBox = THREE.GeometryUtils.enlargeBox(bbox.box, space, offset);
 
-            if (this.debugCollisions) {
+            if (this.debugCharacters) {
                 DebugUtil.adjustBBox(bbox, character.props.name + " - bbox", character.props.space, offset);
                 this.scene.add(bbox);
             }
@@ -247,7 +248,7 @@ export default class CollisionManager {
         //console.log("Add bounding box", obj);
         bbox.update();
         if (this.debugCollisions) {
-            console.log("Collision bounding box", bbox);
+            //console.log("Collision bounding box", bbox);
             this.scene.add(bbox);
             this.squareDebug.push(bbox);
         }
@@ -256,8 +257,11 @@ export default class CollisionManager {
             mesh = obj;
         } else {
             mesh = obj.children[0];
-            mesh.material.visible = false; // A specially crafted collider
         }
+        if (obj.name != "f_11_SubMesh 0") {
+            mesh.material.visible = false; // Our specially crafted collider
+        }
+
         if (obj.onCollision) {
             this.squareEventMeshes.push(mesh);
             this.squareEventObstacles.push([

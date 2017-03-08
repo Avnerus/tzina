@@ -4,7 +4,9 @@ export default [
         position : [11.4, 22.04, -10.1],
         rotation: [355, 302, 3],
         space: 1.3,
-        spaceOffset: [-0.17,0,-0.39]
+        spaceOffset: [-0.17,0,-0.39],
+        endingPosition : [10.49, 22.4, -10.14],
+        endingRotation: [360, 210, 3]
     },
     {
         name: 'Miriam',
@@ -13,6 +15,7 @@ export default [
         scale: 0.003 * 0.661 * 1.071 * 0.9,
         space: 1.2,
         spaceOffset: [0.59,0,0.47],
+        endingPosition : [11.77, 22.04, -18.52],
          adjustments : [
             {
                 sec: 0,
@@ -29,13 +32,14 @@ export default [
         rotation: [9, 208, 3.6],
         space: 1.5, //anim:1.46
         spaceOffset: [0.62,0.59,-0.17], //0.28,0.73,1.73
+        endingPosition : [7.29, 21.8, -12.91],
         gazeOffset: [0.14,0.25,0.47],
         adjustments : [
             {
                 sec: 0,
                 mindepth : 0,
                 maxdepth : 3494.158935547,
-                position : [-6.58,  22.06, 11.01],
+                position : [6.58,  22.06, -12.4],
                 rotation: [9, 208, 3.6],
                 scale: 0.0027 * 0.4686
             }
@@ -47,7 +51,8 @@ export default [
         rotation: [0, 225, 0],
         space: 0.8,
         spaceOffset: [-0.11,0,0.43], //0.28,0.73,1.73
-        gazeOffset: [-4.46,0.9,0.02]
+        gazeOffset: [-4.46,0.9,0.02],
+        endingPosition : [-12.33, 19.7, -6.69]
     },
     {
         name: 'Rami',
@@ -63,6 +68,7 @@ export default [
         position : [-0.43, 22.39, 7.43],
         rotation: [7, 0, 0],
         space: 0.8,
+        endingPosition : [-3.93, 22.04, -8.42],
         spaceOffset: [-0.17,0,0.62]
     },
     {
@@ -84,6 +90,7 @@ export default [
         name: 'LupoDogs5PM',
         position : [21, 21.8, 0],
         rotation: [3, 213, 0],
+        endingPosition : [-22.99, 22.04, -3.93],
     },
     {
         name: 'Mark',
@@ -91,6 +98,7 @@ export default [
         maxdepth : 4564.32861328125,
         space: 1, 
         spaceOffset: [-1,0,-0.4],
+        endingPosition : [-17.4, 22.04, -0.57],
         position : [8.28, 21.8, -16.86],
         rotation: [0, 286, 350],
               adjustments : [
@@ -135,6 +143,7 @@ export default [
     {
         name: 'Lupo5PM',
         position : [18.25, 22, -3.1],
+        endingPosition : [22.99, 22.04, -3.93],
         rotation: [7, 225, 0], //120
         adjustments: [
             {
@@ -162,12 +171,13 @@ export default [
         rotation: [360, 84, 0], // 
         space: 1.2,
         spaceOffset: [0.62,0,-0.17], //0.88,0,0.58
-        gazeOffset: [0,0.47,-0.31]   
+        gazeOffset: [0,0.47,-0.31],
+        endingPosition : [-8.2, 22.04, 0.55]   
     },
     {
         name: 'Shirin7PM',
-        position : [9.22, 22.37, -10.86],
-        rotation: [0, 0, 0],
+        position : [16.7, 27.3, -46.57],
+        rotation: [0, 275, 0],
         space: 100,
         spaceOffset: [0,0,0],
     },
