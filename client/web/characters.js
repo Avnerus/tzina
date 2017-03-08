@@ -5,6 +5,8 @@ export default [
         rotation: [355, 302, 3],
         space: 1.3,
         spaceOffset: [-0.17,0,-0.39],
+        endingPosition : [10.49, 22.4, -10.14],
+        endingRotation: [360, 210, 3]
     },
     {
         name: 'Miriam',
@@ -50,7 +52,7 @@ export default [
         space: 0.8,
         spaceOffset: [-0.11,0,0.43], //0.28,0.73,1.73
         gazeOffset: [-4.46,0.9,0.02],
-        endingPosition : [-18.52, 19.7, -1.69]
+        endingPosition : [-12.33, 19.7, -6.69]
     },
     {
         name: 'Rami',

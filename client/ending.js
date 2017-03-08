@@ -14,7 +14,7 @@ export default class Ending {
         this.square = square;
         this.introAni = introAni;
 
-        this.debug = false;
+        this.debug = true;
 
         this.endCredits = new EndCredits(this.config);
         this.faded = false;
@@ -162,7 +162,11 @@ export default class Ending {
         new THREE.TextureLoader(loadingManager).load('assets/end/miriam.png', (texture) => {
             let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
             this.miriamPlane = new THREE.Mesh(miriamGeo, material);
-            this.miriamPlane.position.set(-3.93,13.4,8.61);
+            if (this.config.platform == "vive") {
+                this.miriamPlane.position.set(-3.93,13.4,8.61);
+            } else {
+                this.miriamPlane.position.set(-10.84,13.4,8.24);
+            }
             this.miriamPlane.rotation.set(0,112 * Math.PI/180,0);
             this.miriamPlane.scale.set(0.00169, 0.00169, 0.00169);
             //DebugUtil.positionObject(this.miriamPlane, "Miriam image");
@@ -184,7 +188,7 @@ export default class Ending {
         if (this.config.platform == "vive") {
             this.spotLight.position.set(-6,2.4,4.14);
         } else {
-            this.spotLight.position.set(-35.94,9.16,18.18);
+            this.spotLight.position.set(-51.73,20.44,29.46);
         }
 
         this.text = this.generateText();
@@ -310,7 +314,6 @@ export default class Ending {
             this.square.add(this.miriamPlane);
         } 
         setTimeout(() => {
-         //   this.characterController.removeCharacter(nextText);
             if (nextText == "Miriam") {
                 this.square.remove(this.miriamPlane);
             }
@@ -329,7 +332,7 @@ export default class Ending {
         .then(() => {
             this.introAni.disposeAni();
             this.camera.add(this.endCredits);
-            this.endCredits.scale.set(0.077, 0.077, 0.077);
+            this.endCredits.scale.set(0.06, 0.06, 0.06);
             this.endCredits.rotation.y = 0;
             this.endCredits.init();
             if (this.config.platform == "vive") {

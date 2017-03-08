@@ -37,7 +37,7 @@ export default class CollisionManager {
 
         this.raycaster = new THREE.Raycaster();
 
-        this.debugCollisions = true;
+        this.debugCollisions = false;
         this.debugGaze = false;
         this.debugCharacters = false;
 
