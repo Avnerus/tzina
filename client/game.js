@@ -186,7 +186,7 @@ export default class Game {
                 'Itzik' : new ItzikAnimation(),
                 'Meir' : new MeirAnimation(),
                 'Mark' : new MarkAnimation(this.sky, this.square),
-                'Agam12PM' : new Agam12PMAnimation(this.square),
+                'Agam12PM' : new Agam12PMAnimation(this.config, this.square),
                 'Lupo12PM' : new Lupo12PMAnimation(),
                 'Itzhak' : new ItzhakAnimation(),
                 'Rami' : new RamiAnimation(this.renderer),
@@ -293,11 +293,11 @@ export default class Game {
         this.instructions.init();
 
         if (this.config.platform == "desktop") {
-            //this.config.endTime = 60 * 25;
-            this.config.endTime = 60 * 0.4;
+            this.config.endTime = 60 * 25;
+            //this.config.endTime = 60 * 0.4;
         } else {
-            //this.config.endTime = 60 * 15;
-            this.config.endTime = 60 * 0.4;
+            this.config.endTime = 60 * 15;
+            //this.config.endTime = 60 * 0.4;
         }
 
         console.log("Experence end time: ", this.config.endTime);

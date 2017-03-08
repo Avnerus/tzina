@@ -3,12 +3,13 @@ import MultilineText from '../util/multiline_text'
 import {textAlign} from '../lib/text2d/index'
 
 export default class Agam12PMAnimation extends THREE.Object3D {
-    constructor( square ) {
+    constructor( config, square ) {
         super();
         this.BASE_PATH = 'assets/animations/agam12pm';
 
         this.square = square;
         this.didInit = false;
+        this.config = config;
 
         this.INTRO_TEXT = [
             "Yaakov Agam, 89 years old.",
@@ -16,6 +17,13 @@ export default class Agam12PMAnimation extends THREE.Object3D {
             "who asked the viewer to participate.",
             "This fountain, \“Water and Fire\”, is a piece that",
             "represents the core of his philosophy."
+        ]
+
+        this.INTRO_TEXT_HEB = [
+            ".יעקב אגם, בן 89",
+            "אבי האמנות הקינטית ומהראשונים",
+            ".ששיתפו את הצופה ביצירה עצמה",
+            ".המזרקה, פסל \"המים והאש\", מהווה את יסוד תורתו",
         ]
 
         this.showedIntro = false;
@@ -29,7 +37,7 @@ export default class Agam12PMAnimation extends THREE.Object3D {
             // Intro text
             this.text = this.generateText();
             this.text.hide(0);
-            this.text.setText(this.INTRO_TEXT);
+            this.text.setText(this.config.language == "heb" ? this.INTRO_TEXT_HEB : this.INTRO_TEXT);
             this.add(this.text);
             //DebugUtil.positionObject(this.text, "Agam text");
 
