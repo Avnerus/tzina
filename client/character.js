@@ -163,7 +163,7 @@ export default class Character extends THREE.Object3D {
                 });
             }
 
-        //events.on("experience_end", () => {this.unload()});
+        events.on("experience_end", () => {this.unload()});
     }
     idleException(name) {
         if (
@@ -349,7 +349,10 @@ export default class Character extends THREE.Object3D {
                 this.ambientAudio.unload();
             }
         }
-        //this.remove(this.animation);
+        if (this.animation) {
+            this.remove(this.animation);
+            this.animation.visible = false;
+        }
         this.active = false;
         this.isPaused = false;
         this.playingFull = false;
@@ -623,7 +626,11 @@ export default class Character extends THREE.Object3D {
 
     checkReady() {
         console.log(this.props.name, "Checking ready");
-        if (this.fullReady && this.audioReady && this.ambientReady && (this.subtitlesReady || !this.props.subtitles)) {
+        if (this.fullReady && 
+            this.audioReady && 
+            (this.ambientReady || !this.props.hasAmbience)&& 
+            (this.subtitlesReady || !this.props.subtitles)) {
+        
             if (this.animation) {
                 this.animation.start(this.props.name);
             }
