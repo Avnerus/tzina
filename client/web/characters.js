@@ -39,7 +39,7 @@ export default [
                 sec: 0,
                 mindepth : 0,
                 maxdepth : 3494.158935547,
-                position : [6.58,  22.06, -12.4],
+                position : [-6.61,  22.09, 10.93],
                 rotation: [9, 208, 3.6],
                 scale: 0.0027 * 0.4686
             }
