@@ -12,7 +12,7 @@ var Stats = require('stats.js');
 // DISABLE LOGGING
 //
 if (config.production) {
-  window['console']['log'] = function () {};
+  window['console']['log'] = function () { };
 }
 
 var game = new Game(config);
@@ -51,13 +51,13 @@ const TREES_PATH = "assets/trees/";
 //Global Variables
 var camera, renderer, trees, clock, landingControls, scene, trees, landingKeyControl;
 
-			var mouseX=0;
-			var mouseY=0;
-			var followX = 0;
-			var followY = 0;
+var mouseX = 0;
+var mouseY = 0;
+var followX = 0;
+var followY = 0;
 
-			var windowHalfX = window.innerWidth >> 1;
-			var windowHalfY = window.innerHeight >> 1;
+var windowHalfX = window.innerWidth >> 1;
+var windowHalfY = window.innerHeight >> 1;
 
 let landingScreen = true;
 
@@ -76,9 +76,9 @@ try {
 
 
     $('#progress').css({
-        'width': loaded / total * 100 + '%'
-      })
-      //console.log(loaded * 20);
+      'width': loaded / total * 100 + '%'
+    })
+    //console.log(loaded * 20);
 
     $('#progress_text').html('Loading Tzina...' + loaded / total * 100 + '%');
 
@@ -94,7 +94,7 @@ try {
   var currentLanguage = 'en';
 
   //Intro sound
-  var introSound = new Audio(SOUND_PATH + 'Theme_Intro_1.ogg');
+  var introSound = new Audio(SOUND_PATH + 'intro.ogg');
 
   introSound.loop = true;
 
@@ -136,17 +136,17 @@ try {
     }, 1000);
 
   });
-  
-  $('#about_readmore').click(function(){
-      $('.about_moretext').fadeToggle(250);  
-      $('#about_readmore :nth-child(2)').fadeToggle(100);
-      $('#about_readmore :nth-child(1)').fadeToggle(100);
+
+  $('#about_readmore').click(function () {
+    $('.about_moretext').fadeToggle(250);
+    $('#about_readmore :nth-child(2)').fadeToggle(100);
+    $('#about_readmore :nth-child(1)').fadeToggle(100);
   });
 
-  $('#about_readmore_heb').click(function(){
-      $('.about_moretext_heb').fadeToggle(250);  
-      $('#about_readmore_heb :nth-child(2)').fadeToggle(100);
-      $('#about_readmore_heb :nth-child(1)').fadeToggle(100);
+  $('#about_readmore_heb').click(function () {
+    $('.about_moretext_heb').fadeToggle(250);
+    $('#about_readmore_heb :nth-child(2)').fadeToggle(100);
+    $('#about_readmore_heb :nth-child(1)').fadeToggle(100);
   });
 
   //Fade in the first screen from black after tree scene was loaded
@@ -162,8 +162,6 @@ try {
     $('#landing_screen').delay(50).fadeIn(500, function () {
 
       console.log('Landing screen faded in');
-            // $('#div_id').readmore();
-
 
       //Disable mouse control on tree scene
       $('#tree_scene').css({
@@ -190,13 +188,7 @@ try {
           //Fade in language selector
           $('#language').fadeIn(250);
 
-          $('#birds').fadeIn(250);
-
         });
-
-        // videoBirds.loop = true;
-
-        //videoBirds.play();
 
       });
 
@@ -215,7 +207,7 @@ try {
 
     $('#language').fadeToggle(250);
 
-        //Click sound
+    //Click sound
     buttonClick.play();
 
     $('#landing_screen').fadeToggle(250);
@@ -292,6 +284,10 @@ try {
 
         $('#lower_tag').html('מסע דרך שטפון של בדידות ואהבה');
 
+        $('#vive_instruc').html('הסתכל סביב, ולך במרחב של שלושה מטר רבוע<br>הסתכל על השמשות בכדי לשלוט בשעה');
+
+        $('#desktop_instruc').html('השתמש בחצים בשביל לזוז<br> השתמש בעכבר בשביל להסתכל סביב<br> הסתכל על השמשות בכדי לשלוט בשעה')
+
         $('#landing_screen').fadeIn(250);
 
       } else if (currentLanguage == 'he') {
@@ -306,6 +302,10 @@ try {
         $('#desc_sub').html('A webVR Documentary by Shirin Anlen');
 
         $('#enter_button').html('ENTER');
+
+        $('#vive_instruc').html('LOOK AROUND AND WALK WITHIN A 3X3 METER RANGE <br> GAZE AT THE SUN TO CHANGE THE TIME');
+
+        $('#desktop_instruc').html('Use arrow/WASD keys to move around<br> Use mouse/trackpad to look around<br> Gaze at the suns to change the time');
 
         $('#lower_tag').html('journey through a flood of love and loneliness');
 
@@ -326,71 +326,70 @@ try {
   ////////////////////
   $('#vive_button').click(function () {
 
-    game.setPlatform("vive");
+    $('#vive_button').fadeOut(250);
+    $('#desktop_button').fadeOut(250);
 
-    //Fade out the overlays
-    $('#landing_screen').fadeOut(250, function () {
-      $('#about').animate({
-        top: '-100px'
-      }, 100);
+    $('#about').animate({
+      top: '-100px'
+    }, 100);
 
-      $('#language').animate({
-        top: '-100px'
-      }, 100);
-    });
+    $('#language').animate({
+      top: '-100px'
+    }, 100);
 
     //Fade in the first set of instructions
-    $('#instruction_screen').delay(500).fadeIn(250, function () {
+    $('#instruction_screen').fadeIn(250, function () {
 
       $('#vive_instruc').fadeIn(250);
 
-      $('#progress_text').fadeIn(250);
+      $('#progress_text').fadeIn(250).delay(2000, function () {
 
-      console.log('instructions faded in');
+        game.setPlatform("vive");
 
-      //Enable mouse events on instructions
-      $('#tree_scene').css({
-        "pointer-events": "auto"
-      });
+        try {
+          game.load(function () {
+            console.log('Game Finished Loading');
+            $('#instruction_screen').fadeOut(250, function () {
 
+              $('#landing_screen').hide();
+              $('#tree_scene').hide();
+              $('#progress').hide();
+              $('#progress_text').hide();
+              killLanding();
 
+              $('#start_head').fadeIn(250, function () {
 
-      console.log("Loading...");
+                $('#start_experience').delay(100).fadeIn(250);
 
-      try {
-        game.load(function () {
-          console.log('Game Finished Loading');
-          $('#instruction_screen').fadeOut(250, function () {
+                buttonClick.play();
 
-            $('#tree_scene').fadeOut(250);
-            $('#progress').hide();
-            $('#progress_text').hide();
-            killLanding();
+                introSound.pause();
 
-            $('#start_head').fadeIn(250, function () {
-
-              $('#start_experience').delay(100).fadeIn(250);
-
-              buttonClick.play();
-
-              introSound.pause();
+              });
 
             });
 
-          });
-
-        }, function (url, itemsLoaded, itemsTotal) {
-          console.log("Landing loaded", itemsLoaded, itemsTotal);
-               $('#progress').css({
+          }, function (url, itemsLoaded, itemsTotal) {
+            console.log("Landing loaded", itemsLoaded, itemsTotal);
+            $('#progress').css({
               'width': itemsLoaded / itemsTotal * 100 + '%'
             })
-            $('#progress_text').html('Loading Tzina...' + Math.round(itemsLoaded / itemsTotal * 100) + '%');
-          
+            if (currentLanguage == 'en') {
+              $('#progress_text').html('Loading Tzina...' + Math.round(itemsLoaded / itemsTotal * 100) + '%');
+            } else {
+              $('#progress_text').html(Math.round(itemsLoaded / itemsTotal * 100) + '%' + '...טוען');
+            }
 
-        });
-      } catch (e) {
-        console.error("Exception during game load ", e);
-      }
+
+
+          });
+        } catch (e) {
+          console.error("Exception during game load ", e);
+        }
+
+
+      });
+
 
     });
 
@@ -401,44 +400,36 @@ try {
   ////////////////////
   $('#desktop_button').click(function () {
 
-    game.setPlatform("desktop");
+    $('#vive_button').fadeOut(250);
+    $('#desktop_button').fadeOut(250);
 
-    //Fade out the overlays
-    $('#landing_screen').fadeOut(250, function () {
+    //Get rid of the about button
+    $('#about').animate({
+      top: '-100px'
+    }, 100);
 
-      //Get rid of the about button
-      $('#about').animate({
-        top: '-100px'
-      }, 100);
-
-      $('#language').animate({
-        top: '-100px'
-      }, 100);
-
-    });
+    $('#language').animate({
+      top: '-100px'
+    }, 100);
 
     //Fade in the first set of instructions
-    $('#instruction_screen').delay(500).fadeIn(250, function () {
+    $('#instruction_screen').fadeIn(250, function () {
 
       $('#desktop_instruc').fadeIn(250);
 
-      $('#progress_text').fadeIn(250);
+      $('#progress_text').fadeIn(250).delay(2000, function () {
 
-      console.log('instructions faded in');
+        game.setPlatform("desktop");
 
-
-      console.log("Loading...");
-      //document.getElementById('game').appendChild(stats.dom);
-
-      try {
-        game.load(function () {
+        try {
+          game.load(function () {
             console.log('Game Finished Loading');
             $('#instruction_screen').fadeOut(250, function () {
 
-              $('#tree_scene').fadeOut(250);
-
+              $('#landing_screen').hide();
+              $('#tree_scene').hide();
+              $('#progress').hide();
               $('#progress_text').hide();
-
               killLanding();
 
               $('#start_head').fadeIn(250, function () {
@@ -454,31 +445,23 @@ try {
             });
 
           },
-          function (url, itemsLoaded, itemsTotal) {
-            $('#progress').css({
-              'width': itemsLoaded / itemsTotal * 100 + '%'
-            })
-            $('#progress_text').html('Loading Tzina...' + Math.round(itemsLoaded / itemsTotal * 100) + '%');   
-        });
-      } catch (e) {
-        console.error("Exception during game load ", e);
-      }
+            function (url, itemsLoaded, itemsTotal) {
+              $('#progress').css({
+                'width': itemsLoaded / itemsTotal * 100 + '%'
+              })
+              if (currentLanguage == 'en') {
+                $('#progress_text').html('Loading Tzina...' + Math.round(itemsLoaded / itemsTotal * 100) + '%');
+              } else {
+                $('#progress_text').html(Math.round(itemsLoaded / itemsTotal * 100) + '%' + '...טוען');
+              }
+            });
+        } catch (e) {
+          console.error("Exception during game load ", e);
+        }
 
-      //Enable mouse events on instructions
-      $('#tree_scene').css({
-        "pointer-events": "auto"
-      });
-
-      $(document).on("mousemove", function (mousePosition) {
-
-        var mouseToRadius = Math.round((mousePosition.pageX * (Math.PI / 360) * 36) + 30);
-
-        //console.log(mouseToRadius);
-
-        $('#mouse').css({
-
-          'transform': 'rotate(' + mouseToRadius + 'deg)'
-
+        //Enable mouse events on instructions
+        $('#tree_scene').css({
+          "pointer-events": "auto"
         });
 
       });
@@ -574,53 +557,6 @@ try {
     }
   });
 
-
-
-  //Utility Functions
-
-  //Keycodes for the keyboard tutorial
-  $(document).on("keypress", function (key) {
-    //console.log(key.keyCode);
-
-    if (key.keyCode == 119) {
-      console.log('W key pressed');
-      $('#wkey').fadeIn(50);
-      //Then remove it
-      setTimeout(function () {
-        $('#wkey').fadeOut(50);
-      }, 350);
-
-    } else if (key.keyCode == 115) {
-      console.log('S key pressed');
-      //Turn the key white
-      $('#skey').fadeIn(50);
-      //Then remove it
-      setTimeout(function () {
-        $('#skey').fadeOut(50);
-      }, 350);
-
-    } else if (key.keyCode == 100) {
-      console.log('D key pressed');
-      //Turn the key white
-      $('#dkey').fadeIn(50);
-      //Then remove it
-      setTimeout(function () {
-        $('#dkey').fadeOut(50);
-      }, 350);
-
-    } else if (key.keyCode == 97) {
-      console.log('A key pressed');
-      //Turn the key white
-      $('#akey').fadeIn(50);
-      //Then remove it
-      setTimeout(function () {
-        $('#akey').fadeOut(50);
-      }, 350);
-    }
-  });
-
-
-
   function killLanding() {
     console.log("Kill landing");
 
@@ -683,10 +619,10 @@ try {
 
   var et = 0;
 
-  function onMouseMove(e){
+  function onMouseMove(e) {
 
-    		mouseX = ( event.clientX - windowHalfX );
-				mouseY = ( event.clientY - windowHalfY );
+    mouseX = (event.clientX - windowHalfX);
+    mouseY = (event.clientY - windowHalfY);
 
   }
 
@@ -705,14 +641,14 @@ try {
       requestAnimationFrame(render);
 
       //Mouse movement
-      	var moveX = (mouseX-followX)/150;
-				var moveY = (mouseY-followY)/150;
+      var moveX = (mouseX - followX) / 150;
+      var moveY = (mouseY - followY) / 150;
 
-				followX += moveX;
-				followY += moveY;
+      followX += moveX;
+      followY += moveY;
 
-        camera.position.y = 30 +(followY/70)*-1;
-        camera.position.x = 30 +(followX/70)*-1;
+      camera.position.y = 30 + (followY / 70) * -1;
+      camera.position.x = 30 + (followX / 70) * -1;
 
       // update time
       var delta = clock.getDelta();

@@ -426,7 +426,7 @@ body {
 
 #instruction_screen {
   position: absolute;
-  top: 20%;
+  top: 60%;
   left: 0;
   width: 100%;
   z-index: 2 !important;
