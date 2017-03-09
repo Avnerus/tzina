@@ -136,7 +136,7 @@ export default class ZoomController {
 
         this.square.position.copy(this.VR_SQUARE_POSITION);
         this.baseVRPosition = new THREE.Vector3();
-        this.baseVRPosition.y = 1.2;
+        this.baseVRPosition.y = 1.1;
     }
 
     jumpIn() {

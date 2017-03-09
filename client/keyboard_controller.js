@@ -41,7 +41,7 @@ export default class KeyboardController {
 
         events.on("intro_end" ,() => {
             this.CROUCH_HEIGHT = 0.55;
-            this.STAND_HEIGHT = 1.2;
+            this.STAND_HEIGHT = 1.1;
         });
 
         events.on("experience_end" ,() => {
