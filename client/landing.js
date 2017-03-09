@@ -284,6 +284,10 @@ try {
 
         $('#lower_tag').html('מסע דרך שטפון של בדידות ואהבה');
 
+        $('#vive_instruc').html('הסתכל סביב, ולך במרחב של שלושה מטר רבוע<br>הסתכל על השמשות בכדי לשלוט בשעה');
+
+        $('#desktop_instruc').html('השתמש בחצים בשביל לזוז<br> השתמש בעכבר בשביל להסתכל סביב<br> הסתכל על השמשות בכדי לשלוט בשעה')
+
         $('#landing_screen').fadeIn(250);
 
       } else if (currentLanguage == 'he') {
@@ -298,6 +302,10 @@ try {
         $('#desc_sub').html('A webVR Documentary by Shirin Anlen');
 
         $('#enter_button').html('ENTER');
+
+        $('#vive_instruc').html('LOOK AROUND AND WALK WITHIN A 3X3 METER RANGE <br> GAZE AT THE SUN TO CHANGE THE TIME');
+
+        $('#desktop_instruc').html('Use arrow/WASD keys to move around<br> Use mouse/trackpad to look around<br> Gaze at the suns to change the time');
 
         $('#lower_tag').html('journey through a flood of love and loneliness');
 
