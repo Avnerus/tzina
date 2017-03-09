@@ -347,7 +347,7 @@ export default class Character extends THREE.Object3D {
         }
         this.active = true;
         this.onHold = false;
-    }
+    1}
 
     unload() {
         console.log("Character " + this.props.name + " Unload");
@@ -546,7 +546,7 @@ export default class Character extends THREE.Object3D {
             // Avoiding 2 collisions at the same time
             setTimeout(() => {
                 this.colliding = false;
-                if (this.inControl && !this.playingFull && !this.onHold && !this.done) {
+                if (this.active && this.inControl && !this.playingFull && !this.onHold && !this.done) {
                     this.playingFull = true;
                     console.log(this.props.name + " - Loading full video ");
                     if (this.animation && !this.props.fullOnly) {
@@ -593,7 +593,7 @@ export default class Character extends THREE.Object3D {
                         }
                       
                     } else {
-                        console.log("Resume");
+                        console.log(this.props.name + " Resume");
                         if (this.props.subtitles) {
                             this.subtitlesVideo.style.display = "block";
                             this.subtitlesVideo.play();
