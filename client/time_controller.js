@@ -50,9 +50,17 @@ export default class TimeController {
         this.IDLE_TIMEOUT = 60;
         this.HELP_TIMEOUT = 30;
         this.NOW_HELP_TRIGGER = 3;
+        this.characterPlaying = false;
 
         events.on("experience_end", () => {
             this.done = true;
+        });
+
+        events.on("character_playing", () => {
+            this.characterPlaying = true;
+        });
+        events.on("character_idle", () => {
+            this.characterPlaying = false;
         });
     }
     init(loadingManager) {
@@ -369,15 +377,19 @@ export default class TimeController {
 
             if (this.idleTimer > this.IDLE_TIMEOUT) {
                 console.log("Idle timer reached!", this.idleTimer);
-                this.setDaySpeed(0.5);
+                if (!this.characterPlaying) {
+                    this.setDaySpeed(0.5);
+                }
                 this.idleTimer = 0;
                 this.helpTimer = 0;
             }
 
             if (!this.usedSun && this.helpTimer > this.HELP_TIMEOUT) {
                 this.helpTimer = 0;
-                this.HELP_TIMEOUT = 60;
-                this.showHelp();
+                if (!this.characterPlaying) {
+                    this.showHelp();
+                    this.HELP_TIMEOUT = 60;
+                }
             }
 
             this.currentHour += dt * this.daySpeed;
@@ -686,6 +698,8 @@ export default class TimeController {
             let hebChapter = _.find(ChaptersHeb, {hour: this.currentHour});
             MiscUtil.overwriteProps(this.currentChapter, hebChapter);
         }
+
+        this.characterPlaying = false;
 
         this.clearVoiceovers();
 
