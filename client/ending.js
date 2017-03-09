@@ -317,6 +317,7 @@ export default class Ending {
             if (nextText == "Miriam") {
                 this.square.remove(this.miriamPlane);
             }
+            targetCharacter.idleVideo.pause();
             if (this.showingTexts.length > 0) {
                 this.showNextText();
             } else {
