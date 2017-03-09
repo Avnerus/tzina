@@ -114,7 +114,7 @@ export default class Character extends THREE.Object3D {
 
             events.on("chapter_sound_playing", (isIt)=>{
                 if(isIt){
-                    this.hold();
+                    this.hold(false);
                 } else {
                     this.unhold();
                 }
@@ -126,7 +126,7 @@ export default class Character extends THREE.Object3D {
                 }
                 if (this.props.name != name &&
                     this.props.name != "FatmanShower" && this.props.name != "FatmanSleep")  {
-                    this.hold();
+                    this.hold(true);
                 }
             });
             events.on("character_idle", (name) => {
@@ -173,13 +173,15 @@ export default class Character extends THREE.Object3D {
             return false;
         }
     }
-    hold() {
+    hold(setAlpha) {
         if (this.active && !this.done && !this.ending) {
             this.onHold = true;
             console.log(name, " is playing." , this.props.name, "is pausing");
             if (!this.props.fullOnly) {
                 this.idleVideo.pause();
-                this.idleVideo.setOpacity(0.5);
+                if (setAlpha) {
+                    this.idleVideo.setOpacity(0.5);
+                }
             }
         }
     }
