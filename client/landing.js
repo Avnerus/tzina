@@ -94,7 +94,7 @@ try {
   var currentLanguage = 'en';
 
   //Intro sound
-  var introSound = new Audio(SOUND_PATH + 'Theme_Intro_1.ogg');
+  var introSound = new Audio(SOUND_PATH + 'intro.ogg');
 
   introSound.loop = true;
 
