@@ -366,7 +366,12 @@ try {
             $('#progress').css({
               'width': itemsLoaded / itemsTotal * 100 + '%'
             })
-            $('#progress_text').html('Loading Tzina...' + Math.round(itemsLoaded / itemsTotal * 100) + '%');
+            if (currentLanguage == 'en') {
+              $('#progress_text').html('Loading Tzina...' + Math.round(itemsLoaded / itemsTotal * 100) + '%');
+            } else {
+              $('#progress_text').html(Math.round(itemsLoaded / itemsTotal * 100) + '%' + '...טוען');
+            }
+
 
 
           });
@@ -436,7 +441,11 @@ try {
               $('#progress').css({
                 'width': itemsLoaded / itemsTotal * 100 + '%'
               })
-              $('#progress_text').html('Loading Tzina...' + Math.round(itemsLoaded / itemsTotal * 100) + '%');
+              if (currentLanguage == 'en') {
+                $('#progress_text').html('Loading Tzina...' + Math.round(itemsLoaded / itemsTotal * 100) + '%');
+              } else {
+                $('#progress_text').html(Math.round(itemsLoaded / itemsTotal * 100) + '%' + '...טוען');
+              }
             });
         } catch (e) {
           console.error("Exception during game load ", e);
