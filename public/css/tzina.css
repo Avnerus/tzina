@@ -159,7 +159,7 @@ body {
 }
 
 #secure-access {
-  display: none;
+  /*display: none;*/
   display: inline-flex;
   align-items: c_;
   margin: auto;
@@ -170,11 +170,16 @@ body {
 }
 
 #password {
-  width: 280px;
-  color: white;
-  background-color: black;
-  border: solid 2px;
+/*  width: 280px;
+  height: 60px;*/
+  color: black;
+  /*background-color: black;*/
+/*  border: solid 2px;*/
   height: 20px;
+}
+#enter{
+    font-family: "Assistant",sans-serif;
+  font-size: 1em; 
 }
 
 #tree_scene {
@@ -219,7 +224,17 @@ body {
   position: relative;
   height: 20px;
 }
+#welcome{
+  font-family: "Assistant",sans-serif;
+  font-size: 2em; 
 
+
+}
+#exclusive{
+font-family: "Miriam Libre",serif;
+  font-size: 0.8em; 
+
+}
 
 /*General UI*/
 
@@ -426,7 +441,7 @@ body {
 
 #instruction_screen {
   position: absolute;
-  top: 60%;
+  top: 20%;
   left: 0;
   width: 100%;
   z-index: 2 !important;
