@@ -569,11 +569,14 @@ font-family: "Miriam Libre",serif;
 
 #vive_instruc {
   display: none;
+
   font-family:"Assistant", sans-serif;
    line-height: 200%;
   margin-top: 30%;
   text-align: center;
   color: #fff;
+
+  
 }
 
 #vive_instruc img {
