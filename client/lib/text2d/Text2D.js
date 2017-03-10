@@ -16,6 +16,7 @@ var Text2D = (function (_super) {
         this._font = options.font || '30px Arial';
         this._fillStyle = options.fillStyle || '#FFFFFF';
         this._shadow = options.shadow || false;
+        this._shadowSize = options.shadowSize || 4;
         this.canvas = new CanvasText_1.CanvasText();
         this.align = options.align || utils_1.textAlign.center;
         this.side = options.side || THREE.DoubleSide;

@@ -3,12 +3,13 @@ import MultilineText from '../util/multiline_text'
 import {textAlign} from '../lib/text2d/index'
 
 export default class Agam12PMAnimation extends THREE.Object3D {
-    constructor( square ) {
+    constructor( config, square ) {
         super();
         this.BASE_PATH = 'assets/animations/agam12pm';
 
         this.square = square;
         this.didInit = false;
+        this.config = config;
 
         this.INTRO_TEXT = [
             "Yaakov Agam, 89 years old.",
@@ -17,6 +18,15 @@ export default class Agam12PMAnimation extends THREE.Object3D {
             "This fountain, \“Water and Fire\”, is a piece that",
             "represents the core of his philosophy."
         ]
+
+        this.INTRO_TEXT_HEB = [
+            ".יעקב אגם, בן 89",
+            "אבי האמנות הקינטית ומהראשונים",
+            ".ששיתפו את הצופה ביצירה עצמה",
+            ".המזרקה, פסל \"המים והאש\", מהווה את יסוד תורתו",
+        ]
+
+        this.showedIntro = false;
     }
 
     init(loadingManager) {
@@ -26,7 +36,8 @@ export default class Agam12PMAnimation extends THREE.Object3D {
 
             // Intro text
             this.text = this.generateText();
-            this.text.setText(this.INTRO_TEXT);
+            this.text.hide(0);
+            this.text.setText(this.config.language == "heb" ? this.INTRO_TEXT_HEB : this.INTRO_TEXT);
             this.add(this.text);
             //DebugUtil.positionObject(this.text, "Agam text");
 
@@ -34,14 +45,27 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         }
     }
 
+    showIntroText() {
+        this.showedIntro = true;
+        this.text.show(1);
+        setTimeout(() => {
+            if (this.text) {
+                this.text.hide(1)
+                .then(() => {
+                    this.remove(this.text);
+                });
+            }            
+        },20000);
+    }
+
     generateText() {
         let TEXT_DEFINITION = {
              align: textAlign.center, 
              font: '70px Miriam Libre',
-             //fillStyle: '#33e5ab',
-             fillStyle: '#ffffff',
+             fillStyle: '#33e5ab',
              antialias: true,
-             shadow: true
+             shadow: true,
+             shadowSize: 6
         }
         let text = new MultilineText(5, TEXT_DEFINITION, 100);
         text.init();
@@ -75,9 +99,10 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         }
 
         let agamTex = tex_loader.load( this.BASE_PATH + "/images/agamFigure.jpg" );
-        let agamMat = new THREE.MeshLambertMaterial({map: agamTex});
+        this.agamMat = new THREE.MeshLambertMaterial({map: agamTex});
         loader.load( this.BASE_PATH + "/models/agamFigure.json", (geometry, material) => {
-            this.agamArt = new THREE.Mesh( geometry, agamMat );
+            this.agamGeo = geometry;
+            this.agamArt = new THREE.Mesh( this.agamGeo, this.agamMat );
             this.agamArt.position.set(-.44, .32, -4.78);
             this.agamArt.scale.multiplyScalar(1.31);
             this.add(this.agamArt);
@@ -86,16 +111,18 @@ export default class Agam12PMAnimation extends THREE.Object3D {
 
         let agamSmallTex_1 = tex_loader.load( this.BASE_PATH + "/images/agamSmall_1.jpg" );
         let agamSmallTex_2 = tex_loader.load( this.BASE_PATH + "/images/agamSmall_2.jpg" );
-        let agamSMat1 = new THREE.MeshLambertMaterial({map: agamSmallTex_1});
-        let agamSMat2 = new THREE.MeshLambertMaterial({map: agamSmallTex_2});
+        this.agamSMat1 = new THREE.MeshLambertMaterial({map: agamSmallTex_1});
+        this.agamSMat2 = new THREE.MeshLambertMaterial({map: agamSmallTex_2});
         loader.load( this.BASE_PATH + "/models/agamSmall.json", (geometry, material) => {
-            this.agamSmall_1 = new THREE.Mesh( geometry, agamSMat1 );
+            this.agamGeoS = geometry;
+
+            this.agamSmall_1 = new THREE.Mesh( this.agamGeoS, this.agamSMat1 );
             this.agamSmall_1.position.set(2.88, .26, -2.21);
             this.agamSmall_1.scale.multiplyScalar(0.56);
             this.add(this.agamSmall_1);
             // DebugUtil.positionObject(this.agamSmall_1, "agamSmall_1");
 
-            this.agamSmall_2 = new THREE.Mesh( geometry, agamSMat2 );
+            this.agamSmall_2 = new THREE.Mesh( this.agamGeoS, this.agamSMat2 );
             this.agamSmall_2.position.set(-2, .18, -1.85);
             this.agamSmall_2.scale.multiplyScalar(0.5);
             this.add(this.agamSmall_2);
@@ -108,6 +135,10 @@ export default class Agam12PMAnimation extends THREE.Object3D {
         DebugUtil.positionObject(testCube, "testCube");*/
 
         this.dummy = {opacity: 1};
+
+        events.on("experience_end", ()=>{
+            this.disposeAni();
+        });
 
         // DebugUtil.positionObject(this, "Agam Ani");
         //
@@ -138,6 +169,24 @@ export default class Agam12PMAnimation extends THREE.Object3D {
             } } );
     }
 
+    disposeAni() {
+        this.remove(this.text);
+        this.remove(this.agamArt);
+        this.remove(this.agamSmall_1);
+        this.remove(this.agamSmall_2);
+
+        this.agamMat.map.dispose();
+        this.agamSMat1.map.dispose();
+        this.agamSMat2.map.dispose();
+        this.agamMat.dispose();
+        this.agamSMat1.dispose();
+        this.agamSMat2.dispose();
+        this.agamGeo.dispose();
+        this.agamGeoS.dispose();
+
+        console.log("dispose Agam ani!");
+    }
+
     transX(geo, n){
         for(let i=0; i<geo.vertices.length; i++){
             geo.vertices[i].x += n;
@@ -162,6 +211,11 @@ export default class Agam12PMAnimation extends THREE.Object3D {
     }
 
     updateVideoTime(time) {
+        
+        if (!this.showedIntro && time >= 10) {
+            this.showIntroText();
+        }
+
         if (this.nextAnim && time >= this.nextAnim.time) {
             console.log("do anim sequence ", this.nextAnim);
             this.nextAnim.anim();

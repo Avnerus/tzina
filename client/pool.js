@@ -15,6 +15,9 @@ export default class Pool extends THREE.Object3D {
             this.simulation_vs = glslify('./shaders/pool/simulation_vs.glsl');
             this.pool_fs = glslify('./shaders/pool/pool_fs.glsl');
             this.pool_vs = glslify('./shaders/pool/pool_vs.glsl');
+
+            this.enableWaves = true;
+
             //console.log("Pool vertex shader", this.pool_vs);
         }
         init(loadingManager) {
@@ -209,19 +212,21 @@ export default class Pool extends THREE.Object3D {
         }
 
         update(dt,et) {
-          this.uniforms.time.value = et;
-          // update waves
-          for(var i = 0; i < this.noOfCircularWaves; i++){
-            if(this.uniforms.circularWaveStrengths.value[i] > 0) {
-              this.uniforms.circularWaveStrengths.value[i] -= (dt/1.0);
-            } else {
-              // spawn new wave
-              var center = this.getRandomPoint();
-              this.particleParents[i].position.x = center.x;
-              this.particleParents[i].position.y = center.y;
-              this.uniforms.circularWaveCenterPoints.value[i] = center;
-               this.particleSimulationShaders[i].uniforms.splashTimer.value = 10.0;
-              this.uniforms.circularWaveStrengths.value[i] = Math.random()/2 + 0.5;
+          if (this.enableWaves) {
+            this.uniforms.time.value = et;
+            // update waves
+            for(var i = 0; i < this.noOfCircularWaves; i++){
+              if(this.uniforms.circularWaveStrengths.value[i] > 0) {
+                this.uniforms.circularWaveStrengths.value[i] -= (dt/1.0);
+              } else {
+                // spawn new wave
+                var center = this.getRandomPoint();
+                this.particleParents[i].position.x = center.x;
+                this.particleParents[i].position.y = center.y;
+                this.uniforms.circularWaveCenterPoints.value[i] = center;
+                 this.particleSimulationShaders[i].uniforms.splashTimer.value = 10.0;
+                this.uniforms.circularWaveStrengths.value[i] = Math.random()/2 + 0.5;
+              }
             }
           }
           // update particle systems

@@ -2,10 +2,12 @@ import DebugUtil from './util/debug'
 import {MeshText2D, textAlign} from './lib/text2d/index'
 
 export default class Instructions {
-    constructor(config, camera, square) {
+    constructor(config, camera, square, soundManager) {
         this.config = config;
         this.camera = camera;
         this.square = square;
+
+        this.soundManager = soundManager;
 
         this.lines_eng = [
             ["You are in one of the most","iconic landmarks of Tel Aviv."],
@@ -61,18 +63,27 @@ export default class Instructions {
         this.instructionLineThree.position.set(0,-200,0);
         this.instructionText.add(this.instructionLineThree);
 
+        
+
+        this.loadInstructionSound(this.config.assetsHost + "assets/sound/instruction.ogg").then((result)=>{
+            this.instructionSound = result;
+        });
+
         console.log("Instructions initialized");
     }
 
     start() {
         this.lines = this.config.language == "heb" ? this.lines_heb : this.lines_eng;
         if (this.config.skipInstructions) {
-            console.log("Instructions skipping");
-            events.emit("instructions_end");
-            if (this.config.platform == "vive") {
-                events.emit("delayed_rotation", true);
-            }
-            this.square.extras.showExtras();
+            setTimeout(() => {
+                console.log("Instructions skipping");
+                events.emit("instructions_end");
+                if (this.config.platform == "vive") {
+                    events.emit("delayed_rotation", true);
+                }
+                this.square.extras.showExtras();
+
+            },1000);
         } else {
             console.log("Instructions starting");
             this.camera.add(this.instructionText);
@@ -91,13 +102,16 @@ export default class Instructions {
     showNextLine() {
         let texts = this.lines[this.currentLine];
         this.instructionText.text = texts[0];
+        this.instructionSound.play();
         if (texts.length > 1) {
             this.instructionLineTwo.text = texts[1];
+            this.instructionSound.play();
         } else {
             this.instructionLineTwo.text = "";
         }
         if (texts.length > 2) {
             this.instructionLineThree.text = texts[2];
+            this.instructionSound.play();
         } else {
             this.instructionLineThree.text = "";
         }
@@ -108,6 +122,7 @@ export default class Instructions {
         TweenMax.to( this.instructionText.material, 1, { opacity: 1, 
             onComplete: () => {
                 setTimeout(() => {
+                    this.instructionSound.stop();
                     this.hideLine();
                 },delay);
             } 
@@ -140,6 +155,17 @@ export default class Instructions {
         this.instructionText.material.dispose();
         this.instructionLineTwo.material.dispose();
         this.instructionLineThree.material.dispose();
+        this.instructionSound.unload();
+    }
+    loadInstructionSound(path) {
+        return new Promise((resolve, reject) => {
+            console.log("Loading Instruction sound", path);
+            this.soundManager.createStaticSoundSampler(path, (sampler) => {
+                console.log("Loaded Instruction sound", sampler);                              
+                this.soundManager.panorama.append(sampler);
+                resolve(sampler);
+            });
+        });
     }
 }
 

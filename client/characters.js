@@ -17,13 +17,14 @@ export default [
         animationPosition: [0,-0.3,-0.85], //z: 0.55
         animationRotation: [15, 0, 2],
         space: 0.22,
-        spaceOffset: [-0.35,0,0.29],
+        spaceOffset: [-0.2,0,0.29],
         subtitles: null,
         gazeSpace: [-0.27,-0.21,-0.6],
         gazeOffset: [0,0,0.16],
         endingPosition : [5.04, 22.8, -18],
         endingRotation: [360, 190, 3],
-        endingScaleMul: 1
+        endingScaleMul: 1,
+        hasAmbience: true
     },
     {
         name: 'Miriam',
@@ -58,7 +59,8 @@ export default [
         gazespace: [-0.52,-0.3,-0.29],
         endingPosition : [-2, 22.04, -16.9],
         endingRotation: [0, 178, 0],
-        endingScaleMul: 1.1
+        endingScaleMul: 1.1,
+        hasAmbience: true
     },
     {
         name: 'Itzik',
@@ -92,7 +94,8 @@ export default [
         gazespace: [-0.39,-0.04,-0.21],
         endingPosition : [9.41, 21.8, -10.54],
         endingRotation: [4, 190, 5],
-        endingScaleMul: 1.2
+        endingScaleMul: 1.2,
+        hasAmbience: true
 
     },
     {
@@ -109,16 +112,17 @@ export default [
         height: 2048,
         scale: 0.003 * 1.243 * 1.455 * 1.048 * 1.024,
         animationScale: 0.4, // 0.25
-        animationPosition: [1.14, -0.38, 6.85],
-        animationRotation: [6, -50, -9], //6, -50, -9
+        animationPosition: [1.27, -0.53, 6.92],
+        animationRotation: [0, -50, 0], //6, -50, -9
         subtitles: false,
-        space: -1.64,
-        spaceOffset: [-0.11,0,0.76],
+        space: -1.85,
+        spaceOffset: [0.32,0,0.71],
         gazeSpace: [-2.15,1.9,-0.95],
         gazeOffset: [1.63,1.76,3.62],
-        endingPosition : [1.65, 16.5, 15.14],
-        endingRotation: [218, 0, 190],
-        endingScaleMul: 1.2
+        endingPosition : [6.24, 19.83, 11.35],
+        endingRotation: [196, 29, 188],
+        endingScaleMul: 1.2,
+        hasAmbience: true
     },
     {
         name: 'Rami',
@@ -144,7 +148,8 @@ export default [
         gazeOffset: [0,-0.11,0.58],
         endingPosition : [16.7, 22.04, -5.9],
         endingRotation: [356, 180, 10],
-        endingScaleMul: 1
+        endingScaleMul: 1,
+        hasAmbience: true
     },
     {
         name: 'Meir',
@@ -170,7 +175,8 @@ export default [
         gazeOffset: [0.19,-0.06,-0.52],
         endingPosition : [-1.69, 22.04, -7.3],
         endingRotation: [190.1, 20, 194],
-        endingScaleMul: 1
+        endingScaleMul: 1,
+        hasAmbience: true
     },
     {
         name: 'Sasha',
@@ -186,7 +192,8 @@ export default [
         height: 2048,
         scale: 0.003 * 0.5,
         subtitles: null,
-        idleOnly: true
+        idleOnly: true,
+        hasAmbience: false
     },
     {
         name: 'Agam12PM',
@@ -206,7 +213,8 @@ export default [
         animationRotation: [0, 17, -6],
         subtitles: null,
         idleOnly: true,
-        event: true
+        event: true,
+        hasAmbience: false
     },
     {
         name: 'LupoDogs12PM',
@@ -222,7 +230,8 @@ export default [
         height: 1024,
         scale: 0.003 * 0.406,
         subtitles: null,
-        idleOnly: true
+        idleOnly: true,
+        hasAmbience: false
     },
     {
         name: 'LupoDogs5PM',
@@ -238,7 +247,8 @@ export default [
         height: 1024,
         scale: 0.003 * 0.406,
         subtitles: null,
-        idleOnly: true
+        idleOnly: true,
+        hasAmbience: false
     },
     {
         name: 'Mark',
@@ -286,7 +296,8 @@ export default [
         gazeSpace: [-0.28,0,-0.64],
         endingPosition : [-12.2, 21.7, -2.9],
         endingRotation: [12, 150, 340],
-        endingScaleMul: 1.3
+        endingScaleMul: 1.3,
+        hasAmbience: true
     },
     {
         name: 'FatmanSleep',
@@ -302,7 +313,8 @@ export default [
         height: 2048,
         scale: 0.003 * 1.0952,
         subtitles: null,
-        idleOnly: true
+        idleOnly: true,
+        hasAmbience: false
     },
     /*
     {
@@ -361,7 +373,8 @@ export default [
         height: 2048,
         scale: 0.003 * 0.25,
         subtitles: null,
-        idleOnly: true
+        idleOnly: true,
+        hasAmbience:false
     },
     {
         name: 'Lupo12PM',
@@ -402,7 +415,8 @@ export default [
         space: 0.2, //2
         spaceOffset: [0.06,0,-0.58],
         gazeOffset: [0.19,0.13,0.22],
-        gazeSpace: [0.02,-0.2,-0.65]
+        gazeSpace: [0.02,-0.2,-0.65],
+        hasAmbience:true
     },
     /*
     {
@@ -463,7 +477,8 @@ export default [
         spaceOffset: [4.86,0,1.13],
         endingPosition : [12.4, 22.3, -2.7],
         endingRotation: [12, 190, 352],
-        endingScaleMul: 1.1
+        endingScaleMul: 1.1,
+        hasAmbience:true
     },
     /*
     {
@@ -485,7 +500,8 @@ export default [
         space: 0.4,
         spaceOffset: [1.57,0,0.3],
         subtitles: null,
-        fullOnly: true
+        fullOnly: true,
+        hasAmbience:false
     }, */
     {
         name: 'Itzhak',
@@ -512,14 +528,15 @@ export default [
         gazeOffset: [-0.07,0.15,0.06],
         endingPosition : [-12.91, 22.04, 6.4],
         endingRotation: [356, 146, 12],
-        endingScaleMul: 1.2
+        endingScaleMul: 1.2,
+        hasAmbience:true
     },
     {
         name: 'Shirin7PM',
         basePath : 'assets/characters/shirin7pm',
         mindepth : 1214.999755859,
         maxdepth : 3681.950439453,
-        position : [23.2, 27.2, -43.8],
+        position : [16.98, 27.2, -46.32],
         rotation: [0, 270, 0],
         animation: 'Shirin',
         uvdy: 0.47509765625,
@@ -533,7 +550,8 @@ export default [
         space: 100,
         spaceOffset: [0,0,0],
         subtitles: null,
-        fullOnly: true
+        fullOnly: true,
+        hasAmbience:false
     },
     {
         name: 'Waterman',
@@ -550,7 +568,8 @@ export default [
         scale: 0.003 * 0.96,
         subtitles: null,
         fullOnly: true,
-        space: 20
+        space: 20,
+        hasAmbience:false
     },
     {
         name: 'FatmanShower',
@@ -566,7 +585,8 @@ export default [
         height: 2048,
         scale: 0.003 * 0.64725 * 1.308,
         subtitles: null,
-        idleOnly: true
+        idleOnly: true,
+        hasAmbience:false
     },
     {
         name: 'Agam7PM',
@@ -586,7 +606,8 @@ export default [
         animationRotation: [0, -4, -3.5],
         subtitles: null,
         idleOnly: true,
-        event: true
+        event: true,
+        hasAmbience:false
     }
 /*,
     {

@@ -49,7 +49,7 @@ export default class VideoRGBD  {
 
         let baseGeometry = this.buildMeshGeometry();
         
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 10; i++) {
             let meshMaterial = new THREE.ShaderMaterial( {
 
                 uniforms: {
@@ -70,9 +70,9 @@ export default class VideoRGBD  {
                 wireframe:false
             } );
 
-            let geometry = baseGeometry.clone();
+         //   let geometry = baseGeometry.clone();
 
-            this.meshPool.push(new THREE.Mesh(geometry, meshMaterial ));
+            this.meshPool.push(new THREE.Mesh(baseGeometry, meshMaterial ));
         }
         for (let i = 0; i < 10; i++) {
             let linesMaterial = new THREE.ShaderMaterial( {
@@ -97,9 +97,9 @@ export default class VideoRGBD  {
               transparent:    true
             } );
 
-            let geometry = baseGeometry.clone();
+        //    let geometry = baseGeometry.clone();
 
-            this.wirePool.push(new THREE.Mesh( geometry, linesMaterial ));
+            this.wirePool.push(new THREE.Mesh( baseGeometry, linesMaterial ));
         }
 
     }

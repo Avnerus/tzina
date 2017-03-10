@@ -3,9 +3,11 @@ import DebugUtil from './util/debug'
 const MAX_FLOOD_HEIGHT = 13;
 
 export default class Flood extends THREE.Object3D  {
-    constructor() {
+    constructor(config) {
         super();
         console.log("Flood constructed!")
+
+        this.config = config;
 
         this.waveSource = new THREE.Vector3(0, -30, 0);
         this.waveFrequencey = 0.07;
@@ -17,8 +19,10 @@ export default class Flood extends THREE.Object3D  {
         this.END_HEIGHT = 12.45;
         this.START_HEIGHT = 11.65;
 
+        this.UPDATE_INTERVAL = 1 / 25;
+
     }
-    init(scene) {
+    init(loadingManager) {
         //let geometry = new THREE.PlaneGeometry(1000, 1000, 24, 24);
         let geometry = new THREE.CircleGeometry( 100, 16  );
         let tessellateModifier = new THREE.TessellateModifier(.1);
@@ -26,19 +30,17 @@ export default class Flood extends THREE.Object3D  {
         for(let i = 0; i < tessellationDepth; i++){
             tessellateModifier.modify(geometry);
         }
-        console.log(geometry);
-        let texture = new THREE.TextureLoader().load( "assets/flood/emotions.jpg" );
+        let texture = new THREE.TextureLoader(loadingManager).load( "assets/flood/emotions.jpg" );
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(50,50);
+        texture.repeat.set(10,10);
 
         let material = new THREE.MeshLambertMaterial({
-           // color: 0x99F9FF,
             opacity: 0.80,
             map:texture,
           //  shininess: 164,
             shading: THREE.FlatShading,
             transparent: true,
-            side: THREE.DoubleSide,
+            //side: THREE.DoubleSide,
             wireframe: false,
         });
         this.mesh = new THREE.Mesh(geometry, material);
@@ -55,37 +57,48 @@ export default class Flood extends THREE.Object3D  {
 
         this.add(this.mesh);
 
-        this.time = 0;
+        this.timer = 0;
 
-        //events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveFrequencey");
 
         /*
+        events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveFrequencey");
         events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveLength");
         events.emit("add_gui", {folder:"Flood", listen:false}, this, "waveHeight");
         events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "x");
         events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "y");
         events.emit("add_gui", {folder:"Flood", listen:false}, this.waveSource, "z");*/
-
+/*
         events.on("experience_progress", (percentage) => {
             //console.log("FLOOD progress", percentage);
             // First scale, then rise
-            if (percentage <= 0.5) {
-                let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * (percentage / 0.5));
-                this.mesh.scale.set(scale, scale, scale);
-            } else {
-                let height = (this.START_HEIGHT + (this.END_HEIGHT - this.START_HEIGHT) * ((percentage - 0.5) / 0.5));
-                this.mesh.position.y = height;
-            }
         });
+        */
     }
 
-    update(dt) {
-        this.time += dt;
+
+    updateFlood(percentage) {
+        //console.log("Update flood progress:", percentage);
+        if (percentage >= 0.3 && percentage <= 0.7) {
+            let scale = (this.START_SCALE + (this.END_SCALE - this.START_SCALE) * ((percentage - 0.3) / 0.4));
+            this.mesh.scale.set(scale, scale, scale);
+        } else if (percentage > 0.7 && percentage <= 1.0) {
+            let height = (this.START_HEIGHT + (this.END_HEIGHT - this.START_HEIGHT) * ((percentage - 0.7) / 0.3));
+            this.mesh.position.y = height;
+        }
+    }
+
+    update(dt,et) {
+        this.timer += dt;
+        if (this.timer >= this.UPDATE_INTERVAL) {
+            this.timer = 0;
+            let percent = Math.min(et / ( this.config.endTime - 120 ),1);
+            this.updateFlood(percent);
+        }
         for (let i = 0; i < this.mesh.geometry.vertices.length; i++) {
             let dist = this.mesh.geometry.vertices[i].distanceTo(this.waveSource);
             dist = (dist % this.waveLength) / this.waveLength;
             this.mesh.geometry.vertices[i].z = 
-                this.waveHeight * Math.sin(this.time * Math.PI * 2.0 * this.waveFrequencey + 
+                this.waveHeight * Math.sin(et * Math.PI * 2.0 * this.waveFrequencey + 
                 (Math.PI * 2.0 * dist));
             //console.log(this.mesh.geometry.vertices[i].z);
         }
@@ -98,5 +111,4 @@ export default class Flood extends THREE.Object3D  {
             this.mesh.position.y += 0.01;
         }*/
     }
-
 }

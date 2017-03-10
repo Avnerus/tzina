@@ -43,9 +43,10 @@ export default class ShirinAnimation extends THREE.Object3D {
                 { time: 8,  anim: ()=>{this.stopFragment(1)} }
             ],
             'Shirin7PM': [
-                { time: 5, anim: ()=>{this.crackCocoon(2)} },
-                { time: 6, anim: ()=>{this.dropShirin()} },
-                { time: 76,  anim: ()=>{this.stopFragment(2)} }
+                { time: 1, anim: ()=>{this.crackCocoon(2)} },
+                { time: 3, anim: ()=>{this.showShirin()} },
+                { time: 77, anim: ()=>{this.closeCocoon(2)} },
+                { time: 80,  anim: ()=>{this.stopFragment(2)} }
             ]
         };
         // v.1
@@ -92,7 +93,7 @@ export default class ShirinAnimation extends THREE.Object3D {
             this.candyGroupPos = new THREE.Vector3( -12,0,0 );
             this.cocoonGroupPos = new THREE.Vector3( 0,25,0 );
             this.cobwebGroupPos = new THREE.Vector3( 14,10,0 );
-
+            this.smallShirinPos = new THREE.Vector3( 0.05, -0.24, 0.64 );
         //
         let webTexture = tex_loader.load( this.BASE_PATH + "/images/web2.jpg" );
         this.webMat = new THREE.MeshBasicMaterial({map: webTexture, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending});
@@ -131,7 +132,7 @@ export default class ShirinAnimation extends THREE.Object3D {
         let moonTexture = tex_loader.load( this.BASE_PATH + "/images/moon.jpg" );
         let moonNRMTexture = tex_loader.load( this.BASE_PATH + "/images/moonNormal.jpg" );
         let moonMat = new THREE.MeshPhongMaterial({map: moonTexture, normalMap: moonNRMTexture});
-        this.moon = new THREE.Mesh(new THREE.SphereGeometry(20, 32, 32), moonMat);
+        this.moon = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), moonMat);
         this.moon.rotation.set(Math.PI/2, Math.PI/2, Math.PI/2);
         // MOON location
             // console.log(this.parent);
@@ -207,7 +208,13 @@ export default class ShirinAnimation extends THREE.Object3D {
             this.add(this.cocoonGroup);
             // hide all the cocoon except 7pm
             for(var i=0; i<this.cocoonGroup.children.length; i++){
-                if(i!=2){
+                if(i==2){
+                    this.cocoonGroup.children[i].rotation.x = 233 * Math.PI/180;
+                    this.cocoonGroup.children[i].rotation.y = 14 * Math.PI/180;
+                    // DebugUtil.positionObject(this.cocoonGroup.children[i], "cocoon");
+                    this.cocoonGroup.children[i].position.set(0.02, -9.48, -1.82);
+                    this.cocoonGroup.children[i].scale.set(1.55, 1.55, 1.55);
+                }else{
                     this.cocoonGroup.children[i].visible = false;
                 }
             }
@@ -309,8 +316,9 @@ export default class ShirinAnimation extends THREE.Object3D {
                     value: [0.02, 0.3, 0.3, 0.3, .2], // 0.1,5,5,5,3    // 0.1,1,1,1,.5
                     spread: 0.5 // 2
                 },
-                particleCount: 60 //20
+                particleCount: 120 //60
             });
+            emitter.activeMultiplier = 0.5;
             emitter.disable();
 
             this.particleGroup.addEmitter( emitter );
@@ -352,7 +360,7 @@ export default class ShirinAnimation extends THREE.Object3D {
     }
 
     pauseVideo() {
-        this.parent.fullVideo.pause();
+        //this.parent.fullVideo.pause();
         this.parent.fullVideo.mesh.position.y += 2;
         this.parent.fullVideo.wire.position.y += 2;
 
@@ -364,8 +372,41 @@ export default class ShirinAnimation extends THREE.Object3D {
 
         setTimeout( ()=>{
             this.stopFragment(0);
-            this.parent.fullVideo.play();
+          //  this.parent.fullVideo.play();
         }, 8000 );
+    }
+
+    closeCocoon(index) {
+        this.particleGroup.emitters[index].activeMultiplier = 1;
+
+        var newEPos = this.particleGroup.emitters[2].position.value;
+        newEPos.y -= 9;
+        newEPos.z += 18;
+        this.particleGroup.emitters[2].position.value = newEPos;
+
+        setTimeout( (_index)=>{
+            this.resetFragment(_index);
+
+            var newEPos2 = this.particleGroup.emitters[2].position.value;
+            newEPos2.y += 9;
+            newEPos2.z -= 18;
+            this.particleGroup.emitters[2].position.value = newEPos2;
+
+        }, 3000, index);
+
+        let crackTween = TweenMax.to( this.cocoonGroup.children[index].morphTargetInfluences, 3, {
+            delay: 1,
+            endArray: [0],
+            ease: RoughEase.ease.config({ template:  Power0.easeNone, 
+                                         strength: 1, points: 20, taper: "none",
+                                         randomize:  true, clamp: false}) 
+        });
+        this.tweenAnimCollectors.push(crackTween);
+
+        TweenMax.to(this.parent.fullVideo.mesh.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 2.5 });
+        TweenMax.to(this.parent.fullVideo.wire.position, 2, { x:this.smallShirinPos.x, y:this.smallShirinPos.y, z:this.smallShirinPos.z, delay: 2.5 });
+        TweenMax.to(this.parent.fullVideo.mesh.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 2.5 });
+        TweenMax.to(this.parent.fullVideo.wire.scale, 2, { x:this.oriShirinScale*0.01, y:this.oriShirinScale*0.01, z:this.oriShirinScale*0.01, delay: 2.5 });
     }
 
     crackCocoon(index) {
@@ -409,6 +450,16 @@ export default class ShirinAnimation extends THREE.Object3D {
         // console.log("do first animation.");
         // for(let i=0; i<this.particleGroup.emitters.length; i++){
             this.particleGroup.emitters[f_i].enable();
+            this.particleGroup.emitters[f_i].activeMultiplier = 1;
+            setTimeout( (index)=>{
+                this.resetFragment(index);
+
+                var newEPos = this.particleGroup.emitters[2].position.value;
+                newEPos.y += 9;
+                newEPos.z -= 18;
+                this.particleGroup.emitters[2].position.value = newEPos;
+
+            }, 3000, f_i);
         // }
     }
 
@@ -416,6 +467,10 @@ export default class ShirinAnimation extends THREE.Object3D {
         // for(let i=0; i<this.particleGroup.emitters.length; i++){
             this.particleGroup.emitters[f_i].disable();
         // }
+    }
+
+    resetFragment(index) {
+        this.particleGroup.emitters[index].activeMultiplier = 0.5;
     }
 
     dropCaterpillars() {
@@ -510,6 +565,17 @@ export default class ShirinAnimation extends THREE.Object3D {
 
     }
 
+    showShirin() {
+        TweenMax.to(this.parent.fullVideo.mesh.position, 3, { x:this.oriShirinPos.x, y:this.oriShirinPos.y, z:this.oriShirinPos.z });
+        TweenMax.to(this.parent.fullVideo.wire.position, 3, { x:this.oriShirinPos.x, y:this.oriShirinPos.y, z:this.oriShirinPos.z });
+        TweenMax.to(this.parent.fullVideo.mesh.scale, 3, { x:this.oriShirinScale, y:this.oriShirinScale, z:this.oriShirinScale });
+        TweenMax.to(this.parent.fullVideo.wire.scale, 3, { x:this.oriShirinScale, y:this.oriShirinScale, z:this.oriShirinScale,
+            onComplete: ()=>{
+                this.parent.fullVideo.play();
+            }
+        });
+    }
+
     transX(geo, n){
         for(let i=0; i<geo.vertices.length; i++){
             geo.vertices[i].x += n;
@@ -560,7 +626,8 @@ export default class ShirinAnimation extends THREE.Object3D {
 
         if(time == "Shirin7PM"){
             var newEPos = this.particleGroup.emitters[2].position.value;
-            newEPos.y -= 28;
+            newEPos.y -= 37; //-=28
+            newEPos.z += 18;
             this.particleGroup.emitters[2].position.value = newEPos;
             this.particleGroup.emitters[2].acceleration.value = new THREE.Vector3(0,0.7,0);
             this.particleGroup.emitters[2].acceleration.spread = new THREE.Vector3(.8,1,.8);
@@ -571,9 +638,11 @@ export default class ShirinAnimation extends THREE.Object3D {
             this.oriShirinScale = this.parent.fullVideo.mesh.scale.x;
             this.parent.fullVideo.setScale(this.oriShirinScale * 0.01);
             this.parent.fullVideo.pause();
-            this.parent.fullVideo.mesh.position.y += 2;
-            this.parent.fullVideo.wire.position.y += 2;
-
+            // this.parent.fullVideo.mesh.position.y += 2;
+            // this.parent.fullVideo.wire.position.y += 2;
+            this.oriShirinPos = this.parent.fullVideo.mesh.position.clone();
+            this.parent.fullVideo.mesh.position.copy(this.smallShirinPos);
+            this.parent.fullVideo.wire.position.copy(this.smallShirinPos);
         } else {
             // unhidden the cocoons
             for(var i=0; i<this.cocoonGroup.children.length; i++){

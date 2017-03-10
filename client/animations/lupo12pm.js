@@ -56,7 +56,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     { time: 0, anim: ()=>{this.setupForNight()} },
                     { time: 1, anim: ()=>{this.connectToDogs()} },
 
-                    { time: 3, anim: ()=>{this.scaleDogs(1)} },     // first time
+                    { time: 7, anim: ()=>{this.scaleDogs(1)} },     // first time
                     
                     { time: 16, anim: ()=>{this.showSculptures()} },    // 16
                     { time: 24, anim: ()=>{this.flickerSculptureTextures()} },  // 24 // texture flickering
@@ -143,7 +143,10 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.sculptureTextures={};
         this.sculptureMADMaterials=[];
         this.sculptureMADTextures={};
-
+        // dispose
+        this.disposeRelatedGeos=[];
+        this.disposeRelatedMats=[];
+        this.disposeRelatedTexs=[];
 
         this.loadSculptureTextures( sculptureTextureFiles, sculptureTextMADFiles )
         .then( () => {
@@ -243,6 +246,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                     let newIndex = i%5;
                     let new_c = allCactus[ newIndex ].clone(true);
                     let new_mat = this.cactusMat.clone();
+                    this.disposeRelatedMats.push(new_mat);
+
                     for(let j=0; j<new_c.children.length; j++){
                         new_c.children[j].material = new_mat;
                     }
@@ -256,7 +261,11 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 for(let i=0; i<5; i++){
                     let newIndex = (i%3)+2;
                     let new_c = allCactus[ newIndex ].clone(true);
-                    new_c.material = this.cactusMat.clone();
+                    //new_c.material = this.cactusMat.clone();
+                    let new_mat = this.cactusMat.clone();
+                    this.disposeRelatedMats.push(new_mat);
+
+                    new_c.material = new_mat;
                     new_c.scale.multiplyScalar( 1.8-0.5*this.lookupTable[i] );
                     new_c.position.set(
                         Math.sin( Math.PI*2/20*(i-1) ) * 10 + this.lookupTable[i],
@@ -295,10 +304,10 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 this.cactusOffsetPos2.push(cP);
             }
 
-            let cactusTexLight = p_tex_loader.load( this.BASE_PATH + "/images/cactus_white.jpg" );
-            let cactusTex = p_tex_loader.load( this.BASE_PATH + "/images/cactusTex.jpg" );
-            this.cactusMat = new THREE.MeshLambertMaterial({map: cactusTexLight, color: 0x1fc529, side: THREE.DoubleSide}); //0x298a59
-            this.sculptCactusMat = new THREE.MeshLambertMaterial({map: cactusTex, color: 0xcccccc, side: THREE.DoubleSide}); //0x206c5e
+            this.cactusTexLight = p_tex_loader.load( this.BASE_PATH + "/images/cactus_white.jpg" );
+            this.cactusTex = p_tex_loader.load( this.BASE_PATH + "/images/cactusTex.jpg" );
+            this.cactusMat = new THREE.MeshLambertMaterial({map: this.cactusTexLight, color: 0x1fc529, side: THREE.DoubleSide}); //0x298a59
+            this.sculptCactusMat = new THREE.MeshLambertMaterial({map: this.cactusTex, color: 0xcccccc, side: THREE.DoubleSide}); //0x206c5e
             this.loadCactus1( this.cactusMat );
             this.loadCactus2( this.cactusMat )
 
@@ -343,6 +352,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
             this.ropeMaterial = new THREE.MeshBasicMaterial({color: 0xb30000, wireframe: true});
             this.liquidMats = [];
+            this.liquidTexs = [];
+
             this.nightRopeTransformation = {
                 "vive": [
                     [ [-2.18, -0.57, 5.71], [0,100*Math.PI/180,0] ],
@@ -356,6 +367,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             this.dayRopeTransformation = [1.4, -0.7, 4.1];
             for(let i=0; i<2; i++){
                 let liquidTex = p_tex_loader.load(this.BASE_PATH + '/images/liquid_trans.png');
+                this.liquidTexs.push(liquidTex);
+
                 liquidTex.repeat.x = 1;
                 liquidTex.repeat.y = 1;
                 liquidTex.offset.x = -1.5;
@@ -384,6 +397,10 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         this.dummy={roughValue:0};
 
         // this.completeSequenceSetup();
+
+        events.on("experience_end", ()=>{
+            this.disposeAni();
+        });
 
         this.loadingManager.itemEnd("Lupo12PMAnim");
     }
@@ -449,6 +466,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 let flowerrr = this.flower.clone();
 
                 let new_mat = this.petalMat.clone();
+                this.disposeRelatedMats.push(new_mat);
+
                 new_mat.color.set( this.flowerColor[i%3] );
 
                 for(let j=0; j<flowerrr.children.length; j++){
@@ -473,8 +492,12 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         let cSpline = new THREE.CatmullRomCurve3( this.ropesVec[_index] );
         cSpline.type = 'chordal';
         let ropeGeometry = new THREE.TubeGeometry( cSpline, this.ARC_SEGMENTS, 0.1, 5, false );
+        this.disposeRelatedGeos.push(ropeGeometry);
+
         let ropee = new THREE.Mesh(ropeGeometry, this.ropeMaterial);
         let liquidGeo = new THREE.TubeGeometry( cSpline, this.ARC_SEGMENTS, 0.07, 5, false );
+        this.disposeRelatedGeos.push(liquidGeo);
+
         let liquid = new THREE.Mesh(liquidGeo, this.liquidMats[_index]);
         liquid.material.map.offset.x = -1 - _index*0.4;
         ropee.add(liquid);
@@ -660,6 +683,44 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         });
     }
 
+    disposeAni(){
+        // sculptures
+        this.remove(this.lupoArt);
+        this.baseMat.dispose();
+        this.bottomMat.dispose();
+        this.topMat.dispose();
+        for(var i=0; i<this.sculptureMaterials.length; i++){ this.sculptureMaterials[i].dispose(); }
+        for(var i=0; i<this.sculptureMaterials.length; i++){ this.sculptureMaterials[i].dispose(); }
+        for(var i=0; i<this.liquidMats.length; i++){ this.liquidMats[i].dispose(); }
+
+        // cactus
+        this.remove(this.cactusGroup);
+        this.remove(this.cactusGroupFloor);
+        this.cactusMat.dispose();
+        this.sculptCactusMat.dispose();
+        this.cactusTexLight.dispose();
+        this.cactusTex.dispose();
+        
+        // flower
+        this.petalGeo.dispose();
+        this.petalMat.dispose();
+        this.petalTexture.dispose();
+
+        // ropes
+        for(var i=0; i<this.ropes.length; i++){ this.remove(this.ropes[i]); }
+
+        for(var i=0; i<this.liquidMats.length; i++){ this.liquidMats[i].dispose(); }
+        this.ropeMaterial.dispose();
+        for(var i=0; i<this.liquidTexs.length; i++){ this.liquidTexs[i].dispose(); }
+
+        // all the rest
+        for(var i=0; i<this.disposeRelatedGeos.length; i++){ this.disposeRelatedGeos[i].dispose(); }
+        for(var i=0; i<this.disposeRelatedMats.length; i++){ this.disposeRelatedMats[i].dispose(); }
+        for(var i=0; i<this.disposeRelatedTexs.length; i++){ this.disposeRelatedTexs[i].dispose(); }
+
+        console.log("dispose Lupo ani!");
+    }
+
     loadCactus1( mat ) {
         // let promise = new Promise( (resolve, reject) => {
 
@@ -790,6 +851,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 _tex.texIndex=i;
                 _tex.name="sculptureTex_" + i;
                 this.sculptureTextures[i] = _tex;
+                this.disposeRelatedTexs.push(_tex);
 
                 let _mat = new THREE.MeshPhongMaterial({map: _tex, shininess: 100});
                 this.sculptureMaterials.push( _mat );
@@ -799,6 +861,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 _tex.texIndex=i;
                 _tex.name="sculptureMadTex_" + i;
                 this.sculptureMADTextures[i] = _tex;
+                this.disposeRelatedTexs.push(_tex);
 
                 let _mat = new THREE.MeshPhongMaterial({map: _tex, shininess: 100});
                 this.sculptureMADMaterials.push( _mat );
@@ -826,6 +889,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 this.artNum = 0;
 
                 loader.load( modelF, (geometry) => {
+                    this.disposeRelatedGeos.push(geometry);
+
                     let meshhh = new THREE.Mesh( geometry, matF );
                     meshhh.scale.y = 0.01;
                     // meshhh.material.opacity = 0;
@@ -860,7 +925,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             let loader = new THREE.JSONLoader(this.loadingManager);
 
             loader.load(model, (geometry, material) => {
-
+                this.disposeRelatedGeos.push(geometry);
                 let lupoArt = new THREE.Object3D();
 
                 let s_base = new THREE.Mesh( geometry, this.baseMat );
@@ -868,11 +933,13 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
                 lupoArt.add( s_base );
                 
                 loader.load(modelT, (geometryT, materialT) => {
+                    this.disposeRelatedGeos.push(geometryT);
                     let s_top = new THREE.Mesh( geometryT, this.topMat );
                     // s_top.rotation.y = 30/180*Math.PI;
                     lupoArt.add( s_top );
 
                     loader.load(modelB, (geometryB, materialB) => {
+                        this.disposeRelatedGeos.push(geometryB);
                         let s_bottom = new THREE.Mesh( geometryB, this.bottomMat );
                         // s_bottom.rotation.y = 30/180*Math.PI;
                         lupoArt.add( s_bottom );
