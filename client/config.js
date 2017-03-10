@@ -17,7 +17,7 @@ export default {
     noCharacters: false,
     production: false,
     assetsHost: "http://assets.tzina.space/",
-    //assetsHost: ""
+    //assetsHost: "",
     platform: "desktop", // desktop, vive
     skipLanding: false,
     skipInstructions: false,

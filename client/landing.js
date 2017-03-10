@@ -103,9 +103,9 @@ try {
   //Declare all button sounds and play logo video
 
   //Hover
-  var buttonSound = new Audio(SOUND_PATH + 'Button_C_1_new.ogg');
+  var buttonSound = new Audio(SOUND_PATH + 'Button_C_1b.ogg');
 
-  var buttonClick = new Audio(SOUND_PATH + 'Button_Click_new.ogg');
+  var buttonClick = new Audio(SOUND_PATH + 'Button_Click_b.ogg');
 
   $('.button').mouseenter(function () {
 

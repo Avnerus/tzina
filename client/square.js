@@ -8,16 +8,6 @@ import {MeshText2D, textAlign} from './lib/text2d/index'
 import DebugUtil from "./util/debug"
 import _ from 'lodash';
 
-const MODEL_PATH = "assets/square/scene/scene.json"
-const BUILDINGS_PATH = "assets/square/buildings/buildings_new.json"
-const END_BUILDING_PATH = "assets/square/buildings/endBuilding.json"
-const SUNS_PATH = "assets/square/suns.json"
-const COLLIDERS_PATH = "assets/square/colliders.json"
-const END_COLLIDERS_PATH = "assets/square/buildings/colliderBalcony.json"
-const BENCHES_PREFIX = "assets/square/benches/"
-const FOUNTAIN_PATH = "assets/square/fountain/fountain.json"
-const GROUND_PATH = "assets/square/squareRamp_22.json"
-
 let SUN_LOADER_TIME = 3;
 
 export default class Square extends THREE.Object3D{
@@ -35,6 +25,17 @@ export default class Square extends THREE.Object3D{
 
         this.debug = false;
         this.ending = false;
+
+        this.MODEL_PATH = this.config.assetsHost + "assets/square/scene/scene.json"
+        this.BUILDINGS_PATH = this.config.assetsHost + "assets/square/buildings/buildings_new.json"
+        this.END_BUILDING_PATH = this.config.assetsHost + "assets/square/buildings/endBuilding.json"
+        this.SUNS_PATH = this.config.assetsHost + "assets/square/suns.json"
+        this.COLLIDERS_PATH = this.config.assetsHost + "assets/square/colliders.json"
+        this.END_COLLIDERS_PATH = this.config.assetsHost + "assets/square/buildings/colliderBalcony.json"
+        this.BENCHES_PREFIX = this.config.assetsHost + "assets/square/benches/"
+        this.FOUNTAIN_PATH = this.config.assetsHost + "assets/square/fountain/fountain.json"
+        this.GROUND_PATH = this.config.assetsHost + "assets/square/squareRamp_22.json"
+
 
         this.sunTextureOffsets = {
             19 : 0,
@@ -513,8 +514,8 @@ export default class Square extends THREE.Object3D{
     loadBuildings(loadingManager) {
         return new Promise((resolve, reject) => {
             let loaders = [];
-            loaders.push(this.loadFile(loadingManager, BUILDINGS_PATH));
-            loaders.push(this.loadFile(loadingManager, END_BUILDING_PATH));
+            loaders.push(this.loadFile(loadingManager, this.BUILDINGS_PATH));
+            loaders.push(this.loadFile(loadingManager, this.END_BUILDING_PATH));
             Promise.all(loaders)
             .then((results) => {
                 console.log("Loaded Buildings ", results);
@@ -588,7 +589,7 @@ export default class Square extends THREE.Object3D{
             let loader = new THREE.ObjectLoader(loadingManager);
 
             //events.emit("add_gui", {folder: "Sun texture", step: 0.01, listen: true} ,this.sunTexture.offset, "y", 0, 1);
-            loader.load(SUNS_PATH,( obj ) => {
+            loader.load(this.SUNS_PATH,( obj ) => {
                 console.log("Loaded suns", obj)
 
                 let reorderedSuns = new THREE.Object3D();
@@ -659,7 +660,7 @@ export default class Square extends THREE.Object3D{
         });
     }
     loadColliders(loadingManager) {
-        return this.loadFile(loadingManager, COLLIDERS_PATH)
+        return this.loadFile(loadingManager, this.COLLIDERS_PATH)
         .then((obj) => {
                 let colliders;
                 obj.children  = _.filter(obj.children, function(o) { return (o.name != "BenchColliders2" && o.name != "BenchColliders" && o.children.length > 1); });
@@ -722,7 +723,7 @@ export default class Square extends THREE.Object3D{
             ]
             let loaders = [];
             benches.forEach((benchGroup) => {
-                loaders.push(this.loadFile(loadingManager, BENCHES_PREFIX + benchGroup + ".json"));
+                loaders.push(this.loadFile(loadingManager, this.BENCHES_PREFIX + benchGroup + ".json"));
             });
             return new Promise((resolve, reject) => {
                 Promise.all(loaders)
@@ -755,7 +756,7 @@ export default class Square extends THREE.Object3D{
     loadBenchesDesktop(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(BENCHES_PREFIX + "BenchAll.json",( obj ) => {
+            loader.load(this.BENCHES_PREFIX + "BenchAll.json",( obj ) => {
                 console.log("Loaded Desktop benches ", obj);
                 obj.scale.set(0.95,0.95,0.95);
                 obj.position.set(0.86,0.82,-1.38);
@@ -774,7 +775,7 @@ export default class Square extends THREE.Object3D{
     loadFountain(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(FOUNTAIN_PATH,( obj ) => {
+            loader.load(this.FOUNTAIN_PATH,( obj ) => {
                 console.log("Loaded square fountain ", obj);
                 resolve(obj);
             });
@@ -783,7 +784,7 @@ export default class Square extends THREE.Object3D{
     loadGround(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(GROUND_PATH,( obj ) => {
+            loader.load(this.GROUND_PATH,( obj ) => {
                 console.log("Loaded ground ", obj);
                 resolve(obj);
             });
@@ -792,7 +793,7 @@ export default class Square extends THREE.Object3D{
     loadSquare(loadingManager) {
         return new Promise((resolve, reject) => {
             let loader = new THREE.ObjectLoader(loadingManager);
-            loader.load(MODEL_PATH,( obj ) => {
+            loader.load(this.MODEL_PATH,( obj ) => {
                 console.log("Loaded square ", obj);
 
                 this.rotation.y = Math.PI * 150 / 180;
