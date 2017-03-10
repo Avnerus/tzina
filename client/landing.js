@@ -365,7 +365,7 @@ try {
 
                 introSound.pause();
 
-              });
+             });
 
             });
 
