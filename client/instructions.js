@@ -65,7 +65,7 @@ export default class Instructions {
 
         
 
-        this.loadInstructionSound("assets/sound/instruction.ogg").then((result)=>{
+        this.loadInstructionSound(this.config.assetsHost + "assets/sound/instruction.ogg").then((result)=>{
             this.instructionSound = result;
         });
 

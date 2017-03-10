@@ -1,8 +1,9 @@
 import DebugUtil from './util/debug'
 
 export default class Show {
-    constructor(square, characterController, timeController, soundManager) {
+    constructor(config, square, characterController, timeController, soundManager) {
         console.log("Show constructed!")
+        this.config = config;
         this.square = square;
         this.characterController = characterController;
         this.timeController = timeController;
@@ -23,8 +24,8 @@ export default class Show {
     init(loadingManager) {
 
         Promise.all([
-            this.loadAudio("assets/sound/event9am.ogg"),
-            this.loadAudio("assets/sound/event7pm.ogg")
+            this.loadAudio(this.config.assetsHost + "assets/sound/event9am.ogg"),
+            this.loadAudio(this.config.assetsHost + "assets/sound/event7pm.ogg")
         ])
         .then((results) => {
             this.music9am = results[0];

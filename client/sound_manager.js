@@ -1,5 +1,4 @@
 import BlurModule from "./util/SoundBlur";
-const SOUND_PATH = "assets/sound/"
 
 /*note on sound focus and defocus:
 Each StaticSoundSampler and each PositionalSoundSampler contains a blurModule.
@@ -24,9 +23,12 @@ let ambientSamples=[
 
 
 export default class SoundManager {
-    constructor(camera, scene) {
+    constructor(config, camera, scene) {
       this.camera = camera;
       this.scene = scene;
+      this.config = config;
+      
+      this.SOUND_PATH = this.config.assetsHost + "assets/sound/";
       //this array will contain all the positionalSamplers that we want to focus and unfocs
       //this lets us to blur all sounds while focusing on one, for the tweenFocus(to) function
       this.panorama={
@@ -159,7 +161,7 @@ export default class SoundManager {
             pSampler.blurModule.controlVolume(1.5);
             pSampler.position.set(thisSample.position[0],thisSample.position[1],thisSample.position[2]);
             //pSampler.createDebugCube(0xFF0000);
-            pSampler.init(SOUND_PATH + thisSample.path,loadingManager,function(thisSampler){
+            pSampler.init(thisSoundManager.SOUND_PATH + thisSample.path,loadingManager,function(thisSampler){
               //Put attention that thisSample is not the same as thisSampler.
               //on sample loaded
               thisSoundManager.panorama.append(thisSampler);

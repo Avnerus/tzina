@@ -86,7 +86,7 @@ export default class Game {
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
 
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
-        this.soundManager = new SoundManager(this.camera, this.scene);
+        this.soundManager = new SoundManager(this.config, this.camera, this.scene);
 
 
         this.scene.add(this.camera);
@@ -233,7 +233,7 @@ export default class Game {
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
 
-        this.show = new Show(this.square, this.characterController, this.timeController, this.soundManager); 
+        this.show = new Show(this.config, this.square, this.characterController, this.timeController, this.soundManager); 
 
         this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni);
         this.ending.init();

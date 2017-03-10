@@ -623,7 +623,7 @@ export default class Character extends THREE.Object3D {
 
     loadCharacterAmbience() {
         return new Promise((resolve, reject) => {
-            let relPath = "assets/sound/character_ambience/" + this.props.name + ".ogg";
+            let relPath = this.config.assetsHost + "assets/sound/character_ambience/" + this.props.name + ".ogg";
             console.log("Loading characters ambience ", relPath);
             this.soundManager.createStaticSoundSampler(relPath, sampler=> {
                 console.log("Loaded characters ambience ", sampler);

@@ -874,7 +874,7 @@ export default class TimeController {
         return new Promise((resolve, reject) => {
             if(type == "ambience"){
                 this.soundManager.createStaticSoundSampler(
-                    "assets/sound/chapter_vo/ambience/" + hour + "_" + type + ".ogg", 
+                    this.config.assetsHost + "assets/sound/chapter_vo/ambience/" + hour + "_" + type + ".ogg", 
                     (sampler) => {
                         resolve({
                             sampler: sampler,
@@ -886,7 +886,7 @@ export default class TimeController {
                 );
             } else if (type == "VO"){
                 this.soundManager.createStaticSoundSampler(
-                    "assets/sound/chapter_vo/" + hour + "_" + this.config.language + ".ogg",
+                    this.config.assetsHost + "assets/sound/chapter_vo/" + hour + "_" + this.config.language + ".ogg",
                     (sampler) => {
                         resolve({
                             sampler: sampler,
