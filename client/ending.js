@@ -333,14 +333,15 @@ export default class Ending {
         .then(() => {
             this.introAni.disposeAni();
             this.camera.add(this.endCredits);
-            this.endCredits.scale.set(0.06, 0.06, 0.06);
             this.endCredits.rotation.y = 0;
             this.endCredits.init();
             if (this.config.platform == "vive") {
                 this.endCredits.position.set(-0.02,-0.08,-60);
+                this.endCredits.scale.set(0.077, 0.077, 0.077);
                 this.square.position.set(0,-15,-150);
             } else {
                 this.endCredits.position.set(-0.02,-0.08,-50);
+                this.endCredits.scale.set(0.04, 0.04, 0.04);
                 this.camera.position.set(0, 15, 150);
             }
             this.fadeIn()

@@ -115,7 +115,7 @@ export default class Instructions {
         } else {
             this.instructionLineThree.text = "";
         }
-        let delay = 2500 * texts.length;
+        let delay = Math.max(5000,2500 * texts.length);
 
         TweenMax.to( this.instructionLineTwo.material, 1, { opacity: 1});
         TweenMax.to( this.instructionLineThree.material, 1, { opacity: 1});
