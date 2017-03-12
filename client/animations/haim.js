@@ -6,9 +6,10 @@ import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class HaimAnimation extends THREE.Object3D {
-    constructor( renderer, sky, square ) {
+    constructor( renderer, sky, square, config ) {
         super();
-        this.BASE_PATH = 'assets/animations/haim';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/haim';
         this.sky = sky;
         this.square = square;
     }

@@ -3,9 +3,10 @@ import TextureAnimator from '../util/texture_animator'
 import DebugUtil from '../util/debug'
 
 export default class Lupo12PMAnimation extends THREE.Object3D {
-    constructor() {
+    constructor(config) {
         super();
-        this.BASE_PATH = 'assets/animations/lupo12pm';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/lupo12pm';
         this.initialized = false;
         this.theDogs = null;
 
