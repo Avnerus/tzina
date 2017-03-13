@@ -20,6 +20,6 @@ export default {
     //assetsHost: "",
     platform: "vive", // desktop, vive
     skipLanding: true,
-    skipInstructions: false,
+    skipInstructions: true,
     language: "eng"
 }

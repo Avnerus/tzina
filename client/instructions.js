@@ -77,10 +77,10 @@ export default class Instructions {
         if (this.config.skipInstructions) {
             setTimeout(() => {
                 console.log("Instructions skipping");
-                events.emit("instructions_end");
                 if (this.config.platform == "vive") {
                     events.emit("delayed_rotation", true);
                 }
+                events.emit("instructions_end");
                 this.square.extras.showExtras();
 
             },1000);
