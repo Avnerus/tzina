@@ -14,15 +14,15 @@ export default class Ending {
         this.square = square;
         this.introAni = introAni;
 
-        this.debug = false;
+        this.debug = true;
 
-        this.endCredits = new EndCredits(this.camera);
+        this.endCredits = new EndCredits(this.config);
         this.faded = false;
 
         this.SQUARE_POSITON = [
-            -28.24,
-            -15.41,
-            7.48
+            -29.17,
+            -15.13,
+            7.77
         ]
 
         this.CHARACTER_ORDER = ["Rami", "Meir", "Itzik", "Miriam", "Lupo5PM", "Mark", "Hannah", "Haim", "Itzhak" ]
@@ -33,43 +33,33 @@ export default class Ending {
 
         this.CHARACTER_TEXTS = {
             "Meir": [
-                "Meir tried to form a Facebook group", 
-                "against the destruction of the square.",
-                "He was very upset and worried",
-                "over the impact it will have on the area.",
-                "He continues to feed the lost pigeons."
+                "Meir tried to form a Facebook group against the ruin", 
+                "He was very worried for what it willl do to the area.",
+                "He continues to feed the lost pigeons.",
             ],
             "Rami": [
-                "Rami doesn’t care too much",
-                "about the removal of the square.",
-                "He says life is always in motion,",
-                "and one shouldn’t fear that."
+                "Rami doesn’t care too much about the removal",
+                "of the square. He says life is always",
+                "in motion, and one shouldn’t fear that."
             ],
             "Miriam": [
-                "Miriam passed away",
-                "around April-May 2015.",
-                "We shot a reenactment",
-                "of a conversation with her.",
+                "Miriam passed away around April-May 2015.",
+                "We shot a reenactment of a conversation with her."
             ],
             "Itzik": [
-                "Itzik hopes that the demolition",
-                "will keep the junkies away.",
-                "He will likely keep sitting",
-                "on the benches in the area."
+                "Itzik hopes that the demolition will keep the",
+                "junkies away. He will likely keep sitting",
+                " on the benches in the area."
             ],
             "Mark": [
-                "Mark found an apartment at south Tel Aviv",
-                "and doesn’t sleep on the benches anymore.",
-                "He still use drugs and he still comes",
-                "to visit the square every week.",
+                "Mark found an apartment at south Tel Aviv and doesn’t sleep",
+                "on the benches anymore. He still use drugs and still visit.",
                 "He was in deep grief about the demolition."
             ],
             "Lupo5PM": [
-                "Lupo is bored from the area",
-                "and is happy with any change",
-                "that might energizes the place.",
-                "He wished that Agam’s sculpture",
-                "would have been destroyed as well."
+                "Lupo is bored from the area and is happy with any change",
+                "that might energizes the place. He wished that Agam’s",
+                "fountain would have been destroyed as well."
             ],
             "Hannah": [
                 "Hanna get upset every time",
@@ -77,15 +67,57 @@ export default class Ending {
                 "since she often forgets about it."
             ],
             "Itzhak": [
-                "Yitzhak says that for the lack",
-                "of a better option,",
+                "Yitzhak says that for the lack of a better option,",
                 "he will keep coming to the square."
             ],
             "Haim": [
-                "Haim wished that the square",
-                "would be torn down after his death.",
-                "That did not happen. Haim is alive",
-                "and still begs at the same spot."
+                "Haim wished that the square would be torn down",
+                "after his death. That did not happen.",
+                "Haim is alive and still begs at the same spot."
+            ]
+        }
+        this.CHARACTER_TEXTS_HEB = {
+            "Meir": [
+                ".מאיר ניסה להקים קבוצת פייסבוק נגד הריסת הכיכר", 
+                ".הוא נסער מאוד מהשינוי ופוחד ממה שיקרה לאזור",
+                ".ממשיך להגיע ולהאכיל את היונים האבודות"
+            ],
+            "Rami": [
+                ",רמי אדיש להורדת הכיכר. מרגיש שהחיים הם",
+                ".חלק מתנועה ואין מה לפחד ממה שהם מזמנים"
+            ],
+            "Miriam": [
+                ".מרים נפטרה באזור אפריל-מאי 2015",
+                ".לצורך הצילומים בוצע שחזור של שיחה עמה"
+            ],
+            "Itzik": [
+                "איציק מקווה שהורדת הכיכר תרחיק את",
+                "הנרקומנים מהאזור. הוא ככל הנראה ימשיך",
+                ".להגיע ולשבת על הספסלים"
+            ],
+            "Mark": [
+                "מארק מצא דירה בדרום תל אביב, הוא יותר לא ישן על",
+                "ספסלי הכיכר. עדיין משתמש בסמים",
+                ".ועדיין מגיע לבקר. הוא כאב מאוד את ההריסה"
+            ],
+            "Lupo5PM": [
+                "לופו משעומם ביותר מהאזור ושמח על כל שינוי",
+                "שמביא עמו אנרגיה חדשה. הוא קיווה שהפסל",
+                ".של אגם יהרס גם יחד עם הכיכר"
+            ],
+            "Hannah": [
+                "חנה מצטערת על הרס הכיכר",
+                ",בכל פעם מחדש",
+                ".מאחר והיא נוטה לשכוח שזה קרה"
+            ],
+            "Itzhak": [
+                ",יצחק מעיד כי ימשיך להגיע לשבת בכיכר",
+                ".בלית ברירה"
+            ],
+            "Haim": [
+                "חיים יחל לכך שיהרסו את הכיכר",
+                "רק לאחר מותו ,זה לא קרה. חיים עדיין חי",
+                ".ועדיין יושב באותו מקום מקבץ נדבות"
             ]
         }
     }
@@ -99,18 +131,15 @@ export default class Ending {
         }
         let text = new MultilineText(5, TEXT_DEFINITION, 100);
 
-        text.position.set(-45.22, 14.96, 11.3);
+        text.position.set(-45.22, 9, 11.3);
         text.rotation.set(
              327 * Math.PI / 180,
              105 * Math.PI / 180,
              31 * Math.PI / 180
         );
 
-        text.scale.set(0.016, 0.016, 0.016);
+        text.scale.set(0.0136, 0.0136, 0.0136);
 
-        if (this.config.platform == "desktop") {
-        } else {
-        }
         if (this.debug) {
             DebugUtil.positionObject(text, "Ending character text");
         }
@@ -133,9 +162,14 @@ export default class Ending {
         new THREE.TextureLoader(loadingManager).load('assets/end/miriam.png', (texture) => {
             let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
             this.miriamPlane = new THREE.Mesh(miriamGeo, material);
-            this.miriamPlane.position.set(610,-73,24);
-            this.miriamPlane.scale.set(0.83, 0.83, 0.83);
-            //DebugUtil.positionObject(this.miriamPlane, "Miriam image", false, -1000, 1000);
+            if (this.config.platform == "vive") {
+                this.miriamPlane.position.set(-3.93,13.4,8.61);
+            } else {
+                this.miriamPlane.position.set(-10.84,13.4,8.24);
+            }
+            this.miriamPlane.rotation.set(0,112 * Math.PI/180,0);
+            this.miriamPlane.scale.set(0.00169, 0.00169, 0.00169);
+            //DebugUtil.positionObject(this.miriamPlane, "Miriam image");
         });
 
         events.on("vr_start", () => {
@@ -151,7 +185,11 @@ export default class Ending {
         this.spotLight.distance = 0;
         this.spotLight.decay = 1;
         this.spotLight.penumbra = 0.8;
-        this.spotLight.position.set(-6,2.4,4.14);
+        if (this.config.platform == "vive") {
+            this.spotLight.position.set(-6,2.4,4.14);
+        } else {
+            this.spotLight.position.set(-51.73,20.44,29.46);
+        }
 
         this.text = this.generateText();
 
@@ -173,16 +211,29 @@ export default class Ending {
     start() {
         console.log("Ending is starting!");
         events.emit("experience_end");
-        this.endCredits.init();
-        this.endCredits.scale.set(0.019, 0.019, 0.019);
-        this.endCredits.position.set(30.51, 24, -7.18);
-        this.endCredits.rotation.y = 285 * Math.PI /180;
+        if (this.config.language == "heb") {
+            this.CHARACTER_TEXTS = this.CHARACTER_TEXTS_HEB;
+        }
+        this.floodLight = new THREE.PointLight( 0xffffff, 0.6, 13); // 5
+        this.floodLight.position.set(-15.3,2.36,2.36);
+        if (this.debug) {
+            events.emit("add_gui", {folder:"floodLight " + i, listen:true, step: 0.1}, this.floodLight, "decay",1,2);
+            events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "x", -100, 100);
+            events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "y", -100, 100);
+            events.emit("add_gui", {folder:"floodLight " + i, listen: true, step: 0.01}, this.floodLight.position, "z", -100, 100);
+            events.emit("add_gui", {folder:"floodLight " + i, listen:true}, this.floodLight, "intensity",0,2);
+            events.emit("add_gui", {folder:"floodLight " + i, listen:true}, this.floodLight, "distance",0,100);
+        }
+        this.scene.add(this.floodLight);
 
         this.fadeOut()
         .then(() => {
             // Move to midnight
             this.timeController.jumpToTime(0);
             this.square.suns.visible = false;
+            this.square.pool.enableWaves = false;
+            this.square.fountainLight.intensity = 0.2;
+
             if (this.config.platform == "vive") {
                 this.square.clockRotation = 17 * 15 * Math.PI / 180; // Best view 
             }
@@ -190,8 +241,9 @@ export default class Ending {
             this.square.position.fromArray(this.SQUARE_POSITON);
 
             if (this.config.platform == "desktop") {
-                this.camera.position.set(0,1.2,0);
+                this.camera.position.set(-1.2,1.6,-3.1);
                 this.square.mesh.rotation.y = 2.7;
+                this.square.setEndingColliders();
             }
 
             this.introAni.createSnowParticle();
@@ -214,34 +266,10 @@ export default class Ending {
             setTimeout(() => {
                 this.showCharacters();
             },5000);
-            /*
-            setTimeout(() => {
-                console.log("Ending video");
-                this.square.add(this.endCredits);
-                this.endCredits.creditsVideo.video.addEventListener('timeupdate',() => {
-                    if(!this.faded && this.endCredits.creditsVideo.video.currentTime > 60) {
-                        console.log("Ending fade");
-                        this.faded = true;                    
-                        this.fadeOut()
-                        .then(() => {
-                            this.camera.add(this.endCredits);
-                            this.endCredits.scale.set(0.077, 0.077, 0.077);
-                            this.endCredits.rotation.y = 0;
-                            if (inVR) {
-                                this.endCredits.position.set(-0.02,-0.08,-60);
-                                this.square.position.set(0,-15,-150);
-                            } else {
-                                this.endCredits.position.set(-0.02,-0.08,-50);
-                                this.camera.position.set(0, 15, 150);
-                            }
-                            this.fadeIn()
-                            .then(() => {
+        });
 
-                            })
-                        });
-                    }
-                },false);
-            },2300000);*/
+        events.on("character_ended", (name) => {
+            this.showTexts();
         });
 
 
@@ -263,12 +291,7 @@ export default class Ending {
             setTimeout(() => {
                 this.showNextCharacter();
             },4000);
-        } else {
-            setTimeout(() => {
-                this.showTexts();
-            },2000);
-        }
-
+        } 
     }
     showTexts() {
         this.showingTexts = this.CHARACTER_ORDER.slice(0);
@@ -287,19 +310,44 @@ export default class Ending {
         this.spotLight.target = targetCharacter;
         targetCharacter.idleVideo.play();
         if (nextText == "Miriam") {
-            this.text.add(this.miriamPlane);
-        }
+            console.log("Ending - Miriam plane");
+            this.square.add(this.miriamPlane);
+        } 
         setTimeout(() => {
-            targetCharacter.idleVideo.pause();
             if (nextText == "Miriam") {
-                this.text.remove(this.miriamPlane);
+                this.square.remove(this.miriamPlane);
             }
+            targetCharacter.idleVideo.pause();
             if (this.showingTexts.length > 0) {
                 this.showNextText();
             } else {
                 this.text.hide(1);
+                setTimeout(() => {
+                    this.showCredits();
+                },3000);
             }
         },10000); 
+    }
+    showCredits() {
+        this.fadeOut()
+        .then(() => {
+            this.introAni.disposeAni();
+            this.camera.add(this.endCredits);
+            this.endCredits.scale.set(0.06, 0.06, 0.06);
+            this.endCredits.rotation.y = 0;
+            this.endCredits.init();
+            if (this.config.platform == "vive") {
+                this.endCredits.position.set(-0.02,-0.08,-60);
+                this.square.position.set(0,-15,-150);
+            } else {
+                this.endCredits.position.set(-0.02,-0.08,-50);
+                this.camera.position.set(0, 15, 150);
+            }
+            this.fadeIn()
+            .then(() => {
+                this.endCredits.play();
+            });
+        });
     }
     fadeIn() {
         return new Promise((resolve, reject) => {

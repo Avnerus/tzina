@@ -16,7 +16,7 @@ export default class HaimAnimation extends THREE.Object3D {
     init(loadingManager) {
         this.loadingManager = loadingManager;
         this.setupAnim();
-        //DebugUtil.positionObject(this, "Haim Ani");
+        // DebugUtil.positionObject(this, "Haim Ani");
     }
 
     setupAnim() {
@@ -31,9 +31,11 @@ export default class HaimAnimation extends THREE.Object3D {
             { time: 2,  anim: ()=>{this.bagOn()} },
             { time: 12,  anim: ()=>{this.tubeDown(1)} },    // 12
             { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
+            { time: 75,  anim: ()=>{this.skyLightDarken()} },   // took 3 sec
+            { time: 82,  anim: ()=>{this.skyLightStorm()} },
 
-            { time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
-            { time: 212,  anim: ()=>{this.skyLightStorm()} }, //212
+            //{ time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
+            //{ time: 212,  anim: ()=>{this.skyLightStorm()} }, //212
             { time: 246,  anim: ()=>{this.skyLightBack()} },
 
             { time: 252, anim: ()=>{this.characterDisappear()} }    //252
@@ -46,14 +48,16 @@ export default class HaimAnimation extends THREE.Object3D {
           this.lookupTable.push(Math.random());
         }
 
+        this.envLightChanged = false;
+
         // TUBE
         this.ARC_SEGMENTS = 20;
 
-        let liquidTex = tex_loader.load(this.BASE_PATH + '/images/liquid_trans.png');
-        liquidTex.repeat.x = 1;
-        liquidTex.repeat.y = 1;
-        liquidTex.offset.x = -1.5;
-        // liquidTex.offset.y = 0.5;
+        this.liquidTex = tex_loader.load(this.BASE_PATH + '/images/liquid_trans.png');
+        this.liquidTex.repeat.x = 1;
+        this.liquidTex.repeat.y = 1;
+        this.liquidTex.offset.x = -1.5;
+        // this.liquidTex.offset.y = 0.5;
 
         let liquidOutTex = tex_loader.load(this.BASE_PATH + '/images/liquid_trans.png');
         liquidOutTex.offset.x = -1.5;
@@ -67,6 +71,9 @@ export default class HaimAnimation extends THREE.Object3D {
         this.liquidInTubes = [];
         this.tubesVec = [];
         this.tubesCurve = [];
+        // for dispose
+        this.tubesGeo = [];
+        this.tubesMat = [];
 
         // PARSE DATA
         for(let k=0; k<curveData.length; k++) {
@@ -89,9 +96,9 @@ export default class HaimAnimation extends THREE.Object3D {
         }
 
         // CLOUND
-        let cloudTex = tex_loader.load( this.BASE_PATH + '/images/clouds.png' );
+        this.cloudTex = tex_loader.load( this.BASE_PATH + '/images/clouds.png' );
         // cloudTex.repeat.y = 2;
-        this.cloudMat = new THREE.MeshBasicMaterial( {color: 0x00ffff, map: cloudTex, blending: "AdditiveBlending", side: THREE.DoubleSide, opacity: 1} );
+        this.cloudMat = new THREE.MeshBasicMaterial( {color: 0x00ffff, map: this.cloudTex, blending: "AdditiveBlending", side: THREE.DoubleSide, opacity: 1} );
         this.cloudGroup = {'in': [], 'out': []};
 
         // TUBE_BAG
@@ -117,6 +124,9 @@ export default class HaimAnimation extends THREE.Object3D {
         this.liquidInOutTubes = [];
         this.outTubesVec = [];
         this.outTubesCurve = [];
+        // for dispose
+        this.outTubesGeo = [];
+        this.outTubesMat = [];
 
         // PARSE DATA
         for(let k=0; k<curveOutData.length; k++) {
@@ -140,16 +150,18 @@ export default class HaimAnimation extends THREE.Object3D {
         }
 
         loader.load(this.BASE_PATH + "/models/haim_tubeBag.json", (geometry, material) => {
+            this.bagGeo = geometry;
             this.bag = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( {map: this.bagTexs[0], transparent: true} ) );
             
             loader.load(this.BASE_PATH + "/models/cloud.json", (geometry, material) => {
+                this.cloudGeo = geometry;
                 this.cloud = new THREE.Mesh( geometry, this.cloudMat );
                 // this.cloud.rotation.x = Math.PI/2;
                 this.cloud.scale.multiplyScalar(0.01);
 
                 // CREATE CURVE
                 this.cvMaterial = new THREE.MeshBasicMaterial({color: 0x00ffff, wireframe: true, morphTargets: true, transparent: true, opacity: 0.1});
-                this.liquidMaterial = new THREE.MeshBasicMaterial({map: liquidTex, transparent: true, opacity: 0.9});
+                this.liquidMaterial = new THREE.MeshBasicMaterial({map: this.liquidTex, transparent: true, opacity: 0.9});
                 this.liquidDown = false;
                 this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,-0.5,0), 0 );
                 this.createCurve( new THREE.Vector3(), new THREE.Vector3(0,0.25,0), 1 );
@@ -168,13 +180,45 @@ export default class HaimAnimation extends THREE.Object3D {
         });
 
         // SPINE
-        let boneTex = tex_loader.load( this.BASE_PATH + '/images/bone.jpg' );
-        boneTex.wrapS = boneTex.wrapT = THREE.RepeatWrapping;
-        boneTex.repeat.set( 5, 5 );
+        this.boneTex = tex_loader.load( this.BASE_PATH + '/images/bone.jpg' );
+        this.boneTex.wrapS = this.boneTex.wrapT = THREE.RepeatWrapping;
+        this.boneTex.repeat.set( 5, 5 );
+        this.boneMat = new THREE.MeshBasicMaterial({map: this.boneTex});
         loader.load(this.BASE_PATH + "/models/spine.json", (geometry, material) => {
-            this.boneGeo = geometry.clone();
-            this.spine = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({map: boneTex}) );
+            this.boneGeo = geometry;
+            this.spine = new THREE.Mesh( this.boneGeo, this.boneMat );
             this.add( this.spine );
+        });
+
+        // ENV_LIGHT
+        // envLight reacts to character PAUSE
+        events.on("character_idle", (name) => {
+            if(name=="Haim" && this.envLightChanged){
+                //console.log("pause so bring light back");
+                this.skyLightBack();                
+            }
+        });
+
+        // envLight reacts to character RESUME
+        events.on("character_playing", (name) => {
+            if(name=="Haim" && this.envLightChanged){
+                //console.log("change the color again");
+
+                this.oriHemi = this.sky.getHemiLghtOriStatus();
+                this.oriDir = this.sky.getDirLghtOriStatus();
+                this.sky.pauseUpdateHemiLight();
+                this.oriFLightIntensity = this.square.fountainLight.intensity;
+
+                TweenMax.to( this.sky.dirLight, 1, {intensity: 0.0});
+                TweenMax.to( this.sky.hemiLight, 1, {intensity: 0.7});
+                TweenMax.to( this.square.fountainLight, 1, {intensity: 0});
+                TweenMax.to( this.sky.hemiLight.color, 1, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
+                TweenMax.to( this.sky.hemiLight.groundColor, 1, { r:0.078, g:0.373, b:0.4 } );
+            }
+        });
+
+        events.on("experience_end", ()=>{
+            this.disposeAni();
         });
 
         //
@@ -195,6 +239,8 @@ export default class HaimAnimation extends THREE.Object3D {
             depthTest: true,
             maxParticleCount: 3000
         });
+        //
+        this.particleEmitters = [];
 
         for(let i = 0; i < this.cloudGroup.out.length; i++){
             let emitter = new SPE.Emitter({
@@ -227,6 +273,7 @@ export default class HaimAnimation extends THREE.Object3D {
                 activeMultiplier: 0.1
             });
             this.particleGroup.addEmitter( emitter );
+            this.particleEmitters.push( emitter );
         }
         this.add( this.particleGroup.mesh );
 
@@ -235,24 +282,29 @@ export default class HaimAnimation extends THREE.Object3D {
     createGroundPuddle( tex_loader) {
         this.puddles = new THREE.Object3D();
         this.puddleAnimators = [];
-        let puddleMats = [];
+        this.puddleMats = [];
+        this.puddleTexs = [];
+        this.puddleGeos = [];
+
         let orders = [ [0,1,2,3,2,4,4,4], [4,4,4,0,1,2,3,2], [2,3,2,4,4,4,0,1], [2,4,4,4,0,1,2,3] ];
 
-        let puddleTex = tex_loader.load( this.BASE_PATH + '/images/puddle.png', ()=>{
+        this.puddleTex = tex_loader.load( this.BASE_PATH + '/images/puddle.png', ()=>{
             for(let i=0; i<orders.length; i++){
-                let pTex = puddleTex.clone();
+                let pTex = this.puddleTex.clone();
                 pTex.needsUpdate = true;
+                this.puddleTexs.push(pTex);
 
                 let puddleAni = new TextureAnimator( pTex, 5, 1, 8, 40, orders[i] );
                 let puddleMat = new THREE.MeshBasicMaterial({map: pTex, transparent: true, blending:THREE.AdditiveBlending, opacity: 0.2}); // 
                 this.puddleAnimators.push(puddleAni);
-                puddleMats.push(puddleMat);
+                this.puddleMats.push(puddleMat);
             }
             
             var puddleGeo = new THREE.PlaneGeometry(1,1);
+            this.puddleGeos.push(puddleGeo);
 
             for(let i=0; i<40; i++){
-                let puddle = new THREE.Mesh(puddleGeo, puddleMats[i%4]);
+                let puddle = new THREE.Mesh(puddleGeo, this.puddleMats[i%4]);
                 puddle.position.set(Math.random()*12-6,
                                     0,
                                     Math.random()*14-7 +3);
@@ -288,6 +340,8 @@ export default class HaimAnimation extends THREE.Object3D {
                 cvGeometry.morphTargets[i] = {name: nameee, vertices: cvGeometry2.vertices};
             }
             cvGeometry.computeMorphNormals();
+            //
+            this.tubesGeo.push(cvGeometry);
 
             // children_0
             let cvTube = new THREE.Mesh(cvGeometry, this.cvMaterial);
@@ -300,6 +354,9 @@ export default class HaimAnimation extends THREE.Object3D {
 
             // children_1
             let liquidGeo = new THREE.TubeGeometry( curve_points[curve_points.length-1], this.ARC_SEGMENTS, 0.03, 3, false);
+            //
+            this.tubesGeo.push(liquidGeo);
+            //
             let tubeLiquid = new THREE.Mesh(liquidGeo, this.liquidMaterial);
             // tubeLiquid.position.copy( pos );
             // tubeLiquid.rotation.set( rot.x, rot.y, rot.z );
@@ -309,6 +366,9 @@ export default class HaimAnimation extends THREE.Object3D {
             // children_2
             let theBag = this.bag.clone();
             theBag.material = new THREE.MeshBasicMaterial( {map: this.bagTexs[j%4], transparent: true} );
+            //
+            this.tubesMat.push(theBag.material);
+            //
             let lengthhh = liquidGeo.vertices.length-1;
             theBag.position.copy( liquidGeo.vertices[lengthhh] );
             theBag.scale.multiplyScalar( this.clamp(this.lookupTable[j+index*tubeNumber], 0.3, 1) );
@@ -360,6 +420,8 @@ export default class HaimAnimation extends THREE.Object3D {
                 cvGeometry.morphTargets[i] = {name: nameee, vertices: cvGeometry2.vertices};
             }
             cvGeometry.computeMorphNormals();
+            //
+            this.outTubesGeo.push(cvGeometry);
 
             // children_0
             let cvTube = new THREE.Mesh(cvGeometry, this.cvOutMaterial);
@@ -369,6 +431,9 @@ export default class HaimAnimation extends THREE.Object3D {
 
             // children_1
             let liquidGeo = new THREE.TubeGeometry( curve_points[curve_points.length-1], this.ARC_SEGMENTS, 0.03, 3, false);
+            //
+            this.outTubesGeo.push(liquidGeo);
+            //
             let tubeLiquid = new THREE.Mesh(liquidGeo, this.liquidOutMaterial);
             tubeObject.add( tubeLiquid );
             tubeLiquid.visible = false;
@@ -579,32 +644,34 @@ export default class HaimAnimation extends THREE.Object3D {
         TweenMax.to( this.sky.dirLight, 2, {intensity: 0.2});
         TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.2});
         TweenMax.to( this.square.fountainLight, 3, {intensity: 0});
+
+        this.envLightChanged = true;
     }
 
     skyLightStorm() {
-        TweenMax.to( this.sky.dirLight, 2, {intensity: 0.0});
-        TweenMax.to( this.sky.hemiLight, 2, {intensity: 0.7});
-        TweenMax.to( this.sky.hemiLight.color, 2, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
-        TweenMax.to( this.sky.hemiLight.groundColor, 2, { r:0.078, g:0.373, b:0.4 } ); // #145f67
+        TweenMax.to( this.sky.dirLight, 4, {intensity: 0.0});
+        TweenMax.to( this.sky.hemiLight, 4, {intensity: 0.7});
+        TweenMax.to( this.sky.hemiLight.color, 4, { r:0.114, g:0.192, b:0.592 } ); // #1d3197
+        TweenMax.to( this.sky.hemiLight.groundColor, 4, { r:0.078, g:0.373, b:0.4 } ); // #145f67
     }
 
     skyLightBack() {
-        TweenMax.to( this.square.fountainLight, 3, {intensity: this.oriFLightIntensity});
+        TweenMax.to( this.square.fountainLight, 2, {intensity: this.oriFLightIntensity});
         let hemiTargetIntensity = this.sky.getHemiLghtCorrectIntensity();
-        TweenMax.to( this.sky.hemiLight, 3, {intensity: hemiTargetIntensity});
-        TweenMax.to( this.sky.dirLight, 3, {
+        TweenMax.to( this.sky.hemiLight, 2, {intensity: hemiTargetIntensity});
+        TweenMax.to( this.sky.dirLight, 2, {
             intensity: this.oriDir.intensity,
             onComplete:()=>{
                 this.sky.resumeUpdateHemiLight();
             }
         });
 
-        TweenMax.to( this.sky.hemiLight.color, 2, { 
+        TweenMax.to( this.sky.hemiLight.color, 1, { 
             r:this.oriHemi.color.r,
             g:this.oriHemi.color.g,
             b:this.oriHemi.color.b
         } );
-        TweenMax.to( this.sky.hemiLight.groundColor, 2, {
+        TweenMax.to( this.sky.hemiLight.groundColor, 1, {
             r:this.oriHemi.groundColor.r,
             g:this.oriHemi.groundColor.g,
             b:this.oriHemi.groundColor.b
@@ -661,6 +728,59 @@ export default class HaimAnimation extends THREE.Object3D {
                             this.particleGroup.emitters[i].position.value = rainOriginPositions[i];
                         }
                     } } );
+
+        this.envLightChanged = false;
+    }
+
+    disposeAni(){
+        // tubes: tube + liquid + bag + cloud
+        for(var t in this.tubes){
+            this.remove(t);
+        }
+        // outTubes: tube + liquid + cloud
+        for(var t in this.outTubes){
+            this.remove(t);
+        }
+        for(var i=0; i<this.tubesGeo.length; i++){ this.tubesGeo[i].dispose(); }
+        for(var i=0; i<this.outTubesGeo.length; i++){ this.outTubesGeo[i].dispose(); }
+        for(var i=0; i<this.tubesMat.length; i++){ this.tubesMat[i].dispose(); }
+        for(var i=0; i<this.outTubesMat.length; i++){ this.outTubesMat[i].dispose(); }
+
+        // tubeBags
+        this.bagGeo.dispose();
+        for(var i=0; i<this.bagTexs.length; i++){ this.bagTexs[i].dispose(); }
+        for(var i=0; i<this.bagAniTexs.length; i++){ this.bagAniTexs[i].dispose(); }
+
+        // curve
+        this.cvMaterial.dispose();
+        this.liquidMaterial.dispose();
+        this.cvOutMaterial.dispose();
+        this.liquidOutMaterial.dispose();
+        this.liquidTex.dispose();
+
+        // clouds
+        this.cloudTex.dispose();
+        this.cloudMat.dispose();
+        this.cloudGeo.dispose();
+
+        // spine
+        this.remove(this.spine);
+        this.boneGeo.dispose();
+        this.boneMat.dispose();
+        this.boneTex.dispose();
+
+        // ground puddle
+        this.remove(this.puddles);
+        for(var i=0; i<this.puddleGeos.length; i++){ this.puddleGeos[i].dispose(); }
+        for(var i=0; i<this.puddleMats.length; i++){ this.puddleMats[i].dispose(); }
+        for(var i=0; i<this.puddleTexs.length; i++){ this.puddleTexs[i].dispose(); }
+
+        // SPE: Group.removeEmitter(emitter) + Group.dispose()<=Dipose the geometry and material for the group.; 
+        this.remove( this.particleGroup.mesh );
+        this.particleEmitters.forEach( (e)=>{ this.particleGroup.removeEmitter(e); } );
+        this.particleGroup.dispose();
+    
+        console.log("dispose Haim ani!");
     }
 
     detach ( child, parent, scene ) {

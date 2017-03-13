@@ -48,6 +48,7 @@ import Ending from './ending'
 
 import PidgeonController from './clientSockets/index'
 
+import Coin from './coin'
 
 export default class Game {
     constructor(config) {
@@ -58,6 +59,7 @@ export default class Game {
         this.shownWASD = false;
         this.shownZoom = false;
         this.ended = false;
+        this.config.endTime = 0;
     }
     init() {
 
@@ -84,7 +86,7 @@ export default class Game {
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
 
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
-        this.soundManager = new SoundManager(this.camera, this.scene);
+        this.soundManager = new SoundManager(this.config, this.camera, this.scene);
 
 
         this.scene.add(this.camera);
@@ -153,8 +155,7 @@ export default class Game {
         this.sunGazer.init();
 
 
-        this.flood = new Flood();
-        this.flood.init();
+        this.flood = new Flood(this.config);
 
 
         /*
@@ -185,7 +186,7 @@ export default class Game {
                 'Itzik' : new ItzikAnimation(),
                 'Meir' : new MeirAnimation(),
                 'Mark' : new MarkAnimation(this.sky, this.square),
-                'Agam12PM' : new Agam12PMAnimation(this.square),
+                'Agam12PM' : new Agam12PMAnimation(this.config, this.square),
                 'Lupo12PM' : new Lupo12PMAnimation(),
                 'Itzhak' : new ItzhakAnimation(),
                 'Rami' : new RamiAnimation(this.renderer),
@@ -204,7 +205,7 @@ export default class Game {
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config, this.introAni);
 
 
-        this.instructions = new Instructions(this.config, this.camera, this.square);
+        this.instructions = new Instructions(this.config, this.camera, this.square, this.soundManager);
 
         // laura: i don't know other better way to do this..
         if (!this.config.noAnimations) {
@@ -225,14 +226,14 @@ export default class Game {
         this.ZOOM_OUT_SOUND = 'assets/sound/zoom_out.ogg'
         this.SUN_GAZE_SOUND = 'assets/sound/ui/Hour_Replace_1.ogg'
 
-        this.waterDrops = new WaterDrops();
+        this.waterDrops = new WaterDrops(this.config);
         this.camera.add(this.waterDrops);
 
             /*
         this.fpsCount = new FPSCount(this.camera);
         this.fpsCount.init();*/
 
-        this.show = new Show(this.square, this.characterController, this.timeController, this.soundManager); 
+        this.show = new Show(this.config, this.square, this.characterController, this.timeController, this.soundManager); 
 
         this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni);
         this.ending.init();
@@ -240,6 +241,7 @@ export default class Game {
         this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
         this.pidgeonController.init(this.loadingManager);
 
+        this.coin = new Coin(this.characterController);
     }
 
     load(onLoad, onProgress) {
@@ -280,13 +282,25 @@ export default class Game {
             // Characters
             console.log("Initializing characters");
             this.characterController.init(this.loadingManager);
+            this.coin.init(this.loadingManager);
         }
         this.intro.init(this.loadingManager);
         this.soundManager.init(this.loadingManager);
         this.timeController.init(this.loadingManager);
         this.waterDrops.init(this.loadingManager);
+        this.flood.init(this.loadingManager);
         this.show.init();
         this.instructions.init();
+
+        if (this.config.platform == "desktop") {
+            this.config.endTime = 60 * 25;
+            //this.config.endTime = 60 * 0.4;
+        } else {
+            this.config.endTime = 60 * 15;
+            //this.config.endTime = 60 * 0.4;
+        }
+
+        console.log("Experence end time: ", this.config.endTime);
         
         VideoRGBD.initPool();
 
@@ -441,6 +455,9 @@ export default class Game {
             if (!this.controlPassed) {
                 this.intro.update(dt,et);
             }
+            if(this.coin.toCheck){
+                this.coin.update(this.camera,dt,et);
+            }
         }
         if (this.keyboardController) {
             this.keyboardController.update(dt);
@@ -453,7 +470,7 @@ export default class Game {
             this.controls.update();
         }
         this.collisionManager.update(dt);
-        this.flood.update(dt);
+        this.flood.update(dt,et);
 
         if (this.ended) {
             this.ending.update(dt);
@@ -475,7 +492,7 @@ export default class Game {
     }
 
     endCheck(time) {
-        if (!this.ended && time > 60 * 15) {
+        if (!this.ended && time >= this.config.endTime) {
         //if (!this.ended && time > 60 * 0.4) {
             this.ended = true;
             this.ending.start();
@@ -502,8 +519,9 @@ export default class Game {
     vrChange() {
         if (this.vrManager.hmd.isPresenting) {
             let newCameras = this.vrEffect.getCameras();
+                /*
             document.getElementById('reset-pose').style.display = "block";
-            document.getElementById('reset-pose').addEventListener("click", () => {this.resetPose()});
+            document.getElementById('reset-pose').addEventListener("click", () => {this.resetPose()});*/
             events.emit("vr_start", newCameras);
             inVR = true;
             if (!this.config.skipIntro && !this.controlPassed) {

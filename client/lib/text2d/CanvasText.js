@@ -29,8 +29,8 @@ var CanvasText = (function () {
         this.ctx.fillStyle = ctxOptions.fillStyle;
         if (ctxOptions.shadow) {
             this.ctx.shadowColor = "black"
-            this.ctx.shadowOffsetX = -6;
-            this.ctx.shadowOffsetY = 6;
+            this.ctx.shadowOffsetX = ctxOptions.shadowSize * -1;
+            this.ctx.shadowOffsetY = ctxOptions.shaodwSize;
         }
 
         this.ctx.textAlign = 'left';

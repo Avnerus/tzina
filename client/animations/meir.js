@@ -45,6 +45,9 @@ export default class MeirAnimation extends THREE.Object3D {
         
         this.backBirds = new THREE.Object3D();
 
+         // dispose
+        this.disposeRelatedGeos = [];
+
         /// ANI-SETTING ----------------------------------------------------
 
         //v.1
@@ -175,6 +178,10 @@ export default class MeirAnimation extends THREE.Object3D {
         // console.log(this.parent);
         // this.parent.fullvideo.updateMatrixWorld();
 
+        events.on("experience_end", ()=>{
+            this.disposeAni();
+        });
+
         //
         this.loadingManager.itemEnd("MeirAnim");
     }
@@ -232,20 +239,38 @@ export default class MeirAnimation extends THREE.Object3D {
             } } );
     }
 
+    disposeAni(){
+        for(var i=0; i<this.birds.length; i++){ this.remove(this.birds[i]); }
+        this.remove(this.backBirds);
+
+        this.birdMat.dispose();
+        this.birdTex.dispose();
+
+        for(var i=0; i<this.disposeRelatedGeos.length; i++){ this.disposeRelatedGeos[i].dispose(); }
+
+        console.log("dispose Meir ani!");
+    }
+
     loadModelBird( _body, _wingR, _wingL, loader ){
         // let birdMat = new THREE.MeshLambertMaterial({map: this.birdTex});
-        let birdMat = new THREE.MeshBasicMaterial({color: 0xa5d0c3, map: this.birdTex});
+        this.birdMat = new THREE.MeshBasicMaterial({color: 0xa5d0c3, map: this.birdTex});
 
         loader.load( _body, (geometry, material) => {
-            this.bird = new THREE.Mesh(geometry, birdMat);
+            this.disposeRelatedGeos.push(geometry);
+
+            this.bird = new THREE.Mesh(geometry, this.birdMat);
             
             loader.load( _wingR, (geometry, material) => {
-                let wingR = new THREE.Mesh(geometry, birdMat);
+                this.disposeRelatedGeos.push(geometry);
+
+                let wingR = new THREE.Mesh(geometry, this.birdMat);
                 wingR.position.x = -0.6;
                 this.bird.add(wingR);
 
                 loader.load( _wingL, (geometry, material) => {
-                    let wingL = new THREE.Mesh(geometry, birdMat);
+                    this.disposeRelatedGeos.push(geometry);
+
+                    let wingL = new THREE.Mesh(geometry, this.birdMat);
                     wingL.position.x = 0.6;
                     this.bird.add(wingL);
 

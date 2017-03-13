@@ -21,7 +21,8 @@ var MeshText2D = (function (_super) {
         this.canvas.drawText(this._text, {
             font: this._font,
             fillStyle: this._fillStyle,
-            shadow: this._shadow
+            shadow: this._shadow,
+            shadowSize: this._shadowSize
         });
         this.texture = new THREE.Texture(this.canvas.canvas);
         this.texture.needsUpdate = true;
