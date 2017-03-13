@@ -234,13 +234,7 @@ export default class Character extends THREE.Object3D {
                     this.soundManager.panorama.append(this.audio);
                     this.audio.play();
                 });
-                //Load the ambient track to accompany the character
-                if(this.props.hasAmbience){
-                    this.loadCharacterAmbience().then(()=>{
-                        this.ambientAudio.play();
-                    });
-                }
-               
+
                 events.emit("character_playing", this.props.name)
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {
