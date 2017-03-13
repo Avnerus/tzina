@@ -42,9 +42,7 @@ export default class CharacterController {
         events.on("instructions_end", () => {
             console.log("Character controller now in control");
             this.inControl = true;
-            if (this.config.platform == "desktop") {
-                this.addColiders();
-            }
+            this.addColiders();
         });
 
         events.on("hour_updated", (hour) => {
