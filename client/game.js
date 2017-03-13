@@ -180,17 +180,17 @@ export default class Game {
 
         if (!this.config.noAnimations) {
             this.animations = {
-                'Hannah' : new HannahAnimation(),
-                'Miriam' : new MiriamAnimation(this.renderer),
-                'Haim' : new HaimAnimation(this.renderer, this.sky, this.square),
-                'Itzik' : new ItzikAnimation(),
-                'Meir' : new MeirAnimation(),
-                'Mark' : new MarkAnimation(this.sky, this.square),
+                'Hannah' : new HannahAnimation(this.config),
+                'Miriam' : new MiriamAnimation(this.renderer, this.config),
+                'Haim' : new HaimAnimation(this.renderer, this.sky, this.square, this.config),
+                'Itzik' : new ItzikAnimation(this.config),
+                'Meir' : new MeirAnimation(this.config),
+                'Mark' : new MarkAnimation(this.sky, this.square, this.config),
                 'Agam12PM' : new Agam12PMAnimation(this.config, this.square),
-                'Lupo12PM' : new Lupo12PMAnimation(),
-                'Itzhak' : new ItzhakAnimation(),
-                'Rami' : new RamiAnimation(this.renderer),
-                'Shirin' : new ShirinAnimation()
+                'Lupo12PM' : new Lupo12PMAnimation(this.config),
+                'Itzhak' : new ItzhakAnimation(this.config),
+                'Rami' : new RamiAnimation(this.renderer, this.config),
+                'Shirin' : new ShirinAnimation(this.config)
             }
         } else {
             this.animations = {};
@@ -201,7 +201,7 @@ export default class Game {
 
         this.timeController = new TimeController(this.config, this.container, this.square, this.sky, this.scene, this.camera, this.soundManager, this.sunGazer);
 
-        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController);
+        this.introAni = new IntroAnimation( this.scene, this.renderer, this.square, this.timeController, this.config);
         this.intro = new Intro(this.camera, this.square, this.timeController, this.soundManager, this.scene, this.vrControls, this.zoomController, this.config, this.introAni);
 
 

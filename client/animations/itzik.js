@@ -2,9 +2,10 @@ import ImprovedNoise from '../util/improved_noise'
 import DebugUtil from '../util/debug'
 
 export default class ItzikAnimation extends THREE.Object3D {
-    constructor() {
+    constructor(config) {
         super();
-        this.BASE_PATH = 'assets/animations/itzik';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/itzik';
     }
 
     init(loadingManager) {

@@ -7,9 +7,10 @@ import GeometryUtils from '../util/GeometryUtils'
 import FBO from '../util/fbo'
 
 export default class RamiAnimation extends THREE.Object3D {
-    constructor( renderer ) {
+    constructor( renderer, config ) {
         super();
-        this.BASE_PATH = 'assets/animations/rami';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/rami';
 
         // FBO_PARTICLES
         // ref: https://github.com/Avnerus/nao-game-client/blob/master/beam.js

@@ -5,9 +5,10 @@ import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class HannahAnimation extends THREE.Object3D {
-    constructor() {
+    constructor(config) {
         super();
-        this.BASE_PATH = 'assets/animations/hannah';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/hannah';
     }
 
     init(loadingManager) {

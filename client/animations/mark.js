@@ -1,9 +1,10 @@
 import DebugUtil from '../util/debug'
 
 export default class MeirAnimation extends THREE.Object3D {
-    constructor( sky, square ) {
+    constructor( sky, square, config ) {
         super();
-        this.BASE_PATH = 'assets/animations/mark';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/mark';
         this.sky = sky;
         this.square = square;
     }

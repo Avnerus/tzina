@@ -9,9 +9,10 @@ TweenPlugin.activate([EndArrayPlugin]);
 import SunLoader from '../sun_loader'
 
 export default class IntroAnimation extends THREE.Object3D {
-    constructor( scene, renderer, square, timeController ) {
+    constructor( scene, renderer, square, timeController, config ) {
         super();
-        this.BASE_PATH = 'assets/animations/intro';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/intro';
 
         // FBO_PARTICLES
         // ref: https://github.com/Avnerus/nao-game-client/blob/master/beam.js

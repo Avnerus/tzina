@@ -364,6 +364,13 @@ export default class Character extends THREE.Object3D {
                 this.ambientAudio.stop();
                 this.ambientAudio.unload();
             }
+
+            // revert evn light changes if any
+            if(this.animation){
+                if (this.animation.envLightChanged) {
+                    this.animation.skyLightBack();
+                }
+            }            
         }
         //this.remove(this.animation);
         this.active = false;
