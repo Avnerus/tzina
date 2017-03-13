@@ -173,15 +173,15 @@ export default class Character extends THREE.Object3D {
             return false;
         }
     }
-    hold(setAlpha) {
+    hold(freeze) {
         if (this.active && !this.done && !this.ending) {
             this.onHold = true;
             console.log(name, " is playing." , this.props.name, "is pausing");
             if (!this.props.fullOnly) {
-                this.idleVideo.pause();
-                if (setAlpha) {
-                    this.idleVideo.setOpacity(0.5);
+                if (freeze) {
+                    this.idleVideo.pause();
                 }
+                this.idleVideo.setOpacity(0.5);
             }
         }
     }
