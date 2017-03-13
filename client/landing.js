@@ -497,6 +497,7 @@ try {
         $('#start_head').fadeOut(250, function () {
 
           $('#start_experience').fadeOut(250);
+          $('#vive_message').fadeOut(250);
 
         });
       }
