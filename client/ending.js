@@ -228,7 +228,9 @@ export default class Ending {
 
         this.fadeOut()
         .then(() => {
-            // Move to midnight
+            // Move to midnight, kill all tweens before
+            TweenMax.killAll();
+
             this.timeController.jumpToTime(0);
             this.square.suns.visible = false;
             this.square.pool.enableWaves = false;
