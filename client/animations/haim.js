@@ -34,11 +34,7 @@ export default class HaimAnimation extends THREE.Object3D {
             { time: 73, anim: ()=>{this.tubeOut(0.5)} },    // 73
             { time: 75,  anim: ()=>{this.skyLightDarken()} },   // took 3 sec
             { time: 82,  anim: ()=>{this.skyLightStorm()} },
-
-            //{ time: 180,  anim: ()=>{this.skyLightDarken()} }, //180
-            //{ time: 212,  anim: ()=>{this.skyLightStorm()} }, //212
             { time: 246,  anim: ()=>{this.skyLightBack()} },
-
             { time: 252, anim: ()=>{this.characterDisappear()} }    //252
         ];
         this.nextAnim = null;
@@ -314,7 +310,18 @@ export default class HaimAnimation extends THREE.Object3D {
                 this.puddles.add(puddle);
             }
             this.add(this.puddles);
-            //DebugUtil.positionObject(this.puddles, "puddle");
+
+            if( this.config.platform=="vive" )
+            {
+                this.puddles.position.y = 0.46;
+                this.puddles.rotation.set(8.85*Math.PI/180, 0, 348.45*Math.PI/180);
+            } 
+            else {
+                this.puddles.position.y = -0.16;
+            }
+            //var fakePuddle = new THREE.Mesh(new THREE.BoxGeometry(5,0.2,5), new THREE.MeshBasicMaterial({color:0xffff00}));
+            //this.add(fakePuddle);
+            // DebugUtil.positionObject(this.puddles, "puddle");
         });
     }
 
