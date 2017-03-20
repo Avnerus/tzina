@@ -3,16 +3,20 @@ var host = window.location.hostname;
 console.log("Current host: ", host);
 
 window.onload = function() {
-    if (1 || host == "localhost") {
+    if (host == "localhost") {
         $("#loading-container").show();
         $.getScript("bundle.js");
     } else {
+        $("#loading-container").show();
+        $.getScript("bundle.min.js");
+
+/*
         $("#secure-access-container").css("display", "flex");
         $("#secure-form").submit(function(event) {
             $("#secure-access-container").hide();
             secureLogin(event.target["password"].value);
             event.preventDefault();
-        })
+        })*/
     }
 }
 
