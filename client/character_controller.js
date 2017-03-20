@@ -102,7 +102,7 @@ export default class CharacterController {
     }
 
     addCharacter(characterName, ending = false) {
-        if (this.characters[characterName] && !this.characters[characterName].done) {
+        if (this.characters[characterName] && (ending || !this.characters[characterName].done)) {
             console.log("Adding character " + characterName);
             let character = this.characters[characterName];
             this.activeCharacters.push(character);

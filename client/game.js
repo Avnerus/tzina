@@ -293,7 +293,7 @@ export default class Game {
         this.instructions.init();
 
         if (this.config.platform == "desktop") {
-            this.config.endTime = 60 * 20;
+            this.config.endTime = 60 * 15;
             //this.config.endTime = 60 * 0.4;
         } else {
             this.config.endTime = 60 * 15;

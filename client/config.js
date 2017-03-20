@@ -4,8 +4,8 @@ export default {
     fps: 60,
     enableFlying: false,
     skipIntro: false,
-    skipCharacters: false,
-    speedIntro: false,
+    skipCharacters: true,
+    speedIntro: true,
     startTime: 7,
     movementSpeed: 0.3, //0.2
     daySpeed: 0.001,
@@ -15,11 +15,11 @@ export default {
     noExtras: false,
     noTrees: false,
     noCharacters: false,
-    production: true,
+    production: false,
     assetsHost: "http://assets.tzina.space/",
     //assetsHost: "",
     platform: "desktop", // desktop, vive
-    skipLanding: false,
-    skipInstructions: false,
+    skipLanding: true,
+    skipInstructions: true,
     language: "eng"
 }
