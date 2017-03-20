@@ -286,6 +286,7 @@ font-family: "Miriam Libre",serif;
   transition-duration: 0.6s;
   transition-timing-function: linear;
   width: 20%;
+  cursor: pointer;
 }
 
 .platform_selection {
@@ -723,4 +724,12 @@ margin-top: 20%;
 #headphones-solo{
   width: 300px;
     margin-top: 20%;
+}
+.mobile_splash_screen{
+  color: white;
+  font-size: 18px;
+  display: none;
+  position: fixed;
+  top: 40%;
+  text-align: center;
 }
