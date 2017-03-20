@@ -317,16 +317,17 @@ export default class Ending {
         } 
         setTimeout(() => {
             if (nextText == "Miriam") {
-                this.square.remove(this.miriamPlane);
-            }
-            targetCharacter.idleVideo.pause();
-            if (this.showingTexts.length > 0) {
-                this.showNextText();
+                //this.square.remove(this.miriamPlane);
             } else {
-                this.text.hide(1);
-                setTimeout(() => {
-                    this.showCredits();
-                },3000);
+                targetCharacter.idleVideo.pause();
+                if (this.showingTexts.length > 0) {
+                    this.showNextText();
+                } else {
+                    this.text.hide(1);
+                    setTimeout(() => {
+                        this.showCredits();
+                    },3000);
+                }
             }
         },10000); 
     }
