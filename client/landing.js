@@ -161,50 +161,56 @@ try {
 
   if (!config.skipLanding) {
 
-    if (!mobilecheck()) {
-      $("#loading-container").hide();
+    if(!!window.chrome){
+        if (!mobilecheck()) {
+          $("#loading-container").hide();
 
-      $('#landing_screen').delay(50).fadeIn(500, function () {
+          $('#landing_screen').delay(50).fadeIn(500, function () {
 
-        console.log('Landing screen faded in');
+            console.log('Landing screen faded in');
 
-        //Disable mouse control on tree scene
-        $('#tree_scene').css({
-          "pointer-events": "none"
-        });
+            //Disable mouse control on tree scene
+            $('#tree_scene').css({
+              "pointer-events": "none"
+            });
 
-        //After scene loaded get rid of the progress bar
+            //After scene loaded get rid of the progress bar
 
-        //Ambient Sound
-        introSound.play();
+            //Ambient Sound
+            introSound.play();
 
-        $('#progress_text').fadeOut(50);
+            $('#progress_text').fadeOut(50);
 
-        $('#headphones-solo').delay(250).fadeIn(250).delay(5000).fadeOut(50, function () {
+            $('#headphones-solo').delay(250).fadeIn(250).delay(5000).fadeOut(50, function () {
 
-          $('#firstscreen').fadeIn(250);
+              $('#firstscreen').fadeIn(250);
 
-          //Fade in the canvas
-          $('#tree_scene').delay(250).fadeIn(500, function () {
+              //Fade in the canvas
+              $('#tree_scene').delay(250).fadeIn(500, function () {
 
-            //Fade in about button
-            $('#about').fadeIn(250);
+                //Fade in about button
+                $('#about').fadeIn(250);
 
-            //Fade in language selector
-            $('#language').fadeIn(250);
+                //Fade in language selector
+                $('#language').fadeIn(250);
+
+              });
+
+            });
+
+
 
           });
 
-        });
-
-
-
-      });
-
+        } else {
+          $('#tree_scene').delay(250).fadeIn(500, function () {
+            console.log('its a mobile');
+            $('.mobile_splash_screen').fadeIn(250);
+          });
+        }
     } else {
-       $('#tree_scene').delay(250).fadeIn(500, function () {
-        console.log('its a mobile');
-        $('.mobile_splash_screen').fadeIn(250);
+      $('#tree_scene').delay(250).fadeIn(500, function () {
+          $('.not_chrome').fadeIn(250);
       });
     }
   }

@@ -733,3 +733,10 @@ margin-top: 20%;
   top: 40%;
   text-align: center;
 }
+.not_chrome{
+  display: none;
+  position: fixed;
+  top: 50%;
+  text-align: center; 
+  font-size: 18px;
+}
