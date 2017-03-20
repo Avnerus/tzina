@@ -339,7 +339,7 @@ export default class Ending {
             this.endCredits.init();
             if (this.config.platform == "vive") {
                 this.endCredits.position.set(-0.02,-0.08,-60);
-                this.endCredits.scale.set(0.077, 0.077, 0.077);
+                this.endCredits.scale.set(0.053, 0.053, 0.053);
                 this.square.position.set(0,-15,-150);
             } else {
                 this.endCredits.position.set(-0.02,-0.08,-50);

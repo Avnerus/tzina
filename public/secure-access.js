@@ -3,9 +3,9 @@ var host = window.location.hostname;
 console.log("Current host: ", host);
 
 window.onload = function() {
-    if (host == "localhost") {
+    if (1 || host == "localhost") {
         $("#loading-container").show();
-        $.getScript( "bundle.js");
+        $.getScript("bundle.js");
     } else {
         $("#secure-access-container").css("display", "flex");
         $("#secure-form").submit(function(event) {
