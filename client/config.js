@@ -4,7 +4,7 @@ export default {
     fps: 60,
     enableFlying: false,
     skipIntro: false,
-    skipCharacters: true,
+    skipCharacters: false,
     speedIntro: true,
     startTime: 7,
     movementSpeed: 0.3, //0.2

@@ -21,7 +21,7 @@ export default [
         subtitles: null,
         gazeSpace: [-0.27,-0.21,-0.6],
         gazeOffset: [0,0,0.16],
-        endingPosition : [5.04, 22.8, -18],
+        endingPosition : [4.46, 22.11, -13.77],
         endingRotation: [360, 190, 3],
         endingScaleMul: 1,
         hasAmbience: true

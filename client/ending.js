@@ -21,7 +21,7 @@ export default class Ending {
 
         this.SQUARE_POSITON = [
             -29.17,
-            -15.13,
+            -15.28,
             7.77
         ]
 
@@ -317,17 +317,16 @@ export default class Ending {
         } 
         setTimeout(() => {
             if (nextText == "Miriam") {
-                //this.square.remove(this.miriamPlane);
+                this.square.remove(this.miriamPlane);
+            } 
+            targetCharacter.idleVideo.pause();
+            if (this.showingTexts.length > 0) {
+                this.showNextText();
             } else {
-                targetCharacter.idleVideo.pause();
-                if (this.showingTexts.length > 0) {
-                    this.showNextText();
-                } else {
-                    this.text.hide(1);
-                    setTimeout(() => {
-                        this.showCredits();
-                    },3000);
-                }
+                this.text.hide(1);
+                setTimeout(() => {
+                    this.showCredits();
+                },3000);
             }
         },10000); 
     }
