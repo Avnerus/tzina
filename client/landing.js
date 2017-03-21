@@ -381,6 +381,7 @@ try {
               $('#start_head').fadeIn(250, function () {
 
                 $('#start_experience').delay(100).fadeIn(250);
+                $('#vive_message').delay(100).fadeIn(250);
 
                 buttonClick.play();
 
