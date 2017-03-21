@@ -12,7 +12,7 @@ var Stats = require('stats.js');
 // DISABLE LOGGING
 //
 if (config.production) {
-  window['console']['log'] = function () {};
+  window['console']['log'] = function () { };
 }
 
 var game = new Game(config);
@@ -106,9 +106,9 @@ try {
   //Declare all button sounds and play logo video
 
   //Hover
-  var buttonSound = new Audio(SOUND_PATH + 'Button_C_1_new.ogg');
+  var buttonSound = new Audio(SOUND_PATH + 'Button_C_1b.ogg');
 
-  var buttonClick = new Audio(SOUND_PATH + 'Button_Click_new.ogg');
+  var buttonClick = new Audio(SOUND_PATH + 'Button_Click_b.ogg');
 
   $('.button').mouseenter(function () {
 
@@ -160,6 +160,7 @@ try {
   //Change language bind
 
   if (!config.skipLanding) {
+    $("#loading-container").hide();
 
     if(!!window.chrome){
         if (!mobilecheck()) {
@@ -299,8 +300,8 @@ try {
         $('#desc_sub').html('מאת שירין אנלן webVR דוקומנטרי');
 
         $('#enter_button').html('כניסה');
-        $('#start_head').html('?אנחנו מוכנים, ואתה');
-        $('#start_experience').html('התחל');
+        $('#start_head').html('?אנחנו מוכנים, מה איתך?');
+         $('#start_experience').html('התחל');
 
         $('#lower_tag').html('מסע דרך שטפון של בדידות ואהבה');
 
@@ -514,6 +515,7 @@ try {
         $('#start_head').fadeOut(250, function () {
 
           $('#start_experience').fadeOut(250);
+          $('#vive_message').fadeOut(250);
 
         });
       }

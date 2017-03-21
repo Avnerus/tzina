@@ -47,7 +47,7 @@ export default class TimeController {
         this.usedSun = false;
         this.nowCount = 0;
 
-        this.IDLE_TIMEOUT = 60;
+        this.IDLE_TIMEOUT = 90;
         this.HELP_TIMEOUT = 30;
         this.NOW_HELP_TRIGGER = 3;
         this.characterPlaying = false;

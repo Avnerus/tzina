@@ -77,10 +77,10 @@ export default class Instructions {
         if (this.config.skipInstructions) {
             setTimeout(() => {
                 console.log("Instructions skipping");
-                events.emit("instructions_end");
                 if (this.config.platform == "vive") {
                     events.emit("delayed_rotation", true);
                 }
+                events.emit("instructions_end");
                 this.square.extras.showExtras();
 
             },1000);
@@ -115,7 +115,7 @@ export default class Instructions {
         } else {
             this.instructionLineThree.text = "";
         }
-        let delay = 2500 * texts.length;
+        let delay = Math.max(5000,2500 * texts.length);
 
         TweenMax.to( this.instructionLineTwo.material, 1, { opacity: 1});
         TweenMax.to( this.instructionLineThree.material, 1, { opacity: 1});

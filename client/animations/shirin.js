@@ -7,9 +7,10 @@ import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class ShirinAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( config ) {
         super();
-        this.BASE_PATH = 'assets/animations/shirin';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/shirin';
         this.initialized = false;
     }
 
@@ -131,7 +132,7 @@ export default class ShirinAnimation extends THREE.Object3D {
         // MOON
         let moonTexture = tex_loader.load( this.BASE_PATH + "/images/moon.jpg" );
         let moonNRMTexture = tex_loader.load( this.BASE_PATH + "/images/moonNormal.jpg" );
-        let moonMat = new THREE.MeshPhongMaterial({map: moonTexture, normalMap: moonNRMTexture});
+        let moonMat = new THREE.MeshPhongMaterial({map: moonTexture, normalMap: moonNRMTexture, emissive: 0x111111});
         this.moon = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), moonMat);
         this.moon.rotation.set(Math.PI/2, Math.PI/2, Math.PI/2);
         // MOON location
@@ -139,11 +140,11 @@ export default class ShirinAnimation extends THREE.Object3D {
             // if( this.parent.config.platform=="desktop" ){
             //     this.moon.position.y = 200;
             // } else {
-            //     this.moon.position.set(500,690,500);
-            //     this.moon.scale.set(4,4,4);
+                this.moon.position.set(900,480,345);
+                this.moon.scale.set(3.3,3.3,3.3);
             // }
         this.add( this.moon );
-        //DebugUtil.positionObject(this.moon, "moon");
+        DebugUtil.positionObject(this.moon, "moon");
 
         //
         let cocoonTexFiles = [ this.BASE_PATH + "/images/seamless_circle.png",
@@ -450,7 +451,7 @@ export default class ShirinAnimation extends THREE.Object3D {
         // console.log("do first animation.");
         // for(let i=0; i<this.particleGroup.emitters.length; i++){
             this.particleGroup.emitters[f_i].enable();
-            this.particleGroup.emitters[f_i].activeMultiplier = 1;
+            this.particleGroup.emitters[f_i].activeMultiplier = 2;
             setTimeout( (index)=>{
                 this.resetFragment(index);
 
@@ -595,12 +596,12 @@ export default class ShirinAnimation extends THREE.Object3D {
     }
 
     afterLoaded() {
-        if( this.parent.config.platform=="desktop" ){
-            this.moon.position.y = 200;
-        } else {
-            this.moon.position.set(500,690,500);
-            this.moon.scale.set(4,4,4);
-        }
+        // if( this.parent.config.platform=="desktop" ){
+        //     this.moon.position.y = 200;
+        // } else {
+        //     this.moon.position.set(500,690,500);
+        //     this.moon.scale.set(4,4,4);
+        // }
     }
 
     start(time) {

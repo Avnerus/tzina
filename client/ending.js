@@ -21,7 +21,7 @@ export default class Ending {
 
         this.SQUARE_POSITON = [
             -29.17,
-            -15.13,
+            -15.28,
             7.77
         ]
 
@@ -228,7 +228,9 @@ export default class Ending {
 
         this.fadeOut()
         .then(() => {
-            // Move to midnight
+            // Move to midnight, kill all tweens before
+            TweenMax.killAll();
+
             this.timeController.jumpToTime(0);
             this.square.suns.visible = false;
             this.square.pool.enableWaves = false;
@@ -316,7 +318,7 @@ export default class Ending {
         setTimeout(() => {
             if (nextText == "Miriam") {
                 this.square.remove(this.miriamPlane);
-            }
+            } 
             targetCharacter.idleVideo.pause();
             if (this.showingTexts.length > 0) {
                 this.showNextText();
@@ -333,14 +335,15 @@ export default class Ending {
         .then(() => {
             this.introAni.disposeAni();
             this.camera.add(this.endCredits);
-            this.endCredits.scale.set(0.06, 0.06, 0.06);
             this.endCredits.rotation.y = 0;
             this.endCredits.init();
             if (this.config.platform == "vive") {
                 this.endCredits.position.set(-0.02,-0.08,-60);
+                this.endCredits.scale.set(0.053, 0.053, 0.053);
                 this.square.position.set(0,-15,-150);
             } else {
                 this.endCredits.position.set(-0.02,-0.08,-50);
+                this.endCredits.scale.set(0.04, 0.04, 0.04);
                 this.camera.position.set(0, 15, 150);
             }
             this.fadeIn()

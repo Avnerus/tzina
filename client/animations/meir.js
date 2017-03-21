@@ -7,9 +7,10 @@ import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class MeirAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( config ) {
         super();
-        this.BASE_PATH = 'assets/animations/meir';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/meir';
     }
 
     init(loadingManager) {

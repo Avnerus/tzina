@@ -5,11 +5,11 @@ import {textAlign} from '../lib/text2d/index'
 export default class Agam12PMAnimation extends THREE.Object3D {
     constructor( config, square ) {
         super();
-        this.BASE_PATH = 'assets/animations/agam12pm';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/agam12pm';
 
         this.square = square;
         this.didInit = false;
-        this.config = config;
 
         this.INTRO_TEXT = [
             "Yaakov Agam, 89 years old.",

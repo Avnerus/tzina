@@ -7,9 +7,10 @@ import DebugUtil from '../util/debug'
 TweenPlugin.activate([EndArrayPlugin]);
 
 export default class MiriamAnimation extends THREE.Object3D {
-    constructor( renderer ) {
+    constructor( renderer, config ) {
         super();
-        this.BASE_PATH = 'assets/animations/miriam';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/miriam';
 
         // FBO_PARTICLES
         // ref: https://github.com/Avnerus/nao-game-client/blob/master/beam.js

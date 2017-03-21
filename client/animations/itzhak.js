@@ -2,9 +2,10 @@ import ImprovedNoise from '../util/improved_noise'
 import DebugUtil from '../util/debug'
 
 export default class ItzhakAnimation extends THREE.Object3D {
-    constructor( scene, renderer ) {
+    constructor( config ) {
         super();
-        this.BASE_PATH = 'assets/animations/itzhak';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/itzhak';
     }
 
     init(loadingManager) {

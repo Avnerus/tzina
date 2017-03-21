@@ -7,9 +7,10 @@ import GeometryUtils from '../util/GeometryUtils'
 import FBO from '../util/fbo'
 
 export default class RamiAnimation extends THREE.Object3D {
-    constructor( renderer ) {
+    constructor( renderer, config ) {
         super();
-        this.BASE_PATH = 'assets/animations/rami';
+        this.config = config;
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/rami';
 
         // FBO_PARTICLES
         // ref: https://github.com/Avnerus/nao-game-client/blob/master/beam.js
@@ -115,12 +116,13 @@ export default class RamiAnimation extends THREE.Object3D {
         this.disposeRelatedTexs=[];
 
         let peacockTex = tex_loader.load( this.BASE_PATH + "/images/peacockB.jpg" );
-        this.peacockTexAni = new TextureAnimator( peacockTex, 3, 1, 15, 60, [0,1,2,0,0,0,0,0,0,0,0,0,0,0,0] );
+        //this.peacockTexAni = new TextureAnimator( peacockTex, 3, 1, 15, 60, [0,1,2,0,0,0,0,0,0,0,0,0,0,0,0] );
         peacockTex.wrapS = THREE.RepeatWrapping;
         peacockTex.wrapT = THREE.RepeatWrapping;
         peacockTex.repeat.set( 1,2 );
         this.disposeRelatedTexs.push(peacockTex);
 
+        /*
         let feathersTex = tex_loader.load( this.BASE_PATH + "/images/pea.jpg" );
         feathersTex.wrapS = THREE.RepeatWrapping;
         feathersTex.wrapT = THREE.RepeatWrapping;
@@ -129,6 +131,7 @@ export default class RamiAnimation extends THREE.Object3D {
 
         let grassTex = tex_loader.load( this.BASE_PATH + "/images/redlight-thin.jpg" );
         this.disposeRelatedTexs.push(grassTex);
+        */
         this.peacockMaterial = new THREE.MeshBasicMaterial({ map: peacockTex,
                                                             side: THREE.DoubleSide,
                                                             wireframe: true,
@@ -292,7 +295,7 @@ export default class RamiAnimation extends THREE.Object3D {
                 size: {
                     value: [.05, .15, .15, .15, .1]
                 },
-                particleCount: 15,
+                particleCount: 10,
                 drag: 0.6,
                 activeMultiplier: 1
             });

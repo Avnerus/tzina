@@ -13,8 +13,8 @@ export default class Character extends THREE.Object3D {
         this.inShow = false;
         this.scene = scene;
 
-        if (config.videoHost) {
-            props.basePath = config.videoHost + props.basePath;
+        if (config.assetsHost) {
+            props.basePath = config.assetsHost + props.basePath;
         }
 
         console.log("Character base path", props.basePath);
@@ -173,15 +173,15 @@ export default class Character extends THREE.Object3D {
             return false;
         }
     }
-    hold(setAlpha) {
+    hold(freeze) {
         if (this.active && !this.done && !this.ending) {
             this.onHold = true;
             console.log(name, " is playing." , this.props.name, "is pausing");
             if (!this.props.fullOnly) {
-                this.idleVideo.pause();
-                if (setAlpha) {
-                    this.idleVideo.setOpacity(0.5);
+                if (freeze) {
+                    this.idleVideo.pause();
                 }
+                this.idleVideo.setOpacity(0.5);
             }
         }
     }
@@ -196,7 +196,7 @@ export default class Character extends THREE.Object3D {
         }
     }
     play() {
-        if (!this.done && !this.props.fullOnly) {
+        if ((!this.done || this.ending) && !this.props.fullOnly) {
             console.log(this.props.name + " Play idle video");
             this.idleVideo.load();
             this.idleVideo.setVisible(true);
@@ -234,13 +234,7 @@ export default class Character extends THREE.Object3D {
                     this.soundManager.panorama.append(this.audio);
                     this.audio.play();
                 });
-                //Load the ambient track to accompany the character
-                if(this.props.hasAmbience){
-                    this.loadCharacterAmbience().then(()=>{
-                        this.ambientAudio.play();
-                    });
-                }
-               
+
                 events.emit("character_playing", this.props.name)
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {
@@ -250,7 +244,10 @@ export default class Character extends THREE.Object3D {
                     this.soundManager.panorama.detach(this.audio);
                     this.audio.stop();
                     this.audio.unload();
-                    this.remove(this.idleVideo);
+                    this.remove(this.idleVideo.mesh);
+                    if (this.idleVideo.wire) {
+                        this.remove(this.idleVideo.wire);
+                    }
                     if (this.animation) {
                         this.remove(this.animation);
                     }
@@ -370,6 +367,13 @@ export default class Character extends THREE.Object3D {
                 this.ambientAudio.stop();
                 this.ambientAudio.unload();
             }
+
+            // revert evn light changes if any
+            if(this.animation){
+                if (this.animation.envLightChanged) {
+                    this.animation.skyLightBack();
+                }
+            }            
         }
         //this.remove(this.animation);
         this.active = false;
@@ -394,7 +398,7 @@ export default class Character extends THREE.Object3D {
     }
 
     update(dt,et) {
-        if (!this.done) {
+        if (!this.done || this.ending) {
             if (!this.playingFull && !this.props.fullOnly) {
                 this.idleVideo.update(dt);
             } else if (this.playingFull) {
@@ -429,10 +433,16 @@ export default class Character extends THREE.Object3D {
         if (!this.props.fullOnly) {
             this.idleVideo.pause();
             this.idleVideo.unload();
-            this.remove(this.idleVideo);
+            this.remove(this.idleVideo.mesh);
+            if (this.idleVideo.wire) {
+                this.add(this.idleVideo.wire);
+            }
         }
 
-        this.remove(this.fullVideo);
+        this.remove(this.fullVideo.mesh);
+        if (this.fullVideo.wire) {
+            this.remove(this.fullVideo.wire);
+        }
 
         if (this.props.event) {
             this.remove(this.animation);

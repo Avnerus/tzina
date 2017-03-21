@@ -42,9 +42,7 @@ export default class CharacterController {
         events.on("instructions_end", () => {
             console.log("Character controller now in control");
             this.inControl = true;
-            if (this.config.platform == "desktop") {
-                this.addColiders();
-            }
+            this.addColiders();
         });
 
         events.on("hour_updated", (hour) => {
@@ -104,7 +102,7 @@ export default class CharacterController {
     }
 
     addCharacter(characterName, ending = false) {
-        if (this.characters[characterName] && !this.characters[characterName].done) {
+        if (this.characters[characterName] && (ending || !this.characters[characterName].done)) {
             console.log("Adding character " + characterName);
             let character = this.characters[characterName];
             this.activeCharacters.push(character);

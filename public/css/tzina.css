@@ -725,6 +725,12 @@ margin-top: 20%;
   width: 300px;
     margin-top: 20%;
 }
+#vive_message {
+    position: relative;
+    top: 40vh;
+    text-align: center;
+    color: white
+}
 .mobile_splash_screen{
   color: white;
   font-size: 18px;
