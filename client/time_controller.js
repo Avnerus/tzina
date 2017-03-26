@@ -324,8 +324,8 @@ export default class TimeController {
             ]);
         } else {
             text.setText([
-                "When you would like to change the time,",
-                "Focus your gaze on one of the suns above.",
+                "When you wish to change the time,",
+                "focus your gaze on one of the suns above.",
             ]);
         }
 
