@@ -67,8 +67,14 @@ body {
 
 #idfa-image {
   position: fixed;
-  right: 15px;
+  right: 20px;
   bottom: 15px;
+  /*top:80%;*/
+}
+#docaviv-image {
+  position: fixed;
+  right: 20px;
+  bottom: 140px;
   /*top:80%;*/
 }
 
