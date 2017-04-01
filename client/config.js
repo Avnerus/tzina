@@ -15,11 +15,11 @@ export default {
     noExtras: false,
     noTrees: false,
     noCharacters: false,
-    production: true,
+    production: false,
     assetsHost: "http://assets.tzina.space/",
     //assetsHost: "",
     platform: "desktop", // desktop, vive
-    skipLanding: false,
-    skipInstructions: false,
+    skipLanding: true,
+    skipInstructions: true,
     language: "eng"
 }

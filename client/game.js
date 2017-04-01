@@ -85,6 +85,17 @@ export default class Game {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 0.1, 2000000);
 
+        this.panoManager = new CubemapToEquirectangular( this.renderer, true );
+        this.panoManager.setSize( 2048, 1024 );
+
+        this.panoManager.captureAframe = (camera, renderer)=>{
+            this.panoManager.update(this.camera, this.scene);
+        }
+
+        events.emit("add_gui", {folder:"Panorama Capture", listen:true, onChange: () =>{
+            
+        }}, this.panoManager, "captureAframe");
+
         //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 2000000  );
         this.soundManager = new SoundManager(this.config, this.camera, this.scene);
 
