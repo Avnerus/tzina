@@ -31,8 +31,8 @@ export default [
         basePath : 'assets/characters/miriam',
         mindepth : 2200,
         maxdepth : 3119.456298828,
-        position : [-2.17, 21.99, 11.89],
-        rotation: [10, 215, 12],
+        position : [-3.1, 21.99, 12.5],
+        rotation: [10, 146, 12],
         animation: 'Miriam',
         uvdy_idle: 0.47900390625,
         uvdy: 0.496,
@@ -103,7 +103,7 @@ export default [
         basePath : 'assets/characters/haim',
         mindepth : 1029.795776367,
         maxdepth : 1600.0,
-        position : [-15.45, 19.8, -11.2],
+        position : [-15.3, 19.8, -10.4],
         rotation: [313, 70, 46],
         animation: 'Haim',
         uvdy: 0.507,
@@ -129,8 +129,8 @@ export default [
         basePath : 'assets/characters/rami',
         mindepth : 2225.287353516,
         maxdepth : 3252.206298828,
-        position : [0.16, 22.14, 13.5],
-        rotation: [356, 55, 10],
+        position : [0.5, 22.14, 12.5],
+        rotation: [356, 125, 10],
         animation: 'Rami',
         uvdy: 0.48,
         uvdy_idle: 0.477,
@@ -262,7 +262,7 @@ export default [
                 sec: 0,
                 mindepth : 1499.999877929688,
                 maxdepth : 4564.32861328125,
-                position : [-11.35, 21.94, 1.95],
+                position : [-9.75, 21.94, 0.3],
                 scale: 0.003 * 0.458437 * 1.34174  * 0.865 * 1.246
             },
             {
@@ -276,9 +276,9 @@ export default [
                 maxdepth : 4564.32861328125
             }
         ],
-        position : [-12.9, 21.86, 1.56],
+        position : [-14.5, 21.86, 3.2],
         //rotation: [0, 37, 0],
-        rotation: [10, 76, 350],
+        rotation: [0, 101, 340],
         animation: 'Mark',
         uvdy: 0.458984375,
         uvdy_idle: 0.419,
@@ -400,7 +400,7 @@ export default [
                 scale: 0.003 * 0.52198
             }
         ],
-        position : [-10.77, 22.02, 6.62],
+        position : [-9.54, 22.02, 6],
         rotation: [2, 216, 0],
         animation: 'Lupo12PM',
         uvdy: 0.505,
@@ -473,7 +473,7 @@ export default [
         animationPosition: [1.13, -0.53, -2.27],
         animationRotation: [6,-25,9],
         subtitles: null,
-        space: 0.51,
+        space: 0.7,
         spaceOffset: [4.86,0,1.13],
         endingPosition : [12.4, 22.3, -2.7],
         endingRotation: [12, 190, 352],
@@ -508,8 +508,8 @@ export default [
         basePath : 'assets/characters/itzhak',
         mindepth : 1762.584594726563,
         maxdepth : 3120.0,
-        position : [-2.58, 21.87, -14.8],
-        rotation: [340, 72, 22], // 
+        position : [-0.5, 21.87, -12],
+        rotation: [340, 85, 22], // 
         animation: 'Itzhak',
         uvdy_idle: 0.498,
         uvdy: 0.484,
