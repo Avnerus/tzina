@@ -413,7 +413,7 @@ export default [
         animationRotation: [0,0,0], // 0,-25,0
         subtitles: null,
         space: 0.2, //2
-        spaceOffset: [0.06,0,-0.06],
+        spaceOffset: [0.02,0,-0.06],
         gazeOffset: [0.19,0.13,0.22],
         gazeSpace: [0.02,-0.2,-0.65],
         hasAmbience:true
@@ -522,7 +522,7 @@ export default [
         animationPosition: [-0.21, -0.01, 0.26],
         animationRotation: [5, 17, 0],
         space: -0.6,
-        spaceOffset: [-0.17,0,-0.06], //0.88,0,0.58
+        spaceOffset: [0.24,0,-0.06], //0.88,0,0.58
         subtitles: false,
         gazeSpace: [0,0,-0.1],
         gazeOffset: [-0.07,0.15,0.06],
