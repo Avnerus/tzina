@@ -31,8 +31,8 @@ export default [
         basePath : 'assets/characters/miriam',
         mindepth : 2200,
         maxdepth : 3119.456298828,
-        position : [-1.69, 21.99, 11.77],
-        rotation: [10, 218, 12],
+        position : [-2.5, 21.99, 12.2],
+        rotation: [10, 210, 12],
         animation: 'Miriam',
         uvdy_idle: 0.47900390625,
         uvdy: 0.496,
@@ -43,7 +43,7 @@ export default [
         animationScale: 0.478, //.4
         animationPosition: [-0.43, -0.52, 0.51],
         animationRotation: [6, 0, -6],      // 20, 0, 0
-        space: 0.01,
+        space: 0.03,
         spaceOffset: [0.11,0,-0.07],
         subtitles: null,
         adjustments : [
@@ -51,7 +51,7 @@ export default [
                 sec: 0,
                 mindepth : 2200,
                 maxdepth : 3119.456298828,
-                position : [-1.35,22.05, 12.062],
+                position : [-2.3,22.05, 12.6],
                 scale: 0.003 * 0.5748 * 1.106
             }
         ],
@@ -67,7 +67,7 @@ export default [
         basePath : 'assets/characters/itzik',
         mindepth : 0,
         maxdepth : 3494.158935547,
-        position : [-6.92, 21.92, 10.39],
+        position : [-6, 21.92, 9.7],
         rotation: [10, 216, 5],
         animation: 'Itzik',
         uvdy: 0.478,
@@ -79,14 +79,14 @@ export default [
         animationPosition: [-0.76, 0.42, -1.52], //-0.28, 0.51, -1.63
         animationRotation: [7.9, 7.7, 1], //7.9, 0, 1
         space: 0.33, //anim:1.46
-        spaceOffset: [-0.25,0,0.15], //0.28,0.73,1.73
+        spaceOffset: [-0.27,0,0.15], //0.28,0.73,1.73
         subtitles: false,
         adjustments : [
             {
                 sec: 0,
                 mindepth : 0,
                 maxdepth : 3494.158935547,
-                position : [-6.95,  22.03, 10.41], //-6.3,  22, 10.88
+                position : [-6.1,  22.03, 9.9], //-6.3,  22, 10.88
                 scale: 0.0027 * 0.4686
             }
         ],
@@ -129,8 +129,8 @@ export default [
         basePath : 'assets/characters/rami',
         mindepth : 2225.287353516,
         maxdepth : 3252.206298828,
-        position : [0.5, 22.14, 12.5],
-        rotation: [356, 125, 10],
+        position : [0.5, 22.14, 12.8],
+        rotation: [356, 109, 10],
         animation: 'Rami',
         uvdy: 0.48,
         uvdy_idle: 0.477,
@@ -262,7 +262,7 @@ export default [
                 sec: 0,
                 mindepth : 1499.999877929688,
                 maxdepth : 4564.32861328125,
-                position : [-12.95, 21.94, 3.59],
+                position : [-12.7, 21.94, 2.7],
                 scale: 0.003 * 0.458437 * 1.34174  * 0.865 * 1.246
             },
             {
@@ -278,7 +278,7 @@ export default [
         ],
         position : [-14.5, 21.86, 3.2],
         //rotation: [0, 37, 0],
-        rotation: [0, 101, 340],
+        rotation: [16, 107, 340],
         animation: 'Mark',
         uvdy: 0.458984375,
         uvdy_idle: 0.419,
@@ -290,7 +290,7 @@ export default [
         animationPosition: [-0.39, 0.08, -1.86], // -0.5, 0.08, -1.42
         animationRotation: [0, 275, 0], // 0, 214, 0
         space: 0.29, 
-        spaceOffset: [0.06,0,0.14],
+        spaceOffset: [0.4,0,1],
         subtitles: null,
         gazeOffset: [-0.23,0.01,0],
         gazeSpace: [-0.28,0,-0.64],
@@ -396,11 +396,11 @@ export default [
                 sec: 141,
                 mindepth: 2015.678588867188,
                 maxdepth: 3681.246826171875,
-                position: [-9.77, 22.13, 5.12],
+                position: [-10.4, 22.13, 5.6],
                 scale: 0.003 * 0.52198
             }
         ],
-        position : [-9.54, 22.02, 6],
+        position : [-10.4, 22.13, 6.2],
         rotation: [2, 216, 0],
         animation: 'Lupo12PM',
         uvdy: 0.505,
@@ -413,7 +413,7 @@ export default [
         animationRotation: [0,0,0], // 0,-25,0
         subtitles: null,
         space: 0.2, //2
-        spaceOffset: [0.06,0,-0.58],
+        spaceOffset: [0.06,0,-0.06],
         gazeOffset: [0.19,0.13,0.22],
         gazeSpace: [0.02,-0.2,-0.65],
         hasAmbience:true
@@ -474,7 +474,7 @@ export default [
         animationRotation: [6,-25,9],
         subtitles: null,
         space: 0.7,
-        spaceOffset: [4.86,0,1.13],
+        spaceOffset: [4,0,1.13],
         endingPosition : [12.4, 22.3, -2.7],
         endingRotation: [12, 190, 352],
         endingScaleMul: 1.1,
@@ -508,8 +508,8 @@ export default [
         basePath : 'assets/characters/itzhak',
         mindepth : 1762.584594726563,
         maxdepth : 3120.0,
-        position : [-0.5, 21.87, -12],
-        rotation: [340, 85, 22], // 
+        position : [-0.65, 21.87, -11.9],
+        rotation: [340, 327, 0], // 
         animation: 'Itzhak',
         uvdy_idle: 0.498,
         uvdy: 0.484,
@@ -522,7 +522,7 @@ export default [
         animationPosition: [-0.21, -0.01, 0.26],
         animationRotation: [5, 17, 0],
         space: -0.6,
-        spaceOffset: [1.58,0,-0.18], //0.88,0,0.58
+        spaceOffset: [1.07,0,0.28], //0.88,0,0.58
         subtitles: false,
         gazeSpace: [0,0,-0.1],
         gazeOffset: [-0.07,0.15,0.06],
