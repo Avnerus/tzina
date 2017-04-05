@@ -44,7 +44,7 @@ export default [
         animationPosition: [-0.43, -0.52, 0.51],
         animationRotation: [6, 0, -6],      // 20, 0, 0
         space: 0.03,
-        spaceOffset: [0.11,0,-0.07],
+        spaceOffset: [0.06,0,0],
         subtitles: null,
         adjustments : [
             {
@@ -79,7 +79,7 @@ export default [
         animationPosition: [-0.76, 0.42, -1.52], //-0.28, 0.51, -1.63
         animationRotation: [7.9, 7.7, 1], //7.9, 0, 1
         space: 0.33, //anim:1.46
-        spaceOffset: [-0.27,0,0.15], //0.28,0.73,1.73
+        spaceOffset: [0.39,0,0.28], //0.28,0.73,1.73
         subtitles: false,
         adjustments : [
             {
@@ -129,7 +129,7 @@ export default [
         basePath : 'assets/characters/rami',
         mindepth : 2225.287353516,
         maxdepth : 3252.206298828,
-        position : [0.5, 22.14, 12.8],
+        position : [0.8, 22.14, 12.5],
         rotation: [356, 109, 10],
         animation: 'Rami',
         uvdy: 0.48,
@@ -262,7 +262,7 @@ export default [
                 sec: 0,
                 mindepth : 1499.999877929688,
                 maxdepth : 4564.32861328125,
-                position : [-12.7, 21.94, 2.7],
+                position : [-12.5, 21.94, 3.1],
                 scale: 0.003 * 0.458437 * 1.34174  * 0.865 * 1.246
             },
             {
@@ -276,9 +276,9 @@ export default [
                 maxdepth : 4564.32861328125
             }
         ],
-        position : [-14.5, 21.86, 3.2],
+        position : [-14.2, 21.86, 3.2],
         //rotation: [0, 37, 0],
-        rotation: [16, 107, 340],
+        rotation: [16, 81, 340],
         animation: 'Mark',
         uvdy: 0.458984375,
         uvdy_idle: 0.419,
@@ -473,8 +473,8 @@ export default [
         animationPosition: [1.13, -0.53, -2.27],
         animationRotation: [6,-25,9],
         subtitles: null,
-        space: 0.7,
-        spaceOffset: [4,0,1.13],
+        space: 0.8,
+        spaceOffset: [5,0,1.13],
         endingPosition : [12.4, 22.3, -2.7],
         endingRotation: [12, 190, 352],
         endingScaleMul: 1.1,
@@ -508,8 +508,8 @@ export default [
         basePath : 'assets/characters/itzhak',
         mindepth : 1762.584594726563,
         maxdepth : 3120.0,
-        position : [-0.65, 21.87, -11.9],
-        rotation: [340, 327, 0], // 
+        position : [2.1, 22, -12.1],
+        rotation: [340, 255, 340], // 
         animation: 'Itzhak',
         uvdy_idle: 0.498,
         uvdy: 0.484,
@@ -522,7 +522,7 @@ export default [
         animationPosition: [-0.21, -0.01, 0.26],
         animationRotation: [5, 17, 0],
         space: -0.6,
-        spaceOffset: [1.07,0,0.28], //0.88,0,0.58
+        spaceOffset: [-0.17,0,-0.06], //0.88,0,0.58
         subtitles: false,
         gazeSpace: [0,0,-0.1],
         gazeOffset: [-0.07,0.15,0.06],
