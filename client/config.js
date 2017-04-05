@@ -5,21 +5,21 @@ export default {
     enableFlying: false,
     skipIntro: false,
     skipCharacters: false,
-    speedIntro: false,
+    speedIntro: true,
     startTime: 7,
     movementSpeed: 0.3, //0.2
-    daySpeed: 0.001,
+    daySpeed: 0.001, //original 0.001
     noSquare: false,
     fullscreen: false,
     noAnimations: false,
     noExtras: false,
     noTrees: false,
     noCharacters: false,
-    production: true,
+    production: false,
     assetsHost: "http://assets.tzina.space/",
     //assetsHost: "",
     platform: "desktop", // desktop, vive
-    skipLanding: false,
-    skipInstructions: false,
+    skipLanding: true,
+    skipInstructions: true,
     language: "eng"
 }
