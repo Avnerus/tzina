@@ -51,7 +51,7 @@ export default [
                 sec: 0,
                 mindepth : 2200,
                 maxdepth : 3119.456298828,
-                position : [-1.83,22.05, 12.182],
+                position : [-1.35,22.05, 12.062],
                 scale: 0.003 * 0.5748 * 1.106
             }
         ],
@@ -262,7 +262,7 @@ export default [
                 sec: 0,
                 mindepth : 1499.999877929688,
                 maxdepth : 4564.32861328125,
-                position : [-9.75, 21.94, 0.3],
+                position : [-12.95, 21.94, 3.59],
                 scale: 0.003 * 0.458437 * 1.34174  * 0.865 * 1.246
             },
             {
@@ -396,7 +396,7 @@ export default [
                 sec: 141,
                 mindepth: 2015.678588867188,
                 maxdepth: 3681.246826171875,
-                position: [-11, 22.13, 5.74],
+                position: [-9.77, 22.13, 5.12],
                 scale: 0.003 * 0.52198
             }
         ],
