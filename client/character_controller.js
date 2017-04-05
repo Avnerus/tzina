@@ -18,7 +18,7 @@ export default class CharacterController {
         this.animations = animations;
         this.addedColliders = false;
         this.inControl = false;
-        this.debug = false;
+        this.debug = true;
         this.scene = scene;
     }
     init(loadingManager) {
