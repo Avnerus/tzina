@@ -14,7 +14,7 @@ export default class Ending {
         this.square = square;
         this.introAni = introAni;
 
-        this.debug = true;
+        this.debug = false;
 
         this.endCredits = new EndCredits(this.config);
         this.faded = false;
