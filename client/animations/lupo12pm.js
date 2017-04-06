@@ -22,7 +22,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
     }
 
     setupAnim() {
-        //DebugUtil.positionObject(this, "Lupo Ani");
+        // DebugUtil.positionObject(this, "Lupo Ani");
 
         this.loadingManager.itemStart("Lupo12PMAnim");
         this.perlin = new ImprovedNoise();
@@ -503,8 +503,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
         liquid.material.map.offset.x = -1 - _index*0.4;
         ropee.add(liquid);
         this.add(ropee);
-        ropee.position.set(1.4, -0.7, 4.1);
-        //DebugUtil.positionObject(ropee, "rope"+_index);
+        ropee.position.set(2.49, -0.7, 4.1);
+        // DebugUtil.positionObject(ropee, "rope"+_index);
         this.ropes.push(ropee);
     }
 
@@ -663,8 +663,8 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
             x:"+="+Math.PI,
             delay: 2,
             onStart:()=>{
-                TweenMax.to(this.ropes[0].position, 3, { y:"-="+2 });
-                TweenMax.to(this.ropes[1].position, 3, { y:"-="+2 });
+                TweenMax.to(this.ropes[0].position, 3, { y:"-="+2.5 });
+                TweenMax.to(this.ropes[1].position, 3, { y:"-="+2.5 });
             },
             onComplete: ()=>{
                 this.fullVideo.setOpacity(0.0);
@@ -963,7 +963,7 @@ export default class Lupo12PMAnimation extends THREE.Object3D {
 
         if(this.theDogs==null){
             this.theDogs = this.characterController.characters['LupoDogs5PM'];
-            //DebugUtil.positionObject(this.theDogs, "Dogs");
+            // DebugUtil.positionObject(this.theDogs, "Dogs");
         }
     }
 

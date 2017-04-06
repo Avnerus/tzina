@@ -75,8 +75,8 @@ export default [
         width: 512,
         height: 2048,
         scale: 0.0027 * 0.5308,
-        animationScale: 0.248, //0.26
-        animationPosition: [-0.76, 0.42, -1.52], //-0.28, 0.51, -1.63
+        animationScale: 0.246,
+        animationPosition: [0.25, 0.42, -1.38],
         animationRotation: [7.9, 7.7, 1], //7.9, 0, 1
         space: 0.33, //anim:1.46
         spaceOffset: [0.39,0,0.28], //0.28,0.73,1.73
@@ -409,7 +409,7 @@ export default [
         height: 2048,
         scale: 0.003 * 0.7411,
         animationScale: 0.25,
-        animationPosition: [-0.66, -0.41, -0.96], // -0.53, -0.51, -1.76
+        animationPosition: [-0.19, -0.52, -0.96], // -0.53, -0.51, -1.76
         animationRotation: [0,0,0], // 0,-25,0
         subtitles: null,
         space: 0.2, //2
@@ -518,9 +518,9 @@ export default [
         width: 512,
         height: 2048,
         scale: 0.003 * 0.45 * 1.014,
-        animationScale: 0.235,
-        animationPosition: [-0.21, -0.01, 0.26],
-        animationRotation: [5, 17, 0],
+        animationScale: 0.24,
+        animationPosition: [-0.03, 0.09, 0.27],
+        animationRotation: [5, -3, 0],
         space: -0.6,
         spaceOffset: [0.24,0,-0.06], //0.88,0,0.58
         subtitles: false,

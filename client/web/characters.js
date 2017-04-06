@@ -83,8 +83,8 @@ export default [
     },
     {
         name: 'LupoDogs12PM',
-        position : [-21.34, 21.94, 3.78],
-        rotation: [0, 80, 0],
+        position : [-19.85, 22, 5.34],
+        rotation: [0, 86, 0],
     },
     {
         name: 'LupoDogs5PM',
@@ -137,8 +137,8 @@ export default [
         rotation: [0, 132, 0],
         space: 1.2, //2
         spaceOffset: [0.5,0,0.28],
-        animationPosition: [0.49, -0.46, -0.78],
-        animationRotation: [0,-50,0]
+        animationPosition: [0.18, -0.47, -1.01],
+        animationRotation: [0,-39,0]
     },
     {
         name: 'Lupo5PM',
