@@ -9,9 +9,10 @@ const EXTRAS_PATH = "assets/extras"
 const HEART_PATH = "ass"
 
 export default class Extras extends THREE.Object3D {
-    constructor(config, camera, renderer) {
+    constructor(config, camera, renderer, soundManager) {
         super();
 
+        this.soundManager = soundManager;
         this.currentExtras = [];
         this.cameras = [camera];
         this.renderer = renderer;
@@ -179,5 +180,17 @@ export default class Extras extends THREE.Object3D {
                 extra.hearts.forEach((heart) => {heart.visible = true});
             }});
         });
+    }
+
+        loadPointSound(url){
+                return new Promise((resolve, reject) => {
+                this.soundManager.createStaticSoundSampler(
+                    url,
+                    (sampler) => {
+                        resolve(sampler);
+                    }
+                );
+            }
+        );
     }
 }
