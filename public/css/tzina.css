@@ -65,37 +65,13 @@ body {
   z-index: 2;
 }
 
-#idfa-image {
+#logos_all {
   position: fixed;
-  right: 20px;
-  bottom: 15px;
+ left: 35px;
+  bottom: 20px;*/
   /*top:80%;*/
 }
-#docaviv-image {
-  position: fixed;
-  right: 20px;
-  bottom: 140px;
-  /*top:80%;*/
-}
-#cannes-image {
-  position: fixed;
-  right: 35px;
-  bottom: 250px;
-  /*top:80%;*/
-}
-#paris-image {
-  position: fixed;
-  right: 22px;
-  bottom: 450px;
-  /*top:80%;*/
-}
-#toronto-image {
-  position: fixed;
-  right: 20px;
-  bottom: 350px;
-  /*top:80%;*/
-}
-
+/**/
 #keren-image {
   position: fixed;
   right: 170px;
