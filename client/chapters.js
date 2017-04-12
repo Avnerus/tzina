@@ -19,7 +19,12 @@ export default
 					name: "junkie",
 					position: [2.24,23.9,10.32],
 					rotation: [182,335,0],
-					scale: 0.365
+					scale: 0.365,
+					sound: {
+                		url: "assets/ui_sounds/Inside_Scan_1.ogg",
+                		distance: 0.05,
+						position: [-6,0,12]
+            		}
 				},
 					{
 					name: "pocketCam",
@@ -212,7 +217,12 @@ export default
                     name: "bridegroom",
                     position: [1.22,21.15,8.1],
                     rotation: [0,278,0],
-                    scale: 0.348
+                    scale: 0.348,
+					sound: {
+						url: "assets/ui_sounds/Inside_Scan_2.ogg",
+						distance: 0.05,
+						position: [-8,0,1]
+					}
 				},
 					{
                     name: "yukalele",

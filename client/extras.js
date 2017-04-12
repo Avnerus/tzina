@@ -91,6 +91,7 @@ export default class Extras extends THREE.Object3D {
         this.currentExtras.splice(0);
         let chapter = _.find(Chapters, {hour: hour });
         chapter.extraAssets.forEach((asset) => {
+
             if (this.store[asset.name]) {
                 console.log("Loading extra asset ", asset);
                 let type = this.store[asset.name];
@@ -153,7 +154,36 @@ export default class Extras extends THREE.Object3D {
 
                 this.add(extra);
 
-                this.currentExtras.push({name: asset.name, mesh: mesh, handle: extra, hearts: hearts});
+                //If we have sound on the character load it and push it to the currentExtras object      
+                if(asset.sound){
+                    console.log(asset.name + " has a point cloud sound");
+                    this.loadPointSound(asset.sound.url).then((sampler)=>{
+                        this.updateMatrixWorld();
+                        sampler.positionalAudio.panner.refDistance = asset.sound.distance;
+                        this.audio = sampler;
+                        //Debug cube - for positioning
+                        this.audio.position.set(asset.sound.position[0],asset.sound.position[1],asset.sound.position[2]);
+                        //this.audio.createDebugCube();
+
+                        this.audio.loop = true;
+                        this.audio.controlVolume(3.0);
+
+                        
+
+                        console.log("the POCSounds reference distance is  " + this.audio.positionalAudio.panner.refDistance);
+                        
+                         this.currentExtras.push({name: asset.name, mesh: mesh, handle: extra, hearts: hearts, sound: this.audio});
+
+                    });
+
+                   
+                } else {
+                    this.currentExtras.push({name: asset.name, mesh: mesh, handle: extra, hearts: hearts});
+                }
+                
+                
+
+                
                 if (this.debug) {
                     DebugUtil.positionObject(extra, asset.name, false, -40,40, asset.rotation);
                 }
@@ -172,10 +202,16 @@ export default class Extras extends THREE.Object3D {
         this.currentExtras.forEach((extra) => {
             extra.mesh.children[0].material.opacity = 0;
             extra.hearts.forEach((heart) => {heart.visible = false});
+            if(extra.sound){
+                extra.sound.stop();
+            }
         });
     }
     showExtras() {
         this.currentExtras.forEach((extra) => {
+            if(extra.sound){
+                extra.sound.play();
+            }
             TweenMax.to( extra.mesh.children[0].material, 1, { opacity: 1, onComplete: () => {
                 extra.hearts.forEach((heart) => {heart.visible = true});
             }});
@@ -184,7 +220,7 @@ export default class Extras extends THREE.Object3D {
 
         loadPointSound(url){
                 return new Promise((resolve, reject) => {
-                this.soundManager.createStaticSoundSampler(
+                this.soundManager.createPositionalSoundSampler(
                     url,
                     (sampler) => {
                         resolve(sampler);

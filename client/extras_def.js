@@ -26,11 +26,7 @@ export default {
                    rotation: [0,235,182],
                    scale: 0.05
                 }
-            ],
-            sound: {
-                url: "assets/ui_sounds/point_cloud.ogg",
-                distance: 1.7
-            }
+            ]
          },
          {
             name: "pocketCam",
@@ -246,11 +242,7 @@ export default {
                    rotation: [0,101,0],
                    scale: 0.05
                 }
-            ],
-            sound: {
-                url: "assets/ui_sounds/point_cloud.ogg",
-                distance: 1.7
-            }
+            ]
         },
           {
             name: "bikeHottie",
