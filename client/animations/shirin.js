@@ -144,7 +144,7 @@ export default class ShirinAnimation extends THREE.Object3D {
                 this.moon.scale.set(3.3,3.3,3.3);
             // }
         this.add( this.moon );
-        DebugUtil.positionObject(this.moon, "moon");
+        //DebugUtil.positionObject(this.moon, "moon");
 
         //
         let cocoonTexFiles = [ this.BASE_PATH + "/images/seamless_circle.png",

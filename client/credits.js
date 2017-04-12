@@ -18,7 +18,7 @@ export default
             "Name": "Or Fleisher",     
         },
         {
-            "Role": "Creative Coder",
+            "Role": "Creative Coder Animation",
             "Name": "Laura Juo-hsin Chen",     
         },
         {

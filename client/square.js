@@ -865,7 +865,7 @@ export default class Square extends THREE.Object3D{
       this.fountainLight = new THREE.PointLight( 0xffffff, 0.5, 100 );
       this.fountainLight.position.set(0,0,0);
       this.fountainLight.intensity = 0.9;
-      events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, this.fountainLight, "intensity", 0, 2); 
+      //events.emit("add_gui", {folder: "Fountain light ", listen: true, step: 0.01}, this.fountainLight, "intensity", 0, 2); 
       this.mesh.add(this.fountainLight);
       //DebugUtil.positionObject(this.fountainLight, "Fountain light");
     }

@@ -17,7 +17,7 @@ export default class Ending {
 
         this.endingSound;
 
-        this.debug = true;
+        this.debug = false;
 
         this.endCredits = new EndCredits(this.config);
         this.faded = false;
