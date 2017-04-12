@@ -358,8 +358,10 @@ export default class Ending {
             }
             this.fadeIn()
             .then(() => {
-                TweenMax.to(this.endingSound, 1.0, {volume: 0.4, onComlete: () =>{
+                TweenMax.to(this.endingSound, 1.0, {volume: 0.1, onComlete: () =>{
                     console.log("Faded sound to 0.4 for video dialog");
+                }, onUpdate: () => {
+                    this.endingSound.controlVolume(this.endingSound.volume);
                 }});
                 this.endCredits.play();
             });
@@ -389,6 +391,8 @@ export default class Ending {
                     "assets/sound/new_end.ogg",
                     (sampler) => {
                         this.endingSound = sampler;
+                        this.endingSound.volume = 0.5;
+                        this.endingSound.controlVolume(this.endingSound.volume);
                         resolve(sampler);
                     }
                 );
