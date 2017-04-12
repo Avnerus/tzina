@@ -39,7 +39,7 @@ export default class CollisionManager {
 
         this.debugCollisions = false;
         this.debugGaze = false;
-        this.debugCharacters = true;
+        this.debugCharacters = false;
 
         this.lastGaze = null;
     }
