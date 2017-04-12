@@ -235,7 +235,7 @@ export default class Game {
 
         this.show = new Show(this.config, this.square, this.characterController, this.timeController, this.soundManager); 
 
-        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni);
+        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni, this.soundManager);
 
         this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
         this.pidgeonController.init(this.loadingManager);
@@ -293,8 +293,8 @@ export default class Game {
         this.ending.init(this.loadingManager);
 
         if (this.config.platform == "desktop") {
-            this.config.endTime = 60 * 15;
-            //this.config.endTime = 60 * 0.4;
+            // this.config.endTime = 60 * 15;
+            this.config.endTime = 60 * 0.4;
         } else {
             this.config.endTime = 60 * 15;
             //this.config.endTime = 60 * 1;
