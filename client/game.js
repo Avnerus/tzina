@@ -235,7 +235,7 @@ export default class Game {
 
         this.show = new Show(this.config, this.square, this.characterController, this.timeController, this.soundManager); 
 
-        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni);
+        this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni, this.soundManager);
 
         this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
         this.pidgeonController.init(this.loadingManager);
@@ -386,9 +386,10 @@ export default class Game {
                     this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                     this.keyboardController.init();
                 } else {
+                    
                     this.keyboardController = new KeyboardController(this.config, this.camera, this.square, this.collisionManager)
                     this.keyboardController.init();
-                    
+                   
                     this.vrControls.standing = true;
                 }
                     

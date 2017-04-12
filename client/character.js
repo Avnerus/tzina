@@ -176,7 +176,7 @@ export default class Character extends THREE.Object3D {
     hold(freeze) {
         if (this.active && !this.done && !this.ending) {
             this.onHold = true;
-            console.log(name, " is playing." , this.props.name, "is pausing");
+            console.log(this.props.name, "is pausing");
             if (!this.props.fullOnly) {
                 if (freeze) {
                     this.idleVideo.pause();
@@ -235,7 +235,9 @@ export default class Character extends THREE.Object3D {
                     this.audio.play();
                 });
 
-                events.emit("character_playing", this.props.name)
+                setTimeout(() => {
+                    events.emit("character_playing", this.props.name)
+                },5000);
                 this.idleVideo.video.loop = false;
                 this.idleVideo.video.addEventListener('ended',() => {
                     console.log(this.props.name, "Character video ended");

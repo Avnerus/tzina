@@ -4,7 +4,7 @@ import MultilineText from './util/multiline_text'
 import {textAlign} from './lib/text2d/index'
 
 export default class Ending {
-    constructor(config, camera, timeController, characterController, scene, vrControls, square, introAni) {
+    constructor(config, camera, timeController, characterController, scene, vrControls, square, introAni, soundManager) {
         this.config = config;
         this.timeController = timeController;
         this.characterController = characterController;
@@ -13,6 +13,9 @@ export default class Ending {
         this.vrControls = vrControls;
         this.square = square;
         this.introAni = introAni;
+        this.soundManager = soundManager;
+
+        this.endingSound;
 
         this.debug = false;
 
@@ -158,6 +161,10 @@ export default class Ending {
         //DebugUtil.positionObject(this.fadePlane, "Ending Fade plane");
         //events.emit("add_gui", {folder: "Ending Fade plane", step: 0.01, listen: true} ,this.fadePlane.material, "opacity", 0, 1);
 
+        this.loadEndingSound().then(()=>{
+            console.log("Ending sound loaded");
+        });
+
         let miriamGeo = new THREE.PlaneGeometry( 512, 1024 );
         new THREE.TextureLoader(loadingManager).load('assets/end/miriam.png', (texture) => {
             let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
@@ -296,6 +303,9 @@ export default class Ending {
         } 
     }
     showTexts() {
+        if(!this.endingSound.isPlaying){
+            this.endingSound.play();
+        }
         this.showingTexts = this.CHARACTER_ORDER.slice(0);
         this.showNextText();
         this.scene.add(this.spotLight);
@@ -348,6 +358,11 @@ export default class Ending {
             }
             this.fadeIn()
             .then(() => {
+                TweenMax.to(this.endingSound, 1.0, {volume: 0.1, onComlete: () =>{
+                    console.log("Faded sound to 0.4 for video dialog");
+                }, onUpdate: () => {
+                    this.endingSound.controlVolume(this.endingSound.volume);
+                }});
                 this.endCredits.play();
             });
         });
@@ -367,6 +382,22 @@ export default class Ending {
     }
     update(dt) {
         this.endCredits.update(dt);
+    }
+
+    loadEndingSound(){
+                return new Promise((resolve, reject) => {
+
+                this.soundManager.createStaticSoundSampler(
+                    "assets/sound/new_end.ogg",
+                    (sampler) => {
+                        this.endingSound = sampler;
+                        this.endingSound.volume = 0.5;
+                        this.endingSound.controlVolume(this.endingSound.volume);
+                        resolve(sampler);
+                    }
+                );
+            }
+        );
     }
 }
 

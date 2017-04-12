@@ -65,19 +65,13 @@ body {
   z-index: 2;
 }
 
-#idfa-image {
+#logos_all {
   position: fixed;
-  right: 20px;
-  bottom: 15px;
+ left: 35px;
+  bottom: 20px;*/
   /*top:80%;*/
 }
-#docaviv-image {
-  position: fixed;
-  right: 20px;
-  bottom: 140px;
-  /*top:80%;*/
-}
-
+/**/
 #keren-image {
   position: fixed;
   right: 170px;
