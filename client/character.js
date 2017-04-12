@@ -113,7 +113,9 @@ export default class Character extends THREE.Object3D {
             }
 
             events.on("chapter_sound_playing", (isIt)=>{
-                if(isIt){
+                if(isIt &&
+                   this.props.name != "FatmanShower" && this.props.name != "FatmanSleep"
+                ){
                     this.hold(false);
                 } else {
                     this.unhold();
