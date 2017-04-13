@@ -259,15 +259,19 @@ export default class ItzikAnimation extends THREE.Object3D {
             loader.load( urls[i], (geometry, material) => {
                 this.disposeRelatedGeos.push(geometry);
 
-                if(i==3){
+                if(i==1) {
+                    let tmpItem = new THREE.Mesh( geometry, mat );
+                    this.items[i] = tmpItem;
+                }
+                else if(i==3){
                     geometry.applyMatrix(new THREE.Matrix4().makeTranslation( -2, -1.5, 0 ) );
                     let tmpItem = new THREE.Mesh( geometry, mat );
-                    tmpItem.position.set(-2.5,1.5,0);
+                    tmpItem.position.set(2.5,1.5,0);
                     this.items[i] = tmpItem;
                 }
                 else if(i==4 || i==6){
                     let tmpItem = new THREE.Mesh( geometry, mat2 );
-                    tmpItem.position.x = -5;
+                    //tmpItem.position.x = -5;
                     this.items[i] = tmpItem;
                 }
                 else if(i==5){
@@ -284,6 +288,7 @@ export default class ItzikAnimation extends THREE.Object3D {
                 }
                 else {
                     let tmpItem = new THREE.Mesh( geometry, mat );
+                    tmpItem.position.x = 4;
                     this.items[i] = tmpItem;
                 }
             });
