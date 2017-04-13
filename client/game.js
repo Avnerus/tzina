@@ -46,7 +46,7 @@ import VideoRGBD from './util/video_rgbd'
 
 import Ending from './ending'
 
-import PidgeonController from './clientSockets/index'
+//import PidgeonController from './clientSockets/index'
 
 import Coin from './coin'
 
@@ -237,8 +237,9 @@ export default class Game {
 
         this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni, this.soundManager);
 
+        /*
         this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
-        this.pidgeonController.init(this.loadingManager);
+        this.pidgeonController.init(this.loadingManager); */
 
         this.coin = new Coin(this.characterController);
     }
@@ -482,6 +483,7 @@ export default class Game {
 
         //        console.log("SQUARE CUBE", worldPos.x, worldPos.z);
 
+        /*
        if(!this.pidgeonfailed){
           try{
             this.pidgeonController.frame(dt);
@@ -490,7 +492,7 @@ export default class Game {
             this.pidgeonfailed=true;
           }
 
-        }
+          }*/
     }
 
     endCheck(time) {
