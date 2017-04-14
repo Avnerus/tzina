@@ -1,2 +1,2 @@
-# tzina
-Tzina Experience
+# Tzina
+A WebVR Experience: http://tzina.space
