@@ -21,5 +21,6 @@ export default {
     platform: "desktop", // desktop, vive
     skipLanding: false,
     skipInstructions: false,
+    enablePigeons: true,
     language: "eng"
 }

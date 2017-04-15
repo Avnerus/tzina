@@ -237,8 +237,10 @@ export default class Game {
 
         this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni, this.soundManager);
 
-        this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
-        this.pidgeonController.init(this.loadingManager);
+        if (this.config.enablePigeons) {
+            this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
+            this.pidgeonController.init(this.loadingManager);
+        }
 
         this.coin = new Coin(this.characterController);
     }
@@ -481,7 +483,7 @@ export default class Game {
 
         //        console.log("SQUARE CUBE", worldPos.x, worldPos.z);
 
-       if(!this.pidgeonfailed){
+       if(this.config.enablePigeons && !this.pidgeonfailed){
           try{
             this.pidgeonController.frame(dt);
           }catch(e){
