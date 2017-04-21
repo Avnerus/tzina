@@ -520,7 +520,7 @@ export default class Character extends THREE.Object3D {
     
             this.position.fromArray(this.nextAdjustment.position);
             // this.attach( this.animation, this.scene, this );
-        } else if (this.lastAdjustment.position) {
+        } else if (this.lastAdjustment && this.lastAdjustment.position) {
             this.nextAdjustment.position = this.lastAdjustment.position.slice(0);
         }
 
