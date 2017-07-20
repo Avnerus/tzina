@@ -300,7 +300,7 @@ try {
         $('#desc_sub').html('מאת שירין אנלן webVR דוקומנטרי');
 
         $('#enter_button').html('כניסה');
-        $('#start_head').html('?אנחנו מוכנים, מה איתך?');
+        $('#start_head').html('אנחנו מוכנים, שנתחיל?');
          $('#start_experience').html('התחל');
 
         $('#lower_tag').html('מסע דרך שטפון של בדידות ואהבה');
