@@ -149,8 +149,8 @@ export default function (emitter, object, onError, square) {
 
 
             } else if (vrInput.getFrameData) {
-
-                vrDisplay.getFrameData(frameData);
+              var frameData = new VRFrameData();
+                vrInput.getFrameData(frameData);
 
                 pose = frameData.pose;
 
