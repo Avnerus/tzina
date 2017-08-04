@@ -548,9 +548,9 @@ try {
       }
 
       /*
-    
 
-    
+
+
     if (config.fullscreen && fullscreen.available()) {
         var fs = fullscreen(el);
 
@@ -584,7 +584,7 @@ try {
     console.log("Kill landing");
 
     landingScreen = false;
-    scene.remove(camera);
+    // scene.remove(camera);
     scene.remove(trees);
     landingKeyControl = null;
     landingControls = null;
