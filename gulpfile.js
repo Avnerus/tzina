@@ -42,9 +42,13 @@ function bundle() {
 
 
 gulp.task('server', ['client'], function (cb) {
-  return nodemon({
+  var stream =  nodemon({
       script: './server/index.js',
       watch: './server/'
+  });
+  stream.on('crash', function() {
+     console.error('Tzina crashed :( Restarting in 5 seconds');
+     stream.emit('restart', 5);
   });
 });
 
