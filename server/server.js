@@ -87,4 +87,10 @@ socketSM.on('connection',function(ws){
     client.logout();
   }
 
+  ws.on('error', (err) => {
+      console.log("Error on client socket");
+      if (err.message) {
+          console.log(err.message);
+      }
+  });
 });
