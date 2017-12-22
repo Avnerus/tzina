@@ -29,6 +29,9 @@ export default class socketServerManager{
     wss.binaryType = "arraybuffer";
 
     wss.on('connection', function(ws) {
+      ws.on('error', (err) => {
+        console.error("Early Error on client socket",err);
+      });
 
       ws.binaryType = "arraybuffer";
       parent.handle('connection',new thisWebSocketManager.WebSocketInstance(ws));
