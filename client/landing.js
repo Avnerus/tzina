@@ -644,8 +644,8 @@ try {
 
   function onMouseMove(e) {
 
-    mouseX = (event.clientX - windowHalfX);
-    mouseY = (event.clientY - windowHalfY);
+    mouseX = (e.clientX - windowHalfX);
+    mouseY = (e.clientY - windowHalfY);
 
   }
 
