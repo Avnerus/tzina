@@ -162,7 +162,7 @@ try {
   if (!config.skipLanding) {
     $("#loading-container").hide();
 
-    if(!!window.chrome){
+    if(1 || !!window.chrome){
         if (!mobilecheck()) {
           $("#loading-container").hide();
 
