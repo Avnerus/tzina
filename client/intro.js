@@ -86,7 +86,7 @@ export default class Intro {
         }
         let CREDIT_TEXT_SCALE = 0.039;
 
-        this.creditTextTitle = new SpriteText2D("", CREDIT_TEXT_TITLE);
+        this.creditTextTitle = new SpriteText2D(" ", CREDIT_TEXT_TITLE);
         this.creditTextTitle.scale.multiplyScalar(CREDIT_TEXT_SCALE);
         this.creditTextTitle.position.set(0.4,7.27,-17);
         this.creditTextTitle.material.opacity = 0;
@@ -98,7 +98,7 @@ export default class Intro {
 
         this.scene.add(this.creditTextTitle);
 
-        this.creditTextName = new SpriteText2D("", CREDIT_TEXT_NAME);
+        this.creditTextName = new SpriteText2D(" ", CREDIT_TEXT_NAME);
         this.creditTextName.position.y = -30;
         this.creditTextName.material.opacity = 0;
         this.creditTextTitle.add(this.creditTextName);

@@ -41,7 +41,7 @@ export default class Instructions {
              antialias: true,
              shadow: true
         }
-        this.instructionText = new MeshText2D("", TEXT_DEFINITION);
+        this.instructionText = new MeshText2D(" ", TEXT_DEFINITION);
         if (this.config.platform == "desktop") {
             this.instructionText.scale.multiplyScalar(0.00005);
             this.instructionText.position.set(0, 0, -0.1001);
@@ -53,12 +53,12 @@ export default class Instructions {
 
         //DebugUtil.positionObject(this.instructionText, "Instrucitons text");
 
-        this.instructionLineTwo = new MeshText2D("", TEXT_DEFINITION);
+        this.instructionLineTwo = new MeshText2D(" ", TEXT_DEFINITION);
         this.instructionLineTwo.material.opacity = 0;
         this.instructionLineTwo.position.set(0,-100,0);
         this.instructionText.add(this.instructionLineTwo);
 
-        this.instructionLineThree = new MeshText2D("", TEXT_DEFINITION);
+        this.instructionLineThree = new MeshText2D(" ", TEXT_DEFINITION);
         this.instructionLineThree.material.opacity = 0;
         this.instructionLineThree.position.set(0,-200,0);
         this.instructionText.add(this.instructionLineThree);
@@ -107,13 +107,13 @@ export default class Instructions {
             this.instructionLineTwo.text = texts[1];
             this.instructionSound.play();
         } else {
-            this.instructionLineTwo.text = "";
+            this.instructionLineTwo.text = " ";
         }
         if (texts.length > 2) {
             this.instructionLineThree.text = texts[2];
             this.instructionSound.play();
         } else {
-            this.instructionLineThree.text = "";
+            this.instructionLineThree.text = " ";
         }
         let delay = Math.max(5000,2500 * texts.length);
 

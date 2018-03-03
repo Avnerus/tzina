@@ -214,10 +214,10 @@ export default class TimeController {
         this.chapterTitleLineTwo.visible = false;
 
 
-        this.insideChapterTitle = new MeshText2D("", INSIDE_SUN_TEXT_DEFINITION);
+        this.insideChapterTitle = new MeshText2D(" ", INSIDE_SUN_TEXT_DEFINITION);
         this.insideChapterTitle.scale.multiplyScalar(0.01);
 
-        this.insideChapterTitleLineTwo = new MeshText2D("", INSIDE_TEXT_DEFINITION);
+        this.insideChapterTitleLineTwo = new MeshText2D(" ", INSIDE_TEXT_DEFINITION);
         this.insideChapterTitleLineTwo.scale.multiplyScalar(SUN_TEXT_SCALE);
 
         let nowText = (this.config.language == "eng") ? "Now:" : ":כעת";
