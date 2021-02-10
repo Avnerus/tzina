@@ -2,6 +2,8 @@ let ip2countrify = require( 'ip2countrify' );
 
 
 exports.getCountryName=function(ip,onReady){
+  onReady({country: ""});
+  /* THIS SERVICE IS DOWN BECAUSE OF AN EXPIRED CERTIFICATE
   if(!ip) console.error("geolocator needs that you specify an ip on the first parameter");
   ip2countrify.lookup(
     ip,
@@ -19,5 +21,5 @@ exports.getCountryName=function(ip,onReady){
       if(ip=="::1"||ip=="192.168.0.0"||results.countryName=="") results.countryName="Amsterdam";
       if(onReady) onReady({country:results.countryName});
     }
-  );
+  ); */
 }
