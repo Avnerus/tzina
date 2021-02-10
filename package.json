@@ -61,7 +61,7 @@
     "pointer-lock": "git+https://github.com/bunnybones1/pointer-lock-chrome-tolerant.git",
     "pointer-lock-chrome-tolerant": "0.0.7",
     "stats.js": "^0.16.0",
-    "ws": "^1.1.1"
+    "ws": "^1.1.5"
   },
   "browserify": {
     "transform": [
