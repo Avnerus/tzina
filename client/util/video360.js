@@ -10,6 +10,7 @@ export default class Video360 {
     init() {
         this.video = document.createElement('video');
         this.video.loop = true;
+        this.video.crossOrigin = "anonymous";
         this.video.src = this.path;
         this.video.load();
         this.video.isPlaying = false;

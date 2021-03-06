@@ -93,12 +93,12 @@ export default class SoundManager {
         },
       };
       this.createStaticSoundSampler=function(url,onLoad){
-        let sss=new StaticSoundSampler(this.listener.context);
+        let sss=new StaticSoundSampler(this.config, this.listener.context);
         sss.init(url,this.loadingManager,onLoad);
         return sss;
       }
       this.createPositionalSoundSampler=function(url,onLoad){
-        let pss=new PositionalSoundSampler(this.listener,this.scene);
+        let pss=new PositionalSoundSampler(this.config, this.listener,this.scene);
         pss.init(url,this.loadingManager,onLoad);
         return pss;
       }
@@ -157,7 +157,7 @@ export default class SoundManager {
 
           let thisSample=ambientSamples[a];
           if(!thisSample.disable){
-            let pSampler=new PositionalSoundSampler(this.listener,this.scene);
+            let pSampler=new PositionalSoundSampler(this.config, this.listener,this.scene);
             pSampler.blurModule.controlVolume(1.5);
             pSampler.position.set(thisSample.position[0],thisSample.position[1],thisSample.position[2]);
             //pSampler.createDebugCube(0xFF0000);
@@ -188,7 +188,7 @@ export default class SoundManager {
                 folder: "Sound setFocus",
                 },thisSamplerGuiControl,"focus"); */
 
-              console.log(thisSampler.name+" sample loaded");
+              console.log(thisSample.name+" sample loaded", thisSampler.positionalAudio.position);
             });
             thisSample.sampler=pSampler;
           }
@@ -268,9 +268,10 @@ export default class SoundManager {
 }
 
 export class StaticSoundSampler{
-  constructor(audioContext){
-    this.blurModule=new BlurModule(audioContext);
+  constructor(config, audioContext){
+    this.blurModule=new BlurModule(config, audioContext);
     this.audioContext=audioContext;
+
     //in practical terms, where to connect the blurmodule:
     //if static, will be an audiocontext, but if positional, will be positional audionode
     this.staticSoundOutputDestination=audioContext.destination;
@@ -369,9 +370,9 @@ export class StaticSoundSampler{
 
 
 export class PositionalSoundSampler extends StaticSoundSampler{
-  constructor(listener,scene){
+  constructor(config, listener,scene){
     let audioContext=listener.context;
-    super(audioContext);
+    super(config, audioContext);
     this.listener=listener;
     this.scene=scene;
     let connectorNode=audioContext.createGain();
@@ -384,11 +385,11 @@ export class PositionalSoundSampler extends StaticSoundSampler{
       set:function(a,b,c){return pa.position.set(a,b,c)},
       get:function(){return pa.position.get()}
     }
+    // this.position=this.positionalAudio.position;
     //using apply because there are n arguments
     this.control=function(...a){this.blurModule.control.apply(this.blurModule,a)};
     this.controlBlur=function(...a){this.blurModule.controlBlur.apply(this.blurModule,a)};
     this.controlVolume=function(...a){this.blurModule.controlVolume.apply(this.blurModule,a)};
-    // this.position=this.positionalAudio.position;
   }
   init(sampleUrl,loadingManager,loadReadyCallback){
     super.init(sampleUrl,loadingManager,loadReadyCallback);

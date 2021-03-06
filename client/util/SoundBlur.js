@@ -4,7 +4,7 @@
 const SOUND_PATH = "assets/sound/";
 
 export default class BlurModule{
-  constructor(audioContext){
+  constructor(config, audioContext){
     this.filterLowestCut=380;
     this.filterHighestCut=20000;
     this.volumeWhenBLurred=0.7;
@@ -12,9 +12,10 @@ export default class BlurModule{
     this.defaultBlurValue=0;
 
     this.audioContext=audioContext;
-
+    this.config = config;
     this.inputNode=audioContext.createGain();
     this.outputNode=audioContext.createGain();
+
   }
   init(loadingManager){
     console.log("blurmodule init");
@@ -76,7 +77,7 @@ export default class BlurModule{
       ajaxRequest.send();
     }
     // getImpulse("audio/Batcave.wav");
-    getImpulse(SOUND_PATH + "ui/Tunnel_impulse_response.wav");
+    getImpulse(this.config.assetsHost + SOUND_PATH + "ui/Tunnel_impulse_response.wav");
     this.controlBlur(this.defaultBlurValue);
   }
   setRange(min,max){

@@ -15,9 +15,12 @@ var myWalkingTween={totalProgress:function(){return 1;}};
 
 
 export default class Pidgeon extends THREE.Object3D{
-  constructor(props){
+  constructor(config, props){
     super();
     //this.walkingOnGround=false;
+
+    this.config = config;
+    console.log("PIDGEON", config);
 
     let thisPidgeon=this;
     let properties = props || {};
@@ -393,7 +396,7 @@ export default class Pidgeon extends THREE.Object3D{
     }
   }
   //load and initialize meshes, textures and animations
-  static initMesh(loadingManager){
+  static initMesh(config, loadingManager){
     console.log("pidgeon load and init mesh");
 
     //initialize graphics, create mesh?
@@ -404,7 +407,7 @@ export default class Pidgeon extends THREE.Object3D{
     // let loader = new THREE.JSONLoader(loadingManager);
     //statically load mesh, animations and skin
     try{
-      THREE.BlendCharacter.loadGeometry( 'assets/pidgeon/Bird_33.json', function(geometry,materials) {
+      THREE.BlendCharacter.loadGeometry(config.assetsHost +  'assets/pidgeon/Bird_33.json', function(geometry,materials) {
   			loaded3dObject={tipology:"Geometry",geometry:geometry,materials:materials};
   			console.log("pidgeon 3d object loaded");
   		},loadingManager );
@@ -412,11 +415,11 @@ export default class Pidgeon extends THREE.Object3D{
       console.error("pidgeon",e);
     }
     try{
-      THREE.BlendCharacter.loadNewDiffuse( 'assets/pidgeon/pigeons_v4.png', function(newTexture) {
+      THREE.BlendCharacter.loadNewDiffuse(config.assetsHost +  'assets/pidgeon/pigeons_v4.png', function(newTexture) {
   			loadedSkinTexture=newTexture;
   			console.log("pidgeon skin texture loaded");
   		},loadingManager );
-      THREE.BlendCharacter.loadNewDiffuse( 'assets/pidgeon/pigeons_v2.png', function(newTexture) {
+      THREE.BlendCharacter.loadNewDiffuse(config.assetsHost + 'assets/pidgeon/pigeons_v2.png', function(newTexture) {
   			loadedSkinTexture2=newTexture;
   			console.log("pidgeon skin texture loaded");
   		},loadingManager );

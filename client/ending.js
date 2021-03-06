@@ -166,7 +166,7 @@ export default class Ending {
         });
 
         let miriamGeo = new THREE.PlaneGeometry( 512, 1024 );
-        new THREE.TextureLoader(loadingManager).load('assets/end/miriam.png', (texture) => {
+        new THREE.TextureLoader(loadingManager).load(this.config.assetsHost + 'assets/end/miriam.png', (texture) => {
             let material = new THREE.MeshBasicMaterial( {map: texture, side: THREE.DoubleSide, transparent:true}  );
             this.miriamPlane = new THREE.Mesh(miriamGeo, material);
             if (this.config.platform == "vive") {
@@ -388,7 +388,7 @@ export default class Ending {
                 return new Promise((resolve, reject) => {
 
                 this.soundManager.createStaticSoundSampler(
-                    "assets/sound/new_end.ogg",
+                    this.config.assetsHost + "assets/sound/new_end.ogg",
                     (sampler) => {
                         this.endingSound = sampler;
                         this.endingSound.volume = 0.5;

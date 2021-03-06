@@ -1,9 +1,9 @@
 import DebugUtil from "./util/debug"
 
 export default class Fountain extends THREE.Object3D  {
-    constructor( square ) {
+    constructor( config, square ) {
         super();
-        this.BASE_PATH = 'assets/fountain/'
+        this.BASE_PATH = config.assetsHost + 'assets/fountain/';
         console.log("Fountain constructed!")
 
         this.debug = false;

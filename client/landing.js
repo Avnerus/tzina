@@ -44,9 +44,9 @@ $('body').click(function () {
 });
 
 //Paths
-const SOUND_PATH = 'assets/ui_sounds/';
+const SOUND_PATH = config.assetsHost + 'assets/ui_sounds/';
 
-const TREES_PATH = "assets/trees/";
+const TREES_PATH = config.assetsHost + "assets/trees/";
 
 //Global Variables
 var camera, renderer, trees, clock, landingControls, scene, trees, landingKeyControl;
@@ -295,7 +295,7 @@ try {
         currentLanguage = 'he';
         config.language = 'heb';
 
-        $('#language').html('<img src="assets/ui/language_Eng.png">');
+        $('#language').html('<img src=' + config.assetsHost +  '"assets/ui/language_Eng.png">');
 
         $('#desc_sub').html('מאת שירין אנלן webVR דוקומנטרי');
 
@@ -318,7 +318,7 @@ try {
         currentLanguage = 'en';
         config.language = 'eng';
 
-        $('#language').html('<img src="assets/ui/language-Heb.png">');
+        $('#language').html('<img src=' + config.assetsHost + '"assets/ui/language-Heb.png">');
 
         $('#desc_sub').html('A webVR Documentary by Shirin Anlen');
 

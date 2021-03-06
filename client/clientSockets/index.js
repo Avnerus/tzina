@@ -29,15 +29,16 @@ let verbose=false;
 let isLanded=false;
 
 export default class PidgeonController {
-  constructor(scene,camera) {
+  constructor(config, scene,camera) {
     this.scene = scene;
+    this.config = config;
     this.camera=camera;
     this.lastCameraPosition={x:0,y:0,z:0};
     this.raycaster = new THREE.Raycaster();
   }
   init(loadingManager){
     console.log("pidgeon init");
-    Pidgeon.initMesh(loadingManager);
+    Pidgeon.initMesh(this.config, loadingManager);
     events.on(eventWhenTo.createSocket, (passed) => {
       if (!wsock){
         this.startSocket();
@@ -46,7 +47,7 @@ export default class PidgeonController {
   }
   startSocket() {
     let host = window.document.location.host.replace(/:.*/, '');
-    wsock=new Wsock('ws://' + host + ':' + window.document.location.port);
+    wsock=new Wsock('wss://' + host + ':' + window.document.location.port);
     if(verbose)     console.log("Started pidgeon socket");
 
     let thisPidgeonController=this;
@@ -62,7 +63,7 @@ export default class PidgeonController {
       // console.log("incoming message",message);
       if(message.header=="newclient"){
         // console.log("new client",message);
-        let pidgeon=new Pidgeon({unique:message.pointer});
+        let pidgeon=new Pidgeon(this.config, {unique:message.pointer});
         thisPidgeonController.scene.add(pidgeon);
       }else if(message.header=="changeposition"){
         // retrieve the pidgeon icon that represents my own.
@@ -83,7 +84,7 @@ export default class PidgeonController {
         }else{
           console.warn("couldn't retrieve the corresponding pidgeon. Creating a new one ",message);
           //if we don't have it, we create it. Comment this if many pidgeon sprites start appearing
-          let newCharacter=new Pidgeon({position:{x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001},unique:message.pointer});
+          let newCharacter=new Pidgeon(this.config, {position:{x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001},unique:message.pointer});
           thisPidgeonController.scene.add(newCharacter);
         }
 
@@ -104,7 +105,7 @@ export default class PidgeonController {
         }else{
           console.warn("couldn't retrieve the corresponding pidgeon. Creating a new one ",message);
           //if we don't have it, we create it. Comment this if many pidgeon sprites start appearing
-          let newCharacter=new Pidgeon({position:{x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001},unique:message.pointer});
+          let newCharacter=new Pidgeon(this.config, {position:{x:message.data[0]*0.001,y:message.data[1]*0.001,z:message.data[2]*0.001},unique:message.pointer});
           thisPidgeonController.scene.add(newCharacter);
         }
 
@@ -173,7 +174,7 @@ export default class PidgeonController {
             }else{
               if(verbose)console.log("pidgeon object "+stateObjectUnique+" notfound create");
               //if we don't have it, we create it.
-              let newCharacter=new Pidgeon({position:dataCoordinates,unique:stateObjectUnique});
+              let newCharacter=new Pidgeon(this.config, {position:dataCoordinates,unique:stateObjectUnique});
               thisPidgeonController.scene.add(newCharacter);
               //go to floor level if the pidgeon is walking
               newCharacter.transform.jumpToFloor(true);
@@ -186,7 +187,7 @@ export default class PidgeonController {
         if(!remoteSprite){
           console.warn("couldn't retrieve the corresponding pidgeon, creating it ",message);
           //if we don't have it, we create it. Comment this if many pidgeon sprites start appearing
-          remoteSprite=new Pidgeon({unique:message.pointer});
+          remoteSprite=new Pidgeon(this.config, {unique:message.pointer});
           thisPidgeonController.scene.add(remoteSprite);
         }else{
           //the whole string would more orderly be sent from server, but that costs some data.
@@ -217,7 +218,7 @@ export default class PidgeonController {
             }else{
               if(verbose)console.log("pidgeon object "+stateObjectUnique+" notfound create");
               //if we don't have it, we create it.
-              let newCharacter=new Pidgeon({position:dataCoordinates,unique:stateObjectUnique});
+              let newCharacter=new Pidgeon(this.config, {position:dataCoordinates,unique:stateObjectUnique});
               thisPidgeonController.scene.add(newCharacter);
             }
           }

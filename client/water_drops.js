@@ -15,7 +15,7 @@ export default class WaterDrops extends THREE.Object3D  {
 
     }
     init(loadingManager) {
-        let map = new THREE.TextureLoader(loadingManager).load( "assets/drops/water_drop.png" );
+        let map = new THREE.TextureLoader(loadingManager).load(this.config.assetsHost + "assets/drops/water_drop.png" );
         this.material = new THREE.SpriteMaterial( { map: map } );
         this.position.z = -0.5;
 

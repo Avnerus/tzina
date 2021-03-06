@@ -40,7 +40,7 @@ export default class Intro {
         ]
 
         
-        this.LOGO_PATH = 'assets/intro/logo/logo.json';
+        this.LOGO_PATH = this.config.assetsHost + 'assets/intro/logo/logo.json';
 
         this.STARTING_POSITION = new THREE.Vector3(
             0,

@@ -9,9 +9,10 @@ const States = {
 }
 
 export default class Clouds {
-    constructor(loadingManager) {
+    constructor(config, loadingManager) {
         console.log("Clouds constructed!")
 
+        this.config = config;
         this.loadingManager = loadingManager;
 
         this.currentState = States.STATIC;
@@ -19,10 +20,10 @@ export default class Clouds {
     }
     init(targetShader) {
         console.log("Clounds init");
-        this.cloudsVideo = new Video360(CLOUDS_SEQUENCE_PATH, targetShader.uniforms.cloudsMap);
+        this.cloudsVideo = new Video360(this.config.assetsHost + CLOUDS_SEQUENCE_PATH, targetShader.uniforms.cloudsMap);
         this.cloudsVideo.init();
 
-        this.staticTexture = new THREE.TextureLoader(this.loadingManager).load(CLOUDS_STATIC_PATH);
+        this.staticTexture = new THREE.TextureLoader(this.loadingManager).load(this.config.assetsHost + CLOUDS_STATIC_PATH);
         targetShader.uniforms.cloudsMap.value = this.staticTexture;
 
         this.targetShader = targetShader;

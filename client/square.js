@@ -93,7 +93,7 @@ export default class Square extends THREE.Object3D{
     init(loadingManager) {
         loadingManager.itemStart("Square");
         this.trees = new Trees(this.config, this.camera, this.renderer);
-        this.fountain = new Fountain( this );
+        this.fountain = new Fountain( this.config, this );
 
         let loaders = [
             this.loadSquare(loadingManager),
@@ -580,7 +580,7 @@ export default class Square extends THREE.Object3D{
         return new Promise((resolve, reject) => {
             let textureLoader = new THREE.TextureLoader(loadingManager);
 
-            this.sunTexture = textureLoader.load("assets/square/sunActive_gradientSun2.png");
+            this.sunTexture = textureLoader.load(this.config.assetsHost + "assets/square/sunActive_gradientSun2.png");
             this.sunTexture.repeat.set(1.0,0.5);
 
             //debug 

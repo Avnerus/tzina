@@ -145,7 +145,7 @@ export default class Game {
 
         this.extras = new Extras(this.config, this.camera, this.renderer);
 
-        this.sky = new Sky(this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
+        this.sky = new Sky(this.config, this.loadingManager, this.scene,  this.dirLight, this.hemiLight);
 
         // Square
         this.square = new Square(this.collisionManager, this.renderer, this.camera, this.config, this.soundManager, this.scene, this.extras, this.sky);
@@ -238,11 +238,11 @@ export default class Game {
         this.ending = new Ending(this.config, this.camera, this.timeController, this.characterController, this.scene, this.vrControls, this.square, this.introAni, this.soundManager);
 
         if (this.config.enablePigeons) {
-            this.pidgeonController = new PidgeonController(this.scene,this.camera);//this.camera also
+            this.pidgeonController = new PidgeonController(this.config, this.scene,this.camera);//this.camera also
             this.pidgeonController.init(this.loadingManager);
         }
 
-        this.coin = new Coin(this.characterController);
+        this.coin = new Coin(this.config, this.characterController);
     }
 
     load(onLoad, onProgress) {

@@ -6,7 +6,6 @@ import DebugUtil from './util/debug'
 import MiscUtil from './util/misc'
 
 const EXTRAS_PATH = "assets/extras"
-const HEART_PATH = "ass"
 
 export default class Extras extends THREE.Object3D {
     constructor(config, camera, renderer) {
@@ -60,7 +59,7 @@ export default class Extras extends THREE.Object3D {
         // Itzhak's heart
         
         return new Promise((resolve, reject) => {
-            new THREE.JSONLoader(loadingManager).load("assets/animations/itzhak/models/heart1.json", (geometry, material) => {
+            new THREE.JSONLoader(loadingManager).load(this.config.assetsHost + "assets/animations/itzhak/models/heart1.json", (geometry, material) => {
                 this.heartGeo = geometry;
                 this.heartMat = new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, transparent: true});
                 resolve();
@@ -71,7 +70,7 @@ export default class Extras extends THREE.Object3D {
     loadType(props) {
         return new Promise((resolve, reject) => {
             console.log("Loading extra type ", props);
-            Potree.POCLoader.load(EXTRAS_PATH + "/" + props.fileName,( geometry ) => {
+            Potree.POCLoader.load(this.config.assetsHost + EXTRAS_PATH + "/" + props.fileName,( geometry ) => {
                 props.geometry = geometry;
                 this.store[props.name] = props;
                 resolve();

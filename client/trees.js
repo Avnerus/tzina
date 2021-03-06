@@ -130,7 +130,7 @@ export default class Trees extends THREE.Object3D {
     loadType(props,store) {
         return new Promise((resolve, reject) => {
             console.log("Loading tree type ", props);
-            Potree.POCLoader.load(TREES_PATH + "/" + props.fileName,( geometry ) => {
+            Potree.POCLoader.load(this.config.assetsHost + TREES_PATH + "/" + props.fileName,( geometry ) => {
                 store[props.name] = geometry;
                 resolve();
             });

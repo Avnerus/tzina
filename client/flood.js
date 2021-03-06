@@ -30,7 +30,7 @@ export default class Flood extends THREE.Object3D  {
         for(let i = 0; i < tessellationDepth; i++){
             tessellateModifier.modify(geometry);
         }
-        let texture = new THREE.TextureLoader(loadingManager).load( "assets/flood/emotions.jpg" );
+        let texture = new THREE.TextureLoader(loadingManager).load(this.config.assetsHost + "assets/flood/emotions.jpg" );
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(10,10);
 

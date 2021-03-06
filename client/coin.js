@@ -3,10 +3,11 @@ import DebugUtil from './util/debug'
 //import _ from 'lodash'
 
 export default class Coin extends THREE.Object3D  {
-    constructor(character_controller) {
+    constructor(config, character_controller) {
         super();
+        this.config = config;
         this.character_controller = character_controller;
-        this.BASE_PATH = 'assets/animations/coin/';
+        this.BASE_PATH = this.config.assetsHost + 'assets/animations/coin/';
     }
     init(loadingManager) {
         
@@ -45,7 +46,7 @@ export default class Coin extends THREE.Object3D  {
             shininess: 30 //76
         } );
         
-        this.loadCoin( this.BASE_PATH + "/models/coin.json" )
+        this.loadCoin( this.BASE_PATH + "models/coin.json" )
         .then( (coinModel) => {
             this.coinModel = coinModel;
             

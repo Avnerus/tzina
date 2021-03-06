@@ -8,11 +8,12 @@ const States = {
 }
 
 export default class Sky {
-    constructor(loadingManager, scene, dirLight, hemiLight) {
+    constructor(config, loadingManager, scene, dirLight, hemiLight) {
         console.log("Sky constructed!")
         const glslify = require('glslify');
 
         this.SUN_DISTANCE = 51;
+        this.config = config;
 
         // Shaders
         this.sky_fs = glslify('./shaders/sky_fs.glsl')
@@ -86,7 +87,7 @@ export default class Sky {
             fragmentShader: this.sky_fs
         } );
 
-        this.clouds = new Clouds(loadingManager);
+        this.clouds = new Clouds(this.config, loadingManager);
 
         // Chrome Linux workaround
         this.clouds.init(this.shader);
@@ -142,9 +143,9 @@ export default class Sky {
 
         let textureLoader = new THREE.TextureLoader(loadingManager);
 
-        let textureFlare0 = textureLoader.load( "assets/lensflare/lensflare0.png" );
-        let textureFlare2 = textureLoader.load( "assets/lensflare/lensflare2.png" );
-        let textureFlare3 = textureLoader.load( "assets/lensflare/lensflare3.png" );
+        let textureFlare0 = textureLoader.load( this.config.assetsHost + "assets/lensflare/lensflare0.png" );
+        let textureFlare2 = textureLoader.load( this.config.assetsHost + "assets/lensflare/lensflare2.png" );
+        let textureFlare3 = textureLoader.load( this.config.assetsHost + "assets/lensflare/lensflare3.png" );
 
         let lightHSL = this.dirLight.color.getHSL();
         
