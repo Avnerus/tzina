@@ -57,7 +57,7 @@
     "jquery-browserify": "^1.8.1",
     "jquery-mousewheel": "^3.1.13",
     "lodash": "^4.17.19",
-    "moment": "^2.19.3",
+    "moment": "^2.29.4",
     "pointer-lock": "git+https://github.com/bunnybones1/pointer-lock-chrome-tolerant.git",
     "pointer-lock-chrome-tolerant": "0.0.7",
     "stats.js": "^0.16.0",
